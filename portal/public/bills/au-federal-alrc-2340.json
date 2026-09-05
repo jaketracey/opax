@@ -1,0 +1,178 @@
+{
+ "key": "au-federal-alrc-2340",
+ "title": "Higher Education Support Amendment (Further Streamlining and Other Measures) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-02-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Tertiary Education, Skills, Science and Research",
+ "status": "passed",
+ "status_as_of": "2013-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-02-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-03-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-03-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-03-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-03-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-21",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-21",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-03-21",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-03-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00023",
+   "document_date": "2013-03-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-270181",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270182",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270184",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270186",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822235",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822426",
+   "speaker": "Mark Furner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": "Three bills—the Australian Capital Territory (Self-Government) Amendment Bill 2013, the Higher Education Support Amendment (Further Streamlining and Other Measures) Bill 2013, and the Royal Commissions Amendment Bill 2013—were introduced together, with a motion to proceed without formalities and be read a first time agreed to."
+  },
+  {
+   "slug": "speech-823052",
+   "speaker": "Fiona Nash",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-03-21",
+   "stage_hint": null,
+   "brief": "The coalition supported the bill, which introduced recommendations from a 2011 review of VET FEE-HELP to reduce administrative complexity and increase provider numbers. The Greens supported the bill but opposed shifting VET costs to students via income-contingent loans and the commercialisation of the VET sector."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Higher Education Support Amendment (Further Streamlining and Other Measures) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00023",
+   "assent_date": "2013-03-28"
+  }
+ ]
+}

@@ -1,0 +1,217 @@
+{
+ "key": "au-federal-r6763",
+ "title": "National Health Amendment (COVID-19) Bill 2021",
+ "short_title": "National Health Amendment (COVID-19) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2021-09-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6763%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6763%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6763%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6763%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6763%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6763%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6763%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6763%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6763%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6763%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6763%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6763%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6763%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6763_ems_757dab6f-29bb-4c9b-9a6b-327604b7cc0d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6763%22",
+   "document_date": "2021-08-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00108",
+   "document_date": "2021-09-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-412579",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Health Amendment (COVID-19) Bill 2021 is necessary to allow the Minister for Health to make timely payments for vaccines, boosters, and consumables beyond January 2022, supporting the national plan. The bill sunsets on 30 June 2022, and the speaker noted over 9,000 vaccination points, 3,000 pharmacies delivering 350,000 doses, and the Royal Flying Doctor Service's role in remote areas."
+  },
+  {
+   "slug": "speech-412581",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the \"shadow pandemic\" of COVID-19 includes mental health crises, suicide, and missed health checks, and questioned whether lockdown measures—citing the Doherty Institute's modelling of an 80 per cent threshold—are proportional, suggesting the actual threshold for harm may be lower."
+  },
+  {
+   "slug": "speech-412583",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's slow vaccine rollout, poor procurement of mRNA vaccines and treatments like tocilizumab, and failure to counter COVID-19 misinformation increased risks for vulnerable groups, citing under 8% Indigenous vaccination in far western NSW and overwhelmed hospitals like Campbelltown and Liverpool. They supported the National Health Amendment (COVID-19) Bill 2021 but criticised inadequate protection for high-risk populations, including pregnant women and immunosuppressed people, and warned of potential shortages of medications such as tocilizumab and remdesivir."
+  },
+  {
+   "slug": "speech-412584",
+   "speaker": "John Alexander",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Health Amendment (COVID-19) Bill 2021 is critical for providing the Department of Health with flexible funding to purchase vaccines and treatments, citing specific achievements like New South Wales reaching 66 per cent first-dose vaccinations and a vaccine swap deal with Singapore."
+  },
+  {
+   "slug": "speech-412585",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Health Amendment (COVID-19) Bill to ensure ongoing funding for COVID-19 vaccines, boosters, and treatments. The speaker criticised the Morrison government’s vaccine rollout as one of the biggest policy failures in a century, noting that only 600,000 doses were administered by the end of March 2021 against a target of four million, that Australia ranked 113th globally, and that Melbourne experienced 200 days of lockdown."
+  },
+  {
+   "slug": "speech-412586",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The government's vaccine rollout was a failure due to incompetence and lack of urgency, with the Prime Minister blamed for not ordering enough vaccines or building quarantine facilities, leading to ongoing lockdowns; the bill gives the health minister power to spend on vaccines, but the problem is not lack of money—the government had a $40 billion advance."
+  },
+  {
+   "slug": "speech-412587",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "Labor supported the National Health Amendment (COVID-19) Bill 2021 to fast-track vaccine and treatment purchases, but argued the government’s vaccine rollout was a \"complete and utter shambles\" and that Australia lagged behind the OECD. The speaker also called out Liberal MP Craig Kelly (member for Hughes) and Nationals MP George Christensen (member for Dawson) for spreading dangerous COVID-19 conspiracy theories, and criticised Senators Matt Canavan and Gerard Rennick for undermining public health measures."
+  },
+  {
+   "slug": "speech-412588",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "Labor supported the COVID-19 health bill but argued the Prime Minister failed on vaccine rollout, citing only 600,000 doses administered by March 2021 against a promise of four million, and just one-third of aged-care staff vaccinated by 30 June. The speech also criticised the Prime Minister for not acting against government MPs spreading vaccination misinformation."
+  },
+  {
+   "slug": "speech-412589",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The MP supported the National Health Amendment (COVID-19) Bill 2021 but called for detailed planning on how the national plan would work for rural and regional Australia, citing under-resourced health services, the Shepparton outbreak, and border disruptions. She urged local modelling, dedicated vaccination efforts, and long-term support for frontline health workers, including a new hospital at Albury-Wodonga Health."
+  },
+  {
+   "slug": "speech-412590",
+   "speaker": "Michelle Landry",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The bill ensures continued government purchase of COVID-19 vaccines, boosters, treatments and related consumables to support Australia’s transition plan and reduce severe disease and hospitalisation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Health Amendment (COVID-19) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00108",
+   "assent_date": "2021-09-13"
+  }
+ ]
+}

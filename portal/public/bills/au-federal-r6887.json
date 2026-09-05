@@ -1,0 +1,954 @@
+{
+ "key": "au-federal-r6887",
+ "title": "Social Security (Administration) Amendment (Repeal of Cashless Debit Card and Other Measures) Bill 2022",
+ "short_title": "Social Security (Administration) Amendment (Repeal of Cashless Debit Card and Other Measures) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-07-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2022-09-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-09-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-09-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6887_ems_9d8d6235-4180-420f-afa5-879c566287a7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6887_ems_e7b1338c-706c-4611-9a3e-f664069f3007%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6887_ems_2d9d7616-35de-4b12-954a-af117e640ed2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6887_ems_13970e8d-2d49-4b43-8de9-e2bfecc981df%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6887%22",
+   "document_date": "2022-07-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00039",
+   "document_date": "2022-09-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-07-27",
+  "sentences": [
+   "This bill would scrap the cashless debit card welfare program.",
+   "It would instead let people move to the income management system in Part 3B of the Social Security (Administration) Act 1999 where suitable.",
+   "Around 17,300 current card users, a large proportion of whom are Indigenous Australians, would be affected."
+  ],
+  "changes": [
+   "Abolishes Part 3D of the Social Security (Administration) Act 1999.",
+   "Makes consequential amendments to the A New Tax System (Family Assistance) (Administration Act) Act 1999, the National Emergency Declaration Act 2020 and the Social Security Act 1991.",
+   "Is the first of two tranches of reforms."
+  ],
+  "affected": "The roughly 17,300 people currently using the cashless debit card, many of whom are First Nations people.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:11:32Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7693",
+   "date": "2022-08-02",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2022-08-02.113.8) \"*that the bill be considered urgent.*\" ### What does this mean? Speaker and MP for Oxley [Milton Dick](https://theyvoteforyou.org.au/people/representatives/oxley/milton_dick) (Labor) [explained that](https://www.openaustralia.org.au/debate/?id=2022-08-02.115.1): > *As the House has declared the bill urgent, I remind members standing order 85 provides principles for proceedings, which include standing order 31 will not apply and a second reading debate may continue from 7.30 until 10 pm or earlier if no member rises to speak. Each member will have a maximum of 10 minutes of speaking time. At 10 pm or earlier the Speaker shall interrupt the debate and immediately adjourn the House until 9 am tomorrow. After prayers tomorrow, the question on the bill will be put without further amendment or debate.* ### Why would this bill be considered urgent? Watson MP [Tony Burke](https://theyvoteforyou.org.au/people/representatives/watson/tony_burke) (Labor) [explained that](https://www.openaustralia.org.au/debate/?id=2022-08-02.113.1): > *I previously explained to the House one of the challenges with the bill that is now before us is that if it is to be carried by both houses, for the deadline on the card, which is within the bill, there needs to be a phase down period. The phase down period is required because—and I'm not sure how this has happened, and I don't want to engage too much with the debate—it has been possible with this particular card for people to connect it to Afterpay accounts. As a result of that, you can't just suddenly end it on a set date without there being a staged down period. For that reason, for the bill to be able to work, the government requires when we return in the next sitting fortnight for the Senate to pass it at that point.* > > *Those familiar with the Senate, which I suspect is none of us—but I know enough to know that overwhelmingly their go",
+   "stage": "Second reading",
+   "ayes": 82,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 136,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-02/2"
+  },
+  {
+   "key": "federal-representatives-7712",
+   "date": "2022-08-03",
+   "house": "representatives",
+   "question": "Social Security (Administration) Amendment (Repeal of Cashless Debit Card and Other Measures) Bill 2022 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 86,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 75,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 136,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-03/1"
+  },
+  {
+   "key": "federal-representatives-7713",
+   "date": "2022-08-03",
+   "house": "representatives",
+   "question": "Social Security (Administration) Amendment (Repeal of Cashless Debit Card and Other Measures) Bill 2022 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 86,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-03/2"
+  },
+  {
+   "key": "federal-senate-7761",
+   "date": "2022-09-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-09-26.20.2) to the usual second reading motion, which is \"*that the bill be read a second time*\". To read a bill a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is to agree with its main idea. The amendment was introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal). ### Motion text > *Omit all words after \"that\", substitute \"further consideration of the bill be made an order of the day for the next day of sitting after the Senate passes a resolution that it is of the opinion that both of the following conditions have been met:* > >> *(a) thorough and appropriate consultation has occurred with all relevant stakeholders and communities about the changes proposed by the bill; and* >> >> *(b) a bill providing a permanent alternative to income management has been introduced into the Parliament\".*",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "earliest": 29,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-27/5"
+  },
+  {
+   "key": "federal-senate-7762",
+   "date": "2022-09-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-09-27.153.1) to the usual second reading motion, which is \"*that the bill be read a second time*\". To read a bill a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is to agree with its main idea. The amendment was introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens). ### Motion text > *At the end of the motion, add \", but the Senate calls on the Government to:* > >> *(a) provide a clear plan for an end to all compulsory income management, which disproportionately impacts First Nations peoples; and* >> >> *(b) urgently and significantly increase the funding for community and support services through a jobs and services plan, including redirecting any savings from the abolition of the cashless debit card to these services\".*",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 19,
+    "earliest": 28,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-27/6"
+  },
+  {
+   "key": "federal-senate-7763",
+   "date": "2022-09-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-09-27.155.1) to the usual second reading motion, which is \"*that the bill be read a second time*\". To read a bill a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is to agree with its main idea. The amendment was introduced on behalf of Queensland Senator [Gerard Rennick](https://theyvoteforyou.org.au/people/senate/queensland/gerard_rennick) (Liberal). ### Motion text > *At the end of the motion, add \", but the Senate calls on the Government to ensure that no recipient of the Age Pension or a Veteran or Service Pension will be placed on income management by the Commonwealth Government or any of its agencies. The current authority the Family Responsibility Commission, child protection workers, or the Alcohol Mandatory Treatment Tribunal in the Northern Territory will continue\".*",
+   "stage": "Second reading",
+   "ayes": 24,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "earliest": 29,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-27/7"
+  },
+  {
+   "key": "federal-senate-7764",
+   "date": "2022-09-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-09-27.157.1) to the usual second reading motion, which is \"*that the bill be read a second time*\". To read a bill a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is to agree with its main idea. The amendment was introduced by Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie) (Jacqui Lambie Network). ### Motion text > *At the end of the motion, add \", and the Senate:* > > *(a) agrees that it is imperative that social disruption be minimised in trial sites where the cashless debit card is being repealed; and* > > *(b) orders that there be laid on the table by the Minister representing the Minister for Social Services, by no later than 2 pm on Friday, 30 September 2022, a transition plan which includes an outline of the following:* > >> *(i) the administrative measures that will be taken by the Commonwealth Government to ensure cashless welfare participants will continue to have access to restrictable payments, including regarding any changes relating to those participants' bank accounts or bank cards,* >> >> *(ii) the social and community supports that will be available to combat alcohol abuse, drug abuse and crime in program areas,* >> >> *(iii) the measures that the Commonwealth Government will take to combat coercive control and financial abuse in relation to cashless welfare participants who are using the restrictions under the cashless welfare scheme to control their own finances, and* >> >> *(iv) the Commonwealth Government's economic plan for the program areas, including what measures the Commonwealth Government will take to increase access to training and jobs in program areas\".*",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "earliest": 29,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-27/8"
+  },
+  {
+   "key": "federal-senate-7765",
+   "date": "2022-09-27",
+   "house": "senate",
+   "question": "Social Security (Administration) Amendment (Repeal of Cashless Debit Card and Other Measures) Bill 2022 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "earliest": 29,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-27/9"
+  },
+  {
+   "key": "federal-senate-7766",
+   "date": "2022-09-27",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2022-09-27.390.1) (1) and (3) on [sheet 1656](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6887_amend_a401f5c5-7c7a-48f4-8dc1-01669466f8fc%22;rec=0), which means they failed. The amendments were to end compulsory income management. ### What does this bill do? The [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd001) provides the following key points that explain what the bill does and why it was introduced: * *There are two schemes for income support recipients that aim to limit spending on harmful goods such as alcohol, illicit drugs, and gambling. One is the cashless debit card (CDC) program and the other is income management.* * *The CDC program currently operates in six areas around Australia — Ceduna (South Australia), Kununurra and Wyndham in the East Kimberly (Western Australia), the Goldfields region (Western Australia), the Bundaberg and Hervey Bay region (Queensland), the Northern Territory, and Cape York (Queensland). In June 2022 it applied to 17,382 people.* * *The Bill will abolish the CDC program in line with the Government’s 2022 election commitment.* * *The abolition will occur in two stages.* * *Certain people who are currently participating in the CDC program may be moved to income management. Others may decide to voluntarily participate in income management.*",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "earliest": 23,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-27/10"
+  },
+  {
+   "key": "federal-senate-7767",
+   "date": "2022-09-27",
+   "house": "senate",
+   "question": "Social Security (Administration) Amendment (Repeal of Cashless Debit Card and Other Measures) Bill 2022 - in Committee - Agree with the bill as amended",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "earliest": 31,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-27/11"
+  },
+  {
+   "key": "federal-senate-7768",
+   "date": "2022-09-27",
+   "house": "senate",
+   "question": "Social Security (Administration) Amendment (Repeal of Cashless Debit Card and Other Measures) Bill 2022 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 33,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "earliest": 31,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-27/12"
+  },
+  {
+   "key": "federal-representatives-7769",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "question": "Social Security (Administration) Amendment (Repeal of Cashless Debit Card and Other Measures) Bill 2022 - Consideration of Senate Message - Agree and pass the bill",
+   "stage": "Consideration of Senate message",
+   "ayes": 87,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-09-28/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-420194",
+   "speaker": "Amanda Louise Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-07-27",
+   "stage_hint": null,
+   "brief": "The Albanese government introduced a bill to abolish the cashless debit card, citing a lack of evidence it worked, and will transition over 17,000 participants off the card with no requirement to prove anything, while continuing consultations on income management."
+  },
+  {
+   "slug": "speech-421094",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The Albanese Labor government is abolishing the cashless debit card, fulfilling an election commitment, with approximately 17,300 participants transitioning off the card and the program closed to new entrants from 1 August. The former government spent $170 million on the scheme, which the speaker argued privatised welfare and was opposed through extensive community consultation."
+  },
+  {
+   "slug": "speech-421096",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The member for O'Connor opposed the Social Security (Administration) Amendment (Repeal of Cashless Debit Card and Other Measures) Bill 2022, arguing the card was voluntarily adopted after extensive consultation in Goldfields communities and citing ORIMA and University of Adelaide reports showing 45% of participants reported improved wellbeing, 41% reduced alcohol use, and 48% reduced drug use and gambling. The speaker warned that repeal would increase social harm, noting the government had not consulted the Goldfields before introducing the bill."
+  },
+  {
+   "slug": "speech-421101",
+   "speaker": "Keith Pitt",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker condemned the Labor government's automatic gag at 10pm as an attack on democracy, stating that 151 members were silenced, and intended to speak on the Social Security (Administration) Amendment (Repeal of Cashless Debit Card and Other Measures) Bill."
+  },
+  {
+   "slug": "speech-421110",
+   "speaker": "Colin Boyce",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Security (Administration) Amendment (Repeal of Cashless Debit Card and Other Measures) Bill 2022, arguing the cashless debit card reduced alcohol, drug, and gambling harm based on evaluations showing decreases in consumption and improved community outcomes, and criticised the Labor government for guillotining debate and lacking community consultation."
+  },
+  {
+   "slug": "speech-421111",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the repeal of the Cashless Debit Card, arguing it reduced alcohol, drug and gambling-related harm, lowered violence and youth unemployment, and improved school attendance in regions including Kalgoorlie, Hervey Bay, Bundaberg, Ceduna and the East Kimberley, citing 6,552 young people in Hinkler and 17,000 total users, along with $30 million in jobs funding and $50 million for rehabilitation facilities."
+  },
+  {
+   "slug": "speech-421114",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker argued against repealing the Cashless Debit Card, citing insufficient community consultation and warning it would increase alcohol and drug abuse, violence, and domestic family violence. They noted a University of Adelaide evaluation found 45% of participants reported the card improved their family stability."
+  },
+  {
+   "slug": "speech-421115",
+   "speaker": "Luke Howarth",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The opposition opposed the repeal of the cashless debit card, arguing it abandoned communities in Ceduna, East Kimberley, Goldfields, Bundaberg, and Hervey Bay, and cited support from police, local mayors, and evaluations showing positive impact."
+  },
+  {
+   "slug": "speech-421119",
+   "speaker": "Nola Bethwyn Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that repealing the Cashless Debit Card will increase alcohol, drug abuse and violence in at-risk communities, citing survey results showing 41% of participants drank less and 48% used drugs less frequently. They named the members for Durack, O'Connor, Grey, Hinkler and Aston as having direct community experience with the card, and stated that no Labor MP or senator consulted with the Goldfields community."
+  },
+  {
+   "slug": "speech-421121",
+   "speaker": "Scott Buchholz",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The opposition opposes the Social Security (Administration) Amendment (Repeal of Cashless Debit Card and Other Measures) Bill 2022, arguing the card was introduced following a 2011 South Australian coroner's report into six deaths in Ceduna and that the government has no replacement financial management tool."
+  },
+  {
+   "slug": "speech-421122",
+   "speaker": "Aaron Violi",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker argued against repealing the cashless debit card, citing evidence that 41% of participants drank less, 48% used drugs less, and 48% gambled less, with 40% reporting overall improvement, and criticised the government for rushing the repeal without a replacement plan. The speaker named Kalgoorlie-Boulder mayor John Bowler, WA police commissioner Col Blanch, Wunan Foundation, and Generation One as supporters of the card."
+  },
+  {
+   "slug": "speech-421123",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed repealing the Cashless Debit Card, citing a 12% reduction in poker machine revenue in Ceduna and positive community feedback from Hervey Bay, and argued the bill would affect over 17,000 people without adequate support or a transition plan."
+  },
+  {
+   "slug": "speech-421125",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the repeal of the cashless debit card, arguing it would make vulnerable Australians less safe by allowing cash to be spent on drugs and alcohol, and noted the card restricts 80% of welfare payments from being used for alcohol, gambling, or cash withdrawals. They claimed the repeal was politically motivated to follow through on election campaign demonisation of the program."
+  },
+  {
+   "slug": "speech-421129",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the repeal of the Cashless Debit Card, arguing it improved lives through reduced drinking (25%), gambling (21%), and domestic violence, with 45% of participants reporting better outcomes. They cited $110 million in coalition investments, including $50 million for rehab facilities, and noted 2,085 volunteers in the Northern Territory and community leader Ian Trust’s support from the East Kimberley region."
+  },
+  {
+   "slug": "speech-421131",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the repeal of the Cashless Debit Card, arguing it had reduced violence and protected children in four remote trial communities. He criticised the government for rushing the repeal in the first two weeks of sitting, claiming it would redirect welfare money to alcohol, drugs and gambling."
+  },
+  {
+   "slug": "speech-421133",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Security (Administration) Amendment (Repeal of Cashless Debit Card and Other Measures) Bill 2022, arguing the cashless debit card has successfully benefited children and families in remote communities by quarantining 80 per cent of welfare payments and citing support from Senator Jacinta Price. The speaker noted the bill would transition more than 17,000 existing participants off the card and warned of harmful effects on communities such as Ceduna, the Goldfields, and Cape York."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Security (Administration) Amendment (Repeal of Cashless Debit Card and Other Measures) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00039",
+   "assent_date": "2022-09-30"
+  }
+ ]
+}

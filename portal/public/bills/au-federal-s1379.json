@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s1379",
+ "title": "Freeze on Rent and Rate Increases Bill 2023",
+ "short_title": "Freeze on Rent and Rate Increases Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-06-19",
+ "originating_house": "senate",
+ "sponsor": "FARUQI, Sen Mehreen",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10912",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1379%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1379%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1379_ems_bbb8c9ba-7f35-4f25-bff1-cdc82dd4d808%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1379%22",
+   "document_date": "2023-06-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-19",
+  "sentences": [
+   "The bill would create a national pause on rent and interest rate rises.",
+   "The Commonwealth would work with state governments to stop rent increases for two years, then limit them after that, and end evictions without a stated reason.",
+   "The bill's sponsor says rents are rising at the fastest rate ever recorded and that renters are paying an extra $10 billion a year in rent."
+  ],
+  "changes": [
+   "Stops rent increases nationwide for two years.",
+   "Caps rent increases after the two-year freeze ends.",
+   "Bans no-grounds evictions."
+  ],
+  "affected": "Renters, landlords, and state governments are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:41Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

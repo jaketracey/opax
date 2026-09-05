@@ -1,0 +1,84 @@
+{
+ "key": "au-federal-r6782",
+ "title": "COAG Legislation Amendment Bill 2021",
+ "short_title": "COAG Legislation Amendment Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-09-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6782%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6782%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6782%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6782_ems_47ebe52c-03ad-4726-9ac1-b80d2c015dd8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6782%22",
+   "document_date": "2021-09-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-09-02",
+  "sentences": [
+   "The bill would update references in Commonwealth laws to reflect the replacement of the COAG Reform Fund with the Federation Reform Fund.",
+   "It would also replace references to COAG with First Ministers Council and update the definition of Ministerial Council.",
+   "The bill would clarify that protections for Cabinet deliberations and decisions also apply to the National Cabinet."
+  ],
+  "changes": [
+   "Updates references to COAG Reform Fund to Federation Reform Fund.",
+   "Updates references to COAG to First Ministers Council.",
+   "Changes the definition of Ministerial Council to mean a body of Commonwealth, state and territory ministers responsible for a portfolio issue.",
+   "Extends protections for Cabinet deliberations and decisions to the National Cabinet."
+  ],
+  "affected": "Commonwealth legislation that references COAG Reform Fund, COAG, Ministerial Council, or Cabinet protections.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-412840",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-02",
+   "stage_hint": null,
+   "brief": "The COAG Legislation Amendment Bill 2021 replaces references to the Council of Australian Governments (COAG) with the National Cabinet and National Federation Reform Council, updating federal structures after COAG ceased in May 2020. The bill also protects the confidentiality of National Cabinet proceedings, reflecting the move to a more agile intergovernmental decision-making model praised by all premiers for its effectiveness during the COVID-19 pandemic."
+  }
+ ],
+ "acts": []
+}

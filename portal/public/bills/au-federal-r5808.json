@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r5808",
+ "title": "Commonwealth Electoral Amendment (Donation Reform and Transparency) Bill 2017",
+ "short_title": "Commonwealth Electoral Amendment (Donation Reform and Transparency) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-13",
+ "originating_house": "representatives",
+ "sponsor": "SHORTEN, Bill, MP",
+ "sponsor_party": "&#34;ALP&#34;",
+ "sponsor_person_id": "10580",
+ "portfolio": "(s) SHORTEN, Bill, MP",
+ "status": "lapsed",
+ "status_as_of": "2017-09-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5808%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5808%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5808%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5808_ems_63ba4a6b-ef1d-4264-b071-8f025f0e7155%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5808%22",
+   "document_date": "2017-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-13",
+  "sentences": [
+   "This bill would change how political donations are reported and controlled in federal elections.",
+   "It would lower the threshold for disclosing donations from over $10,000 to $1,000, treat related parties as one entity, and ban foreign and anonymous gifts.",
+   "Public funding for election campaigns would be limited to the lesser of declared expenditure or the amount based on first preference votes at the 4% threshold."
+  ],
+  "changes": [
+   "Reduce the disclosure threshold from more than $10,000 to $1,000.",
+   "Make it unlawful for political parties, candidates and Senate group members to receive gifts of foreign property.",
+   "Prohibit all anonymous gifts to registered political parties, candidates and Senate group members.",
+   "Limit public funding of election campaigning to the lesser of declared expenditure or the sum based on first preference votes at the 4% threshold.",
+   "Provide for recovery of unlawful gifts that are not returned.",
+   "Introduce new offences and penalties and increase penalties for existing offences."
+  ],
+  "affected": "Political parties, candidates, members of a Senate group, associated entities, people incurring political expenditure, and the Australian Electoral Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:39:14Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

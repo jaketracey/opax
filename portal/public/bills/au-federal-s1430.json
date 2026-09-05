@@ -1,0 +1,384 @@
+{
+ "key": "au-federal-s1430",
+ "title": "Competition and Consumer Amendment (Make Price Gouging Illegal) Bill 2024",
+ "short_title": "Competition and Consumer Amendment (Make Price Gouging Illegal) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2024-09-16",
+ "originating_house": "senate",
+ "sponsor": "MCKIM, Sen Nick",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10841",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2026-02-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1430%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1430%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1430_ems_5175c498-24fb-4481-b7eb-713b1b889f1e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1430%22",
+   "document_date": "2024-09-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-09-16",
+  "sentences": [
+   "The bill would prohibit corporations with substantial market power from charging excessive prices, known as price gouging.",
+   "It would amend the Competition and Consumer Act 2010 to insert a new subsection 46(2), enforced by the Australian Competition and Consumer Commission (ACCC) and the courts.",
+   "Corporations found in breach could face a maximum civil penalty of $50 million, and the ACCC could require them to lower prices to a competitive level for a specified period."
+  ],
+  "changes": [
+   "The bill inserts a new subsection 46(2) into the Competition and Consumer Act 2010 to ban price gouging by corporations with substantial market power.",
+   "It sets a maximum civil penalty of $50 million for corporations found in breach.",
+   "It allows the ACCC to require enforceable undertakings, including lowering prices to a competitive level and guaranteeing supply.",
+   "It exempts small businesses with annual turnover under $10 million from the prohibition.",
+   "It defines an excessive price as one that would not be charged if the corporation lacked substantial market power.",
+   "It excludes goods or services whose price is set by a Commonwealth, state or territory law."
+  ],
+  "affected": "Corporations with substantial market power, particularly large energy, supermarket and banking companies, and small businesses with turnover under $10 million are exempt.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9394",
+   "date": "2024-09-16",
+   "house": "senate",
+   "question": "Competition and Consumer Amendment (Make Price Gouging Illegal) Bill 2024 - First Reading - Suspend the usual rules",
+   "stage": "First Reading",
+   "ayes": 41,
+   "noes": 4,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-09-16/3"
+  },
+  {
+   "key": "federal-senate-9173",
+   "date": "2024-10-09",
+   "house": "senate",
+   "question": "Competition and Consumer Amendment (Make Price Gouging Illegal) Bill 2024 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 41,
+   "noes": 18,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-10-09/1"
+  },
+  {
+   "key": "federal-senate-9174",
+   "date": "2024-10-09",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-10-09.7.1) introduced by Victorian Senator [Jess Walsh](https://theyvoteforyou.org.au/people/senate/victoria/jess_walsh) (Labor), which means it failed. The amendment would have changed the wording of the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *Omit all words after \"That\", substitute \"the bill be referred to the Economics Legislation Committee for inquiry and report by 28 March 2025\".* #### No rebellion West Australian Senator [Fatima Payman](https://theyvoteforyou.org.au/people/senate/wa/fatima_payman) (Independent) is currently listed as a rebel voter against the Labor Party, but this is inaccurate because she is no longer part of the Labor Party.",
+   "stage": "Second reading",
+   "ayes": 18,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-10-09/2"
+  },
+  {
+   "key": "federal-senate-9176",
+   "date": "2024-10-09",
+   "house": "senate",
+   "question": "Competition and Consumer Amendment (Make Price Gouging Illegal) Bill 2024 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 16,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 3,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-10-09/4"
+  },
+  {
+   "key": "federal-senate-9890",
+   "date": "2026-02-05",
+   "house": "senate",
+   "question": "Competition and Consumer Amendment (Make Price Gouging Illegal) Bill 2024 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-02-05/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1196357",
+   "speaker": "Nick McKim",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2025-08-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199819",
+   "speaker": "Nick McKim",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2026-02-05",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

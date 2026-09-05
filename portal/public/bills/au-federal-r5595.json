@@ -1,0 +1,347 @@
+{
+ "key": "au-federal-r5595",
+ "title": "Water Amendment (Review Implementation and Other Measures) Bill 2015",
+ "short_title": "Water Amendment (Review Implementation and Other Measures) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2016-05-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5595_ems_6f238abc-acd0-4842-bb7a-8ff9bef80594%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5595%22",
+   "document_date": "2015-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00040",
+   "document_date": "2016-05-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-03",
+  "sentences": [
+   "This bill would change the Water Act to carry out the government's response to a review of that Act and to fix several small issues.",
+   "It would require regular assessments of how the Basin Plan affects communities and the economy, adjust how state water plans get approved, and give the Commonwealth Environmental Water Holder more freedom to spend money on non-water environmental projects.",
+   "Reviews of the Basin Plan's social and economic effects would happen every five years, and the first state water resource plans would need approval by 1 July 2019."
+  ],
+  "changes": [
+   "Introduce five-yearly assessments of the Basin Plan's social and economic impacts.",
+   "Allow greater flexibility for the Commonwealth Environmental Water Holder to invest in non-water environmental activities.",
+   "Remove the Murray-Darling Basin Authority's power to run a Water Rights Information Service."
+  ],
+  "affected": "The people, communities, and governments in the Murray-Darling Basin, the Commonwealth Environmental Water Holder, the Murray-Darling Basin Authority, state water planners, and Indigenous groups.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:51:27Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4239",
+   "date": "2016-05-02",
+   "house": "senate",
+   "question": "Robert Simms by leave—I move amendments (1) and (2) on sheet 7909, standing in my name, together: (1) Schedule 1, item 1, page 3 (line 8), after \"Plan\", insert \"including the social and economic impacts of the Basin Plan on Indigenous people\". (2) Schedule 1, item 5, page 4 (after line 12), after Subdivision H, insert: Subdivision I—Review of long - term average sustainable diversion limits 52B Review of long - term average sustainable diversion limits (1) Before the end of 2017, the Authority must undertake a review of the long-term average sustainable diversion limits to determine if the limits adequately account for the projected impacts of climate change. (2) The Authority must give the Minister a written report of the review. (3) The report must be provided to the Minister by 31 December 2017. (4) The Minister must cause a copy of the report to be tabled in each House of the Parliament within 15 sitting days of that House after the day the report is given to the Minister. The Greens also oppose items 26 and 27 of schedule 1 in the following terms: (3) Schedule 1, items 26 and 27, page 11 (line 4) to page 13 (line 24), to be opposed. I have spoken to the amendments. Anne Ruston The government will not be supporting the amendments proposed by the Australian Greens. This bill was the result of an independent review of the Water Act, and the government's response released last year was subject to extensive consultation with the basin communities, including Indigenous community stakeholders and all of the states. All of the state ministers and governments have expressed enthusiastic support for the current amendments passing as they are, and for this reason the government will not be supporting the amendments put forward. Lisa Singh The opposition—Labor—also will not be supporting these amendments, for similar reasons. As we understand it, they do not have the support of the basin states. They have been delivered at pretty much the eleventh hour, and as we have cont",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 30,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-05-02/6"
+  },
+  {
+   "key": "federal-senate-4240",
+   "date": "2016-05-02",
+   "house": "senate",
+   "question": "Robert Simms by leave—I move Australian Greens amendments (1) to (7) on sheet 7914: (1) Schedule 1, item 26, page 11 (lines 4 to 6), omit the item, substitute: 26 Subsection 86AE(2) Omit \"106(2)(b)\", substitute \"106(7)(b)\". (2) Schedule 1, item 27, page 12 (lines 27 to 34), omit all the words from and including \"the objectives\" to the end of paragraph 106(3)(c), substitute \"the objectives mentioned in subsection (7); and\". (3) Schedule 1, item 27, page 12 (after line 34), at the end of subsection 106(3), add: (d) in any case—the Commonwealth Environmental Water Holder reasonably believes, at the time the proceeds are used for an activity, that using the proceeds for the activity will improve the capacity of the Commonwealth environmental water holdings to be applied to meet the objectives mentioned in subsection (7). (4) Schedule 1, item 27, page 12 (lines 35 to 37), omit the note. (5) Schedule 1, item 27, page 13 (after line 24), at the end of section 106, add: (7) For the purposes of paragraphs (3)(c) and (d), the objectives are the objectives of one or more of the following: (a) the environmental watering plan; (b) a plan specified in the regulations in relation to an area outside the Murray-Darling Basin; (c) protecting or restoring the environmental assets of an area outside the Murray-Darling Basin in relation to which those regulations do not specify a plan. Note: This subsection is modified in relation to water access rights acquired by the Commonwealth with amounts debited from the Water for the Environment Special Account (see subsection 86AE(2)). (6) Schedule 1, item 28, page 13 (after line 35), after paragraph (ab), insert: (ac) if during the year the Commonwealth Environmental Water Holder used the proceeds of a disposal of a water allocation for an environmental activity—how the activity has improved, or is expected to improve, the capacity of the Commonwealth environmental water holdings to be applied to meet the objectives mentioned in subsection 106",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 29,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-05-02/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-325392",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-12-03",
+   "stage_hint": null,
+   "brief": "The government moved the Water Amendment (Review Implementation and Other Measures) Bill 2015 to implement 21 of 23 recommendations from the independent review of the Water Act 2007. Key measures include enabling the Commonwealth Environmental Water Holder to sell water allocations and use proceeds for environmental activities, capping surface water buybacks at 1,500 gigalitres, improving water market transparency, monitoring social and economic impacts of the Basin Plan, and adding Indigenous representation to the Murray-Darling Basin Authority."
+  },
+  {
+   "slug": "speech-327540",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The opposition supported the Water Amendment (Review Implementation and Other Measures) Bill 2015, which implements recommendations from the Water Act review including allowing the Commonwealth Environmental Water Holder to invest in non-water environmental activities, incorporating Indigenous expertise in governance, and introducing five-yearly social and economic reviews, but opposed the transfer of the water portfolio to the agriculture department, arguing it should remain with the environment portfolio to maintain bipartisan consensus and scientific integrity."
+  },
+  {
+   "slug": "speech-327541",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Water Amendment (Review Implementation And Other Measures) Bill 2015, which implements 23 recommendations including allowing the Commonwealth Environmental Water Holder to trade surplus water, and reinforced that buybacks are capped at 1,500 gigalitres. They emphasised the need for five-yearly reviews and flexibility, criticised a previous 450-gigalitre allocation made without scientific backing, and called for certainty for basin communities such as Warren, Moree, Bourke, Narrabri and Broken Hill."
+  },
+  {
+   "slug": "speech-327542",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The Water Amendment (Review Implementation and Other Measures) Bill 2015 was supported as an important first step toward a better Basin Plan, with the speaker citing low water allocations of around 12 per cent in the NSW Murray system for recent rice industry job losses. The speech called for a cultural shift at the Murray-Darling Basin Authority—including more local consultation and an audit of environmental watering—and welcomed the new CEO, Phillip Glyde."
+  },
+  {
+   "slug": "speech-327543",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The member for Barker argued the Water Amendment (Review Implementation and Other Measures) Bill 2015 improves Murray-Darling Basin water management, supports bipartisan cooperation, and delivers transparency and reduced regulation for irrigators. He highlighted $13 billion committed to basin initiatives, a cap on water buybacks at 1,500 gigalitres, and praised Minister for Agriculture and Water Resources for reforms allowing the Commonwealth Environmental Water Holder to trade water without requiring buybacks."
+  },
+  {
+   "slug": "speech-327544",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The speaker argued the Water Amendment (Review Implementation and Other Measures) Bill 2015 is a long-overdue but insufficient step, criticising the Commonwealth Environmental Water Holder for not selling water back to irrigators and blaming poorly targeted buybacks for causing a daily productivity loss of $5–7 million in the Murray-Darling Basin. They called for better socioeconomic impact assessments and rejected claims that the basin's environmental health depends on continuous river flow to the sea, naming groups like Murray Irrigation and academics Quentin Grafton and Jamie Pittock."
+  },
+  {
+   "slug": "speech-327546",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The minister introduced the Water Amendment (Review Implementation and Other Measures) Bill 2015, which implements all 23 recommendations from the independent review of the Water Act, including allowing the Commonwealth Environmental Water Holder to reinvest trade proceeds in environmental works, requiring five‑yearly socioeconomic impact reviews of the Basin Plan, and cutting red tape for water information reporting. The bill also reaffirms the existing 1,500‑gigalitre cap on water purchases."
+  },
+  {
+   "slug": "speech-331526",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "A motion was moved requesting the Senate to resume consideration of 14 specified bills from the previous session, with each request to be conveyed in a separate message. The bills covered water amendment, managed investment trusts, social services, crime commission, deaths registration, tax and superannuation, crowd-sourced funding, firearms trafficking, and parliamentary entitlements."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Water Amendment (Review Implementation and Other Measures) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00040",
+   "assent_date": "2016-05-04"
+  }
+ ]
+}

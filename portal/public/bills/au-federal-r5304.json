@@ -1,0 +1,260 @@
+{
+ "key": "au-federal-r5304",
+ "title": "Customs Amendment Bill 2014",
+ "short_title": "Customs Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-07-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2015-02-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5304%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5304%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5304%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5304%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5304%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5304%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5304%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5304%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5304%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5304%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5304%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5304%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5304_ems_83d2a78e-8d80-44ae-9ee9-69ed2526fe0e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5304%22",
+   "document_date": "2014-07-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00004",
+   "document_date": "2015-02-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-07-17",
+  "sentences": [
+   "The bill would make several technical updates to the Customs Act 1901.",
+   "It would allow the customs agency to authorise future job roles, extend controls to arrival points, and improve reporting and application processes.",
+   "Customs powers would be expanded to cover baggage and cargo of domestic passengers on international flights and voyages."
+  ],
+  "changes": [
+   "The bill would let authorisations cover positions created after the authorisation is given.",
+   "It would extend customs controls to places where ships and aircraft arrive under section 58 of the Act.",
+   "It would provide more flexibility for reporting ship and aircraft arrivals and reporting stores and prohibited goods.",
+   "It would improve application processes for several permissions and support online applications.",
+   "It would extend customs examination powers to domestic passenger baggage and domestic cargo on international flights or voyages.",
+   "It would improve how the infringement notice scheme interacts with the claims process for prohibited imports."
+  ],
+  "affected": "The Australian Customs and Border Protection Service and people or entities involved in international flights and voyages.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:21:32Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-294972",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302348",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302349",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302350",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302351",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302352",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302570",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302572",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302575",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302576",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302577",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302578",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302671",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-11-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00004",
+   "assent_date": "2015-02-25"
+  }
+ ]
+}

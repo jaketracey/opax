@@ -1,0 +1,101 @@
+{
+ "key": "au-federal-r6321",
+ "title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2019-2020",
+ "short_title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2019-2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-04-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6321%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6321%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6321%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6321_ems_f8f8a593-8dc5-4401-8add-091d4dc75290%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6321%22",
+   "document_date": "2019-04-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-04-02",
+  "sentences": [
+   "This bill would authorise spending from the Consolidated Revenue Fund for the Parliamentary Departments.",
+   "It would provide about seven-twelfths of the estimated annual funding for 2019-20, plus new budget measures.",
+   "The remaining five-twelfths would be covered by a separate supply bill to ensure enough money for the start of the financial year."
+  ],
+  "changes": [
+   "Appropriates money from the Consolidated Revenue Fund for the Parliamentary Departments.",
+   "Provides funding equivalent to seven-twelfths of the estimated 2019-20 annual appropriations plus budget measures.",
+   "Works with a separate supply bill to cover the residual five-twelfths for the first part of the financial year."
+  ],
+  "affected": "The Parliamentary Departments are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-376572",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "The Supply (Parliamentary Departments) Bill (No. 1) 2019-2020 seeks just over $101 million in interim appropriations for the Department of the Senate, Department of the House of Representatives, Department of Parliamentary Services, and Parliamentary Budget Office to fund operations until the end of November 2019. The bill must be passed to ensure continuity of parliament’s operations from 1 July 2019."
+  },
+  {
+   "slug": "speech-376621",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 1) 2019‑2020 seeks approval for $58.5 billion from the Consolidated Revenue Fund, with major allocations including $19.8 billion for Defence (supporting operations Okra, Accordion, Highroad, Resolute and Manitou), $5.7 billion for Social Services (including expanding the cashless debit card and establishing the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability), $6.3 billion for Health (including the Medical Research Future Fund and expansion of headspace), $3.2 billion for Foreign Affairs and Trade, $2.7 billion for Human Services, $2.2 billion for Home Affairs, and $2.1 billion for the Australian Taxation Office (continuing the Corporate Tax Avoidance Taskforce and expanding Single Touch Payroll)."
+  },
+  {
+   "slug": "speech-376622",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "Appropriation Bill (No. 2) 2019-20 was moved for second reading, seeking $7.4 billion in appropriations, while the Parliamentary Departments bill seeks $162 million, including $127 million for Parliament House maintenance and upgrades to the auxiliary power system and mobile phone antenna."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1161",
+ "title": "Lower Tax Bill 2018",
+ "short_title": "Lower Tax Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-11-29",
+ "originating_house": "senate",
+ "sponsor": "LEYONHJELM, Sen David",
+ "sponsor_party": "Liberal Democratic Party",
+ "sponsor_person_id": "10832",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1161%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1161%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1161%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1161_ems_64718e2a-30bb-4108-8908-574a8b80ca22%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1161%22",
+   "document_date": "2018-11-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 8,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-11-29",
+  "sentences": [
+   "The Lower Tax Bill 2018 would cut annual Commonwealth Government taxation by almost half.",
+   "It would abolish several taxes including import duties, tobacco duties, alcohol duties, fuel duties, and luxury car tax, and reduce personal income tax, fringe benefits tax, and corporate income tax.",
+   "Personal income tax would have a $40,000 tax-free threshold and a flat 20% rate, while the Medicare levy would be repealed but the surcharge for high-income earners without private health insurance would remain."
+  ],
+  "changes": [
+   "The bill would nearly halve annual Commonwealth Government taxation.",
+   "It would abolish multiple taxes and reduce the rates of others.",
+   "It would introduce a $40,000 tax-free threshold and a 20% personal income tax rate."
+  ],
+  "affected": "All taxpayers, businesses, and individuals subject to the abolished or reduced taxes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:50:42Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

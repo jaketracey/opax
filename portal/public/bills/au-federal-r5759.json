@@ -1,0 +1,139 @@
+{
+ "key": "au-federal-r5759",
+ "title": "Australian Organ and Tissue Donation and Transplantation Authority Amendment (New Governance Arrangements) Bill 2016",
+ "short_title": "Australian Organ and Tissue Donation and Transplantation Authority Amendment (New Governance Arrangements) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2016-11-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5759%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5759%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5759%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5759%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5759%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5759%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5759%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5759%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5759%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5759%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5759%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5759%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5759_ems_40514647-6614-4695-b1e8-eca1c64317e9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5759%22",
+   "document_date": "2016-11-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00083",
+   "document_date": "2016-11-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-338130",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The bill establishes an eight‑member board to govern the Australian Organ and Tissue Donation and Transplantation Authority, abolishes the existing advisory council, and transfers responsibilities from the CEO to the board. The speaker noted the donation rate rose from 11.4 to 18.3 per million people between 2009 and 2015 but remains short of the 25 per million target, and that family consent increases from 52% to 91% when the deceased had registered their donation decision."
+  },
+  {
+   "slug": "speech-338131",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to establish a skills-based board for the Organ and Tissue Authority, and argued that the new board should prioritise introducing a nationwide opt-out organ donation system, citing Australia’s low rate of 16 deceased donors per million population and over 1,000 preventable deaths annually."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Organ and Tissue Donation and Transplantation Authority Amendment (New Governance Arrangements) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00083",
+   "assent_date": "2016-11-30"
+  }
+ ]
+}

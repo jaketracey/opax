@@ -1,0 +1,800 @@
+{
+ "key": "au-federal-r5519",
+ "title": "Foreign Acquisitions and Takeovers Legislation Amendment Bill 2015",
+ "short_title": "Foreign Acquisitions and Takeovers Legislation Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-08-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-11-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5519_ems_44bc0cd7-d45c-4613-a4fa-975ec999eabf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5519%22",
+   "document_date": "2015-08-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00150",
+   "document_date": "2015-11-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-08-20",
+  "sentences": [
+   "This bill is part of a package that would create a register of foreign ownership of agricultural land in Australia.",
+   "The Commissioner of Taxation would administer the register, which would hold information on foreign persons' interests in agricultural land.",
+   "The register would have a basic part with full records and a statistical part published online, with the Commissioner reporting to Parliament at least annually."
+  ],
+  "changes": [
+   "Establishes a register of foreign ownership of agricultural land.",
+   "Requires the Commissioner to publish the statistical part of the register online.",
+   "Requires the Commissioner to give the Minister an annual report on the register's operation."
+  ],
+  "affected": "Foreign persons holding interests in agricultural land in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:53:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5049",
+   "date": "2015-11-23",
+   "house": "senate",
+   "question": "Penny Wong We had the interesting spectacle today of Senator Cormann, who I notice is not handling this legislation, tabling a copy of a letter from Mr Morrison and Mr Joyce, co-signed by the Leader of the Australian Greens—and I see Senator Cormann has now arrived in the chamber. It is an interesting proposition because the government constantly rail against the Greens as being economic vandals and irresponsible and anti jobs. Witness Senator Brandis in question time today having a real go at Senator Waters about her question. These are the very people the government are doing a deal with when it comes to economic policy. Let us be very clear about what they have done a deal on. They have done a deal on a set of propositions that have been roundly condemned by the business community—the Business Council, ACCI, AiG—and a range of groups, including the Australian Food and Grocery Council and I think I saw one of the paper industry groups today also supporting the position Labor have taken on this. Despite the government's rhetoric about the Greens being anti jobs—and really you cannot go through a question time in this place without listening to that particular lecture—we have seen that they are happy to sit down and do a deal with the Greens. Senator Whish-Wilson is grinning at me. I am not sure whether he is happy about the fact that the government are now welcoming the Greens into their arms, welcoming the Greens to the government's economic policy fold, or whether he is uncertain about it. But certainly what we have seen today is an alliance between the Greens and the Liberal Party when it comes to the economic direction of the government. So every time we hear Mr Morrison, or Senator Brandis in this place, tell everybody how the Greens are anti jobs, let us remember that the government have done a deal with the Greens in this lovely little co-signed letter I have here, that makes clear that their anti-jobs and anti-investment policy as set out in this bill, whic",
+   "stage": "In committee",
+   "ayes": 3,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "earliest": 6,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-23/5"
+  },
+  {
+   "key": "federal-senate-5050",
+   "date": "2015-11-23",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "member": 14,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-23/6"
+  },
+  {
+   "key": "federal-senate-5051",
+   "date": "2015-11-23",
+   "house": "senate",
+   "question": "Glenn Sterle The question is that the bill stand as printed. Senator Xenophon. Nick Xenophon Tricky, Chair. Let _Hansard_ record that you clicked your fingers in disappointment! I move amendment (1) on sheet 7782 revised: (1) Schedule 1, item 4, page 44 (lines 15 and 16), omit \"the total value of the following is more than the value prescribed for the purposes of this paragraph\", substitute \"the total value of the following is more than $5 million\". Essentially this amendment relates to the threshold test for agricultural land. It was traversed earlier. Essentially this says that the threshold ought to be $5 million, not $50 million. As I indicated earlier, in relation to Senator Lazarus, Senator Madigan and Senator Lambie's amendment, back in the 1960s and 1970s the threshold was, as I understand it, in the order of $1 million. It then jumped up exponentially, and going to a $5 million threshold is like the threshold that was in place in the 1960s and 1970s, where there was still foreign investment but it was a much more stringent threshold, particularly for agricultural land. So this amendment seeks to reduce the threshold to $5 million. It is a policy position I have had for a number of years. It is one that I know the Australian Greens have had. In fact, then-Senator Milne and I introduced legislation a number of years ago, a private senators' bill, that put up this very proposal of a $5 million threshold, which strikes that balance in having investment without the need for regulatory approval. That threshold of $5 million seems to be much more realistic, although I do have some real sympathy for the amendment that my colleagues just put up. So this amendment takes the threshold from $15 million down to $5 million. It is consistent with previous legislation I have introduced. By way of contrast, in New Zealand any purchase of agricultural land where the size of the land is five hectares or greater is subject to review by their Overseas Investment Office. I think",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "earliest": 6,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-23/7"
+  },
+  {
+   "key": "federal-senate-5052",
+   "date": "2015-11-23",
+   "house": "senate",
+   "question": "Nick Xenophon by leave, I move amendments (2) and (4) on sheet 7782 revised. (2) Schedule 1, item 4, page 54 (after line 16), after subsection 67(1), insert: (1A) If: (a) the significant action is to acquire an interest in Australian land; and (b) the land is agricultural land; then, in determining whether taking the significant action would be contrary to the national interest for the purposes of subsection (1), the Treasurer must have regard to each of the following matters in so far as the matter is relevant: (c) national security issues, including Australia's ability to protect its strategic and security interests; (d) the impact the significant action will have, if any, on the following: (i) competition, global industry or market outcomes; (ii) Australian tax revenues; (iii) Australia's food security; (e) the impact the significant action will have, if any, on the Australian economy, including whether the significant action will, or is likely to, result in; (i) the creation of new job opportunities in Australia, or the retention of existing jobs in Australia that may otherwise be lost; or (ii) the introduction into Australia of new technology or business skills; or (iii) increased export receipts for Australian exporters; or (iv) additional market competition, greater efficiency or productivity, or enhanced domestic services, in Australia; or (v) the introduction into Australia of additional investment for development purposes; or (vi) increased processing in Australia of Australian primary products; (f) whether Australia's economic interests are adequately safeguarded and promoted; (g) whether the significant action will, or is likely to benefit Australia generally, or any part of Australia or group of Australians; (h) whether the foreign person has demonstrated financial commitment to the interest; (i) whether the foreign person has business experience and acumen relevant to the interest; (j) whether the foreign person is of good character; (k) any other matt",
+   "stage": "In committee",
+   "ayes": 5,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 26,
+    "earliest": 6,
+    "member": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-23/8"
+  },
+  {
+   "key": "federal-senate-5053",
+   "date": "2015-11-23",
+   "house": "senate",
+   "question": "Penny Wong I have two questions to ask the minister. The first is: in response, I think, to Senator Lazarus he was making reference to the fact that the $15 million is cumulative—that is, if a particular investor continues to purchase land the value of all of their holdings is assessed to assess whether or not the $15 million threshold has been met. Can he tell the chamber if there is any other threshold in the foreign investment regime which is cumulative? Mathias Cormann No. Penny Wong Can the minister explain why the government is intent on having a cumulative approach to agricultural land but not a cumulative approach to agribusiness, telecommunications, defence and military related industries, uranium and plutonium extraction or the operation of nuclear facilities? Mathias Cormann Because in the government's judgment it is an appropriate arrangement in the context of foreign investment into agricultural land. Obviously that is our judgment. You are entitled to disagree with it but that is the position we have come to. Penny Wong Can the minister explain the reasons behind the judgment? What is the public policy rationale for saying you have to have cumulative in relation to one specific sector of the economy but not in relation to any of the sector? Mathias Cormann This in essence is the debate we have been having all night. The threshold used to be $252 million. We thought that was too high. That was at a time when Senator Wong thought the threshold for agricultural land should be the same as for all the relevant assets—that is $1 billion. Of course, you would struggle to find any foreign acquisition that would reach a $1 billion threshold. Labor has moved down from that $1 billion proposition to $50 million. Some people in this chamber, Senator Lazarus in particular, supported by Senator Lambie and Senator Madigan, suggested a zero dollar threshold, which we do not agree with. Senator Xenophon suggested a $5 million threshold. We suggested a $15 million thres",
+   "stage": "In committee",
+   "ayes": 21,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 14,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-23/9"
+  },
+  {
+   "key": "federal-senate-5054",
+   "date": "2015-11-23",
+   "house": "senate",
+   "question": "Penny Wong I move opposition amendment (11) on sheet 7778: (11) Schedule 1, item 4, page 38 (lines 16 to 19), section 42 to be opposed. The TEMPORARY CHAIRMAN: The question is that section 42 in item 4 of schedule 1 stand as printed.",
+   "stage": "In committee",
+   "ayes": 38,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 14,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-23/10"
+  },
+  {
+   "key": "federal-senate-5055",
+   "date": "2015-11-23",
+   "house": "senate",
+   "question": "Penny Wong I move amendment (15) on sheet 7778: (15) Schedule 1, item 4, page 44 (lines 15 to 20), omit paragraph 52(2)(b), substitute: (b) the value of the interest in the land is more than: (i) $50 million; or (ii) if a higher value is prescribed for the purposes of this paragraph—that higher value. Sean Edwards The question is that amendment (15) on sheet 7778 be agreed to.",
+   "stage": "In committee",
+   "ayes": 21,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 14,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-23/11"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-319068",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government strongly supports foreign investment but needs to know where it is and ensure it serves Australia's national interest. They highlighted that the Foreign Acquisitions and Takeovers Legislation Amendment Bill 2015 overhauls four-decade-old rules, increases criminal penalties from $90,000 to $135,000 for individuals, gives the ATO responsibility for regulating residential real estate investment, and lowers screening thresholds for agricultural investments."
+  },
+  {
+   "slug": "speech-319086",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Foreign Acquisitions and Takeovers Legislation Amendment Bill 2015 fulfills the coalition's 2013 election commitment to lower screening thresholds for foreign investment and create a register of foreign agricultural land ownership, while maintaining a welcoming environment for investment that is not contrary to the national interest. The bill introduces fees on foreign investment applications, stricter penalties for rule breaches, and transfers residential real estate regulation to the Australian Taxation Office, with the speaker noting that Chinese investors are comfortable with the changes and that the $15 million threshold will apply under the China-Australia Free Trade Agreement."
+  },
+  {
+   "slug": "speech-319087",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the three foreign investment bills, which introduce fees on applications to shift administrative costs from taxpayers, increase penalties for noncompliance, lower the agricultural land screening threshold to $15 million, and strengthen ATO enforcement, but expressed concern about applying different screening thresholds for investors from different countries."
+  },
+  {
+   "slug": "speech-319088",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The Foreign Acquisitions and Takeovers Legislation Amendment Bill 2015 introduces new criminal and civil penalties for unauthorised foreign acquisitions, reduces the agricultural land screening threshold to $15 million, and imposes application fees expected to raise $735 million, while granting the Australian Taxation Office and Foreign Investment Review Board new compliance powers, with 500 investigations into $1 billion in illegal real estate holdings underway."
+  },
+  {
+   "slug": "speech-319089",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "Labor supported the Foreign Acquisitions and Takeovers Legislation Amendment Bill 2015 in the House but expressed reservations, particularly criticising the government's proposed discriminatory screening thresholds for agricultural land—$15 million for investors from China, Japan and Korea versus over $1 billion for those from the United States, New Zealand and Chile—and arguing that the real estate fees would not solve the housing affordability crisis. The party will await the Senate report before finalising its position."
+  },
+  {
+   "slug": "speech-319090",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bills strengthen regulation of foreign investment in agricultural land, agribusiness and residential real estate, introducing a register for acquisitions over $15 million, FIRB review for agribusiness purchases over $55 million, higher penalties and application fees expected to net $620 million, and raising the substantial interest threshold from 15% to 20%."
+  },
+  {
+   "slug": "speech-319091",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speech argued that the government's foreign investment bills are insufficient to fix housing affordability, criticised the demonisation of foreign and Asian-Australian buyers, and noted that foreign investment is essential for the economy and agricultural sector. The speaker cited Reserve Bank data showing foreign residential purchases are about two per cent of transactions and accused the government of xenophobic rhetoric."
+  },
+  {
+   "slug": "speech-319276",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Foreign Acquisitions and Takeovers Legislation Amendment Bill, arguing it would lower screening thresholds for foreign agricultural land purchases from $250 million to $15 million and create a foreign ownership register. They cited an ANZ report estimating $600 billion in new capital needed for Australian agriculture by 2050 and noted bipartisan support for military commitments in the Middle East."
+  },
+  {
+   "slug": "speech-319277",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Foreign Acquisitions and Takeovers Legislation Amendment Bill 2015 is an important initiative, citing Peter Costello's 2001 rejection of Shell's Woodside takeover as a landmark decision that served national interest and enabled Australia's LNG industry growth. The speaker supported Shell's current $70 billion bid for BG Group as in Australia's interest, while criticising the former government's discriminatory foreign investment thresholds for agriculture and Treasurer Hockey's blocking of Archer Daniels Midland's GrainCorp bid."
+  },
+  {
+   "slug": "speech-319278",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Foreign Acquisitions and Takeovers Legislation Amendment Bill 2015 and related bills are necessary to enforce existing foreign investment rules, increase penalties, and transfer monitoring to the Australian Taxation Office, with a partial amnesty until 30 November. For agriculture, the bills establish a national register of foreign-owned land, reduce the Foreign Investment Review Board threshold for agricultural land purchases from $252 million to $15 million (cumulative), and set a $55 million threshold for agribusinesses."
+  },
+  {
+   "slug": "speech-319279",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Foreign Acquisitions and Takeovers Legislation Amendment Bill 2015, which lowers the screening threshold for foreign investment in agricultural land from $252 million to $15 million cumulative and for agribusiness to $55 million, establishes a foreign ownership register, and increases penalties for breaches. They criticised Labor for previously raising the threshold and highlighted the economic importance of towns like Temora and Leeton in the Riverina region."
+  },
+  {
+   "slug": "speech-319280",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The member for Robertson supported the Foreign Acquisitions and Takeovers amendment bills, which tighten foreign investment rules with stricter penalties, lower agricultural screening thresholds, a register of foreign ownership, and $47.5 million for ATO enforcement—reporting over 500 foreign-owned residential properties under investigation and supporting the China-Australia Free Trade Agreement for local jobs."
+  },
+  {
+   "slug": "speech-319281",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The minister argued that the Foreign Acquisitions and Takeovers bills modernise the foreign investment regime and fulfil an election commitment, while praising the China-Australia Free Trade Agreement as the best deal either country has made, opening a market of 1.35 billion people."
+  },
+  {
+   "slug": "speech-319285",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speaker supported three bills to strengthen Australia's foreign investment framework, including lowering the agricultural land screening threshold to $15 million (with higher thresholds for US, New Zealand and Chilean investors), establishing a register of foreign-owned agricultural land, and increasing penalties for non-compliance. The bills also introduce application fees and transfer residential real estate regulation to the Australian Taxation Office, with $47.5 million allocated for compliance."
+  },
+  {
+   "slug": "speech-319286",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The member argued in favour of the Foreign Acquisitions and Takeovers bills, citing examples of beneficial foreign investment in his electorate including New Forests' purchase of a mill at Tarpeena and Hassad Australia's acquisition of Telopea Downs, and welcomed new thresholds lowering the Foreign Investment Review Board referral for agricultural land from $252 million to a cumulative $15 million, with a $55 million threshold for agribusinesses."
+  },
+  {
+   "slug": "speech-319288",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The member supported the foreign investment package, citing reduced screening thresholds of $15 million for agricultural land and $55 million for agribusiness, plus a new foreign ownership register from 1 July 2015. They also defended the China-Australia free trade agreement, noting Chinese property investment on the Gold Coast totalled $148 million in 2013–14, and criticised federal Labor's opposition to it."
+  },
+  {
+   "slug": "speech-319290",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The coalition supports the Foreign Acquisitions and Takeovers Legislation Amendment Bill 2015, which introduces a comprehensive land register for foreign ownership, application fees to shift screening costs from taxpayers, and stricter penalties for breaches—particularly in residential real estate—following an inquiry led by the member for Higgins. The speech also praised Andrew Hastie as the Liberal candidate in the Canning by-election."
+  },
+  {
+   "slug": "speech-323905",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-24",
+   "stage_hint": null,
+   "brief": "The amendments to the Foreign Acquisitions and Takeovers Legislation Amendment Bill 2015 overhaul the 1975 Act from 1 December 2015, introducing stricter civil and criminal penalties, transferring residential real estate enforcement to the Australian Taxation Office, and lowering screening thresholds for agricultural investments. A Senate amendment requires a register of water entitlements within 12 months."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Foreign Acquisitions and Takeovers Legislation Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00150",
+   "assent_date": "2015-11-25"
+  }
+ ]
+}

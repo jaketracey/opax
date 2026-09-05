@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1295",
+ "title": "National Health Amendment (Pharmaceutical Benefits Transparency and Cost Recovery) Bill 2021",
+ "short_title": "National Health Amendment (Pharmaceutical Benefits Transparency and Cost Recovery) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-03-17",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1295%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1295%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1295%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1295_ems_1ceb557a-0aa9-41ad-a32e-93684de1e7e1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1295%22",
+   "document_date": "2021-03-17",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-03-17",
+  "sentences": [
+   "The bill would allow the Department of Health to publish more information about pharmaceutical benefits and simplify how it recovers costs.",
+   "It would put existing publication practices into law and let fees for services be set through a disallowable legislative instrument instead of regulations.",
+   "The bill would also let the Department charge separate fees for entering into, managing, varying and renewing deed arrangements, starting when those costs occur."
+  ],
+  "changes": [
+   "Creates a statutory basis for publishing PBAC agendas, meeting outcomes, public summary documents and Medicine Status Website information.",
+   "Replaces the current regulation-based cost recovery system with a disallowable legislative instrument for setting fees and costs.",
+   "Allows separate fee categories for deed-related activities so costs can be recovered at the time the Commonwealth incurs them."
+  ],
+  "affected": "The Department of Health, pharmaceutical companies, and industry stakeholders involved in the Pharmaceutical Benefits Scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:09Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

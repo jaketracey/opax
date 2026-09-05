@@ -1,0 +1,92 @@
+{
+ "key": "au-federal-r5671",
+ "title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2016-2017",
+ "short_title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2016-2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-05-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-05-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5671%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5671%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5671%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5671_ems_c80c4a21-a46b-4a83-9fb3-cbc690751502%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5671%22",
+   "document_date": "2016-05-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-05-03",
+  "sentences": [
+   "This bill would authorise spending from the Consolidated Revenue Fund for the Parliamentary Departments.",
+   "It would provide about 7/12 of the estimated annual funding for 2016-2017, plus full-year Budget measures.",
+   "The remaining 5/12 would come from a separate supply bill, ensuring enough money for the first part of the year."
+  ],
+  "changes": [
+   "The bill would appropriate money from the Consolidated Revenue Fund for the Parliamentary Departments.",
+   "It would set the appropriation at 7/12 of the estimated annual amount plus full-year Budget measures.",
+   "The bill would work with a supply bill to cover the other 5/12 of the annual funding."
+  ],
+  "affected": "The Parliamentary Departments are the affected entities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:47:41Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-332074",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-03",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 2) 2016-2017 seeks just under $9 billion for non‑ordinary annual services, including $4.9 billion for the National Broadband Network, $1.4 billion for defence (with an additional $700 million for the 2016 defence white paper), $544 million for infrastructure programs such as Roads to Recovery and Western Sydney airport, and $310 million for agriculture, including a $50 million national water infrastructure loan facility."
+  },
+  {
+   "slug": "speech-332075",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-03",
+   "stage_hint": null,
+   "brief": "The Appropriation (Parliamentary Departments) Bill (No. 1) 2016-2017 seeks just over $147 million for the operations of the Department of the Senate, the Department of the House of Representatives, the Department of Parliamentary Services, and the Parliamentary Budget Office, including over $25 million for Parliament House maintenance."
+  }
+ ],
+ "acts": []
+}

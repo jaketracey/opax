@@ -1,0 +1,217 @@
+{
+ "key": "au-federal-s1272",
+ "title": "Royal Commissions Amendment (Confidentiality Protections) Bill 2020",
+ "short_title": "Royal Commissions Amendment (Confidentiality Protections) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-06",
+ "originating_house": "senate",
+ "sponsor": "STEELE-JOHN, Sen Jordon",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10901",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1272%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1272%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1272%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1272%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1272%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1272%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1272%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1272_ems_30e05db7-2906-449c-b984-414af9f1443a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1272%22",
+   "document_date": "2020-10-06",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-06",
+  "sentences": [
+   "The bill would make confidentiality protections for evidence given to the Disability Royal Commission permanent, even after the commission finishes its work.",
+   "It would do this by adding a new section to the Royal Commissions Act and updating the Freedom of Information Act to restrict how such information can be used or shared.",
+   "The protections would apply to information that the commission said would be kept confidential before it was given and that it later treated as confidential."
+  ],
+  "changes": [
+   "Extends privacy protections from private sessions to other information provided to the Disability Royal Commission.",
+   "Inserts a new Section 6OO into the Royal Commissions Act 1902.",
+   "Makes a consequential amendment to Section 7 of the Freedom of Information Act 1982."
+  ],
+  "affected": "People giving evidence to the Disability Royal Commission, including people with disability, carers, and advocates.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6939",
+   "date": "2021-02-15",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with a [motion](https://www.openaustralia.org.au/debate/?id=2021-02-15.153.1) introduced by Melbourne MP [Adam Bandt](https://theyvoteforyou.org.au/people/representatives/melbourne/adam_bandt) (Greens), which means it failed. Mr Bandt [explained the reason](https://www.openaustralia.org.au/debate/?id=2021-02-15.153.1) behind his motion: > *There is a loophole that has been open since November 2019 that is hampering the work of the disability royal commission and that is stopping people having the confidence to come and tell their stories.* ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words—* > > *\"the Bill be considered immediately\".*",
+   "stage": "Second reading",
+   "ayes": 64,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-15/13"
+  },
+  {
+   "key": "federal-senate-6940",
+   "date": "2021-02-15",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-02-15.15.5) to read the bill for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is parliamentary jargon for agreeing with the main idea of the bill. The bill can now be considered in greater detail. ### What is the bill's main idea? According to the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fs1272_ems_30e05db7-2906-449c-b984-414af9f1443a%22;rec=0), the bill was introduced \"*to ensure ongoing confidentiality protections for people giving evidence to the [Royal Commission into Violence, Abuse, Neglect, and Exploitation of People with Disability](https://en.wikipedia.org/wiki/Royal_Commission_into_Violence,_Abuse,_Neglect_and_Exploitation_of_People_with_Disability) (the Disability Royal Commission)*.\" In the words of the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1272): > *to apply the limits on the use and disclosure of information given to the Royal Commission into Violence, Abuse, Neglect, and Exploitation of People with Disability (the commission) in private session, and the restrictions on the ability of such private session information to be used in evidence against the person who gave the information, to information given to the commission for purposes other than in a private session, where the commission has indicated the information is to be treated as confidential and has treated it as such*",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "earliest": 20,
+    "dated": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-15/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-401988",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-15",
+   "stage_hint": null,
+   "brief": "The government moved to delay debate on the Royal Commissions Amendment (Confidentiality Protections) Bill 2020, arguing it does not support the Greens bill and will introduce its own bill in coming weeks with broader protections, including for sensitive information and practical amendments sought by the disability royal commission chair."
+  },
+  {
+   "slug": "speech-401990",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government is opposing a bill to extend confidentiality protections for evidence given to the disability royal commission, despite the Attorney-General, the Senate, disability advocates, and commission chair Ronald Sackville all supporting the change, and called on coalition members to back the amendment."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,216 @@
+{
+ "key": "au-federal-r6945",
+ "title": "Treasury Laws Amendment (Modernising Business Communications and Other Measures) Bill 2023",
+ "short_title": "Treasury Laws Amendment (Modernising Business Communications and Other Measures) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-11-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2023-09-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6945%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6945%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6945%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6945%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6945%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6945%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6945%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6945%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6945%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6945%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6945%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6945%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6945%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6945%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6945_ems_31b1d4d0-f8a4-4ff3-8721-93d7aef8fd30%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6945_ems_ebc47736-0035-4fff-b4e1-da34ede2183d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6945_ems_c72c87d8-39f7-447e-ae48-3f3173d707eb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6945%22",
+   "document_date": "2022-11-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00069",
+   "document_date": "2023-09-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2022-11-23",
+  "sentences": [
+   "The bill would update Treasury portfolio laws to make them more current and effective.",
+   "It would do this through changes in four areas: making communications technology-neutral, implementing Australian Law Reform Commission recommendations, and making minor and technical amendments.",
+   "The government says the changes in schedules 2 to 4 generally stay within existing policy settings."
+  ],
+  "changes": [
+   "Make communications technology-neutral.",
+   "Implement recommendations of the Australian Law Reform Commission review.",
+   "Make minor and technical amendments."
+  ],
+  "affected": "The affected groups are not specified in the source.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8317",
+   "date": "2023-09-04",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2023-09-04.211.1) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it failed. The amendment would have introduced provision related to continuous disclosure obligations into the bill.",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 22,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-04/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-826891",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-02-06",
+   "stage_hint": null,
+   "brief": "The opposition supported the Treasury Laws Amendment (Modernising Business Communications and Other Measures) Bill, arguing it reduces red tape—estimated to cost the economy $176 billion annually—and modernises business communications by implementing ALRC recommendations and making electronic signatures and virtual meetings permanent. The speaker also criticised the government’s spending, the dropping of budget balance as an objective, and the absence of a digital economy minister, claiming these policies fuel inflation and interest rate rises."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Modernising Business Communications and Other Measures) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00069",
+   "assent_date": "2023-09-14"
+  }
+ ]
+}

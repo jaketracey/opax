@@ -1,0 +1,365 @@
+{
+ "key": "au-federal-r5204",
+ "title": "Health Workforce Australia (Abolition) Bill 2014",
+ "short_title": "Health Workforce Australia (Abolition) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-05-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2014-09-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5204%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5204%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5204%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5204%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-09-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5204%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-09-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5204%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5204_ems_6cf3a4b7-278c-449e-8cc2-29b99f584d6e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5204%22",
+   "document_date": "2014-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00103",
+   "document_date": "2014-09-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-15",
+  "sentences": [
+   "This bill would abolish the independent body Health Workforce Australia (HWA).",
+   "HWA's functions and programmes would move to the Commonwealth Department of Health, and its assets, liabilities, contracts and other instruments would be transferred.",
+   "The government says the change would reduce duplication and bureaucracy and improve the delivery of health workforce policy."
+  ],
+  "changes": [
+   "Disestablishes Health Workforce Australia.",
+   "Transfers HWA's functions and programmes to the Commonwealth Department of Health.",
+   "Provides for the transfer of HWA's assets, liabilities, interests in land, records and instruments."
+  ],
+  "affected": "Health Workforce Australia and the Commonwealth Department of Health.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:09Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3213",
+   "date": "2014-06-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/debate/?id=2014-06-04.20.11) to read the bill for a second time.(Read more about the stages that a bill must pass through to become law [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) This means that the majority agree with the main idea of the bill and that the House can now discuss it in more detail. _Background to the bill_ The bill was introduced to abolish the [Health Workforce Australia](https://www.hwa.gov.au/about-us) ('HWA'), which had been introduced by the [Council of Australian Governments](http://en.wikipedia.org/wiki/Council_of_Australian_Governments) \"to address the challenges of providing a skilled, flexible and innovative health workforce that meets the needs of the Australian community\".(Read more about HWA [here](https://www.hwa.gov.au/about-us).)",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 47,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 124
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-04/1"
+  },
+  {
+   "key": "federal-senate-3430",
+   "date": "2014-09-22",
+   "house": "senate",
+   "question": "Jan McLucas I rise to speak on the Health Workforce Australia (Abolition) Bill and I want to indicate that the Labor Party will be opposing this bill. In the explanatory memorandum of this bill, it describes the purpose of the bill: It will enable more efficient and effective delivery of policy and programme activities related to the health workforce, to ensure Australia continues to have a high quality, capable and well distributed health workforce, delivering frontline health services for all Australians. That is simply not true. The word that I am offended by is the word 'continues'. We do not have a 'high-quality, capable and well-distributed health workforce' in this country. We do have a high-quality and capable health workforce, but frankly it has never been well distributed; that was why Labor in government established Health Workforce Australia. We received no substantial evidence at the Senate Community Affairs Legislation Committee inquiry that would support the contention that was included in the explanatory memorandum. In fact, the overwhelming evidence points to the success of Health Workforce Australia and its success into the future. Many witnesses who came before our committee said that the work had not yet been completed. So Labor will oppose this bill here in the Senate. In saying that, can I say that the motivation from the government is purely political and frankly spiteful. Labor established Health Workforce Australia through legislation in May 2009. This was partly in response to a Productivity Commission inquiry that was established in 2006. That was before Labor came to government, so the current government knows well and truly that our country has a problem in the distribution of our workforce. The Productivity Commission concluded that a more sustainable and responsive health workforce was needed. The report went further and highlighted the complexity of Australia's health workforce arrangements—the numerous organisations and agencies invo",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 9,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-22/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-288191",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290338",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290392",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290393",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290397",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290400",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290402",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290403",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290405",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290406",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290407",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2014-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290409",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Workforce Australia (Abolition) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00103",
+   "assent_date": "2014-09-24"
+  }
+ ]
+}

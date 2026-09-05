@@ -1,0 +1,312 @@
+{
+ "key": "au-federal-r7283",
+ "title": "Workplace Gender Equality Amendment (Setting Gender Equality Targets) Bill 2024",
+ "short_title": "Workplace Gender Equality Amendment (Setting Gender Equality Targets) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Women",
+ "status": "passed",
+ "status_as_of": "2025-03-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7283_ems_5e42ebca-fd44-4125-b1b8-d803872de62f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7283_ems_a503f9ab-ef83-4a20-9026-a3e00d89a4ba%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7283%22",
+   "document_date": "2024-11-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00025",
+   "document_date": "2025-03-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-20",
+  "sentences": [
+   "This bill would require large employers to set and report on measurable targets to improve gender equality in their workplaces.",
+   "Employers with 500 or more employees would have to commit to, achieve or improve on targets against six gender equality indicators over three-year cycles.",
+   "The Minister would set the categories and number of targets, which could be numeric or action-based, through a new instrument to the Act."
+  ],
+  "changes": [
+   "Introduces a gender equality targets scheme for designated relevant employers.",
+   "Requires employers with 500 or more employees to select and report on targets against the six gender equality indicators.",
+   "Gives the Minister power to set target categories and rules via an instrument."
+  ],
+  "affected": "Employers with 500 or more employees, called designated relevant employers, in the private and Commonwealth sectors, including higher education institutions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:57Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9518",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "question": "Workplace Gender Equality Amendment (Setting Gender Equality Targets) Bill 2024 - Second Reading - Agree with the main idea",
+   "stage": "Second reading",
+   "ayes": 84,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 135,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-06/6"
+  },
+  {
+   "key": "federal-senate-9612",
+   "date": "2025-02-13",
+   "house": "senate",
+   "question": "The same number of senators voted for and against paragraph (a), placitum (ii) of the [motion](https://www.openaustralia.org.au/senate/?gid=2025-02-13.21.1) as moved by Queensland Senator [Larissa Waters](https://theyvoteforyou.org.au/people/senate/queensland/larissa_waters) (Greens), which means it failed to pass. ### Motion text > *That—* > > *(a) the questions on all remaining stages of the following bills be put at 1 pm: [...]* > >> *(ii) Workplace Gender Equality Amendment (Setting Gender Equality Targets) Bill 2024;*",
+   "stage": "Business motion",
+   "ayes": 31,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-13/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1194643",
+   "speaker": "Steph Hodgins-May",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2025-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194653",
+   "speaker": "Jane Hume",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194781",
+   "speaker": "Larissa Waters",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2025-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194833",
+   "speaker": "Andrew McLachlan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-03-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Workplace Gender Equality Amendment (Setting Gender Equality Targets) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00025",
+   "assent_date": "2025-03-27"
+  }
+ ]
+}

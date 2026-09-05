@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-alrc-2428",
+ "title": "Superannuation (Excess Concessional Contributions Charge) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-06-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2013-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-29",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00116",
+   "document_date": "2013-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-276940",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824677",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824921",
+   "speaker": "Jacinta Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-24",
+   "stage_hint": null,
+   "brief": "The bills amend tax laws to tax excess concessional superannuation contributions at an individual's marginal rate instead of the top 46.5% rate, allow withdrawal of excess contributions, and apply from 1 July 2013; the change is estimated to reduce tax liability for about 40,000 low and middle income earners by around $1,100 on average in 2013-14."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Superannuation (Excess Concessional Contributions Charge) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00116",
+   "assent_date": "2013-06-29"
+  }
+ ]
+}

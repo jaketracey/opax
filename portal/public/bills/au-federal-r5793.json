@@ -1,0 +1,563 @@
+{
+ "key": "au-federal-r5793",
+ "title": "Superannuation (Departing Australia Superannuation Payments Tax) Amendment Bill (No. 2) 2016",
+ "short_title": "Superannuation (Departing Australia Superannuation Payments Tax) Amendment Bill (No. 2) 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-12-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2016-12-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5793%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5793%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5793%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5793%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5793%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5793%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5793%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5793%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5793%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5793%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5793%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5793_ems_8a390685-8a6b-4f35-bc3d-4c0108d1e8ce%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5793%22",
+   "document_date": "2016-12-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00094",
+   "document_date": "2016-12-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4483",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-12-01/18"
+  },
+  {
+   "key": "federal-representatives-4484",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "question": "Tony Smith The question is that this bill be now read a second time. Bill read a second time.",
+   "stage": "Second reading",
+   "ayes": 80,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-12-01/19"
+  },
+  {
+   "key": "federal-representatives-4485",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "question": "Tony Smith Is leave granted for the third reading to be moved immediately? Chris Bowen Leave is not granted. Scott Morrison I move: That so much of the standing orders be suspended as would prevent the motion for the third reading being moved without delay. Chris Bowen This government does not want the— Tony Smith The member for McMahon will resume his seat. Christopher Pyne I move: That the member for McMahon be no longer heard. Tony Smith The question is that the member for McMahon be no longer heard.",
+   "stage": "Third reading",
+   "ayes": 79,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-12-01/20"
+  },
+  {
+   "key": "federal-representatives-4486",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "question": "Tony Smith The question is that the motion moved by the Treasurer be agreed to. Christopher Pyne I move: That the question be now put. Tony Smith The question is that the motion be put.",
+   "stage": "Third reading",
+   "ayes": 79,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-12-01/21"
+  },
+  {
+   "key": "federal-representatives-4487",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "question": "Tony Smith The question now is that the motion moved by the Treasurer be agreed to.",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-12-01/22"
+  },
+  {
+   "key": "federal-representatives-4488",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "question": "Scott Morrison I move: That this bill be now read a third time. Chris Bowen Well, now that we have the bill and explanatory— Christopher Pyne I move: That the question be put. Scott Morrison I move: That this bill be now read a third time. Chris Bowen Now that we have the bill and explanatory memorandum— Christopher Pyne I move: That the question be now put. Tony Smith The question is that the motion be put.",
+   "stage": "Third reading",
+   "ayes": 79,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-12-01/23"
+  },
+  {
+   "key": "federal-representatives-4489",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "question": "Tony Smith The question is that this bill be now read a third time. Bill read a third time.",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-12-01/24"
+  },
+  {
+   "key": "federal-senate-4511",
+   "date": "2016-12-01",
+   "house": "senate",
+   "question": "Superannuation (Departing Australia Superannuation Payments Tax) Amendment Bill (No. 2) 2016 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 37,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 15,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-12-01/19"
+  },
+  {
+   "key": "federal-senate-4512",
+   "date": "2016-12-01",
+   "house": "senate",
+   "question": "Superannuation (Departing Australia Superannuation Payments Tax) Amendment Bill (No. 2) 2016 - Third Reading - Speed things along",
+   "stage": "Third reading",
+   "ayes": 37,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 15,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-12-01/20"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-339830",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-12-01",
+   "stage_hint": null,
+   "brief": "The bill reduces the tax rate on superannuation payments for departing working holiday-makers from 95% to 65%, effective 1 July 2017, costing $55 million in revenue. This change is part of a government package negotiated with Senate crossbenchers and the Greens to lower the income tax rate for working holiday-makers to 15%."
+  },
+  {
+   "slug": "speech-339848",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-12-01",
+   "stage_hint": null,
+   "brief": "The speaker argued the backpacker tax has devolved into a chaotic farce, citing a joint statement from Treasurer Scott Morrison and Senator Di Natale, and criticised the government for a $155 million backtrack on the policy, which they said contradicts its claims of fiscal responsibility."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Superannuation (Departing Australia Superannuation Payments Tax) Amendment Act (No. 2) 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00094",
+   "assent_date": "2016-12-02"
+  }
+ ]
+}

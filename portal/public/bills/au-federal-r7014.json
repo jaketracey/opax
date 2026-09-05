@@ -1,0 +1,190 @@
+{
+ "key": "au-federal-r7014",
+ "title": "Nature Repair Bill 2023",
+ "short_title": "Nature Repair Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy, the Environment and Water",
+ "status": "passed",
+ "status_as_of": "2023-12-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-12-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7014_ems_d1d1f9f8-98c5-4c2a-8a44-e3db36180fbd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7014_ems_69661cb2-d146-4e06-8611-853b830255d9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7014%22",
+   "document_date": "2023-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00121",
+   "document_date": "2023-12-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2023-03-29",
+  "sentences": [
+   "The bill would create a voluntary national market where landholders can earn tradeable certificates for projects that protect or improve biodiversity.",
+   "The Clean Energy Regulator would run the scheme, registering projects, issuing certificates, keeping a public register and enforcing compliance.",
+   "Projects would have a permanence period of either 25 or 100 years unless a different period is set in the applicable method."
+  ],
+  "changes": [
+   "Establishes a framework for a voluntary biodiversity market.",
+   "Creates tradeable certificates tracked through a national register.",
+   "Sets up the Nature Repair Market Committee of independent experts to advise the minister on methods.",
+   "Requires project proponents to monitor and report on biodiversity outcomes.",
+   "Gives native title holders the final say on biodiversity projects on native title areas.",
+   "Aligns the scheme with the Carbon Credits (Carbon Farming Initiative) Act 2011."
+  ],
+  "affected": "Eligible landholders, Aboriginal persons, Torres Strait Islanders, conservation groups, corporations, governments and farmers could participate as project proponents or certificate purchasers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Nature Repair Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00121",
+   "assent_date": "2023-12-14"
+  }
+ ]
+}

@@ -1,0 +1,120 @@
+{
+ "key": "au-federal-s1278",
+ "title": "Social Security (Administration) Amendment (Protecting Consumers from Predatory Leasing Practices) Bill 2020",
+ "short_title": "Social Security (Administration) Amendment (Protecting Consumers from Predatory Leasing Practices) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-11-12",
+ "originating_house": "senate",
+ "sponsor": "MCALLISTER, Sen Jenny",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10839",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2020-12-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1278%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1278%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1278%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1278%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1278_ems_8e152b05-b353-41de-82c2-a1c798ef5a11%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1278%22",
+   "document_date": "2020-11-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-6788",
+   "date": "2020-12-07",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2020-12-07.12.14) to agree with the main idea of the bill, which is known as 'reading the bill for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)' in parliamentary jargon. This means the Senate can now discuss it in more detail. ### What is the bill's main idea? This is a private bill (meaning it wasn't introduced by the Government) that was introduced in the Senate by NSW Senator [Jenny McAllister](https://theyvoteforyou.org.au/people/senate/nsw/jenny_mcallister) (Labor), who [explained that](https://www.openaustralia.org.au/senate/?id=2020-12-07.4.2): > *The purpose of this bill is to amend the Social Security (Administration) Act 1999, and it would remove the ability for consumer lease providers to sign up recipients of social security payments and access their payments directly through the Centrepay service. The bill removes the ability for the departmental secretary to make any deductions requested by a person from their social security payment if deductions relate to goods hired under a consumer lease entered into by that person.*",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 24,
+    "dated": 29,
+    "member": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-07/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

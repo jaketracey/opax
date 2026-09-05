@@ -1,0 +1,411 @@
+{
+ "key": "au-federal-r7085",
+ "title": "Identity Verification Services Bill 2023",
+ "short_title": "Identity Verification Services Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-09-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2023-12-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-12-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7085_ems_77593d25-9109-4171-bce4-6e90d2c78602%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7085_ems_f46bfe9d-4a9c-4156-8d94-638f3677a28a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7085_ems_f720213c-ce14-4662-8af7-3df1d10ca543%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7085%22",
+   "document_date": "2023-09-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00115",
+   "document_date": "2023-12-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 10,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-09-13",
+  "sentences": [
+   "This bill is part of a package that creates a legislative framework for national automated identity matching services used by government and industry.",
+   "The package would authorise one-to-one identity checks with consent through the Document Verification Service and Face Verification Service, and one-to-many matching only to protect legally assumed identities.",
+   "Around 2.6 million Face Verification Service transactions occurred in the 2022-23 financial year, and the bill would impose privacy safeguards including consent, breach reporting and annual audits."
+  ],
+  "changes": [
+   "Authorises public and private entities to use one-to-one identity matching services with the individual's consent.",
+   "Prohibits one-to-many facial matching except to protect legally assumed identities such as undercover officers.",
+   "Allows the Attorney-General's Department to develop and operate the identity verification facilities.",
+   "Creates offences for unauthorised recording, disclosure or access of protected information by entrusted persons.",
+   "Requires state and territory authorities to inform individuals if their data is stored on the National Driver Licence Facial Recognition Solution.",
+   "Establishes annual compliance reporting and assessments by the Information Commissioner."
+  ],
+  "affected": "Government agencies, private sector entities including banks, and individuals whose identity is verified through the services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T02:00:10Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8392",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2023-10-18.190.1) to the usual second reading motion, which is \"*that the bill be read a second time*\", which is parliamentary jargon for agreeing with the main idea of the bill. This amendment was introduced by Griffith MP [Max Chandler-Mather](https://theyvoteforyou.org.au/people/representatives/griffith/max_chandler-mather) (Greens). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"the House declines to give the bill a second reading until the Privacy Act reforms are in place in recognition of the significant privacy and data implications of this proposal\".*",
+   "stage": "Second reading",
+   "ayes": 5,
+   "noes": 65,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "dated": 70
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-10-18/8"
+  },
+  {
+   "key": "federal-representatives-8393",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2023-10-18.58.1) to agree with the bill's main idea. In parliamentary jargon, they voted to read the bill for a second time. This means they can now consider it in more detail. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd24) (which is prepared by the non-partisan parliamentary library): > *Bills with similar purposes were introduced in 2018 and 2019 but lapsed with the dissolution of the House of Representatives in April 2019 and April 2022, respectively. ... The Identity Verification Services Bill 2023 (IVS Bill), as outlined in the Explanatory Memorandum, would:* > > * *authorise 1:1 matching of identity through the identity verification services, with consent of the relevant individual, by public and private sector entities. This will be enabled by:* > >> * *the Document Verification Service which provides 1:1 matching to verify biographic information (such as a name or date of birth), with consent, against government issued identification documents;* >> >> * *the Face Verification Service which provides 1:1 matching to verify biometric information (in this case a photograph or facial image of an individual), with consent, against a Commonwealth, state or territory issued identification document (for example, passports and driver licences); and* >> >> * *the National Driver Licence Facial Recognition Solution which enables the FVS to conduct 1:1 matching against State and Territory identification documents such as driver licences.* > > * *authorise 1:many matching services through the Face Identification Service [FIS] only for the purpose of protecting the identity of persons with a legally assumed identity, such as undercover officers and protected witnesses. The protection of legally assumed identities will also be supported by the use of the FVS. All other uses of 1:many mat",
+   "stage": "Second reading",
+   "ayes": 82,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-10-18/9"
+  },
+  {
+   "key": "federal-senate-8612",
+   "date": "2023-12-06",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-12-06.208.3) introduced by Pauline Hanson's One Nation Party, which means it failed. ### Rebellions There were two rebel voters in this division, with South Australian Senator [Alex Antic](https://theyvoteforyou.org.au/people/senate/sa/alex_antic) and Queensland Senator [Gerard Rennick](https://theyvoteforyou.org.au/people/senate/queensland/gerard_rennick) voting \"Yes\" against the rest of the Liberal Party. Queensland Senator [Matthew Canavan](https://theyvoteforyou.org.au/people/senate/queensland/matthew_canavan) (Liberal National Party) also voted \"Yes\". ### Amendment text > *(1) Amendment (8), omit the amendment, substitute:* > >> *\"(8) Clause 9, page 16 (line 32), omit \"consent to\", substitute \"active express consent to each instance of\".\"* > > *(2) Amendment (27), omit the amendment, substitute:* > >> *\"(27) Clause 35, page 39 (line 20), omit \"consented to\", substitute \"actively and expressly consented to each instance of\".\"*",
+   "stage": "Second reading",
+   "ayes": 6,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-06/15"
+  },
+  {
+   "key": "federal-senate-8613",
+   "date": "2023-12-06",
+   "house": "senate",
+   "question": "The majority voted against an [amendments](https://www.openaustralia.org.au/senate/?gid=2023-12-06.210.1) introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means they failed. ### Amendment text > *(1) Clause 5, page 9 (after line 19), after the definition of protected information, insert:* > >> *restricted information of an individual means:* >> >> *(a) health information (within the meaning of the Privacy Act 1988) about the individual; or* >> >> *(b) information or an opinion about the individual's criminal record; or* >> >> *(c) information or an opinion about the individual's membership of a professional or trade association; or* >> >> *(d) information or an opinion about the individual's membership of a trade union; or* >> >> *(e) other information or opinion that is associated with an individual and is prescribed by the rules; or* >> >> *(f) information or an opinion about the individual's:* >> >>> *(i) racial or ethnic origin; or* >>> >>> *(ii) political opinions; or* >>> >>> *(iii) membership of a political association; or* >>> >>> *(iv) religious beliefs or affiliations; or* >>> >>> *(v) philosophical beliefs; or* >>> >>> *(vi) sexual orientation or practices; or* >>> >>> *(vii) disability status.* > > *(2) Clause 23, page 30 (after line 11), at the end of the clause, add:* > >> *However, the Department must not collect, use or disclose restricted information of an individual in developing, operating and maintaining approved identity verification facilities.* > > *(3) Clause 25, page 30 (line 27), at the end of the clause, add:* > >> *; and (c) not collect, use or disclose information that is restricted information of an individual.* > > *(4) Clause 26, page 31 (after line 18), at the end of the clause, add:* > >> *However, the Department must not collect, use or disclose identification information that is restricted information of an individual for any of those purposes.* > > *(5)",
+   "stage": "Committee of the Whole",
+   "ayes": 8,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-06/16"
+  },
+  {
+   "key": "federal-senate-8614",
+   "date": "2023-12-06",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2023-12-06.213.1) to agree with the remaining stages of the bill as amended and so pass the bill. In parliamentary jargon, they voted to read the bill for a third time. This means the bill will now be sent back to the House of Representatives, where our MPs will now decide on whether they agree with the Senate amendments. ### Rebellions There were two rebel voters in this division, with South Australian Senator [Alex Antic](https://theyvoteforyou.org.au/people/senate/sa/alex_antic) and Queensland Senator [Gerard Rennick](https://theyvoteforyou.org.au/people/senate/queensland/gerard_rennick) voting \"No\" against the rest of the Liberal Party. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd24) (which is prepared by the non-partisan parliamentary library): > *Bills with similar purposes were introduced in 2018 and 2019 but lapsed with the dissolution of the House of Representatives in April 2019 and April 2022, respectively. ... The Identity Verification Services Bill 2023 (IVS Bill), as outlined in the Explanatory Memorandum, would:* > > * *authorise 1:1 matching of identity through the identity verification services, with consent of the relevant individual, by public and private sector entities. This will be enabled by:* > >> * *the Document Verification Service which provides 1:1 matching to verify biographic information (such as a name or date of birth), with consent, against government issued identification documents;* >> >> * *the Face Verification Service which provides 1:1 matching to verify biometric information (in this case a photograph or facial image of an individual), with consent, against a Commonwealth, state or territory issued identification document (for example, passports and driver licences); and* >> >> * *the National Driver Licence Facial Recognition Solution which",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-06/17"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Identity Verification Services Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00115",
+   "assent_date": "2023-12-14"
+  }
+ ]
+}

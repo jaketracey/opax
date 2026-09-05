@@ -1,0 +1,214 @@
+{
+ "key": "au-federal-alrc-2335",
+ "title": "Broadcasting Legislation Amendment (Digital Dividend) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Broadband, Communications and the Digital Economy",
+ "status": "passed",
+ "status_as_of": "2013-05-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-03-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-03-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-05-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00051",
+   "document_date": "2013-05-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-269422",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-821686",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270973",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270974",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270975",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270976",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270977",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270978",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270979",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271007",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822966",
+   "speaker": "Jacinta Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": "The Broadcasting Legislation Amendment (Digital Dividend) Bill 2013 was introduced to allow early telecommunications services in the 126 MHz digital dividend spectrum, with auction in April 2013 and spectrum clearance by 31 December 2014, and to limit datacasting regulation to commercial and national broadcasters. The Insurance Contracts Amendment Bill 2013 was introduced to improve the insurance market by removing impediments to electronic communication, making the duty of disclosure easier, and clarifying rights and obligations."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Broadcasting Legislation Amendment (Digital Dividend) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00051",
+   "assent_date": "2013-05-28"
+  }
+ ]
+}

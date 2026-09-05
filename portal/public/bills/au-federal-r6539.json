@@ -1,0 +1,460 @@
+{
+ "key": "au-federal-r6539",
+ "title": "National Skills Commissioner Bill 2020",
+ "short_title": "National Skills Commissioner Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "passed",
+ "status_as_of": "2020-09-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6539%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6539%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6539%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6539%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-06-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6539%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6539%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6539%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6539%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6539%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6539%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6539%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-08-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6539%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-08-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6539%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6539%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6539_ems_0d9aff43-002b-4492-84c3-a1902982c163%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6539_ems_8e808f28-4f7e-4f30-9b08-f3152061415d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6539%22",
+   "document_date": "2020-05-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00076",
+   "document_date": "2020-09-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-14",
+  "sentences": [
+   "The bill would create a new independent statutory officer called the National Skills Commissioner.",
+   "The Commissioner would advise the Minister and the Department on workforce needs, VET course prices, and returns on training investment, and would collect and analyse data.",
+   "The bill would also allow the Minister to set up advisory committees to help the Commissioner."
+  ],
+  "changes": [
+   "Establishes the National Skills Commissioner as a statutory office.",
+   "Gives the Commissioner functions to advise on labour market analysis, efficient VET prices, and investment returns.",
+   "Allows the creation of advisory committees to support the Commissioner."
+  ],
+  "affected": "The Department of Education, Skills and Employment, the Minister, vocational education and training providers, students, and employers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6348",
+   "date": "2020-06-10",
+   "house": "representatives",
+   "question": "National Skills Commissioner Bill 2020 - Second Reading - Keep second reading motion unchanged",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 67
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-10/1"
+  },
+  {
+   "key": "federal-representatives-6349",
+   "date": "2020-06-10",
+   "house": "representatives",
+   "question": "National Skills Commissioner Bill 2020 - Consideration in Detail - Regional Australia",
+   "stage": "Consideration in detail",
+   "ayes": 37,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 67
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-10/2"
+  },
+  {
+   "key": "federal-senate-6470",
+   "date": "2020-06-18",
+   "house": "senate",
+   "question": "The same number of senators voted for and against an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-06-18.195.4) introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens), which means it failed. ### Amendment text > *(1) Clause 9, page 6 (after line 16), after subclause (3), insert:* > > *Requirement for vocational education and training representative* > > *(3A) There must be at least one member of each advisory committee who is employed by or is a representative of a body established to provide vocational education or training under one of the following:* > >> *(a) the Technical and Further Education Commission Act 1990 (NSW);* >> >> *(b) the Education and Training Reform Act 2006 (Vic.);* >> >> *(c) the TAFE Queensland Act 2013 (Qld);* >> >> *(d) the Vocational Education and Training Act 1996 (WA);* >> >> *(e) the TAFE SA Act 2012 (SA);* >> >> *(f) the Training and Workforce Development Act 2013 (Tas.);* >> >> *(g) the Canberra Institute of Technology Act 1987 (ACT);* >> >> *(h) the Charles Darwin University Act 2003 (NT).* > > *Note: To avoid doubt, a member appointed by the Minister under paragraph (h) must be employed by, or a representative of, the University in relation to its function of providing trade, technical or other vocational education.* > > *[advisory committees—TAFE body representative]*",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 25,
+    "member": 11,
+    "earliest": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-18/16"
+  },
+  {
+   "key": "federal-senate-6471",
+   "date": "2020-06-18",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-06-18.197.1) introduced by NSW Senator [Kristina Keneally](https://theyvoteforyou.org.au/people/senate/nsw/kristina_keneally) (Labor), which means it failed. ### Amendment text > *(1) Clause 9, page 6 (after line 16), after subclause (3), insert:* > > *Requirement for representatives nominated by employer and employee representative groups* > > *(3A) On each advisory committee there must be at least:* > >> *(a) one member who has been nominated for appointment by the Australian Council of Trade Unions; and* >> >> *(b) one member who has been nominated for appointment by an employer organisation (within the meaning of the Fair Work Act 2009).* > > *[advisory committees—employer and employee representatives]*",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 26,
+    "member": 11,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-18/17"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-391268",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-14",
+   "stage_hint": null,
+   "brief": "The bill establishes a National Skills Commissioner to provide independent analysis of labour market and skills needs, set efficient prices for VET courses, and assess VET effectiveness and returns on investment. It builds on the $585 million Delivering Skills for Today and Tomorrow package and implements elements of the 2019 review led by Steven Joyce."
+  },
+  {
+   "slug": "speech-391512",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "The speaker moved to amend the National Skills Commissioner Bill 2020, arguing the government has cut over $3 billion from TAFE and training, overseen a loss of 140,000 apprentices since 2013, and seen a 73% drop in apprenticeship ads; they supported the bill as a minor improvement but said it does not address the scale of the crisis."
+  },
+  {
+   "slug": "speech-391515",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "The National Skills Commissioner Bill 2020 is insufficient, but Labor will support it as better than nothing; the speaker criticised the government for cutting $3 billion from skills funding, losing 140,000 apprentices and risking another 100,000, and called for rebuilding public TAFE as the core of vocational education, citing Labor’s proposal for an independent Jobs and Skills Australia."
+  },
+  {
+   "slug": "speech-391642",
+   "speaker": "Gavin Pearce",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "The National Skills Commissioner Bill 2020 was announced to establish an independent statutory position providing expert advice and national leadership on Australia’s labour market, skills needs and workforce development, vital for economic recovery post-COVID. In Tasmania, apprentice and trainee commencements rose 9.7% to 5,525 in the year to June 2019, including a 10.4% increase in females, and the member cited meetings with apprentices Zen, Daniel, Amalia, Tyler, Daniel, Conor, Kate and Nicola."
+  },
+  {
+   "slug": "speech-391643",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the National Skills Commissioner Bill 2020, which creates a statutory office to advise on skills demand and workforce development. The government was faulted for neglecting vocational education over seven years, including a 73% drop in apprenticeships and a nearly 10% rise in skills shortages, and Labor proposed an independent Jobs and Skills Australia as an alternative."
+  },
+  {
+   "slug": "speech-391644",
+   "speaker": "George Christensen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "The National Skills Commissioner Bill 2020 establishes an office to analyse labour market needs, set efficient training prices, and evaluate vocational education outcomes. The speaker cited subsidy disparities of up to $12,000 for nursing diplomas between Western Australia and Queensland, and $7,000 for building design diplomas between NSW and Queensland, and noted 55,400 apprentices and 31,500 employers assisted by a $1.3 billion wage subsidy program as of June 5."
+  },
+  {
+   "slug": "speech-391645",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the National Skills Commissioner Bill 2020 but argued it fails to mention regional Australia, a key omission despite the Joyce review's recommendations for a regional focus. They called for a simple amendment to ensure the National Skills Commission collects region-specific data to address skill shortages, high unemployment and seize opportunities in areas like mental health, disability care and renewable energy."
+  },
+  {
+   "slug": "speech-391648",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "Labor supported the National Skills Commissioner Bill 2020 but argued it was insufficient after $3.2 billion in cuts over seven years, which led to 140,000 lost apprenticeships nationally and over 1,000 in Newcastle. The MP also proposed Labor’s alternative of establishing Jobs and Skills Australia as an independent statutory authority, and noted that TAFE in New South Wales had lost 6,000 jobs and 175,000 enrolments."
+  },
+  {
+   "slug": "speech-391649",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "The National Skills Commissioner Bill 2020 was supported but argued to be insufficient, citing a 35% drop in new apprentices (100,000 nationally, 20,000 in Queensland) and criticising the government's record on vocational education and training, including cuts to TAFE and a 140,000"
+  },
+  {
+   "slug": "speech-391651",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "Labor supported the National Skills Commissioner Bill 2020 but argued it was less robust than Labor’s previous Skills Australia and Australian Workplace Productivity Agency, proposing instead a more collaborative independent statutory authority called Jobs and Skills Australia."
+  },
+  {
+   "slug": "speech-391653",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the National Skills Commissioner Bill 2020, but argued it is a minor adjustment that does not address the government's record of cutting $3 billion from TAFE and overseeing a decline in apprenticeships to around 260,000, with 140,000 lost in recent years and a predicted further 30% fall. The speaker contrasted this with Labor's proposal for an independent Jobs and Skills Australia and highlighted the importance of TAFE for COVID-19 recovery, particularly in peri-urban electorates like Macquarie."
+  },
+  {
+   "slug": "speech-391654",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "The National Skills Commissioner Bill 2020 establishes an independent statutory office to analyse Australia’s labour market and skills needs, develop efficient VET course prices, and assess system effectiveness. The government highlighted its record on regional VET investment, including the Australian apprentice wage subsidy creating 3,200 new apprenticeships, two industry training hubs in Burnie and Townsville, and $9.9 million for remote community pilots."
+  },
+  {
+   "slug": "speech-393318",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The speaker supported an amendment to the National Skills Commissioner Bill 2020 that ensures a focus on regional Australia, noting they had proposed a similar amendment in the House that was voted down before the government adopted an identical version after crossbench pressure."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Skills Commissioner Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00076",
+   "assent_date": "2020-09-02"
+  }
+ ]
+}

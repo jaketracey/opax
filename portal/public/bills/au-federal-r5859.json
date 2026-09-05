@@ -1,0 +1,197 @@
+{
+ "key": "au-federal-r5859",
+ "title": "Parliamentary Business Resources Bill 2017",
+ "short_title": "Parliamentary Business Resources Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2017-05-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5859%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5859%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5859%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5859%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5859%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5859%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5859%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5859%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5859%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5859%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5859%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-05-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5859%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5859_ems_bf865afb-f158-4dbb-9d51-343e8d31ca99%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5859%22",
+   "document_date": "2017-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00037",
+   "document_date": "2017-05-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-30",
+  "sentences": [
+   "The bill would replace the current system for parliamentary work expenses with a new framework based on a 2016 review.",
+   "It would let parliamentarians use public resources for work expenses only when the dominant purpose is conducting parliamentary business, and they must spend those resources efficiently.",
+   "The bill would let the minister make a legislative instrument to define which activities count as parliamentary business and which do not, and a penalty scheme would add a 25% loading for improper use."
+  ],
+  "changes": [
+   "Replaces the parliamentary work expenses framework under the Parliamentary Entitlements Act 1990.",
+   "Introduces a dominant purpose test for accessing public resources.",
+   "Requires members to use public resources efficiently, effectively and economically.",
+   "Allows the minister to specify activities that are not parliamentary business via a legislative instrument.",
+   "Establishes a compliance and enforcement scheme including a 25% penalty loading for improper use.",
+   "Provides for the Independent Parliamentary Expenses Authority to make rulings on travel expenses and allowances."
+  ],
+  "affected": "Current and former parliamentarians and their staff.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-345184",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The Parliamentary Business Resources Bill 2017 streamlines the legislative framework for parliamentarians' work expenses into a single authority, implements key Conde/Tune review recommendations including a dominant purpose test, value-for-money principle, and a 25% penalty loading for incorrect claims, and empowers the new Independent Parliamentary Expenses Authority to make binding rulings on travel expenses."
+  },
+  {
+   "slug": "speech-345185",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The Parliamentary Business Resources (Consequential and Transitional Provisions) Bill 2017 was moved for second reading, repealing the Parliamentary Entitlements Act 1990 and Parliamentary Allowances Act 1952 to implement a new principles-based expenses framework, with transitional provisions validating expenses spanning both systems and amending the Independent Parliamentary Expenses Authority Act 2017 accordingly."
+  },
+  {
+   "slug": "speech-345930",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Parliamentary Business Resources Bills, arguing they improve transparency and accountability for politicians' work expenses to help restore public trust, and noted that a previous independent review into parliamentary expenses—ordered after the former member for Mackellar used a helicopter on taxpayer funds—was delayed for over a year before action was taken."
+  },
+  {
+   "slug": "speech-345931",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Parliamentary Business Resources Bill 2017 for improving transparency on parliamentarians' entitlements, noting the Nick Xenophon Team had long campaigned for such reforms. They argued penalties for breaches are too low and will move amendments to increase penalty loadings and penalise repeat offenders, while welcoming monthly reporting and clearer definitions of parliamentary business."
+  },
+  {
+   "slug": "speech-345932",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The Parliamentary Business Resources Bill 2017 and its consequential bill implement a key recommendation of the Tune-Conde review, establishing a new framework where parliamentarians can only claim expenses for the dominant purpose of parliamentary business, must ensure value for money, and face personal financial liability plus a 25% penalty loading for non-compliant expenses not repaid within 28 days."
+  },
+  {
+   "slug": "speech-345934",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "Amendments were moved to increase penalty loadings for breaches of the Parliamentary Business Resources Bill from 25% to 200% for a first breach and 400% for repeat breaches."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Parliamentary Business Resources Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00037",
+   "assent_date": "2017-05-19"
+  }
+ ]
+}

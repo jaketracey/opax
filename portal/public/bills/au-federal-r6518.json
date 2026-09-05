@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-r6518",
+ "title": "Social Services and Other Legislation Amendment (Omnibus) Bill 2020",
+ "short_title": "Social Services and Other Legislation Amendment (Omnibus) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2020-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6518%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6518%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6518%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6518%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6518%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6518%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6518_ems_5e8b80ee-5880-48c2-a732-5c72bfac1a79%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6518%22",
+   "document_date": "2020-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00107",
+   "document_date": "2020-11-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-391032",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Social Services and Other Legislation Amendment (Omnibus) Bill 2020 compels the Department of Social Services and Services Australia to comply with royal commission compulsory notices for information under secrecy provisions, and clarifies that reckless false-document and false-statement offences apply when Services Australia uses automated processes. The bill also removes obsolete provisions, corrects errors, and updates legislation to improve accessibility and policy delivery."
+  },
+  {
+   "slug": "speech-398264",
+   "speaker": "Vince Connelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services and Other Legislation Amendment (Omnibus) Bill 2020, arguing it enables technical amendments for smoother delivery of social services. He noted the government's extension of JobSeeker payments to March next year and shared his personal experience of briefly relying on unemployment benefits after leaving the Army, encouraging Australians not to feel guilty about using the safety net while aiming to return to work."
+  },
+  {
+   "slug": "speech-398265",
+   "speaker": "Luke Howarth",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-11-10",
+   "stage_hint": null,
+   "brief": "The Morrison government introduced the Social Services and Other Legislation Amendment (Omnibus) Bill 2020, which makes technical and administrative amendments to social services law, including allowing royal commission notices to override portfolio secrecy provisions, updating offence provisions for automated claims processing, and removing obsolete provisions. The government also reaffirmed its commitment to social security, citing JobKeeper, JobSeeker and other coronavirus stimulus measures as beneficial."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services and Other Legislation Amendment (Omnibus) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00107",
+   "assent_date": "2020-11-26"
+  }
+ ]
+}

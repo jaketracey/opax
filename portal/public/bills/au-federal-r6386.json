@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6386",
+ "title": "Australian Passports Amendment (Identity-matching Services) Bill 2019",
+ "short_title": "Australian Passports Amendment (Identity-matching Services) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs and Trade",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6386%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6386%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6386%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6386_ems_b063b85b-0541-488e-9e01-fcccdafe5f3f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6386%22",
+   "document_date": "2019-07-31",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-31",
+  "sentences": [
+   "This bill would allow the Minister to share Australian travel document data for identity-matching services agreed between the Commonwealth, states and territories.",
+   "It would amend the Australian Passports Act 2005 to add a new purpose for disclosing information and let the Minister use computer programs to make decisions.",
+   "The services include the Face Verification Service and the Face Identification Service, and the bill would also allow automation of low-risk decisions like issuing passports when data exactly matches previous applications."
+  ],
+  "changes": [
+   "Adds a new purpose for disclosing information to participate in identity-matching services specified in a Minister's determination.",
+   "Allows the Minister to arrange for computer programs to make decisions under the Passports Act.",
+   "Provides that computer-made decisions may be substituted if incorrect, without limiting reviewability of travel document decisions."
+  ],
+  "affected": "The Department of Foreign Affairs and Trade, Commonwealth, state and territory agencies, and potentially the private sector.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-379228",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The bill amends the Australian Passports Act 2005 to allow the foreign minister to automate sharing of passport data with Commonwealth, state and territory agencies for national security and identity-matching purposes, following a 2017 COAG decision. It aims to enable real-time detection of identity fraud and terrorist threats while maintaining privacy safeguards."
+  }
+ ],
+ "acts": []
+}

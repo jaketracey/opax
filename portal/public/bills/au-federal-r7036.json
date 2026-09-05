@@ -1,0 +1,249 @@
+{
+ "key": "au-federal-r7036",
+ "title": "Trade Support Loans Amendment Bill 2023",
+ "short_title": "Trade Support Loans Amendment Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-05-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2023-08-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7036_ems_722fc370-d95d-4ef1-92ad-f054b44a49e2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7036%22",
+   "document_date": "2023-05-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00061",
+   "document_date": "2023-08-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-05-25",
+  "sentences": [
+   "This bill is part of a package that would let the minister expand trade support loans to apprentices in sectors like aged care, disability care and childcare.",
+   "The bill would replace the current priority list with a new one the minister sets based on advice from Jobs and Skills Australia.",
+   "The bill would also let the secretary give apprentices more time to apply for a loan payment instalment."
+  ],
+  "changes": [
+   "The bill would end the current TSL Priority List.",
+   "The bill would let the minister make a new Australian Apprenticeships Priority List by legislative instrument after considering advice from Jobs and Skills Australia.",
+   "The bill would expand qualifying apprenticeships to include occupations on the new list, opening loans to people in other ANZSCO groups.",
+   "The bill would let the secretary delay the deadline for applying for a loan instalment."
+  ],
+  "affected": "Apprentices and trainees in sectors experiencing skills shortages, such as aged care, disability care and childcare.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:10:34Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8285",
+   "date": "2023-08-09",
+   "house": "senate",
+   "question": "Trade Support Loans Amendment Bill 2023 and Student Loans (Overseas Debtors Repayment Levy) Amendment Bill 2023 - Second Reading - More support and no students fees for sector",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-09/4"
+  },
+  {
+   "key": "federal-senate-8286",
+   "date": "2023-08-09",
+   "house": "senate",
+   "question": "Trade Support Loans Amendment Bill 2023 and Student Loans (Overseas Debtors Repayment Levy) Amendment Bill 2023 - in Committee - Abolish indexation & raise min. repayment income",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-09/5"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Trade Support Loans Amendment Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00061",
+   "assent_date": "2023-08-21"
+  }
+ ]
+}

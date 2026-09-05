@@ -1,0 +1,305 @@
+{
+ "key": "au-federal-r6203",
+ "title": "Treasury Laws Amendment (Making Sure Every State and Territory Gets Their Fair Share of GST) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Making Sure Every State and Territory Gets Their Fair Share of GST) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-10-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-11-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6203%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6203%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6203%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6203%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6203%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6203%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6203_ems_b4177aab-9050-4e38-8881-649c45bcb2ed%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6203%22",
+   "document_date": "2018-10-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00143",
+   "document_date": "2018-11-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-10-18",
+  "sentences": [
+   "This bill changes how the GST is shared among states and territories so the system is fairer.",
+   "It moves from full equalisation to reasonable equalisation based on New South Wales and Victoria, introduces a minimum GST relativity floor set by the Treasurer, and adds extra Commonwealth money to the GST pool permanently.",
+   "Short-term payments are provided to states or territories with a GST relativity below 0.7 and to the Northern Territory if its relativity falls below its 2017-18 factor."
+  ],
+  "changes": [
+   "The bill transitions horizontal fiscal equalisation from full to reasonable equalisation.",
+   "It introduces a minimum GST relativity floor that the Treasurer may set for any state or territory.",
+   "It permanently boosts the GST revenue pool with extra Commonwealth financial assistance."
+  ],
+  "affected": "States and territories that receive GST revenue shares.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:09Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-371175",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-18",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Making Sure Every State and Territory Gets Their Fair Share of GST) Bill 2018 reforms GST distribution to provide a fairer and more sustainable system, leaving all states better off. Key measures include a new equalisation benchmark based on the stronger of New South Wales or Victoria, a permanent relativity floor of 0.7 rising to 0.75, and Commonwealth cash injections of $600 million in 2021-22 and $250 million in 2024-25, indexed annually, with an additional $9 billion over 10 years to 2028-29."
+  },
+  {
+   "slug": "speech-371543",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "Labor supported the Treasury Laws Amendment (Making Sure Every State and Territory Gets Their Fair Share of GST) Bill 2018, which guarantees a GST floor for all states and territories and ensures no state is worse off, after the government backflipped on its earlier opposition; Western Australia had received as low as 30 cents per dollar of GST revenue."
+  },
+  {
+   "slug": "speech-371545",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "The bill transitions the GST distribution system from full fiscal equalisation to a benchmark based on the stronger of New South Wales or Victoria, implemented over eight years in three steps, with no state or territory left worse off. It guarantees a minimum GST relativity floor of 70c then 75c per dollar, provides an additional $9 billion in Commonwealth funding over 10 years and $1 billion extra annually from 2026-27, and addresses Western Australia’s drop to 30c in the dollar."
+  },
+  {
+   "slug": "speech-371546",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Making Sure Every State and Territory Gets Their Fair Share of GST) Bill 2018, arguing it largely replicates Labor’s proposals including a GST floor, a guarantee that no state would be worse off, and a future Productivity Commission inquiry, after the government initially opposed and later adopted these measures."
+  },
+  {
+   "slug": "speech-371550",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Treasury Laws Amendment (Making Sure Every State and Territory Gets Their Fair Share of GST) Bill 2018, criticising the government for taking over five years to address GST equity for Western Australia. They noted that Tasmania receives $1.1 billion more in GST than its population share, representing 40% of state revenue, and defended this reliance due to Tasmania's unique health, education and land reserve constraints."
+  },
+  {
+   "slug": "speech-371687",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Making Sure Every State and Territory Gets Their Fair Share of GST) Bill 2018 would deliver a fairer and more sustainable GST distribution, making all states better off through a permanent relativity floor (0.7 rising to 0.75), direct cash injections, and a six-year transition period, with additional federal funding of $9 billion from 2019–20 to 2028–29. Specific gains cited include Western Australia receiving $3.3 billion, New South Wales $351 million, Victoria $425 million, Queensland $518 million, South Australia $257 million, Tasmania $112 million, the ACT $46 million, and the Northern Territory $189 million."
+  },
+  {
+   "slug": "speech-371688",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Making Sure Every State and Territory Gets Their Fair Share of GST) Bill 2018 addresses Western Australia's long-standing GST distribution issues, but blamed the former Barnett Liberal-National state government and Treasurer Christian Porter for fiscal mismanagement that worsened the state's budget. Concrete figures cited include Western Australia's net debt rising from $3.6 billion in 2007-08 to $32.5 billion after two terms of Liberal-National government, and the opposition's proposed Fair Share for WA Fund of $1.6 billion to raise the state's GST share to 70 per cent."
+  },
+  {
+   "slug": "speech-371691",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the Treasury Laws Amendment Bill delivers a permanent fix to Western Australia's GST share, including a 75-cent floor and $4.7 billion in extra funding. They credited WA Liberal MPs and former Premier Colin Barnett for the reform, while criticising federal Labor and the Member for Burt for inaction."
+  },
+  {
+   "slug": "speech-371692",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Making Sure Every State and Territory Gets Their Fair Share of GST) Bill 2018 was supported in intent, but the former speaker's claim that ALP members in Western Australia did not lobby hard was corrected. The government was accused of acting for the wrong reasons or due to administrative errors, including deposing a sitting Prime Minister."
+  },
+  {
+   "slug": "speech-371696",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill 2018, arguing it fixes the GST system despite previous claims that such changes were \"almost politically impossible.\""
+  },
+  {
+   "slug": "speech-371700",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Making Sure Every State and Territory Gets Their Fair Share of GST) Bill 2018, which introduces a new GST distribution system with a floor of 70c per dollar from 2022-23 rising to 75c from 2024-25, a new equalisation benchmark against New South Wales or Victoria, and $9 billion in additional Commonwealth funding over 10 years, including a $518 million boost for Queensland."
+  },
+  {
+   "slug": "speech-371701",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "The bill legislates a GST floor for Western Australia (70 cents from 2021, rising to 75 cents from 2024) and a guarantee that no state or territory will be worse off during the transition period to 2026–27. The speaker supported the bill, noting Labor had previously proposed a $1.6 billion fund and criticised the government for delays and broken promises."
+  },
+  {
+   "slug": "speech-371704",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment (Making Sure Every State and Territory Gets Their Fair Share of GST) Bill 2018, calling it bad public policy and shameful, and stated they would be the only one to vote against it."
+  },
+  {
+   "slug": "speech-371706",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Making Sure Every State and Territory Gets Their Fair Share of GST) Bill 2018 is vital for Tasmania, which would lose $112 million over seven years without it, and that Labor secured a seven-year legislative guarantee preventing any state from being worse off under GST changes. The bill ties GST calculations to New South Wales or Victoria, ensures Western Australia’s share never falls below 70 cents per dollar contributed, and the speaker stressed that Tasmania relies on GST for 40% of revenue, 64% of health funding, and 71% of education funding."
+  },
+  {
+   "slug": "speech-371707",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Making Sure Every State and Territory Gets Their Fair Share of GST) Bill 2018, highlighting its importance for states like Queensland and Western Australia. They welcomed a GST floor and a transition period guaranteeing no state would be worse off, but warned against the Commonwealth recouping funds through cuts to health or housing agreements."
+  },
+  {
+   "slug": "speech-371712",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "The speech opens by thanking the member for Petrie and referencing the Treasury Laws Amendment (Making Sure Every State and Territory Gets Their Fair Share of GST) Bill 2018, but the provided text cuts off mid-sentence."
+  },
+  {
+   "slug": "speech-371718",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-23",
+   "stage_hint": null,
+   "brief": "The bill reforms GST distribution to states and territories by introducing a new equalisation benchmark based on the stronger of New South Wales or Victoria, a permanent relativity floor rising from 0.7 to 0.75, and direct Commonwealth cash injections from 2021-22, with an additional $9 billion over 10 years and short-term top-ups for Western Australia and the Northern Territory. All states are projected to be better off, with state-specific gains by 2026-27 ranging from $46 million for the ACT to over $3.3 billion for Western Australia."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Making Sure Every State and Territory Gets Their Fair Share of GST) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00143",
+   "assent_date": "2018-11-29"
+  }
+ ]
+}

@@ -1,0 +1,166 @@
+{
+ "key": "au-federal-s1368",
+ "title": "Improving Access to Medicinal Cannabis Bill 2023",
+ "short_title": "Improving Access to Medicinal Cannabis Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-09",
+ "originating_house": "senate",
+ "sponsor": "HANSON, Sen Pauline",
+ "sponsor_party": "Pauline Hanson&#39;s One Nation",
+ "sponsor_person_id": "10280",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1368%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1368%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1368%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1368%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1368_ems_3ef1b780-4147-424f-bfea-771657291a88%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1368%22",
+   "document_date": "2023-03-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 11,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-09",
+  "sentences": [
+   "The bill would make it easier for patients and their pets to get medicinal cannabis products.",
+   "It would do this by reclassifying cannabis as a Schedule 4 medicine, letting any doctor write a prescription, and by allowing some low-THC products to be sold over the counter.",
+   "Products with up to 1% THC and 10% CBD could be sold at chemists or vets to people over 18."
+  ],
+  "changes": [
+   "The bill would let all medical practitioners prescribe medicinal cannabis for humans and animals.",
+   "It would replace the current approved prescriber and special access schemes with ordinary prescription pathways.",
+   "It would increase the legal THC limit for cannabis plants from 0.1% to 1%, matching state laws.",
+   "It would allow some whole-plant cannabis products with up to 1% THC and 10% CBD to be sold without a prescription.",
+   "It would keep the existing hemp food product rules unchanged.",
+   "It would move the existing listing for nabiximols from Schedule 8 to Schedule 4."
+  ],
+  "affected": "Patients, their doctors, chemists, veterinarians, and the medicinal cannabis industry would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T02:00:21Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8029",
+   "date": "2023-03-27",
+   "house": "senate",
+   "question": "Documents - Improving Access to Medicinal Cannabis Bill 2023 - Order for the Production of Documents",
+   "stage": "Documents",
+   "ayes": 37,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "member": 5,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-27/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-828426",
+   "speaker": "Malcolm Roberts",
+   "party": "One Nation",
+   "state": "federal",
+   "date": "2023-03-09",
+   "stage_hint": null,
+   "brief": "Senator Hanson moved to introduce the Improving Access to Medicinal Cannabis Bill 2023, which aims to amend laws regulating products made with or containing cannabis. The bill was agreed to and read a first time."
+  },
+  {
+   "slug": "speech-828427",
+   "speaker": "Malcolm Roberts",
+   "party": "One Nation",
+   "state": "federal",
+   "date": "2023-03-09",
+   "stage_hint": null,
+   "brief": "The Improving Access to Medicinal Cannabis Bill 2023 was introduced to expand access to medicinal cannabis for Australians and their pets, including allowing any prescribing medical practitioner to prescribe, increasing the allowable THC in hemp products from 0.1% to 1%, and permitting over-the-counter sale of low-THC cannabis products (under 1% THC and 10% CBD) in pharmacies for adults aged 18 and over."
+  },
+  {
+   "slug": "speech-828882",
+   "speaker": "Pauline Hanson",
+   "party": "One Nation",
+   "state": "federal",
+   "date": "2023-03-22",
+   "stage_hint": null,
+   "brief": "One Nation's Improving Access to Medicinal Cannabis Bill 2023 would down‑schedule medicinal cannabis to Schedule 4, allowing any doctor or veterinarian to prescribe it and permitting low‑strength products (up to 1% THC) to be sold over the counter to adults. The bill also harmonises Commonwealth and state hemp definitions at 1% THC, aims to reduce costs through economies of scale, and would open the pathway for PBS listing."
+  }
+ ],
+ "acts": []
+}

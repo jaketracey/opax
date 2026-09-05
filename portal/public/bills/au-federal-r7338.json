@@ -1,0 +1,215 @@
+{
+ "key": "au-federal-r7338",
+ "title": "Australian Security Intelligence Organisation Amendment Bill (No. 1) 2025",
+ "short_title": "Australian Security Intelligence Organisation Amendment Bill (No. 1) 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2025-09-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7338%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7338%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7338%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7338%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7338%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7338%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7338%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7338%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7338%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7338%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7338%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7338%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7338%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7338_ems_6b2aa01b-c488-4036-ad84-dcabee5ccefb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7338%22",
+   "document_date": "2025-07-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00041",
+   "document_date": "2025-09-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-9786",
+   "date": "2025-09-04",
+   "house": "senate",
+   "question": "Australian Security Intelligence Organisation Amendment Bill (No. 1) 2025 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-04/15"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1195134",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195697",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195698",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-07-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195792",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2025-07-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196026",
+   "speaker": "Tim Ayres",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-31",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Security Intelligence Organisation Amendment Act (No. 1) 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00041",
+   "assent_date": "2025-09-05"
+  }
+ ]
+}

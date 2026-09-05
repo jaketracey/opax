@@ -1,0 +1,456 @@
+{
+ "key": "au-federal-r7472",
+ "title": "Export Finance and Insurance Corporation Amendment (Strategic Reserve) Bill 2026",
+ "short_title": "Export Finance and Insurance Corporation Amendment (Strategic Reserve) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs and Trade",
+ "status": "passed",
+ "status_as_of": "2026-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7472%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7472%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7472%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7472%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7472%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7472%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7472%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7472_ems_9676c004-5e01-4c93-a987-b66c5da61575%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7472%22",
+   "document_date": "2026-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00021",
+   "document_date": "2026-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-30",
+  "sentences": [
+   "The bill would set up a reserve of materials needed for Australia's economy, fuel security, supply chains, national security, and the government's manufacturing agenda.",
+   "It would give Export Finance Australia new powers to buy, sell, and store fuel and critical minerals when supply is disrupted.",
+   "A review of how the law operates must be finished by the end of 2029, and the bill also lets reserve-related actions skip standard procurement rules."
+  ],
+  "changes": [
+   "It creates a strategic reserve for essential materials.",
+   "It expands Export Finance Australia's role to include securing and stockpiling critical minerals.",
+   "It directs a review of the legislation by the end of 2029.",
+   "It exempts reserve tasks from the Commonwealth Procurement Rules.",
+   "It allows payment for members of the Export Finance Australia board committees.",
+   "It removes limits on equity investments from certain export and infrastructure programs."
+  ],
+  "affected": "Export Finance Australia, the government, and businesses involved in supplying fuel, critical minerals, and other goods.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10128",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2026-03-30.114.1) introduced by New England MP [Barnaby Joyce](https://theyvoteforyou.org.au/people/representatives/new_england/barnaby_joyce) (Pauline Hanson's One Nation Party), which means it was unsuccessful. The amendment would have changed the text of the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after \"whilst\" be omitted with a view to substituting the following words:* > > *\"not declining to give the bill a second reading, the House calls on the Government to initiate a review of this Bill for any potential areas of conflict with other legislation, including but not limited to the Safeguard Mechanism\".*",
+   "stage": "Second reading",
+   "ayes": 43,
+   "noes": 91,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 88
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-30/1"
+  },
+  {
+   "key": "federal-representatives-10129",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2026-03-30.110.1) introduced by Lyne MP [Alison Penfold](https://theyvoteforyou.org.au/people/representatives/lyne/alison_penfold) (Nationals), which means it was unsuccessful. The amendment would have changed the text of the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > >> *\"whilst not declining to give the bill a second reading, the House:* >> >> *(1) notes:* >> >>> *(a) the Government spent three weeks denying the existence of a fuel crisis—first dismissing concerns, then blaming consumers, and only acting once the problem became unavoidable;* >>> >>> *(b) that after four years in office, the Government has failed to strengthen Australia's sovereign fuel capability, and now proposes to fund imports of the same resources it has banned funding for domestic production; and* >>> >>> *(c) that Australia enters this crisis weaker, with higher debt, higher taxes, persistently high inflation, and falling real wages as a direct consequence of the Government's economic mismanagement; and* >> >> *(2) recognises that the former Coalition Government took decisive action to strengthen fuel security, including establishing the Minimum Stockholding Obligation, legislating the Fuel Security Act, and securing Australia's last two refineries\".*",
+   "stage": "Second reading",
+   "ayes": 38,
+   "noes": 96,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 88
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-30/2"
+  },
+  {
+   "key": "federal-representatives-10130",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/download/legislation/amend/r7472_amend_ea0e4fc2-51d5-4c13-8f89-f74b4366612c/upload_pdf/26052%20Tehan.pdf;fileType=application%2Fpdf) to the [Export Finance and Insurance Corporation Amendment (Strategic Reserve) Bill 2026](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7472) introduced by Wannon MP [Dan Tehan](https://theyvoteforyou.org.au/people/representatives/wannon/dan_tehan), which means it was unsuccessful. ### Amendment text > *(1) Schedule 1, page 7 (after line 3), after item 14, insert:* > >> *14A Section 23C* >> >> *Repeal the section.* Therefore, the purpose of this amendment is to repeal section 23C from the Export Finance and Insurance Corporation Act 1991. ### What is Section 23C? Section 23C puts limitations on the powers of the Export Finance and Insurance Corporation (EFIC) in respect to fossil fuels. Wording of [section 23C](https://classic.austlii.edu.au/au/legis/cth/consol_act/efaica1991402/s23c.html): > *Approval required before providing services or products to finance certain coal, crude oil or natural gas activities* > > *Despite any other provision of this Part, EFIC must not provide a service or product under this Part that would:* > >> *(a) directly finance the extraction of coal, crude oil or natural gas; or* >> >> *(b) directly finance the construction of infrastructure for the primary purpose of extracting coal, crude oil or natural gas; or* >> >> *(c) directly finance investments for the sole purpose of the use of coal, crude oil or natural gas;* > > *unless an application for the service or product has been referred to the Minister under [section 25](https://classic.austlii.edu.au/au/legis/cth/consol_act/efaica1991402/s25.html).* > > *Note: A direction under section 26 may prevent such applications from being referred to the Minister. EFIC cannot provide a service or product covered by this section in those",
+   "stage": "Consideration in detail",
+   "ayes": 38,
+   "noes": 97,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 88
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-30/3"
+  },
+  {
+   "key": "federal-senate-10169",
+   "date": "2026-03-31",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2026-03-31.214.2) introduced by Queensland Senator [Matthew Canavan](https://theyvoteforyou.org.au/people/senate/queensland/matthew_canavan) (LNP), which means they failed. The amendments would have repealed restrictions relating to fossil fuels. #### Rebellion South Australian Senator [Andrew McLachlan](https://theyvoteforyou.org.au/people/senate/sa/andrew_mclachlan) (Liberal) crossed the floor to vote \"no\" against the rest of his party. ### Amendment words SHEET 3760 > *(1) Schedule 1, page 7 (after line 3), after item 14, insert:* > >> *14A [Section 23C](https://classic.austlii.edu.au/au/legis/cth/consol_act/efaica1991402/s23c.html)* >> >>> *Repeal the section.* SHEET 3766 > *(1) Schedule 1, page 13 (before line 2), before the heading specifying Export Finance and Insurance Corporation Act 1901, insert:* > >> *Environment Protection and Biodiversity Conservation Act 1999* >> >> *47A Paragraph 87(5A)(a)* >> >>> *Repeal the paragraph.*",
+   "stage": "Limitation of debate",
+   "ayes": 26,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-31/16"
+  },
+  {
+   "key": "federal-senate-10170",
+   "date": "2026-03-31",
+   "house": "senate",
+   "question": "The majority voted against [Australian Greens amendments](https://www.openaustralia.org.au/senate/?gid=2026-03-31.216.1), which means they were unsuccessful. These amendments related to the following: a 6‑month sunset clause; materials, goods or things must be of a kind prescribed by regulations; and excluding things with military use. While Tasmanian Senator [Tammy Tyrrell](https://theyvoteforyou.org.au/people/senate/tasmania/tammy_tyrrell) (Independent) voted \"yes\" in this vote, she subsequently noted that she opposed the amendments on [sheet 3757](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7472_amend_e95be31c-78e0-49f2-a5f8-16e754656f47%22;rec=0), which related to excluding things with military use. ### Amendment text See [openaustralia.org.au](https://www.openaustralia.org.au/senate/?gid=2026-03-31.216.1) for the amendment text.",
+   "stage": "Limitation of debate",
+   "ayes": 11,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-31/17"
+  },
+  {
+   "key": "federal-senate-10171",
+   "date": "2026-03-31",
+   "house": "senate",
+   "question": "The majority voted against a [One Nation amendment](https://www.openaustralia.org.au/senate/?gid=2026-03-31.218.3), which means it was unsuccessful. The amendment would have introduced an independent review into the bill. ### Amendment text > *(1) Clause 2, page 2 (table item 1), omit \"Sections 1 to 3\", substitute \"Sections 1 to 4\".* > > *(2) Page 2 (after line 12), after clause 3, insert:* > >> *4 Review of operation of Act* >> >> *(1) The Minister must cause an independent review to be conducted of the operation of the amendments made by this Act.* >> >> *(2) Without limiting the matters that may be considered when conducting the review, the review must consider the potential for conflict with other legislation, including, but not limited to, the following:* >> >>> *(a) the Australian National Registry of Emissions Units Regulations 2011;* >>> >>> *(b) the Carbon Credits (Carbon Farming Initiative) Rule 2015;* >>> >>> *(c) the Environment Protection and Biodiversity Conservation Act 1999;* >>> >>> *(d) the National Greenhouse and Energy Reporting Act 2007;* >> >> *(e) the National Greenhouse and Energy Reporting (Safeguard Mechanism) Rule 2015.* > > *Timing of review* > > *(3) The review must commence as soon as practicable after this section commences.* > > *(4) The person or persons who conduct the review must complete the review before the end of the period of 6 months beginning on the day the review commences.* > > *Minister to be given report of review* > > *(5) The persons conducting the review must give the Minister a written report of the review as soon as practicable after the review is completed.* > > *Minister to table report of review* > > *(6) The Minister must table a copy of the report in each House of the Parliament within 15 sitting days of that House after the Minister receives the report.*",
+   "stage": "Limitation of debate",
+   "ayes": 27,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-31/18"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1202028",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Export Finance and Insurance Corporation Amendment (Strategic Reserve) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00021",
+   "assent_date": "2026-04-01"
+  }
+ ]
+}

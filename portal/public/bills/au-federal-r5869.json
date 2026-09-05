@@ -1,0 +1,500 @@
+{
+ "key": "au-federal-r5869",
+ "title": "Higher Education Support Legislation Amendment (A More Sustainable, Responsive and Transparent Higher Education System) Bill 2017",
+ "short_title": "Higher Education Support Legislation Amendment (A More Sustainable, Responsive and Transparent Higher Education System) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5869%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5869%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5869%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5869%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5869%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5869%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5869%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5869%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5869%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5869%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5869_ems_aa9ccab7-ce4c-497f-9d2f-432f5b4d2814%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5869%22",
+   "document_date": "2017-05-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-11",
+  "sentences": [
+   "This bill would change how higher education is funded, run and overseen in Australia.",
+   "It would raise the maximum amount students pay, cut some government grants, and tie some funding to university performance.",
+   "From 2018, student contributions would increase by 1.8% each year for four years, reaching a total 7.5% rise by 2021."
+  ],
+  "changes": [
+   "Rebalances the cost of higher education among taxpayers, providers and students.",
+   "Raises maximum student contributions by 1.8% annually for four years from 2018.",
+   "Applies a 2.5% per year efficiency dividend to Commonwealth Grant Scheme grants in 2018 and 2019.",
+   "Extends medical student loading to veterinary science and dentistry units from 2018.",
+   "Introduces performance-contingent funding, with up to 7.5% of a provider's CGS funding tied to meeting requirements from January 2018.",
+   "Replaces current HELP repayment thresholds and rates with new ones, with indexation using CPI from 1 July 2019."
+  ],
+  "affected": "Students, higher education providers, Australian permanent residents, New Zealand citizens, and holders of humanitarian visas.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4818",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "question": "Higher Education Support Legislation Amendment (A More Sustainable, Responsive and Transparent Higher Education System) Bill 2017 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 74,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-09-13/2"
+  },
+  {
+   "key": "federal-representatives-4819",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "question": "Higher Education Support Legislation Amendment (A More Sustainable, Responsive and Transparent Higher Education System) Bill 2017 - Second Reading - Disagree with bill",
+   "stage": "Second reading",
+   "ayes": 64,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-09-13/3"
+  },
+  {
+   "key": "federal-representatives-4820",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "question": "Higher Education Support Legislation Amendment (A More Sustainable, Responsive and Transparent Higher Education System) Bill 2017 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 74,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-09-13/4"
+  },
+  {
+   "key": "federal-representatives-4821",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr5869_amend_e05af329-97e2-467c-a8b7-bcc7a6ede9e0%22;rec=0) to the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5869), which would have created a national regional higher education strategy. ### What was the amendment? Independent MP for Indi [Cathy McGowan](https://theyvoteforyou.org.au/people/representatives/indi/cathy_mcgowan), who proposed the amendment, explained that: > *This amendment is designed to create a financial incentive for students to study at regional universities by creating a HELP-debt-repayment-free period for students studying at regional campuses. Under the amendment, regional students would have a HELP-debt-repayment-free period on the units completed at a regional campus until they reach the $56,205 threshold under the government's proposed legislation. Repayments would then continue as per the government's proposed legislation. The HELP-debt-repayment-free period would apply to students attending a campus that receives a Commonwealth Grant Scheme regional loading or that the minister has identified as having an above-average number of students whose home address is at a regional location.*",
+   "stage": "Consideration in detail",
+   "ayes": 68,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-09-13/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-346028",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-11",
+   "stage_hint": null,
+   "brief": "The speaker moved the Higher Education Support Legislation Amendment Bill 2017, which increases student contribution amounts by 1.8% per year for four years (cumulative 7.5% by 2021) and introduces a 2.5% annual efficiency dividend on Commonwealth Grant Scheme grants in 2018 and 2019. The bill lowers the HELP repayment threshold to $42,000 income with a 1% initial repayment rate, extends demand-driven sub-bachelor places to public universities, and allocates 7.5% of Commonwealth Grant Scheme funding ($500 million annually) based on institutional performance metrics from 2019."
+  },
+  {
+   "slug": "speech-353694",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-12",
+   "stage_hint": null,
+   "brief": "The Labor member moved to oppose the Higher Education Support Legislation Amendment Bill 2017, arguing it would cut nearly $4 billion from university funding, increase student fees and debt, harm teaching and research, and damage Australia's economy. The speech cited specific figures of $3.8 billion in cuts over five years, a 2.5% cut to operating grants, a 7.5% fee increase over four years, and new loan repayment thresholds starting at $42,000, while noting opposition from vice-chancellors including those from the University of Western Australia, RMIT, and the University of Sydney."
+  },
+  {
+   "slug": "speech-353696",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-12",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Higher Education Support Legislation Amendment Bill 2017, defending it as necessary for sustainability and rejecting Labor's characterisation of it as \"tinkering at the edges\" or a cut. He noted that university funding is increasing from $17 billion to $21 billion, and the bill includes a 1.8% annual increase in the student cost share (cumulative 7.5% by 2021), a $42,000 repayment threshold, and measures for transparency and subdegree support."
+  },
+  {
+   "slug": "speech-353697",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Higher Education Support Legislation Amendment Bill 2017 would increase student fees to the highest proportion since Gough Whitlam’s reforms and cut university funding, driven by Liberal Party ideology rather than evidence. He contrasted this with Labor’s past expansions of access, and rejected the claim that students are the principal beneficiaries of university education, citing public benefits and the burdens of increased debt on families, homebuyers, and small business consumers."
+  },
+  {
+   "slug": "speech-353699",
+   "speaker": "John McVeigh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-12",
+   "stage_hint": null,
+   "brief": "The member for Groom supported the Higher Education Support Legislation Amendment Bill 2017, highlighting a record $16.7 billion investment in higher education, including base funding of $206.7 million for the University of Southern Queensland rising to $239.7 million by 2021, and announced $15 million for up to eight regional study hubs, scholarships of up to $18,000 for regional STEM and health students, and changes to enabling course fees and allocations."
+  },
+  {
+   "slug": "speech-353700",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment Bill 2017 and supported the opposition’s amendment, arguing the bill would cut university funding by $45.7 million for the University of Wollongong, increase student fees by 7.5 per cent, and lower the income repayment threshold to $42,000."
+  },
+  {
+   "slug": "speech-353839",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-12",
+   "stage_hint": null,
+   "brief": "The member for Lindsay argued that the Turnbull government's proposed cuts to higher education would disproportionately harm Western Sydney, with Western Sydney University set to lose over $98 million in funding over four years—the highest cut of any university in New South Wales. She opposed the bill, citing that 60% of the university's students are first in their families to attend, and accused the Prime Minister of treating Western Sydney as a community unworthy of educational investment."
+  },
+  {
+   "slug": "speech-353840",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment Bill 2017, which cuts $3.8 billion from universities, including $617 million from New South Wales and $45.7 million from the University of Wollongong, arguing it would worsen inequality and reduce higher education participation in regional Australia."
+  },
+  {
+   "slug": "speech-353841",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment Bill 2017, arguing it would cut university funding by 2.5%, increase student fees, and redirect money to corporate tax cuts rather than improving education. Specific concerns included the bill's impact on enabling programs like Murdoch University's OnTrack, which could affect 350+ students in the Rockingham and Peel regions, and warnings from Times Higher Education editor Phil Baty that funding cuts could harm Australia's international university rankings."
+  },
+  {
+   "slug": "speech-353842",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-12",
+   "stage_hint": null,
+   "brief": "The speech argued the higher education demand-driven system needs sustainable funding, supporting the bill’s measures: increasing maximum student contributions by 7.5 per cent by 2021, lowering the HELP repayment threshold to $42,000, applying a 2.5 per cent efficiency dividend to Commonwealth Grant Scheme subsidies in 2018 and 2019, legislating the HEPPP program with a $985 per low-SES student loading, and extending loan eligibility to most permanent residents and New Zealand citizens without Commonwealth subsidies."
+  },
+  {
+   "slug": "speech-353844",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment Bill 2017, arguing it would cut $3.8 billion from higher education, increase student contributions from 42% to 46%, lower the HECS-HELP repayment threshold to $42,000, remove Commonwealth supported places for permanent residents and New Zealand citizens, impose a 2.5% funding cut on universities, and raise student fees by 7.5% over four years."
+  },
+  {
+   "slug": "speech-353845",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment Bill 2017, arguing it would cut $3.8 billion from universities and $4 billion from the Education Infrastructure Fund, introduce $3,200 fees for enabling courses, and lower the HELP repayment threshold to $42,000, with Western Sydney University set to lose the most funding in New South Wales."
+  },
+  {
+   "slug": "speech-353847",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment Bill 2017, arguing it would increase student fees by 1.8% per year for four years (total 7.5% from 2021) and cut university funding through a 2.5% efficiency dividend, making education less affordable. The speaker also criticised the government for lacking detail on the proposed voucher system for postgraduate places."
+  },
+  {
+   "slug": "speech-353848",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Turnbull government's bill cuts $3.8 billion from university funding, lowers the HELP repayment threshold, and raises fees, benefiting corporations with tax cuts while hurting students—especially those from disadvantaged backgrounds. Specific cuts include $401.8 million from Queensland universities and $37.1 million from James Cook University, and the speaker named Coalition frontbenchers like Malcolm Turnbull, Tony Abbott, George Brandis, and Marise Payne as hypocrites who received free university education under Labor."
+  },
+  {
+   "slug": "speech-353849",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment Bill 2017, arguing it cuts university funding by nearly $4 billion, increases student fees by 7.5% over four years, and imposes a 2.5% efficiency dividend, with New South Wales institutions losing $617.8 million. They cited opposition from vice-chancellors like Professor Barney Glover and Detective Chief Inspector Darren Newman, who warned the bill would harm disadvantaged communities and young people's aspirations."
+  },
+  {
+   "slug": "speech-353925",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill cuts $3.8 billion from tertiary education, calling it intergenerational theft, and said it would reduce access to education, particularly in Western Sydney where the attainment gap is 31%. They noted that Western Sydney University faces a $98.3 million cut over four years, students will repay loans from $42,000 instead of $54,869, enabling courses will incur fees up to $3,200, and most New Zealand citizens and permanent residents will lose Commonwealth supported places."
+  },
+  {
+   "slug": "speech-353926",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment Bill 2017, arguing it cuts $3.8 billion from universities over five years, introduces $3,000 fees for enabling courses, and prioritises corporate tax cuts over education, harming disadvantaged and regional students."
+  },
+  {
+   "slug": "speech-353927",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment Bill 2017, arguing it cuts university funding by $3.8 billion, increases student fees and debt, and will cost Southern Cross University $22.7 million over four years, harming regional students and jobs."
+  },
+  {
+   "slug": "speech-353933",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment Bill 2017, arguing it cuts university funding, increases student fees by 7.5% over four years, lowers the repayment threshold to $42,000, and imposes a 2.5% efficiency dividend; Southern Cross University would lose $22.7 million over four years, with over $617 million cut across New South Wales."
+  },
+  {
+   "slug": "speech-353934",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment Bill 2017, arguing it would cut $3.8 billion from universities over five years—including over $85 million from Griffith University—raise student fees by up to 7.5%, and force New Zealand students to pay up to $80,000 more for degrees. The speaker also criticised the bill for undermining social mobility and aspiration, contrasting it with Labor’s record of increasing university investment from $8 billion to $14 billion."
+  },
+  {
+   "slug": "speech-353935",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker argued the Turnbull government's higher education bill cuts $4 billion from universities and increases student costs, continuing an \"attack on young people\" after already cutting $17.3 billion from schools. The speaker supported the Labor opposition's amendment against the bill, which they described as having an Orwellian title that misrepresents its harmful consequences."
+  },
+  {
+   "slug": "speech-354104",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment Bill 2017, arguing it would cut $533 million from Victorian universities, with La Trobe University facing $68 million in cuts and RMIT's Bundoora campus $80 million. They cited OECD data ranking Australia 30th of 34 nations in public higher education investment and warned the cuts would harm disadvantaged students and Australia's global competitiveness."
+  },
+  {
+   "slug": "speech-354105",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment Bill 2017, arguing it fails to support regional universities and students, and announced they will propose amendments including a national regional higher education strategy and a HELP-debt-repayment-free period for regional students, costing $21.6 million. They cited data showing regional students make up only 18.8% of domestic undergraduates and that 60-80% of regional university graduates stay in regional areas."
+  },
+  {
+   "slug": "speech-354106",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

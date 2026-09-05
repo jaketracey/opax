@@ -1,0 +1,169 @@
+{
+ "key": "au-federal-r5619",
+ "title": "Territories Legislation Amendment Bill 2016",
+ "short_title": "Territories Legislation Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "passed",
+ "status_as_of": "2016-03-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5619%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5619%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5619%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5619%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5619%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5619%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5619%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5619%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5619%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5619%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5619%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5619%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5619_ems_76269439-b14f-42c2-aabe-f9f9beba9270%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5619%22",
+   "document_date": "2016-02-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00033",
+   "document_date": "2016-03-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-24",
+  "sentences": [
+   "This bill is part of a package that makes several changes to laws affecting Norfolk Island and the Indian Ocean Territories.",
+   "The package would amend the Norfolk Island Legislation Amendment Act 2015 to give New Zealand permanent visa holders on Norfolk Island access to social security.",
+   "It would also extend the child support scheme to Christmas Island and Cocos (Keeling) Island residents, and require eligible Norfolk Island residents to enrol and vote in federal elections."
+  ],
+  "changes": [
+   "Amends the Norfolk Island Legislation Amendment Act 2015 to align early claims periods for family assistance payments with those for social security and child support before 1 July 2016.",
+   "Amends the Child Support (Assessment) Act 1989 and Child Support (Registration and Collection) Act 1988 to include residents of the Indian Ocean Territories in the child support scheme.",
+   "Amends the Commonwealth Electoral Act 1918 and the Referendum (Machinery Provisions) Act 1984 to mandate enrolment and voting in federal elections for eligible Norfolk Island residents.",
+   "Amends the Norfolk Island Act 1979 and the Acts Interpretation Act 1901 to apply all Commonwealth laws to Norfolk Island unless stated otherwise, with consequential amendments.",
+   "Amends the Norfolk Island Act 1979 to expand the definition of the Norfolk Island Regional Council for flexibility in local government law application."
+  ],
+  "affected": "New Zealand citizens with permanent visas on Norfolk Island, residents of Norfolk Island, and residents of Christmas Island and Cocos (Keeling) Island.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:37:41Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-328743",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The government introduced two bills to extend Commonwealth laws to Norfolk Island, including the Fair Work Act and federal electoral arrangements, to improve services and economic conditions. Key changes include raising the minimum wage from $10.70 to the national rate of $17.29 per hour, enrolling Norfolk Island voters in the Division of Canberra with compulsory voting, and correcting social security access for New Zealand citizens."
+  },
+  {
+   "slug": "speech-330500",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The member for Canberra argued that the Territories Legislation Amendment Bill 2016 would extend Commonwealth laws to Norfolk Island, make voting compulsory, and incorporate the island into the Canberra electorate, with her as the federal representative. She noted that 90 Norfolk Islanders voted in Canberra in 2013 and thanked the Norfolk Island Advisory Council—Melissa Ward, Duncan Evans, Eve Semple, PJ Wilson, and Wally Beadman—and Administrator Gary Hardgrave."
+  },
+  {
+   "slug": "speech-330501",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The bills extend Commonwealth laws to Norfolk Island, making voting compulsory and including the island in the Division of Canberra and ACT senators, with a phased introduction of the national minimum wage and a two-year delay on modern awards."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Territories Legislation Amendment Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00033",
+   "assent_date": "2016-03-23"
+  }
+ ]
+}

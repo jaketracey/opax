@@ -1,0 +1,586 @@
+{
+ "key": "au-federal-r7363",
+ "title": "Home Affairs Legislation Amendment (2025 Measures No. 1) Bill 2025",
+ "short_title": "Home Affairs Legislation Amendment (2025 Measures No. 1) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-08-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2025-09-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7363%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7363%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7363%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7363%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7363%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7363%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7363%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7363%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7363%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7363%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7363%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7363%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7363%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7363%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7363_ems_6c51dc67-faf5-4f32-b525-e8ac01bf0695%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7363%22",
+   "document_date": "2025-08-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00042",
+   "document_date": "2025-09-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-08-26",
+  "sentences": [
+   "This bill would confirm the lawfulness of past and future government actions concerning offshore processing and certain visa refusals.",
+   "It would amend the Migration Act 1958 to remove the requirement for procedural fairness when the government makes deals with foreign countries on third country reception arrangements.",
+   "It would also validate visa decisions that were overturned by a court because the minister relied on a now-overruled High Court ruling about indefinite detention."
+  ],
+  "changes": [
+   "The bill would make the rules of natural justice inapplicable to entering or preparing third country reception arrangements with foreign countries.",
+   "It would validate any past actions taken in relation to those arrangements that were invalid only because natural justice was not observed.",
+   "It would validate certain protection visa refusal decisions that were set aside by the Full Federal Court in the AJN23 case."
+  ],
+  "affected": "non-citizens subject to removal pathway arrangements, and protection visa applicants whose decisions were influenced by the now-overruled Al-Kateb ruling",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9725",
+   "date": "2025-09-01",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debate/?id=2025-09-01.108.3): > *That the Home Affairs Legislation Amendment (2025 Measures No. 1) Bill 2025 be referred to the Parliamentary Joint Committee on Human Rights for consideration and an advisory report.*",
+   "stage": "Reference to Committee",
+   "ayes": 9,
+   "noes": 72,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 6
+    }
+   },
+   "party_coverage": {
+    "dated": 81
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-09-01/1"
+  },
+  {
+   "key": "federal-senate-9764",
+   "date": "2025-09-03",
+   "house": "senate",
+   "question": "Home Affairs Legislation Amendment (2025 Measures No. 1) Bill 2025 - First Reading - Put the question",
+   "stage": "First Reading",
+   "ayes": 26,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/15"
+  },
+  {
+   "key": "federal-senate-9765",
+   "date": "2025-09-03",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2025-09-03.239.1) *\"that the bill may proceed without formalities.*\" ### What does this motion need? According to the [parliamentary procedure handbook](https://www.aph.gov.au/About_Parliament/Senate/Practice_and_Procedure/aso/so113), the motion \"*that the bill may proceed with formalities*\": > *shall have the effect of suspending any requirements for stages of the passage of the bill or bills to take place on different days, for notice of motions for such stages, and for the printing and certification of the bill or bills during passage*",
+   "stage": "First Reading",
+   "ayes": 26,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/16"
+  },
+  {
+   "key": "federal-senate-9766",
+   "date": "2025-09-03",
+   "house": "senate",
+   "question": "Home Affairs Legislation Amendment (2025 Measures No. 1) Bill 2025 - First Reading - Continue considering the bill in parliament",
+   "stage": "First Reading",
+   "ayes": 26,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/17"
+  },
+  {
+   "key": "federal-senate-9781",
+   "date": "2025-09-04",
+   "house": "senate",
+   "question": "Home Affairs Legislation Amendment (2025 Measures No. 1) Bill 2025 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-04/10"
+  },
+  {
+   "key": "federal-senate-9782",
+   "date": "2025-09-04",
+   "house": "senate",
+   "question": "The majority voted against [Opposition amendments](https://parlinfo.aph.gov.au/parlInfo/download/legislation/amend/r7363_amend_d8d0bf25-d88e-43f0-b042-c3b97a9452c6/upload_pdf/3429_CW_Home%20Affairs%20Legislation%20Amendment%20(2025%20Measures%20No.%201)%20Bill%202025_Cash.pdf;fileType=application%2Fpdf) introduced by West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal), which means they failed. ### Amendment text > *(1) Schedule 1, page 11 (after line 19), at the end of the Schedule, add:* > > *Part 3 — Community protection* > > *Criminal Code Act 1995* > > *1 Paragraph 395.12(1)(b)* > >> *Omit \"to a high degree of probability\".* > > *2 Paragraph 395.12(1)(c)* > >> *Repeal the paragraph, substitute:* >> >> *(c) the Court is satisfied that a less restrictive measure available under this Division may not be effective in protecting the community from harm by addressing the unacceptable risk; and* > > *3 Paragraph 395.12(1)(d)* > >> *Omit \"would\", substitute \"may\".* > > *4 Paragraph 395.13(1)(c)* > >> *Omit \"would\", substitute \"may\".* > > *Migration Act 1958* > > *5 Section 76DA* > >> *Before \"If\", insert \"(1)\".* > > *6 At the end of section 76DA* > >> *Add:* >> >> *(2) If the person is over the age of 18, the sentence imposed must require the person to spend the entire sentence of imprisonment in prison.*",
+   "stage": "Committee of the Whole",
+   "ayes": 26,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-04/11"
+  },
+  {
+   "key": "federal-senate-9783",
+   "date": "2025-09-04",
+   "house": "senate",
+   "question": "Home Affairs Legislation Amendment (2025 Measures No. 1) Bill 2025 - Commmittee of the Whole - Removing the proposed validation of visa decisions",
+   "stage": "Commmittee of the Whole",
+   "ayes": 33,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-04/12"
+  },
+  {
+   "key": "federal-senate-9784",
+   "date": "2025-09-04",
+   "house": "senate",
+   "question": "The majority voted against the [amendments](https://www.openaustralia.org.au/senate/?gid=2025-09-04.62.1) introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means they failed. ### Amendment text > *(1) Schedule 1, item 9, page 6 (line 18), omit \"before,\".* > > *(2) Schedule 1, item 9, page 6 (line 22), omit \"before,\".* > > *(3) Schedule 1, item 9, page 6 (line 24), omit \"before,\".* > > *(4) Schedule 1, item 9, page 6 (lines 25 and 26), omit \", whether the arrangement was entered into before, on or after commencement\".* > > *(5) Schedule 1, item 9, page 6 (line 29), omit \"before,\".* > > *(6) Schedule 1, item 9, page 6 (lines 30 and 31), omit \", whether the arrangement was entered into before, on or after commencement\".*",
+   "stage": "Committee of the Whole",
+   "ayes": 12,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-04/13"
+  },
+  {
+   "key": "federal-senate-9785",
+   "date": "2025-09-04",
+   "house": "senate",
+   "question": "Home Affairs Legislation Amendment (2025 Measures No. 1) Bill 2025 - Limitation of Debate - Pass the bill",
+   "stage": "Limitation of debate",
+   "ayes": 30,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-04/14"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1196878",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196999",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-09-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197006",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197208",
+   "speaker": "Sue Lines",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197210",
+   "speaker": "Sue Lines",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197216",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197315",
+   "speaker": "David Shoebridge",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2025-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197317",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-09-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Home Affairs Legislation Amendment (2025 Measures No. 1) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00042",
+   "assent_date": "2025-09-05"
+  }
+ ]
+}

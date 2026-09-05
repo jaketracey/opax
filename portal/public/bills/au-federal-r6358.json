@@ -1,0 +1,95 @@
+{
+ "key": "au-federal-r6358",
+ "title": "Banking Amendment (Rural Finance Reform) Bill 2019",
+ "short_title": "Banking Amendment (Rural Finance Reform) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-22",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": "(s) SHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2020-02-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6358%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6358%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6358%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6358_ems_786a9d6d-9c99-4656-b834-3ea2bc688af8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6358%22",
+   "document_date": "2019-07-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-22",
+  "sentences": [
+   "The bill adds protections for small primary production businesses when they borrow from banks and other authorised deposit-taking institutions.",
+   "It would stop lenders from unilaterally valuing loan security, from using broad 'material adverse change' clauses, and from changing loan terms without notice, among other requirements.",
+   "The rules would start on the first 1 July after the bill receives royal assent."
+  ],
+  "changes": [
+   "Requires lenders to give borrowers a one-page summary of clauses that could trigger a non-monetary default.",
+   "Prohibits lenders from performing their own valuations of loan security and from charging borrowers for valuations or audits.",
+   "Mandates a 30 business day notice before exercising a power under a general restriction covenant, except for fraud or criminal activity.",
+   "Requires lenders to notify borrowers at least 6 months before a term loan expires and to give 90 business days' notice if they decide not to renew or extend a loan.",
+   "Requires lenders to inform borrowers about external dispute resolution in certain situations, such as after a default notice or a declined hardship request.",
+   "Imposes civil penalties on lenders that do not follow these rules."
+  ],
+  "affected": "Small primary production businesses and the authorised deposit-taking institutions that lend to them.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:01Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-377576",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "Rebekha Sharkie introduced the Banking Amendment (Rural Finance Reform) Bill 2019 to amend the Banking Act 1959, specifically targeting loans to primary production businesses."
+  },
+  {
+   "slug": "speech-377588",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The Banking Amendment (Rural Finance Reform) Bill was reintroduced to address the power imbalance between family farmers and banks for loans under $5 million, aiming to restore trust and integrity in lender-farmer relationships. The bill will be re-referred to the Standing Committee on Economics, with thanks to the member for Goldstein for prior interest."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,921 @@
+{
+ "key": "au-federal-r6606",
+ "title": "National Redress Scheme for Institutional Child Sexual Abuse Amendment (Technical Amendments) Bill 2020",
+ "short_title": "National Redress Scheme for Institutional Child Sexual Abuse Amendment (Technical Amendments) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2021-03-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6606_ems_978c8773-d2b4-438d-847b-9011e61849a6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6606_ems_063c1db9-366a-4ba0-8894-075f88e6f518%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6606%22",
+   "document_date": "2020-10-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00015",
+   "document_date": "2021-03-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6910",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-02-04.36.7) to keep the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) unchanged. The usual second reading motion is \"*that the bill be read a second time,*\" which is parliamentary jargon for agreeing with the main idea of the bill. This vote was put after the MP for Barton [Linda Burney](https://theyvoteforyou.org.au/people/representatives/barton/linda_burney) (Labor) proposed an [amendment](https://www.openaustralia.org.au/debate/?id=2021-02-03.21.2). ### Proposed amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes the deficiencies in the bill as drafted; and* > > *(2) urges the Government to respond to calls from survivors to improve the National Redress Scheme and deliver quicker, fairer and better outcomes for recipients, as recommended by the Royal Commission\".*",
+   "stage": "Second reading",
+   "ayes": 64,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 119
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-04/6"
+  },
+  {
+   "key": "federal-representatives-6911",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2021-02-04.39.2) introduced by Barton MP [Linda Burney](https://theyvoteforyou.org.au/people/representatives/barton/linda_burney) (Labor), which means it failed. MP Burney explained the [purpose of the amendment](https://www.openaustralia.org.au/debate/?id=2021-02-04.39.2): > *This amendment will introduce a requirement that the minister name any institution that refuses to join the Redress Scheme within six months of an application for redress being received. I acknowledge that this is the government's policy and that the government made a change late last year to allow for the removal of an institution's charitable status after six months if it does not join the scheme. It is a change that was made after significant pressure from survivors and from Labor. But this is not guaranteed; it requires proactive management by the government. I have no doubt that the minister will do the right thing here. However, the naming of redress dodgers should be something that is automatic and guaranteed.* ### Amendment text > *(1) Schedule 1, page 15 (after line 13), after Part 6, insert:* > > *Part 6A — Naming and shaming non - participating institutions* > > *National Redress Scheme for Institutional Child Sexual Abuse Act 2018* > > *48A At the end of Division 3 of Part 5 - 1* > > *Add:* > >> *116A Naming and shaming non - participating institutions* >> >> *(1) This section applies to a non-government institution if:* >> >> *(a) either:* >> >>> *(i) an application made under section 19 identifies the institution as being involved in the abuse of a person; or* >>> >>> *(ii) information given in response to a request under section 24 or 25, in relation to an application made under section 19, identifies the institution as being involved in the abuse of a person; and* >> >> *(b) the application has not been withdrawn under section 22; and* >> >> *(c) the institution is not",
+   "stage": "Consideration in detail",
+   "ayes": 63,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 120
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-04/7"
+  },
+  {
+   "key": "federal-representatives-6912",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2021-02-04.41.1) introduced by Barton MP [Linda Burney](https://theyvoteforyou.org.au/people/representatives/barton/linda_burney) (Labor), which means they failed. ### Amendment text > *(2) Schedule 1, item 51, page 18 (after line 30), at the end of Part 8-2, add:* > >> *200 Increase in cap on redress payments* >> >> *(1) As soon as practicable after this section commences, the Minister must consider the action that needs to be taken to increase the $150,000 cap on redress payments to $200,000.* >> >> *(2) Within 90 days after this section commences, the Minister must prepare a report on:* >> >>> *(a) what the Minister has done, or plans to do, to have the cap increased as mentioned in subsection (1); or* >>> >>> *(b) if the Minister has not done, and does not plan to do, anything—the Minister's reasons for this.* >> >> *(3) The Minister must cause a copy of the report to be tabled in each House of the Parliament on or before the first sitting day of that House after the end of those 90 days.* >> >> *(4) In this section:* >> >>> *action includes amending this Act, an instrument made under this Act, or any other law.* > > *(3) Schedule 1, item 51, page 18 (after line 30), at the end of Part 8-2, add:* > >> *201 Ending indexing of relevant prior payments* >> >> *(1) As soon as practicable after this section commences, the Minister must consider the action that needs to be taken to end the indexing of relevant prior payments.* >> >> *(2) Within 90 days after this section commences, the Minister must prepare a report on:* >> >>> *(a) what the Minister has done, or plans to do, to have indexing ended as mentioned in subsection (1); or* >>> >>> *(b) if the Minister has not done, and does not plan to do, anything—the Minister's reasons for this.* >> >> *(3) The Minister must cause a copy of the report to be tabled in each House of the Parliament on or before the firs",
+   "stage": "Consideration in detail",
+   "ayes": 61,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 114
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-04/8"
+  },
+  {
+   "key": "federal-representatives-6913",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2021-02-04.43.1) introduced by Barton MP [Linda Burney](https://theyvoteforyou.org.au/people/representatives/barton/linda_burney) (Labor), which means it failed. MP Burney explained the [purpose of the amendment](): > *This amendment will make sure that payments made in the past for other purposes are not taken from redress payments—for example, to the Stolen Generations. This would mean the scheme would give survivors the benefit of the doubt, and this is only fair.* ### Amendment text > *(4) Schedule 1, item 51, page 18 (after line 30), at the end of Part 8-2, add:* > >> *202 Deducting prior payments—safeguards* >> >> *(1) As soon as practicable after this section commences, the Minister must consider the action that needs to be taken to ensure that prior payments are deducted from redress payments only if, and only to the extent that, it is proven that the prior payments are relevant prior payments.* >> >> *(2) Within 90 days after this section commences, the Minister must prepare a report on:* >> >>> *(a) what the Minister has done, or plans to do, to ensure the result mentioned in subsection (1); or* >>> >>> *(b) if the Minister has not done, and does not plan to do, anything—the Minister's reasons for this.* >> >> *(3) The Minister must cause a copy of the report to be tabled in each House of the Parliament on or before the first sitting day of that House after the end of those 90 days.* >> >> *(4) In this section:* >> >>> *action includes amending this Act, an instrument made under this Act, or any other law.*",
+   "stage": "Consideration in detail",
+   "ayes": 61,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 115
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-04/9"
+  },
+  {
+   "key": "federal-representatives-6914",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2021-02-04.46.1) introduced by Barton MP [Linda Burney](https://theyvoteforyou.org.au/people/representatives/barton/linda_burney) (Labor), which means it failed. MP Burney explained the [purpose of the amendment](https://www.openaustralia.org.au/debate/?id=2021-02-04.46.1): > *To me, this is one of the most important amendments. Many people who are survivors of child sexual assault are old and unwell, and many have died waiting for their payment. An early payment scheme is working well in Scotland. It would not cost more. There are no cost implications. It would just give people recognition and peace of mind at the end of their lives.* ### Amendment text > *(5) Schedule 1, item 51, page 18 (after line 30), at the end of Part 8-2, add:* > >> *203 Advance payment scheme for elderly and ill applicants* >> >> *(1) As soon as practicable after this section commences, the Minister must consider the action that needs to be taken so that, in appropriate circumstances, redress is payable to elderly or ill applicants in advance of their applications being approved.* >> >> *(2) Within 90 days after this section commences, the Minister must prepare a report on:* >> >>> *(a) what the Minister has done, or plans to do, to have redress payable as mentioned in subsection (1); or* >>> >>> *(b) if the Minister has not done, and does not plan to do, anything—the Minister's reasons for this.* >> >> *(3) The Minister must cause a copy of the report to be tabled in each House of the Parliament on or before the first sitting day of that House after the end of those 90 days.* >> >> *(4) In this section:* >> >>> *action includes amending this Act, an instrument made under this Act, or any other law.*",
+   "stage": "Consideration in detail",
+   "ayes": 61,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 115
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-04/10"
+  },
+  {
+   "key": "federal-representatives-6915",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2021-02-04.48.1) introduced by Barton MP [Linda Burney](https://theyvoteforyou.org.au/people/representatives/barton/linda_burney) (Labor), which means it failed. MP Burney explained the [purpose of the amendments](https://www.openaustralia.org.au/debate/?id=2021-02-04.48.1): > *Amendment (6) will make sure that no-one misses out on redress. If an old organisation that has folded no longer has any links to a continuing organisation, or if an organisation generally does not have the resources to participate in the scheme, government should make sure that the redress is paid as funder of last resort. Amendment (10) requires non-participating organisations to participate. This amendment will make sure that, if an organisation refuses to participate in the scheme or deliberately restructures their assets so as to appear they can't participate, the government will be able to get funds from the organisation by order to pay redress. This could take the form of a levy or collection through the tax system. It is unacceptable for organisations to refuse to participate or hide assets, and they must pay redress to those they have hurt.* ### Amendment text > *(6) Schedule 1, item 51, page 18 (after line 30), at the end of Part 8-2, add:* > >> *204 Funders of last resort guarantee* >> >> *(1) As soon as practicable after this section commences, the Minister must consider the action that needs to be taken to ensure that, for each non-government institution that:* >> >>> *(a) is responsible for the abuse of a person; and* >>> >>> *(b) is not a participating institution; and* >>> >>> *(c) either:* >>> >>>> *(i) is a defunct institution; or* >>>> >>>> *(ii) because of the institution's financial situation, cannot participate in the scheme;* >>> >>> *there is a government institution that is liable for what the non-government institution would have been liable to pay in relation",
+   "stage": "Consideration in detail",
+   "ayes": 61,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 115
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-04/11"
+  },
+  {
+   "key": "federal-representatives-6916",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of disagreeing with a [motion](https://www.openaustralia.org.au/debate/?id=2021-02-04.52.4) \"*That the member for Fadden be heard now.*\" In other words, they voted that Fadden MP [Stuart Robert](https://theyvoteforyou.org.au/people/representatives/fadden/stuart_robert) (Liberal) not be heard now.",
+   "stage": "Consideration in detail",
+   "ayes": 61,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 115
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-04/12"
+  },
+  {
+   "key": "federal-representatives-6917",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2021-02-04.51.1) introduced by Barton MP [Linda Burney](https://theyvoteforyou.org.au/people/representatives/barton/linda_burney) (Labor), which means it failed. MP Burney explained the [purpose of the amendment](https://www.openaustralia.org.au/debate/?id=2021-02-04.51.1): > *This amendment is about recognising the impact of abuse. This would require the impact of abuse to be better recognised. Survivors have told me about the cruel and arbitrary matrix which links payments for the impacts of abuse to the nature of the abuse. This needs to change so that payments for abuse are calculated independently, as recommended by the royal commission.* ### Amendment text > *(8) Schedule 1, item 51, page 18 (after line 30), at the end of Part 8-2, add:* > > *206 Better recognising the impact of sexual abuse* > > *(1) As soon as practicable after this section commences, the Minister must consider the action that needs to be taken to have the assessment framework better recognise the impact of sexual abuse.* > > *(2) Within 90 days after this section commences, the Minister must prepare a report on:* > >> *(a) what the Minister has done, or plans to do, to have the assessment framework better recognise the impact of sexual abuse; or* >> >> *(b) if the Minister has not done, and does not plan to do, anything—the Minister’s reasons for this.* > > *(3) The Minister must cause a copy of the report to be tabled in each House of the Parliament on or before the first sitting day of that House after the end of those 90 days.* > > *(4) In this section:* > >> *action includes amending this Act, an instrument made under this Act, or any other law.*",
+   "stage": "Consideration in detail",
+   "ayes": 61,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 115
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-04/13"
+  },
+  {
+   "key": "federal-senate-6949",
+   "date": "2021-02-15",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual second reading motion, which is \"*that the bill be read a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\" - parliamentary jargon for agreeing with the main idea of the bill. Because this amendment was unsuccessful, the usual second reading motion will remain as it is. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes the deficiencies in the bill as drafted; and* > > *(b) urges the Government to respond to calls from survivors to improve the National Redress Scheme and deliver quicker, fairer and better outcomes for recipients, as recommended by the Royal Commission into Institutional Responses to Child Sexual Abuse\".*",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "member": 10,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-15/10"
+  },
+  {
+   "key": "federal-senate-6950",
+   "date": "2021-02-15",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-02-15.219.1) moved by West Australian Senator [Louise Pratt](https://theyvoteforyou.org.au/people/senate/wa/louise_pratt) (Labor), which means it failed. ### Amendment text > *(1) Schedule 1, page 14 (after line 12), after Part 5, insert:* > > *Part 5A—Reviewing the original determination* > > *National Redress Scheme for Institutional Child Sexual Abuse Act 2018* > > *46A At the end of section 75* > > *Add:* > > *(4) When reviewing the original determination, the person may not vary the original determination or set aside the original determination and substitute a new determination in a way that would result in the amount of the redress payment or the amount of the counselling and psychological component of redress being less than the amount determined in the original determination.*",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 19,
+    "member": 11,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-15/11"
+  },
+  {
+   "key": "federal-senate-6951",
+   "date": "2021-02-15",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-02-15.228.4) moved by West Australian Senator [Louise Pratt](https://theyvoteforyou.org.au/people/senate/wa/louise_pratt) (Labor), which means it failed. ### Amendment text > *(2) Schedule 1, page 15 (after line 13), after Part 6, insert:* > > *Part 6A—Naming and shaming non-participating institutions* > > *National Redress Scheme for Institutional Child Sexual Abuse Act 2018* > > *48A At the end of Division 3 of Part 5-1* > > *Add:* > > *116A Naming and shaming non-participating institutions* > > *(1) This section applies to a non-government institution if:* > >> *(a) either:* >> >>> *(i) an application made under section 19 identifies the institution as being involved in the abuse of a person; or* >>> >>> *(ii) information given in response to a request under section 24 or 25, in relation to an application made under section 19, identifies the institution as being involved in the abuse of a person; and* >> >> *(b) the application has not been withdrawn under section 22; and* >> >> *(c) the institution is not a participating non-government institution.* > > *(2) If the institution refuses to participate in the scheme, the Minister must publish a notice stating that, despite the matters mentioned in paragraphs (1) (a) and (b), the institution refuses to participate in the scheme.* > > *Institution has 6 months to become a participating institution after first application etc. that identifies institution* > > *(3) The Minister must not publish a notice under subsection (2) in relation to the institution until the end of 6 months after the first time subparagraph (1) (a) (i) or (ii) applies in relation to the institution.*",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "earliest": 23,
+    "dated": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-15/12"
+  },
+  {
+   "key": "federal-senate-6952",
+   "date": "2021-02-15",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-02-15.230.1) moved by West Australian Senator [Louise Pratt](https://theyvoteforyou.org.au/people/senate/wa/louise_pratt) (Labor), which means it failed. ### Amendment text > *(3) Schedule 1, item 51, page 18 (after line 30), at the end of Part 8-2, add:* > > *200 Increase in cap on redress payments* > > *(1) As soon as practicable after this section commences, the Minister must consider the action that needs to be taken to increase the $150,000 cap on redress payments to $200,000.* > > *(2) Within 90 days after this section commences, the Minister must prepare a report on:* > >> *(a) what the Minister has done, or plans to do, to have the cap increased as mentioned in subsection (1); or* >> >> *(b) if the Minister has not done, and does not plan to do, anything—the Minister's reasons for this.* > > *(3) The Minister must cause a copy of the report to be tabled in each House of the Parliament on or before the first sitting day of that House after the end of those 90 days.* > > *(4) In this section:* > >> *action includes amending this Act, an instrument made under this Act, or any other law.*",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "earliest": 23,
+    "dated": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-15/13"
+  },
+  {
+   "key": "federal-senate-6953",
+   "date": "2021-02-15",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-02-15.232.1) introduced by West Australian Senator [Louise Pratt](https://theyvoteforyou.org.au/people/senate/wa/louise_pratt) (Labor), which means it failed. She [explained that](https://www.openaustralia.org.au/senate/?gid=2021-02-15.232.1) the amendment would: > *stop the indexation of prior payments. We know that many people have had a disappointing experience when they have been through the damaging process of applying, only to receive a tiny or non-existent settlement.* ### Amendment text > *(4) Schedule 1, item 51, page 18 (after line 30), at the end of Part 8-2, add:* > > *201 Ending indexing of relevant prior payments* > > *(1) As soon as practicable after this section commences, the Minister must consider the action that needs to be taken to end the indexing of relevant prior payments.* > > *(2) Within 90 days after this section commences, the Minister must prepare a report on:* > >> *(a) what the Minister has done, or plans to do, to have indexing ended as mentioned in subsection (1); or* >> >> *(b) if the Minister has not done, and does not plan to do, anything—the Minister's reasons for this.* > > *(3) The Minister must cause a copy of the report to be tabled in each House of the Parliament on or before the first sitting day of that House after the end of those 90 days.* > > *(4) In this section:* > >> *action includes amending this Act, an instrument made under this Act, or any other law.*",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "earliest": 23,
+    "dated": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-15/14"
+  },
+  {
+   "key": "federal-senate-6954",
+   "date": "2021-02-15",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-02-15.234.1) introduced by West Australian Senator [Louise Pratt](https://theyvoteforyou.org.au/people/senate/wa/louise_pratt) (Labor), which means it failed. She [explained that](https://www.openaustralia.org.au/senate/?gid=2021-02-15.234.1) the amendment would: > *make sure that, if there's any doubt about whether a prior payment relates to sexual abuse, the scheme should err on the side of the applicant and not deduct payments from redress.* ### Amendment text > *(5) Schedule 1, item 51, page 18 (after line 30), at the end of Part 8-2, add:* > > *202 Deducting prior payments—safeguards* > > *(1) As soon as practicable after this section commences, the Minister must consider the action that needs to be taken to ensure that prior payments are deducted from redress payments only if, and only to the extent that, it is proven that the prior payments are relevant prior payments.* > > *(2) Within 90 days after this section commences, the Minister must prepare a report on:* > >> *(a) what the Minister has done, or plans to do, to ensure the result mentioned in subsection (1); or* >> >> *(b) if the Minister has not done, and does not plan to do, anything—the Minister's reasons for this.* > > *(3) The Minister must cause a copy of the report to be tabled in each House of the Parliament on or before the first sitting day of that House after the end of those 90 days.* > > *(4) In this section:* > >> *action includes amending this Act, an instrument made under this Act, or any other law.*",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "earliest": 23,
+    "dated": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-15/15"
+  },
+  {
+   "key": "federal-senate-6955",
+   "date": "2021-02-15",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-02-15.236.1) moved by West Australian Senator [Louise Pratt](https://theyvoteforyou.org.au/people/senate/wa/louise_pratt) (Labor), which means they failed. The amendments related to: * an advance payment scheme for elderly and ill applicants; * a funders of last resort guarantee; * psychological counselling and support; * better recognising the impact of sexual abuse; and * requiring non -participating institutions to contribute to scheme.",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "earliest": 23,
+    "dated": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-15/16"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-401388",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Redress Scheme is failing survivors, with only 4,620 payments made out of an estimated 60,000 eligible survivors, and proposed Labor amendments including raising the maximum payment to $200,000, removing indexation of prior payments, making the government a funder of last resort for ineligible institutions, providing ongoing psychological counselling, and creating an advance payment scheme for elderly and unwell survivors."
+  },
+  {
+   "slug": "speech-401528",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The member for Oxley argued the National Redress Scheme amendments are insufficient and proposed increasing the maximum payment to $200,000, ensuring prior payments are not deducted, introducing advanced payments for elderly and ill applicants, and requiring institutions that do not join the scheme within 12 months to be publicly named and lose Commonwealth funding."
+  },
+  {
+   "slug": "speech-401530",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "Labor will move amendments to the National Redress Scheme, including a levy on organisations that refuse to join, an advance payment scheme for elderly or ill survivors, an increase in the redress cap from $150,000 to $200,000, and guaranteed ongoing psychological counselling. The speech also noted that as of 15 January 2021, only 4,660 applications had been finalised out of 9,232 lodged, and named institutions such as the Australian Air League, Jehovah's Witnesses, and the Boys Brigade that have not indicated they will join the scheme."
+  },
+  {
+   "slug": "speech-401604",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Commonwealth must act as the funder of last resort for survivors of the Retta Dixon Home in Darwin, where Aboriginal children were forcibly taken and abused, because at least 10 survivors remain in limbo after the organisation AIM was barred from the National Redress Scheme due to insufficient funds. The speaker called for an early payment scheme for elderly and ill applicants and noted that the Prime Minister has not responded to a letter on the issue."
+  },
+  {
+   "slug": "speech-401610",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-02-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Redress Scheme Amendment Bill 2020 but called for expedited amendments including raising the compensation cap from $150,000 to $200,000, ending indexation of prior payments, naming non-participating institutions after six months, introducing an advance payment scheme for ill or elderly applicants, and making the government the funder of last resort for institutions that restructure to avoid liability, citing Jehovah’s Witnesses as an example."
+  },
+  {
+   "slug": "speech-401611",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-04",
+   "stage_hint": null,
+   "brief": "The National Redress Scheme Amendment (Technical Amendments) Bill 2020 makes minor and technical changes to increase efficiency and fix oversights; the Morrison government opposed an opposition amendment, noting 191 institutions have joined and a review by Robyn Kruk AO is underway."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Redress Scheme for Institutional Child Sexual Abuse Amendment (Technical Amendments) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00015",
+   "assent_date": "2021-03-01"
+  }
+ ]
+}

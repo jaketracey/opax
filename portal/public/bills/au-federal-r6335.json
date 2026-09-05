@@ -1,0 +1,502 @@
+{
+ "key": "au-federal-r6335",
+ "title": "Social Security (Administration) Amendment (Cashless Welfare) Bill 2019",
+ "short_title": "Social Security (Administration) Amendment (Cashless Welfare) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2019-08-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6335%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6335%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6335%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6335%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6335%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6335%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6335%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6335%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6335_ems_06c9f966-c612-449a-9b9a-a335bf557f96%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6335%22",
+   "document_date": "2019-07-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00062",
+   "document_date": "2019-08-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5811",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "question": "Social Security (Administration) Amendment (Cashless Welfare) Bill 2019 - Second Reading - Make voluntary",
+   "stage": "Second reading",
+   "ayes": 64,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Labor": {
+     "ayes": 62,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 136,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-07-30/2"
+  },
+  {
+   "key": "federal-senate-5820",
+   "date": "2019-07-31",
+   "house": "senate",
+   "question": "Social Security (Administration) Amendment (Cashless Welfare) Bill 2019 - Second Reading - Stop being compulsory",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 20,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-31/1"
+  },
+  {
+   "key": "federal-senate-5821",
+   "date": "2019-07-31",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6335_amend_5369bb11-64a5-400e-9e70-375867da82cb%22;rec=0) introduced by Tasmanian Senator [Carol Brown](https://theyvoteforyou.org.au/people/senate/tasmania/carol_brown) (Labor), which means it failed. Senator Brown [explained that](https://www.openaustralia.org.au/senate/?gid=2019-07-31.129.1): > *The amendments that the opposition are putting forward on [sheet 8731](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6335_amend_5369bb11-64a5-400e-9e70-375867da82cb%22;rec=0) will require the department to make a decision on the application to leave the card within 21 business days, and there is a stop-the-clock provision to extend the time when further information is requested from the applicant. We believe that this is a fair amendment because people should be able to get off the card in a timely fashion and get on with their lives.*",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 30,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-31/2"
+  },
+  {
+   "key": "federal-senate-5831",
+   "date": "2019-08-01",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6335_amend_ae96acf5-6484-4adf-a2d2-b7a4bb72db23%22;rec=0) introduced by Tasmanian Senator [Carol Brown](https://theyvoteforyou.org.au/people/senate/tasmania/carol_brown) (Labor), which means it failed. Senator Brown [explained that](https://www.openaustralia.org.au/senate/?gid=2019-07-31.314.1): > *These amendments would remove a provision that allows the minister to specify other requirements a person must meet before being permitted to leave the cashless debit card and replace it with a provision that allows the minister to specify more details about how exiting the requirements should be met. This is because Labor does not think the government should be able to make it harder for people to get off the card, particularly given the breadth of the existing requirements in relation to the management of financial affairs, the protection of children and unlawful behaviour.*",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 28,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-08-01/1"
+  },
+  {
+   "key": "federal-senate-5832",
+   "date": "2019-08-01",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2019-08-01.31.1) introduced by WA Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert) (Greens), which means it failed. Senator Siewert explained the [context of this amendment](https://www.openaustralia.org.au/senate/?gid=2019-07-31.15.1): > *Some of the issues that I still think are problematic are under section 124PHB(3). It says that a person wishing to exit the trial will be assessed according to the following:* > >> *(a) the person can demonstrate reasonable and responsible management of the person's affairs (including financial affairs), taking into account all of the following:* >> >>> *(i) the interest of any children for whom the person is responsible;* >>> >>> *(ii) whether the person was convicted of an offence against a law of the Commonwealth, a State or a Territory, or was serving a sentence of imprisonment for such an offence, at any time in the last 12 months …* > > *I acknowledge that this is a change from what originally went through this place, which was about whether the person 'has a likelihood of engaging in any unlawful activity'. That was totally subjective. It wasn't measurable. It was dependent on whether somebody in the community, because at this stage it was about the community panels and the community bodies, thought someone was going to carry out any unlawful activity. So I do acknowledge that that's an improvement on what was there. We do, however, have concerns that it's 'convicted of an offence' rather than 'convicted of a serious offence', so I do have an amendment to make to emphasise that it's about a serious offence.*",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 28,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-08-01/2"
+  },
+  {
+   "key": "federal-senate-5833",
+   "date": "2019-08-01",
+   "house": "senate",
+   "question": "Social Security (Administration) Amendment (Cashless Welfare) Bill 2019 - in Committee - Make voluntary",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 26,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-08-01/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-378471",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-25",
+   "stage_hint": null,
+   "brief": "The Social Security (Administration) Amendment (Cashless Welfare) Bill 2019 makes administrative changes to the cashless debit card exit process, moving decision-making to the Secretary of the Department of Social Services and broadening criteria to include social norms. The program has shown positive results, including 41% of participants drinking less, 48% using drugs less, and 48% gambling less in trial sites including Ceduna, East Kimberley, Goldfields, and Bundaberg and Hervey Bay."
+  },
+  {
+   "slug": "speech-379172",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-30",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the bill as it provides an exit pathway, but moved an amendment requiring a report on community support, a wraparound services plan, and making the card voluntary from 30 January 2020 unless there is clear local consent. The party also criticised the government's $34 million expenditure and lack of evidence for the card's effectiveness."
+  },
+  {
+   "slug": "speech-379173",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-30",
+   "stage_hint": null,
+   "brief": "The bill continues the cashless debit card program while improving the exit process to be more consistent and considerate of child, family and community welfare, with no changes to existing trial areas or the government's commitment to reducing alcohol, drug and gambling harms."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Security (Administration) Amendment (Cashless Welfare) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00062",
+   "assent_date": "2019-08-12"
+  }
+ ]
+}

@@ -1,0 +1,97 @@
+{
+ "key": "au-federal-s1337",
+ "title": "Fair Work Amendment (Equal Pay for Equal Work) Bill 2022",
+ "short_title": "Fair Work Amendment (Equal Pay for Equal Work) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-02-10",
+ "originating_house": "senate",
+ "sponsor": "ROBERTS, Sen Malcolm",
+ "sponsor_party": "Pauline Hanson&#39;s One Nation",
+ "sponsor_person_id": "10856",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1337%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1337%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1337%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1337%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1337_ems_6babf05a-c1bd-48ac-86c1-dc0b584893dc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1337%22",
+   "document_date": "2022-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-10",
+  "sentences": [
+   "The bill would require labour hire workers covered by certain modern awards to be paid at least the same rate as directly employed workers.",
+   "It would insert a provision into the Fair Work Act 2009 that guides the Fair Work Commission to include an equal pay for equal work requirement in enterprise agreements under those awards.",
+   "The Minister could add further awards by disallowable instrument where a market failure appears, and the bill applies only to pay rates and is not retrospective."
+  ],
+  "changes": [
+   "Requires labour hire workers under certain modern awards to receive pay equal to or greater than directly employed workers.",
+   "Removes the incentive for employers to use labour hire contracts for lower wages.",
+   "Allows the Minister to add additional awards by disallowable instrument in response to market failures."
+  ],
+  "affected": "Labour hire workers covered by certain modern awards, their employers, and the Fair Work Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

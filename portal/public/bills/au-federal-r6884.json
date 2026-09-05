@@ -1,0 +1,298 @@
+{
+ "key": "au-federal-r6884",
+ "title": "Australian Human Rights Commission Legislation Amendment (Selection and Appointment) Bill 2022",
+ "short_title": "Australian Human Rights Commission Legislation Amendment (Selection and Appointment) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-07-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2022-11-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6884%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6884%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6884%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6884%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6884%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6884%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6884%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6884%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6884%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6884%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6884%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6884%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6884%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6884_ems_e126e2aa-8ce3-4fc4-b269-bda3c633be07%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6884%22",
+   "document_date": "2022-07-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00048",
+   "document_date": "2022-11-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-07-27",
+  "sentences": [
+   "The bill would create a legal requirement for how commissioners are chosen for Australia's human rights watchdog.",
+   "The minister could only appoint someone if a public, competitive process had picked them.",
+   "No commissioner could serve longer than seven years in total, and the president would need specific expertise."
+  ],
+  "changes": [
+   "Codifies a requirement for merit-based and open selection processes for Australian Human Rights Commission members.",
+   "Limits the total term for a commissioner to seven years.",
+   "Requires the President to hold suitable qualifications, knowledge or experience."
+  ],
+  "affected": "Members and the President of the Australian Human Rights Commission, and the Minister responsible for appointments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7692",
+   "date": "2022-08-02",
+   "house": "representatives",
+   "question": "Australian Human Rights Commission Legislation Amendment (Selection and Appointment) Bill 2022 - Second Reading - Human Rights Commissioner for LGBTIQA+ people",
+   "stage": "Second reading",
+   "ayes": 119,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 7
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 125,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-02/1"
+  },
+  {
+   "key": "federal-senate-7815",
+   "date": "2022-10-27",
+   "house": "senate",
+   "question": "Australian Human Rights Commission Legislation Amendment (Selection and Appointment) Bill 2022 - in Committee - Human Rights Commissioner for LGBTIQA+ people",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "earliest": 24,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-10-27/10"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-420198",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-07-27",
+   "stage_hint": null,
+   "brief": "The bill requires that all appointments to the Australian Human Rights Commission be made through a merit-based, publicly advertised selection process, limits terms to a maximum of seven years, and establishes consistent qualification requirements for the president and commissioners—addressing concerns that led to the deferral of the commission's A‑status reaccreditation in March 2022."
+  },
+  {
+   "slug": "speech-420921",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The coalition does not oppose the bill requiring merit-based, transparent appointments and a seven-year term limit for the Australian Human Rights Commission, arguing it is needed to retain A-status accreditation despite inconsistencies in the Global Alliance of National Human Rights Institutions’ processes; the speaker defended the coalition’s human rights record, citing $120 million in Afghan aid, 30,000 humanitarian places, and Magnitsky-style sanctions, and thanked former commissioners including Ros Croucher, Kate Jenkins, and June Oscar."
+  },
+  {
+   "slug": "speech-420922",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The Australian Human Rights Commission Legislation Amendment (Selection And Appointment) Bill 2022 is necessary to ensure transparent, merit-based appointments and restore public trust, as the commission itself has long advocated—citing President Rosalind Croucher’s 1 August letter and the December 2021 Free and Equal position paper. The speaker also called for a national bill or charter of human rights to provide a legislative framework for rights and responsibilities."
+  },
+  {
+   "slug": "speech-420923",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The opposition supported the Australian Human Rights Commission Legislation Amendment (Selection and Appointment) Bill 2022, which introduces statutory merit-based appointment processes, and thanked Sex Discrimination Commissioner Kate Jenkins for her workplace culture report, noting the need for cultural change in Parliament."
+  },
+  {
+   "slug": "speech-420925",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speech argued that the Australian Human Rights Commission Legislation Amendment (Selection and Appointment) Bill 2022 is needed to establish a merit-based selection process for commissioners and senior executives, addressing past politicisation that led to a deferral of A-status accreditation. It cited Grattan Institute data showing 21% of federal government board positions are political appointees, supported a new public appointments commissioner, and commended Sex Discrimination Commissioner Kate Jenkins as well as an amendment for a dedicated LGBTQI commissioner."
+  },
+  {
+   "slug": "speech-420927",
+   "speaker": "Stephen Bates",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The Greens moved an amendment to the Australian Human Rights Commission Legislation Amendment (Selection and Appointment) Bill 2022 to establish a standalone LGBTQIA+ human rights commissioner, citing higher rates of homelessness and suicide among queer and trans people as evidence of urgent need."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Human Rights Commission Legislation Amendment (Selection and Appointment) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00048",
+   "assent_date": "2022-11-09"
+  }
+ ]
+}

@@ -1,0 +1,146 @@
+{
+ "key": "au-federal-s1292",
+ "title": "Biosecurity Amendment (Clarifying Conditionally Non-prohibited Goods) Bill 2021",
+ "short_title": "Biosecurity Amendment (Clarifying Conditionally Non-prohibited Goods) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-03-18",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Water and the Environment",
+ "status": "passed",
+ "status_as_of": "2021-03-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1292%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1292%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1292%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1292%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1292%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1292%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1292%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1292%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1292%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1292%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1292_ems_8d583fb5-8117-4947-a30c-1f89f89888a3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1292%22",
+   "document_date": "2021-03-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00033",
+   "document_date": "2021-03-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-03-18",
+  "sentences": [
+   "The bill would confirm that certain biosecurity determinations are legally valid despite any technical defects in how they were made.",
+   "It would retrospectively validate determinations made under subsection 174(1) of the Biosecurity Act 2015 that specify goods as conditionally non-prohibited.",
+   "The bill does not alter any conditions or categories of goods, nor does it create new ones."
+  ],
+  "changes": [
+   "Validates determinations made under subsection 174(1) of the Biosecurity Act 2015.",
+   "Ensures these determinations are taken to have always been valid.",
+   "Confirms that goods specified in the determinations are conditionally non-prohibited goods."
+  ],
+  "affected": "The Director of Biosecurity, the Director of Human Biosecurity, and the Agriculture Minister are affected, along with importers of goods covered by the determinations.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-405417",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The Labor speaker announced support for the Biosecurity Amendment Bill to correct drafting errors but criticised the Morrison government's biosecurity mismanagement, citing the axing of a recommended biosecurity levy, the delivery of only 2,600 of 25,000 promised agricultural workers, and $45 million in dumped produce; they moved a second reading amendment to note ongoing government inaction."
+  },
+  {
+   "slug": "speech-405419",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The Biosecurity Amendment (Clarifying Conditionally Non-prohibited Goods) Bill 2021 confirms the validity of existing determinations under section 174 of the Biosecurity Act 2015 for conditionally non-prohibited goods and their conditions, without creating or changing any classes of goods, to maintain effective biosecurity risk management."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Biosecurity Amendment (Clarifying Conditionally Non-prohibited Goods) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00033",
+   "assent_date": "2021-03-31"
+  }
+ ]
+}

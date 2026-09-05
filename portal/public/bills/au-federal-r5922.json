@@ -1,0 +1,175 @@
+{
+ "key": "au-federal-r5922",
+ "title": "Treasury Laws Amendment (2017 Measures No. 4) Bill 2017",
+ "short_title": "Treasury Laws Amendment (2017 Measures No. 4) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-08-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5922%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5922%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5922%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5922%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5922%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5922%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5922%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5922%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5922%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5922%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5922%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5922%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5922_ems_3e1280ef-bb97-47e3-a799-0dff4600fc2f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5922%22",
+   "document_date": "2017-06-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00094",
+   "document_date": "2017-08-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-351754",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (2017 Measures No. 4) Bill 2017, which lowers the wine equalisation tax rebate cap from $500,000 to $350,000, saving $300 million over four years, and reinvests $50 million in the Australian Grape and Wine Authority to promote exports. The reform aims to stop rorting of the rebate on bulk wine and support cellar door sales and tourism."
+  },
+  {
+   "slug": "speech-351756",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill, arguing its changes to the Wine Equalisation Tax rebate would better target small-to-medium craft wine producers in regional areas like Margaret River and Geographe by tightening eligibility rules to prevent double-dipping. The speaker also highlighted that Margaret River wine exports were valued at $27.8 million in 2016 (up 18%) and noted the government's $9.78 million investment in Busselton Margaret River Regional Airport."
+  },
+  {
+   "slug": "speech-351758",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill 2017, which reforms the Wine Equalisation Tax producer rebate by reducing the cap from $500,000 to $350,000, requiring producers to own at least 85% of grapes at crushing, and limiting the rebate to packaged wine under five litres, aiming to close loopholes and benefit smaller wine producers."
+  },
+  {
+   "slug": "speech-351760",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The member argued that the wine equalisation tax rebate was being exploited by \"wine tax traders,\" harming small producers, and that the industry itself requested the rebate be reduced. The Treasury Laws Amendment (2017 Measures No. 4) Bill 2017 will implement these changes, which the member welcomed after years of advocacy."
+  },
+  {
+   "slug": "speech-351763",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (2017 Measures No. 4) Bill 2017, praising its cross-party unity and the wine equalisation tax (WET) provisions, and noted a constructive relationship with the member for Riverina."
+  },
+  {
+   "slug": "speech-351768",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill, particularly the wine equalisation tax rebate, noting the wine industry's contribution of $13.3 billion in revenue and 45,000 jobs in regional Victoria. They praised the consultative process led by ministers Anne Ruston and Kelly O'Dwyer and raised the need for harmonisation of responsible service of alcohol certificates between Victoria and New South Wales."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2017 Measures No. 4) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00094",
+   "assent_date": "2017-08-23"
+  }
+ ]
+}

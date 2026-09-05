@@ -38,6 +38,7 @@ import argparse
 import hashlib
 import json
 import sys
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -257,6 +258,32 @@ def resource_body(doc: dict) -> dict:
 # ---------------------------------------------------------------------------
 
 
+class RateLimiter:
+    """Thread-safe pacing shared across worker threads: at most `rate` calls a
+    second. `push()` acquires one slot per bill (its GET plus, when the
+    content differs, its POST/PATCH), so the whole run -- not just the write
+    half -- is paced. The box is under heavy labelling load during a bulk
+    publish and 429 backpressure is already handled by `parli.arag`, but
+    pacing at the source keeps the run from adding to the queue it is waiting
+    on."""
+
+    def __init__(self, rate: float):
+        self.interval = 1.0 / rate if rate > 0 else 0.0
+        self._lock = threading.Lock()
+        self._next = time.monotonic()
+
+    def acquire(self) -> None:
+        if self.interval <= 0:
+            return
+        with self._lock:
+            now = time.monotonic()
+            start = max(now, self._next)
+            self._next = start + self.interval
+        wait = start - now
+        if wait > 0:
+            time.sleep(wait)
+
+
 def stored_hash(kb: KbClient, slug: str) -> tuple[bool, str | None]:
     """(exists, stored content hash). A resource without one is treated as
     stale and rewritten."""
@@ -270,10 +297,12 @@ def stored_hash(kb: KbClient, slug: str) -> tuple[bool, str | None]:
     return True, meta.get("content_hash")
 
 
-def push(kb: KbClient, body: dict, dry_run: bool) -> str:
+def push(kb: KbClient, body: dict, dry_run: bool, limiter: "RateLimiter | None" = None) -> str:
     """'created' | 'updated' | 'unchanged' | 'failed: ...'. Never deletes."""
     slug = body["slug"]
     want = body["extra"]["metadata"]["content_hash"]
+    if limiter is not None:
+        limiter.acquire()
     try:
         exists, have = stored_hash(kb, slug)
         if exists and have == want:
@@ -342,6 +371,9 @@ def main() -> int:
     ap.add_argument("--cap", type=int, default=RESOURCE_CAP,
                     help=f"hard ceiling on resources this run may write (default {RESOURCE_CAP})")
     ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--rate", type=float, default=0,
+                    help="cap on requests/sec across all workers, shared via a token bucket "
+                         "(default 0 = unlimited); use a low value when the box is under load")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--verify", action="store_true", help="read the catalog back and stop")
     ap.add_argument("--env", default=".env")
@@ -370,8 +402,11 @@ def main() -> int:
     counts: dict[str, int] = {}
     failures: list[str] = []
     t0 = time.time()
+    limiter = RateLimiter(args.rate) if args.rate else None
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
-        for i, (body, outcome) in enumerate(zip(bodies, pool.map(lambda b: push(kb, b, args.dry_run), bodies)), 1):
+        for i, (body, outcome) in enumerate(
+            zip(bodies, pool.map(lambda b: push(kb, b, args.dry_run, limiter), bodies)), 1
+        ):
             head = outcome.split(":")[0]
             counts[head] = counts.get(head, 0) + 1
             if head == "failed":

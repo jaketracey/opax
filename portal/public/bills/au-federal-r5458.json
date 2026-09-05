@@ -1,0 +1,142 @@
+{
+ "key": "au-federal-r5458",
+ "title": "Private Health Insurance (Prudential Supervision) (Consequential Amendments and Transitional Provisions) Bill 2015",
+ "short_title": "Private Health Insurance (Prudential Supervision) (Consequential Amendments and Transitional Provisions) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5458%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5458%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5458%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5458%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5458%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5458%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5458%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5458_ems_489c7c7b-e822-4888-a4d0-072ba2cb403b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5458%22",
+   "document_date": "2015-05-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00087",
+   "document_date": "2015-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-310806",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The bill transfers prudential supervision functions from the council to APRA by 1 July 2015, makes consequential amendments to several acts, and establishes special accounts for the Collapsed Insurer Levy and Risk Equalisation Levy, with transitional provisions for staff, assets, and ongoing registrations."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Private Health Insurance (Prudential Supervision) (Consequential Amendments and Transitional Provisions) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00087",
+   "assent_date": "2015-06-26"
+  }
+ ]
+}

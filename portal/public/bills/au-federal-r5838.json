@@ -1,0 +1,227 @@
+{
+ "key": "au-federal-r5838",
+ "title": "Crimes Legislation Amendment (Powers, Offences and Other Measures) Bill 2018",
+ "short_title": "Crimes Legislation Amendment (Powers, Offences and Other Measures) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Justice",
+ "status": "passed",
+ "status_as_of": "2018-08-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5838%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5838%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5838%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5838%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5838%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5838%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5838%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5838%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5838%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5838%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5838%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5838%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5838%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5838_ems_e453b44f-cbd2-498f-b172-c1f320231725%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5838_ems_58b9aa97-d8bf-4a92-9517-66fdb2081532%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5838_ems_f7ddb3f6-5313-4140-8696-50bf83ce68b0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5838_ems_e914dd32-4cd0-4109-8420-91564eb3afca%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5838_ems_296f17bb-b3ce-4598-be58-a1462095e300%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5838%22",
+   "document_date": "2017-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00075",
+   "document_date": "2018-08-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2017-03-30",
+  "sentences": [
+   "This bill would change several Commonwealth criminal justice laws, including the Australian Federal Police Act 1979, the Crimes Act 1914, and the Criminal Code Act 1995.",
+   "It would clarify police cooperation with international and non-government groups, adjust custody notification rules for questioning Aboriginal and Torres Strait Islander people, create separate disclosure offences for insiders and outsiders in controlled operations, raise maximum penalties for general dishonesty, remove an obsolete death penalty reference, strengthen protections for vulnerable witnesses, and allow information sharing to fight fraud against the Commonwealth with privacy safeguards.",
+   "It would also let the New South Wales Law Enforcement Conduct Commission use spent conviction information under the Commonwealth scheme, and the bill has eight schedules."
+  ],
+  "changes": [
+   "Clarify Australian Federal Police functions to cooperate with international and non-government organisations.",
+   "Clarify custody notification obligations for investigating officials questioning Aboriginal or Torres Strait Islander people.",
+   "Create separate offence regimes for insiders and outsiders disclosing controlled operation information.",
+   "Increase maximum penalties for general dishonesty breaches.",
+   "Remove an obsolete death penalty reference from the Crimes Act 1914.",
+   "Authorise collection, use, and disclosure of information to prevent or deal with fraud against the Commonwealth, with privacy safeguards."
+  ],
+  "affected": "Commonwealth criminal justice arrangements, including police, investigating officials, Aboriginal and Torres Strait Islander people, vulnerable witnesses, and the New South Wales Law Enforcement Conduct Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-345187",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The bill amends multiple Commonwealth acts to clarify AFP functions for international cooperation, mandate custody notification for Aboriginal and Torres Strait Islander people before questioning, revise controlled operations disclosure offences with new elements and defences, increase maximum penalties for general dishonesty from five to ten years, require notice to vulnerable persons before publishing identifying information, authorise personal information sharing for fraud and corruption investigations, and remove impediments for the NSW Law Enforcement Conduct Commission to use spent convictions."
+  },
+  {
+   "slug": "speech-366175",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "Labor supported the Crimes Legislation Amendment (Powers, Offences and Other Measures) Bill 2017, which includes changes to custody notification to protect Indigenous rights, increased penalties for dishonesty offences, and stronger protections for vulnerable witnesses. The speaker criticised a $205 million cut to AFP resourcing and a projected reduction of 567 personnel by 2021-22, and noted that Indigenous incarceration rose from 14% to 27% of the prison population between 1991 and 2017."
+  },
+  {
+   "slug": "speech-366176",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "Labor supported the Crimes Legislation Amendment (Powers, Offences and Other Measures) Bill 2017 with amendments, including protections for Aboriginal custody notification obligations and vulnerable witnesses. The speaker argued that law enforcement funding cuts compromise capabilities against transnational crime, citing an Indonesian terror cell that raised US$600,000 via cryptocurrencies, and highlighted the need for Aboriginal interpreting services in justice settings."
+  },
+  {
+   "slug": "speech-366177",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Crimes Legislation Amendment Bill 2017, noting bipartisan agreement on mandatory notification for questioning Aboriginal and Torres Strait Islander persons, and raised concerns about a $205 million cut to AFP resourcing and a 2½-year delay in resolving police wages. They also announced the inaugural Police Week in September 2018, including the National Police Bravery Awards."
+  },
+  {
+   "slug": "speech-366178",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Crimes Legislation Amendment (Powers, Offences and Other Measures) Bill 2017 will bolster the Commonwealth's ability to combat fraud and corruption, including by allowing collection of personal information for integrity purposes with safeguards, increasing the maximum penalty for general dishonesty offences from five to 10 years, and expanding Australian Federal Police functions to cooperate with international organisations. The bill also clarifies timing for contacting Aboriginal legal assistance before questioning, strengthens vulnerable witness protections, and amends the spent convictions regime for the New South Wales Law Enforcement Conduct Commission."
+  },
+  {
+   "slug": "speech-366182",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "The government moved amendments to remove the term \"reasonable steps\" from the custody notification obligation, instead requiring investigating officials to notify an Aboriginal legal assistance organisation before questioning an Aboriginal or Torres Strait Islander person."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Crimes Legislation Amendment (Powers, Offences and Other Measures) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00075",
+   "assent_date": "2018-08-24"
+  }
+ ]
+}

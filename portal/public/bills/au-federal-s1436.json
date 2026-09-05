@@ -1,0 +1,89 @@
+{
+ "key": "au-federal-s1436",
+ "title": "Whistleblower Protection Authority Bill 2025",
+ "short_title": "Whistleblower Protection Authority Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-02-11",
+ "originating_house": "senate",
+ "sponsor": "POCOCK, Sen David",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "11009",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-07-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1436%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1436%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1436%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1436_ems_2a5243ea-c938-452c-a2d4-2fc2b5a8a89e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1436%22",
+   "document_date": "2025-02-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-11",
+  "sentences": [
+   "The bill would create a new independent federal agency called the Whistleblower Protection Authority to help whistleblowers.",
+   "The Authority would provide information, advice, assistance, guidance and support, receive and facilitate investigations of disclosures, investigate mistreatment of whistleblowers, and carry out enforcement and education activities.",
+   "The Authority would have jurisdiction over all federal whistleblower protection laws and consist of a Commissioner, Deputy Commissioners, a Chief Executive Officer, and staff, along with an Advisory Board and a Parliamentary Joint Committee."
+  ],
+  "changes": [
+   "Establishes the Whistleblower Protection Authority as an independent statutory body.",
+   "Gives the Authority powers to receive and facilitate investigations of whistleblower disclosures, provide support, investigate mistreatment, and undertake enforcement and education.",
+   "Creates a Whistleblower Protection Advisory Board and a Parliamentary Joint Committee on the Authority."
+  ],
+  "affected": "Whistleblowers and potential whistleblowers under federal whistleblower protection laws.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195254",
+   "speaker": "David Pocock",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

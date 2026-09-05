@@ -1,0 +1,208 @@
+{
+ "key": "au-federal-s1488",
+ "title": "Criminal Code Amendment (Keeping Australia Safe) Bill 2026",
+ "short_title": "Criminal Code Amendment (Keeping Australia Safe) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-03",
+ "originating_house": "senate",
+ "sponsor": "DUNIAM, Sen Jonathon",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10847",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2026-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1488%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1488_ems_0826af3d-9d26-4de8-bb91-a4b247d5d32d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1488%22",
+   "document_date": "2026-03-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-03",
+  "sentences": [
+   "The bill would create a new criminal offence for arranging or helping certain people linked to terrorism to enter Australia.",
+   "A person could be charged if they organise or facilitate entry of someone who has committed a terrorism offence, intends to commit one, or is a member of a terrorist organisation, unless the foreign affairs and home affairs ministers give written permission beforehand.",
+   "The bill would also push back the expiry of the declared areas offence from 7 September 2027 to 7 September 2030."
+  ],
+  "changes": [
+   "Creates a new offence for organising or facilitating entry of terrorism-linked persons into Australia.",
+   "Requires prior written permission from both the foreign affairs minister and the home affairs minister for the offence not to apply.",
+   "Extends the declared areas regime's sunset date by three years to 7 September 2030."
+  ],
+  "affected": "People who organise or facilitate entry into Australia of persons involved in terrorism-related conduct, and Commonwealth authorities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:04Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9947",
+   "date": "2026-03-03",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debates/?id=2026-03-03.4.2) to suspend the usual procedural rules - known as standing orders - in order to introduce a bill called the Criminalising Re-entry Assistance for Terrorist Sympathisers The Criminal Code Amendment (Keeping Australia Safe) Bill 2026. This motion was introduced by Hume MP [Angus Taylor](https://theyvoteforyou.org.au/people/representatives/hume/angus_taylor) (Liberal). ### Motion text > *That so much of the standing and sessional orders be suspended as would prevent the following from occurring immediately:* > > *(1) the Member for Hume presenting a Bill for an Act to amend the Criminal Code Act 1995, and for related purposes;* > > *(2) debate on the second reading of the bill proceeding immediately for a period of no longer than one hour;* > > *(3) any questions required to complete passage of the bill then being put without delay; and* > > *(4) any variation to this arrangement being made only on a motion moved by the Manager of Opposition Business.* ### What is the purpose of this bill? Mr Taylor [explained that](https://www.openaustralia.org.au/debates/?id=2026-03-03.4.2): > *The proposed legislation that we bring before the parliament today has three clear objectives. First, it will end the freelancing of non-government third parties who seek to bring dangerous individuals into the country. It amends the Criminal Code Act 1995 and creates a new offence that would make it a crime to assist the entry into Australia of an individual who has been in a terrorist hot spot, who has links to a terrorist organisation or who has committed terror related offences. They are crucial pre-conditions. In this, the bill seeks to achieve a second objective, which is restoring ministerial accountability. Through our proposed legislation, any non-governmental third party that seeks to provide repatriation assistance must obtain written prior permission, and both the Minister for Home Aff",
+   "stage": "First Reading",
+   "ayes": 39,
+   "noes": 93,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 6
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 86
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-03/1"
+  },
+  {
+   "key": "federal-senate-10178",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2026-04-01.4.2) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a second time. This means it will not be considered further. ### What is the bill's main idea? The bill was introduced by Tasmanian Senator [Jonathon Duniam](https://theyvoteforyou.org.au/people/senate/tasmania/jonathon_duniam) (Liberal). According to [its homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1488), the bill: > *Amends the Criminal Code Act 1995 to: create an offence relating to the unauthorised organisation or facilitation of the entry into Australia of certain persons who have engaged in terrorism-related conduct or who are, or have been, members of a terrorist organisation; and extend the operation of the declared areas offence for a further 3 years to 7 September 2030.*",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1200477",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200618",
+   "speaker": "Jonathon Duniam",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-03-03",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

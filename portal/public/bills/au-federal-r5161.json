@@ -1,0 +1,282 @@
+{
+ "key": "au-federal-r5161",
+ "title": "Migration Amendment Bill 2013",
+ "short_title": "Migration Amendment Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-12-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2014-05-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5161%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5161%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5161%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5161%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5161%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5161%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5161%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5161%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5161%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5161%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5161%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-05-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5161%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5161_ems_1e0b5913-9aaf-46ce-a849-b8b5184d6ab4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5161%22",
+   "document_date": "2013-12-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00030",
+   "document_date": "2014-05-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-12-12",
+  "sentences": [
+   "The bill would change when certain visa decisions are considered to have been made.",
+   "It would clarify the rules for submitting another protection visa application after a refusal.",
+   "It would add a requirement that a protection visa applicant must not be found to be a security risk by the Australian Security Intelligence Organisation."
+  ],
+  "changes": [
+   "Specify that a visa decision is taken to be made when a record is created, not when it is told to the person.",
+   "Clarify how the bar on making a further protection visa application operates.",
+   "Make it a condition for granting a protection visa that the applicant is not assessed as a risk to security by ASIO."
+  ],
+  "affected": "Visa applicants, review applicants, former visa holders, and the Minister or his delegate.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:05:09Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3199",
+   "date": "2014-05-14",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/senate/?gid=2014-05-14.13.18) to read the bill for a second time.(Read more about the stages that a bill must pass through to become law [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) This means that the majority agree with the main idea of the bill and that the Senate can now consider it in more detail. Alternatively, the Senate can vote on whether to read the bill for a third time without considering it in any more detail.(In the case of this bill, the Senate did decide to immediately vote on whether to read the bill for a third time without considering it further (see that division [here](http://publicwhip-rails.openaustraliafoundation.org.au/division.php?date=2014-05-14&number=3&house=senate)). ) _Background to the bill_ The bill was introduced in response to recent court and tribunal decisions. Their purpose is to: - resolve questions about the day and time at which certain decisions of the Minister (or their delegate) are taken to be finally made and at which decisions of the [Migration Review Tribunal](http://www.mrt-rrt.gov.au/About-Us.aspx) (MRT) and [Refugee Review Tribunal](http://www.mrt-rrt.gov.au/About-Us.aspx) (RRT) are made and become final; - ensure that, once an application for a protection visa has been refused, or a protection visa has been cancelled, a person cannot apply for a protection visa on any other ground while in the [migration zone](http://en.wikipedia.org/wiki/Australian_migration_zone); - make it a criterion for the grant of a protection visa in [section 36](http://www.austlii.edu.au/au/legis/cth/consol_act/ma1958118/s36.html) of the [Migration Act](http://www.austlii.edu.au/au/legis/cth/consol_act/ma1958118/) that the applicant is not assessed by the [Australian Security Intelligence Organisation](http://en.wikipedia.org/wiki/Australian_Security_Intelligence_Organisation) to be directly or indirectly a risk to security within the meaning",
+   "stage": "Second reading",
+   "ayes": 38,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "earliest": 1,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-05-14/2"
+  },
+  {
+   "key": "federal-senate-3200",
+   "date": "2014-05-14",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/senate/?id=2014-05-14.15.1) to read the bill for a third time.(Read more about the stages that a bill must pass through to become law [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) This means that the majority agree with the bill and want to pass it in the Senate. Because it has already passed in the House of Representatives, the bill will now become law. _Background to the bill_ The bill was introduced in response to recent court and tribunal decisions. Their purpose is to: - resolve questions about the day and time at which certain decisions of the Minister (or their delegate) are taken to be finally made and at which decisions of the [Migration Review Tribunal](http://www.mrt-rrt.gov.au/About-Us.aspx) (MRT) and [Refugee Review Tribunal](http://www.mrt-rrt.gov.au/About-Us.aspx) (RRT) are made and become final; - ensure that, once an application for a protection visa has been refused, or a protection visa has been cancelled, a person cannot apply for a protection visa on any other ground while in the [migration zone](http://en.wikipedia.org/wiki/Australian_migration_zone); - make it a criterion for the grant of a protection visa in [section 36](http://www.austlii.edu.au/au/legis/cth/consol_act/ma1958118/s36.html) of the [Migration Act](http://www.austlii.edu.au/au/legis/cth/consol_act/ma1958118/) that the applicant is not assessed by the [Australian Security Intelligence Organisation](http://en.wikipedia.org/wiki/Australian_Security_Intelligence_Organisation) to be directly or indirectly a risk to security within the meaning of the [Australian Security Intelligence Organisation Act 1979](http://www.austlii.edu.au/au/legis/cth/consol_act/asioa1979472/) (ASIO Act).(Read more about the bill in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1314a/14bd043).)",
+   "stage": "Third reading",
+   "ayes": 38,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "earliest": 1,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-05-14/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-281804",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826738",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826814",
+   "speaker": "Helen Kroger",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": "The Selection of Bills Committee presented its 11th report of 2013, recommending six bills be referred to specific committees for inquiry with set reporting dates, including the Environment Legislation Amendment Bill 2013 (report by 12 February 2014) and the Criminal Code Amendment (Harming Australians) Bill 2013 (report by 4 March 2014)."
+  },
+  {
+   "slug": "speech-282270",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282272",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282278",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2014-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282279",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00030",
+   "assent_date": "2014-05-27"
+  }
+ ]
+}

@@ -1,0 +1,198 @@
+{
+ "key": "au-federal-r6898",
+ "title": "Counter-Terrorism Legislation Amendment (AFP Powers and Other Matters) Bill 2022",
+ "short_title": "Counter-Terrorism Legislation Amendment (AFP Powers and Other Matters) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2022-11-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6898%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6898%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-09-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6898%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6898%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6898%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6898%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6898%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6898%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6898%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6898%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6898%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6898%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6898%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6898%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6898_ems_1eb07dfc-c5ad-4458-9874-ac93115b190c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/8794601%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6898%22",
+   "document_date": "2022-09-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00049",
+   "document_date": "2022-11-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7810",
+   "date": "2022-10-27",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment (AFP Powers and Other Matters) Bill 2022 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 50,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "earliest": 32,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-10-27/5"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Counter-Terrorism Legislation Amendment (AFP Powers and Other Matters) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00049",
+   "assent_date": "2022-11-09"
+  }
+ ]
+}

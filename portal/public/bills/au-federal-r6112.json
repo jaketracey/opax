@@ -1,0 +1,576 @@
+{
+ "key": "au-federal-r6112",
+ "title": "Water Amendment Bill 2018",
+ "short_title": "Water Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2018-06-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6112_ems_0be8d539-12d2-431c-97b0-7804ef584479%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6112%22",
+   "document_date": "2018-05-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00053",
+   "document_date": "2018-06-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-10",
+  "sentences": [
+   "The bill would let the Commonwealth Water Minister order the Murray-Darling Basin Authority to rewrite a part of the Basin Plan that Parliament has already rejected.",
+   "The Authority would not have to run the usual public and state consultation process when preparing such a rewrite.",
+   "The Minister must give the direction within 12 months of the original amendment being disallowed."
+  ],
+  "changes": [
+   "Adds a power for the Minister to direct the Authority to prepare a Basin Plan amendment identical in effect to one that was disallowed.",
+   "Exempts the Authority from the Subdivision F consultation process when acting on such a direction.",
+   "Requires the direction to be given within 12 months of the disallowance."
+  ],
+  "affected": "The Murray-Darling Basin Authority, the Commonwealth Water Minister, and parties that would normally be consulted under Subdivision F, including the public, Basin States, and various committees.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:28:58Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5272",
+   "date": "2018-06-21",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-06-21.19.1): > *That the debate be now adjourned.* This means that [this debate](https://www.openaustralia.org.au/senate/?id=2018-06-21.18.2) on the [Water Amendment Bill 2018](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6112) will now end and the Senate will move on to discuss other subjects.",
+   "stage": "Second reading",
+   "ayes": 38,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 23,
+    "dated": 36,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-21/4"
+  },
+  {
+   "key": "federal-senate-5287",
+   "date": "2018-06-25",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://theyvoteforyou.org.au/divisions/senate/2018-06-25/12) moved by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which adds the words below to the usual [second reading motion](https://theyvoteforyou.org.au/divisions/senate/2018-06-25/12). ### Amendment text > *At the end of the motion, add:* > > *\"and for the purposes of subsection 48(2) of the Legislation Act 2003, the Senate approves the making of an instrument the same in substance as the [Basin Plan Amendment Instrument 2017 (No. 1)](https://theyvoteforyou.org.au/divisions/senate/2018-02-14/11), which was disallowed by the Senate on 14 February 2018\".*",
+   "stage": "Second reading",
+   "ayes": 44,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 2
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 29,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-25/11"
+  },
+  {
+   "key": "federal-senate-5288",
+   "date": "2018-06-25",
+   "house": "senate",
+   "question": "Water Amendment Bill 2018 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 44,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "earliest": 8,
+    "member": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-25/12"
+  },
+  {
+   "key": "federal-senate-5289",
+   "date": "2018-06-25",
+   "house": "senate",
+   "question": "Sarah Hanson-Young I move: (1) Page 6 (after line 11) , at the end of the Bill, add: Schedule 2 — Modifications of Basin Plan Water Act 2007 1 At the end of Part 2AA Add: 86AK Primacy of environmental considerations in delivering 450 GL of additional environmental water—modifications of Basin Plan 2012 (1) Section 7.09 of the Basin Plan 2012 has effect as if: (a) the words “while maintaining or improving social and economic outcomes” were omitted from paragraph (a) of that section; and (b) the words “economic, social and” were omitted from paragraph (d) of that section; and (c) the words “and benchmark conditions of development” were omitted from paragraph (d) of that section. (2) Subsection 7.17(2) of the Basin Plan 2012 has effect as if paragraph (b) of that subsection (including the heading) were omitted and substituted with the following: Improved environmental outcomes (b) The efficiency contributions to the proposed adjustments achieve improved environmental outcomes compared with the benchmark environmental outcomes. 2 Application (1) The modifications of the Basin Plan 2012 made by subsection 86AK(1) of the Water Act 2007 , as inserted by this Schedule, apply in relation to a supply measure or an efficiency measure, whether the supply measure, or the efficiency measure, was notified under section 7.12 of the Basin Plan 2012 before, on or after the commencement of this item. (2) The modifications of the Basin Plan 2012 made by subsection 86AK(2) of the Water Act 2007 , as inserted by this Schedule, apply in relation to an efficiency contribution that relates to an efficiency measure, whether the efficiency measure was notified under section 7.12 of the Basin Plan 2012 before, on or after the commencement of this item. I circulated the amendment in this chamber and it was referred to a number of times already through the second reading debate. This amendment seeks to ensure that the promised 450 gigalitres that was essential in securing South Australia's suppo",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 13
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "earliest": 8,
+    "member": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-25/13"
+  },
+  {
+   "key": "federal-senate-5290",
+   "date": "2018-06-25",
+   "house": "senate",
+   "question": "Water Amendment Bill 2018 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 38,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 2
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 25,
+    "earliest": 8,
+    "member": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-25/14"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-362273",
+   "speaker": "David Littleproud",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "The Water Amendment Bill 2018 was moved to restore the disallowed Northern Basin Review amendment to the Murray-Darling Basin Plan, granting the minister a limited directions power to have the authority remake the instrument, aiming to provide certainty for basin states and communities to meet the 30 June 2019 deadline for sustainable diversion limit compliant water resource plans."
+  },
+  {
+   "slug": "speech-363709",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Turnbull government's incompetence and indifference forced the Water Amendment Bill 2018, citing failures like refusing a judicial inquiry into alleged water theft and mismanagement of water buybacks. Labor supports the bill but insists on full implementation of the 2012 Murray-Darling Basin Plan, including the additional 450 gigalitres for South Australia, warning that any weakening threatens the basin's sustainability."
+  },
+  {
+   "slug": "speech-363710",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Water Amendment Bill 2018, which implements a 70-gigalitre correction in the Northern Basin Review, returning water from environmental use to productive agriculture. He argued for applying a social and economic test to the remaining 450 gigalitres of \"up water,\" citing significant job losses in irrigation regions like Mildura (38%), Merbein (50%), and Swan Hill (53%), and criticised Labor and the Greens for ignoring community impacts."
+  },
+  {
+   "slug": "speech-363711",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The opposition will support the Water Amendment Bill 2018, allowing the government to reissue a previously disallowed instrument after successful negotiations. Labor will facilitate the bill's passage without amendment, acknowledging the Murray-Darling Basin Plan requires compromise and is not an ideal solution for any party."
+  },
+  {
+   "slug": "speech-363714",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The Water Amendment Bill 2018 is needed to get the Murray-Darling Basin Plan back on track, with the speaker criticising political interference—particularly from South Australia—and praising a compromise that includes Indigenous water allocations and compliance measures. The speaker also defended irrigators and the cotton industry against allegations from the Four Corners program, stating that water reforms have taken decades and that communities want the process finalised."
+  },
+  {
+   "slug": "speech-363715",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Water Amendment Bill 2018 is needed to lock in an additional 450 gigalitres of environmental water for the River Murray, building on the existing 2,750 gigalitre recovery and $1.77 billion funding package from 2012, and to protect the river from future droughts and water theft."
+  },
+  {
+   "slug": "speech-363716",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Water Amendment Bill 2018 and the agreement to deliver the Murray-Darling Basin Plan in full, noting the SDL adjustment mechanism reduces water recovery by 605 gigalitres, but expressed concern about the additional 450 gigalitres of environmental water and the 80,000 megalitre daily flow target at the South Australian border, citing socio-economic losses including $120 million at the farm gate, 678 job losses, and population declines of up to 45.6% in communities like Wakool."
+  },
+  {
+   "slug": "speech-363717",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Murray-Darling Basin Plan has driven progress through community engagement, innovation, and bipartisan cooperation, noting that cotton growers in the southern basin have reduced water usage by 40%. They stressed the need for transparency, compliance, and fair water markets, while acknowledging ongoing challenges for dairy farmers and the importance of funding for First Nations water entitlements and the 450-gigalitre environmental target."
+  },
+  {
+   "slug": "speech-363718",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Water Amendment Bill 2018 is crucial for restoring the Murray-Darling Basin Plan, which was \"hanging by a thread,\" and highlighted the need for bipartisan support to address overextraction, climate change pressures, and declining streamflow. They criticised Prime Minister Turnbull's decision to place the plan under the agriculture ministry, supported the return of 3,200 gigalitres of water (including an additional 450 gigalitres), and endorsed new measures for compliance, scrutiny of sustainable diversion limit adjustment projects, and Indigenous cultural water outcomes."
+  },
+  {
+   "slug": "speech-363719",
+   "speaker": "Kate Ellis",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "Federal Labor will fight for a healthy Murray River, criticising the National Party and the member for New England over water theft and corruption, and supports the delivery of 450 gigalitres of environmental flows and 605 gigalitre projects under the Water Amendment Bill 2018."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Water Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00053",
+   "assent_date": "2018-06-27"
+  }
+ ]
+}

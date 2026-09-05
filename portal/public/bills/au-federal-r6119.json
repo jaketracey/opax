@@ -1,0 +1,120 @@
+{
+ "key": "au-federal-r6119",
+ "title": "Corporations (Review Fees) Amendment Bill 2018",
+ "short_title": "Corporations (Review Fees) Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6119%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6119%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6119%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6119%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6119%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6119%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6119_ems_fad1060a-a3c8-4162-a020-666eb66691b1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6119%22",
+   "document_date": "2018-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00072",
+   "document_date": "2018-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Corporations (Review Fees) Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00072",
+   "assent_date": "2018-06-29"
+  }
+ ]
+}

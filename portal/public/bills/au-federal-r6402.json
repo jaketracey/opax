@@ -1,0 +1,269 @@
+{
+ "key": "au-federal-r6402",
+ "title": "National Housing Finance and Investment Corporation Amendment Bill 2019",
+ "short_title": "National Housing Finance and Investment Corporation Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-10-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6402%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6402%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6402%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6402%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6402%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6402%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6402%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6402%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6402_ems_1948f206-0327-4fe0-8837-4328fe9345b4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6402%22",
+   "document_date": "2019-09-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00083",
+   "document_date": "2019-10-18",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-5914",
+   "date": "2019-10-14",
+   "house": "senate",
+   "question": "The majority voted in favour of the main idea of the bill. In parliamentary jargon, they voted to read the bill [for a second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). Because this vote was successful, they'll now discuss the bill in more detail. ### What is the bill's main idea? According to the [bill's homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6402), the bill was introduced to: * *establish the First Home Loan Deposit Scheme which will enable the National Housing Finance and Investment Corporation (NHFIC) to provide a limited guarantee to allow first home buyers to purchase a home with a minimum deposit of 5 per cent of the property purchase price; and* * *enable the NHFIC to undertake research into housing affordability in Australia, including housing supply and demand.* This bill addresses the issue of [housing affordability](https://theyvoteforyou.org.au/policies/117), though there was some debate in the Senate about whether it would assist Australians struggling to buy there own homes or whether it would simply add to the problem by inducing more demand and adding to the re-inflation of Australia's property market. Read [the debate](https://www.openaustralia.org.au/senate/?id=2019-10-14.17.2) to draw your own conclusions.",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 22,
+    "dated": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-10-14/1"
+  },
+  {
+   "key": "federal-senate-5916",
+   "date": "2019-10-14",
+   "house": "senate",
+   "question": "The majority voted in favour of passing the bill in the Senate. In parliamentary jargon, they voted to read the bill [for a third time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). Because the Senate agreed to an amendment to the bill, the bill will now be sent back to the House of Representatives so they can decide whether they agree with the change. If they do, the bill will become law. ### What is the bill's main idea? According to the [bill's homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6402), the bill was introduced to: * *establish the First Home Loan Deposit Scheme which will enable the National Housing Finance and Investment Corporation (NHFIC) to provide a limited guarantee to allow first home buyers to purchase a home with a minimum deposit of 5 per cent of the property purchase price; and* * *enable the NHFIC to undertake research into housing affordability in Australia, including housing supply and demand.* This bill addresses the issue of [housing affordability](https://theyvoteforyou.org.au/policies/117), though there was some debate in the Senate about whether it would assist Australians struggling to buy there own homes or whether it would simply add to the problem by inducing more demand and adding to the re-inflation of Australia's property market. Read [the debate](https://www.openaustralia.org.au/senate/?id=2019-10-14.17.2) to draw your own conclusions.",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "dated": 19,
+    "earliest": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-10-14/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-381543",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "Labor supported the National Housing Finance and Investment Corporation Amendment Bill 2019, which creates a First Home Loan Deposit Scheme allowing eligible singles earning under $125,000 or couples under $200,000 to purchase a home with a 5% deposit, capped at 10,000 purchases per year. Labor moved a second reading amendment noting that under the government home ownership fell to its lowest level since the 1960s, mortgage arrears reached their highest since the global financial crisis, over 1 million low-income households were in housing stress, and homelessness exceeded 116,000."
+  },
+  {
+   "slug": "speech-381546",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The member for Dunkley supported the National Housing Finance and Investment Corporation Amendment Bill 2019 and its second reading amendment, citing that 26% of homeless Victorians are under 25 and that 4,060 young people sought help in the Bayside Peninsula area in 2016–17. She called for bipartisan funding to build two supported crisis accommodation facilities near Frankston and Rosebud and a youth foyer linked to education providers."
+  },
+  {
+   "slug": "speech-381547",
+   "speaker": "Melissa McIntosh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The National Housing Finance and Investment Corporation Amendment Bill 2019 expands the NHFIC to help 10,000 first home buyers per year with a 5% deposit and adds a research function on housing supply and demand. The speaker also highlighted record infrastructure investments in Western Sydney, including the Western Sydney International Airport and North South Rail, and the importance of affordable housing for key workers, domestic violence survivors, and older people."
+  },
+  {
+   "slug": "speech-381548",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The speech supported the National Housing Finance and Investment Corporation Amendment Bill 2019, which establishes a First Home Loan Deposit Scheme providing 10,000 guarantees per year on loans with deposits between 5% and 20%, limited to incomes under $125,000 for singles and $200,000 for couples. It also raised concerns about the scheme's limited scale, unclear regional pricing caps and boundaries, and the distribution of guarantees across states, urging expansion and additional housing measures."
+  },
+  {
+   "slug": "speech-381549",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The National Housing Finance and Investment Corporation Amendment Bill 2019 enables the NHFIC to provide 10,000 guarantees per year for first home buyers and establish a research function on housing affordability, with the First Home Loan Deposit Scheme commencing 1 January 2020 and an investment mandate to be released for public consultation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Housing Finance and Investment Corporation Amendment Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00083",
+   "assent_date": "2019-10-18"
+  }
+ ]
+}

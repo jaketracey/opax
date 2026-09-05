@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7328",
+ "title": "Appropriation Bill (No. 2) 2025-2026",
+ "short_title": "Appropriation Bill (No. 2) 2025-2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-03-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7328%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7328%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7328%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7328_ems_6b43915e-5e04-4ef6-82eb-1ff88c41a75e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7328%22",
+   "document_date": "2025-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-03-25",
+  "sentences": [
+   "This bill would authorise spending from the Consolidated Revenue Fund for government activities that are not the everyday running costs.",
+   "It would provide roughly seven-twelfths of the estimated 2025-26 funding for those activities, plus new budget measures and extra spending already agreed for the rest of 2024-25.",
+   "Under the Constitution, ordinary annual services must be in a separate bill; a companion supply bill covers the remaining five-twelfths to ensure enough money for the first five months of 2025-26."
+  ],
+  "changes": [
+   "Draws money from the Consolidated Revenue Fund for non-ordinary services.",
+   "Sets the initial funding at about seven-twelfths of the estimated annual amount for 2025-26, plus budget measures and outstanding 2024-25 items.",
+   "Works alongside a supply bill that provides the other five-twelfths for the start of the financial year."
+  ],
+  "affected": "Federal government departments and agencies that deliver services not classified as ordinary annual services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

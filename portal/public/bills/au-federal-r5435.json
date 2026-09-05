@@ -1,0 +1,152 @@
+{
+ "key": "au-federal-r5435",
+ "title": "Health and Other Services (Compensation) Care Charges Amendment (Norfolk Island) Bill 2015",
+ "short_title": "Health and Other Services (Compensation) Care Charges Amendment (Norfolk Island) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure",
+ "status": "passed",
+ "status_as_of": "2015-05-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5435%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5435%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5435%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5435%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5435%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5435%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5435%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5435%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5435%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5435%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5435%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-05-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5435%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5435_ems_112c2fc1-2e09-4cc7-855e-0ba9d09fe048%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5435%22",
+   "document_date": "2015-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00054",
+   "document_date": "2015-05-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-26",
+  "sentences": [
+   "This bill is part of a package that reforms governance on Norfolk Island and extends mainland social security, immigration, health arrangements and tax changes to the territory.",
+   "The package would abolish the Norfolk Island Legislative Assembly and replace it with an Advisory Council, transferring legislative power to the Governor-General and giving the Commonwealth Minister supervisory authority over the Administration.",
+   "The second phase of the governance reform, starting on 1 July 2016, would apply New South Wales law to Norfolk Island as Commonwealth law and allow agreements for the delivery of state-level services."
+  ],
+  "changes": [
+   "Abolishes the Norfolk Island Legislative Assembly and Executive Council.",
+   "Establishes an Advisory Council to provide advice to the Administrator.",
+   "Confers broad legislative power on the Governor-General to make ordinances for the territory.",
+   "Creates a statutory Executive Director position to run the Norfolk Island Administration day-to-day.",
+   "Transfers powers and functions from Norfolk Island Ministers to the Commonwealth Minister.",
+   "Sets 1 July 2016 as the start date for applying New South Wales law as Commonwealth law."
+  ],
+  "affected": "The Norfolk Island community, the Norfolk Island Government and Administration, and residents who would gain access to mainland social security, immigration and health arrangements are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:56:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-309198",
+   "speaker": "Jamie Briggs",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-26",
+   "stage_hint": null,
+   "brief": "The bill extends the Health and Other Services (Compensation) Act 1995 to Norfolk Island, ensuring Medicare and care subsidies are recoverable from compensation recipients."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health and Other Services (Compensation) Care Charges Amendment (Norfolk Island) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00054",
+   "assent_date": "2015-05-26"
+  }
+ ]
+}

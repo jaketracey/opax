@@ -1,0 +1,161 @@
+{
+ "key": "au-federal-s1372",
+ "title": "Productivity Commission Amendment (Electricity Reporting) Bill 2023",
+ "short_title": "Productivity Commission Amendment (Electricity Reporting) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-22",
+ "originating_house": "senate",
+ "sponsor": "DUNIAM, Sen Jonathon",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10847",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-08-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1372%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1372%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1372%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1372%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1372%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1372%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1372_ems_32a122a9-c4d8-47e5-9057-6d361d69349f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1372%22",
+   "document_date": "2023-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-22",
+  "sentences": [
+   "The bill would require the Productivity Commission to produce quarterly reports on retail electricity prices and generation sources across Australia.",
+   "The reports would be tabled in Parliament and must include information on prices, daily supply charges, and the percentage of electricity from each energy source.",
+   "The first report would cover every quarter from 1 July 2019 onward, and the bill would take effect the day after it receives Royal Assent."
+  ],
+  "changes": [
+   "The bill inserts a new function for the Productivity Commission to report on retail electricity pricing and generation sources.",
+   "It requires the Commission to prepare quarterly reports containing information on retail electricity prices and the percentage of electricity from each energy source.",
+   "The reports must be provided to and tabled by the Minister within specified timeframes."
+  ],
+  "affected": "The Productivity Commission, the Minister, and electricity consumers in each state and territory.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8266",
+   "date": "2023-08-03",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2023-08-03.4.2) to read the bill for a second time. In other words, they voted against agreeing with the main idea of the bill, which means the bill failed and it won't be considered any further in parliament. ### What was the bill's main idea? The Productivity Commission Amendment (Electricity Reporting) Bill 2023 was a private member's bill (that is, it wasn't introduced by the Government) and, according to its [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1372): > *Amends the Productivity Commission Act 1998 to: require the Productivity Commission to prepare quarterly reports on retail electricity prices and energy sources for electricity generation; and require the minister to table these reports within 30 days after the end of the quarterly period.*",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-03/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-828931",
+   "speaker": "Jonathon Duniam",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-22",
+   "stage_hint": null,
+   "brief": "The Productivity Commission Amendment (Electricity Reporting) Bill 2023 was introduced to amend the Productivity Commission Act 1998, and the bill was agreed to and read a first time."
+  }
+ ],
+ "acts": []
+}

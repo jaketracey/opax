@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7329",
+ "title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2025-2026",
+ "short_title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2025-2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-03-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7329%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7329%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7329%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7329_ems_fc8957c3-855a-46b3-adf7-49781b5689ae%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7329%22",
+   "document_date": "2025-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-03-25",
+  "sentences": [
+   "This bill would authorise spending from the Consolidated Revenue Fund for the Parliamentary Departments.",
+   "It would provide about seven-twelfths of the estimated annual funding for 2025-26, plus new budget measures.",
+   "A separate supply bill covers the remaining five-twelfths to fund the first five months of the financial year."
+  ],
+  "changes": [
+   "Appropriates money from the Consolidated Revenue Fund for the Parliamentary Departments.",
+   "Provides roughly seven-twelfths of the estimated 2025-26 annual appropriations plus budget measures.",
+   "Works with a supply bill to ensure funding for the first five months of 2025-26."
+  ],
+  "affected": "The Parliamentary Departments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

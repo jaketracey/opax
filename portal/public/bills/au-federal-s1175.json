@@ -1,0 +1,153 @@
+{
+ "key": "au-federal-s1175",
+ "title": "Ministers of State (Checks for Security Purposes) Bill 2019",
+ "short_title": "Ministers of State (Checks for Security Purposes) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-02-12",
+ "originating_house": "senate",
+ "sponsor": "PATRICK, Sen Rex",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10903",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1175%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1175%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1175%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1175%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1175%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1175%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1175%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1175_ems_09e51466-8703-4796-b1b9-34185a51b8ea%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1175%22",
+   "document_date": "2019-02-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-12",
+  "sentences": [
+   "The bill would require security background checks for federal ministers, assistant ministers and parliamentary secretaries.",
+   "The Director-General of Security would provide reports to the Prime Minister on any security issues arising from a minister's personal background.",
+   "The bill would address a gap in Australia's Protective Security Framework by removing the current exemption that allows ministers to access classified information without security clearance."
+  ],
+  "changes": [
+   "Requires the Director-General of Security to conduct comprehensive background checks on ministers.",
+   "Provides the Prime Minister with security reports on ministers without overriding the Prime Minister's appointment decisions.",
+   "Closes a gap in the security framework that currently exempts ministers from clearance processes."
+  ],
+  "affected": "Ministers of State, including Cabinet Ministers, other Ministers, Assistant Ministers and Parliamentary Secretaries.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5805",
+   "date": "2019-07-29",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2019-07-29.3.2) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill [for a second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What did the bill do? The [bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1175) was introduced to: > *[require] the Prime Minister to direct the Director-General of Security to provide a report on matters relating to security arising from examination of the personal background and circumstances of all current and future ministers of state.*",
+   "stage": "Second reading",
+   "ayes": 2,
+   "noes": 54,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 21,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-29/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

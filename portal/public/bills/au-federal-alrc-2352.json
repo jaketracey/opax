@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-alrc-2352",
+ "title": "International Organisations (Privileges and Immunities) Amendment Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-13",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs",
+ "status": "passed",
+ "status_as_of": "2013-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-07-01",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00127",
+   "document_date": "2013-07-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-822408",
+   "speaker": "Jacinta Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": "The International Organisations (Privileges and Immunities) Amendment Bill 2013 was moved to bring the International Committee of the Red Cross and the International Criminal Court within the scope of the act, enabling regulations to confer privileges and immunities. The Not-for-profit Sector Freedom to Advocate Bill 2013 was proposed to prohibit and invalidate clauses in Commonwealth agreements that restrict not-for-profit entities from advocating on Commonwealth policy issues."
+  },
+  {
+   "slug": "speech-277545",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277546",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "International Organisations (Privileges and Immunities) Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00127",
+   "assent_date": "2013-07-01"
+  }
+ ]
+}

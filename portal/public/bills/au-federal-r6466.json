@@ -1,0 +1,595 @@
+{
+ "key": "au-federal-r6466",
+ "title": "Treasury Laws Amendment (2019 Measures No. 3) Bill 2019",
+ "short_title": "Treasury Laws Amendment (2019 Measures No. 3) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6466_ems_d1533a9e-7be7-4f4f-b619-2d1d9b3db016%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6466%22",
+   "document_date": "2019-12-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00064",
+   "document_date": "2020-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6201",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual second reading motion, which is that the bill be read for a [second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) (paliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House criticises the Government and the responsible Ministers for their mishandling of and delays to the reforms to professional standards for financial advisers, resulting in significant uncertainty for both members of the industry and consumers\".*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-11/4"
+  },
+  {
+   "key": "federal-representatives-6202",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debates/?id=2020-02-11.92.1) introduced by Whitlam MP [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor), which means they failed. The amendments related to conflicted remuneration, which is defined as: > *… any benefit, whether monetary or non-monetary, given to a financial services licensee, or a representative of a financial services licensee, who provides financial product advice to persons as retail clients that, because of the nature of the benefit or the circumstances in which it is given:* > > *(a) could reasonably be expected to influence the choice of financial product …*",
+   "stage": "Consideration in detail",
+   "ayes": 68,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-11/5"
+  },
+  {
+   "key": "federal-representatives-6374",
+   "date": "2020-06-15",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with the Senate amendments to this [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6466). The bill will now return to the Senate to ask whether the Senate will insist on their amendments. If they do, the bill will not become law. If they do not, then it will pass without the Senate amendments. Read more about the amendments in the [House debate](https://www.openaustralia.org.au/debates/?id=2020-06-15.29.2).",
+   "stage": "Consideration of Senate message",
+   "ayes": 56,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 32,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 108
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-15/1"
+  },
+  {
+   "key": "federal-senate-6389",
+   "date": "2020-06-15",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?id=2020-06-15.182.1) to a motion regarding when to consider the message from the House, which means that the message will be considered immediately. ### Original motion text > *That consideration of message No. 218 in Committee of the Whole be made an order of the day for the next day of sitting.* ### Amendment text > *That all words after 'That' be omitted and replaced with 'the message be considered in Committee of the Whole immediately'.*",
+   "stage": "Consideration of House message",
+   "ayes": 30,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 27,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-15/10"
+  },
+  {
+   "key": "federal-senate-6390",
+   "date": "2020-06-15",
+   "house": "senate",
+   "question": "The same number of senators voted for and against a [motion](https://www.openaustralia.org.au/senate/?gid=2020-06-15.194.1) \"*That the question be now put*\", which means that the motion failed. Motions like these end debate and require that the question be voted on straight away.",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 31,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-15/11"
+  },
+  {
+   "key": "federal-representatives-6397",
+   "date": "2020-06-16",
+   "house": "representatives",
+   "question": "The majority voted in favour of \"*insist[ing] on disagreeing to the amendments insisted on by the Senate.*\" This means that the bill will now return once more to the Senate. If the Senate agrees to *not* insist on their amendments, the bill can become law. However, if the Senate insists on them, the bill won't succeed.",
+   "stage": "Consideration of Senate message",
+   "ayes": 57,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 109
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-16/5"
+  },
+  {
+   "key": "federal-senate-6405",
+   "date": "2020-06-16",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2020-06-16.4.2) \"*That the committee does not insist on its amendments to which the House has disagreed.*\" In other words, the majority was keen to insist on their amendments. This means that the bill with the Senate amendments will once again return to the House of Representatives for their consideration.",
+   "stage": "Consideration of House message",
+   "ayes": 32,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 14,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-16/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-387570",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-10",
+   "stage_hint": null,
+   "brief": "The Labor member supported the bill but criticised the government's handling of financial adviser education standards, arguing the delay in implementing reforms recommended since 1997 stemmed from government incompetence; the bill closes a testamentary trust loophole and extends deadlines for financial advisers to meet new education requirements."
+  },
+  {
+   "slug": "speech-387643",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-11",
+   "stage_hint": null,
+   "brief": "Labor supported the Treasury Laws Amendment Bill but criticised the government for mishandling and delaying financial adviser professional standards reforms, citing 11 years of inaction, three FASEA CEOs in 18 months, and last-minute exam logistics that created industry uncertainty."
+  },
+  {
+   "slug": "speech-387647",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill is necessary to clean up the government's mismanagement of financial adviser standards, citing delays and confusion caused by the under-resourced Financial Adviser Standards and Ethics Authority, and noted that private investment has fallen 20% since the government took office while net debt has reached record highs. Labor’s amendments would remove the current exemption from conflicted remuneration rules for financial advisers selling units or shares in listed investment trusts and companies, which the speaker linked to poor returns and a market that doubled to $45 billion since 2015."
+  },
+  {
+   "slug": "speech-387649",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-11",
+   "stage_hint": null,
+   "brief": "The government rejected opposition amendments to the Treasury Laws Amendment (2019 Measures No. 3) Bill 2019 and commended the bill to the House. The bill limits concessional tax rates for minors from testamentary trusts to assets from the deceased estate from 1 July 2019, extends FASEA exam and qualification deadlines for financial advisers to assist rural and regional advisers and working parents, and makes minor technical amendments to Treasury legislation."
+  },
+  {
+   "slug": "speech-392225",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "The bill removes a 1995 exemption that allowed certain proprietary companies, including some with multibillion-dollar turnovers paying no tax, to avoid lodging financial reports with ASIC, targeting those with turnover over $100 million. The speaker argued this increases transparency and accountability, criticising previous coalition claims of increased kidnappings as false."
+  },
+  {
+   "slug": "speech-392228",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "Support was expressed for Rex Patrick's amendment to remove an exemption that allows certain proprietary companies to avoid lodging financial reports with ASIC. The bill was criticized as narrow and unambitious for failing to address major tax transparency issues like base erosion and profit shifting."
+  },
+  {
+   "slug": "speech-392689",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2020-06-16",
+   "stage_hint": null,
+   "brief": "The government should support an amendment to the Treasury Laws Amendment (2019 Measures No. 3) Bill 2019 to prevent separate rules for the super rich, and its rejection of the amendment because it was not the government’s own idea is childish; the community wants transparency and ASIC has clearly stated the rule should be overturned."
+  },
+  {
+   "slug": "speech-392690",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-16",
+   "stage_hint": null,
+   "brief": "The speaker argued against rejecting an amendment to remove a 25-year-old exemption that allows certain proprietary companies to avoid reporting to ASIC, creating an unjustified two-tiered system that undermines transparency."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2019 Measures No. 3) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00064",
+   "assent_date": "2020-06-22"
+  }
+ ]
+}

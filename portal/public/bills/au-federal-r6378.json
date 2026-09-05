@@ -1,0 +1,162 @@
+{
+ "key": "au-federal-r6378",
+ "title": "National Sports Tribunal (Consequential Amendments and Transitional Provisions) Bill 2019",
+ "short_title": "National Sports Tribunal (Consequential Amendments and Transitional Provisions) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Youth and Sport",
+ "status": "passed",
+ "status_as_of": "2019-09-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6378%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6378%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6378%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6378%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6378%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6378%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6378%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6378%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6378%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6378%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6378%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6378%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6378%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6377_ems_f7052f19-2141-4859-b4db-821b4290c530%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6377_ems_627e1d23-46a3-495c-a169-f6929f782e1f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6378%22",
+   "document_date": "2019-07-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00069",
+   "document_date": "2019-09-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-24",
+  "sentences": [
+   "This bill is part of a two-bill package that would create the National Sports Tribunal, an independent body to resolve sporting disputes fairly and efficiently.",
+   "It would make changes to several other Acts so evidence and information can be shared with the Tribunal, and apply the new dispute rules to matters that arose before, on or after the law starts.",
+   "The Tribunal would begin as a two-year pilot, with most applications needing to be made within two years unless the rules say otherwise."
+  ],
+  "changes": [
+   "Amends the Australian Sports Anti-Doping Authority Act 2006 to let the ASADA CEO present certain assertions and information at Tribunal hearings.",
+   "Changes the same Act so material obtained under a disclosure notice can be used as evidence in the Tribunal.",
+   "Amends the Freedom of Information Act 1982 to exempt material whose disclosure is banned by the secrecy provision in the new National Sports Tribunal Act.",
+   "Applies the new Act's provisions to disputes and decisions made before the law starts, on the day it starts, or after it starts."
+  ],
+  "affected": "The Australian sporting community, including athletes and sporting organisations, as well as the Australian Sports Anti-Doping Authority and the Tribunal itself.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-378203",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-24",
+   "stage_hint": null,
+   "brief": "The bill was introduced as a companion to the National Sports Tribunal Bill 2019, providing for consequential amendments and transitional arrangements to transfer sports dispute resolution functions to the new National Sports Tribunal."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Sports Tribunal (Consequential Amendments and Transitional Provisions) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00069",
+   "assent_date": "2019-09-19"
+  }
+ ]
+}

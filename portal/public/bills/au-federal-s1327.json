@@ -1,0 +1,81 @@
+{
+ "key": "au-federal-s1327",
+ "title": "Health Insurance Legislation Amendment (Transparent Patient Outcomes) Bill 2021",
+ "short_title": "Health Insurance Legislation Amendment (Transparent Patient Outcomes) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-11-23",
+ "originating_house": "senate",
+ "sponsor": "GRIFF, Sen Stirling",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10851",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1327%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1327%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1327%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1327%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1327_ems_d559664d-3edf-491d-a436-96a5928a9214%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1327%22",
+   "document_date": "2021-11-23",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-11-23",
+  "sentences": [
+   "The bill would let the Minister for Health create public databases of surgical procedures and patient outcomes so consumers can compare practitioners.",
+   "It amends the Health Insurance Act 1973 to allow the minister to make rules establishing Transparent Patient Outcomes registers containing data such as procedure numbers, revision rates, mortality rates, and prosthesis use.",
+   "The registers would identify individual practitioners, and the rules must prohibit publishing sensitive health information, with the minister required to consult the Information Commissioner."
+  ],
+  "changes": [
+   "Establishes Transparent Patient Outcomes registers for surgical procedures and patient outcomes.",
+   "Allows reuse of quality assurance activity data that is currently protected from disclosure.",
+   "Provides immunity from civil liability for persons acting in good faith under the rules.",
+   "Prevents information in the register from being used in legal proceedings.",
+   "Allows lawful secondary disclosure of quality assurance data in accordance with other laws."
+  ],
+  "affected": "Australian patients considering surgical procedures, medical practitioners, and facilities that perform surgical procedures.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

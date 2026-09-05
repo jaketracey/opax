@@ -1,0 +1,625 @@
+{
+ "key": "au-federal-r5981",
+ "title": "Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017",
+ "short_title": "Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5981%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5981%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5981%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5981%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5981%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5981%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5981%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5981%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5981%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5981%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5981%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5981_ems_9ff5364b-951f-46ce-a36b-c8317c555734%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/5700360%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5981%22",
+   "document_date": "2017-09-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4817",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to a deferral motion. That is, they voted against changing a motion to resume debate on the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5981) on *the next sitting date* to a motion to resume debate on *the first sitting in 2018*. This amendment was put forward by Labor MP [Anthony Albanese](https://theyvoteforyou.org.au/people/representatives/grayndler/anthony_albanese), as the Labor Party believed that consultation was required before they could consider this bill and so wanted the time for that consultation to be conducted.",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-09-13/1"
+  },
+  {
+   "key": "federal-representatives-5340",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion to agree with the bill's main idea - in parliamentary jargon, \"*That the bill be read a second time*\" - which means the amendment failed and the second reading motion will remain unchanged. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes that during the current Government’s tenure 12 previously Australian-flagged vessels have been reflagged to foreign States—in each case the Australian flag has been lowered and replaced with the white flag when it comes to Australian jobs;* > > *(2) further notes that:* > >> *(a) the consultations associated with preparation of the bill were negligible, the Minister failed to build bipartisan support for the changes he has brought before the Parliament, and the Government is attempting to tilt the 'playing field' further in favour of foreign operators to the detriment of Australian-based shipping companies and other domestic modes of transport, including rail; and* > >> *(b) the Government's true intentions are confirmed in the bill's Regulation Impact Statement, which on page 9 reads '...the current framework makes it unattractive for foreign ships to enter the coastal trading sector' and on page 14 reads 'These amendments ... will remove the barriers that currently face many foreign flagged vessels under the current system'; and* > >> *(3) reaffirms that Australia’s vital economic, environment and national security interests are best served when there is a viable, competitive and growing local shipping industry.\"*",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 142,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-08-15/1"
+  },
+  {
+   "key": "federal-representatives-5341",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "question": "Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-08-15/2"
+  },
+  {
+   "key": "federal-representatives-5342",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "question": "Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017 - Consideration in Detail - Put the question",
+   "stage": "Consideration in detail",
+   "ayes": 78,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-08-15/3"
+  },
+  {
+   "key": "federal-representatives-5343",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "question": "Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017 - Consideration in Detail - Acceptable tolerance limits",
+   "stage": "Consideration in detail",
+   "ayes": 66,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 141,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-08-15/4"
+  },
+  {
+   "key": "federal-representatives-5344",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "question": "Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017 - Consideration in Detail - Definition of 'voyage'",
+   "stage": "Consideration in detail",
+   "ayes": 66,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 141,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-08-15/5"
+  },
+  {
+   "key": "federal-representatives-5345",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "question": "The majority voted against [amendments (2) and (4) to (14)](https://www.openaustralia.org.au/debate/?id=2018-08-15.134.1) introduced by Grayndler MP [Anthony Albanese](https://theyvoteforyou.org.au/people/representatives/grayndler/anthony_albanese) (Labor), which means they failed. ### What did this amendment do? Mr Albanese [explained that](https://www.openaustralia.org.au/debates/?id=2018-08-15.121.1): > *They would omit a range of items from the legislation. Currently there are two types of licence variations to an existing temporary licence: authorised matters—that is, a change to a loading date or volume on an existing planned voyage; and new matters—authorising an entirely new voyage on an existing temporary licence. In the name of streamlining, the bill proposes replacing the two types of licence variations with a single temporary licence variation provision.* ### Amendment text > *(2) Schedule 1, item 9, page 5 (lines 1 and 2), omit the item.* > > *(4) Schedule 1, item 16, page 5 (lines 24 and 25), omit the item.* > > *(5) Schedule 1, item 36, page 8 (lines 25 to 27), omit the item.* > > *(6) Schedule 1, items 37 to 40, page 8 (line 28) to page 9 (line 13), omit the items.* > > *(7) Schedule 1, item 41, page 9 (lines 14 to 17), omit the item.* > > *(8) Schedule 1, items 42 and 43, page 9 (lines 18 to 25), omit the items.* > > *(9) Schedule 1, item 44, page 9 (lines 26 and 27), omit the item.* > > *(10) Schedule 1, item 45, page 10 (lines 1 and 2), omit the item.* > > *(11) Schedule 1, item 49, page 10 (line 16), after \"43\", insert \"or 51\".* > > *(12) Schedule 1, items 58 and 59, page 11 (lines 10 to 13), omit the items.* > > *(13) Schedule 1, items 61 to 63, page 11 (lines 16 to 26), omit the items.* > > *(14) Schedule 1, item 65, page 12 (lines 21 to 25), omit subitem (4).*",
+   "stage": "Consideration in detail",
+   "ayes": 67,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 142,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-08-15/6"
+  },
+  {
+   "key": "federal-representatives-5346",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "question": "Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017 - Consideration in Detail - Agree with bill",
+   "stage": "Consideration in detail",
+   "ayes": 78,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-08-15/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-353902",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017 was introduced to reduce regulatory burden by removing the five-voyage minimum for temporary licences, relaxing tolerance provisions, simplifying consultation requirements, and extending coverage to floating production storage and offloading units and dry-docking vessels. The bill aims to address the expected 30% growth in Australia's freight task by 2030, with coastal shipping currently projected to increase only 15%."
+  },
+  {
+   "slug": "speech-366663",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The 2012 Coastal Trading Act failed to halt the decline of Australian shipping, and the 2017 amendment bill should be passed to allow foreign superyachts to charter in Australia by removing customs import duties, which could create 11,800 jobs and $1.64 billion in economic benefit by 2021."
+  },
+  {
+   "slug": "speech-366664",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017, arguing it would allow foreign vessels to dominate Australian coastal trade, undermine Australian jobs and wages, and cited that the 2015 bill's regulatory impact statement predicted 1,000 of 1,100 maritime workers would be sacked. They highlighted opposition from the Maritime Union of Australia, Maritime Industry Australia Limited, and the Australian Institute of Marine and Power Engineers, and referenced the MV Portland and CSL Melbourne incidents where Australian crews were replaced by foreign crews."
+  },
+  {
+   "slug": "speech-366665",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017 would benefit their electorate of Fisher by boosting tourism and economic activity through relaxed superyacht regulations. They cited potential growth in GDP contributions from $590 million to $3.34 billion by 2021 and 8,100 additional jobs, with specific reference to the Mooloolaba Spit and Browns Slipway."
+  },
+  {
+   "slug": "speech-366666",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017 will decimate seafaring jobs and the maritime industry in Australia. The speaker waited 11 weeks through a gruelling by-election campaign to speak on this bill."
+  },
+  {
+   "slug": "speech-366995",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-14",
+   "stage_hint": null,
+   "brief": "The bill would cause hundreds of Australian seafarer job losses, particularly in Tasmania, by allowing foreign ships and crews to replace Australian vessels on coastal routes, and was developed without consulting the peak shipping industry body, Maritime Industry Australia Ltd."
+  },
+  {
+   "slug": "speech-366998",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-14",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017, arguing it would accelerate the decline of Australia's merchant fleet and harm national security, environmental protection, and jobs—noting that 12 Australian-flagged vessels have been reflagged under the current government and that the bill's regulatory impact statement explicitly aims to remove barriers for foreign vessels."
+  },
+  {
+   "slug": "speech-367001",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-08-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017 should be passed to remove customs duties and taxes on superyachts, allow temporary licences for round trips, and enable charters, which would generate $1.64 billion and create nearly 12,000 jobs, particularly in Queensland regions like the Whitsundays, Bowen, and Cairns."
+  },
+  {
+   "slug": "speech-367002",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-14",
+   "stage_hint": null,
+   "brief": "The speaker argued against the Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017, accusing the Liberal Party of seeking to decimate Australian coastal shipping by replacing Australian vessels, workers, and wages with foreign ones. They specifically criticised the member for Dawson for advocating GST removal on vessels worth $100 million while ordinary Australians still pay GST."
+  },
+  {
+   "slug": "speech-367069",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-15",
+   "stage_hint": null,
+   "brief": "The speech opposed the Turnbull government's Coastal Trading Bill, arguing it would destroy Australia's remaining shipping industry and seafarer jobs while favouring foreign vessels, and supported Labor's amendment. It cited the decline to just 12 Australian coastal trading vessels, the Port of Newcastle's 4,600 annual ship movements, and an ACCC investigation into the NSW port privatisation deal."
+  },
+  {
+   "slug": "speech-367085",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-15",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017, arguing it would decimate Australian shipping jobs and industry, citing that 93% of Australian seafarers could be replaced, over 1,000 jobs lost, and 88% of savings from cheap foreign labour, and criticised changes to tolerance limits and licence variation processes."
+  },
+  {
+   "slug": "speech-367086",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017 would destroy Australian shipping jobs by allowing foreign flag-of-convenience vessels to undercut Australian wages and safety standards, and noted opposition from industry bodies including the Australian Institute of Marine and Power Engineers, Maritime Industry Australia Ltd, and the Maritime Union of Australia. The speaker also referenced the Howard government's illegal lockout of maritime workers in 1998 as part of a pattern of undermining Australian maritime jobs."
+  },
+  {
+   "slug": "speech-367087",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017 would accelerate the decline of Australia's shipping industry, citing the loss of 12 Australian-flagged vessels since 2013, including the MV Portland. They opposed the bill’s tolerance provisions and licence variation changes, claiming they would disadvantage Australian vessels and workers while favouring foreign operators with lower wages."
+  },
+  {
+   "slug": "speech-367088",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017 would further deregulate and destroy Australia's shipping industry, reducing the fleet from hundreds of vessels in the 1980s to only 11 or 12 today. They claimed this creates national security risks, economic harm, and labour exploitation, citing the loss of Australian-crewed oil tankers, reliance on foreign vessels for fuel, and the live sheep export trade as examples, while opposing the bill in favour of a long-term strategy to revitalise the industry."
+  },
+  {
+   "slug": "speech-367090",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-15",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017, arguing it would weaken the regulatory framework, harm Australian seafarers, and reduce sovereign self-sufficiency; they noted that Australian flagged ships declined from 55 in 1996 to 21 in 2007 under the Howard government and that no Australian general licensed vessel currently can transport petroleum."
+  },
+  {
+   "slug": "speech-367091",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-08-15",
+   "stage_hint": null,
+   "brief": "The MP supported the Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017 but expressed significant concerns about measures including increasing cargo volume tolerance from ±20% to +200%/−100%, expanding loading date tolerance from 5 to 30 days, and halving the time for Australian vessels to apply for temporary licences from 48 hours to 24 hours, arguing these would harm the coastal shipping sector. They also flagged concern over extending the regime to chartered recreational vessels, reserving their party's final position."
+  },
+  {
+   "slug": "speech-367092",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-15",
+   "stage_hint": null,
+   "brief": "The speaker called on the government to withdraw the Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017, arguing it is designed to cut Australian jobs and wages by making it easier for shipowners to replace Australian-flagged vessels and crews with foreign ones. They cited the loss of the Iron Chieftain at Port Kembla, warned of risks to national security and the environment, and criticised the government for dismantling previous Labor reforms that had aimed to rebuild the shipping industry."
+  },
+  {
+   "slug": "speech-367093",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-15",
+   "stage_hint": null,
+   "brief": "Opposing the Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017, the member for Brand argued it should be withdrawn, citing official modelling that 93 per cent of Australian seafarer jobs would be lost and criticising the government for inadequate consultation. She supported amendments by the member for Grayndler and the member for Whitlam, and defended Labor's 2012 coastal trading reforms against what she described as a repeat of the coalition's failed 2015 attempt."
+  },
+  {
+   "slug": "speech-367094",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2018-08-15",
+   "stage_hint": null,
+   "brief": "The Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017 was argued to be necessary to reverse the decline of Australia's shipping fleet and workforce caused by decades of neoliberal policies, and to instead use regulation and tax arrangements to increase employment, safety, environmental protection, and revenue."
+  },
+  {
+   "slug": "speech-367218",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-08-15",
+   "stage_hint": null,
+   "brief": "The Coastal Trading (Revitalising Australian Shipping) Amendment Bill 2017 simplifies coastal trading regulation, removes the five-voyage minimum for temporary licences, expands coverage to offshore petroleum and superyachts, and reduces red tape to boost efficiency, fuel security, and tourism."
+  }
+ ],
+ "acts": []
+}

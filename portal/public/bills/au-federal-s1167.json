@@ -1,0 +1,72 @@
+{
+ "key": "au-federal-s1167",
+ "title": "Galilee Basin (Coal Prohibition) Bill 2018",
+ "short_title": "Galilee Basin (Coal Prohibition) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2018-12-05",
+ "originating_house": "senate",
+ "sponsor": "WATERS, Sen Larissa",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10764",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1167%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1167%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1167%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1167%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1167%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1167%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1167_ems_5d3f13ec-2335-4eef-8d1f-671d5c2f9d3f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1167%22",
+   "document_date": "2018-12-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

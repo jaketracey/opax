@@ -1,0 +1,1094 @@
+{
+ "key": "au-federal-r7179",
+ "title": "Migration Amendment (Removal and Other Measures) Bill 2024",
+ "short_title": "Migration Amendment (Removal and Other Measures) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-03-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2024-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7179%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7179%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7179%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7179%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7179%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7179%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7179%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7179%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7179_ems_15d6c6db-ae11-4189-8420-3efe9cad11fb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7179_ems_0baa9a26-d08b-4af7-8b09-a1d901e6104d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7179%22",
+   "document_date": "2024-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00107",
+   "document_date": "2024-12-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8798",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2024-03-26.24.1) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by Griffith MP [Max Chandler-Mather](https://theyvoteforyou.org.au/people/representatives/griffith/max_chandler-mather) (Greens) and would have replaced the usual wording of the second reading motion with the wording below. Declining to give a second reading means refusing to agree with the bill's main idea. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words: \"the House declines to give the bill a second reading and notes that:* > > *(1) the Government is seeking to rush through legislation that will punish people, based on what country they come from and harm people seeking asylum who have already been subjected to a cruel and broken system; and* > > *(2) this bill is nothing more than an election tactic by the Government, trying to outflank the Coalition in a race to the bottom on immigration, which will only punish migrants and whip up racism\".* ### What does this bill do? According to the [bills homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7179), this bill: > *Amends the Migration Act 1958 to: require non-citizens who are on a removal pathway and have exhausted all avenues to remain in Australia to cooperate with steps taken for the purpose of arranging their lawful removal from Australia; and make minor and technical amendments.*",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-26/4"
+  },
+  {
+   "key": "federal-representatives-8799",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2024-03-26.28.1) to agree with the main idea of the bill, which means they can now consider it in greater detail. In parliamentary jargon, they voted to read the bill for a second time. ### What does this bill do? According to the [bills homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7179), this bill: > *Amends the Migration Act 1958 to: require non-citizens who are on a removal pathway and have exhausted all avenues to remain in Australia to cooperate with steps taken for the purpose of arranging their lawful removal from Australia; and make minor and technical amendments.*",
+   "stage": "Second reading",
+   "ayes": 50,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 45,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 62,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-26/5"
+  },
+  {
+   "key": "federal-representatives-8800",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2024-03-26.30.1) introduced by Wannon MP [Dan Tehan](https://theyvoteforyou.org.au/people/representatives/wannon/dan_tehan) (Liberal), which means it failed. ### Amendment text > *(1) Schedule 1, item 3, page 9 (after line 15), after section 199E, insert:* > >> *199EA Statement about each removal pathway direction* >> >> *Minister must prepare statement* >> >> *(1) The Minister must prepare a statement about each removal pathway non-citizen who is given a removal pathway direction.* >> >>> *Note: Statements about 2 or more removal pathway non-citizens could be included in the same document.* >>> >>> *Information included in the statement* >> >> *(2) The statement about the removal pathway non-citizen must include the following:* >> >>> *(a) the non-citizen's country of origin;* >>> >>> *(b) the class of visa (if any) held by the non-citizen at the time the removal pathway direction was given;* >>> >>> *(c) the number and classes of visas (if any) previously held by the non-citizen;* >>> >>> *(d) whether the non-citizen is a serious offender (within the meaning of Division 395 of the Criminal Code) and, if so, any offences for which the non-citizen has been convicted;* >>> >>> *(e) whether the non-citizen is, or has been, the subject of a community safety order (within the meaning of that Division) and, if so, the details of that order;* >>> >>> *(f) whether, in the absence of compliance with the removal pathway direction, there would be no real prospect of the removal of the non-citizen from Australia under section 198 becoming practicable in the reasonably foreseeable future.* >> >> *(3) The statement about the removal pathway non-citizen must not include:* >> >>> *(a) the non-citizen's name, date of birth or residential address; or* >>> >>> *(b) information that would otherwise reveal the non-citizen's identity; or* >>> >>> *(c) information the disclosure of which would, or coul",
+   "stage": "Consideration in detail",
+   "ayes": 46,
+   "noes": 84,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 73
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 128,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-26/6"
+  },
+  {
+   "key": "federal-representatives-8801",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2024-03-26.32.8) to agree with the bill and so stop considering proposed amendments. Because this vote was successful, our MPs will stop discussing the bill in detail and instead now decide on whether to pass the bill in the House of Representatives. ### What does this bill do? According to the [bills homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7179), this bill: > *Amends the Migration Act 1958 to: require non-citizens who are on a removal pathway and have exhausted all avenues to remain in Australia to cooperate with steps taken for the purpose of arranging their lawful removal from Australia; and make minor and technical amendments.*",
+   "stage": "Consideration in detail",
+   "ayes": 92,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 103,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-26/7"
+  },
+  {
+   "key": "federal-representatives-8802",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2024-03-26.34.1) to pass the bill, which means it will now be sent to the Senate for their consideration. In parliamentary jargon, they voted to read the bill for a third time. ### What does this bill do? According to the [bills homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7179), this bill: > *Amends the Migration Act 1958 to: require non-citizens who are on a removal pathway and have exhausted all avenues to remain in Australia to cooperate with steps taken for the purpose of arranging their lawful removal from Australia; and make minor and technical amendments.*",
+   "stage": "Third reading",
+   "ayes": 103,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 114,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-26/8"
+  },
+  {
+   "key": "federal-senate-8812",
+   "date": "2024-03-26",
+   "house": "senate",
+   "question": "Migration Amendment (Removal and Other Measures) Bill 2024 - Reference to Committee - Put the question",
+   "stage": "Reference to Committee",
+   "ayes": 31,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-26/1"
+  },
+  {
+   "key": "federal-senate-8813",
+   "date": "2024-03-26",
+   "house": "senate",
+   "question": "Migration Amendment (Removal and Other Measures) Bill 2024 - Reference to Committee - Let another motion be moved",
+   "stage": "Reference to Committee",
+   "ayes": 31,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-26/2"
+  },
+  {
+   "key": "federal-senate-8814",
+   "date": "2024-03-26",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-03-26.95.1): > *That the question be now put.* In other words, they voted to stop the debate and instead vote on [the question](https://theyvoteforyou.org.au/divisions/senate/2024-03-26/4) straight away.",
+   "stage": "Reference to Committee",
+   "ayes": 28,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-26/3"
+  },
+  {
+   "key": "federal-senate-8815",
+   "date": "2024-03-26",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-03-26.94.1) introduced by South Australian Senator [Simon Birmingham](https://theyvoteforyou.org.au/people/senate/sa/simon_birmingham) (Liberal), which means it passed. ### Motion text > *That a [motion](https://theyvoteforyou.org.au/divisions/senate/2024-03-26/9) relating to a direction to the Legal and Constitutional Affairs Legislation Committee may be moved immediately, have precedence over all other business and be determined without debate.*",
+   "stage": "Reference to Committee",
+   "ayes": 30,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-26/4"
+  },
+  {
+   "key": "federal-senate-8816",
+   "date": "2024-03-26",
+   "house": "senate",
+   "question": "Migration Amendment (Removal and Other Measures) Bill 2024 - Reference to Committee - Put the question",
+   "stage": "Reference to Committee",
+   "ayes": 30,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-26/5"
+  },
+  {
+   "key": "federal-senate-8817",
+   "date": "2024-03-26",
+   "house": "senate",
+   "question": "The majority voted against a motion introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens): > *That so much of sessional and standing orders be suspended as would prevent me from making a short contribution.* Sessional and standing orders are the usual procedural rules of parliament.",
+   "stage": "Reference to Committee",
+   "ayes": 13,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-26/6"
+  },
+  {
+   "key": "federal-senate-8818",
+   "date": "2024-03-26",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-03-26.100.1) to a [motion](https://theyvoteforyou.org.au/divisions/senate/2024-03-26/9). The amendment was introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens). ### Amendment text > *Omit all words after \"That\", substitute 'the provisions of the Migration Amendment (Removal and Other Measures) Bill 2024 be referred immediately to the Legal and Constitutional Affairs Legislation Committee for inquiry and report by 24 June 2024\".* ### Original motion text > *That the Senate directs the Legal and Constitutional Affairs Legislation Committee to hold a public hearing on 26 March 2024, of not less than two hours, for the purposes of hearing from officials from the Department of Home Affairs regarding the details of the [Migration Amendment (Removals and Other Measures) Bill 2024](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7179).*",
+   "stage": "Reference to Committee",
+   "ayes": 13,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-26/7"
+  },
+  {
+   "key": "federal-senate-8819",
+   "date": "2024-03-26",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-03-26.107.1) to a [motion](https://theyvoteforyou.org.au/divisions/senate/2024-03-26/9). The amendment was introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent). ### Amendment text > *Omit all words after \"That\", substitute:* > >> *(a) the provisions of the Migration Amendment (Removal and Other Measures) Bill 2024 be referred immediately to the Legal and Constitutional Affairs Legislation Committee for inquiry and report by 13 May 2024; and* >> >> *(b) for the purposes of the inquiry, the Senate directs the Committee to hold at least one public hearing of not less than 5 hours* ### Original motion text > *That the Senate directs the Legal and Constitutional Affairs Legislation Committee to hold a public hearing on 26 March 2024, of not less than two hours, for the purposes of hearing from officials from the Department of Home Affairs regarding the details of the [Migration Amendment (Removals and Other Measures) Bill 2024](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7179).*",
+   "stage": "Reference to Committee",
+   "ayes": 16,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-26/8"
+  },
+  {
+   "key": "federal-senate-8820",
+   "date": "2024-03-26",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-03-26.99.1) introduced by South Australian Senator [Simon Birmingham](https://theyvoteforyou.org.au/people/senate/sa/simon_birmingham) (Liberal), which means it passed. This means that the Legal and Constitutional Affairs Legislation Committee will hold a [public hearing](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Legal_and_Constitutional_Affairs/MigrationAmendment24/Report) (as set out in the motion text below). ### Motion text > *That the Senate directs the Legal and Constitutional Affairs Legislation Committee to hold a public hearing on 26 March 2024, of not less than two hours, for the purposes of hearing from officials from the Department of Home Affairs regarding the details of the [Migration Amendment (Removals and Other Measures) Bill 2024](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7179).*",
+   "stage": "Reference to Committee",
+   "ayes": 30,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-26/9"
+  },
+  {
+   "key": "federal-senate-10491",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan I will now deal with the Migration Amendment Bill 2024 and two other bills, starting with the second reading amendments. The question is that the Pauline Hanson's One Nation amendment on sheet 2619 be agreed to. _Pauline Hanson's One Nation's circulated amendment_ _in respect of the_ _Migration Amendment_ _(Removal and Other Measures)_ _Bill 2024_ At the end of the motion, add \", but the Senate notes that this bill does not: (a) solve the problem of removing non-citizens from immigration detention and deporting them or removing non-citizens who have no valid reason for remaining in Australia; or (b) actually enforce deportation, it only swaps detention centres for jail\".",
+   "stage": "Second reading",
+   "ayes": 3,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 3,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/53"
+  },
+  {
+   "key": "federal-senate-10492",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan I will now deal with the second reading amendment circulated by Senator Thorpe on sheet 2500. The question is that the amendment on sheet 2500 be agreed to. _Senator Thorpe's amendment__in respect of the_ _Migration Amendment_ _(Removal and Other Measures)_ _Bill 2024_ Omit all words after \"That\", substitute \"the bill be withdrawn and the Senate notes that the bill: (a) raises significant human rights concerns, including breaking Australia's human rights obligations as a signatory to the 1951 Refugee Convention and its 1967 Protocol to adhere to international standards in the protection of asylum seekers and refugees; (b) was not subject to a proper consultation process, with key stakeholders and experts from lived experience refugee communities not consulted; (c) criminalises refugees rather than looking at long-term strategies and solutions to address the underlying structural causes; and (d) gives the Government power to impose punitive measures on countries, which could erode diplomatic ties and weakens Australia's foreign policy relations and stability globally\". Question negatived. David Pocock by leave—I withdraw the amendment on sheet 2495. Andrew McLachlan The question is that Senator David Pocock's second reading amendment on sheet 3168 be agreed to. _Senator David Pocock's amendment_ _in respect of the_ _Migration Amendment_ _(Removal and Other Measures)_ _Bill 2024_ At the end of the motion, add \", but the Senate notes that: (a) the separation of powers established by the Australian Constitution is fundamental to the protection of Australia's democracy, and (b) the executive government cannot exercise Chapter III judicial power, including to impose punishment\".",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/54"
+  },
+  {
+   "key": "federal-senate-10493",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan The question is that the Australian Greens second reading amendment on sheet 3228 be agreed to. _Australian_ _Greens_ _'_ _circulated amendment_ _in respect of_ _the Migration Amendment Bill 2024—_ At the end of the motion, add \", but the Senate notes that: (a) this bill will be part of a brutal package of bills that will be one of the most extreme changes in migration policy since White Australia; (b) this bill and related bills will result in families being torn apart, communities being separated, and serious damage to Australia as a multicultural country; and (c) this bill should have never been proposed, and Australia is a worse place because it was\".",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/55"
+  },
+  {
+   "key": "federal-senate-10494",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan The question now is that these bills now be read a second time.",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/56"
+  },
+  {
+   "key": "federal-senate-10495",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan I will now deal with the Committee of the Whole amendments to the Migration Amendment (Removal and Other Measures) Bill 2024, starting with amendments circulated. Katy Gallagher I table an addendum to the explanatory memorandum relating to the Migration Amendment Bill 2024. The addendum responds to matters raised by the Scrutiny of Bills Committee. And I table a supplementary explanatory memorandum relating to the government amendments to the Migration Amendment (Removal and Other Measures) Bill 2024. Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/57"
+  },
+  {
+   "key": "federal-senate-10496",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan The question now is that the remaining stages of the bills be agreed to and the bills be now passed.",
+   "stage": "Third reading",
+   "ayes": 26,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/58"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Migration Amendment (Removal and Other Measures) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00107",
+   "assent_date": "2024-12-04"
+  }
+ ]
+}

@@ -1,0 +1,856 @@
+{
+ "key": "au-federal-alrc-2351",
+ "title": "Environment Protection and Biodiversity Conservation Amendment Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Sustainability, Environment, Water, Population and Communities",
+ "status": "passed",
+ "status_as_of": "2013-06-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-03-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-03-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-05-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-21",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00060",
+   "document_date": "2013-06-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-2899",
+   "date": "2013-03-21",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment Bill 2013 - Consideration in Detail - Bilateral agreements",
+   "stage": "Consideration in detail",
+   "ayes": 74,
+   "noes": 71,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-03-21/1"
+  },
+  {
+   "key": "federal-senate-2928",
+   "date": "2013-06-17",
+   "house": "senate",
+   "question": "Environment Protection and Biodiversity Conservation Amendment Bill 2013 - In Committee - Amend to include shale gas, tight gas and underground coal gasification",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 2,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-17/4"
+  },
+  {
+   "key": "federal-senate-2929",
+   "date": "2013-06-17",
+   "house": "senate",
+   "question": "Environment Protection and Biodiversity Conservation Amendment Bill 2013 - In Committee - Amend to make more specific",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 58,
+    "member": 2,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-17/5"
+  },
+  {
+   "key": "federal-senate-2930",
+   "date": "2013-06-17",
+   "house": "senate",
+   "question": "Environment Protection and Biodiversity Conservation Amendment Bill 2013 - In Committee - Amend to introduce an independent review",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 58,
+    "member": 2,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-17/6"
+  },
+  {
+   "key": "federal-senate-2931",
+   "date": "2013-06-17",
+   "house": "senate",
+   "question": "Environment Protection and Biodiversity Conservation Amendment Bill 2013 - In Committee - Bilateral agreements",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 60,
+    "member": 2,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-17/7"
+  },
+  {
+   "key": "federal-senate-2944",
+   "date": "2013-06-19",
+   "house": "senate",
+   "question": "Environment Protection and Biodiversity Conservation Amendment Bill 2013 - In Committee - Put the question (Greens Party amendment - owner consent)",
+   "stage": "In committee",
+   "ayes": 39,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 63,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-19/1"
+  },
+  {
+   "key": "federal-senate-2945",
+   "date": "2013-06-19",
+   "house": "senate",
+   "question": "Environment Protection and Biodiversity Conservation Amendment Bill 2013 - In Committee - Owner consent",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 45,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "earliest": 3,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-19/2"
+  },
+  {
+   "key": "federal-senate-2946",
+   "date": "2013-06-19",
+   "house": "senate",
+   "question": "Environment Protection and Biodiversity Conservation Amendment Bill 2013 - In Committee - Put the question (Liberal Party amendment)",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 59,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-19/3"
+  },
+  {
+   "key": "federal-senate-2947",
+   "date": "2013-06-19",
+   "house": "senate",
+   "question": "Environment Protection and Biodiversity Conservation Amendment Bill 2013 - In Committee - Exclude exploration, assessment and appraisal from bill",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 60,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-19/4"
+  },
+  {
+   "key": "federal-senate-2948",
+   "date": "2013-06-19",
+   "house": "senate",
+   "question": "Environment Protection and Biodiversity Conservation Amendment Bill 2013 - In Committee - Put the question (Greens amendment - extend protection)",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-19/5"
+  },
+  {
+   "key": "federal-senate-2949",
+   "date": "2013-06-19",
+   "house": "senate",
+   "question": "Environment Protection and Biodiversity Conservation Amendment Bill 2013 - In Committee - Extend protection",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 57,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 57,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-19/6"
+  },
+  {
+   "key": "federal-senate-2950",
+   "date": "2013-06-19",
+   "house": "senate",
+   "question": "Environment Protection and Biodiversity Conservation Amendment Bill 2013 - In Committee - Stand as printed",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 57,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-19/7"
+  },
+  {
+   "key": "federal-senate-2951",
+   "date": "2013-06-19",
+   "house": "senate",
+   "question": "Environment Protection and Biodiversity Conservation Amendment Bill 2013 - In Committee - Report the bill",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 58,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-19/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-271530",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271531",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271533",
+   "speaker": "Sharon Grierson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271534",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271535",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271547",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271548",
+   "speaker": "Janelle Saffin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271549",
+   "speaker": "Bruce Scott",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271621",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-03-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271632",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271638",
+   "speaker": "Martin Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823512",
+   "speaker": "Jacinta Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": "The speaker moved to call on the Environment Protection and Biodiversity Conservation Amendment Bill 2013 immediately and give it precedence over all other business until 4:30 pm that day; the motion was agreed to."
+  },
+  {
+   "slug": "speech-823513",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": "The senator supported the Environment Protection and Biodiversity Conservation Amendment Bill 2013 to protect aquifers from coal mining and coal seam gas, and criticised Tony Windsor for selling his farm to a coal miner at $5,000 per acre while opposing nearby mines."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Environment Protection and Biodiversity Conservation Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00060",
+   "assent_date": "2013-06-21"
+  }
+ ]
+}

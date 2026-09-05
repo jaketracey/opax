@@ -1,0 +1,383 @@
+{
+ "key": "au-federal-r7429",
+ "title": "Appropriation Bill (No. 4) 2025-2026",
+ "short_title": "Appropriation Bill (No. 4) 2025-2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-02-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2026-03-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7429_ems_85babe65-1356-410a-9ac0-a7e3c4de4e9c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7429%22",
+   "document_date": "2026-02-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00018",
+   "document_date": "2026-03-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-02-05",
+  "sentences": [
+   "This bill would authorise spending from the Consolidated Revenue Fund for government services that are not part of its ordinary annual services.",
+   "It is one of three Additional Estimates Appropriation Bills for the 2025-2026 financial year, alongside the Appropriation Bill (No. 3) and the Appropriation (Parliamentary Departments) Bill (No. 2).",
+   "The appropriations cover government decisions made since the 2025-26 Budget, and details are in the Portfolio Additional Estimates Statements."
+  ],
+  "changes": [
+   "Proposes appropriations from the Consolidated Revenue Fund for non-ordinary annual services.",
+   "Forms part of the Additional Estimates Appropriation Bills for 2025-2026.",
+   "Provides funding for government decisions made after the 2025-26 Budget."
+  ],
+  "affected": "The Australian Government and its agencies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:06:38Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-10115",
+   "date": "2026-03-26",
+   "house": "senate",
+   "question": "Andrew Bragg I rise to make a contribution in relation to the Appropriation Bill (No. 3) 2025-2026, Appropriation Bill (No. 4) 2025-2026 and Appropriation (Parliamentary Departments) Bill (No. 2) 2025-2026. The main point to make is that the nation's finances are no longer within the control of the government. We are now looking at a situation of an almost $40 billion deficit this year and a well over $100 billion deficit over the forward estimates. The reality is that public finances in Australia are completely broken. They're completely broken because the government has decided that it wants to spend at beyond pandemic levels on an ongoing basis—at 27 per cent of GDP—and, as a result, it has needed to find new tax revenues. The other point to make is that the government has completely debased the integrity of public finances with its commitment to significant off-budget funding. When you look at the overall position of the Commonwealth government, we can talk about the deficit, we can talk about the structural deficit, we can talk about the spending and we can talk about the overreliance on a small number—a shrinking number—of Australians for the tax base. But I think one of the biggest problems is this issue of integrity. This government has sought to provide all sorts of different boondoggle funds, like the Future Made in Australia fund, the housing fund, the rewiring fund and the reconstruction fund—I'm still not sure what we're reconstructing from—but all of these funds are off budget. None of them come into the main picture when the Treasurer hands down the budget. It's a pretty sad state of affairs when, at one level, you look at the budget deficit and you think, that's a pretty bad position—$40 billion this year, $100 billion over the forwards, at least, and we're approaching $1 trillion in debt. The budget itself, even in the way the government presents it, is extremely sick. But then, when you build all of the off-budget items into the picture, you realis",
+   "stage": "Second reading",
+   "ayes": 5,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-26/4"
+  },
+  {
+   "key": "federal-senate-10116",
+   "date": "2026-03-26",
+   "house": "senate",
+   "question": "Deborah O'Neill The question is that the bills be read a second time.",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-26/5"
+  },
+  {
+   "key": "federal-senate-10117",
+   "date": "2026-03-26",
+   "house": "senate",
+   "question": "Malarndirri McCarthy I move: That these bills be now read a third time. Deborah O'Neill The question is that the bills be read a third time.",
+   "stage": "Third reading",
+   "ayes": 40,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-26/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1199727",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199728",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199873",
+   "speaker": "Tim Ayres",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200461",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200703",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201951",
+   "speaker": "Andrew Bragg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-03-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 4) 2025-2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00018",
+   "assent_date": "2026-03-27"
+  }
+ ]
+}

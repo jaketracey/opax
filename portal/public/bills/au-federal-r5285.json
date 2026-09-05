@@ -1,0 +1,121 @@
+{
+ "key": "au-federal-r5285",
+ "title": "Excise Tariff Amendment (Fuel Indexation) Bill 2014",
+ "short_title": "Excise Tariff Amendment (Fuel Indexation) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5285%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5285%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5285%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5285%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5285%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5285%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5285%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5285%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5285_ems_ba9df18c-bbec-41b0-a93d-55671a6438f3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5285%22",
+   "document_date": "2014-06-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-293370",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293400",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293422",
+   "speaker": "The DEPUTY SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2014-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293632",
+   "speaker": "Ross Vasta",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

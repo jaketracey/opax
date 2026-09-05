@@ -1,0 +1,217 @@
+{
+ "key": "au-federal-r7409",
+ "title": "Treasury Laws Amendment (Genetic Testing Protections in Life Insurance and Other Measures) Bill 2025",
+ "short_title": "Treasury Laws Amendment (Genetic Testing Protections in Life Insurance and Other Measures) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2026-04-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7409%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7409%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7409%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7409%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7409%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7409%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7409%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7409%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7409%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7409%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7409%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7409%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7409%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7409_ems_eb970c25-aef4-4954-8a94-adc8d4050633%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7409%22",
+   "document_date": "2025-11-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00035",
+   "document_date": "2026-04-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-26",
+  "sentences": [
+   "The bill would ban life insurers from using genetic test results to decide whether to offer cover or set its terms.",
+   "Insurers that break the ban would face criminal charges or civil penalties, and the Australian Securities and Investments Commission (ASIC) would enforce it.",
+   "The ban would start on the first day of the month after the bill receives royal assent."
+  ],
+  "changes": [
+   "Prohibits insurers from using certain genetic testing information in life insurance underwriting.",
+   "Creates a criminal offence and civil penalty for contravening the ban.",
+   "Gives ASIC responsibility for monitoring and enforcing the ban.",
+   "Amends the Disability Discrimination Act 1992 to align with the ban."
+  ],
+  "affected": "Life insurers and individuals who undertake genetic testing, including through health or medical research.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10103",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2026-03-25.28.2) introduced by Kooyong MP [Monique Ryan](https://theyvoteforyou.org.au/people/representatives/kooyong/monique_ryan) (Independent), which means it was unsuccessful. ### What does this amendment do? Dr Ryan [explained that](https://www.openaustralia.org.au/debate/?id=2026-03-25.28.2): > *I have moved this amendment to the Treasury Laws Amendment (Genetic Testing Protections in Life Insurance and Other Measures) Bill 2025. This important bill recognises that we have to remove disincentives for people who want to access life-saving genetic testing. The amendment that I am moving strengthens that intention by requiring the minister to commence and complete the statutory review of this legislation sooner than the government currently proposes—in fact, as soon as is practicable after three years, rather than five.* > > *The government's bill specifies that statutory reviews must consider whether the legislation is effective in providing reasonable certainty to individuals about the use of protected genetic information in relation to contracts of life insurance and whether these provisions have any unintended consequences. There is, in fact, good reason to suspect that future reviews will identify disadvantage arising from the failure of this bill to offer retrospective application. As it stands, people who have already had penalties, loadings, exclusions or discriminatory terms imposed upon them by life insurers will continue to face discrimination unless they seek to negotiate new coverage. The implications of this inequity are going to have to be closely monitored.* ### Amendment text > *(1) Schedule 1, item 3, page 10 (line 18), omit \"each fifth anniversary\", substitute \"each third anniversary\".*",
+   "stage": "Consideration in detail",
+   "ayes": 10,
+   "noes": 66,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 76
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-25/2"
+  },
+  {
+   "key": "federal-representatives-10104",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2026-03-25.31.1) introduced by Mackellar MP [Sophie Scamps](https://theyvoteforyou.org.au/people/representatives/mackellar/sophie_scamps) (Independent), which means they were not successful. Dr Scamps [explained that](https://www.openaustralia.org.au/debate/?id=2026-03-25.31.1): > *While I strongly support this bill, I will be moving two amendments to strengthen it. These amendments respond to concerns raised by the Australian Human Rights Commission regarding sections 33E(2) and 33F(5) of the bill. As currently drafted, these sections allow regulations to override the definitions of key terms, such as 'genetic testing' and 'protected genetic information'. Specifically, the provisions state that the regulations 'have effect despite anything else in this section'. This means that regulations could, in effect, redefine what constitutes protected genetic information, even if that contradicts the definitions set out in the legislation itself. This creates a risk that the scope of protections could be narrowed in the future. In doing so, it dilutes the strength and certainty of the ban. It is not appropriate for regulations to have the power to limit or expand the meaning of terms that are so central to the operation of the legislation.* ### Amendment texts > *(1) Schedule 1, item 3, page 5 (lines 22 and 23), omit \"Regulations made for the purposes of this subsection have effect despite anything else in this section.\".* > > *(2) Schedule 1, item 3, page 6 (lines 26 to 28), omit \"Regulations made for the purposes of this subsection have effect despite anything else in this section.\".*",
+   "stage": "Consideration in detail",
+   "ayes": 9,
+   "noes": 64,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 73
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-25/3"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Genetic Testing Protections in Life Insurance and Other Measures) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00035",
+   "assent_date": "2026-04-08"
+  }
+ ]
+}

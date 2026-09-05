@@ -1,0 +1,261 @@
+{
+ "key": "au-federal-s1248",
+ "title": "Marine Safety (Domestic Commercial Vessel) National Law Amendment (Improving Safety) Bill 2019",
+ "short_title": "Marine Safety (Domestic Commercial Vessel) National Law Amendment (Improving Safety) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-05",
+ "originating_house": "senate",
+ "sponsor": "STERLE, Sen Glenn",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10610",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1248%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1248%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1248%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1248%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1248%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1248%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1248%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1248_ems_55211ee9-0b50-4a0a-9cd9-6a5247efaf5d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1248%22",
+   "document_date": "2019-12-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-05",
+  "sentences": [
+   "The bill would require masters of domestic commercial vessels to count passengers twice on each trip.",
+   "The Australian Maritime Safety Authority would be directed to write a rule mandating a headcount when the voyage starts and another when it ends.",
+   "The requirement would not apply to Class 4 vessels, vessels used for public transport, or vessels longer than 24 metres."
+  ],
+  "changes": [
+   "The bill would increase the required passenger headcounts from one to two per voyage.",
+   "It would exclude certain vessel types from the new headcount requirement.",
+   "It would task the Australian Maritime Safety Authority with creating the instrument to enforce the rule."
+  ],
+  "affected": "Masters of domestic commercial vessels and their passengers are affected, as well as the Australian Maritime Safety Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-6190",
+   "date": "2020-02-10",
+   "house": "senate",
+   "question": "Marine Safety (Domestic Commercial Vessel) National Law Amendment (Improving Safety) Bill 2019 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 26,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-02-10/1"
+  },
+  {
+   "key": "federal-senate-6191",
+   "date": "2020-02-10",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2020-02-10.93.1) to agree with the main idea of the bill. This means they can now discuss it in more detail. In parliamentary jargon, they voted to read the bill for a [second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). ### What is the bill's main idea? The [purpose of the bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1248) is \"to require masters of certain vessels to conduct two headcounts of passengers, one at the start of a voyage and one at the end.\" ### Background to the bill According to the bill's [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fs1248_ems_55211ee9-0b50-4a0a-9cd9-6a5247efaf5d%22;rec=0): > *This bill is needed to avoid a similar case occurring to that which happened with the [tragic loss of Mr Damien Mills](https://www.abc.net.au/news/2017-06-06/inquest-into-death-of-damien-mills-on-perth-cruise/8593166) when he fell off the back of a boat undetected and died in 2014. Had the master of that vessel conducted a headcount when the boat got back to Fremantle, they would have realised that Mr Mills was missing and they could have alerted the appropriate authorities. WA Water Police, in giving evidence to the Senate’s Rural and Regional Affairs and Transport Legislation Committee’s inquiry into the performance of the Australian Maritime Safety Authority, stated that had they been made aware that Mr Mills had fallen overboard at the time the vessel docked, they would have had a very strong chance of finding him alive.*",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 26,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-02-10/2"
+  },
+  {
+   "key": "federal-representatives-6198",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2020-02-11.3.2) intrdouced by Gippsland MP [Darren Chester](https://theyvoteforyou.org.au/people/representatives/gippsland/darren_chester) (Nationals), which means it passed. The motion was: > *That the second reading be made an order of the day for the next sitting.* A [second reading](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is a vote to agree with the main idea of the bill.",
+   "stage": "First Reading",
+   "ayes": 73,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-11/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

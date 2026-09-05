@@ -1,0 +1,95 @@
+{
+ "key": "au-federal-r6692",
+ "title": "Snowy Hydro Corporatisation Amendment (No New Fossil Fuels) Bill 2021",
+ "short_title": "Snowy Hydro Corporatisation Amendment (No New Fossil Fuels) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-03-22",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-11-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6692%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6692%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6692%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6692_ems_52bfb7c5-036e-4e3e-957e-662507214e2a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6692%22",
+   "document_date": "2021-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-03-22",
+  "sentences": [
+   "The bill would stop Snowy Hydro from building, buying or running new power stations that use fossil fuels.",
+   "This ban would not cover existing fossil fuel plants or any that Snowy Hydro is already legally committed to build or buy before the law starts.",
+   "The bill would also add a purpose statement, update the short title description and create new definitions."
+  ],
+  "changes": [
+   "Prohibits Snowy Hydro from developing new fossil fuel electricity generation.",
+   "Prohibits Snowy Hydro from acquiring or investing in new fossil fuel electricity generation.",
+   "Prohibits Snowy Hydro from operating new fossil fuel electricity generation.",
+   "Excludes existing fossil fuel assets from the prohibition.",
+   "Excludes fossil fuel assets required under pre-commencement binding contracts.",
+   "Inserts a new objects clause, amends the short outline and adds definitions."
+  ],
+  "affected": "Snowy Hydro and its group companies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-404654",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2021-03-22",
+   "stage_hint": null,
+   "brief": "The Snowy Hydro Corporatisation Amendment (No New Fossil Fuels) Bill 2021 was introduced to prohibit Snowy Hydro from developing new fossil fuel electricity generation, arguing the government’s claimed 1,000-megawatt capacity gap is fabricated—actual gap is 215 megawatts—and that private sector battery projects (700 MW, 500 MW, 1,200 MW) offer cheaper alternatives to the proposed gas plant in the Hunter."
+  },
+  {
+   "slug": "speech-404655",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-03-22",
+   "stage_hint": null,
+   "brief": "The speech argued that the government's proposed 1,000‑megawatt gas generator at Kurri Kurri via Snowy Hydro is unnecessary because the market is already providing sufficient battery storage, including a 1,200‑megawatt battery from CEP.Energy and AGL's 500‑megawatt battery. The bill would amend the Snowy Hydro Corporatisation Act to ban new fossil fuel projects by the company."
+  }
+ ],
+ "acts": []
+}

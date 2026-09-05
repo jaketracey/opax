@@ -1,0 +1,68 @@
+{
+ "key": "au-federal-s1486",
+ "title": "Environment and Other Legislation Amendment (Removing Nuclear Energy Prohibitions) Bill 2026",
+ "short_title": "Environment and Other Legislation Amendment (Removing Nuclear Energy Prohibitions) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-02-04",
+ "originating_house": "senate",
+ "sponsor": "CANAVAN, Sen Matthew",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10827",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-02-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1486%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1486_ems_40586b7c-050e-48b7-b17a-cf0dc6c3d2d8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1486%22",
+   "document_date": "2026-02-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-02-04",
+  "sentences": [
+   "The bill would end current bans that prevent the environment minister from allowing the building or running of certain nuclear facilities under federal environment law.",
+   "It does this by deleting specific provisions in the Environment Protection and Biodiversity Conservation Act 1999 and the Australian Radiation Protection and Nuclear Safety Act 1998.",
+   "The changes would take effect the day after the law receives royal assent."
+  ],
+  "changes": [
+   "Repeals the ban on the minister approving nuclear facilities under sections 37J, 140A, 146M and paragraph 305(2)(d) of the Environment Protection and Biodiversity Conservation Act 1999.",
+   "Repeals the ban on building or running certain nuclear facilities in section 10 of the Australian Radiation Protection and Nuclear Safety Act 1998.",
+   "Leaves untouched state and territory authority to shield their people and environment from harmful radiation.",
+   "Maintains the foreign minister's power to decide on permits under the Nuclear Non-Proliferation (Safeguards) Act 1987 for proposed facilities."
+  ],
+  "affected": "The minister for environment and people or organisations seeking to establish nuclear facilities are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:37:21Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

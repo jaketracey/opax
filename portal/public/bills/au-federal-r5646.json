@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5646",
+ "title": "Superannuation Legislation Amendment (Transparency Measures) Bill 2016",
+ "short_title": "Superannuation Legislation Amendment (Transparency Measures) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-03-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5646%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5646%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5646%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5646_ems_ffc6652e-603c-4521-87f5-e2bfd3131f88%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5646%22",
+   "document_date": "2016-03-17",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-17",
+  "sentences": [
+   "The bill would require superannuation funds to give members and employers better information about their accounts.",
+   "It would update the Corporations Act 2001 to make existing rules on dashboards and investment disclosure easier for the industry to follow.",
+   "The changes would start on 1 July 2017."
+  ],
+  "changes": [
+   "Requires improved information for fund members and employers.",
+   "Makes current disclosure obligations more workable for industry.",
+   "Introduces choice product dashboards and portfolio holdings disclosure measures."
+  ],
+  "affected": "Superannuation fund members, employers, and the superannuation industry.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

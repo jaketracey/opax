@@ -1,0 +1,139 @@
+{
+ "key": "au-federal-r5291",
+ "title": "Customs Tariff Amendment (Carbon Tax Repeal) Bill 2013 [No. 2]",
+ "short_title": "Customs Tariff Amendment (Carbon Tax Repeal) Bill 2013 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2014-07-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5291%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5291%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-07-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5291%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5291%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5291%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5291%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5291_ems_10c85768-5b00-4a90-8be1-960af991050b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5291%22",
+   "document_date": "2014-06-23",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-23",
+  "sentences": [
+   "This bill is part of a package that repeals the carbon tax and aims to stop businesses from unfairly raising prices after the repeal.",
+   "The package would let the competition watchdog track prices of certain goods and ban pricing abuses linked to the carbon tax removal.",
+   "Companies that break the ban could face fines of up to 6,471 penalty units, and individuals up to 1,295 penalty units."
+  ],
+  "changes": [
+   "The package would forbid price exploitation on key goods like electricity and gas after the carbon tax is repealed.",
+   "The package would give the ACCC new powers to monitor and assess price changes before and during the repeal transition.",
+   "The package would stop companies from making false or misleading claims about how the carbon tax repeal affects prices."
+  ],
+  "affected": "Businesses supplying certain key goods, and the Australian Competition and Consumer Commission (ACCC).",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:05:04Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

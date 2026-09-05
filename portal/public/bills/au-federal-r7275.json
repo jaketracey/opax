@@ -1,0 +1,376 @@
+{
+ "key": "au-federal-r7275",
+ "title": "Scams Prevention Framework Bill 2025",
+ "short_title": "Scams Prevention Framework Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2025-02-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7275_ems_4ee55c79-dd09-40ea-bc07-166c4071de27%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7275_ems_ec62fd87-d851-47d9-a2e5-8ec59b146297%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7275_ems_818c93ad-dea3-4895-a647-45eaa5c1cf5c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7275%22",
+   "document_date": "2024-11-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00015",
+   "document_date": "2025-02-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9515",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "question": "The majority voted against the amendment to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for reading the bill for a second time). This means the usual second reading motion will remain unchanged. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words: \"whilst not declining to give the bill a second reading, the House notes the Government's:* > > *(1) rushed, half-finished and last-minute approach to legislating its scams prevention policy; and* > > *(2) failure to control homegrown inflation and address the cost of living crisis;* > > *is leaving Australians more vulnerable to scams\".*",
+   "stage": "Second reading",
+   "ayes": 59,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 5,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 33,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 133,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-06/3"
+  },
+  {
+   "key": "federal-representatives-9516",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2025-02-06.41.1) introduced by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent), which means they did not succeed. ### Amendment text > *(1) Schedule 1, item 1, page 13 (after line 24), after the paragraph beginning \"The entity must keep\" in section 58BC, insert:* > >> *The entity must publish information about scams detected, reported and responded to.* > > *(2) Schedule 1, item 1, page 16 (after line 4), after section 58BG, insert:* > >> *58BGA Publishing information about scams detected, reported and responded to — civil penalty provision* >> > *(1) A regulated entity for a regulated sector contravenes this subsection if the entity fails to publish the following information on a publicly available website:* > >> *(a) the prevention, detection and disruption of scams over the last 3 month period (the reporting period);* >> >> *(b) the response to scams over the last 3 month period (the reporting period);* >> >> *(c) reports relating to scams over the last 3 month period (the reporting period);* >> >> *within the period provided under subsection (2) and in accordance with the requirements under subsection (3).* > > *(2) For the purposes of subsection (1), the period is within 30 days of the end of the reporting period.* > > *(3) For the purposes of subsection (1), the information must:* > >> *(a) be in the form required by the SPF rules; and* >> >> *(b) contain the details required by the SPF rules.* > > *(4) Subsection (1) is a civil penalty provision.* > > *Note: This means subsection (1) is a civil penalty provision of an SPF principle for the purposes of section 58FJ (about civil penalties).*",
+   "stage": "Consideration in detail",
+   "ayes": 13,
+   "noes": 52,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 64,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-06/4"
+  },
+  {
+   "key": "federal-senate-9577",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2025-02-12.206.1) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it failed. It would have added the text below to the usual second reading motion, which is \"*that the bill be read a second time*\" (which is parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text **SHEET 3294** > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) too many people and their families experience significant harm from scams each year,* >> >> *(ii) instead of implementing a best practice model to prevent scams, Labor has caved to the interests of the major banks and their multi-billion-dollar profits, and* >> >> *(iii) under Labor's bill, it would take a person impacted by a scam up to 30 steps and 2 years to seek redress, and at the end of the process there is no guarantee they will get any of their money back; and* > > *(b) calls on the Government to amend the bill to include a presumption of reimbursement, similar to the UK model, which would require banks to promptly reimburse people who have been scammed, and then recover costs from other businesses involved in the scam in proportion to their liability, including telcos and digital platforms\".* **SHEET 3324** > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) the bill fails to address the jurisdictional impediments to enforcement of laws against offshore social media companies,* >> >> *(ii) any measures or civil penalties the bill imposes on online platforms will be unenforceable and require voluntary compliance,* >> >> *(ii) the Joint Select Committee on Social Media and Australian Society considered the impact of online scams and jurisdictional impediments and recommended that the Australian Government consider options for greater enforceability of Australian laws for soci",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/21"
+  },
+  {
+   "key": "federal-senate-9578",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-02-12.209.1) introduced by Queensland Senator [Pauline Hanson](https://theyvoteforyou.org.au/people/senate/queensland/pauline_hanson) (One Nation), which means it failed. It would have added the text below to the usual second reading motion, which is \"*that the bill be read a second time*\" (which is parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that this legislation fails to make adequate provisions for the compensation of vulnerable Australians who have been victims of scams; and* > > *(b) calls on the Government to introduce legislation similar to the successful UK model of reimbursement, which ensures that banks are required to initially refund scam victims, providing stronger consumer protection and accountability in the financial sector\".*",
+   "stage": "Second reading",
+   "ayes": 18,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/22"
+  },
+  {
+   "key": "federal-senate-9579",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted in favour of government [amendments (1) and (2) on sheet FR102](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7275_amend_a20921b1-60c5-4c5f-ae31-34dfae97ceb7%22;rec=0), which means it succeeded and will now become a part of the bill. ### Amendment text > *(1) Schedule 1, item 1, page 13 (line 9), before “Matters”, insert “(1)”.* > > *(2) Schedule 1, item 1, page 13 (after line 16), at the end of section 58BB, add:* > >> *(2) In determining whether a regulated entity has taken reasonable steps for the purposes of a provision of this Division, the primary consideration must be the matter in paragraph (1)(e) (if applicable).*",
+   "stage": "Committee of the Whole",
+   "ayes": 27,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/23"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1194370",
+   "speaker": "Murray Watt",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194522",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194525",
+   "speaker": "David Pocock",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Scams Prevention Framework Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00015",
+   "assent_date": "2025-02-20"
+  }
+ ]
+}

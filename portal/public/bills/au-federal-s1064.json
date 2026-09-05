@@ -1,0 +1,926 @@
+{
+ "key": "au-federal-s1064",
+ "title": "Social Services Legislation Amendment Bill 2017",
+ "short_title": "Social Services Legislation Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-22",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2017-04-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1064%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1064%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1064%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1064%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1064%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1064%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1064%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1064%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1064%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1064%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1064%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1064%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1064%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-04-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1064%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1064_ems_dcc97d69-0fb8-4cec-a2a9-444db0feaef0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1064%22",
+   "document_date": "2017-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00033",
+   "document_date": "2017-04-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-22",
+  "sentences": [
+   "This bill would freeze or pause several payment thresholds and rates for welfare recipients.",
+   "It would let the Department of Human Services collect data automatically from income stream providers and change how long some jobseekers wait before receiving payments.",
+   "The income-free areas for working age allowances and single parenting payments would be held steady for three years from July after royal assent, while student payment thresholds would be frozen from the following January."
+  ],
+  "changes": [
+   "Freezes income-free areas for working age allowances and single parenting payments for three years.",
+   "Freezes income-free areas and means test thresholds for student payments for three years.",
+   "Automates the collection of income stream data from providers by the Department of Human Services.",
+   "Extends and simplifies the ordinary waiting period for working age payments.",
+   "Maintains current family tax benefit rates for two years from July 2017."
+  ],
+  "affected": "Recipients of working age allowances, parenting payment single, student payments, and family tax benefit, as well as income stream providers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:14:22Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4633",
+   "date": "2017-03-22",
+   "house": "senate",
+   "question": "George Brandis I move: That the following bill be introduced: A Bill for an Act to amend the law relating to family assistance and social security, and for related purposes. Stephen Parry The question is that the motion moved by Senator Brandis be agreed to.",
+   "stage": "Bill",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 41,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-22/6"
+  },
+  {
+   "key": "federal-senate-4634",
+   "date": "2017-03-22",
+   "house": "senate",
+   "question": "George Brandis I present the bill and move: That this bill may proceed without formalities and be now read a first time. I move that the question be now put. Stephen Parry The question is that the question be now put.",
+   "stage": "Bill",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 41,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-22/7"
+  },
+  {
+   "key": "federal-senate-4635",
+   "date": "2017-03-22",
+   "house": "senate",
+   "question": "Stephen Parry The question now is that the motion that the bill proceed without formalities and be read a first time be agreed to.",
+   "stage": "Bill",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 41,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-22/8"
+  },
+  {
+   "key": "federal-senate-4639",
+   "date": "2017-03-22",
+   "house": "senate",
+   "question": "Claire Moore We seem to be going through the same process we did earlier today. When I was speaking earlier, I talked about the process that the community affairs committee has had to consider the various iterations of these issues that are in front of us in this new bill. As I was saying, it is really important, and I value the fact, that governments actually listen to the evidence that is brought forward in submissions and public hearings. And it is worthy that governments take up some of the issues that have been brought in through that process. It does not always happen. But in this case, belatedly, this morning—I am not quite sure what time but it was sometime before 9.30—the government did take up one of the core recommendations that people had made during the hearing quite recently, which was to separate into two bills the proposed bill put before the committee. Consistently, submissions and evidence that came to us talked about the division that the previous bill had caused. It fact, it had divided people who would be subject to loss through this bill through budget savings. I will go through that later, and many senators will talk about the most vulnerable people subject to cuts. It set up a division between people who would be losing entitlement and losing some process through this bill. And it put that in direct contrast with the child-care package, for which the community had been waiting for many years. There was a clear division created, seemingly a conflict, which was expressed by many of our witnesses. The way the government had presented the omnibus bill, the statements by ministers, and speeches in the other place and in the media all told the community that, unless we were prepared as a parliament and a community to accept the budget cuts—some of which had been around since 2014—the child-care package would not be funded. It was clearly, 'Take it or leave it.' My understanding is that that rhetoric continued certainly until this morning's media. T",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 16,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-22/12"
+  },
+  {
+   "key": "federal-senate-4640",
+   "date": "2017-03-22",
+   "house": "senate",
+   "question": "Doug Cameron Labor opposes schedules 1, 3 and 4 in the following terms: (4) Schedule 1, page 3 (lines 1 to 21), to be opposed. (5) Schedule 3, page 6 (line 1) to page 16 (line 35), to be opposed. (6) Schedule 4, page 17 (lines 1 to 9), to be opposed. I have heard all of the debate tonight, and I think the debate has been very good, especially from Senator Lambie and Senator Gallagher, who have actually experienced relying on social security to help them and their families. Not too many in this place would have had to rely on that position, and that is why Labor sees social security as absolutely essential to have a decent society in this country. That is why we are opposed to this bill, because this is not the end of the cuts that this government is proposing. I am not sure if, in the negotiations that took place between One Nation, Senator Xenophon and Senator Hinch, the government indicated that this was only the first tranche of cuts to social security in this country. I listened to Senator Cormann when we were discussing the bill today, and this is what he said: 'These measures have been around for so long—why are you persisting with them?' But the government is persisting with them. The government is continuing to seek to legislate, and it is true that we have worked with crossbench senators because Labor and the Greens in relation to these measures were not prepared to pursue further budget repair, even though it was necessary, given the mess Labor left behind. I do not know what you would call the fiscal and economic position that you are in at the moment, but what we are not prepared to do is simply deal with budget repair at arm's length from the implications it has for ordinary families in this country. Senator Cormann said: Today is the next instalment. Building on the progress that we made in the initial omnibus savings bill, we will be able to secure more savings today. There will be more work to do after today, but this is as far as we believe the Sena",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 15,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-22/13"
+  },
+  {
+   "key": "federal-senate-4641",
+   "date": "2017-03-22",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 15,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-22/14"
+  },
+  {
+   "key": "federal-senate-4642",
+   "date": "2017-03-22",
+   "house": "senate",
+   "question": "Social Services Legislation Amendment Bill 2017 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 15,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-22/15"
+  },
+  {
+   "key": "federal-representatives-4612",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment Bill 2017 - Second Reading - Don't agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 68,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-29/2"
+  },
+  {
+   "key": "federal-representatives-4613",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment Bill 2017 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-29/3"
+  },
+  {
+   "key": "federal-representatives-4614",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "question": "Jenny Macklin by leave—I move opposition amendments (1) to (7) together: (1) Clause 2, page 2 (table item 2), omit the table item. (2) Clause 2, page 2 (table item 4), omit the table item. (3) Clause 2, page 2 (table item 5), omit the table item. (4) Schedule 1, page 3 (lines 1 to 21), omit the Schedule. (5) Schedule 3, page 6 (line 1) to page 16 (line 35), omit the Schedule. (6) Schedule 4, page 17 (lines 1 to 9), omit the Schedule. (7) Title, page 1 (line 2), omit \"family assistance and\". As the member for Grayndler usefully pointed out, we could do these amendments one by one and we could divide on them one by one. I was actually going to do this in a minute, but now that the Leader of the House is so up on things we might as well remind them that this government wants to take $1.4 billion out of the pockets of families. That is actually what you are doing. That is actually what this bill that you have all voted for right now is all about. All of you, go out into your electorates and tell all the families—1½ million families—that you are going to take money out of their pockets. That is what you have just voted for. This detailed amendment is trying to take that out of the bill. No doubt, in a minute, you will all do the same thing again—you will all vote to keep it in the bill. You are all like lemmings. You are just going to do what you are told. You do not care what the families in your electorate actually think. Now, he has come over because he still does not know what is going on! I just say to the minister at the table that the purpose of these amendments is to take all of these cuts, which are going to hurt the poorest people in the country, out of the bill so that we do not have so many people losing so much money as a result of this government going back to the 2014 budget well and hitting very vulnerable Australians. _A division having been called and the bells being/having been rung—_ Bob Katter We have no idea what the amendments are. With all due res",
+   "stage": "Consideration in detail",
+   "ayes": 68,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-29/4"
+  },
+  {
+   "key": "federal-representatives-4615",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment Bill 2017 - Consideration in Detail - Agree to the bill",
+   "stage": "Consideration in detail",
+   "ayes": 75,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-29/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-344034",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment Bill 2017 secures $2.4 billion in savings over the forward estimates and $6.8 billion over the medium term by freezing income free areas and means test thresholds for three years, automating income stream reviews, extending waiting periods for parenting payment and youth allowance, and maintaining family tax benefit rates at current levels for two years with no cuts to payments."
+  },
+  {
+   "slug": "speech-344864",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The speaker argued the Social Services Legislation Amendment Bill 2017 would cut family tax benefits for 1.5 million families by $1.4 billion, freezing payments for two years, and also freeze income free areas for 264,500 recipients and impose a one-week waiting period for some payments. The speaker moved an amendment to decline the bill."
+  },
+  {
+   "slug": "speech-344866",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment Bill 2017, arguing it would freeze indexation for working-age and student payments, introduce waiting periods, and cut family tax benefits by $1.4 billion, affecting 1.5 million families, while contrasting it with $50 billion in corporate tax cuts."
+  },
+  {
+   "slug": "speech-344867",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that freezing family payments is a cut Australian families cannot afford, and opposed the Social Services Legislation Amendment Bill 2017, which would affect 1.5 million families, extend waiting periods for Newstart and sickness allowance, and freeze income-free areas for students."
+  },
+  {
+   "slug": "speech-344868",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The speech argued that the Social Services Legislation Amendment Bill 2017 freezes Newstart, youth allowance, parenting payment and carer payment rates for three years, extends waiting periods for parenting payment and youth allowance, and freezes family tax benefit indexation for two years—making 204,000 Australians worse off, while millionaires receive $16,400 in tax relief."
+  },
+  {
+   "slug": "speech-344869",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment Bill 2017, arguing it cuts $1.4 billion from Australian families by freezing indexation on payments for three years, extending waiting periods for youth allowance and parenting payments, and freezing family tax benefit indexation for two years. Specific impacts cited include 8,500 families in the Macquarie electorate losing family tax benefit Part A and 6,500 losing Part B, with a single parent on $50,000 with three children under 12 being $600 worse off in 2018-19."
+  },
+  {
+   "slug": "speech-344870",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment Bill 2017, arguing it attacks vulnerable Australians and that the government is disorganised for failing to provide speakers on its own legislation. Labor will support only the automation of the income stream measure if separated, and criticised the government for refusing to rule out $50 billion in tax cuts for the wealthy while the bill would harm 1.5 million families and freeze payments for 204,000 low-income Australians."
+  },
+  {
+   "slug": "speech-344871",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment Bill 2017 would cut $1.4 billion from Australian families, freeze income-free areas for working-age and student payments, and affect 1.5 million families, including 14,330 in their electorate receiving Family Tax Benefit Part A. They criticised the government for prioritising tax cuts for large corporations and banks over vulnerable Australians, and challenged government MPs—specifically naming the member for Petrie, Flynn, Leichhardt, Dawson, and Hughes—to defend the bill."
+  },
+  {
+   "slug": "speech-345038",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment Bill 2017 is a \"rotten\" attack on Australian families, resulting from a \"dirty deal\" with crossbenchers including the Nick Xenophon Team, One Nation and Derryn Hinch, and that it will rip $1.4 billion from families, leaving 1.5 million worse off."
+  },
+  {
+   "slug": "speech-345048",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The member for Indi opposed the Social Services Legislation Amendment Bill 2017, arguing the cuts would negatively affect over 20,000 aged pensioners and 32,000 pensioner concession card holders in her electorate, along with thousands more on family payments, Newstart and other supports. She called for a compassionate, systems-based approach to welfare that prioritises early intervention and community-led solutions over punitive measures."
+  },
+  {
+   "slug": "speech-345049",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment Bill 2017, arguing it would harm vulnerable Australians through measures like freezing income indexation thresholds and cutting family tax benefits, citing examples of families losing hundreds of dollars annually and noting a 40% increase in people seeking welfare help in Bendigo."
+  },
+  {
+   "slug": "speech-345050",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment Bill, arguing it would freeze family tax benefit indexation for two years, cut $1.4 billion from families, and leave 1.5 million families worse off, including 600,000 on minimum-rate FTB A with household incomes under $52,000. They also criticised the bill for introducing a one-week waiting period for parenting payment or youth allowance and freezing income-free areas for working-age and student payments, affecting 204,000 low-income Australians."
+  },
+  {
+   "slug": "speech-345051",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment Bill 2017 unfairly targets low- and middle-income Australians by freezing income-free areas for working age and student payments for three years, freezing indexation of family tax benefit parts A and B for two years, and extending waiting periods for parenting payment and Youth Allowance. They also criticised the Turnbull government for continuing a pattern of cutting social supports while giving tax breaks to big business, and accused the Prime Minister of abandoning commitments on marriage equality, climate change and a republic."
+  },
+  {
+   "slug": "speech-345057",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment Bill 2017 secures $2.4 billion in savings over the forward estimates, building to $6.8 billion over the medium term, by maintaining income free areas and means test thresholds, automating income stream reviews, extending waiting periods, and freezing family tax benefit rates for two years (saving an additional $2 billion). It also reverses a previous decision to increase family tax benefit rates, reducing costs by a further $2.3 billion."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00033",
+   "assent_date": "2017-04-12"
+  }
+ ]
+}

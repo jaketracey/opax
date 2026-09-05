@@ -1,0 +1,297 @@
+{
+ "key": "au-federal-r5205",
+ "title": "G20 (Safety and Security) Complementary Bill 2014",
+ "short_title": "G20 (Safety and Security) Complementary Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Justice",
+ "status": "passed",
+ "status_as_of": "2014-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5205%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5205%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5205%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5205%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5205%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-07-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5205%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-07-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5205%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5205%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5205_ems_0ac70143-2b62-4642-8b02-2acf10f87023%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5205%22",
+   "document_date": "2014-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00092",
+   "document_date": "2014-07-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-20",
+  "sentences": [
+   "The bill would create a new Commonwealth Act to clarify how Queensland's G20 safety law interacts with federal law at Brisbane Airport during the 2014 G20 Summit.",
+   "It would provide mechanisms for resolving overlaps between the Queensland G20 Act and existing Commonwealth legislation at the airport, which is a Commonwealth place.",
+   "The bill would ensure police and authorised persons clearly understand which powers they can use at Brisbane Airport during the summit."
+  ],
+  "changes": [
+   "Creates a standalone Commonwealth Act.",
+   "Clarifies the interaction between Queensland's G20 safety law and Commonwealth legislation at Brisbane Airport.",
+   "Ensures police and authorised persons have a clear understanding of available powers at the airport during the summit."
+  ],
+  "affected": "Police officers and other appointed or authorised persons at Brisbane Airport during the G20 Summit.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3329",
+   "date": "2014-07-14",
+   "house": "senate",
+   "question": "Jacinta Collins Labor will be supporting the G20 (Safety and Security) Complementary Bill 2014. On 15 and 16 November this year Brisbane will play host to arguably the most significant world leaders' summit, the G20. G20 members account for two-thirds of the world's population, around 80 per cent of global trade and, most notably, 85 per cent of the world's economy. Geographically, all the world's populated regions will be represented. The event itself is expected to have around 3,000 media representatives and around 4,000 delegates attend. It will place Brisbane at the centre of the world's attention at that time. It is a significant event that has as been brought to Australia by the previous government, which I will speak about in a moment. The G20 is the place to discuss global economic and financial matters. The objects of the G20 are threefold: to modernise international financial architecture, to promote financial regulations that reduce risks and prevent future financial crises, and policy coordination between its members in order to achieve global economic stability and sustainable growth. The bill itself clarifies the interaction between the Queensland government's G20 (Safety and Security) Act 2013 and the stand-alone bill proposed here. It was determined by the Queensland government that a separate act was needed because of the extra duties the Queensland Police Service would be facing. Those duties include: security for accommodation venues where meetings are being held, security for official parties and world leaders, motorcade routes and for other official events. That is on top of the everyday work the Queensland Police Service do in providing policing for the general public. The extra powers granted under the Queensland act and this bill are similar to the ones granted to the APEC meeting in New South Wales in 2007 and the Commonwealth Heads of Government Meeting in 2011. This bill deals with any overlap powers regarding jurisdiction issues between s",
+   "stage": "Second reading",
+   "ayes": 41,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 8,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-14/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-286001",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287685",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287686",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287687",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287920",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288177",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288178",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288179",
+   "speaker": "Michael Danby",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288180",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-14",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "G20 (Safety and Security) Complementary Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00092",
+   "assent_date": "2014-07-21"
+  }
+ ]
+}

@@ -1,0 +1,203 @@
+{
+ "key": "au-federal-r6329",
+ "title": "National Health Amendment (Pharmaceutical Benefits) Bill 2019",
+ "short_title": "National Health Amendment (Pharmaceutical Benefits) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2019-10-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6329%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6329%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6329%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6329%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6329%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6329%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6329%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6329%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6329%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6329%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6329%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6329%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6329_ems_74fb0662-1bb3-4832-a65c-e0a3a4772b3a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6329%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00077",
+   "document_date": "2019-10-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "This bill changes the rules for the Pharmaceutical Benefits Scheme, which helps Australians get medicines.",
+   "It introduces a charge for pharmacists when they ask to be allowed to dispense PBS medicines at a particular location.",
+   "The charge is meant to recover all the government's costs of processing these requests, as part of a budget measure from 2018-19."
+  ],
+  "changes": [
+   "The bill adds a fee for pharmacists' applications to supply PBS medicines at specific premises.",
+   "The bill aims to recover the full costs of processing those applications.",
+   "The bill also addresses keeping PBS medicines available when a pharmacy goes bankrupt or is under external administration."
+  ],
+  "affected": "Pharmacists and pharmacies that apply to supply PBS medicines, and patients who rely on those medicines.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-377402",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-04",
+   "stage_hint": null,
+   "brief": "The government moved the National Health Amendment (Pharmaceutical Benefits) Bill 2019 to amend the National Health Act 1953, introducing an application fee for pharmacists seeking PBS supply approvals and allowing continued medicine supply after a pharmacist's bankruptcy. The bill also highlighted over 2,100 new or amended PBS listings since 2013 at a cost of $10.6 billion, and a $308 million investment to lower the safety net threshold from 1 January 2020, saving up to $80 per year for 1.4 million Australians."
+  },
+  {
+   "slug": "speech-380432",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The opposition supported the National Health Amendment (Pharmaceutical Benefits) Bill 2019, which recovers costs for pharmacy approvals and ensures continued PBS supply after pharmacy bankruptcy, but moved a second-reading amendment criticising the government for failing to list 60 PBAC-recommended medicines, including Symdeko for cystic fibrosis."
+  },
+  {
+   "slug": "speech-380591",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The government's National Health Amendment (Pharmaceutical Benefits) Bill 2019 was supported, ensuring continued supply of PBS medicines if a pharmacist faces bankruptcy. The government has listed over 2,100 new or amended medicines on the PBS, including Tagrisso, Venclexta, and Ibrance, with 91% of scripts dispensed to concession cardholders at $6.50 per script."
+  },
+  {
+   "slug": "speech-380594",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government has failed to address rising healthcare costs, access disparities, and PBS listing delays, while supporting the National Health Amendment (Pharmaceutical Benefits) Bill 2019 to ensure medicine supply continuity if pharmacies fail. They criticised the coalition for proposing a $5 PBS copayment increase in the 2014 budget and for failing to list over 20 drugs recommended by the PBAC, contrasting this with Labor’s history of universal healthcare and an election commitment to list all expert-recommended medicines."
+  },
+  {
+   "slug": "speech-380598",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Health Amendment (Pharmaceutical Benefits) Bill 2019 guarantees access to PBS medicines for all Australians, especially in rural and regional communities, at a cost of $2.8 million per year, and criticised the Labor opposition for past failures in listing new medications."
+  },
+  {
+   "slug": "speech-380599",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Health Amendment (Pharmaceutical Benefits) Bill 2019 and an amendment criticising the government for delayed PBS listings, noting over 60 drugs including Symdeko for cystic fibrosis were awaiting listing, and that 961,000 Australians delay or avoid filling prescriptions due to cost."
+  },
+  {
+   "slug": "speech-380600",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The bill introduces an application fee for pharmacists seeking approval to supply PBS medicines, aligning with the government charging framework to support the scheme's sustainability, and grants the Health Secretary power to ensure continuity of PBS medicine supply when a pharmacy faces bankruptcy or external administration—affecting about 20 pharmacies annually, particularly in rural and remote areas. The government has made over 2,100 new or amended PBS listings since 2013, investing over $10.6 billion, contrasting with Labor’s 2011 pause on listings."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Health Amendment (Pharmaceutical Benefits) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00077",
+   "assent_date": "2019-10-02"
+  }
+ ]
+}

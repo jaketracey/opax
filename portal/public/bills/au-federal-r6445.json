@@ -1,0 +1,233 @@
+{
+ "key": "au-federal-r6445",
+ "title": "Farm Household Support Amendment (Relief Measures) Bill (No. 2) 2019",
+ "short_title": "Farm Household Support Amendment (Relief Measures) Bill (No. 2) 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-11-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2019-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6445%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6445%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6445%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6445%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6445%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6445%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6445%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6445%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6445%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6445%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6445_ems_53fbc593-77e5-46ad-9f6d-4f72e449b70a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6445%22",
+   "document_date": "2019-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00117",
+   "document_date": "2019-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-11-27",
+  "sentences": [
+   "The bill would change how the Farm Household Allowance is paid and assessed.",
+   "It would remove the income test for the payment rate, simplify the assets test to a single $5.5 million threshold, and allow recipients to choose who conducts their farm financial assessment.",
+   "The maximum activity supplement would rise from $4,000 to $10,000 and cover travel and accommodation costs."
+  ],
+  "changes": [
+   "The rate of Farm Household Allowance would no longer vary with a person's income.",
+   "All assets, farm and non-farm, would be subject to a single net value threshold of $5.5 million.",
+   "The requirement for farm financial assessments to be done by a person prescribed in the Minister's rules would be removed.",
+   "The maximum activity supplement would increase to $10,000 and include travel and accommodation costs."
+  ],
+  "affected": "Farm Household Allowance recipients.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6096",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual [second reading](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is that the bill be read a second time (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House criticises the Government for:* > > *(1) its ad hoc approach to drought assistance;* > > *(2) failing to deliver a comprehensive drought plan; and* > > *(3) forcing drought-affected farmers off the Farm Household Allowance\".*",
+   "stage": "Second reading",
+   "ayes": 62,
+   "noes": 72,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-03/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-384954",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-11-27",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment (Relief Measures) Bill (No. 2) 2019 simplifies Farm Household Allowance (FHA) payments by introducing an all-or-nothing fortnightly amount, increases the activity supplement to $10,000, and sets a single asset test threshold of $5.5 million net. The bill also removes the requirement for farm financial assessments to be conducted by a prescribed adviser and extends the activity supplement to cover travel and accommodation costs."
+  },
+  {
+   "slug": "speech-385906",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "The government's four sets of amendments to the Farm Household Support Amendment (Relief Measures) Bill (No. 2) 2019 provide a full-rate farm household allowance regardless of income, simplify the asset test by including water value, strengthen management with a $10,000 activity supplement for travel and accommodation, and the member for Hunter is wrong about farmers having to wait until mid‑2020 to receive support after reaching the four‑year maximum."
+  },
+  {
+   "slug": "speech-385915",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "Centre Alliance supported the Farm Household Support Amendment (Relief Measures) Bill (No. 2) 2019, which increases the activity supplement from $4,000 to $10,000, raises the income-free threshold to $1,074 per fortnight for single farmers, and broadens who can conduct farm financial assessments. The speaker questioned whether the bill achieves long-term structural change and noted that other welfare payments like Newstart are less generous, while also promoting their own Banking Amendment (Rural Finance Reform) Bill 2019."
+  },
+  {
+   "slug": "speech-386052",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment (Relief Measures) Bill 2019 requires financial institutions to meet additional conditions when making loans of up to $5 million to small primary production businesses, which are typically family-run and operate in volatile markets. The speaker urged the government to consider measures from a separate rural finance bill and noted that a national climate change work program, endorsed by agriculture ministers, will focus on four priorities to help farmers adapt to climate change."
+  },
+  {
+   "slug": "speech-386053",
+   "speaker": "Bob Katter",
+   "party": "Katter's Australian Party",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that free-market policies and the dominance of Coles and Woolworths have devastated Australian agriculture, with farmer numbers falling from 200,000 to under 84,000, government support at only 4.6% of farm income compared to a 41% OECD average, and cattle numbers dropping from 32 million to 22 million. He criticised the Farm Household Support scheme as inadequate and called for collective selling and government intervention, citing historical successes like the wool scheme under Doug Anthony."
+  },
+  {
+   "slug": "speech-386054",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment (Relief Measures) Bill (No. 2) 2019 implements recommendations from the independent review \"Rebuilding the FHA\" to improve financial support for farmers in hardship, with over $365 million in farm household allowance payments made to nearly 13,000 farmers and partners since 2014."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Farm Household Support Amendment (Relief Measures) Act (No. 2) 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00117",
+   "assent_date": "2019-12-11"
+  }
+ ]
+}

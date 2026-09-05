@@ -1,0 +1,267 @@
+{
+ "key": "au-federal-r6833",
+ "title": "Security Legislation Amendment (Critical Infrastructure Protection) Bill 2022",
+ "short_title": "Security Legislation Amendment (Critical Infrastructure Protection) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2022-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6833%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6833%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6833%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6833%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6833%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6833%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6833%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6833%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6833%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6833%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6833%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6833%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6833_ems_e948a334-98d0-4960-860d-f1d9622b2d53%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6833_ems_dd1bf2ad-0dae-4320-b608-d4bee55f1a62%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6833_ems_17ef6249-e91d-4011-8a93-6a3b76b69699%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6833%22",
+   "document_date": "2022-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00033",
+   "document_date": "2022-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-10",
+  "sentences": [
+   "This bill would require owners and operators of critical infrastructure to set up risk management programs and meet extra cyber security rules for the most important assets.",
+   "The responsible entity for a critical infrastructure asset would have to adopt and keep a risk management program, but only when the Minister makes a legislative instrument that says so.",
+   "The bill would add these duties to the Security of Critical Infrastructure Act 2018 and would apply to systems of national significance."
+  ],
+  "changes": [
+   "Creates a duty for responsible entities to adopt and maintain a critical infrastructure risk management program.",
+   "Introduces enhanced cyber security obligations for systems of national significance.",
+   "The Minister can decide by legislative instrument when the risk management program duty applies."
+  ],
+  "affected": "Owners and operators of critical infrastructure assets, and the entities responsible for them.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7685",
+   "date": "2022-03-30",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2022-03-30.229.1) to [pass the bill](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) in the Senate. The bill will now be sent back to the House of Representatives where our MPs will consider whether they agree with Senate amendments. ### What does the bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6833), the purpose of the bill is to: * *provide that specified critical infrastructure assets must adopt and maintain a critical infrastructure risk management program;* * *provide for annual reporting obligations for assets that are exempt from the risk management program obligation;* * *make minor amendments in relation to consultation requirements and immunities;* * *provide for additional cyber security obligations that may be applied in relation to systems of national significance;* * *provide that directions facilitating government assistance to industry in the event of a serious cyber security incident prevail over the requirements of a risk management program;* * *amend provisions that authorise the use and disclosure of protected information;* * *provide that the minister's power to privately declare an asset as a critical infrastructure asset includes a power to require compliance with a risk management program; and* * *enable the minister to declare a critical infrastructure asset to be a system of national of significance; and include additional reporting requirements.* See the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd055) for more detailed information.",
+   "stage": "Third reading",
+   "ayes": 45,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 18,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/13"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-418828",
+   "speaker": "Brendan Patrick John O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government breached long-standing national security convention by debating the Security Legislation Amendment (Critical Infrastructure Protection) Bill 2022 before the Parliamentary Joint Committee on Intelligence and Security could complete its inquiry, and moved an amendment stating the government had substituted bipartisan cooperation for political expediency."
+  },
+  {
+   "slug": "speech-419011",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Labor Party's second reading amendment to the Security Legislation Amendment (Critical Infrastructure Protection) Bill 2022 is overly broad, allowing debate on virtually any topic, and accused Labor of playing \"stupid, undergraduate games\" with the amendment."
+  },
+  {
+   "slug": "speech-419023",
+   "speaker": "Katie Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The Security Legislation Amendment (Critical Infrastructure Protection) Bill 2022 requires critical infrastructure entities to maintain risk management programs and allows the declaration of nationally significant systems. The speaker cited 1,600 cyber incidents handled by the Australian Cyber Security Centre in two years, with 400 affecting critical infrastructure, and argued the bill is urgently needed to protect essential services."
+  },
+  {
+   "slug": "speech-419024",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The Morrison government is breaking a longstanding bipartisan convention by forcing a vote on the Security Legislation Amendment (Critical Infrastructure Protection) Bill 2022 before it has been reviewed by the Parliamentary Joint Committee on Intelligence and Security, and has repeatedly politicised and mismanaged national security and defence policy, including abolishing the dedicated cybersecurity minister role and bungling major defence procurements."
+  },
+  {
+   "slug": "speech-419027",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The government introduced the Security Legislation Amendment (Critical Infrastructure Protection) Bill 2022, requiring critical infrastructure entities to implement risk management programs and comply with enhanced cybersecurity obligations for systems of national significance, using a principles-based framework and industry collaboration through the Trusted Information Sharing Network (TISN)."
+  },
+  {
+   "slug": "speech-419530",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The speaker presented four reports from the Parliamentary Joint Committee on Intelligence and Security: advisory reports on the Security Legislation Amendment (Critical Infrastructure Protection) Bill 2022 and the National Security Legislation Amendment (Comprehensive Review and Other Measures No. 1) Bill 2021; an inquiry into national security risks affecting the higher education and research sector; and a statement on the review of regulations listing Hizballah and The Base as terrorist organisations."
+  },
+  {
+   "slug": "speech-419531",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "Four unanimous bipartisan reports were tabled covering Hezbollah and The Base listings, national security risks in higher education, the critical infrastructure protection bill, and national security legislation amendments. The speaker welcomed the government's decision to list the entirety of Hezbollah as a terrorist organisation and supported passing the critical infrastructure bill despite consultation concerns, while noting many Richardson review recommendations remain outstanding."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Security Legislation Amendment (Critical Infrastructure Protection) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00033",
+   "assent_date": "2022-04-01"
+  }
+ ]
+}

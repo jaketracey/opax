@@ -1,0 +1,139 @@
+{
+ "key": "au-federal-r5812",
+ "title": "Disability Services Amendment (Linking Upper Age Limits for Disability Employment Services to Pension Age) Bill 2017",
+ "short_title": "Disability Services Amendment (Linking Upper Age Limits for Disability Employment Services to Pension Age) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2017-05-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5812%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5812%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5812%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5812%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5812%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5812%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5812%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5812%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5812%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5812%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5812%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-05-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5812%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5812_ems_5cce45e4-8417-41f8-a1c8-005bd76c0c25%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5812%22",
+   "document_date": "2017-02-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00036",
+   "document_date": "2017-05-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-344746",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "Labor supported the bill amending the Disability Services Act 1986 to align the upper age limit for disability employment services with pension age, costing $4.6 million and affecting around 200 vulnerable people."
+  },
+  {
+   "slug": "speech-344747",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The bill aligns the upper age limit for Disability Employment Services with the gradually increasing pension age (from 65 to 67 by 2024), preventing an estimated 200 vulnerable people from losing support this year."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Disability Services Amendment (Linking Upper Age Limits for Disability Employment Services to Pension Age) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00036",
+   "assent_date": "2017-05-19"
+  }
+ ]
+}

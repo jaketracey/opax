@@ -1,0 +1,987 @@
+{
+ "key": "au-federal-r6475",
+ "title": "Federal Circuit and Family Court of Australia Bill 2019",
+ "short_title": "Federal Circuit and Family Court of Australia Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2021-03-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-02-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6475_ems_e0f4b252-ccb7-4771-848a-0b748d053514%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6475_ems_e75067aa-4530-429b-a932-e5a4dd96ec33%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6475%22",
+   "document_date": "2019-12-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00012",
+   "document_date": "2021-03-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-05",
+  "sentences": [
+   "The bill would merge the Federal Circuit Court and the Family Court into a single court called the Federal Circuit and Family Court of Australia.",
+   "The new court would have two divisions, with one Chief Justice and a unified case management system to handle family law matters more efficiently.",
+   "The bill would not allow decided family law cases to be reopened just because of these changes."
+  ],
+  "changes": [
+   "Creates the Federal Circuit and Family Court of Australia as an overarching structure.",
+   "Establishes two divisions: Division 1 continues the Family Court, and Division 2 continues the Federal Circuit Court.",
+   "Provides for a single point of entry for family law matters, filed in Division 2 and transferred to Division 1 as needed.",
+   "Places the court under the leadership of one Chief Justice and one Deputy Chief Justice with dual commissions.",
+   "Preserves the Federal Circuit Court's general federal law and fair work jurisdiction in Division 2.",
+   "Allows the Chief Justice and Chief Judge to make Rules of Court alone for the first two years."
+  ],
+  "affected": "Australian families involved in family law disputes and the federal family court system.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:33:23Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6732",
+   "date": "2020-12-01",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the usual second reading motion - which is \"*that the bill be read a second time*\" - unchanged. Reading a bill [for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is parliamentary jargon for agreeing with the main idea of a bill. This vote was put after a motion (see below) was introduced to change the wording of the usual second reading motion. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words: \"whilst not declining to give the bill a second reading, the House:* > > *(1) recognises the critical importance of the family law system to the wellbeing and safety of families across our nation;* > > *(2) notes that:* > >> *(a) the Family Court of Australia was established in 1975, and has served Australian families for 45 years;* >> >> *(b) after seven years of neglect by Liberal Governments, the family law system is in a state of unprecedented crisis; and* >> >> *(c) if passed, these bills will cause further harm to vulnerable children and families in need of specialist family law assistance; and* > > *(3) calls on the Government to withdraw these dangerous bills and to instead get to work doing things that would actually help Australian families in times of need, including:* > >> *(a) responding to the sixty recommendations of the Australian Law Reform Commission's landmark 2019 review into the family law system;* >> >> *(b) increasing resources to the Family Court of Australia and the Federal Circuit Court in order to reduce case backlogs and the stress current delays are causing to families;* >> >> *(c) increasing resources to legal assistance services that provide vital help to vulnerable families in crisis, including Legal Aid Commissions, Family Violence Prevention Legal Services, Aboriginal and Torres Strait Islander Legal Services, Women's Legal Services and other Community Leg",
+   "stage": "Second reading",
+   "ayes": 62,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 121
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-01/1"
+  },
+  {
+   "key": "federal-representatives-6733",
+   "date": "2020-12-01",
+   "house": "representatives",
+   "question": "Federal Circuit and Family Court of Australia Bill 2019 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 62,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 121
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-01/2"
+  },
+  {
+   "key": "federal-representatives-6734",
+   "date": "2020-12-01",
+   "house": "representatives",
+   "question": "Federal Circuit and Family Court of Australia Bill 2019 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 62,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 120
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-01/3"
+  },
+  {
+   "key": "federal-senate-6971",
+   "date": "2021-02-17",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual second reading motion. The usual second reading motions is \"*that the bills be read a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*,\" which is parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *Omit all words after \"that\", insert:* > > *\"the bills be referred to the Legal and Constitutional Affairs Legislation Committee for further consideration, including examination in detail of the alternative 'Family Court 2.0' model proposed by the NSW Bar Association in 2018 and also recommended by the 2008 Future governance options for federal family law courts in Australia reportby Mr Des Semple (the Semple Report) and endorsed by a large number of stakeholders, which would relocate judicial officers hearing family law matters and the family law jurisdiction of the Federal Circuit Court into a second division within the Family Court, with a reporting date of no earlier than 20 May 2022.\"*",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 23,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-17/8"
+  },
+  {
+   "key": "federal-senate-6972",
+   "date": "2021-02-17",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-02-17.180.1) to the usual second reading motion. The usual second reading motions is \"*that the bills be read a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*,\" which is parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *Omit all words after \"that\", insert:* > > *\"further consideration of the bill be deferred until the Joint Select Committee on Australia's Family Law System has presented its final report.\"*",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 23,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-17/9"
+  },
+  {
+   "key": "federal-senate-6973",
+   "date": "2021-02-17",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-02-17.182.1) to the usual second reading motion. The usual second reading motions is \"*that the bills be read a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*,\" which is parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *At the end of the motion, add:* > > *\", but the Senate is of the opinion that:* > > *(a) the Government proposal to merge the Family Court and the Federal Circuit Court is deeply flawed and will do nothing to alleviate any of the fundamental problems plaguing the family law system – a system the Government has neglected for the last seven years; and* > > *(b) further consideration of the bill should be deferred until the government responds to the Australian Law Reform Commission's report Family Law for the Future – An Inquiry into the Family Law System, which made 60 recommendations for reform.\"*",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 23,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-17/10"
+  },
+  {
+   "key": "federal-senate-6974",
+   "date": "2021-02-17",
+   "house": "senate",
+   "question": "Federal Circuit and Family Court of Australia Bill 2019 and another - Second Reading - Agree with bills' main idea",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 23,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-17/11"
+  },
+  {
+   "key": "federal-senate-6975",
+   "date": "2021-02-17",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-02-17.189.1) introduced by Queensland Senator [Murray Watt](https://theyvoteforyou.org.au/people/senate/queensland/murray_watt) (Labor), which means it failed. It would have increase the minimum number of Judges required by the bill. ### Amendment text > *That the House of Representatives be requested to make the following amendment:* > > *(1) Amendment (1), subclause (3), omit “25 Judges”, substitute “32 Judges”.* > > *(2) Amendment (1), subclause (4), omit “25 Judges”, substitute “32 Judges”.*",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 22,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-17/12"
+  },
+  {
+   "key": "federal-senate-6976",
+   "date": "2021-02-17",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-02-17.191.1) moved by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Greens), which means it failed. The amendment would have increased the minimum number of judges set out in the legislation from 25 to 40. Senator Thorpe [explained that](https://www.openaustralia.org.au/senate/?gid=2021-02-17.191.1): > *As at 17 February there are 32 judges currently listed on the Family Court's website, who would become Division 1 judges, not including the Family Court of Western Australia judges. The government's amendment requiring 25 judges doesn't make any sense. It's going backwards from the current number of 32 judges. It does not make any sense to go backwards at this time, particularly to a figure of 25 in view of the crippling backlogs and workloads facing the courts.* ### Amendment text > *That the House of Representatives be requested to make the following amendment:* > > *(1) Amendment (1), subclause (3), omit \"25 Judges\", substitute \"40 Judges\".* > > *(2) Amendment (1), subclause (4), omit \"25 Judges\", substitute \"40 Judges\".* > > *Federal Circuit and Family Court of Australia Bill 2019* > > *Statement pursuant to the order of the Senate of 26 June 2000* > > *Amendments (1) and (2)* > > *Amendments (1) and (2) are framed as requests because they amend the government amendments to the bill to require that the minimum number of judges to hold office in the Federal Circuit and Family Court of Australia (Division 1) is 40 rather than 25. As this will have the effect of increasing the number of judges to be remunerated, it will increase the expenditure under the appropriation proposed by clause 18 of theFederal Circuit and Family Court of Australia Bill 2019.* > > *Statement by the Clerk of the Senate pursuant to the order of the Senate of 26 June 2000* > > *Amendments (1) and (2)* > > *If the effect of the amendments is to incre",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "member": 13,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-17/13"
+  },
+  {
+   "key": "federal-senate-6977",
+   "date": "2021-02-17",
+   "house": "senate",
+   "question": "Federal Circuit and Family Court of Australia Bill 2019 and another - Third Reading - Pass the bills",
+   "stage": "Third reading",
+   "ayes": 30,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "member": 13,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-17/14"
+  },
+  {
+   "key": "federal-representatives-6978",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "question": "Federal Circuit and Family Court of Australia Bill 2019 - Consideration of Senate Message - Agree with Senate amendments and so pass bills",
+   "stage": "Consideration of Senate message",
+   "ayes": 64,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 123
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-18/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-386444",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-12-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-386445",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-12-05",
+   "stage_hint": null,
+   "brief": "The bill facilitates the transition from the Family Court and Federal Circuit Court to the new Federal Circuit and Family Court of Australia (FCFC), repealing and amending parts of the Family Law Act 1975 and the Federal Circuit Court Act 1999, and includes transitional arrangements for pending matters. It addresses five recommendations from the Senate Legal and Constitutional Affairs Legislation Committee's February 2019 report."
+  },
+  {
+   "slug": "speech-399028",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that merging the Family Court of Australia into the Federal Circuit Court would harm vulnerable families by undermining specialist family law expertise, and criticised the government's lack of consultation and evidence. The speaker called for the bills to be withdrawn and for increased resources and adoption of the Australian Law Reform Commission's 2019 recommendations."
+  },
+  {
+   "slug": "speech-399030",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the family law system is broken and that the Federal Circuit and Family Court of Australia Bill 2019 will improve it by creating a unified court structure with a single point of entry, reducing costs and delays. They cited consistent evidence from inquiries of a broken system, noted that 88% of family law cases are handled by the Federal Circuit Court, and detailed $87.3 million in funding for family law services and the Lighthouse Project pilot for family safety screening."
+  },
+  {
+   "slug": "speech-399137",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Federal Circuit and Family Court of Australia Bill 2019, arguing it would abolish the specialist Family Court, worsen delays averaging 18.6 months in the Family Court and 17.5 months in the Federal Circuit Court, and ignore expert recommendations. They criticised the government for neglecting the family law system under Prime Ministers Abbott, Turnbull, and Morrison, and supported an amendment by the shadow Attorney-General."
+  },
+  {
+   "slug": "speech-399138",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Federal Circuit and Family Court of Australia Bill 2019 would abolish the specialised Family Court, putting vulnerable children and families at risk, and noted that over 110 stakeholders, including the Peninsula Community Legal Centre and the Law Council of Australia, oppose the merger. The speaker cited concerns from former Chief Justices Elizabeth Evatt and Alastair Nicholson, and stated the bill would not increase efficiency or save money, but could cost lives."
+  },
+  {
+   "slug": "speech-399139",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Federal Circuit and Family Court of Australia Bill 2019, arguing it would abolish the specialised Family Court and merge it with the already overburdened Federal Circuit Court, harming vulnerable families and children. She noted that over 110 stakeholders oppose the merger, and the bill fails to address resourcing issues, judge workloads, or family violence risks."
+  },
+  {
+   "slug": "speech-399140",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Federal Circuit and Family Court of Australia Bill 2019, arguing it would gradually abolish the specialist Family Court and worsen outcomes for families, and criticised the government for ignoring 33 recommendations from a parliamentary inquiry and failing to consult stakeholders."
+  },
+  {
+   "slug": "speech-399141",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Federal Circuit and Family Court of Australia Bill 2019 and related bills, arguing they would abolish the specialist Family Court and merge it into an overstretched generalist Federal Circuit Court. The speaker noted that no recommendation for such a merger came from the Australian Law Reform Commission review, the Joint Select Committee on Australia's Family Law System, or any of 67 previous inquiries, and cited opposition from former Chief Justices Elizabeth Evatt and Alastair Nicholson, the Law Council of Australia, and other legal bodies."
+  },
+  {
+   "slug": "speech-399142",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Federal Circuit and Family Court of Australia Bill merger, arguing it lacks additional resources, will not reduce delays or backlogs, and is opposed by over 110 stakeholders including the Law Council and former Family Court justices. The speaker also noted the merger is based on a flawed six-week PwC review and that the government has not responded to the Australian Law Reform Commission's 60 recommendations for family law reform."
+  },
+  {
+   "slug": "speech-399143",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The speaker argued against the government's proposed merger of the Family Court and Federal Circuit Court, calling instead for a standalone specialist Family Court with a \"Family Court 2.0\" model, and opposed the bill as based on a six-week desktop review rather than evidence. The speaker also called for at least $310 million per year in additional funding for legal assistance providers and adequate resourcing of the courts."
+  },
+  {
+   "slug": "speech-399145",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Federal Circuit and Family Court of Australia Bill 2019, arguing it would abolish the specialist Family Court and harm vulnerable families and children, citing average caseloads of 337 per Federal Circuit Court judge, trial delays of 18.6 months in the Family Court and 17.5 months in the Federal Circuit Court, and up to 12 months for family reports. They noted that 110 stakeholders, including the Law Council of Australia and Aboriginal and Torres Strait Islander Legal Services, opposed the merger, and that the government relied on a discredited PricewaterhouseCoopers desktop review rather than independent reports."
+  },
+  {
+   "slug": "speech-399146",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "Labor opposed the Federal Circuit and Family Court of Australia Bill 2019, arguing it abolishes the specialist Family Court, harms vulnerable women and children, and follows years of government neglect; the speaker cited over 110 organisations' opposition and supported the shadow attorney-general's amendment to reject the legislation."
+  },
+  {
+   "slug": "speech-399148",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Federal Circuit and Family Court of Australia Bill 2019 and related bill will dismantle the Family Court system, adversely affecting families and children, and criticized the coalition for underfunding, failing to appoint enough judges, and ignoring opposition from 110 individuals and organisations."
+  },
+  {
+   "slug": "speech-399149",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "Labor opposed the Federal Circuit and Family Court of Australia Bill 2019, arguing the merger would harm vulnerable families and children by diluting specialist expertise. The party called for proper resourcing and judicial appointments instead, citing the Australian Law Reform Commission's 60 recommendations and widespread expert opposition."
+  },
+  {
+   "slug": "speech-399152",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The government's bill to abolish the Family Court is a radical, unjustified change that ignores expert opposition from former chief justices, the Law Council and the Australian Law Reform Commission, and is based on under-resourcing rather than structural problems."
+  },
+  {
+   "slug": "speech-399156",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Federal Circuit and Family Court of Australia merger bills would harm women and children escaping violence, citing that 45 women had been killed in 2020 and 70% of Family Court matters involve family violence. They called for the government to scrap the legislation and instead remove the presumption of shared equal parental responsibility, noting opposition from over 110 family law experts and the Law Council of Australia."
+  },
+  {
+   "slug": "speech-399157",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Federal Circuit and Family Court of Australia Bill 2019 and its accompanying bill should not pass, as they would abolish the specialist Family Court and replace it with an under-resourced model based on a discredited six-week report by two accountants. The speaker cited evidence of judges handling 400–600 cases each and claimed the government’s motive is ideological, part of a broader pattern of dehumanising social services like robodebt and Centrelink."
+  },
+  {
+   "slug": "speech-399158",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Federal Circuit and Family Court of Australia Bill 2019, arguing it would abolish the specialist Family Court—a Whitlam legacy—by merging it with the overburdened Federal Circuit Court, based on a six-week desktop review with no consultation, and that the government ignored the Australian Law Reform Commission’s 2019 report."
+  },
+  {
+   "slug": "speech-399294",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-01",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Federal Circuit and Family Court of Australia Bill 2019, arguing the merger of the Family Court and Federal Circuit Court would harm vulnerable families and children, increase costs and delays, and was widely condemned by 110 stakeholders including the Law Council of Australia and former Chief Justices Elizabeth Evatt and Alastair Nicholson. The speaker called for addressing court underfunding and under-resourcing instead of merging the courts."
+  },
+  {
+   "slug": "speech-399295",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-01",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Federal Circuit and Family Court of Australia Bill 2019, arguing it would abolish the standalone Family Court through radical vandalism rather than conservative reform. They noted that all 110 stakeholders who engaged with the government opposed the bill, and that it would harm vulnerable families and victims of family violence."
+  },
+  {
+   "slug": "speech-399296",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the coalition government has neglected the family law system for seven years, causing a crisis, and that the proposed Federal Circuit and Family Court of Australia Bill 2019 will harm vulnerable children and families. They called for the bill to be withdrawn and for the government to instead implement the 60 recommendations from the Australian Law Reform Commission's 2019 review, increase funding and resources to the courts and legal assistance services, and consult experts for meaningful reforms."
+  },
+  {
+   "slug": "speech-399297",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-01",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Federal Circuit and Family Court of Australia Bill 2019, arguing it would abolish the specialist Family Court of Australia and harm vulnerable families, citing opposition from 110 stakeholders including the Law Council and Women's Legal Services Australia."
+  },
+  {
+   "slug": "speech-399298",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's bill to abolish the Family Court of Australia as a specialist standalone court is bewildering and likely driven by ideology or political game-playing, contrasting the limited debate on the bill with the extensive 28-hour debate on the original Family Law Act 1974."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Federal Circuit and Family Court of Australia Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00012",
+   "assent_date": "2021-03-01"
+  }
+ ]
+}

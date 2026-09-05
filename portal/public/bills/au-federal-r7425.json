@@ -1,0 +1,362 @@
+{
+ "key": "au-federal-r7425",
+ "title": "National Commission for Aboriginal and Torres Strait Islander Children and Young People Bill 2026",
+ "short_title": "National Commission for Aboriginal and Torres Strait Islander Children and Young People Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-02-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2026-03-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7425%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7425%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7425%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7425%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7425%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7425%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7425%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7425_ems_535dc69a-c0c9-41dc-88f4-4919cbee09d9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7425%22",
+   "document_date": "2026-02-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00014",
+   "document_date": "2026-03-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9907",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2026-02-11.11.7) to agree with the bill's main idea. In other words, they voted to read the bill for a second time and can now discuss it in more detail. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd043), which is a document created by the parliamentary library: > *The purpose of the National Commission for Aboriginal and Torres Strait Islander Children and Young People Bill 2026 (the Bill) is to establish the National Commission for Aboriginal and Torres Strait Islander Children and Young People (the National Commission) as a statutory agency and the National Commissioner for Aboriginal and Torres Strait Islander Children and Young People (the National Commissioner) as a statutory officer, with the functions and powers to advance the interests of Aboriginal and Torres Strait Islander children and young people.*",
+   "stage": "Second reading",
+   "ayes": 95,
+   "noes": 39,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Labor": {
+     "ayes": 83,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-02-11/1"
+  },
+  {
+   "key": "federal-senate-10105",
+   "date": "2026-03-25",
+   "house": "senate",
+   "question": "Glenn Sterle The question is that the amendment moved by Senator Waters be agreed to.",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-25/1"
+  },
+  {
+   "key": "federal-senate-10106",
+   "date": "2026-03-25",
+   "house": "senate",
+   "question": "Glenn Sterle The question is that the bill be now read a second time.",
+   "stage": "Second reading",
+   "ayes": 38,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 58,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-25/2"
+  },
+  {
+   "key": "federal-senate-10107",
+   "date": "2026-03-25",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-03-25.27.1) introduced by Queensland Senator [Larissa Waters](https://theyvoteforyou.org.au/people/senate/queensland/larissa_waters) (Greens), which means it was unsuccessful.. ### What does this amendment do? Senator Waters [explained that](https://www.openaustralia.org.au/senate/?gid=2026-03-25.27.1): > *This amendment would require the government to actually respond to the recommendations of the commissioner that this bill is establishing as an independent statutory position. The bill allows the commissioner to seek information from governments to inform her reports and recommendations, but there is nothing in the bill to compel the government to actually respond to those recommendations. I think that is tragic and I think it is very easily fixed. The optimist in me thought it was an oversight; however, it seems to be by design, and I think that is heartbreaking. On a day when we are doing a good thing, to establish a commissioner to look into the needs of First Nations young kids, why the backhand to say, 'Yeah, but we're not actually going to be compelled to respond to your recommendations'?* ### Amendment text > *(1) Clause 16, page 13 (after line 19), at the end of the clause, add:* > >> *Government response* >> >> *(4) If a report given to the Minister under subsection (2) sets out one or more recommendations to the Commonwealth Government:* >> >>> *(a) as soon as practicable after receiving the report, the Minister must cause to be prepared a statement setting out:* >>> >>>> *(i) the Commonwealth Government's response to each of the recommendations; and* >>>> >>>> *(ii) if the Commonwealth Government has not accepted a recommendation—the reasons for not accepting the recommendation; and* >>> >>> *(b) the Minister must cause copies of the statement to be tabled in each House of the Parliament within 15 sitting days of that House after the report is given to the Minist",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-25/3"
+  },
+  {
+   "key": "federal-senate-10108",
+   "date": "2026-03-25",
+   "house": "senate",
+   "question": "National Commission for Aboriginal and Torres Strait Islander Children and Young People Bill 2026 and another - Third Reading - Pass the bills",
+   "stage": "Third reading",
+   "ayes": 37,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-25/4"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "National Commission for Aboriginal and Torres Strait Islander Children and Young People Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00014",
+   "assent_date": "2026-03-26"
+  }
+ ]
+}

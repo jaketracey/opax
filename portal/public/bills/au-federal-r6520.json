@@ -1,0 +1,260 @@
+{
+ "key": "au-federal-r6520",
+ "title": "Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 2) Bill 2020",
+ "short_title": "Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 2) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2021-02-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6520_ems_63b375a2-5617-4875-ab90-a8a406307c38%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6520_ems_318835ac-9b5b-4961-92e7-3dcdcd36bcd1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6520_ems_ab81cefe-e0ca-4097-85f3-5fcf4325de10%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6520%22",
+   "document_date": "2020-10-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00002",
+   "document_date": "2021-02-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2020-10-21",
+  "sentences": [
+   "This bill would change how home care subsidies are paid to approved providers.",
+   "Approved providers would have to report the cost of care delivered each month to the Commonwealth to receive subsidies.",
+   "The Commonwealth would keep any unspent subsidy on behalf of care recipients, and providers could elect to return unspent funds through a 100 per cent subsidy reduction."
+  ],
+  "changes": [
+   "Requires approved providers to report the cost of care and services delivered each month to the Commonwealth.",
+   "The Commonwealth will retain unspent Commonwealth subsidy on behalf of care recipients.",
+   "Introduces a mechanism for providers to elect to return unspent funds to the Commonwealth.",
+   "Providers returning unspent funds will do so through a 100 per cent subsidy reduction until the funds are exhausted.",
+   "Makes a consequential amendment to the A New Tax System (Goods and Services Tax) Act 1999 to keep home care GST-free.",
+   "Does not change how consumer contributions are treated or affect eligibility for home care subsidy."
+  ],
+  "affected": "Approved home care providers and home care recipients.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-396453",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 2) Bill 2020 changes home-care provider subsidy payments to be made only for care delivered each month, with Services Australia retaining unspent Commonwealth subsidy for future use, while maintaining consumer access to full subsidies and contributions."
+  },
+  {
+   "slug": "speech-400746",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The bill changes home-care subsidy payments to after services are delivered and requires providers to return unspent funds within six months. Over $1 billion in unspent funds were held by providers, with over 100,000 older Australians on the waiting list, 30,000 deaths while waiting, and 32,000 entering residential care prematurely."
+  },
+  {
+   "slug": "speech-400748",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-400836",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The government argued the Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 2) Bill 2020 will improve financial accountability by requiring monthly cost reporting from providers and letting the Commonwealth retain unspent subsidies worth around $750 million, while noting an additional 23,000 home-care packages were funded in the 2020-21 budget."
+  },
+  {
+   "slug": "speech-400837",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 2) Bill 2020 was introduced in February 2020 but sat idle for months. The speaker noted that the interim report of the royal commission into aged care is titled \"Neglect,\" criticising the member for Toorak for referencing a \"suite of bills\" instead of the commission's findings."
+  },
+  {
+   "slug": "speech-400841",
+   "speaker": "Vince Connelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The Morrison government argued the bill improves home-care subsidy payments by moving to arrears-based payments and having Services Australia retain unspent funds, with $23.9 billion in aged care funding in 2020-21 growing from $13.3 billion under Labor, and 23,000 additional home-care packages in the 2020-21 budget."
+  },
+  {
+   "slug": "speech-400843",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "Labor opposed the Aged Care Legislation Amendment Bill, arguing it would create financial risks for smaller and regional providers, and criticised the Morrison government for not prioritising home-care packages, noting 102,000 older Australians on the waiting list and over 30,000 who had died while waiting."
+  },
+  {
+   "slug": "speech-400845",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The MP argued the Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 2) Bill 2020 fails to address the aged-care crisis, citing over 100,000 older Australians waiting for home-care packages and more than 30,000 deaths while waiting, and supported sending the bill to a committee over concerns it would disadvantage smaller regional providers. The speech also condemned government inaction on royal commission findings, including 50 daily sexual assaults in aged care and COVID-19 failures that contributed to nearly 700 resident deaths."
+  },
+  {
+   "slug": "speech-400846",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The bill amends home-care provider payments so the government subsidy is paid only for services rendered each month, with unspent funds retained by Services Australia but available for future draw-downs. The measure addresses stakeholder concerns about unspent funds and aligns home-care arrangements with the National Disability Insurance Scheme."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 2) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00002",
+   "assent_date": "2021-02-16"
+  }
+ ]
+}

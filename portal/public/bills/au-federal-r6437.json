@@ -1,0 +1,455 @@
+{
+ "key": "au-federal-r6437",
+ "title": "Official Development Assistance Multilateral Replenishment Obligations (Special Appropriation) Bill 2019",
+ "short_title": "Official Development Assistance Multilateral Replenishment Obligations (Special Appropriation) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs and Trade",
+ "status": "passed",
+ "status_as_of": "2020-06-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6437%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6437%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6437%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6437%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6437%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6437%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6437%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6437%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6437%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6437%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6437%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6437%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6437%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6437%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6437_ems_cb7bac82-88d3-4799-8188-41242b0e09ac%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6437%22",
+   "document_date": "2019-10-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00052",
+   "document_date": "2020-06-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6226",
+   "date": "2020-02-24",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual second reading motion, which means it failed. The usual second reading motion is \"that the bill be read for a second time\", which is parliamentary jargon for agreeing with the main idea of the bill. The amendment was introduced by Shortland MP [Pat Conroy](https://theyvoteforyou.org.au/people/representatives/shortland/pat_conroy) (Labor). ### Amendment text > *That all words after 'That' be omitted with a view to substituting the following words:* > > *'whilst not declining to give the bill a second reading, the House:* > > *(1) notes that Australia's Official Development Assistance (ODA) investments are an important way of advancing Australia's interests, projecting our values and tackling global poverty;* > > *(2) expresses concern that since 2014 Coalition Governments have cut $11.8 billion from the foreign aid budget with the result that Australia's ODA investments are now at a record low as a share of Gross National Income;* > > *(3) agrees that active and engaged participation in multilateral institutions, including multilateral development institutions, is essential for advancing Australia's interests in a stable, secure and prosperous international environment; and* > > *(4) expresses concern that the Prime Minister's recent public attacks on global institutions are contrary to Australia's interests in an international rules-based order supported by multilateral institutions which promote economic growth, global security and human development'*",
+   "stage": "Second reading",
+   "ayes": 64,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Labor": {
+     "ayes": 62,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 40
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-24/2"
+  },
+  {
+   "key": "federal-senate-6350",
+   "date": "2020-06-10",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2020-06-10.8.1) introduced by South Australian Senator [Penny Wong](https://theyvoteforyou.org.au/people/senate/sa/penny_wong) (Labor), which means it failed. This motion would have amended the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/): that the bill be read for a second time. Reading something for a second time is the same as agreeing with the main idea of the bill. ### Motion text > *At the end of the motion, add:* > > *\", but the Senate:* > > *(a) notes that Australia's Official Development Assistance (ODA) investments are an important way of advancing Australia’s interests, projecting our values and tackling global poverty;* > > *(b) expresses its concern that:* > >> *(i) since 2014, Coalition governments have cut $11.8 billion from the foreign aid budget, with the result that Australia's ODA investments are now at a record low as a share of Gross National Income, and* >> >> *(ii) the Prime Minister's promotion of negative globalism is contrary to Australia's interests in an international rules-based order supported by multilateral institutions, which promote economic growth, global security and human development; and* > > *(c) agrees that active and engaged participation in multilateral institutions, including multilateral development institutions, is essential for advancing Australia’s interests in a stable, secure and prosperous international environment\".*",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 13,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-10/1"
+  },
+  {
+   "key": "federal-senate-6351",
+   "date": "2020-06-10",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2020-06-10.13.1) to pass the bill. In other words, they voted to read it for a [third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). Because it had already been read for a third time in the House of Representatives, it will now become law. ### What does the bill do? The bill was [introduced to do the following](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6437): > *Appropriates money from the Consolidated Revenue Fund to meet certain Official Development Assistance Multilateral Replenishment Obligations in relation to the World Bank’s International Development Association and debt relief schemes, including the Heavily Indebted Poor Countries Initiative and the Multilateral Debt Relief Initiative; the Asian Development Bank’s Asian Development Fund; the Global Environment Facility Trust Fund; and the Multilateral Fund for the Implementation of the Montreal Protocol.*",
+   "stage": "Third reading",
+   "ayes": 41,
+   "noes": 3,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "earliest": 17,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-10/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-384099",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-24",
+   "stage_hint": null,
+   "brief": "The bill appropriates money from the Consolidated Revenue Fund to meet Australia's existing and future obligations to six multilateral funds: the World Bank's International Development Association, its debt relief schemes (Heavily Indebted Poor Countries Initiative and Multilateral Debt Relief Initiative), the Asian Development Bank's Asian Development Fund, the Global Environment Facility Trust Fund, and the Multilateral Fund for the Implementation of the Montreal Protocol, providing a standing appropriation for three- to four-year replenishment cycles with payments over three to ten years."
+  },
+  {
+   "slug": "speech-386458",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-05",
+   "stage_hint": null,
+   "brief": "Labor supported the bill but moved an amendment expressing concern that Coalition governments have cut $11.8 billion from foreign aid since 2014, bringing Australia's aid to a record low of 0.18% of GNI, and that the Prime Minister's public attacks on multilateral institutions undermine Australia's interests in a rules-based international order."
+  },
+  {
+   "slug": "speech-386460",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-05",
+   "stage_hint": null,
+   "brief": "The speaker, a Labor MP, announced support for the Official Development Assistance Multilateral Replenishment Obligations Bill 2019, which funds multilateral development funds including the International Development Association and Asian Development Fund, but criticised the government for cutting $11.8 billion from aid since 2013, reducing Australia's ODA to 0.19% of GNI—the lowest since 1961—and accused Prime Minister Morrison of hypocrisy for attacking multilateral institutions while supporting this bill."
+  },
+  {
+   "slug": "speech-386461",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Official Development Assistance Multilateral Replenishment Obligations Bill 2019 but criticised the government for cutting $11.8 billion from Australia's aid budget since 2013, resulting in the lowest share of national income for aid under any Liberal prime minister."
+  },
+  {
+   "slug": "speech-386462",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that while the Official Development Assistance Multilateral Replenishment Obligations Bill 2019 has bipartisan support, the Coalition government has cut $12 billion from aid since 2013, reducing it to the lowest level on record, including halving aid to Pakistan to $19 million and cutting Cambodia's aid to $43 million. The speaker urged a larger aid program and global leadership, citing Labor's past achievements like the Mining for Development program and framing the Coalition's approach as a \"little-Australia\" strategy under the \"straiteners.\""
+  },
+  {
+   "slug": "speech-388422",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Official Development Assistance Multilateral Replenishment Obligations Bill 2019 and an amendment moved by the member for Shortland, while criticising the Prime Minister’s remarks about “unaccountable internationalist bureaucracy” and “negative globalism” as vague and lacking specifics. They noted that global extreme poverty fell to 10% in 2015, with over a billion people raised out of poverty."
+  },
+  {
+   "slug": "speech-388552",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia must meet its multilateral development fund commitments and criticised the Coalition government for cutting $11.8 billion from foreign aid since 2013, with the aid budget projected to fall to 0.19% of gross national income by 2022-23. Specific cuts include a 50% reduction in aid to Indonesia and 41% in education spending, while contrasting the UK's 0.7% GNI target."
+  },
+  {
+   "slug": "speech-388553",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia's aid budget has been cut by 27% from 2013 levels, including a $700 million cut in 2014 and the closure of AusAID, while spending on pets ($12.2 billion annually) far exceeds aid ($3.8–3.9 billion). He called for a bipartisan agreement to increase aid spending toward 0.5% of gross national income, citing specific cuts to programs in Pakistan and Africa/Middle East, and criticised the government for neglecting climate change commitments and using positive isolationism as a policy."
+  },
+  {
+   "slug": "speech-388554",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to guarantee Australia's contributions to six multilateral aid funds but criticised the government for cutting $11.8 billion from development assistance since 2013, reducing aid to 0.19% of GNI—the lowest in history—and citing a 41% cut to education programs, a 32% cut to health programs, and the termination of aid to Pakistan after 70 years."
+  },
+  {
+   "slug": "speech-388556",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Official Development Assistance Multilateral Replenishment Obligations (Special Appropriation) Bill 2019, stating that Australian aid saves lives and is in Australia's national interest. They criticised the government for cutting $11.8 billion from the aid budget since 2013, reducing aid to 0.19% of gross national income—the lowest in history—and named specific funds covered by the bill, including the International Development Association, Asian Development Fund, and Global Environment Facility Trust Fund."
+  },
+  {
+   "slug": "speech-388557",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Official Development Assistance Multilateral Replenishment Obligations Bill 2019, which authorises around $350 million annually for multilateral initiatives, and criticised the government for $11.8 billion in cumulative aid cuts, including a 10% cut to East Timor, a 50% cut to Indonesia, and an 86% cut to health funding in Indonesia."
+  },
+  {
+   "slug": "speech-388565",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "Labor supported the Official Development Assistance Multilateral Replenishment Obligations Bill 2019 but criticised the coalition government for cutting $11.8 billion from aid since 2013, including specific reductions to Indonesia, Vietnam, Vanuatu, and other nations, while arguing the cuts undermine Australia's international standing and security."
+  },
+  {
+   "slug": "speech-388575",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Official Development Assistance Multilateral Replenishment Obligations Bill 2019 but criticised the government for cutting foreign aid by $1.5 billion annually since 2013, including 41% from education and 32% from health, and specific reductions to Indonesia, Vietnam, the Philippines, Laos, Cambodia, and several Pacific islands, arguing these cuts undermine Australia's national interest and regional influence."
+  },
+  {
+   "slug": "speech-388576",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "Australian aid spending has fallen to 0.22% of gross national income, with $11.8 billion cut since 2013, and the speaker argued for increased aid to Pacific neighbours and urged that funding under the bill be conditional on not using chrysotile asbestos in construction projects."
+  },
+  {
+   "slug": "speech-388577",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The member supported the Official Development Assistance Multilateral Replenishment Obligations Bill 2019 but criticised six consecutive aid budget cuts, noting funding is frozen at $4 billion (0.21% of GNI), and urged the government to adopt the bipartisan committee’s recommendation to increase aid to 0.5% of GNI within five years and 0.7% within ten."
+  },
+  {
+   "slug": "speech-388579",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "Labor supported the Official Development Assistance Multilateral Replenishment Obligations Bill 2019, but argued the government's $11.8 billion in foreign aid cuts had reduced Australia's aid to 0.19% of gross national income—a record low—and specifically criticised cuts to health and education in Pacific nations including Samoa, Vanuatu and Timor-Leste."
+  },
+  {
+   "slug": "speech-388580",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "Labor supported the Official Development Assistance Multilateral Replenishment Obligations Bill 2019 and the amendments moved by the member for Shortland. The speaker argued that since 2014, coalition governments have cut $11.8 billion from the foreign aid budget, reducing Australia's ODA to a record low of 0.19% of gross national income, and criticised cuts to health funding in Pacific nations including a 75% cut to the Cook Islands, 22% to Fiji, 13% to the Solomon Islands, and 36% to Samoa."
+  },
+  {
+   "slug": "speech-388581",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Official Development Assistance Multilateral Replenishment Obligations Bill 2019 is a standing appropriation to meet Australia's commitments to multilateral development organisations, noting the Morrison government's $4 billion aid budget includes a record $1.4 billion for the Pacific and $450 million in humanitarian funding."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Official Development Assistance Multilateral Replenishment Obligations (Special Appropriation) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00052",
+   "assent_date": "2020-06-16"
+  }
+ ]
+}

@@ -1,0 +1,834 @@
+{
+ "key": "au-federal-r5939",
+ "title": "Social Services Legislation Amendment (Cashless Debit Card) Bill 2017",
+ "short_title": "Social Services Legislation Amendment (Cashless Debit Card) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-08-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2018-02-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5939_ems_92264413-4a31-47a1-bd6b-80a7cff8d04e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5939_ems_12f7b23e-5633-4b69-bf9f-7a59ff57e420%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5939_ems_3b6797bc-2701-4740-9617-5c2c06101c6f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5939%22",
+   "document_date": "2017-08-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00003",
+   "document_date": "2018-02-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-4865",
+   "date": "2017-08-17",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2017-08-17.21.1) introduced by Victorian Senator [Mitch Fifield](https://theyvoteforyou.org.au/people/senate/victoria/mitch_fifield) (Liberal) to an [original amendment](https://www.openaustralia.org.au/senate/?gid=2017-08-17.19.1) introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor) ### Amendment text > *\"13 November 2017\", substitute \"16 October 2017\".* ### Original amendment text > *At the end of the motion, add \"and in respect of [Social Services Legislation Amendment (Cashless Debit Card) Bill 2017](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5939), the Community Affairs Legislation Committee report by 13 November 2017\".*",
+   "stage": "Committee motion",
+   "ayes": 27,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 35,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-17/1"
+  },
+  {
+   "key": "federal-representatives-5087",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Cashless Debit Card) Bill 2017 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 71,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 147
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-02-06/1"
+  },
+  {
+   "key": "federal-senate-5116",
+   "date": "2018-02-12",
+   "house": "senate",
+   "question": "Social Services Legislation Amendment (Cashless Debit Card) Bill 2017 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 39,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-02-12/1"
+  },
+  {
+   "key": "federal-senate-5117",
+   "date": "2018-02-12",
+   "house": "senate",
+   "question": "The majority voted in favour of a [government amendment](https://www.openaustralia.org.au/senate/?gid=2018-02-12.148.1) introduced by NSW Senator [Concetta Fierravanti-Wells](https://theyvoteforyou.org.au/people/senate/nsw/concetta_fierravanti-wells) (Liberal), which means it will now be included as part of the bill. ### What does the amendment do? Senator Fierravanti-Wells [explained that](https://www.openaustralia.org.au/senate/?gid=2018-02-12.148.1): > *The government amendment extends the trial of the cashless debit card to 30 June 2019. The amendments also specify that the trial will be limited to three sites—namely, the East Kimberley and the included communities, Ceduna and the surrounding regions, and the Goldfields. The bill retains the existing legislated limitations on trial parameters in relation to the number of sites, participant numbers and the duration of the cashless debit card trial.* > > *Under the current legislation, trial sites are determined via legislative instrument. The bill removes this ability and specifically names the trial areas. Instead, the minister will be able to declare that specific parts of the trial areas are exempt from the cashless debit card. This provides the government with the flexibility to remove localities. This reflects that discussions with communities in the Goldfields region are ongoing and that requirements for communities already on the cashless debit card may change over time.* ### Amendment text > *(1) Schedule 1, items 1 and 2, page 3 (lines 4 to 8), omit the items, substitute:* > > *1 Subsection 124PD(1)* > >> *Insert:* >> >> *Ceduna area means Ceduna within the meaning of the Social Security (Administration) (Trial Area—Ceduna and Surrounding Region) Determination2015 as in force on 15 March 2016 and includes the Surrounding Region (within the meaning of that determination as so in force).* >> >> *East Kimberley area means East Kimberley within the meaning of the Social Security (Administration) (Trial Area—",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 34,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-02-12/2"
+  },
+  {
+   "key": "federal-senate-5118",
+   "date": "2018-02-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2018-02-12.258.1) introduced by NSW Senator [Doug Cameron](https://theyvoteforyou.org.au/people/senate/nsw/doug_cameron) (Labor), which means it failed. ### What do these amendments do? Senator Cameron [explained that](https://www.openaustralia.org.au/senate/?gid=2018-02-12.256.1): > *Our amendments seek to improve the way the trial work in Ceduna and East Kimberley by ensuring that the rules by which a community body makes recommendations to the secretary are transparent and made public. Labor, in its own consultations, heard the way in which the decisions made by the community body were not always clear and transparent.* > > *The government must specify funding for wraparound services in trial sites formally in the legislation. The wraparound services are important. There is no point in putting these cards in without appropriate wraparound services. The minister could give me a figure on what wraparound services cost across the country, but, for the bill that's been brought here, we didn't get any specified idea of what the wraparound services were costing. We are seeking that the government specify the social support services to ensure trial participants get the alcohol rehabilitation, mental health and other support services they need. The funding allocated in the new services being delivered is not clear to trial participants. This amendment requires the information be made public.* ### Amendment text > *(2) Schedule 1, item 2, page 3 (lines 7 and 8), omit the item, substitute:* > > *2 Paragraph 124PF(1 ) ( b)* > >> *Omit \"30 June 2018\", substitute \"30 June 2019\".* > > *3 Subsection 124PF(2)* > >> *Omit \"up to 3 discrete\", substitute \"2 discrete\".* > > *4 Paragraph 124PK(2 ) ( a)* > >> *After \"voluntary participant\", insert \"reached in accordance with the requirements set out in a determination made under subsection (6)\".* > > *5 At the end of section 124PK* > >> *Add:* >> >>",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 34,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-02-12/3"
+  },
+  {
+   "key": "federal-senate-5119",
+   "date": "2018-02-12",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-02-12.270.1) that item 1 of schedule 1 stand as printed. In other words, they voted to leave that item unchanged. This motion was put after NSW Senator [Doug Cameron](https://theyvoteforyou.org.au/people/senate/nsw/doug_cameron) (Labor) moved a [motion](https://www.openaustralia.org.au/senate/?gid=2018-02-12.268.1) to oppose the item.",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 34,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-02-12/4"
+  },
+  {
+   "key": "federal-senate-5120",
+   "date": "2018-02-12",
+   "house": "senate",
+   "question": "Social Services Legislation Amendment (Cashless Debit Card) Bill 2017 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 30,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 34,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-02-12/5"
+  },
+  {
+   "key": "federal-representatives-5122",
+   "date": "2018-02-13",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Cashless Debit Card) Bill 2017 - Consideration of Senate Message - Agree with the amendment to pass the bill",
+   "stage": "Consideration of Senate message",
+   "ayes": 77,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-02-13/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-356443",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the bill in the House but reserves its final position until the Senate inquiry concludes, citing concerns over the flawed ORIMA evaluation, the $18.9 million cost of existing trials, and the need for community consultation and wraparound services."
+  },
+  {
+   "slug": "speech-356444",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The cashless debit card trial was a success, with published results showing reductions in drinking (41%), drug use (48%), and gambling (48%), along with improvements in parenting (40%) and saving (45%). The speaker supported extending the program to additional communities through the Social Services Legislation Amendment (Cashless Debit Card) Bill 2017, citing community backing in Hinkler and safeguards for local consent."
+  },
+  {
+   "slug": "speech-356445",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The speaker offered qualified support for the Cashless Debit Card bill, which removes the current limit of three trial sites and the 30 June 2018 end date, but argued the program is too expensive—$18.9 million for 2,000 participants, up to $7,900 per person per year—and risks deepening welfare dependency, suggesting funds would be better spent on health and education."
+  },
+  {
+   "slug": "speech-356447",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The speaker argued for the passage of the Cashless Debit Card Bill 2017 to expand the program to the Goldfields region, citing community support and promising trial results in Ceduna and East Kimberley, including a 37% reduction in alcohol-related hospital presentations and improved child welfare. The card restricts 80% of welfare payments from being used on alcohol or gambling, with the Goldfields rollout based on demonstrated need and extensive community consultation."
+  },
+  {
+   "slug": "speech-356448",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Cashless Debit Card Bill is being rushed ahead of a Senate inquiry, with insufficient support services and flawed trial methodology, specifically citing concerns from east Kimberley community leaders and questioning ORIMA Research’s findings due to participant identification issues and lack of baseline data."
+  },
+  {
+   "slug": "speech-357972",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-05",
+   "stage_hint": null,
+   "brief": "The speaker opposed the cashless debit card bill, arguing it lacks evidence and proper community consultation, and announced Labor will move amendments to extend existing trials to 30 June 2019 while blocking new trial sites in Bundaberg and the Goldfields."
+  },
+  {
+   "slug": "speech-357976",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-05",
+   "stage_hint": null,
+   "brief": "The member for Herbert opposed the cashless debit card rollout in the electorate, arguing the community prefers funding for early intervention and prevention, and criticised the government for rushing the bill without proper consultation or evaluation. Labor will support or oppose the card on a case-by-case basis depending on community wishes, and noted that Townsville has 9.1% unemployment and Palm Island 29%, with Labor pledging $100 million for water infrastructure and $200 million for hydro-electricity."
+  },
+  {
+   "slug": "speech-357977",
+   "speaker": "Tony Abbott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-05",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Cashless Debit Card Bill 2017 to extend and expand trials ensuring welfare is spent on essentials, citing problems in the Kimberley and Ceduna, and noted the card would only be introduced where local communities want it, with new trials subject to parliamentary disallowance."
+  },
+  {
+   "slug": "speech-357978",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill to expand the cashless debit card trial should not proceed without thorough community consultation and robust evaluation, and announced Labor would move an amendment to block new trial sites unless the government demonstrates an agreed consultation process and evidence base. The speaker supported existing trials in Ceduna and East Kimberley continuing to mid-2019, and criticised the consultation process in the proposed Goldfields and Bundaberg-Hervey Bay sites as disempowering and unrepresentative."
+  },
+  {
+   "slug": "speech-357979",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-05",
+   "stage_hint": null,
+   "brief": "The speaker argued for expanding the cashless debit card program nationwide, citing trial results in East Kimberley and Ceduna that showed reductions in alcohol consumption (25% of participants), illegal drug use (24%), and gambling (32%), along with improved child care and savings (31%). The bill removes the current limits of three locations and 10,000 participants, deletes the 30 June 2018 end date, and enables expansion to the Goldfields in Western Australia and Hinkler in Queensland."
+  },
+  {
+   "slug": "speech-358180",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-06",
+   "stage_hint": null,
+   "brief": "The Labor opposition will oppose the bill to expand the cashless debit card trial to Hervey Bay, Bundaberg, and the Goldfields, citing insufficient consultation, flawed evaluation data, high costs of $7,900–$10,000 per person per year, and difficulty for users to opt out. Labor will instead move amendments to extend the existing Ceduna and East Kimberley trials to June 2019, limit participants to 10,000, allow opt-out pathways, and mandate funding for wraparound services."
+  },
+  {
+   "slug": "speech-358182",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-06",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Cashless Debit Card bill, arguing against a national rollout and for community-led, evidence-based approaches, citing insufficient consultation, inconclusive evaluations, and a cost of $25.5 million (about $12,000 per participant); they supported continuing existing trials in Ceduna and East Kimberley and proposed amendments to guarantee wraparound services and restrict new trial sites to the existing two."
+  },
+  {
+   "slug": "speech-358305",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-06",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Cashless Debit Card) Bill 2017, arguing it lacks sufficient evidence, fails to respect individual circumstances and human rights, and should not be rolled out nationally without proper evaluation and community consultation. The speaker highlighted a domestic violence survivor's account that the card would have prevented her escape, and supported Labor's call for a community-by-community approach with wraparound services."
+  },
+  {
+   "slug": "speech-358309",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-06",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Cashless Debit Card Bill 2017, arguing it lacks evidence, disproportionately affects Aboriginal and Torres Strait Islander peoples, and represents lazy policymaking that disempowers communities, instead advocating for community-driven solutions."
+  },
+  {
+   "slug": "speech-358310",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-06",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Cashless Debit Card Bill 2017, citing trial site reductions of 41% in drinking abuse and 48% in drug and gambling abuse, and noting 374 alcohol-induced and 1,808 drug-induced deaths in 2016. The speaker also highlighted extensive consultation in Hinkler for a proposed trial, with 80% of welfare payments placed on the card and 20% as cash."
+  },
+  {
+   "slug": "speech-358312",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that the cashless debit card trials in Ceduna and East Kimberley should be extended to July 2019 before any expansion to the Goldfields, Bundaberg or Hervey Bay, citing inconclusive evidence, a divided parliamentary committee report, and concerns that the trials disproportionately target Indigenous Australians (75% in Ceduna, 82% in East Kimberley) and may be discriminatory."
+  },
+  {
+   "slug": "speech-358313",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-02-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that the cashless debit card trials lack conclusive evidence of effectiveness, citing mixed data, high costs, and negative impacts on families, and called for independent evaluations, community consent, and wraparound services before any expansion. The Nick Xenophon Team supports only a 12-month extension of existing trial sites, not the bill's expansion to new areas."
+  },
+  {
+   "slug": "speech-358314",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-06",
+   "stage_hint": null,
+   "brief": "The government argued the Social Services Legislation Amendment (Cashless Debit Card) Bill 2017 should be passed to expand the cashless debit card, which restricts welfare payments from being used on alcohol, gambling, or cash withdrawals, citing successful trials in Ceduna, Kununurra, and Wyndham with reduced public drunkenness, gambling, and alcohol-related hospital admissions."
+  },
+  {
+   "slug": "speech-358994",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-359306",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-02-13",
+   "stage_hint": null,
+   "brief": "The speaker refuted claims by the member for Wakefield that the Nick Xenophon Team made a sweetheart deal cutting South Australian school funding by $210 million, and reiterated the team cannot support the Cashless Debit Card bill in its current form without conclusive evidence of its effectiveness."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (Cashless Debit Card) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00003",
+   "assent_date": "2018-02-20"
+  }
+ ]
+}

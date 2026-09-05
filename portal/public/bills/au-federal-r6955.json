@@ -1,0 +1,1357 @@
+{
+ "key": "au-federal-r6955",
+ "title": "National Reconstruction Fund Corporation Bill 2023",
+ "short_title": "National Reconstruction Fund Corporation Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-11-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Science and Resources",
+ "status": "passed",
+ "status_as_of": "2023-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6955_ems_1d2402ff-f993-4b24-afd5-a06b7dbd376e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6955_ems_92f1a0d3-bb2b-4b4a-80c3-e7f88d246593%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6955_ems_d0504cc4-ae7c-4a7f-bf94-3c1bab583911%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6955_ems_04b5d399-c719-4ce7-bbf2-c7c929334139%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6955%22",
+   "document_date": "2022-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00012",
+   "document_date": "2023-04-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2022-11-30",
+  "sentences": [
+   "This bill would create a new government body to invest $15 billion in Australian industry.",
+   "The National Reconstruction Fund Corporation would provide loans and buy equity in businesses in priority areas of the economy.",
+   "The Corporation's investment mandate would be set by ministers through a non-disallowable legislative instrument, while priority areas would be declared in a disallowable instrument."
+  ],
+  "changes": [
+   "Establishes the National Reconstruction Fund Corporation as a corporate Commonwealth entity.",
+   "Sets out the Corporation's investment functions, including providing financial accommodation and acquiring equity interests in priority areas.",
+   "Creates a special account for the Corporation's funding and allows ministers to issue an Investment Mandate."
+  ],
+  "affected": "Australian industry and businesses in priority areas of the economy.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7982",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "question": "National Reconstruction Fund Corporation Bill 2022 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 89,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-09/1"
+  },
+  {
+   "key": "federal-representatives-7983",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "question": "National Reconstruction Fund Corporation Bill 2022 - Consideration in Detail - Prohibited investments",
+   "stage": "Consideration in detail",
+   "ayes": 84,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-09/2"
+  },
+  {
+   "key": "federal-representatives-7984",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2023-03-09.15.1) introduced by Mackellar MP [Sophie Scamps](https://theyvoteforyou.org.au/people/representatives/mackellar/sophie_scamps) (Independent), which means they failed. ### What did these amendments do? Dr Scamps [explained that](https://www.openaustralia.org.au/debate/?id=2023-03-09.15.1): > *I bring forward these amendments today to inject into the bill a more robust and independent process for the appointment of members to the board of this corporation. After all, this board will be making investment decisions for a $15 billion fund.* > > *Over the last decade, the integrity of many institutions that underpin our democracy has taken a battering. In recent years, we've witnessed the 'jobs for mates' culture flourish here in Canberra, as rates of political friendly appointments to public boards and entities have soared. Last term, one of those entities, the Administrative Appeals Tribunal, was so heavily stacked with political appointees—a rate of 40 per cent of those appointments—that the current Attorney-General has made the decision to abolish it. How can the Australian people trust the decisions that flow from institutions that have had their independence compromised in this way?* ### Amendment text > *(1) Clause 5, page 7 (after line 20), after the definition of financial accommodation, insert:* > >> *former judge means:* >> >> *(a) a former Justice of the High Court; or* >> >> *(b) a former judge of the Federal Court of Australia; or* >> >> *(c) a former judge of the Supreme Court of a State or Territory.* > > *(2) Clause 19, page 16 (after line 9), after subclause (1), insert:* > >> *(1A) A person must not be appointed as a Board member unless:* >> >>> *(a) the selection of the person for the appointment is the result of a process that includes:* >>> >>>> *(i) public advertising of selection criteria for the position; and* >>>> >>>> *(ii) asse",
+   "stage": "Consideration in detail",
+   "ayes": 67,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 82
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-09/3"
+  },
+  {
+   "key": "federal-senate-8047",
+   "date": "2023-03-28",
+   "house": "senate",
+   "question": "The majority voted in favour of an amendment to the usual second reading motion, which is \"*That this bill be now read a second time.*\" To [read a bill for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is to agree with its main idea. This amendment does not make any changes to the bill itself but still has political significance because it represents the will of the Senate. It was introduced by Tasmanian Senator [Peter Whish-Wilson](https://theyvoteforyou.org.au/people/senate/tasmania/peter_whish-wilson) (Greens). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) is of the opinion that:* > >> *(i) building a circular economy is a central element of delivering net-zero emissions,* >> >> *(ii) a circular economy can bolster Australia's capabilities and reduce supply chain vulnerabilities, and* >> >> *(iii) the benefits of a circular economy could add $210 billion in GDP by 2047-48, creating an additional 17,000 full-time equivalent jobs; and* > > *(b) calls on the Government to:* > >> *(i) invest in projects that facilitate the establishment of a circular economy for renewable energy and other products,* >> >> *(ii) incorporate circular economy principles into the Investment Mandate for the National Reconstruction Fund; and* >> >> *(iii) seek that the National Reconstruction Fund Board give regard to outcomes and advice from the Circular Economy Taskforce\".*",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-28/10"
+  },
+  {
+   "key": "federal-senate-8048",
+   "date": "2023-03-28",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-03-28.132.1) to the usual second reading motion, which is \"*That this bill be now read a second time.*\" To [read a bill for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is to agree with its main idea. This amendment does not make any changes to the bill itself but still has political significance because it represents the will of the Senate. It was introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) the success of the National Reconstruction Fund Corporation's work will depend in large part on the existence of a sustainable pipeline of eligible projects at a stage suitable for funding through the Corporation, and* >> >> *(ii) the work of the Corporation will reach across multiple portfolio areas and have a long-term, transformative impact on Australia's economy and industrial base; and* > > *(b) calls on the Government to:* > >> *(i) commit to exploring additional policy mechanisms to provide Australian startups access to finance as they navigate the path to commercialisation, and* >> >> *(ii) establish an office for the Corporation in the Australian Capital Territory to foster collaborative engagement with other key government bodies and private corporations and access to a skilled local workforce\".*",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-28/11"
+  },
+  {
+   "key": "federal-senate-8049",
+   "date": "2023-03-28",
+   "house": "senate",
+   "question": "National Reconstruction Fund Corporation Bill 2023 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-28/12"
+  },
+  {
+   "key": "federal-senate-8050",
+   "date": "2023-03-28",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2023-03-28.241.1): > *That the committee now report progress.* This means they will now continue to consider the bill. ### What does this motion mean? According to [Odgers' Australian Senate Practice](https://www.aph.gov.au/About_Parliament/Senate/Powers_practice_n_procedures/Odgers_Australian_Senate_Practice/Chapter_14#h08): > *The equivalent of adjourning consideration of a matter in committee of the whole is to report progress. The committee reports to the Senate that the committee has considered the matter referred to it, has made progress, and seeks leave to sit again at some future time for further consideration. The Senate then normally, by motion, gives the committee leave to sit again at a later time, and consideration of the matter in committee of the whole then becomes an order of the day for that later time.*",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 6,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-28/13"
+  },
+  {
+   "key": "federal-senate-8051",
+   "date": "2023-03-28",
+   "house": "senate",
+   "question": "National Reconstruction Fund Corporation Bill 2023 - in Committee - Consider biodiversity",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-28/14"
+  },
+  {
+   "key": "federal-senate-8052",
+   "date": "2023-03-28",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6955_amend_0cc18ad6-4f33-4893-8ab2-d5f4430b204f%22;rec=0) introduced by South Australian Senator [Don Farrell](https://theyvoteforyou.org.au/people/senate/sa/don_farrell) (Labor), which means they'll now be part of the bill. ### What do these amendments do? The Government also provided an [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6955_ems_d0504cc4-ae7c-4a7f-bf94-3c1bab583911%22;rec=0) to explain the amendments further: > *These amendments to the Bill address issues discussed by the Committee and respond to stakeholder feedback received during the Committee’s inquiry process and debate on the Bill in the House of Representatives.* > > *The key amendments to the Bill include:* > > * *requiring the Corporation Board to have regard to certain matters in the exercise of its functions* > > * *a requirement for the Corporation to have an environmental, labour, social and governance policy to inform the exercise of its investment functions and powers* > > * *a condition that the CEO can only delegate their powers to senior staff members.* ### Amendment text > *(1) Clause 5, page 4 (after line 16), after the definition of Australia , insert:* > >> *Australia’s greenhouse gas emissions reduction targets means:* >> >> *(a) if:* >> >>> *(i) Australia’s current nationally determined contribution was communicated in accordance with Article 4 of the Paris Agreement in June 2022; and* >>> >>> *(ii) that nationally determined contribution has not been adjusted in accordance with paragraph 11 of Article 4 of the Paris Agreement;* >>> >>> *the greenhouse gas emissions reduction targets set out in paragraphs 10(1)(a) and (b) of the Climate Change Act 2022 ; or* >> >> *(b) in any",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 8,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-28/15"
+  },
+  {
+   "key": "federal-senate-8053",
+   "date": "2023-03-28",
+   "house": "senate",
+   "question": "The majority voted against Pauline Hanson's One Nation [amendment](https://www.openaustralia.org.au/senate/?gid=2023-03-28.340.13), which means it failed. ### Amendment text > *(1) Clause 63, page 39 (line 9), at the end of **subclause (3)**, add:* > > *; or (d) directly finance any activities for which a complying investment under the Clean Energy Finance Corporation Act 2012 could be made.* ### Text of subclause (3) > *(3) An investment of a Corporation body must not:* > >> *(a) directly finance the extraction of coal or natural gas; or* >> >> *(b) directly finance the construction of pipeline infrastructure primarily for the extraction of natural gas; or* >> >> *(c) directly finance the logging of native forests.*",
+   "stage": "In committee",
+   "ayes": 6,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-28/16"
+  },
+  {
+   "key": "federal-senate-8054",
+   "date": "2023-03-28",
+   "house": "senate",
+   "question": "National Reconstruction Fund Corporation Bill 2023 - in Committee - Investments",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 8,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-28/17"
+  },
+  {
+   "key": "federal-senate-8055",
+   "date": "2023-03-28",
+   "house": "senate",
+   "question": "National Reconstruction Fund Corporation Bill 2023 - in Committee - No financing goal, gas and native forest logging",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 8,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-28/18"
+  },
+  {
+   "key": "federal-senate-8056",
+   "date": "2023-03-28",
+   "house": "senate",
+   "question": "The majority voted against [Opposition amendments](https://www.openaustralia.org.au/senate/?gid=2023-03-28.346.1), which means they failed. ### Amendment text > *SHEET 1821* > >> *(1) Clause 6, page 10 (lines 26 to 30), omit the clause, substitute:* >> >>> *6 Priority areas of the Australian economy* >>> >>> *(1) Each of the following areas of the Australian economy is a priority area of the Australian economy to enhance sovereign manufacturing capability for the purposes of this Act:* >>> >>>> *(a) resources technology and critical minerals processing;* >>>> >>>> *(b) food, fibre and beverage;* >>>> >>>> *(c) medical products;* >>>> >>>> *(d) recycling and clean energy;* >>>> >>>> *(e) defence;* >>>> >>>> *(f) space.* >>> >>> *(2) In addition, the Ministers may, by legislative instrument, declare that each area of the Australian economy specified in the declaration is a priority area of the Australian economy for the purposes of this Act.* > > *SHEET 1824* > >> *(1) Clause 71, page 44 (after line 18), at the end of the clause, add:* >> >>> *(4) A direction under subsection (1) does not come into effect until it has been approved by resolution of each House of the Parliament.* > > *SHEET 1825* > >> *(1) Heading to clause 82, page 50 (line 10), omit the heading, substitute:* >> >>> *82 Publication and tabling of investment reports* >> >> *(2) Clause 82, page 50 (before line 11), before subclause (1), insert:* >> >>> *Publication of investment reports by the Corporation* >> >> *(3) Clause 82, page 51 (after line 9), after subclause (1), insert:* >> >>> *(1A) The Corporation must, within one month after the end of each quarter, give a copy of the report for that quarter to the Minister.* >> >> *(4) Clause 82, page 51 (after line 14), at the end of the clause, add:* >> >>> *Tabling of investment reports by the Minister* >>> >>> *(3) The Minister must cause a copy of each report given to the Minister under subsection (1A) to be tabled in each House of the Parliament no l",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 8,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-28/19"
+  },
+  {
+   "key": "federal-senate-8057",
+   "date": "2023-03-28",
+   "house": "senate",
+   "question": "The majority voted against the amendments on [sheet 1840 revised](https://www.openaustralia.org.au/senate/?gid=2023-03-28.349.3), which means they failed. They were introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent). ### Amendment text > *(1) Clause 82, page 50 (line 20), at the end of paragraph (1)(a), add:* > >> *and (iv) the name of the constitutional corporation;* > > *(2) Clause 82, page 50 (line 28), at the end of paragraph (1)(b), add:* > >> *and (iv) the name of the entity or individual;* > > *(3) Clause 82, page 51 (line 2), at the end of paragraph (1)(c), add:* > >> *and (iv) the name of the entity;* > > *(4) Clause 82, page 51 (line 6), at the end of paragraph (1)(d), add:* > >> *and (iii) the State or Territory to which the financial accommodation was provided;*",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 11
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 8,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-28/20"
+  },
+  {
+   "key": "federal-senate-8058",
+   "date": "2023-03-28",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2023-03-28.349.3), which means they'll now be included in the bill. They were introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent). ### Amendment text > *(1) Clause 21, page 17 (lines 6 and 7), omit “5 years”, substitute “4 years”.* > > *(2) Clause 91, page 57 (lines 2 and 3), omit “within 5 years after the commencement of this section”, substitute “by 31 December 2026”.*",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 8,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-28/21"
+  },
+  {
+   "key": "federal-senate-8059",
+   "date": "2023-03-28",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2023-03-28.354.1) introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent), which means they failed. ### Amendment text > *SHEET 1863* > >> *(1) Clause 63, page 39 (lines 5 to 9), after \"directly\" (wherever occurring), insert \"or indirectly\".* >> >> *(2) Clause 63, page 39 (before line 11), before the definition of native forest, insert:* >> >>> *indirectly, in relation to the finance of certain activity, includes directly financing other activity that is in the same supply chain as the first-mentioned activity.* > > *SHEET 1875* > >> *(1) Clause 63, page 39 (line 9), at the end of subclause (3), add:* >> >>> *; or (d) finance the development or use of nuclear technology; or* >>> >>> *(e) finance the construction or operation of a radioactive waste management facility.* >> >> *(2) Clause 63, page 39 (after line 11), after the definition of native forest, insert:* >> >>> *nuclear technology does not include nuclear medicine technology produced other than through the use of nuclear reactors.* > > *SHEET 1876* > >> *(1) Clause 63, page 39 (line 9), at the end of subclause (3), add:* >> >>> *; or (d) finance the development or use of nuclear technology; or* >>> >>> *(e) finance the construction or operation of a radioactive waste management facility.* >> >> *(2) Clause 63, page 39 (after line 11), after the definition of native forest, insert:* >> >>> *nuclear tec hnology does not include nuclear medicine technology produced other than through the use of nuclear reactors.*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-28/22"
+  },
+  {
+   "key": "federal-senate-8060",
+   "date": "2023-03-28",
+   "house": "senate",
+   "question": "National Reconstruction Fund Corporation Bill 2023 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 8,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-28/23"
+  },
+  {
+   "key": "federal-representatives-8061",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "question": "National Reconstruction Fund Corporation Bill 2023 - Consideration of Senate Message - Agree with the Senate amendments",
+   "stage": "Consideration of Senate message",
+   "ayes": 87,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-29/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-827554",
+   "speaker": "Sophie Scamps",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2023-02-13",
+   "stage_hint": null,
+   "brief": "Investment decisions of the $15 billion National Reconstruction Fund will be made solely by its board, with ministers required to consider listed skills criteria when appointing members. The minister rejected concerns about political stacking, cited the CEFC as a model, and criticised the opposition’s record on manufacturing."
+  },
+  {
+   "slug": "speech-827569",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-02-13",
+   "stage_hint": null,
+   "brief": "The opposition will oppose the National Reconstruction Fund Corporation Bill 2022, arguing it does nothing for manufacturers and ignores their key concerns — citing a survey where 83% of manufacturers faced rising energy prices, and giving examples of Solaris Paper’s tripled gas bill and Advanced Bricks’ closure after 82 years."
+  },
+  {
+   "slug": "speech-827591",
+   "speaker": "Sophie Scamps",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2023-02-13",
+   "stage_hint": null,
+   "brief": "A survey of Mackellar found integrity in politics remains the second most important issue; the MP supported the National Reconstruction Fund Corporation Bill but criticised clause 18 for allowing ministers to appoint board members, risking political influence over $11 billion in investment decisions."
+  },
+  {
+   "slug": "speech-827751",
+   "speaker": "Carina Garland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Reconstruction Fund Corporation Bill 2022 is essential for rebuilding Australia's manufacturing capacity and supply chain resilience after COVID-19, listing seven priority areas including medical science, renewables and defence. The opposition speaker criticised the $15 billion fund as an expensive, poorly designed intervention that bypasses parliamentary oversight, ignores energy price and labour shortages, and risks wasteful spending."
+  },
+  {
+   "slug": "speech-827780",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-16",
+   "stage_hint": null,
+   "brief": "The Albanese government argued the $15 billion National Reconstruction Fund, a key election commitment, is necessary to rebuild Australia's manufacturing capability, create secure jobs, and strengthen supply chains after the pandemic exposed vulnerabilities. The opposition argued the bill lacks detail, risks driving inflation through off-budget spending, and gives inappropriate ministerial discretion, including appointing union officials to the board."
+  },
+  {
+   "slug": "speech-828032",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-07",
+   "stage_hint": null,
+   "brief": "The Prime Minister argued for the National Reconstruction Fund to boost Australian manufacturing, jobs, and economic sovereignty, citing the Clean Energy Finance Corporation’s success in unlocking $2.60 in private investment per dollar and listing seven priority areas including renewables, medical science, and defence."
+  },
+  {
+   "slug": "speech-828083",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2023-03-07",
+   "stage_hint": null,
+   "brief": "The National Reconstruction Fund Corporation Bill 2022 establishes a $15 billion fund to invest in seven priority areas—including renewables, medical science, transport, and defence—aiming to revitalise Australian manufacturing and create secure jobs. Coalition speakers opposed the bill, arguing it would increase union influence, ignore cost-of-living pressures, and duplicate existing programs like the Modern Manufacturing Initiative."
+  },
+  {
+   "slug": "speech-828176",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-08",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the National Reconstruction Fund Corporation Bill 2022, a $15 billion investment in seven priority areas including renewables, medical science, transport, and defence, and criticised the opposition for opposing the bill. The speaker also referenced the opposition's past cuts of $50 billion from hospitals and their role in the departure of the Australian car industry."
+  },
+  {
+   "slug": "speech-828223",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-08",
+   "stage_hint": null,
+   "brief": "The opposition argued the National Reconstruction Fund Corporation Bill 2022 is poorly designed, fiscally irresponsible, and prioritises union interests, claiming it ignores rising energy costs, labour shortages, and disrupted supply chains. They opposed the $15 billion off-budget fund, criticised the removal of space manufacturing as a priority, and defended the former coalition's Modern Manufacturing Strategy as superior."
+  },
+  {
+   "slug": "speech-828320",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-09",
+   "stage_hint": null,
+   "brief": "The question was put on the National Reconstruction Fund Corporation Bill 2022 for a second reading, with no further debate allowed."
+  },
+  {
+   "slug": "speech-828647",
+   "speaker": "Carol Brown",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-20",
+   "stage_hint": null,
+   "brief": "The bill establishes a $15 billion National Reconstruction Fund Corporation to invest in seven priority areas—value-add resources, agriculture, transport, medical science, renewables, defence, and enabling capabilities—with an independent board, aiming to rebuild Australia's industrial capability and create secure, well-paying jobs."
+  },
+  {
+   "slug": "speech-829101",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-24",
+   "stage_hint": null,
+   "brief": "The Coalition opposed the National Reconstruction Fund Corporation Bill 2023, arguing it would fuel inflation and ignore manufacturers' needs for lower energy and input costs, citing the IMF's warning against off-budget spending and examples such as Solaris Paper's tripled gas bill and Advance Bricks' closure after gas prices rose from $6 to $37 per gigajoule."
+  },
+  {
+   "slug": "speech-829256",
+   "speaker": "Tony Sheldon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-27",
+   "stage_hint": null,
+   "brief": "The National Reconstruction Fund Corporation Bill 2023 creates a $15 billion government financing vehicle to invest in seven priority manufacturing areas—including renewables, medical science, and transport—through loans, equity, and guarantees. Supporters argued it will revive domestic manufacturing and secure jobs, while opponents criticised it as a fiscally irresponsible slush fund that ignores rising energy costs and regulatory burdens, with the Coalition and crossbenchers opposing the bill and the Greens securing amendments to prohibit funding for coal, gas, and native forest logging."
+  },
+  {
+   "slug": "speech-829302",
+   "speaker": "Sarah Hanson-Young",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2023-03-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-829435",
+   "speaker": "Sue Lines",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-28",
+   "stage_hint": null,
+   "brief": "The chair put second reading amendments to the National Reconstruction Fund Corporation Bill 2023: a Greens amendment from Senator Whish-Wilson, Senator David Pocock’s amendment calling for extra startup finance mechanisms and an ACT office for the Corporation, and Senator Thorpe’s amendment requiring free, prior and informed consent of First Nations Traditional Owners for major projects, reflected in the investment mandate and with close engagement. The Thorpe amendment was negatived, after which the main second reading question was put."
+  },
+  {
+   "slug": "speech-829436",
+   "speaker": "Don Farrell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-28",
+   "stage_hint": null,
+   "brief": "The government moved amendments to the National Reconstruction Fund Corporation Bill 2023 requiring the board to consider Australia’s greenhouse gas emissions reduction targets, decarbonisation, secure jobs, supply chain resilience and commercialisation of innovation, and to develop policies on environmental, labour, social and governance matters. The fund aims to create secure, well-paid manufacturing jobs—nearly 85% of manufacturing jobs are full-time—and will not fund coal, gas extraction or native forest logging."
+  },
+  {
+   "slug": "speech-829573",
+   "speaker": "Jana Stewart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-29",
+   "stage_hint": null,
+   "brief": "The National Reconstruction Fund Corporation Bill passed the Senate, with Senator Farrell arguing it is one of the largest investments in Australian manufacturing history, providing finance to priority areas like agriculture, resources, transport, medical science, renewable energy, and defence. He stated amendments would attract private investment, reduce emissions, create secure jobs, and strengthen supply chains, while criticising the coalition for opposing the jobs and local manufacturing the fund aims to create."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Reconstruction Fund Corporation Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00012",
+   "assent_date": "2023-04-11"
+  }
+ ]
+}

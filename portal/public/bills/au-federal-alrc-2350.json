@@ -1,0 +1,175 @@
+{
+ "key": "au-federal-alrc-2350",
+ "title": "Financial Framework Legislation Amendment Bill (No. 2) 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance and Deregulation",
+ "status": "passed",
+ "status_as_of": "2013-05-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-05-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00053",
+   "document_date": "2013-05-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-270238",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822295",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271361",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271578",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271579",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822823",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Financial Framework Legislation Amendment Act (No. 2) 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00053",
+   "assent_date": "2013-05-28"
+  }
+ ]
+}

@@ -1,0 +1,891 @@
+{
+ "key": "au-federal-r6583",
+ "title": "Coronavirus Economic Response Package (Jobkeeper Payments) Amendment Bill 2020",
+ "short_title": "Coronavirus Economic Response Package (Jobkeeper Payments) Amendment Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-08-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-09-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6583_ems_f4e6bb8e-73d5-4d82-b234-908cb62ecc0d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6583_ems_9ef039e3-d9b1-41af-9112-3b88be4c7f24%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6583%22",
+   "document_date": "2020-08-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00081",
+   "document_date": "2020-09-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-08-26",
+  "sentences": [
+   "The bill would extend the JobKeeper payment scheme until 28 March 2021.",
+   "It would allow protected JobKeeper information to be shared with Australian government agencies for coronavirus-related law administration.",
+   "The bill would also extend the period for making a related information sharing determination under the Omnibus Act."
+  ],
+  "changes": [
+   "Extends the JobKeeper payment period to 28 March 2021.",
+   "Amends tax secrecy provisions to permit disclosure of JobKeeper information to government agencies for coronavirus purposes.",
+   "Extends the period for a related information sharing determination."
+  ],
+  "affected": "Australian government agencies and participants in the JobKeeper scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6490",
+   "date": "2020-08-26",
+   "house": "representatives",
+   "question": "Andrew Leigh We are now in the greatest economic downturn that Australia has seen since the Great Depression. Research from the Australian Treasury has revealed just how damaging this can be, particularly to young Australians. That research has looked at the so-called scarring effect, the long-term effect, of graduating in the teeth of a recession. I know this effect well, having finished high school in 1990 and seen some of my classmates who searched for work utterly unable to find it at that time. We know now that there are 13 jobseekers for every job vacancy, so this problem is particularly acute. The research conducted by Daniel Andrews of the Australian Treasury—now at the OECD—titled _The career effect of labour market conditions of entry_ found that a person who enters the labour market for the first time during a recession is more likely to be unemployed and more likely to be unemployed for longer. When they do find a job—if they do—they are more likely to work at a low-productivity firm and are less likely to switch firms, thereby missing out on the wage gains that come from that. Their estimate is that somebody who enters the workforce in a year in which youth unemployment is five percentage points higher suffers an eight per cent hit to their earnings in the first year and a 3.5 per cent hit to their earnings in the fifth year. The scarring effect lasts a full decade. We know that in Australia right now we are seeing significant adverse effects right across the labour market. We've seen a downturn in hours of some 20 per cent and the effective unemployment rate, the Treasurer tells us, will go to 13 per cent. The difference between those is JobKeeper, a wage subsidy scheme urged on the government, after they initially dragged their heels, by Labor. Labor recognises the value of wage subsidy schemes and maintaining the connection between employer and employee. Its value has been shown in Australia, as it has overseas. But JobKeeper is far from perfect. Let",
+   "stage": "Second reading",
+   "ayes": 44,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 73,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-08-26/1"
+  },
+  {
+   "key": "federal-representatives-6491",
+   "date": "2020-08-26",
+   "house": "representatives",
+   "question": "Tony Burke by leave—I move opposition amendments (1) to (11) together: (1) Schedule 2, items 2 to 8, page 7 (line 3) to page 8 (line 14), omit the items. (2) Schedule 2, item 9, page 8 (line 20), omit \"5A\". (3) Schedule 2, items 10 to 22, page 8 (line 21) to page 21 (line 5), omit the items. (4) Schedule 2, items 25 to 27, page 21 (lines 15 to 24), omit the items. (5) Schedule 2, item 29, page 21 (line 28) to page 24 (line 16), omit the item. (6) Schedule 2, items 30 and 30A, page 24 (line 24 to 29), omit the items. (7) Schedule 2, items 33 and 34, page 25 (lines 4 to 7), omit the items. (8) Schedule 2, items 36 to 38, page 25 (line 10) to page 28 (line 2), omit the items. (9) Schedule 2, item 47, page 31 (lines 4 and 5), omit the item, substitute: 47 Item 9 of Schedule 1 Omit \"5,\". (10) Schedule 2, items 49 and 50, page 31 (lines 8 to 11), omit the items, substitute: 49 Item 10 of Schedule 1 Omit \"5\". 50 Item 10 of Schedule 1 Omit \"789GJ(2)\". (11) Schedule 2, item 51, page 31 (line 18), omit \"or 789GJD(2)\". I'll be brief in my remarks on these amendments, because I'm mindful of the importance of our completing the bill before 7.30 tonight. As I made clear in my remarks earlier today, quite simply, we don't believe the government has made the case for the legacy companies that are covered here. We need to remember that what we are talking about is companies that the government has made an active decision that it will no longer provide financial support for via JobKeeper. The whole concept of the legacy companies is effectively to transfer the burden of support for those companies from the government to the workforce. For that reason I commend the amendments to the House. Fiona Phillips I'm pleased to speak in this consideration in detail. Firstly, I want to say that I am proud to have been one of the many people calling on the government to extend the JobKeeper payment. My area of Gilmore, on the New South Wales South Coast, has been hit by drought, by bushfires, by",
+   "stage": "Consideration in detail",
+   "ayes": 43,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 73,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-08-26/2"
+  },
+  {
+   "key": "federal-representatives-6492",
+   "date": "2020-08-26",
+   "house": "representatives",
+   "question": "Tony Burke I move amendment (12) as circulated in my name: (12) Schedule 2, item 22, page 13 (after line 30), after paragraph 789GJA(1)(c), insert: (ca) the jobkeeper enabling stand down direction will not result in the amount payable to the employee in relation to the performance of work for the employer for a jobkeeper fortnight that is within the jobkeeper enabling stand down period that is less than the amount that would be payable to the employee if the employer were entitled to a jobkeeper payment for the employee for the fortnight; and I want to draw to the attention of members of the House that this is the amendment that puts in place a safety net so that we don't end up with a situation where we end up paying people more for not working than for working and where, for an employee, the result of the business that they work for doing better and recovering is that their take-home pay goes down. As I said in my speech earlier today, we suspect this anomaly has not been put there deliberately, and we're constructively putting forward one of the ways that this can be fixed Effectively, what we're saying here is that—while, as was reflected in the previous amendments, our position is that we don't think the case has been made for the legacy companies at all—this is the specific instance where somebody who starts on a modest income would find themselves, without mutual agreement, potentially having their hours cut by 40 per cent. If you do those calculations for someone on average weekly earnings or on a higher income, you'll end up well above the JobKeeper rate, but, if you do those calculations for someone who's on a lower award rate—a hospitality worker or a retail worker—you'll end up with a situation where their hours can be cut to lower than the JobKeeper rate. To give some quick examples of the numbers and what we're talking about—and bear in mind we're talking about people on very modest incomes—a full-time retail employee on the minimum award earns $813.60",
+   "stage": "Consideration in detail",
+   "ayes": 44,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 75,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-08-26/3"
+  },
+  {
+   "key": "federal-senate-6515",
+   "date": "2020-08-31",
+   "house": "senate",
+   "question": "Mehreen Faruqi I rise to continue my speech on the Coronavirus Economic Response Package (Jobkeeper Payments) Amendment Bill 2020. Women are already bearing the brunt of the economic impacts of the pandemic—so much so that economists have said that we are in a pink collar recession. Women lost their jobs twice as fast as men when the economy was shut down. Women are over-represented as casual workers and in industries most affected by shutdowns like retail and hospitality. Women are under-represented in the few industries which received targeted stimulus, such as the construction sector. Young women have been forced to dip into their already meagre superannuation balances at disproportionate rates to make it through the crisis, which is going to decimate their retirement savings. The government's approach to early childhood education and care was a double whammy for women and their earning potential. Not only did the government rip away access to free child care—potentially one of the most significant boosts to women's capacity to enter and remain in the workforce in a generation—but it carved the highly feminised early learning and care workforce out of JobKeeper altogether, months before the scheme was originally scheduled to end. There has been no job creation for women during this crisis and there is none planned for the recovery. Instead, women have been totally shafted and left to fend for themselves. I've said it before and I'll say it again: our recovery plans must have women at the front and centre of planning and decision-making. This recovery must be a feminist recovery. Creating this two-tier JobKeeper system will also be a disaster. Can I remind the chamber that we are in the middle of a pandemic and in the middle of a recession. This is not the time to be cutting the critical JobKeeper payment, which is $1,500 at the moment; it's really barely a living wage to begin with. A cut down to $1,200 and a staggeringly low $750 in the case of part-time workers",
+   "stage": "Second reading",
+   "ayes": 21,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 20,
+    "member": 12,
+    "earliest": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-31/2"
+  },
+  {
+   "key": "federal-senate-6516",
+   "date": "2020-08-31",
+   "house": "senate",
+   "question": "Rachel Siewert I move: At the end of the motion, add: \", but the Senate calls on the Government to: (a) end its plans to reduce the coronavirus supplement by $300 a fortnight which will cause millions of Australians to fall below the poverty line; (b) continue to provide the current $550 coronavirus supplement throughout the pandemic to ensure unemployed Australians receive adequate support; (c) commit to a permanent and adequate increase to Jobseeker Payment that allows unemployed Australians to live above the poverty line\". Scott Ryan The question is that the second reading amendment moved by Senator Siewert be agreed to.",
+   "stage": "Second reading",
+   "ayes": 4,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 17,
+    "member": 6,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-31/3"
+  },
+  {
+   "key": "federal-senate-6517",
+   "date": "2020-08-31",
+   "house": "senate",
+   "question": "Don Farrell by leave—I move opposition amendments (2), (9), (10) and (11) on sheet 1014: (2) Schedule 2, item 9, page 8 (line 20), omit \"5A,\". (9) Schedule 2, item 47, page 31 (lines 4 and 5), omit the item, substitute: 47 Item 9 of Schedule 1 Omit \"5,\". (10) Schedule 2, items 49 and 50, page 31 (lines 8 to 11), omit the items, substitute: 49 Item 10 of Schedule 1 Omit \"5\". 50 Item 10 of Schedule 1 Omit \"789GJ(2)\". (11) Schedule 2, item 51, page 31 (line 18), omit \"or 789GJD(2)\". We also oppose schedule 2 in the following terms: (1) Schedule 2, items 2 to 8, page 7 (line 3) to page 8 (line 14), to be opposed. (3) Schedule 2, items 10 to 22, page 8 (line 21) to page 21 (line 5), to be opposed. (4) Schedule 2, items 25 to 27, page 21 (lines 15 to 24), to be opposed. (5) Schedule 2, item 29, page 21 (line 28) to page 24 (line 16), to be opposed. (6) Schedule 2, items 30 and 30A, page 24 (line 24 to 29), to be opposed. (7) Schedule 2, items 33 and 34, page 25 (lines 4 to 7), to be opposed. (8) Schedule 2, items 36 to 38, page 25 (line 10) to page 28 (line 2), to be opposed. These amendments remove all references to the so-called legacy employers from the Coronavirus Economic Response Package (Jobkeeper Payments) Amendment Bill 2020, thereby removing access to the fair work flexibility provisions for businesses no longer eligible for government support. Labor believes the extension of JobKeeper flexibility provisions are unnecessary. The same businesses doing well enough to lose all government support are now being allowed to take away the job security of their workers. The government is shifting the cost of supporting businesses onto ordinary workers. Why should the pay of workers go down when the business's revenue is improving? How is it that a business suffering a 10 per cent hit is allowed to inflict a 40 per cent hit on its workers? Extending the fair work flexibility provisions for people who are no longer receiving JobKeeper is a complete shift from what we were",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "member": 14,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-31/4"
+  },
+  {
+   "key": "federal-senate-6518",
+   "date": "2020-08-31",
+   "house": "senate",
+   "question": "The majority voted against [amendment (1) on sheet 1015](https://www.openaustralia.org.au/senate/?gid=2020-08-31.156.1), which was introduced by South Australian Senator [Don Farrell](https://theyvoteforyou.org.au/people/senate/sa/don_farrell) (Labor). ### What did this amendment do? Senator Farrell [explained that](https://www.openaustralia.org.au/senate/?gid=2020-08-31.156.1): > *Labor is moving this amendment because it's critical to protecting the pay and conditions of low-paid workers. If this bill is passed unamended, we could see a situation where businesses which have recovered to the point where their turnover decline is less than 10 per cent can cut the hours of their employees to the tune of 40 per cent. Let's not forget that, in income terms, it could actually be much more than that, because it's a cut to hours.* ### Amendment text > *(1) Schedule 2, item 22, page 13 (after line 17), after paragraph 789GJA(1)(c), insert:* > >> *(ca) the jobkeeper enabling stand down direction will not result in the amount payable to the employee in relation to the performance of work for the employer for a jobkeeper fortnight that is within the jobkeeper enabling stand down period that is less than the amount that would be payable to the employee if the employer were entitled to a jobkeeper payment for the employee for the fortnight; and*",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "member": 15,
+    "earliest": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-31/5"
+  },
+  {
+   "key": "federal-senate-6519",
+   "date": "2020-08-31",
+   "house": "senate",
+   "question": "The same number of senators voted for and against [amendments (1) and (2) on sheet 1008](https://www.openaustralia.org.au/senate/?gid=2020-08-31.161.1), which were moved by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens). This means the amendments failed. ### Motion text > *(1) Clause 2 , page 2 (at the end of the table), [add](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6583_amend_b35abd0b-a20a-41e4-9f3f-79ed652f89fd%22;rec=0):* > > *(2) Page 33 (after line 21) , at the end of the Bill, add:* > >> *Schedule 4—Fair Work Commission powers to deal with jobkeeper-related disputes* >> >> *Fair Work Act 2009* >> >> *1 Section 789GA (paragraph beginning \"This Part provides that the FWC may deal\")* >> >>> *Repeal the paragraph, substitute:* >>> >>> *This Part provides that the FWC may deal with a dispute about the operation of this Part, a dispute about whether a person who is a relevant employee of an entity should be treated as if they were an eligible employee of an entity and the entity entitled to a jobkeeper payment for the purposes of the jobkeeper payment rules, and other disputes arising between entities and employees in relation to eligibility and payments under those rules.* >> >> *2 Section 789GC* >> >>> *Insert:* >>> >>>> *eligible employee has the same meaning as in the jobkeeper payment rules.* >>>> >>>> *relevant employee has the same meaning as in the jobkeeper payment rules.* >> >> *3 After section 789GV* >> >>> *Insert:* >>> >>>> *789GVA FWC may deal with a dispute about eligible employees or related matters under the jobkeeper payment rules* >>>> >>>>> *(1) The FWC may deal with a dispute about:* >>>>> >>>>>> *(a) whether a person who is a relevant employee of an entity should be treated as if they were an eligible employee of the entity for the purposes of the jobkeeper payment rules; or* >>>>>> >>>>>>",
+   "stage": "In committee",
+   "ayes": 24,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "member": 12,
+    "earliest": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-31/6"
+  },
+  {
+   "key": "federal-senate-6534",
+   "date": "2020-09-01",
+   "house": "senate",
+   "question": "Coronavirus Economic Response Package (Jobkeeper Payments) Amendment Bill 2020 - in Committee - Casual workers",
+   "stage": "In committee",
+   "ayes": 7,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 14,
+    "earliest": 14,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-01/1"
+  },
+  {
+   "key": "federal-senate-6535",
+   "date": "2020-09-01",
+   "house": "senate",
+   "question": "Coronavirus Economic Response Package (Jobkeeper Payments) Amendment Bill 2020 - in Committee - Temporary visa holders",
+   "stage": "In committee",
+   "ayes": 6,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 14,
+    "earliest": 13,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-01/2"
+  },
+  {
+   "key": "federal-senate-6536",
+   "date": "2020-09-01",
+   "house": "senate",
+   "question": "Coronavirus Economic Response Package (Jobkeeper Payments) Amendment Bill 2020 - in Committee - University workers",
+   "stage": "In committee",
+   "ayes": 5,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "earliest": 11,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-01/3"
+  },
+  {
+   "key": "federal-senate-6537",
+   "date": "2020-09-01",
+   "house": "senate",
+   "question": "Coronavirus Economic Response Package (Jobkeeper Payments) Amendment Bill 2020 - in Committee - Childcare providers",
+   "stage": "In committee",
+   "ayes": 5,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "earliest": 10,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-01/4"
+  },
+  {
+   "key": "federal-senate-6538",
+   "date": "2020-09-01",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2020-09-01.20.1) introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens), which means they failed. Senator Faruqi [explained her amendments](https://www.openaustralia.org.au/senate/?gid=2020-09-01.20.1): > *This amends the Coronavirus Economic Response Package (Payments and Benefits) Act 2020 to prevent the minister from establishing a tiered payment system. While the JobKeeper bill doesn't deal specifically with tiered payments, it does extend the rule-making power which allows the minister to establish tiers. The amendment will insert a new section that specifies that the minister must not create rules for different rates of pay for different employees.* ### Amendment text > *(1) Clause 2, page 2 (at the end of the table), add:* > > *(2) Page 33 (after line 21), at the end of the Bill, add:* > > *Schedule 7—Preventing tiered jobkeeper payments* > > *Coronavirus Economic Response Package (Payments and Benefits) Act 2020* > > *1 After section 7* > > *Insert:* > > *7A Requirement for rules that provide for jobkeeper payments scheme—no tiered jobkeeper payments* > > *(1) If the rules provide for a kind of payment that is intended to assist businesses affected by the Coronavirus to cover the cost of wages of their employees (whether known as a jobkeeper payment or otherwise), the rules relating to that kind of payment (the jobkeeper scheme rules) must comply with the requirement in subsection (2).* > > *(2) The jobkeeper scheme rules, in providing for the amount of the payment under the jobkeeper scheme, must not provide for there to be different amounts payable in relation to employees.*",
+   "stage": "In committee",
+   "ayes": 4,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "earliest": 12,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-01/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-393802",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The speaker supported extending JobKeeper but criticised the Treasurer's sole control over rates and eligibility, noting that millions of workers—including casuals, aviation and university staff—remain excluded, and argued the government is withdrawing support too quickly without a jobs plan, moving an amendment to tailor rates to rising unemployment."
+  },
+  {
+   "slug": "speech-393806",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment and bill but argued the Morrison government’s response to COVID-19 was painfully slow, poorly implemented, and excluded millions, citing 520,000 payroll jobs lost, 400,000 additional workers expected to lose jobs by Christmas, a $60 billion JobKeeper bungle, and $33 billion in superannuation withdrawals. The speaker criticised the government for failing to include aviation workers, universities, and international students in JobKeeper, and for lacking a comprehensive jobs plan."
+  },
+  {
+   "slug": "speech-393808",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The government's planned reductions to JobKeeper and JobSeeker are premature without a comprehensive jobs plan, and support should be extended and expanded to excluded industries like childcare, hospitality, arts, and local government. The speech notes 520,000 payroll jobs lost, a predicted further 400,000, and that JobKeeper rates will drop from $1,500 to as low as $650 per fortnight by early 2021, while the government has room in its revised $101 billion cost estimate to do more."
+  },
+  {
+   "slug": "speech-393812",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The speech welcomed the JobKeeper extension to March 2021 but criticised the scheme's implementation for excluding childcare, university, casual and dnata workers. It cited 2.7 million people withdrawing $33.3 billion from superannuation, Qantas's outsourcing of 2,500 ground crew jobs, and projected 400,000 further job losses by Christmas, arguing for a comprehensive jobs plan."
+  },
+  {
+   "slug": "speech-393817",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The speaker supported extending JobKeeper but argued the government's eligibility criteria were too narrow and the support came too late, and criticised a provision allowing recovered businesses to unilaterally cut employee hours by up to 40%."
+  },
+  {
+   "slug": "speech-393818",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Coronavirus Economic Response Package (Jobkeeper Payments) Amendment Bill 2020, arguing for the extension of JobKeeper payments until 28 March 2021 with a two-tiered payment system and revised turnover tests, citing that over 5,300 organisations in the electorate of Forde benefited and provided examples like Club Beenleigh retaining 32 staff, Good Life Kindergarten retaining nine, and Harvey's Towing retaining 29."
+  },
+  {
+   "slug": "speech-393819",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the JobKeeper extension amendments but argued that the bill still leaves behind aviation, arts, council, casual, and childcare workers, specifically citing Qantas outsourcing 2,500 jobs and dnata workers being denied support. They criticised the government for lacking a long-term aviation plan and for allowing unilateral 40% hour reductions for workers in recovered businesses."
+  },
+  {
+   "slug": "speech-393931",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Coronavirus Economic Response Package (Jobkeeper Payments) Amendment Bill 2020, arguing that JobKeeper was the most significant measure for saving livelihoods and noting that 3,700 businesses in his electorate had used it, including specific employers like Josslyn Lee and Lucy Von Stanke’s cafe, Karen Milesi’s hotel, Tom Kosch’s motel, Toni Vorenas’s bakery, and Thyme at the Lakes."
+  },
+  {
+   "slug": "speech-393935",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "Labor proposed amendments to the JobKeeper extension bill to ensure workers whose hours are cut do not receive less than the $750-a-week JobKeeper rate and to deny emergency industrial relations powers to businesses not receiving the subsidy. Labor also highlighted the initial rejection of wage subsidies and the $60 billion JobKeeper overpayment mistake under Treasurer Josh Frydenberg."
+  },
+  {
+   "slug": "speech-393936",
+   "speaker": "Patrick Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The speaker supported extending the JobKeeper payment for another six months and retesting eligibility to target businesses most in need, citing the $70 billion package as having helped retain staff and citing positive feedback from businesses such as Dorrigo Hotel, Settlers Inn, Observatory Apartments, and McGrath real estate."
+  },
+  {
+   "slug": "speech-393939",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The government was forced into supporting JobKeeper after initially resisting, but one million casual workers were excluded; the speaker argued that cutting JobKeeper is premature and called for a green-led recovery with investment in renewable energy and domestic manufacturing to combat the worst recession since the Great Depression."
+  },
+  {
+   "slug": "speech-393940",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The member for Indi supported the extension of JobKeeper until 28 March 2021, citing that over 4,600 businesses in her electorate received the payment in May, and argued for amendments to include universities and childcare sectors, while presenting a budget submission for regional tourism and infrastructure projects."
+  },
+  {
+   "slug": "speech-393942",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The speech argued for extending JobKeeper, criticised the government for initially refusing and delaying the scheme, and highlighted specific workers and businesses in Dunkley left out or facing hardship, while opposing the extension of emergency industrial relations powers that could weaken worker protections."
+  },
+  {
+   "slug": "speech-393943",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The member for Warringah welcomed the JobKeeper extension to March 2021 but urged targeted support for travel agents, events, arts, entertainment, and childcare industries, and called for eligibility clarifications for start-ups and sole traders, along with greater attention to women and youth disproportionately affected by the economic downturn."
+  },
+  {
+   "slug": "speech-393946",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The bill extends the JobKeeper payment until 28 March 2021, introduces a two-tiered payment rate to better align with part-time hours, and extends temporary Fair Work Act provisions for employer flexibility. Legacy employers must meet a 10% decline in turnover test to access modified provisions, with penalties for providing false information."
+  },
+  {
+   "slug": "speech-394641",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-01",
+   "stage_hint": null,
+   "brief": "Labor argued that the government was reluctant to introduce wage subsidies, leading to hundreds of thousands of unnecessary job losses, and criticised the rejection of amendments that would prevent workers from being paid less than JobKeeper recipients, citing a gap between $314 billion and $85 billion in claimed economic support."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Coronavirus Economic Response Package (Jobkeeper Payments) Amendment Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00081",
+   "assent_date": "2020-09-03"
+  }
+ ]
+}

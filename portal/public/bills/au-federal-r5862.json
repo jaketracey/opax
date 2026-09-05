@@ -1,0 +1,185 @@
+{
+ "key": "au-federal-r5862",
+ "title": "Comcare and Seacare Legislation Amendment (Pension Age and Catastrophic Injury) Bill 2017",
+ "short_title": "Comcare and Seacare Legislation Amendment (Pension Age and Catastrophic Injury) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "passed",
+ "status_as_of": "2017-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5862%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5862%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5862%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5862%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5862%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5862%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5862%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5862%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5862%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5862%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5862%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5862%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5862_ems_66aaa3ea-606a-4249-8788-f681dd402412%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5862%22",
+   "document_date": "2017-05-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00048",
+   "document_date": "2017-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-11",
+  "sentences": [
+   "The bill would end weekly incapacity payments to injured workers at the pension age rather than 65, and lift some limits on support for severe injuries.",
+   "It links the stop date for compensation to the rising qualifying age for the age pension under the Social Security Act 1991, which increases from 1 July 2017.",
+   "For catastrophic injuries, the bill removes the dollar ceiling on weekly payments for home help and nursing care, and waives the usual 28-day wait before such help can be claimed."
+  ],
+  "changes": [
+   "Removes the cap on weekly compensation for household services and attendant care services for workers with a catastrophic injury.",
+   "Eliminates the 28-day waiting period for household services compensation for those workers.",
+   "Aligns the Comcare and Seacare schemes with minimum benchmarks in the National Injury Insurance Scheme."
+  ],
+  "affected": "Injured employees covered by the Comcare scheme (Australian Government, ACT Government and 34 licensed corporations, plus some pre-2004 Defence Force members) and the Seacare scheme (a small part of the maritime industry).",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:37:22Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-346026",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-11",
+   "stage_hint": null,
+   "brief": "The bill amends the Comcare and Seacare schemes to align income replacement payments with the rising age pension qualifying age (increasing from 65 to 67) and to meet National Injury Insurance Scheme benchmarks for catastrophically injured employees."
+  },
+  {
+   "slug": "speech-348119",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to align workers' compensation cessation with the rising pension age and remove caps on catastrophic injury payments, but criticised the Turnbull government's plan to increase the pension age to 70, calling it unfair and out of touch with workers like construction workers and nurses. The speaker also opposed two other Comcare amendment bills, arguing they would reduce worker protections and compensation."
+  },
+  {
+   "slug": "speech-348120",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "Labor supported the Comcare and Seacare Legislation Amendment (Pension Age and Catastrophic Injury) Bill 2017, which extends compensation coverage for catastrophically injured workers from age 65 to 67 and removes the 28-day waiting period for household services. The speaker also criticised the government for prioritising anti-union measures like the ABCC over workplace safety, citing rising injury rates in construction and manufacturing, and opposed raising the pension age to 70."
+  },
+  {
+   "slug": "speech-348256",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Comcare and Seacare Legislation Amendment (Pension Age and Catastrophic Injury) Bill 2017, which links workers' compensation payments to the pension age and removes caps on household and attendant care for catastrophically injured workers. The speaker also criticised flag-of-convenience vessels, the government's deregulation of Australian ports, and the proposed increase of the pension age to 70, citing risks for seafarers and citing a survey where 38% of 1,594 seafarer respondents reported a serious injury or fatality on their ship."
+  },
+  {
+   "slug": "speech-348804",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The Comcare and Seacare Legislation Amendment (Pension Age and Catastrophic Injury) Bill 2017 makes minor but important changes to workers' compensation schemes, ensuring injured employees keep income replacement payments until they qualify for the age pension after 1 July 2017, and aligns schemes with National Injury Insurance Scheme benchmarks to provide uncapped compensation for catastrophic injury care and household services."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Comcare and Seacare Legislation Amendment (Pension Age and Catastrophic Injury) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00048",
+   "assent_date": "2017-06-22"
+  }
+ ]
+}

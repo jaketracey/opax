@@ -1,0 +1,272 @@
+{
+ "key": "au-federal-r6759",
+ "title": "Investment Funds Legislation Amendment Bill 2021",
+ "short_title": "Investment Funds Legislation Amendment Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6759%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6759%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6759%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6759%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6759%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6759%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6759%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6759%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6759%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6759%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6759_ems_94946cb0-e816-423d-b585-2e5d897ebb0d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6759_ems_3c6d4159-3968-4f30-a1f4-67e800210aff%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6759%22",
+   "document_date": "2021-08-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-25",
+  "sentences": [
+   "This bill would change several laws to make the government's investment funds run more smoothly.",
+   "A new hiring system for the Future Fund Agency would let its chair set staff pay and conditions, while keeping workers as Commonwealth employees.",
+   "From 2022-23, the Medical Research Future Fund would have a fixed yearly cap of $650 million for spending, with a review every five years."
+  ],
+  "changes": [
+   "The bill creates a new employment framework for Future Fund staff.",
+   "It gives a partial freedom-of-information exemption for documents about the Future Fund Board's investments.",
+   "It simplifies the Medical Research Future Fund's annual disbursement to a fixed $650 million from 2022-23.",
+   "It lets state and territory governments receive funding directly from the Medical Research Future Fund Health Special Account.",
+   "It moves responsibility for Emergency Response Fund spending from Emergency Management Australia to the National Recovery and Resilience Agency.",
+   "It allows senior officials to handle some administrative directions instead of ministers when the Finance Minister has delegated the power."
+  ],
+  "affected": "The Future Fund Board and Agency, staff of those bodies, the Medical Research Future Fund, the Emergency Response Fund, state and territory governments, and the National Recovery and Resilience Agency.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7563",
+   "date": "2021-12-01",
+   "house": "senate",
+   "question": "Business - Consideration of Legislation - Investment Funds Legislation Amendment Bill 2021",
+   "stage": "Business motion",
+   "ayes": 33,
+   "noes": 7,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "earliest": 16,
+    "dated": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-01/19"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-411833",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The bill improves the operation of Australian government investment funds, including a new employment framework for the Future Fund Management Agency, a partial FOI exemption for investment documents, a fixed maximum annual disbursement of $650 million for the Medical Research Future Fund from 2022-23, and transferring Emergency Response Fund responsibility to the National Recovery and Resilience Agency."
+  },
+  {
+   "slug": "speech-415232",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-22",
+   "stage_hint": null,
+   "brief": "The speaker outlined the history and purpose of the Future Fund and five associated funds, criticised the government for failing to disburse money from the Emergency Response Fund to fire-affected communities, and noted Labor supports the bill's new employment framework for the Future Fund Management Agency and partial FOI exemption for investment documents. The speaker also accused the Prime Minister of breaking promises, citing a breach in the Medical Research Future Fund's annual disbursement cap of $650 million."
+  },
+  {
+   "slug": "speech-415251",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-22",
+   "stage_hint": null,
+   "brief": "The speaker argued against three elements of the bill: a partial FOI exemption for the Future Fund that would create an unfair advantage over industry superannuation funds; removal of Future Fund staff from the Public Service Act, citing government attacks on the APS; and a $650 million cap on Medical Research Future Fund disbursements, which represents a 35% cut from the original $1 billion annual commitment made by the Abbott government."
+  },
+  {
+   "slug": "speech-415252",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-11-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Investment Funds Legislation Amendment Bill 2021 will improve the operation of Australian government investment funds by introducing a new employment framework for the Future Fund Management Agency, a partial FOI exemption for investment activities, a fixed $650 million annual disbursement framework for the Medical Research Future Fund from 2022-23, and transferring Emergency Response Fund administration to the National Recovery and Resilience Agency. The Future Fund has delivered an 8.4% per annum return since inception, exceeding its 6.6% target, and manages $245.8 billion across six funds."
+  },
+  {
+   "slug": "speech-417025",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The member supported the amendment to the Investment Funds Legislation Amendment Bill 2021, backing the new employment framework for Future Fund staff, the FOI exemption for investment documents, and the transfer of the Emergency Response Fund to the National Recovery and Resilience Agency. They opposed the proposed $650 million annual cap on Medical Research Future Fund distributions, calling it a broken promise, and criticised the government's record on public service cuts and freedom of information."
+  },
+  {
+   "slug": "speech-417026",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Investment Funds Legislation Amendment Bill 2021, arguing for FOI Act exemptions for the Future Fund and moving its employees out of the Australian Public Service to improve competitiveness. The Future Fund has nearly $250 billion under management with an average long-term return of 8.8 per cent, and the speaker noted former Labor minister Lindsay Tanner first proposed these reforms over a decade ago."
+  },
+  {
+   "slug": "speech-417028",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The government's reforms to class action litigation funding, through the Investment Funds Legislation Amendment Bill 2021 and related bills, introduce a rebuttable presumption that distributions over 30% to non-members are not fair and reasonable, empower courts to approve distributions, and impose disincentives on funders seeking common fund orders, aiming to ensure claimants receive a fair share of proceeds rather than over 50% going to lawyers and funders."
+  },
+  {
+   "slug": "speech-417031",
+   "speaker": "The DEPUTY SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-417033",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The speaker noted they were continuing their earlier speech on the Investment Funds Legislation Amendment Bill 2021 and stated they had completed their remarks."
+  },
+  {
+   "slug": "speech-417035",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The speaker opposed schedule 2 of the bill for allowing the Future Fund to operate with unnecessary secrecy, and criticised the $650 million annual cap on the Medical Research Future Fund as too low, particularly for rural and regional health research which receives only 8% of funding despite 20% of the population. The speaker supported schedule 4's administrative changes to the Emergency Response Fund but raised concerns about politicisation of bushfire recovery grants, citing flaws in the Black Summer Bushfire Recovery Grants and Preparing Australia Program, and called for greater transparency and inclusion of Towong Shire in the priority list."
+  },
+  {
+   "slug": "speech-417036",
+   "speaker": "Trevor Evans",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The Investment Funds Legislation Amendment Bill 2021 was commended, aiming to enhance the Future Fund's investment ability through a new employment framework and a partial exemption under the Freedom of Information Act 1982. It also introduces a new disbursements framework for the Medical Research Future Fund, transfers Emergency Response Fund expenditure responsibility to the National Recovery and Resilience Agency, and sets a new investment mandate to increase target earnings."
+  }
+ ],
+ "acts": []
+}

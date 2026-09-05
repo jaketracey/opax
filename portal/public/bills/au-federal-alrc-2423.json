@@ -1,0 +1,175 @@
+{
+ "key": "au-federal-alrc-2423",
+ "title": "Sugar Research and Development Services Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-06-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Fisheries and Forestry",
+ "status": "passed",
+ "status_as_of": "2013-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-06-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-29",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00113",
+   "document_date": "2013-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-274918",
+   "speaker": "Sid Sidebottom",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824032",
+   "speaker": "Sid Sidebottom",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276716",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276717",
+   "speaker": "Paul Neville",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276718",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824554",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Sugar Research and Development Services Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00113",
+   "assent_date": "2013-06-29"
+  }
+ ]
+}

@@ -1,0 +1,733 @@
+{
+ "key": "au-federal-r5127",
+ "title": "Commonwealth Inscribed Stock Amendment Bill 2013",
+ "short_title": "Commonwealth Inscribed Stock Amendment Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2013-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2013-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2013-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2013-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5127_ems_dfe1d5b2-bd7c-424c-afc8-efdd37c905b1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5127%22",
+   "document_date": "2013-11-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00135",
+   "document_date": "2013-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-13",
+  "sentences": [
+   "This bill would raise the legal cap on how much the Treasurer can borrow on behalf of the Commonwealth.",
+   "It does this by amending the Commonwealth Inscribed Stock Act 1911 to lift the borrowing limit from $300 billion to $500 billion.",
+   "The change would take effect on the day the bill receives Royal Assent."
+  ],
+  "changes": [
+   "The bill raises the Treasurer's standing borrowing authority to $500 billion.",
+   "The bill amends the Commonwealth Inscribed Stock Act 1911.",
+   "The bill commences on Royal Assent."
+  ],
+  "affected": "The Treasurer and the Commonwealth government are directly affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:08:49Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-2998",
+   "date": "2013-11-13",
+   "house": "representatives",
+   "question": "Commonwealth Inscribed Stock Amendment Bill 2013 - Consideration in Detail - Debt ceiling of $400 billion",
+   "stage": "Consideration in detail",
+   "ayes": 54,
+   "noes": 81,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 52,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 66
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 111,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-11-13/11"
+  },
+  {
+   "key": "federal-representatives-3001",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "question": "Commonwealth Inscribed Stock Amendment Bill 2013 - Consideration of Senate Message - Debt ceiling of $400 billion",
+   "stage": "Consideration of Senate message",
+   "ayes": 82,
+   "noes": 48,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 109,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-11-14/3"
+  },
+  {
+   "key": "federal-senate-3016",
+   "date": "2013-11-14",
+   "house": "senate",
+   "question": "Commonwealth Inscribed Stock Amendment Bill 2013 - In Committee - Debt ceiling of $400 billion",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "member": 4,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-11-14/10"
+  },
+  {
+   "key": "federal-representatives-3039",
+   "date": "2013-12-09",
+   "house": "representatives",
+   "question": "Commonwealth Inscribed Stock Amendment Bill 2013 - Consideration of Senate Message - Put the question",
+   "stage": "Consideration of Senate message",
+   "ayes": 85,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-09/1"
+  },
+  {
+   "key": "federal-representatives-3040",
+   "date": "2013-12-09",
+   "house": "representatives",
+   "question": "Commonwealth Inscribed Stock Amendment Bill 2013 - Consideration of Senate Message - Make requested amendments",
+   "stage": "Consideration of Senate message",
+   "ayes": 88,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-09/2"
+  },
+  {
+   "key": "federal-representatives-3041",
+   "date": "2013-12-09",
+   "house": "representatives",
+   "question": "Commonwealth Inscribed Stock Amendment Bill 2013 - Consideration of Senate Message - Put the question re: removing the debt limit",
+   "stage": "Consideration of Senate message",
+   "ayes": 83,
+   "noes": 50,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-09/3"
+  },
+  {
+   "key": "federal-senate-3073",
+   "date": "2013-12-09",
+   "house": "senate",
+   "question": "Commonwealth Inscribed Stock Amendment Bill 2013 - Consideration of House of Representatives Message - Removing debt limit",
+   "stage": "Consideration of House message",
+   "ayes": 41,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 63,
+    "earliest": 1,
+    "member": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-12-09/1"
+  },
+  {
+   "key": "federal-senate-3074",
+   "date": "2013-12-09",
+   "house": "senate",
+   "question": "Commonwealth Inscribed Stock Amendment Bill 2013 - Consideration of House of Representatives Message - Agree to bill as amended",
+   "stage": "Consideration of House message",
+   "ayes": 41,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 63,
+    "earliest": 1,
+    "member": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-12-09/2"
+  },
+  {
+   "key": "federal-senate-3075",
+   "date": "2013-12-09",
+   "house": "senate",
+   "question": "Commonwealth Inscribed Stock Amendment Bill 2013 - Consideration of House of Representatives Message - Adopt report",
+   "stage": "Consideration of House message",
+   "ayes": 41,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 63,
+    "earliest": 1,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-12-09/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-278236",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278336",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278338",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278341",
+   "speaker": "The SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278360",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278363",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825409",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825429",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825459",
+   "speaker": "Mitch Fifield",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": "The speaker moved to suspend standing orders to allow the Commonwealth Inscribed Stock Amendment Bill 2013 to be considered during the current sittings, with royal assent required by the end of November 2013 to increase the legislative limit on Commonwealth Government Securities."
+  },
+  {
+   "slug": "speech-825558",
+   "speaker": "Mitch Fifield",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-14",
+   "stage_hint": null,
+   "brief": "The speaker moved to waive standing order requirements for the Commonwealth Inscribed Stock Amendment Bill 2013 so it could be considered in the current sittings; the motion was agreed to."
+  },
+  {
+   "slug": "speech-826321",
+   "speaker": "Mitch Fifield",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-05",
+   "stage_hint": null,
+   "brief": "The speaker moved to schedule the Australian Capital Territory Water Management Legislation Amendment Bill 2013 for 12:45 pm and the Commonwealth Inscribed Stock Amendment Bill 2013 for debate until 2 pm, arguing the opposition supports the stock bill but needs more time for substantive discussion on debt ceiling changes, and criticised poor time management in the chamber."
+  },
+  {
+   "slug": "speech-280935",
+   "speaker": "Joe Hockey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280960",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280970",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826413",
+   "speaker": "Bronwyn Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826564",
+   "speaker": "Stephen Parry",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": "The House of Representatives agreed to the Senate's further amendments to the Commonwealth Inscribed Stock Amendment Bill 2013 and made the amendments requested by the Senate."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Commonwealth Inscribed Stock Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00135",
+   "assent_date": "2013-12-10"
+  }
+ ]
+}

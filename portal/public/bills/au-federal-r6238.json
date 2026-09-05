@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6238",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment (Regulations References) Bill 2018",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment (Regulations References) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-12-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Innovation and Science",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6238%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6238%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6238%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6238_ems_c509ad62-20e5-4f2a-a0ab-cd793ddca113%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6238%22",
+   "document_date": "2018-12-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-12-05",
+  "sentences": [
+   "This bill would update references to offshore petroleum regulations in the Levies Act so they stay valid when those regulations are remade after expiring.",
+   "It would remove specific regulation titles from the Levies Act and instead let those references be set by new regulations under that Act.",
+   "The change would prevent the Levies Act from needing amendment each time the underlying regulations sunset and are remade with different names or numbering."
+  ],
+  "changes": [
+   "Removes specific references to regulation titles from the Levies Act.",
+   "Allows references to regulation titles or provisions to be prescribed by regulations under the Levies Act.",
+   "Avoids the need to amend the Levies Act when regulations sunset and are remade."
+  ],
+  "affected": "The offshore petroleum industry regulator NOPSEMA and entities liable for levies under the Levies Act.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:14Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-374014",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-12-05",
+   "stage_hint": null,
+   "brief": "The Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment (Regulations References) Bill 2018 makes technical amendments to future-proof references to regulations in the levies act, mirroring changes to the OPGGS Act and ensuring cost-recovery levies for the National Offshore Petroleum Safety and Environmental Management Authority."
+  }
+ ],
+ "acts": []
+}

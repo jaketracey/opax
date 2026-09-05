@@ -1,0 +1,442 @@
+{
+ "key": "au-federal-r7249",
+ "title": "Privacy and Other Legislation Amendment Bill 2024",
+ "short_title": "Privacy and Other Legislation Amendment Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-09-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2024-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7249_ems_a01fc1bd-4aa3-4fc2-87d7-ed8aa84ab564%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7249_ems_3368674a-a8c7-4741-865b-154cd6901275%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7249_ems_ae0405d8-84cd-4536-8af9-8ef2e81053fb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7249%22",
+   "document_date": "2024-09-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00128",
+   "document_date": "2024-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-10486",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan I will now deal with the Privacy and Other Legislation Amendment Bill 2024, first dealing with the second reading amendments circulated by the opposition. The question is that the opposition amendments on sheets 3163 and 3227 be agreed to. _Opposition's circulated amendments—_ SHEET 3163 At the end of the motion, add \", but the Senate notes that: (a) this bill inappropriately consolidates 3 separate and distinct matters into a single bill, hindering the Senate in expressing its view on distinct matters about which opinions may reasonably differ; (b) the Government decided not to release any cost-benefit or impact analysis of this legislation, hindering the Senate in understanding the effects of the proposed changes; (c) despite requests from multiple stakeholders and the highly technical nature of the legislation, the Government decided not to conduct an exposure draft process, preventing those affected from understanding the impact of the legislation before it was introduced into the Parliament; (d) the Government provided inadequate time for inquiry into the legislation, preventing those affected—including critical stakeholders who are directly affected—from properly scrutinising the legislation; and (e) these basic failures of process prevent the Senate from carrying out its democratic function of scrutinising legislation and are inconsistent with the Government's own commitment to transparency\". \\_\\_\\_\\_\\_ SHEET 3227 At the end of the motion, add \", but the Senate notes that both the Coalition and Labor support doxxing reforms\".",
+   "stage": "Second reading",
+   "ayes": 37,
+   "noes": 17,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/48"
+  },
+  {
+   "key": "federal-senate-10487",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "David Shoebridge by leave—Could I have the minutes record that because we wanted an efficient process we didn't split those two, but the Greens do not support 3227. Andrew McLachlan Yes, it will be recorded that the Greens do not support 3227. David Pocock by leave—Please could I note my support for 3227. Andrew McLachlan It is noted. The question now is that the bill be now read a second time. Question agreed to. Bill read a second time. I will now deal with the Committee of the Whole amendments, starting with amendments circulated by the government. I understand the minister has documents to table. Katy Gallagher I table an addendum to the explanatory memorandum relating to the Privacy and Other Legislation Amendment Bill 2024. The addendum responds to matters raised by the Scrutiny of Bills Committee and the Legal and Constitutional Affairs Legislation Committee. I also table a supplementary explanatory memorandum relating to government amendments to be moved to this bill. Andrew McLachlan We come to sheet RZ120. Anne Ruston Could I ask that amendments on sheet RZ120 be separated and put separately? So can amendments (1) to (14) be put separately to amendments (15) to (35)? Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/49"
+  },
+  {
+   "key": "federal-senate-10488",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan I will now deal with Committee of the Whole amendments circulated by the opposition. We are coming to sheet 3144, amendment (2). The question before the Senate is that schedule 2 stand as printed. _The opposition opposed schedule 2 in the following terms—_ (2) Schedule 2, page 59 (line 1) to page 74 (line 24), to be opposed.",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/50"
+  },
+  {
+   "key": "federal-senate-10489",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan This means that the opposition amendment on sheet 3144 cannot be moved. We are now on sheets 3016, 3017 and 3018 in the name of the Australian Greens. The question is that the Australian Greens amendments on sheets 3016 revised, 3017 revised and 3018 be agreed to. _Australian_ _Greens' circulated amendments—_ SHEET 3016 REVISED (1) Clause 2, page 2 (after table item 7), insert: (2) Schedule 1, page 58 (after line 27), at the end of the Schedule, add: Part 17 — Meaning of personal information _Privacy Act 1988_ 92 Subsection 6(1) (definition of _de-identified_ ) Omit \"is no longer about an identified individual\", substitute \"no longer relates to an identified individual\". 93 Subsection 6(1) (definition of _personal information_ ) Omit \"about an identified individual\", substitute \"that relates to an identified individual\". 94 Subsection 6(1) Insert: _reasonably_ _identifiable_: an individual is _reasonably identifiable_ if the individual is capable of being distinguished from other individuals, even if the identity of the individual is not known. \\_\\_\\_\\_\\_ SHEET 3017 REVISED (1) Clause 2, page 2 (after table item 7), insert: (2) Schedule 1, page 58 (after line 27), at the end of the Schedule, add: Part 16 — Meaning of consent _Privacy Act 1988_ 90 Subsection 6(1) (definition of _consent_ ) Repeal the definition, substitute: _consent_ means: (a) when used in relation to the collection, use or disclosure of information that is about an individual—consent that is in accordance with subsection (12); and (b) otherwise—express consent or implied consent. 90A At the end of section 6 Add: (12) For the purposes of paragraph (a) of the definition of _consent_ in subsection (1): (a) the consent must be: (i) voluntary; and (ii) informed; and (iii) current; and (iv) specific; and (v) unambiguous; and (b) the individual must be able to withdraw the consent in a manner that is easily accessible to the individual. 91 Application of amendment The amendment of the _Pr",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 22,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 26,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/51"
+  },
+  {
+   "key": "federal-senate-10490",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan The question now is that the remaining stages of the bill be agreed to and the bill be now passed.",
+   "stage": "Third reading",
+   "ayes": 31,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 7,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/52"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Privacy and Other Legislation Amendment Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00128",
+   "assent_date": "2024-12-10"
+  }
+ ]
+}

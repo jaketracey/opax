@@ -1,0 +1,84 @@
+{
+ "key": "au-federal-s963",
+ "title": "Recognition of Foreign Marriages Bill 2014",
+ "short_title": "Recognition of Foreign Marriages Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2014-05-15",
+ "originating_house": "senate",
+ "sponsor": "HANSON-YOUNG, Sen Sarah",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10711",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s963%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s963%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s963%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s963%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s963%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s963%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s963%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s963%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s963_ems_e058eec4-874d-408b-bd06-ba4f957c6504%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s963%22",
+   "document_date": "2014-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,332 @@
+{
+ "key": "au-federal-r6811",
+ "title": "Electoral Legislation Amendment (Voter Integrity) Bill 2021",
+ "short_title": "Electoral Legislation Amendment (Voter Integrity) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Special Minister of State",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6811%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6811%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6811%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6811%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6811_ems_b170411c-21e9-40d2-a812-8c00c3ead7fb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6811%22",
+   "document_date": "2021-10-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-28",
+  "sentences": [
+   "This bill would require voters to show identification before voting at any polling place.",
+   "It would define acceptable ID types and let voters without ID use a declaration vote or have another enrolled person attest to their identity.",
+   "The bill follows recommendations from reports on the 2013, 2016, and 2019 elections."
+  ],
+  "changes": [
+   "Voters must present identification before receiving a ballot paper.",
+   "Voters without ID may cast a declaration vote or have another enrolled person attest to their identity.",
+   "The bill defines acceptable forms of identification, including digital versions."
+  ],
+  "affected": "Voters, the Australian Electoral Commission, and polling staff.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7490",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an amendment to a [motion](https://theyvoteforyou.org.au/divisions/representatives/2021-10-28/2) \"*that the resumption of the debate be made an order of the day for the next day of sitting*.\" This means the original motion will remain unchanged. This division related to the [Electoral Legislation Amendment (Voter Integrity) Bill 2021](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6811). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"the resumption of the debate be made an order of the day for the first sitting after 1 January 2023\".*",
+   "stage": "Second reading",
+   "ayes": 56,
+   "noes": 50,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 32,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 105
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-10-28/1"
+  },
+  {
+   "key": "federal-representatives-7491",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-10-28.15.1) to end debate on [the bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6811) today and resume on the next sitting day, which will be in [late November](https://www.aph.gov.au/News_and_Events/Events_Calendar/Events_Search_Result#range=yearly&display=calendar&from=2021-01-01&to=2021-12-31&senate=1&house=1&estimates=1&sb=1&sa=1&ss=1&committees=0&sh=0&hh=0&jh=0&sc=0&ir=0&visit=0&tr=0&se=0&ex=0&od=0&general=0&pubhol=0).",
+   "stage": "Second reading",
+   "ayes": 56,
+   "noes": 50,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 32,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 105
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-10-28/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-414773",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-28",
+   "stage_hint": null,
+   "brief": "The Electoral Legislation Amendment (Voter Integrity) Bill 2021 requires voters to present identification documentation before receiving a ballot paper at pre-poll or polling day, with options including photographic ID, government documents, or utility bills, and alternatives such as attestation by another enrolled voter or a declaration vote for those without ID."
+  },
+  {
+   "slug": "speech-414784",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-28",
+   "stage_hint": null,
+   "brief": "The Morrison-Joyce Government's Electoral Legislation Amendment (Voter Integrity) Bill 2021 was criticised as an attempt to suppress voting and undermine democracy, with claims it would cause longer queues at polling places. The speaker moved to discharge notice No. 6, government business, relating to the bill from the Notice Paper."
+  },
+  {
+   "slug": "speech-414785",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-28",
+   "stage_hint": null,
+   "brief": "The motion argued that voter fraud is vanishingly small according to the AEC, with no prosecutions for multiple voting at the last election, and accused the Morrison-Joyce Government of trying to ram through a bill to stop Australians voting, undermining democracy by importing Trump-era tactics, and causing longer weekend lines. It also noted the Prime Minister was the only world leader who did not condemn the Capitol attacks."
+  },
+  {
+   "slug": "speech-414913",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor opposed the Electoral Legislation Amendment (Voter Integrity) Bill 2021 without reading it, claiming the bill would align Australia with other democracies requiring voter ID, and cited a Queensland election where voter ID led to higher turnout."
+  },
+  {
+   "slug": "speech-415840",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The committee's 14th scrutiny report of 2021 raises human rights concerns about aged care restrictive practices amendments, the Voter Integrity Bill, and NDIS plan variation powers, seeking further information or recommending amendments."
+  },
+  {
+   "slug": "speech-415841",
+   "speaker": "Graham Douglas Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The deputy chair argued that the Electoral Legislation Amendment (Voter Integrity) Bill 2021 lacked evidence of voter impersonation and risked disproportionately affecting Indigenous persons, people experiencing homelessness (around 100,000 nationally), and domestic violence victims. For the National Disability Insurance Scheme Amendment (Participant Service Guarantee and Other Measures) Bill 2021, the committee recommended amendments requiring participant consent and benefit for any plan variations by the CEO."
+  },
+  {
+   "slug": "speech-415851",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Electoral Legislation Amendment (Voter Integrity) Bill 2021, arguing it is a voter suppression tool that would require all electors to prove identity despite vanishingly low rates of multiple voting (0.001% of 16 million voters, with only 24 referred for investigation). The speaker also criticised the government for failing to establish a national integrity commission and for allowing government members to spread COVID-19 misinformation."
+  },
+  {
+   "slug": "speech-415855",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Electoral Legislation Amendment (Voter Integrity) Bill 2021, requiring voter ID for in-person voting, would prevent multiple voting (citing about 2,000 multiple votes at the last federal election, including one person voting 13 times) and rejected claims it disenfranchises First Nations people, noting declaration votes are available. He also cited Queensland election data showing higher turnout with voter ID in 2015 than without in 2017 and 2020, and accused opponents of \"Trump derangement syndrome.\""
+  },
+  {
+   "slug": "speech-415857",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "Labor opposed the Electoral Legislation Amendment (Voter Integrity) Bill 2021, arguing it would suppress voting by requiring ID, particularly harming First Nations and culturally diverse communities, and noted that out of over 15 million votes in the last election only about 2,000 multiple votes were recorded with no prosecutions."
+  },
+  {
+   "slug": "speech-415859",
+   "speaker": "Warren Edward Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued the Electoral Legislation Amendment (Voter Integrity) Bill 2021 is unnecessary and would disproportionately disenfranchise Aboriginal people, particularly in remote communities like Lingiari where 42% of electors are Aboriginal, citing low enrolment (68.7% in Northern Territory) and turnout (around 45%) and past AEC budget cuts reducing staff and education programs. The speaker called the bill discriminatory and racist, urging Parliament to reject it."
+  },
+  {
+   "slug": "speech-415860",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Electoral Legislation Amendment (Voter Integrity) Bill 2021 is not intended to cause the ALP to lose the seat of Lingiari to CLP candidate Damien Ryan, and noted their own efforts to secure two federal seats in the Northern Territory."
+  },
+  {
+   "slug": "speech-415868",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Electoral Legislation Amendment (Voter Integrity) Bill 2021 and supported an amendment by the member for Scullin, arguing the bill would suppress votes from First Nations, young, culturally diverse and disadvantaged Australians. They cited AEC evidence that double voting is negligible—2,000 of 15 million votes, 19 investigated cases and no prosecutions—and criticised the government's integrity record, including raising donation disclosure thresholds to $14,500 and failing to deliver an integrity commission."
+  },
+  {
+   "slug": "speech-415874",
+   "speaker": "Lucy Elizabeth Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Electoral Legislation Amendment (Voter Integrity) Bill, which requires voter ID at federal elections, citing recommendations from the Joint Standing Committee on Electoral Matters' 2013, 2016 and 2019 reports. The bill includes $5.6 million for AEC implementation, $9.4 million for Indigenous electoral participation, and allows a broad range of ID documents or an attestation form for voters without ID."
+  },
+  {
+   "slug": "speech-415875",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued the Electoral Legislation Amendment (Voter Integrity) Bill 2021 is a voter suppression bill that undermines democracy, and criticised Liberal Party MPs for lacking understanding of diverse life experiences."
+  },
+  {
+   "slug": "speech-415877",
+   "speaker": "Rowan Eric Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that requiring voter identification is necessary to protect electoral integrity, rejecting claims it disenfranchises Indigenous Australians and noting that his own remote Indigenous communities use mobile phones and support him. He also cited close election results to argue that even one corrupted vote could change a government, and opposed electronic voting as too vulnerable to manipulation."
+  },
+  {
+   "slug": "speech-415878",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Electoral Legislation Amendment (Voter Integrity Bill) 2021 is voter suppression that would cause 200-minute queues, disenfranchise voters with recently expired licences, and reduce funding for community sausage sizzles, comparing the prime minister’s ideas to Donald Trump’s."
+  },
+  {
+   "slug": "speech-415890",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Electoral Legislation Amendment (Voter Integrity) Bill 2021, arguing it would disenfranchise First Nations people, homeless individuals, and others without ID, while citing a 0.03% rate of multiple voting in 2019 with no prosecutions. They noted opposition from Indigenous leaders and organisations, and claimed the bill was a solution to a nonexistent problem."
+  }
+ ],
+ "acts": []
+}

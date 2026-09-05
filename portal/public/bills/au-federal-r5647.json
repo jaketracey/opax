@@ -1,0 +1,84 @@
+{
+ "key": "au-federal-r5647",
+ "title": "Migration Amendment (Family Violence and Other Measures) Bill 2016",
+ "short_title": "Migration Amendment (Family Violence and Other Measures) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-03-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5647%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5647%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5647%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5647_ems_68013935-f53e-4d95-85a7-d4a215ff7755%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5647%22",
+   "document_date": "2016-03-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-16",
+  "sentences": [
+   "This bill is part of a package that would create a system for approving people who sponsor family visa applicants.",
+   "The system would give officials the power to check sponsors, set legal duties for them, and punish rule-breaking with fines or other penalties.",
+   "The source describes only the work visa sponsorship framework already in the Migration Act and does not give a start date, threshold, or list of changes for this bill."
+  ],
+  "changes": [
+   "The bill would require sponsors to be assessed and approved before they can sponsor someone.",
+   "The bill would impose legal duties on sponsors.",
+   "The bill would allow civil penalties and administrative sanctions if sponsors break their duties.",
+   "The bill would let information be shared between relevant parties."
+  ],
+  "affected": "Sponsors of family visa applicants would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-330566",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Family Violence and Other Measures) Bill 2016 was introduced to extend the assessable sponsorship framework to family sponsored visas, replacing unenforceable undertakings with statutory obligations enforced by civil penalties and administrative sanctions. The framework requires sponsor approval before visa applications, enables refusal, cancellation or barring of sponsors for family violence, and improves information sharing."
+  }
+ ],
+ "acts": []
+}

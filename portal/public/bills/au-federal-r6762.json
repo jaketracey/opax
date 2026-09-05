@@ -1,0 +1,227 @@
+{
+ "key": "au-federal-r6762",
+ "title": "National Security Legislation Amendment (Comprehensive Review and Other Measures No. 1) Bill 2021",
+ "short_title": "National Security Legislation Amendment (Comprehensive Review and Other Measures No. 1) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-11-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2022-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6762%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6762%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6762%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6762%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6762%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6762%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6762%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6762%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6762%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6762%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6762_ems_f6343e8e-dc03-4b70-9f67-6e2b59009744%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6762_ems_6e6dc62f-ec30-4bbf-91d0-d81bf7685cab%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6762%22",
+   "document_date": "2021-11-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00031",
+   "document_date": "2022-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-11-25",
+  "sentences": [
+   "The bill would let intelligence agency heads decide to collect intelligence on an Australian person overseas without a minister's prior approval when that person's safety is in immediate danger.",
+   "A new section 9D in the Intelligence Services Act would allow agency heads or their delegates to act without ministerial authorisation in emergencies where an Australian person outside Australia faces an imminent safety risk.",
+   "The change implements recommendation 52 of the Comprehensive Review and addresses situations such as hostage-taking or arbitrary detention overseas."
+  ],
+  "changes": [
+   "Creates a new emergency authorisation power for intelligence agency heads to act without ministerial approval when an Australian person's safety is at imminent risk.",
+   "Removes the requirement for ministerial or emergency authorisation in certain urgent overseas situations involving Australian persons.",
+   "Applies to Australian persons located outside Australia."
+  ],
+  "affected": "Intelligence agencies covered by the Intelligence Services Act (ASIS, ASD and AGO) and Australian persons overseas whose safety is at imminent risk.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7684",
+   "date": "2022-03-30",
+   "house": "senate",
+   "question": "National Security Legislation Amendment (Comprehensive Review and Other Measures No. 1) Bill 2021 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 42,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 17,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-415921",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-11-25",
+   "stage_hint": null,
+   "brief": "The government introduced the National Security Legislation Amendment (Comprehensive Review and Other Measures No. 1) Bill 2021, implementing 13 recommendations from the Richardson comprehensive review and the 2017 independent intelligence review. The bill includes emergency authorisation for intelligence agencies to assist Australians at imminent risk overseas, extends travel document suspension from 14 to 28 days, and requires agencies to publish privacy rules."
+  },
+  {
+   "slug": "speech-419530",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The speaker presented four reports from the Parliamentary Joint Committee on Intelligence and Security: advisory reports on the Security Legislation Amendment (Critical Infrastructure Protection) Bill 2022 and the National Security Legislation Amendment (Comprehensive Review and Other Measures No. 1) Bill 2021; an inquiry into national security risks affecting the higher education and research sector; and a statement on the review of regulations listing Hizballah and The Base as terrorist organisations."
+  },
+  {
+   "slug": "speech-419531",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "Four unanimous bipartisan reports were tabled covering Hezbollah and The Base listings, national security risks in higher education, the critical infrastructure protection bill, and national security legislation amendments. The speaker welcomed the government's decision to list the entirety of Hezbollah as a terrorist organisation and supported passing the critical infrastructure bill despite consultation concerns, while noting many Richardson review recommendations remain outstanding."
+  },
+  {
+   "slug": "speech-419554",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The speaker announced the National Security Legislation Amendment (Comprehensive Review and Other Measures No. 1) Bill 2021, which implements some recommendations from Dennis Richardson’s review of the national intelligence community and rejects one, while also adopting measures from the 2017 Independent Intelligence Review. The bill includes 14 schedules addressing operational challenges for ASIO, ASIS, ASD, AGO, DIO, and ONI, such as emergency authorisations for intelligence on Australians overseas, class-based ministerial authorisations for terrorist-linked persons, and expanded onshore ASIS support for ASIO, with the Parliamentary Joint Committee on Intelligence and Security recommending passage subject to a clarification on lawyer protections."
+  },
+  {
+   "slug": "speech-419555",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The National Security Legislation Amendment (Comprehensive Review and Other Measures No. 1) Bill 2021 was presented, with the Parliamentary Joint Committee on Intelligence and Security recommending it be passed without amendments. A replacement explanatory memorandum was also tabled, incorporating the committee's recommendation and additional text requested by the Senate Scrutiny of Bills Committee."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Security Legislation Amendment (Comprehensive Review and Other Measures No. 1) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00031",
+   "assent_date": "2022-04-01"
+  }
+ ]
+}

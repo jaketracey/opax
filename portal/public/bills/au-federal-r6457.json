@@ -1,0 +1,455 @@
+{
+ "key": "au-federal-r6457",
+ "title": "Australian Crime Commission Amendment (Special Operations and Special Investigations) Bill 2019",
+ "short_title": "Australian Crime Commission Amendment (Special Operations and Special Investigations) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-11-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2019-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6457%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6457%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6457%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6457%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6457%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6457%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6457%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6457_ems_58e4ba21-5758-4232-9006-1034e43dc5af%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6457%22",
+   "document_date": "2019-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00114",
+   "document_date": "2019-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-11-28",
+  "sentences": [
+   "This bill would make sure past and present special operations and investigations by the Australian Crime Commission are legally valid.",
+   "It would change how the Australian Criminal Intelligence Commission Board authorises future special operations and investigations.",
+   "The government says the bill would have minimal financial impact on revenue, though compensation may be paid if property is acquired on unjust terms."
+  ],
+  "changes": [
+   "Confirms the legal validity of past and present special ACC operations and investigations.",
+   "Changes the authorisation process for the ACIC Board to approve future special operations and investigations.",
+   "Makes related amendments to the Australian Crime Commission Act 2002."
+  ],
+  "affected": "The Australian Criminal Intelligence Commission Board and the Australian Crime Commission are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-6164",
+   "date": "2019-12-05",
+   "house": "senate",
+   "question": "Australian Crime Commission Amendment (Special Operations and Special Investigations) Bill 2019 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 24,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-05/13"
+  },
+  {
+   "key": "federal-senate-6167",
+   "date": "2019-12-05",
+   "house": "senate",
+   "question": "The majority voted in favour of of [motion](https://www.openaustralia.org.au/senate/?gid=2019-12-05.234.24) to speed up consideration of the [Australian Crime Commission Amendment (Special Operations and Special Investigations) Bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6457). Specifically, they voted to include that bill in paragraph (a) of the motion below. ### Motion text > *That:* > > *(a) the following bills be called on at 4.30 pm and the questions on all remaining stages shall be put:* > >> *Australian Crime Commission Amendment (Special Operations and Special Investigations) Bill 2019* >> >> *Farm Household Support Amendment (Relief Measures) Bill (No. 2) 2019* >> >> *Special Recreational Vessels Bill 2019* > > *(b) paragraph (a) of this order shall operate as a limitation of debate under standing order 142;* > > *(c) divisions may take place after 4.30 pm for the purposes of the bills only; and* > > *(d) after conclusion of consideration of the bills the routine of business shall be:* > >> *(i) ministerial statements,* >> >> *(ii) end of 2019 sittings statements,* >> >> *(iii) messages,* >> >> *(iv) committee membership,* >> >> *(v) a motion relating to the next meeting of the Senate and leave of absence for all senators,* >> >> *(vi) adjournment proposed, and* >> >> *(vii) the Senate shall adjourn not later than 40 minutes after the adjournment is proposed.*",
+   "stage": "Business motion",
+   "ayes": 34,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "member": 8,
+    "earliest": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-05/16"
+  },
+  {
+   "key": "federal-senate-6168",
+   "date": "2019-12-05",
+   "house": "senate",
+   "question": "Australian Crime Commission Amendment (Special Operations and Special Investigations) Bill 2019 - Third Reading - Statutory review",
+   "stage": "Third reading",
+   "ayes": 11,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "dated": 20,
+    "earliest": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-05/17"
+  },
+  {
+   "key": "federal-senate-6169",
+   "date": "2019-12-05",
+   "house": "senate",
+   "question": "The majority voted against [amendment (2)](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6457_amend_9133ddad-d339-4baf-aeed-60a984f2fe71%22;rec=0), which was introduced by the Centre Alliance, which means it failed. The amendment was to introduce a sunset provision so that the bill would stop having legal effect after two years. ### Amendment text > *(2) Page 2 (after line 11), after clause 3, insert:* > >> **5 Expiration of amendments** >> >> *This Act ceases to be in force at the start of the day after the end of the period of 2 years beginning on the day the Australian Crime Commission Amendment (Special Operations and Special Investigations) Act 2019 commenced.* ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd065), the bill was introduced in order to: > * *respond to concern about the validity of certain [ACIC](https://en.wikipedia.org/wiki/Australian_Criminal_Intelligence_Commission) determinations and other documents raised in the case of [CXXXVIII v Commonwealth](http://www.austlii.edu.au/cgi-bin/viewdoc/au/cases/cth/HCATrans/2019/206.html) by confirming the validity of current and former Australian Crime Commission (ACC) special operations and special investigations, the lawfulness of which has been questioned and* > * *amend the process by which the Australian Criminal Intelligence Commission (ACIC) Board authorises future special operations and special investigations, including by amending the threshold of which it must be satisfied.* Although the bill does not expand or alter the powers available to ACIC, parties [like the Centre Alliance](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd065) were concerned by the retroactive nature of the bill. That is, it will confirm the validity of current and former special operations and special investigations at a time when the High Court is c",
+   "stage": "Third reading",
+   "ayes": 11,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "dated": 20,
+    "earliest": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-05/18"
+  },
+  {
+   "key": "federal-senate-6170",
+   "date": "2019-12-05",
+   "house": "senate",
+   "question": "Australian Crime Commission Amendment (Special Operations and Special Investigations) Bill 2019 - Third Reading - Retroactive application",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "dated": 21,
+    "earliest": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-05/19"
+  },
+  {
+   "key": "federal-senate-6171",
+   "date": "2019-12-05",
+   "house": "senate",
+   "question": "Australian Crime Commission Amendment (Special Operations and Special Investigations) Bill 2019 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "member": 8,
+    "earliest": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-05/20"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-385306",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "The government moved the Australian Crime Commission Amendment (Special Operations and Special Investigations) Bill to streamline authorisation processes for the ACIC board and confirm existing determinations, without expanding powers. The bill also makes minor consequential amendments to related acts."
+  },
+  {
+   "slug": "speech-385892",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "Labor supported the Australian Crime Commission Amendment (Special Operations and Special Investigations) Bill 2019, which streamlines authorisation for special operations and confirms the validity of existing determinations without expanding the commission's powers. The government agreed to refer the bill's operation to the Parliamentary Joint Committee on Law Enforcement for review within 12 months of passage."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Crime Commission Amendment (Special Operations and Special Investigations) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00114",
+   "assent_date": "2019-12-10"
+  }
+ ]
+}

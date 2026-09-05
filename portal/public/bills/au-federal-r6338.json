@@ -1,0 +1,217 @@
+{
+ "key": "au-federal-r6338",
+ "title": "Higher Education Support Amendment (Cost Recovery) Bill 2019",
+ "short_title": "Higher Education Support Amendment (Cost Recovery) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2019-10-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6338%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6338%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6338%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6338%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6338%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6338%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6338%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6338%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6338%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6338%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6338%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6338%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6338%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6338_ems_1a50de4b-64a0-470b-9648-3a3aae70bcc2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6338%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00086",
+   "document_date": "2019-10-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "The bill would charge universities and other higher education providers for their approval to offer FEE-HELP loans.",
+   "It would introduce an application fee for new providers and an annual charge for existing providers, with amounts set by regulation.",
+   "The annual charge would vary by provider size based on yearly enrolments, and a fees schedule consistent with government cost recovery guidelines would be published before regulations take effect."
+  ],
+  "changes": [
+   "The bill would require providers to pay an annual charge as a condition of their approval under the Higher Education Support Act 2003.",
+   "The bill would create an application fee for prospective FEE-HELP providers to cover the costs of processing their applications.",
+   "The bill would allow the Department of Education to collect and recover the annual charge."
+  ],
+  "affected": "Higher education providers whose students can access FEE-HELP loans, and prospective providers seeking that approval.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:52Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5919",
+   "date": "2019-10-15",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2019-10-15.5.2) to agree with the bills' main idea. In parliamentary jargon, they voted to read the bills for a [second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). The Senate can now discuss them in greater detail. ### What is the bills' main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd003): > *Together, the [Charges Bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6339) and the [Cost Recovery Bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6338) propose to give effect to a 2018–19 Budget measure to introduce partial cost recovery arrangements for higher education providers whose students access the Higher Education Loan Program (HELP).* > > *These arrangements comprise two new charges:* > > * *an annual higher education provider charge to partially recover the cost of administering HECS‑HELP and FEE-HELP and* > * *an application fee to be paid by registered higher education providers seeking to become FEE‑HELP providers, to recover the cost of administering the FEE-HELP application process.*",
+   "stage": "Second reading",
+   "ayes": 36,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "dated": 19,
+    "earliest": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-10-15/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-377410",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-04",
+   "stage_hint": null,
+   "brief": "The bill introduces an application fee for new higher education providers and an annual charge on existing providers to recover the costs of administering the HELP loan programs, effective from 1 January 2020, with an estimated $11.7 million in savings over four years."
+  },
+  {
+   "slug": "speech-380417",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "Labor supported the higher education cost-recovery bills but moved an amendment to record that the government has damaged higher education through billions in cuts, including a $134.8 million research cut, a $2.2 billion cut from capping undergraduate places, and an estimated 235,000 students missing out on university places by 2031. The party said the charges should be absorbed by universities and not passed on to students."
+  },
+  {
+   "slug": "speech-380418",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's cost-recovery fees on universities for HELP administration would worsen Australia's already high tertiary fees, and noted the expected savings of $11 million could instead fund the CapTel program. They cited that 140,000 fewer apprentices and 24.5% fewer TAFE enrolments have occurred since 2013, and that one in seven students report going without food."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Higher Education Support Amendment (Cost Recovery) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00086",
+   "assent_date": "2019-10-28"
+  }
+ ]
+}

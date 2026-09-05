@@ -1,0 +1,454 @@
+{
+ "key": "au-federal-r5468",
+ "title": "Water Amendment Bill 2015",
+ "short_title": "Water Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "passed",
+ "status_as_of": "2015-10-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5468_ems_3f8f9aaa-95d5-41bb-bd5e-d1876331f90f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5468_ems_b1ed6c64-2d40-4f1a-b0c2-022d314b5688%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5468%22",
+   "document_date": "2015-05-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00133",
+   "document_date": "2015-10-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-28",
+  "sentences": [
+   "The bill would set a maximum on how much surface water the Commonwealth can buy in the Murray-Darling Basin.",
+   "It would also confirm a target for recovering extra water for the environment through efficiency projects paid from a special account.",
+   "The cap of 1,500 gigalitres on purchases was announced in the government's Water Recovery Strategy and is now being written into law."
+  ],
+  "changes": [
+   "The bill imposes a 1,500 gigalitre limit on Commonwealth surface water purchases across the Murray-Darling Basin.",
+   "The bill enshrines a commitment to recover 450 gigalitres of additional water for the environment through efficiency measures.",
+   "The bill provides assurance to rural and irrigation communities about the implementation of the Basin Plan."
+  ],
+  "affected": "Rural and irrigation communities, businesses, and communities throughout the Murray-Darling Basin.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:55:39Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3919",
+   "date": "2015-09-14",
+   "house": "senate",
+   "question": "David Leyonhjelm This bill is proposing some sensible amendments to the Water Act to cut buybacks from farmers to 1500 gigalitres, and I support that. However, I have moved two amendments which I think I should explain once again for the benefit of the chamber. The first amendment will counter water hoarding by the Commonwealth Environmental Water Holder. As the law currently stands, the Commonwealth Environmental Water Holder is required to hold and store water even when environmental watering plans have been fully utilised. My amendment removes the ban on selling water that is excess to environmental needs by removing a requirement to retain water if it can be stored for a future accounting period. This idea, I believe, is supported by the National Party—certainly by the Victorian National's leader, Mr Peter Walsh, former water minister in Victoria. I do not see why it should not be supported at least by the Nationals in this place. The second amendment that I am proposing increases the total water that can be used by farmers in the basin by around one per cent. This is a modest change that will benefit farmers and not threaten the environment. The increased water for farmers is achieved by reducing water use reduction targets listed in the Basin Plan. The government argues these sorts of amendments will fall out of their current review process, and we should not proceed with them now. Quite frankly, I think that amounts to the government saying, 'We want our name on these measures, not your name, Senator Leyonhjelm.' I do not accept that. We have a responsibility in this parliament to promptly amend Commonwealth law when a clearly beneficial change is before us. We should not delay in the hope that bureaucratic committee processes will come up with something sensible in a timely way. These amendments do not threaten environmental outcomes, and additional water will also be available to farmers who wish to purchase it at a reasonable price. They will improve the B",
+   "stage": "In committee",
+   "ayes": 6,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 11,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-09-14/1"
+  },
+  {
+   "key": "federal-senate-3920",
+   "date": "2015-09-14",
+   "house": "senate",
+   "question": "The majority of Senators voted in favour of reading of the [Water Amendment Bill 2015](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5468) a “third time” — which means that the bill will now become law.",
+   "stage": "Third reading",
+   "ayes": 39,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 11,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-09-14/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-311066",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-28",
+   "stage_hint": null,
+   "brief": "The Water Amendment Bill legislates a 1,500-gigalitre cap on Commonwealth surface water purchases for the Murray-Darling Basin and expands infrastructure programs to recover water for the environment, with a continued investment of $2.5 million per day through to 2019."
+  },
+  {
+   "slug": "speech-317798",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The Water Amendment Bill 2015 enacts a coalition commitment to cap surface water purchases in the Murray‑Darling Basin at 1,500 gigalitres, with the opposition also supporting the legislation."
+  },
+  {
+   "slug": "speech-317801",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Water Amendment Bill 2015, highlighting bipartisan support after extensive consultation with stakeholders, and announced a cap of 1,500 gigalitres on water purchases to provide certainty for Murray-Darling Basin communities."
+  },
+  {
+   "slug": "speech-317802",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Water Amendment Bill 2015 and the cap, noting that prior water recovery efforts—including $700 million for 500 gigalitres under the Living Murray, 282 gigalitres from Water for Rivers, and 75 gigalitres from pipeline projects—had already returned water to the system, and warned that the previous government's proposal to recover 6,000 gigalitres would have devastated farming communities."
+  },
+  {
+   "slug": "speech-317809",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The speaker endorsed the Water Amendment Bill 2015, which legislates a 1,500 gigalitre cap on water buybacks in the Murray-Darling Basin, arguing it prioritises infrastructure investment over buybacks to achieve the 2,750-gigalitre target. He cited the Trangie-Nevertire scheme as a successful infrastructure project in his Parkes electorate and criticised the purchase of Twynam Pastoral Company water from Collymongle Station for devastating the town of Collarenebri by costing 100 permanent jobs."
+  },
+  {
+   "slug": "speech-317810",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The Water Amendment Bill 2015 imposes a 1,500 gigalitre cap on voluntary water purchases to achieve the 3,200 gigalitre Murray-Darling Basin recovery target, shifting from buybacks to efficiency investments. The speaker supported the bill, noting 1,900 gigalitres already recovered, with 1,160 through purchases and 600 through infrastructure."
+  },
+  {
+   "slug": "speech-317811",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Water Amendment Bill 2015 and a 1,500‑gigalitre cap on water buybacks to restore confidence in irrigators, and argued for allowing the Commonwealth Environmental Water Holder to sell water on the temporary market to reinvest in environmental infrastructure."
+  },
+  {
+   "slug": "speech-317812",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Water Amendment Bill 2015 while raising concerns from constituents about the Murray-Darling Basin Plan's constraint strategies, particularly regarding environmental flows on the Goulburn River and releases from Hume Dam. The speaker noted that 50% of the basin's water falls in the electorate of Indi, and read a letter from farmer Jan Beer questioning the feasibility of proposed flows of 20,000 megalitres per day, the lack of socio-economic impact studies, insufficient property-level assessments, and the use of easements as mitigation."
+  },
+  {
+   "slug": "speech-317813",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The speech supported the Water Amendment Bill 2015, which legislates a 1,500-gigalitre cap on Murray-Darling water buybacks, arguing buybacks damage river communities and calling for the Commonwealth Environmental Water Holder to be allowed to trade water and invest proceeds in infrastructure. It also criticised the opposition for delaying the China-Australia Free Trade Agreement, which the speaker said would benefit farmers."
+  },
+  {
+   "slug": "speech-317837",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Murray-Darling Basin irrigation system is well-regulated and that irrigators did not take water during drought when allocations were zero, contrary to public misconceptions. They supported the 1,500 gigalitre buyback limit and efficiency measures, noting that $263.5 million in improvements returned 20 gigalitres to farmers and 77 gigalitres for environmental flows, with an efficiency dividend of 500–600 gigalitres identified."
+  },
+  {
+   "slug": "speech-317838",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "Labor supported the Water Amendment Bill 2015 but expressed reservations about its cap on water buybacks, warning it limits the government's flexibility to achieve the 3,200 gigalitre target for restoring the Murray-Darling Basin to health. The MP argued that the choice is between a healthy or unhealthy river system, not agriculture versus the environment, and pledged to hold the government accountable for meeting the target."
+  },
+  {
+   "slug": "speech-317839",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The Water Amendment Bill 2015 caps water buybacks at 1,500 gigalitres to provide certainty for farmers, businesses and communities in the Murray‑Darling Basin, especially in the Calare electorate where the Lachlan and Macquarie rivers support 40% of the state’s agricultural production. The speaker argued that previous buybacks disproportionately affected the Lachlan River and that full, on‑time implementation of the Basin Plan must balance environmental needs with the livelihoods of communities reliant on stored water."
+  },
+  {
+   "slug": "speech-317840",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Water Amendment Bill 2015 to cap water buyback at 1,500 gigalitres from Murray-Darling Basin irrigators, arguing that previous buybacks destroyed irrigator communities and that over 90% of buyback funds went to banks. He also criticised the additional 450 gigalitres recovery target and the constraints strategy, calling for engineering solutions and a comprehensive evaluation of the Basin Plan."
+  },
+  {
+   "slug": "speech-317841",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Water Amendment Bill 2015 should be supported, as it legislates a cap on surface water purchases in the Murray-Darling Basin at 1,500 gigalitres, and highlighted the basin's economic importance—accounting for over 50% of Australia's irrigated produce—and linked it to export opportunities from the China-Australia Free Trade Agreement, while criticising Bill Shorten's 2005 comment questioning future exports to China."
+  },
+  {
+   "slug": "speech-317856",
+   "speaker": "Bruce Scott",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-317858",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The Water Amendment Bill 2015 imposes a statutory cap of 1,500 gigalitres on Commonwealth surface water buybacks in the Murray-Darling Basin, and the speaker argued that this cap will restore confidence in irrigated agriculture while prioritising infrastructure investment over non-strategic purchases. The speaker also raised concerns about zero general security water allocations in the New South Wales Murray and the need for stronger community engagement on the Environmental Watering Plan."
+  },
+  {
+   "slug": "speech-317859",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The government legislated a 1,500 gigalitre cap on surface water purchases in the Murray-Darling Basin, with 1,952.9 gigalitres already recovered towards the 2,750 gigalitre target, leaving 335.4 gigalitres of headroom before the cap is reached. The bill prioritises infrastructure investment over water buybacks, backed by over $12 billion in funding through to 2024."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Water Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00133",
+   "assent_date": "2015-10-13"
+  }
+ ]
+}

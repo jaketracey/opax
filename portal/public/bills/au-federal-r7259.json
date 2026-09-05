@@ -1,0 +1,273 @@
+{
+ "key": "au-federal-r7259",
+ "title": "National Broadband Network Companies Amendment (Commitment to Public Ownership) Bill 2024",
+ "short_title": "National Broadband Network Companies Amendment (Commitment to Public Ownership) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-10-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2025-03-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7259_ems_dbaf313f-6db3-4b63-b47e-0afe71ce494a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7259%22",
+   "document_date": "2024-10-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00027",
+   "document_date": "2025-03-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-10-09",
+  "sentences": [
+   "This bill would write into law the government's existing policy that the company operating the National Broadband Network must stay in public hands.",
+   "It would remove the legislative conditions that currently allow the company to be privately owned and controlled, and add a new statement of parliamentary intent confirming the company should remain wholly owned by the Commonwealth.",
+   "The bill would also make two minor consequential amendments to the Telecommunications Act 1997, but does not change how the network operates, the company's governance, or the competition regulator's oversight."
+  ],
+  "changes": [
+   "Removes the legislative conditions that enable private ownership and control of NBN Co.",
+   "Inserts a new section 43A as a statement of parliamentary intent that NBN Co should remain wholly owned by the Commonwealth.",
+   "Amends the simplified outline in section 43 of the National Broadband Network Companies Act 2011.",
+   "Makes two minor consequential amendments to the Telecommunications Act 1997."
+  ],
+  "affected": "NBN Co Limited, the company that operates the National Broadband Network, and the Commonwealth government.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9410",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "question": "National Broadband Network Companies Amendment (Commitment to Public Ownership) Bill 2024 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 85,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-20/1"
+  },
+  {
+   "key": "federal-representatives-9411",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "question": "National Broadband Network Companies Amendment (Commitment to Public Ownership) Bill 2024 - Consideration in Detail - Universal service obligation",
+   "stage": "Consideration in detail",
+   "ayes": 16,
+   "noes": 48,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 63,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-20/2"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "National Broadband Network Companies Amendment (Commitment to Public Ownership) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00027",
+   "assent_date": "2025-03-27"
+  }
+ ]
+}

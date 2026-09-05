@@ -1,0 +1,212 @@
+{
+ "key": "au-federal-r6713",
+ "title": "Farm Household Support Amendment (Debt Waiver) Bill 2021",
+ "short_title": "Farm Household Support Amendment (Debt Waiver) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-06-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Water and the Environment",
+ "status": "passed",
+ "status_as_of": "2021-07-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6713%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6713%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6713%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6713%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6713%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6713%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6713%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6713%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6713%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6713%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6713%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6713%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6713%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6713_ems_057bf9cc-45a4-42d0-ae59-932ef0b90f93%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6713%22",
+   "document_date": "2021-06-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00075",
+   "document_date": "2021-07-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-02",
+  "sentences": [
+   "This bill would cancel the requirement to repay certain debts from the Farm Household Allowance program.",
+   "The bill would let the Secretary waive debts that arose from the business income reconciliation process between July 2015 and June 2020, but not if the recipient has already used all 1,460 days of payment.",
+   "Recipients with days left on their payment clock could choose to trade those days as partial payment for the debt instead of having the debt waived."
+  ],
+  "changes": [
+   "Waives repayment of certain classes of Farm Household Allowance debts from the business income reconciliation process.",
+   "Prevents double benefit by not re-crediting payment days when a debt is waived.",
+   "Allows the Secretary to waive a portion of a debt if the recipient still has days left to trade.",
+   "Gives recipients the choice to accept the waiver or keep their remaining payment days.",
+   "Extends the deadline for providing financial statements to June 2023.",
+   "Allows new debts from the extended deadline to also be waived."
+  ],
+  "affected": "Farmers and their partners who received Farm Household Allowance and incurred debts from the business income reconciliation process between 1 July 2015 and 30 June 2020.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-408849",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-17",
+   "stage_hint": null,
+   "brief": "Labor will support the Farm Household Support Amendment (Debt Waiver) Bill 2021, which waives debts calculated under the previous farm household allowance system from 2015 to 1 July 2020, but moved an amendment criticising the Coalition Government's failure to address farmers' challenges and its mishandling of debts, drawing parallels to the robodebt scandal."
+  },
+  {
+   "slug": "speech-408856",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-17",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment (Debt Waiver) Bill 2021 waives certain classes of farm debt, reflecting the government's support for Australian agriculture. The speaker also highlighted the Australia-United Kingdom Free Trade Agreement as creating new export opportunities for the sector."
+  },
+  {
+   "slug": "speech-409087",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment (Debt Waiver) Bill 2021 writes off historical business income reconciliation debts for up to 5,300 farmers and maintains the farm household allowance as a time-limited payment of four years in every ten."
+  },
+  {
+   "slug": "speech-409088",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Farm Household Support Amendment (Debt Waiver) Bill 2021 will waive certain debts incurred by farmers between 1 July 2015 and 30 June 2020, providing relief to those in financial hardship. The speaker also criticised the Morrison government and the National Party for lacking a national response to the mouse plague in New South Wales, and called on AusNet to reconsider the Western Victoria Transmission Network Project, which would place a terminal station on productive horticultural land at Mount Prospect, threatening potato farming and the McCain plant in Ballarat."
+  },
+  {
+   "slug": "speech-409089",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "South Australian potato producers could increase supply to McCain's factory to avoid any risk of a shortage. The Farm Household Support Amendment (Debt Waiver) Bill 2021 should pass to waive business income reconciliation debts for drought-affected farmers, and post-pandemic migration from Southeast Asia and the Pacific is needed to address labour shortages."
+  },
+  {
+   "slug": "speech-409090",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment (Debt Waiver) Bill waives debts from overestimated farm household allowance payments and extends eligibility to any four years within a ten-year period, while increasing the allowable farming asset threshold to $5 million. The speaker argued this support is necessary for farmers facing uncontrollable events like drought, floods, and the 2016 dairy price crisis, noting 16,000 recipients were helped."
+  },
+  {
+   "slug": "speech-409094",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment (Debt Waiver) Bill 2021 was commended, which waives repayment of historic debts from the business income reconciliation process for farm household allowance recipients. This waiver, effective from changes made on 1 July 2020, ensures consistent and fair treatment for all recipients and provides relief to farming families."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Farm Household Support Amendment (Debt Waiver) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00075",
+   "assent_date": "2021-07-23"
+  }
+ ]
+}

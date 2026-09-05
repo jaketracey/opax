@@ -1,0 +1,182 @@
+{
+ "key": "au-federal-r7366",
+ "title": "Health Legislation Amendment (Miscellaneous Measures No. 1) Bill 2025",
+ "short_title": "Health Legislation Amendment (Miscellaneous Measures No. 1) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-09-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health, Disability and Ageing",
+ "status": "passed",
+ "status_as_of": "2025-11-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7366%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7366%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7366%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7366%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7366%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7366%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7366%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7366%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7366%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7366%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7366%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7366%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7366%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-11-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7366%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7366_ems_b12b4119-5b13-44d3-b1ea-50c8d8ac8904%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7366%22",
+   "document_date": "2025-09-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00054",
+   "document_date": "2025-11-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-09-04",
+  "sentences": [
+   "This bill would make several changes to health insurance and medical program laws.",
+   "It would establish a new part in the Health Insurance Act 1973 for allocating Medicare provider numbers, including allowing a computer program to make certain decisions.",
+   "The bill would also delay the start of changes to assignment of Medicare benefits from 9 January 2026 to 1 July 2026."
+  ],
+  "changes": [
+   "Establish the function of allocating Medicare provider numbers in the Health Insurance Act 1973.",
+   "Delay commencement of changes to the Health Insurance Act 1973 introduced by the Health Insurance Legislation Amendment (Assignment of Medicare Benefits) Act 2024 to 1 July 2026.",
+   "Amend the Private Health Insurance Act 2007 to align with Services Australia's electronic systems for the Premiums Reduction Scheme.",
+   "Amend Part VD of the Health Insurance Act 1973 to enhance the Bonded Medical Program.",
+   "Remove the Medicare ban for ex-Medical Rural Bonded Scholarship Scheme participants who breach their return of service obligations.",
+   "Remove the requirement for students who do not complete their medical degree to repay the cost of their Commonwealth Supported Place."
+  ],
+  "affected": "Health professionals, private health insurers, medical students, and participants in the Bonded Medical Program.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:41Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1197222",
+   "speaker": "Rebecca White",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197404",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-10-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197866",
+   "speaker": "Jordon Steele-John",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2025-10-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Legislation Amendment (Miscellaneous Measures No. 1) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00054",
+   "assent_date": "2025-11-04"
+  }
+ ]
+}

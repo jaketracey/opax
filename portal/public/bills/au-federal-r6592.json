@@ -1,0 +1,252 @@
+{
+ "key": "au-federal-r6592",
+ "title": "Treasury Laws Amendment (2020 Measures No. 4) Bill 2021",
+ "short_title": "Treasury Laws Amendment (2020 Measures No. 4) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6592%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6592%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6592%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6592%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6592%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6592%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6592%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6592%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6592%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6592_ems_04b816d6-aa3b-43db-856d-fa5ddcf97703%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6592_ems_581017bd-c103-49b0-89b0-132196095456%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6592_ems_7737d037-fee9-4c6e-82c1-529543621562%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6592%22",
+   "document_date": "2020-10-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7083",
+   "date": "2021-03-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the original wording of the [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) - \"*that the bill be read a second time** - unchanged. Reading a bill for a second time is parliamentary jargon for agreeing with its main idea. This present motion was put after the MP for Whitlam Stephen Jones (Labor) proposed the [amended motion](https://www.openaustralia.org.au/debate/?id=2021-03-24.115.3) below. ### Amended motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes the Government:* > > *(1) has failed to deliver sufficient economic support to Australian workers, Australian families, and Australian businesses during the coronavirus pandemic;* > > *(2) has not implemented the full recommendations of the Parliamentary Joint Committee on Corporations and Financial Services inquiry into the operation and effectiveness of the Franchising Code of Conduct report, particularly in relation to applying adequate penalties to franchisors who act improperly;* > > *(3) has consistently failed to deliver adequate support for jobs and businesses in the renewable energy sector; and* > > *(4) continues to refuse to commit to implementing its election promise to deliver the legislated increases to superannuation\".*",
+   "stage": "Second reading",
+   "ayes": 68,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 38,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-03-24/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-405321",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "Labor will support the Treasury Laws Amendment (2020 Measures No. 4) Bill but will move a second reading amendment criticising the government on pandemic economic support, inadequate Franchising Code penalties, renewable energy policy, and its refusal to recommit to the superannuation guarantee. The speech also pointed to the ANAO report on the Collinsville coal project and the government falling short of its target of four million vaccinations."
+  },
+  {
+   "slug": "speech-405324",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor’s amendment prioritises superannuation funds over homeownership, blaming Labor for rising homeownership age from 24 to 36 since 1992. The Treasury Laws Amendment (2020 Measures No. 4) Bill 2020 addresses generation certificates, super complaints via AFCA, franchising codes, and COVID-19 powers."
+  },
+  {
+   "slug": "speech-405327",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government's proposed $133,000 maximum fine for franchising code breaches is inadequate and called for penalties of up to $10 million, noting that the government was forced to consider amendments after Labor's Senate bill passed."
+  },
+  {
+   "slug": "speech-405330",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Treasury Laws Amendment (2020 Measures No. 4) Bill 2020, which removes tax on refunds of large-scale generation certificate shortfall charges (estimated cost $70 million over forward estimates, effective from 1 January 2019), provides transitional arrangements for closing the Superannuation Complaints Tribunal with cases transferred to the Australian Financial Complaints Authority, and extends COVID-19 compliance modification powers. The speaker criticised the member for Whitlam (Stephen Jones) for moving amendments, accusing him of protecting industry super funds over ordinary Australians."
+  },
+  {
+   "slug": "speech-405331",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "Labor supported the bill with amendments to increase penalties for franchising code breaches, arguing the government has failed to protect small businesses from large corporations, and called for targeted wage subsidies for travel agents and tourism businesses affected by COVID-19."
+  },
+  {
+   "slug": "speech-405332",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (2020 Measures No. 4) Bill 2020, arguing it provides certainty for small and medium businesses to create jobs, and highlighted amendments to make large-scale generation shortfall charge refunds non-assessable non-exempt income and to increase penalties for breaches of the franchising code. The speaker also referenced consultation with the Australian Energy Council and CSIRO hydrogen research in the Ryan electorate."
+  },
+  {
+   "slug": "speech-405333",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The speaker argued the Treasury Laws Amendment Bill is insufficient and criticised the government for ending JobKeeper entirely, stating its rationales—moral obligation, employer-employee connections, need, and macroeconomic stability—still apply due to floods, a slow vaccine rollout (10% of target), and patchy recovery, particularly for sectors like travel agents and international aviation."
+  },
+  {
+   "slug": "speech-405334",
+   "speaker": "John Alexander",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2020 Measures No. 4) Bill 2020 includes four schedules: making refunds on large-scale generation shortfall charges non-assessable, non-exempt for income tax; transitioning Superannuation Complaints Tribunal records and cases to the Australian Financial Complaints Authority; increasing maximum civil penalties for breaches of industry codes, including the Franchising Code, from 300 to 600 penalty points; and extending the power to modify information and documentary requirements in response to the COVID-19 pandemic."
+  },
+  {
+   "slug": "speech-405335",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The member argued that the government's lack of renewable energy investment—down 80% since 2017—harms jobs, the economy, and the environment, and that ending JobKeeper prematurely will hurt the 10,000 people and 3,200 businesses in Dunkley still relying on it."
+  },
+  {
+   "slug": "speech-405336",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the national debt is heading toward $1.3 trillion and that the renewable energy target imposes a billion-dollar \"green tax\" on electricity, which ultimately benefits China. He also argued that compulsory superannuation reduces workers' disposable income and makes it harder for young Australians to save for a home deposit."
+  },
+  {
+   "slug": "speech-405337",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The bill clarifies that refunds of large-scale generation certificate shortfall charges are not taxable, closes the Superannuation Complaints Tribunal, increases maximum penalties for breaching industry codes from 300 to 600 penalty units (with franchising code penalties up to $10 million, three times the benefit, or 10% of annual turnover), and reimplements a temporary mechanism until 31 December 2021 to allow alterations to information and documentary requirements under Commonwealth legislation due to COVID-19."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6853",
+ "title": "Education Legislation Amendment (2022 Measures No. 1) Bill 2022",
+ "short_title": "Education Legislation Amendment (2022 Measures No. 1) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6853%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6853%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6853%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6853_ems_805cab69-9829-43dd-9668-545c634bf5bd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6853%22",
+   "document_date": "2022-02-17",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-17",
+  "sentences": [
+   "This bill would change the main law for Commonwealth higher education funding and make smaller updates to the law that governs the sector's regulator.",
+   "It would require students to give their unique identifier to their university and the department to qualify for government help, and would let some health workers in remote areas have their student loan debts cut or wiped.",
+   "Domestic students taking a short course in 2022 would not pay the usual loan fee, and New Zealand citizens would need to live in Australia during their studies to get certain loans."
+  ],
+  "changes": [
+   "Requires students to provide a unique student identifier to their provider and the Secretary to be eligible for Commonwealth assistance.",
+   "Allows partial or full reduction of outstanding HELP debts for eligible health practitioners in rural, remote or very remote areas, and waives indexation on those debts while they work there.",
+   "Clarifies that units in an enabling course do not count toward a student's lifetime limit on Commonwealth support.",
+   "Exempts students from the FEE-HELP loan fee for units undertaken in 2022.",
+   "Makes domestic students taking microcredential courses eligible for FEE-HELP.",
+   "Limits HECS-HELP and FEE-HELP eligibility for New Zealand citizens to those who are Australian residents for the duration of the unit."
+  ],
+  "affected": "Higher education students, higher education providers, health practitioners in rural and remote areas, and New Zealand citizens studying in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-419150",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-17",
+   "stage_hint": null,
+   "brief": "The Education Legislation Amendment (2022 Measures No. 1) Bill 2022 was moved for a second reading, extending the FEE-HELP loan fee exemption to 31 December 2022 (assisting around 30,000 full-fee paying students), allowing FEE-HELP loans for microcredential pilot courses, and reducing or waiving HELP debt and indexation for doctors and nurse practitioners who work in rural, remote and very remote areas. It also makes minor changes to align citizenship and residency requirements for New Zealand citizens and clarify Unique Student Identifier obligations."
+  }
+ ],
+ "acts": []
+}

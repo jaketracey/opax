@@ -1,0 +1,211 @@
+{
+ "key": "au-federal-r5357",
+ "title": "Social Services and Other Legislation Amendment (2014 Budget Measures No. 6) Bill 2014",
+ "short_title": "Social Services and Other Legislation Amendment (2014 Budget Measures No. 6) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2014-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5357%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5357%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5357%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5357%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5357%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-10-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5357%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5357%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5357%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5357%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5357%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5357%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5357%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5357%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5357%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5357_ems_c2769391-36d1-4f94-b23a-5bbed10ad672%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5357%22",
+   "document_date": "2014-10-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00122",
+   "document_date": "2014-11-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-3582",
+   "date": "2014-11-17",
+   "house": "senate",
+   "question": "Social Services and Other Legislation Amendment (2014 Budget Measures No. 6) Bill 2014 - Second Reading - Agree with the main idea of the bill",
+   "stage": "Second reading",
+   "ayes": 37,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "earliest": 4,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-11-17/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-298993",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299001",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-02",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services and Other Legislation Amendment (2014 Budget Measures No. 6) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00122",
+   "assent_date": "2014-11-26"
+  }
+ ]
+}

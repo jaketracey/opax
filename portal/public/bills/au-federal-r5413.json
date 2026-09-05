@@ -1,0 +1,326 @@
+{
+ "key": "au-federal-r5413",
+ "title": "Customs Amendment (Anti-dumping Measures) Bill (No. 1) 2015",
+ "short_title": "Customs Amendment (Anti-dumping Measures) Bill (No. 1) 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-02-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry and Science",
+ "status": "passed",
+ "status_as_of": "2015-05-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-05-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5413_ems_5e1811bc-d441-4257-b451-99f6e5b5a9f5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5413%22",
+   "document_date": "2015-02-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00042",
+   "document_date": "2015-05-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 9,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-02-26",
+  "sentences": [
+   "This bill would change the Customs Act to tighten rules on information submission in anti-dumping investigations and make several clarifications.",
+   "It would require public notices to be published electronically on the Anti-Dumping Commission's website and allow the Anti-Dumping Commissioner to approve how applications are lodged and withdrawn.",
+   "The bill would also let the government introduce a fee for applying to the Anti-Dumping Review Panel, with refunds possible and different fees for different applicants."
+  ],
+  "changes": [
+   "Tighten deadlines for submitting information in dumping and subsidisation investigations.",
+   "Require electronic publication of anti-dumping notices.",
+   "Consolidate rules for lodging and withdrawing applications.",
+   "Clarify that the investigation period cannot be varied.",
+   "Allow the government to charge a fee for Review Panel applications.",
+   "Replace the statutory International Trade Remedies Forum with administrative business consultative arrangements."
+  ],
+  "affected": "Importers, exporters, the Anti-Dumping Commission, the Anti-Dumping Review Panel, and the Minister responsible for anti-dumping matters.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T02:02:15Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3713",
+   "date": "2015-03-17",
+   "house": "representatives",
+   "question": "No motion text available",
+   "stage": "Second reading",
+   "ayes": 53,
+   "noes": 83,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 50,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-03-17/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-306213",
+   "speaker": "Ian Macfarlane",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306214",
+   "speaker": "Ian Macfarlane",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-307628",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-16",
+   "stage_hint": null,
+   "brief": "The Customs Amendment (Anti-dumping Measures) Bill (No. 1) 2015 and the Customs Tariff (Anti-dumping) Amendment Bill 2015 make minor amendments to anti-dumping laws, including simplifying publication, clarifying investigation periods and the lesser duty rule, and introducing fees for Anti-Dumping Review Panel appeals. The speaker supported most changes but opposed abolishing the International Trade Remedies Forum and raised concerns that appeal fees, set by regulation, could become prohibitively expensive for small businesses."
+  },
+  {
+   "slug": "speech-307630",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Customs Amendment (Anti-dumping Measures) Bill (No. 1) 2015, which strengthens Australia's anti-dumping system by placing a greater onus on exporters to cooperate, introducing cost-recovery for reviews, creating a new information service, and closing a circumvention loophole (e.g., adding boron to steel). Concrete outcomes include a 26% duty on uncooperative Italian canned tomato exporters (versus 8%), with nearly 80% of dumping cases coming from the steel and aluminium industry."
+  },
+  {
+   "slug": "speech-307631",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Customs Amendment (Anti-dumping Measures) Bill (No. 1) 2015 but opposed the abolition of the International Trade Remedies Forum and the introduction of fees for anti-dumping reviews, citing concerns about stakeholder engagement and barriers for small businesses. The speaker highlighted the case of Capral Aluminium, where Commissioner Dale Seymour found Chinese exporter PanAsia Aluminium circumvented anti-dumping measures, leading to higher duties approved by Minister Ian Macfarlane."
+  },
+  {
+   "slug": "speech-307633",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-16",
+   "stage_hint": null,
+   "brief": "Supported an amendment to the Customs Amendment (Anti-dumping Measures) Bill, arguing for stronger anti-dumping rules, government procurement of Australian-made goods (e.g., Bushmasters from Bendigo) and local content in infrastructure contracts, while opposing abolition of the International Trade Remedies Forum; noted manufacturing employs five times more Australians than mining."
+  },
+  {
+   "slug": "speech-307634",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that anti-dumping provisions address international geographic price discrimination, not cheap imports, and criticised the lack of similar domestic prohibitions. They also stated that Australian manufacturing costs are too high due to policies like the carbon tax and renewable energy target, and that removing the carbon tax led to the largest recorded fall in electricity prices."
+  },
+  {
+   "slug": "speech-307637",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Customs Amendment (Anti-dumping Measures) Bill (No. 1) 2015, stating that the coalition government has improved Australia's anti-dumping regime by reducing submission deadlines from 40 to 37 days, cracking down on non-cooperation from overseas producers, and strengthening enforcement of WTO provisions. They cited examples such as SPC Ardmona’s case against Italian canned tomatoes, where 88 of 90 importers were found dumping, and criticised the previous regime for failing Australian manufacturers, referencing a case where South African peach exporters were fined by their own competition agency while Australia took no action."
+  },
+  {
+   "slug": "speech-307638",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Customs Amendment (Anti-dumping Measures) Bill (No. 1) 2015 but criticised the government's plan to abolish the International Trade Remedies Forum, arguing it should be retained. He highlighted his own role in introducing major anti-dumping reforms as a Labor minister between 2010 and 2012, which he said benefited companies like BlueScope Steel and OneSteel."
+  },
+  {
+   "slug": "speech-307640",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Customs Amendment (Anti-dumping Measures) Bill (No. 1) 2015, arguing it would implement election commitments, fix merits review, and improve support services. They detailed that the reforms place a heavier onus on foreign exporters to cooperate in investigations, impose $10,000 review fees (reduced to $1,000 for small businesses), and modernise publication provisions."
+  },
+  {
+   "slug": "speech-307642",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Customs Amendment (Anti-dumping Measures) Bill (No. 1) 2015 is vital for protecting Australian farmers, particularly in the Riverina, from unfair overseas competition, citing that Griffith farmers feed 150 Australians and 450 people overseas each year. The speaker supported the bill as a means to strengthen Australia's anti-dumping system while complying with international trade rules, referencing free trade agreements with Korea, Japan, and China."
+  },
+  {
+   "slug": "speech-307755",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The government announced a reform package for Australia's anti-dumping system, replacing the statutory International Trade Remedies Forum with flexible consultations and introducing fees for Anti-Dumping Review Panel appeals ($10,000 for large businesses/foreign governments, $1,000 for SMEs/individuals) while raising the threshold for reviews. The bills clarify provisions on dumping margins, material injury, and lesser duty rules, and the government rejected an amendment by the member for Makin."
+  },
+  {
+   "slug": "speech-309666",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The government accepted Senate amendments to the Customs Amendment (Anti-dumping Measures) Bill and the Customs Tariff (Anti-Dumping) Amendment Bill, including changes to the International Trade Remedies Forum, the definition of 'subsidy', and the lesser duty rule subsidy provision. The reforms aim to strengthen Australia's anti-dumping system by tightening deadlines, cracking down on uncooperative exporters, and reducing red tape, with further consultation planned on the Senate amendments."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment (Anti-dumping Measures) Act (No. 1) 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00042",
+   "assent_date": "2015-05-20"
+  }
+ ]
+}

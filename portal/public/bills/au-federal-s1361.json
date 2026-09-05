@@ -1,0 +1,70 @@
+{
+ "key": "au-federal-s1361",
+ "title": "Electoral Legislation Amendment (Lowering the Voting Age) Bill 2023",
+ "short_title": "Electoral Legislation Amendment (Lowering the Voting Age) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2023-02-08",
+ "originating_house": "senate",
+ "sponsor": "STEELE-JOHN, Sen Jordon",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10901",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-07-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1361%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1361%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1361%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1361%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1361_ems_2cf382b9-251b-4b25-bc22-a7d70e5d2791%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1361%22",
+   "document_date": "2023-02-08",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195265",
+   "speaker": "Malcolm Roberts",
+   "party": "One Nation",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

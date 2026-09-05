@@ -1,0 +1,198 @@
+{
+ "key": "au-federal-s1358",
+ "title": "COVID-19 Vaccination Status (Prevention of Discrimination) Bill 2022",
+ "short_title": "COVID-19 Vaccination Status (Prevention of Discrimination) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-11-29",
+ "originating_house": "senate",
+ "sponsor": "HANSON, Sen Pauline",
+ "sponsor_party": "Pauline Hanson&#39;s One Nation",
+ "sponsor_person_id": "10280",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-08-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1358%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1358%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1358%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1358%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1358_ems_57fcbed2-b922-47f8-8d10-16a99391a61f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1358%22",
+   "document_date": "2022-11-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-9043",
+   "date": "2024-08-14",
+   "house": "senate",
+   "question": "Covid-19 Vaccination Status (Prevention of Discrimination) Bill 2022 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-14/1"
+  },
+  {
+   "key": "federal-senate-9044",
+   "date": "2024-08-14",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-08-14.10.1) to agree with the main idea of the bill, which means it passed. In parliamentary jargon, they voted against reading the bill for a second time. This was a private member's bill sponsored by Queensland Senator [Pauline Hanson](https://theyvoteforyou.org.au/people/senate/queensland/pauline_hanson) (One Nation). However, this question was [voted on for a second time](https://theyvoteforyou.org.au/divisions/senate/2024-08-14/3) as several senators were on the wrong side of the room due to an error. ### What does the bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1358), the bill: > *Prohibits discrimination based on a person's COVID-19 vaccination status by the Commonwealth, state and territory governments, statutory authorities, local governments, and private enterprises.*",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-14/2"
+  },
+  {
+   "key": "federal-senate-9045",
+   "date": "2024-08-14",
+   "house": "senate",
+   "question": "Covid-19 Vaccination Status (Prevention of Discrimination) Bill 2022 - Second Reading - Agree with the main idea of the bill",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-14/3"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

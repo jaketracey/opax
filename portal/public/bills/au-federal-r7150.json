@@ -1,0 +1,219 @@
+{
+ "key": "au-federal-r7150",
+ "title": "Autonomous Sanctions Amendment Bill 2024",
+ "short_title": "Autonomous Sanctions Amendment Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-02-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs and Trade",
+ "status": "passed",
+ "status_as_of": "2024-04-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7150_ems_669d4050-37cb-45ef-970a-c2adceb57a65%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7150%22",
+   "document_date": "2024-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00019",
+   "document_date": "2024-04-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-15",
+  "sentences": [
+   "The bill would confirm that individuals and entities can be sanctioned for past conduct or status under Australia's autonomous sanctions framework.",
+   "It would clarify that sanctions are valid even if the minister's decision to impose them, or to choose between financial sanctions and travel bans, is not explicitly clear.",
+   "The bill would apply to activities in Australia and to Australian citizens and registered bodies corporate overseas, with non-compliance attracting heavy penalties."
+  ],
+  "changes": [
+   "Explicitly confirms that sanctions can be based on past conduct or status.",
+   "Ensures the validity of sanctions made based on past conduct or status.",
+   "Confirms that sanctions are valid even where the minister's discretion is not explicitly clear."
+  ],
+  "affected": "Individuals, entities, Australian citizens, and Australian registered bodies corporate subject to autonomous sanctions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8853",
+   "date": "2024-03-27",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7150_amend_935696e7-491a-455f-9d3a-1d5ceb98a2fe%22;rec=0) introduced by the Greens, which means they failed. ### Amendment text > *(1) Page 7 (after line 32), at the end of the bill, add:* > >> *Schedule 2 — Thematic sanctions and other measures* >> >> *Autonomous Sanctions Act 2011* >> >> *1 Section 4* >> >> *Insert:* >> >>> *civil society organisation does not include the following:* >>> >>>> *(a) a foreign government entity;* >>>> >>>> *(b) a body that is carried on for the purposes of profit or gain to its individual members;* >> >> *2 At the end of subsection 10(4)* >> >> *Add:* >> >>> *; and (e) if the proposed proscription addresses a matter mentioned in paragraph 3(3)(d) or (f)—the Minister must consider any credible information provided by a civil society organisation that monitors violations or abuses of human rights or has expertise in international humanitarian law.* >> >> *3 At the end of subsection 10(5)* >> >> *Add:* >> >>> *; and (e) if the proscription addresses a matter mentioned in paragraph 3(3)(d) or (f)—the Minister must consider any credible information provided by a civil society organisation that monitors violations or abuses of human rights or has expertise in international humanitarian law.* >> >> *4 At the end of section 10* >> >> *Add:* >> >>> *(7) The regulations must prescribe one or more processes under which a civil society organisation may provide information to the Minister as mentioned in paragraphs (4)(e) and (5)(e).* >>> >>> *(8) Without limiting subsection (7), the regulations may provide for any of the following:* >>> >>>> *(a) the Minister to convene regular meetings with civil society organisations;* >>>> >>>> *(b) the Minister to convene such other meetings with civil society organisations as are necessary to respond to an international crisis;",
+   "stage": "Committee of the Whole",
+   "ayes": 13,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 3,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-27/17"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Autonomous Sanctions Amendment Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00019",
+   "assent_date": "2024-04-08"
+  }
+ ]
+}

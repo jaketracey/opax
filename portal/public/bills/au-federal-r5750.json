@@ -1,0 +1,158 @@
+{
+ "key": "au-federal-r5750",
+ "title": "Social Services Legislation Amendment (Family Assistance Alignment and Other Measures) Bill 2016",
+ "short_title": "Social Services Legislation Amendment (Family Assistance Alignment and Other Measures) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2016-11-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5750%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5750%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5750%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5750%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5750%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5750%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5750%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5750%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5750%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5750%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5750%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5750%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5750_ems_5bc0b540-e462-4dca-a1c5-8854bb65d750%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5750%22",
+   "document_date": "2016-10-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00085",
+   "document_date": "2016-11-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-20",
+  "sentences": [
+   "This bill would set clear rules for when new or increased family tax benefit payments take effect after certain review decisions.",
+   "It would amend the Family Assistance Administration Act to specify date of effect rules for top-up payments and supplements.",
+   "The bill also includes contingent amendments to remove or change these measures if another bill phasing out FTB supplements by 1 July 2018 becomes law."
+  ],
+  "changes": [
+   "Introduces date of effect rules for review decisions that create new or increased family tax benefit entitlements.",
+   "Proposes contingent amendments to repeal or revise the measures if the Structural Reform Bill is enacted.",
+   "Addresses an unintended consequence of previous amendments to the Youth Allowance Rate Calculator."
+  ],
+  "affected": "Families receiving family tax benefit and youth allowance recipients.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:44:16Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-337806",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "Labor supported the Social Services Legislation Amendment (Family Assistance Alignment and Other Measures) Bill 2016 as technical, but opposed further cuts to family tax benefit end-of-year supplements. The speaker also accused Minister for Social Services of using misleading figures, citing ACOSS, Greg Jericho, Ross Gittins, and Cassandra Goldie, and referenced $8.5 billion in previous Liberal cuts and $2 billion in proposed cuts."
+  },
+  {
+   "slug": "speech-337807",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The bill reinforces the one-year time frame for family tax benefit income reconciliation for 2012–13 to 2014–15, clarifies arrears payment rules, and corrects a youth allowance rate calculator error to produce fortnightly amounts. The opposition supported the technical amendments but opposed further cuts to the family tax benefit supplement."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (Family Assistance Alignment and Other Measures) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00085",
+   "assent_date": "2016-11-30"
+  }
+ ]
+}

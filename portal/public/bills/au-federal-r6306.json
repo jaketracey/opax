@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6306",
+ "title": "Water Amendment (Indigenous Authority Member) Bill 2019",
+ "short_title": "Water Amendment (Indigenous Authority Member) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6306%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6306%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6306%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6306_ems_fbb6582a-38e5-4929-a870-9790850c9683%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6306%22",
+   "document_date": "2019-02-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375915",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The Water Amendment (Indigenous Authority Member) Bill 2019 creates a standing Indigenous authority member position on the Murray‑Darling Basin Authority, to be appointed based on expertise in Indigenous water matters. The government also committed $40 million over four years for Indigenous water entitlements and $30 million for the Wilcannia Weir upgrade."
+  }
+ ],
+ "acts": []
+}

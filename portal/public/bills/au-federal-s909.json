@@ -1,0 +1,143 @@
+{
+ "key": "au-federal-s909",
+ "title": "Health Insurance Amendment (Medicare Funding for Certain Types of Abortion) Bill 2013",
+ "short_title": "Health Insurance Amendment (Medicare Funding for Certain Types of Abortion) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-03-19",
+ "originating_house": "senate",
+ "sponsor": "MADIGAN, Sen John",
+ "sponsor_party": "Democratic Labor Party (DLP",
+ "sponsor_person_id": "10759",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s909%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s909%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s909%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s909%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s909%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s909%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s909%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s909_ems_bace4cf0-3ba8-4724-9dcd-b1a67dbdc3f4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s909%22",
+   "document_date": "2013-03-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-19",
+  "sentences": [
+   "The bill would stop Medicare covering abortions done because the fetus is a particular sex.",
+   "It would end public funding for terminations selected on the basis of gender, with an exception for cases where a gender-specific disorder is diagnosed.",
+   "The bill follows the United Nations' call to address gender-biased sex selection, which it says is discriminatory and harmful to girls and women."
+  ],
+  "changes": [
+   "Remove Medicare funding for abortions performed solely for sex selection.",
+   "Allow Medicare funding to continue for terminations related to a gender-specific disorder.",
+   "Align Australian law with international recommendations against gender-biased sex selection."
+  ],
+  "affected": "People seeking Medicare-funded abortions and the medical practitioners who provide them.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:10:21Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-822788",
+   "speaker": "John Madigan",
+   "party": "DLP",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Medicare Funding for Certain Types of Abortion) Bill 2013 was introduced to amend the Health Insurance Act 1973, and the bill was read a first time."
+  },
+  {
+   "slug": "speech-825237",
+   "speaker": "Jacinta Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-27",
+   "stage_hint": null,
+   "brief": "The order of general business was set to consider first the Health Insurance Amendment (Medicare Funding for Certain Types of Abortion) Bill 2013, then the Criminal Code Amendment (Misrepresentation of Age to a Minor) Bill 2013. The motion was agreed to."
+  },
+  {
+   "slug": "speech-825282",
+   "speaker": "Anne McEwen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-27",
+   "stage_hint": null,
+   "brief": "The committee reports listed under order of business items 8 and 10 were tabled, and the Publications Committee's 26th report was adopted."
+  },
+  {
+   "slug": "speech-825289",
+   "speaker": "John Madigan",
+   "party": "DLP",
+   "state": "federal",
+   "date": "2013-06-27",
+   "stage_hint": null,
+   "brief": "The bill proposed removing Medicare funding for abortions performed solely for gender selection, which the speaker argued is morally reprehensible and occurs in Australia based on anecdotal evidence. Opponents stated there is no statistical evidence of gender-selection abortion occurring in Australia and argued the bill is an unnecessary restriction on women's reproductive rights."
+  },
+  {
+   "slug": "speech-825472",
+   "speaker": "John Madigan",
+   "party": "DLP",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": "A motion was agreed to suspend standing orders and restore the Health Insurance Amendment (Medicare Funding for Certain Types of Abortion) Bill 2013 and the Fair Trade (Workers' Rights) Bill 2013 to the Notice Paper for resumed consideration at the stage reached in the last session."
+  }
+ ],
+ "acts": []
+}

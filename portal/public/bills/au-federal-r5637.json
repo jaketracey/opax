@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r5637",
+ "title": "Law and Justice Legislation Amendment (Northern Territory Local Court) Bill 2016",
+ "short_title": "Law and Justice Legislation Amendment (Northern Territory Local Court) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-03-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2016-03-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5637%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5637%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5637%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5637%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5637%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5637%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5637%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5637%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5637%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5637%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5637%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5637%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5637_ems_d10a0832-cb67-4f1b-bea5-f415325a4777%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5637%22",
+   "document_date": "2016-03-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00026",
+   "document_date": "2016-03-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-03",
+  "sentences": [
+   "This bill updates Commonwealth laws so that Northern Territory Local Court judges can keep doing work that magistrates used to do.",
+   "It changes definitions in the Acts Interpretation Act 1901 and many other federal Acts to match the new court structure created by the Northern Territory's Local Court Act 2015.",
+   "The changes take effect from 1 May 2016, when the Northern Territory Local Court replaces the old Court of Summary Jurisdiction and magistrates become judges."
+  ],
+  "changes": [
+   "Amends the Acts Interpretation Act 1901 so that references to 'magistrate' in Commonwealth law also cover Northern Territory Local Court judges.",
+   "Amends several other Commonwealth Acts that define 'magistrate', 'judge' or 'court of summary jurisdiction' to include the Northern Territory Local Court.",
+   "Ensures that references to 'judge' in Commonwealth law do not generally include Northern Territory Local Court judges."
+  ],
+  "affected": "Northern Territory Local Court judges and the Commonwealth agencies that administer the amended Acts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-330051",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The bill makes technical amendments to Commonwealth legislation to address unintended consequences from the Northern Territory Local Court Act 2015, which merges two courts and changes judicial titles, ensuring continued jurisdiction for criminal matters like warrant issuance."
+  },
+  {
+   "slug": "speech-330504",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "Labor supported the Law and Justice Legislation Amendment (Northern Territory Local Court) Bill 2016, describing it as technical and uncontroversial. The bill adjusts Commonwealth laws to preserve existing judicial arrangements after the Northern Territory's Local Court Act 2015 consolidated its courts and renamed magistrates as judges, including specific amendments to the Acts Interpretation Act 1901 and other listed legislation."
+  },
+  {
+   "slug": "speech-330505",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The Law and Justice Legislation Amendment (Northern Territory Local Court) Bill 2016 is a non‑controversial bill that amends Commonwealth acts to support Northern Territory court reforms and ensure Local Court judges can continue exercising their current jurisdiction in Commonwealth matters."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Law and Justice Legislation Amendment (Northern Territory Local Court) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00026",
+   "assent_date": "2016-03-23"
+  }
+ ]
+}

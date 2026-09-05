@@ -1,0 +1,212 @@
+{
+ "key": "au-federal-r5951",
+ "title": "Migration and Other Legislation Amendment (Enhanced Integrity) Bill 2017",
+ "short_title": "Migration and Other Legislation Amendment (Enhanced Integrity) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-08-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2018-08-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5951%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5951%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5951%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5951%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5951%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5951%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5951%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5951%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5951%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5951%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5951%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5951%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5951_ems_ef4c2fab-b925-4ca7-95ba-b712309a5368%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5951%22",
+   "document_date": "2017-08-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00090",
+   "document_date": "2018-08-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-16",
+  "sentences": [
+   "The bill would tighten rules for employer-sponsored skilled visa programs.",
+   "It would let the public see when visa sponsors have been penalised, give the immigration department access to tax file numbers for visa-related work, and fix merit review rules for some skilled visas.",
+   "The bill also corrects the Migration Act by replacing wrong references to the Regulatory Powers Act."
+  ],
+  "changes": [
+   "Authorises public disclosure of sponsor sanction details.",
+   "Enables the Department of Immigration and Border Protection to access tax file numbers for prescribed visa purposes.",
+   "Ensures merit review rights for certain skilled visas match government policy."
+  ],
+  "affected": "Employers sponsoring skilled visas and applicants for those visas are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:46Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-351751",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The bill would allow public disclosure of sponsor sanctions, collection and use of tax file numbers for compliance and research, clarification of merits review for visa refusals, and enforceable undertakings with sponsors, as part of replacing the subclass 457 visa with the temporary skill shortage visa."
+  },
+  {
+   "slug": "speech-360229",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-27",
+   "stage_hint": null,
+   "brief": "Labor supported the Migration and Other Legislation Amendment (Enhanced Integrity) Bill 2017, which enables tax file number collection and public naming of businesses that breach sponsorship obligations, but argued the government should extend protections to all temporary workers, not just those on skilled visas, to close loopholes."
+  },
+  {
+   "slug": "speech-360385",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration and Other Legislation Amendment (Enhanced Integrity) Bill 2017 as a sensible but modest measure to collect tax file numbers and name and shame sponsors, but criticised the government for taking three years to implement only two recommendations from a 2014 review and argued the bill is insufficient to protect vulnerable migrant workers from exploitation."
+  },
+  {
+   "slug": "speech-360389",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration and Other Legislation Amendment (Enhanced Integrity) Bill 2017 as a step forward but argued it does not go far enough to protect vulnerable workers, and criticised the government for securitising immigration and failing to invest in infrastructure to manage population growth. They also called for stronger measures to ensure local workers are prioritised and to end exploitation of migrant workers on 457 visas."
+  },
+  {
+   "slug": "speech-360390",
+   "speaker": "Susan Lamb",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration and Other Legislation Amendment (Enhanced Integrity) Bill 2017 but argued the coalition government had failed to protect vulnerable migrant workers and local workers, citing 140,000 skilled visa workers and 723,000 unemployed Australians. Labor would restore $637 million in VET funding and establish an independent authority to address skills shortages."
+  },
+  {
+   "slug": "speech-360394",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-27",
+   "stage_hint": null,
+   "brief": "The Migration and Other Legislation Amendment (Enhanced Integrity) Bill is too little and too late to address widespread exploitation of migrant workers, as it only collects tax file numbers and names non-compliant sponsors for temporary and permanent sponsored visas, leaving out seasonal workers and backpackers, and lacks market testing to ensure Australians are hired first."
+  },
+  {
+   "slug": "speech-360395",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration and Other Legislation Amendment (Enhanced Integrity) Bill 2017 will help protect vulnerable overseas workers from exploitation, citing findings that a quarter of international students and a third of backpackers earn only half their entitled wage, and that some agricultural workers were paid as little as $5 per hour. The speaker noted Labor supports the bill but raised concerns that it does not cover working holiday visa holders (subclass 417), leaving Taiwanese and other backpackers in places like Bundaberg and the Lockyer Valley still at risk."
+  },
+  {
+   "slug": "speech-360404",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-27",
+   "stage_hint": null,
+   "brief": "The bill strengthens integrity of temporary and permanent sponsored skilled work visas by publishing sanction information, clarifying merits review timing, and allowing the Department of Home Affairs to collect and use tax file numbers. It accompanies the planned replacement of the 457 visa with a temporary skills shortage visa in March 2018 and the reduction of eligible occupations from 651 to 461, with 70,000 457 visas issued last year compared to 130,000 at the program's peak under the previous government."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration and Other Legislation Amendment (Enhanced Integrity) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00090",
+   "assent_date": "2018-08-31"
+  }
+ ]
+}

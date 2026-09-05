@@ -1,0 +1,188 @@
+{
+ "key": "au-federal-r5461",
+ "title": "Private Health Insurance (Prudential Supervision) Bill 2015",
+ "short_title": "Private Health Insurance (Prudential Supervision) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5461%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5461%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5461%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5461%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5461%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5461%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5461%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5461%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5461%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5461%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5461%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5461%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5461%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5461%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5461_ems_154afc21-b575-45c0-83b8-5e70868d5e8e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5461%22",
+   "document_date": "2015-05-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00085",
+   "document_date": "2015-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-27",
+  "sentences": [
+   "This bill is part of a package that transfers prudential regulation of private health insurers from the Council to the Australian Prudential Regulation Authority from 1 July 2015.",
+   "The package includes bills to make consequential amendments, provide transitional arrangements, and continue levies on the industry to fund regulatory activities.",
+   "The explanatory memorandum states the bills are interdependent and provides a single human rights statement for the package."
+  ],
+  "changes": [
+   "Transfers the Council's prudential and regulatory functions to APRA.",
+   "Creates a regime for prudential regulation of private health insurers by APRA.",
+   "Provides for continued imposition of levies on the private health insurance industry."
+  ],
+  "affected": "Private health insurers and the Australian Prudential Regulation Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:03Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-312234",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bills transferring PHIAC's prudential regulation to APRA and abolishing PHIAC, arguing they would weaken consumer protection and premium oversight for the 13.2 million Australians with private health insurance, and warned this is a step toward removing all oversight of health fund premiums."
+  },
+  {
+   "slug": "speech-312235",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for the health minister not speaking on the medical research fund bill and for guillotining debate, arguing that such actions undermine public trust in institutions like private health insurance."
+  },
+  {
+   "slug": "speech-312429",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Private Health Insurance (Prudential Supervision) Bill 2015, arguing the transfer of regulation from PHIAC to APRA lacks sufficient detail and risks weakening oversight of the private health insurance market, which covers 13 million Australians with 40,000 products from 34 insurers, with five firms holding 83% of the market. He called for the bill to be referred to another committee for deeper scrutiny."
+  },
+  {
+   "slug": "speech-312563",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The Private Health Insurance (Prudential Supervision) Bill 2015 and related bills transfer prudential regulation of private health insurance from the Private Health Insurance Administration Council to the Australian Prudential Regulation Authority (APRA) from 1 July 2015. The changes aim to reduce duplication, lower industry costs through reduced levies, and maintain the existing regulatory framework, with around 80 per cent of staff transferring to APRA and no substantive changes for compliant insurers."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Private Health Insurance (Prudential Supervision) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00085",
+   "assent_date": "2015-06-26"
+  }
+ ]
+}

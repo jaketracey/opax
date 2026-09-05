@@ -1,0 +1,519 @@
+{
+ "key": "au-federal-r5396",
+ "title": "Higher Education and Research Reform Bill 2014",
+ "short_title": "Higher Education and Research Reform Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "lapsed",
+ "status_as_of": "2015-03-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5396%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5396%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5396%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5396_ems_43d461b7-fba8-4cdb-a1b9-13a1ba097888%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5396_ems_ba07b637-175c-40c5-9320-34a5a7160762%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5396_ems_f131be9c-3350-4788-89d2-b936bcb58737%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5396%22",
+   "document_date": "2014-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-12-03",
+  "sentences": [
+   "The bill would deregulate university fees and let the government fund more student places.",
+   "Universities and private colleges could set their own tuition fees, and the government would subsidise places for diplomas and associate degrees as well as bachelor degrees.",
+   "Providers with 500 or more government-funded places would have to spend 20 per cent of extra revenue on scholarships for disadvantaged students."
+  ],
+  "changes": [
+   "Deregulates university fees.",
+   "Extends demand-driven funding to sub-bachelor qualifications and private providers.",
+   "Requires large providers to put 20 per cent of additional revenue into a Commonwealth Scholarship Scheme.",
+   "Changes the HELP loan programme, including a new minimum repayment threshold and removal of loan fees.",
+   "Allows universities to charge research students tuition fees up to a maximum set by course cost.",
+   "Makes technical amendments to the Australian Research Council Act 2001 for Future Fellowships."
+  ],
+  "affected": "Universities, private higher education providers, and students.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:59:07Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3688",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "question": "Christopher Pyne It is my great pleasure to sum up the debate on the Higher Education and Research Reform Bill 2014. I would like to thank all of my colleagues, particularly on this side of the House, who have given passionate and informed speeches about this reform bill over the course of the last week and a half of sittings. I thank those members of the opposition who have also participated, although I would not say their speeches were nearly as well informed as the ones from the side of the House, because they are not supporting the higher education reform bill. They are putting their head deeply in the sand and refusing to acknowledge the need for reform in higher education. It has been a very long debate. Most members of the government have participated in it. I thank my colleagues for doing this process a second time, for the second reform bill. It is because the government believes so fervently in these reforms that it has brought the bill back. The reform bill amends the Higher Education Support Act 2003 and the Australian Research Council Act 2001 to implement a fair, balanced and essential set of reforms to Australia's higher education and research system. The reform bill represents the boldest ambitions for Australian higher education in generations. It aims to make it possible for Australia to develop the best higher education system in the world. Above all, this will enable our students to get an education of the quality they need and deserve in this world of intensifying international competition. It will do so while making Australian higher education more equitable, affordable and accessible than ever before. This is the right package at the right time for Australian universities and colleges. More importantly, it is the best package for students. It has been designed thoughtfully and deliberately following careful review, consideration and consultation. All the higher education peak bodies around Australia support the core elements of these reforms.",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-02-25/1"
+  },
+  {
+   "key": "federal-representatives-3689",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "question": "Higher Education and Research Reform Bill 2014 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 78,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-02-25/2"
+  },
+  {
+   "key": "federal-senate-3717",
+   "date": "2015-03-17",
+   "house": "senate",
+   "question": "Higher Education and Research Reform Bill 2014 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 47,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-17/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-303637",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303657",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303704",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304434",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304436",
+   "speaker": "Ann Sudmalis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304438",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304724",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304725",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304726",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304727",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304728",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304925",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304926",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304927",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304928",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304929",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304930",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304933",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304934",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304936",
+   "speaker": "Matt Williams",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304966",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304968",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304972",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304973",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-11",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

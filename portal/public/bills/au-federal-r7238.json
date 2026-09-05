@@ -1,0 +1,651 @@
+{
+ "key": "au-federal-r7238",
+ "title": "Aged Care Bill 2024",
+ "short_title": "Aged Care Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-09-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2024-12-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7238_ems_b7a81da3-8d0c-4501-99e4-0c33f8a39107%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7238_ems_5597433f-f66a-4719-97d4-271d1873a601%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7238_ems_11a602fb-4e9b-4dec-85e6-77f6fa87e444%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7238_ems_d3261378-1ce3-44f4-8598-44f754904d67%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7238_ems_039e71de-7333-4c91-a254-31370f3bca1b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7238%22",
+   "document_date": "2024-09-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00104",
+   "document_date": "2024-12-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2024-09-12",
+  "sentences": [
+   "This bill would create a new legal framework for aged care, based on the rights of older people and focused on their safety and wellbeing.",
+   "The framework would give legislative authority for delivering government-funded aged care services, including programs not previously covered by aged care law, and introduce a regulatory model that uses risk assessment to improve quality and accountability.",
+   "The bill would respond to about 60 recommendations from the aged care royal commission and implement the government's response to the Aged Care Taskforce final report."
+  ],
+  "changes": [
+   "Establishes a modern rights-based legislative framework for aged care.",
+   "Brings programs such as the NATSIFAC Program and the Commonwealth Home Support Programme under aged care legislation.",
+   "Introduces a risk-based regulatory model to encourage high-quality services and increase provider accountability."
+  ],
+  "affected": "Older people, their families and carers, registered aged care providers, and the Aged Care Quality and Safety Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9217",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [government amendment](https://www.openaustralia.org.au/debate/?id=2024-11-07.44.1) to remove the subclauses set out below, which means those subclauses will no longer be part of the bill. ### Amendment text > *(1) Clause 158, page 167 (line 26) to page 168 (line 18), omit subclauses (5) to (7).* ### Subclauses (5) to (7) > *158 Advisory body requirements* > > *[...]* > > *(5) It is a condition of registration that a registered provider of a kind prescribed by the rules must offer, in accordance with any requirements prescribed by the rules, aged care workers of the provider the opportunity to establish a body (the quality care worker voice body ) to:* > >> *(a) give responsible persons of the provider feedback about the quality of the funded aged care services delivered by the provider; and* >> >> *(b) give responsible persons of the provider feedback on any other matters prescribed by the rules; and* >> >> *(c) work collaboratively with the responsible persons and governing body of the provider to address any such feedback.* >> >> *Note: A person may make a complaint to the Complaints Commissioner about compliance with this Act: see section 361.* > > *(6) If a quality care worker voice body is established, a registered provider must require the governing body of the provider to:* > >> *(a) comply with any requirements regarding membership of the body and the terms and conditions of members of the body prescribed by the rules; and* >> >> *(b) consider feedback given by the body when making decisions in relation to the quality of the funded aged care services delivered by the provider; and* >> >> *(c) advise, in writing, the body how the governing body considered such feedback.* > > *(7) It is a condition of registration that the registered provider must, if requested to do so by a quality care worker voice body, give the body information about the quality of the funded aged care services delivered by the provider.*",
+   "stage": "Consideration in detail",
+   "ayes": 51,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 40,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 58,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-07/6"
+  },
+  {
+   "key": "federal-senate-9229",
+   "date": "2024-11-21",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansards/28073/&sid=0000) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by NSW Senator [Maria Kovacic](https://theyvoteforyou.org.au/people/senate/nsw/maria_kovacic) (Liberal). ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Government to:* > > *(a) revise the transitional arrangements of the Support at Home Program to allow sufficient time for implementation by in-home aged care providers;* > > *(b) provide certainty to the aged care sector through a clear transition path, including implementation information beyond 1 July 2025, recognising the cost, both in staff training time and monetary value, of the measures in this bill;* > > *(c) undertake an extensive education and information campaign about the measures in this bill, targeted at both older Australians and their families and the wider aged care sector, to address the understanding gap clearly articulated throughout the Community Affairs Legislation Committee inquiry;* > > *(d) expedite the design of the Commonwealth Home Support Program (CHSP) replacement program to:* > >> *(i) give aged care providers sufficient time to make necessary changes and to prevent the challenges associated with rushed policy implementation as seen with this bill,* >> >> *(ii) enable providers to undertake ICT changes for both Support at Home and the CHSP replacement program concurrently, and* >> >> *(iii) ensure greater emphasis is placed on the additional value delivered by organisations, such as Meals on Wheels, when determining contracts and pricing for services;* > > *(e) undertake further consultation on care management fee caps and service delivery, including with clinicians, to:* > >> *(i) provide greater transparency about the facto",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-21/1"
+  },
+  {
+   "key": "federal-senate-9230",
+   "date": "2024-11-21",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2024-11-21.6.2) to the usual second reading motion, which is \"that the bill be read a second time\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by West Australian Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) the Royal Commission into Aged Care Quality and Safety recommended that no person with disability under the age of 65 should remain living in residential aged care from 2025,* >> >> *(ii) while the Government accepted this recommendation, this Bill works in direct opposition to the recommendation by formalising a pathway to place people under 65 in aged care,* >> >> *(iii) there are 911 people aged under 65 in residential aged care who are NDIS participants who should be receiving the disability-specific supports they need to exit residential aged care; and* > > *(b) calls on the Government to implement the recommendation of the Royal Commission and ensure no disabled person under the age of 65 remains living in residential aged care\".*",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-21/2"
+  },
+  {
+   "key": "federal-senate-9236",
+   "date": "2024-11-21",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-11-21.366.4) \"*that chapter 4 stand as amended.*\" In other words, they voted to keep the [amended form of chapter 4](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fbills%2Fr7238_third-reps%2F0000%22;rec=0) as it is. Chapter 4 relates to the funding of aged care services.",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-21/8"
+  },
+  {
+   "key": "federal-senate-9237",
+   "date": "2024-11-21",
+   "house": "senate",
+   "question": "Aged Care Bill 2024 - in Committee - Greens Amendments",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-21/9"
+  },
+  {
+   "key": "federal-senate-9238",
+   "date": "2024-11-21",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-11-21.421.1) introduced by South Australian [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which means it passed and will now form part of the bill. ### Amendment text > *(1) Clause 361, page 365 (after line 30), after subclause (1), insert:* > >> *(1A) Without limiting subsection (1), the rules must provide that if a complaint is made to the Complaints Commissioner about:* >> >>> *(a) the compliance of a registered provider or a responsible person or aged care worker of a registered provider with this Act; or* >>> >>> *(b) a registered provider acting in a way that is incompatible with the Statement of Rights;* >>> >>> *the Complaints Commissioner must, by the end of the period specified in the rules:* >>> >>> *(c) deal with and resolve the complaint; and* >>> >>> *(d) prepare a written statement (a complaint determination) setting out:* >>> >>>> *(i) what action (if any) the Complaints Commissioner took to deal with and resolve the complaint; and* >>>> >>>> *(ii) what action (if any) should be taken by another person to deal with and resolve the complaint; and* >>>> >>>> *(iii) information relating to the review or reconsideration of decisions made under the scheme; and* >>> >>> *(e) give the person who made the complaint a copy of the complaint determination.*",
+   "stage": "In committee",
+   "ayes": 43,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 7,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-21/10"
+  },
+  {
+   "key": "federal-senate-9239",
+   "date": "2024-11-21",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-11-21.423.1) introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which means it will now form part of the bill. ### What does this amendment do? Senator Ruston [explained that](https://www.openaustralia.org.au/senate/?gid=2024-11-21.423.1): > *This amendment seeks to make sure that no person in aged care can, in the future, ever be denied access to see the person that they designate, or the person that is designated under the appropriate authority. We need to make sure that, if we're going to embed choice, control and rights for older Australians into this act, one of the most fundamental rights of anybody is to be able to get access to the people they love.* ### Amendment text > *(1) Clause 23, page 49 (after line 34), at the end of the clause, add:* > >> *(13) An individual has a right to access, at any time the individual chooses, a person designated by the individual, or a person designated by an appropriate authority.*",
+   "stage": "In committee",
+   "ayes": 40,
+   "noes": 17,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 7,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-21/11"
+  },
+  {
+   "key": "federal-senate-9240",
+   "date": "2024-11-21",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2024-11-21.514.1) to pass the bill. In parliamentary jargon, they voted to read the bill for a third time. As several amendments were agreed to by the Senate, the bill will need to return to the House for our MPs' consideration so they can decide on whether they agree with them. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2425/25bd020): * *The Aged Care Bill 2024 proposes to replace existing aged care legislation, including the Aged Care Act 1997, Aged Care (Transitional Provisions) Act 1997 and Aged Care Quality and Safety Commission Act 2018.* * *The aim of the Bill is to create a simplified, rights-based legislative framework that comprises one main piece of primary legislation to establish and regulate the aged care system. In addition there will be a single set of subordinate legislation, known as the Rules (compared to the current 14 sets of subordinate aged care principles).* * *The Bill relies heavily on Rules which have not been made publicly available at the time of writing.* * *The Bill proposes to enact many, but not all, of the recommendations of the Royal Commission into Aged Care Quality and Safety 2021.* * *The Bill proposes significant changes to how aged care is funded. While the Commonwealth will continue to be the main funder of aged care, the Bill proposes a refined means-tested user-pays system for co-contributions to everyday living and independence support.* * *The Bill has been referred to the Senate Community Affairs Legislation Committee for inquiry and report by 31 October 2024.*",
+   "stage": "Third reading",
+   "ayes": 27,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 26,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-21/12"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Aged Care Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00104",
+   "assent_date": "2024-12-02"
+  }
+ ]
+}

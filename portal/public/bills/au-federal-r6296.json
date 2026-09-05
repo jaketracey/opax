@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6296",
+ "title": "Coal Prohibition (Quit Coal) Bill 2019",
+ "short_title": "Coal Prohibition (Quit Coal) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-18",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6296%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6296%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6296%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6296_ems_6cb95a7a-7dc6-4953-aeaa-9ae8a020f3cc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6296%22",
+   "document_date": "2019-02-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375342",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The speaker moved the Coal Prohibition (Quit Coal) Bill 2019, which would ban new coal mines and power stations immediately and phase out all thermal coal mining and exports by 2030, arguing that Australia exports 80% of its thermal coal and must stop exporting to Japan, China, South Korea and Taiwan to address climate change."
+  }
+ ],
+ "acts": []
+}

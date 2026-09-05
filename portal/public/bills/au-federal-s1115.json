@@ -1,0 +1,187 @@
+{
+ "key": "au-federal-s1115",
+ "title": "Copyright Amendment (Service Providers) Bill 2017",
+ "short_title": "Copyright Amendment (Service Providers) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-06",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2018-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1115%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1115%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1115%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1115%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1115%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1115%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1115%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1115%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1115%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1115%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1115%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1115%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1115%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1115_ems_753168c1-e7d9-4bf7-8006-518285d5495f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1115_ems_03a606b0-5e0c-47cd-80f3-4b44e521101e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1115%22",
+   "document_date": "2017-12-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00071",
+   "document_date": "2018-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-365605",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "Labor supported the Copyright Amendment (Service Providers) Bill 2017, which extends the legal safe harbour scheme to educational institutions, libraries, archives, cultural institutions, and organisations assisting people with disabilities, arguing it balances rights holders' interests with social benefits without distorting the commercial market."
+  },
+  {
+   "slug": "speech-365606",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Copyright Amendment (Service Providers) Bill 2017, noting Labor had long advocated for its provisions but that wider copyright policy challenges remain, and highlighted the importance of expanding safe harbours for schools and universities."
+  },
+  {
+   "slug": "speech-365607",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Copyright Amendment (Service Providers) Bill 2017, arguing it extends safe harbour protections to educational and cultural institutions to protect them from liability for inadvertent copyright infringement, and called it a non‑controversial step toward modernising copyright law. No specific figures or opposing positions were cited."
+  },
+  {
+   "slug": "speech-365608",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "Labor supported the Copyright Amendment (Service Providers) Bill 2017 as a balanced measure benefiting educational and cultural institutions without compromising the commercial creative arts market or creators' livelihoods."
+  },
+  {
+   "slug": "speech-365997",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Copyright Amendment (Service Providers) Bill 2017 only extends safe harbour protections to educational and cultural institutions, leaving Australian digital platforms like Redbubble, Envato, and 99designs vulnerable to costly litigation. They noted Redbubble has 20 million monthly visitors, 10 million artworks from 600,000 artists, artists earned over $100 million (10% to Australians) with 50% annual growth, and a recent court case resulted in nominal damages of just $1, criticising the government for lacking courage to pursue broader reform."
+  },
+  {
+   "slug": "speech-365998",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "The Copyright Amendment (Service Providers) Bill 2017 extends the safe harbour scheme to educational, cultural and disability sectors, protecting schools, universities, libraries, museums, archives and disability organisations from copyright liability when providing digital services. The bill will benefit nearly 9,500 primary and secondary schools, 41 universities, and over 1,630 public libraries across Australia."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Copyright Amendment (Service Providers) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00071",
+   "assent_date": "2018-06-29"
+  }
+ ]
+}

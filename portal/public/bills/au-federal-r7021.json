@@ -1,0 +1,142 @@
+{
+ "key": "au-federal-r7021",
+ "title": "Defence Legislation Amendment (Naval Nuclear Propulsion) Bill 2023",
+ "short_title": "Defence Legislation Amendment (Naval Nuclear Propulsion) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-05-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "passed",
+ "status_as_of": "2023-07-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7021%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7021%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7021%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7021%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7021%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7021%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7021%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7021%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7021%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7021%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7021%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7021%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7021%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-07-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7021%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7021_ems_e44551cb-4c03-419b-97a8-bf7eac87cc2a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7021%22",
+   "document_date": "2023-05-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00048",
+   "document_date": "2023-07-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-829916",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-10",
+   "stage_hint": null,
+   "brief": "The Defence Legislation Amendment (Naval Nuclear Propulsion) Bill 2023 clarifies that the moratorium on civil nuclear power does not prevent regulators from performing functions related to conventionally armed nuclear-powered submarines and their infrastructure. The speaker also announced the planned establishment of a new Australian Nuclear-Powered Submarine Safety Regulator later in 2023."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Defence Legislation Amendment (Naval Nuclear Propulsion) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00048",
+   "assent_date": "2023-07-03"
+  }
+ ]
+}

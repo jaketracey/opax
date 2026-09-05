@@ -1,0 +1,208 @@
+{
+ "key": "au-federal-r7095",
+ "title": "Primary Industries (Consequential Amendments and Transitional Provisions) Bill 2023",
+ "short_title": "Primary Industries (Consequential Amendments and Transitional Provisions) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-10-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Fisheries and Forestry",
+ "status": "passed",
+ "status_as_of": "2024-07-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7095%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7095%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7095%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7095%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7095%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7095%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7095%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7095%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-11-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7095%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7095%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7095%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7095%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7095%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-07-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7095%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7095_ems_cf6649cb-bb65-44cc-935d-0b953df4a9f7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7095%22",
+   "document_date": "2023-10-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00060",
+   "document_date": "2024-07-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-10-18",
+  "sentences": [
+   "This bill is part of a set of laws that would update the national system for agricultural levies.",
+   "It would repeal outdated Acts and make changes to other laws to support the transition to a modernised framework.",
+   "The bill would also move rules about paying out levy funds and matching government contributions into a new separate law."
+  ],
+  "changes": [
+   "Repeals Acts that would be redundant when the new system starts.",
+   "Makes amendments to Commonwealth legislation to support the transition.",
+   "Removes provisions from the Primary Industries Research and Development Act 1989 and the Wine Australia Act 2013 about disbursement of levy amounts and matching funding.",
+   "Sets out application, savings and transitional arrangements to keep the levy system running without interruption."
+  ],
+  "affected": "Farmers, producers, processors, exporters, collection agents and levy recipient bodies would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:29:49Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-10438",
+   "date": "2024-07-01",
+   "house": "senate",
+   "question": "Murray Watt I table addenda to the explanatory memoranda relating to the Primary Industries Levies and Charges Collection Bill 2023 and the Primary Industries Levies and Charges Disbursement Bill 2023. The addenda respond to matters raised by the Scrutiny of Bills Committee. Question agreed to. Bills read a second time. Sue Lines The question is that the amendments on sheets 2420, 2421 and 2422, circulated by the opposition, be agreed to. _Opposition's circulated amendments—_ SHEET 2420 Primary Industries (Customs) Charges Bill 2023 (1) Clause 4, page 3 (after line 12), after the definition of _animal_, insert: _Animal Health Australia_ has the same meaning as in the _Primary Industries Levies and Charges Disbursement Act 2024_. (2) Clause 4, page 3 (after line 22), after the definition of _charge_, insert: _emergency animal biosecurity response deed_ has the same meaning as in the _Primary Industries Levies and Charges Disbursement Act 2024_. _emergency plant biosecurity response deed_ has the same meaning as in the _Primary Industries Levies and Charges Disbursement Act 2024_. (3) Clause 4, page 4 (after line 11), after the definition of _plant_, insert: _Plant Health Australia_ has the same meaning as in the _Primary Industries Levies and Charges Disbursement Act 2024_. (4) Clause 7, page 6 (lines 19 to 22), omit paragraphs (3)(c) and (d), substitute: (c) expenditure on activities, including biosecurity activities, that: (i) are undertaken by, or at the direction of, Animal Health Australia or Plant Health Australia; and (ii) relate to the promotion or maintenance of the health of plants, animals, fungi or algae; (d) expenditure on matters relating to a biosecurity response under: (i) an emergency animal biosecurity response deed; or (ii) an emergency plant biosecurity response deed; (5) Clause 10, page 8 (lines 17 to 20), omit paragraphs (2)(a) and (b), substitute: (a) expenditure on activities, including biosecurity activities, that: (i) are undertaken by, or a",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 10,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-01/20"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Primary Industries (Consequential Amendments and Transitional Provisions) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00060",
+   "assent_date": "2024-07-09"
+  }
+ ]
+}

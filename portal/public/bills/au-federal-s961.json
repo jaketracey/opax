@@ -1,0 +1,97 @@
+{
+ "key": "au-federal-s961",
+ "title": "Private Health Insurance Amendment (GP Services) Bill 2014",
+ "short_title": "Private Health Insurance Amendment (GP Services) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2014-03-27",
+ "originating_house": "senate",
+ "sponsor": "DI NATALE, Sen Richard",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10755",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s961%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s961%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s961%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s961%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s961%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s961%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s961%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s961_ems_60af684b-a1a7-43bd-9f1f-4be5b5e9b6c5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s961%22",
+   "document_date": "2014-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-27",
+  "sentences": [
+   "This bill would stop private health insurers from making deals with GP clinics that give their members better access to appointments.",
+   "It would amend the Private Health Insurance Act 2007 to ban insurers from contracting with primary care providers for preferential treatment.",
+   "The bill does not change the existing rule that insurers cannot cover services that attract a Medicare rebate."
+  ],
+  "changes": [
+   "Prohibits private health insurers from entering into arrangements with primary care providers that offer preferential treatment to insured members.",
+   "Clarifies that such arrangements are against the law, addressing ambiguity in the current Act.",
+   "Amends the Private Health Insurance Act 2007 to make the prohibition explicit."
+  ],
+  "affected": "Private health insurers, primary care providers (such as GP clinics), and their insured members.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:08:19Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

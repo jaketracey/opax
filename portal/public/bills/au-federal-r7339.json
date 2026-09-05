@@ -1,0 +1,744 @@
+{
+ "key": "au-federal-r7339",
+ "title": "Australian Security Intelligence Organisation Amendment Bill (No. 2) 2025",
+ "short_title": "Australian Security Intelligence Organisation Amendment Bill (No. 2) 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2026-08-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7339_ems_7b07fbaf-6caa-4121-a5a1-a13e4c97a88f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7339_ems_b911c923-74ab-4118-b769-d3f2621e349c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7339_ems_104925bd-220c-46b4-8924-c1773f0a0847%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7339%22",
+   "document_date": "2025-07-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00081",
+   "document_date": "2026-08-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-23",
+  "sentences": [
+   "The bill would permanently enshrine ASIO's compulsory questioning powers in law instead of letting them expire.",
+   "It would expand the types of security threats for which an adult can be questioned under a warrant to include sabotage, communal violence promotion, attacks on defence systems, and serious border integrity threats.",
+   "People charged with a related offence that is unresolved or imminent could only be questioned before a retired judge serving as a prescribed authority."
+  ],
+  "changes": [
+   "Makes the compulsory questioning framework permanent by removing its sunset provision.",
+   "Expands the scope of adult compulsory questioning warrants to cover new security threats defined in the ASIO Act.",
+   "Amends rules for the appointment and termination of prescribed authorities to strengthen their independence and impartiality.",
+   "Adds a new reporting requirement for conduct under a compulsory questioning warrant.",
+   "Introduces a safeguard requiring questioning of a person with an unresolved or imminent related charge to happen only before a retired judge."
+  ],
+  "affected": "ASIO, prescribed authorities, people subject to compulsory questioning warrants, and the Parliamentary Joint Committee on Intelligence and Security.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:28:49Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9910",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "question": "Australian Security Intelligence Organisation Amendment Bill (No. 2) 2025 - Report from Federation Chamber - Agree with the bill's main idea",
+   "stage": "Report from Federation Chamber",
+   "ayes": 106,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 114
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-02-12/1"
+  },
+  {
+   "key": "federal-representatives-9911",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "question": "Australian Security Intelligence Organisation Amendment Bill (No. 2) 2025 - Consideration in Detail - Sunset clause and review",
+   "stage": "Consideration in detail",
+   "ayes": 10,
+   "noes": 67,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-02-12/2"
+  },
+  {
+   "key": "federal-representatives-9912",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "question": "Australian Security Intelligence Organisation Amendment Bill (No. 2) 2025 - Consideration in Detail - Protections for minors",
+   "stage": "Consideration in detail",
+   "ayes": 9,
+   "noes": 60,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 69
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-02-12/3"
+  },
+  {
+   "key": "federal-senate-10735",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Australian Security Intelligence Organisation Amendment Bill (No. 2) 2025. I'll begin with the second reading amendment moved by Senator Shoebridge. The question is that the amendment on sheet 3789 be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/23"
+  },
+  {
+   "key": "federal-senate-10736",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines The question now is that this bill be now read a second time.",
+   "stage": "Limitation of debate",
+   "ayes": 26,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/24"
+  },
+  {
+   "key": "federal-senate-10737",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Committee of the Whole amendments circulated by the government. I understand the minister has documents to table. Katy Gallagher I table a replacement explanatory memorandum and a supplementary explanatory memorandum relating to the government amendments to this bill. Sue Lines The question is that the amendments on sheet SV144 be agreed to. _Government'_ _s circulated amendments—_ (1) Schedule 1, item 1, page 3 (lines 4 and 5), omit the item, substitute: 1 Section 34JF Omit \"7 March 2027\", substitute \"the third anniversary of the commencement of the _Australian Security Intelligence Organisation Amendment Act (No. 2) 2026_\". (2) Schedule 1, item 2, page 3 (line 8), omit \"third\", substitute \"second\". (3) Schedule 1, item 2, page 3 (line 10), omit \"_2025_\", substitute \"_2026_\". Question agreed to. I will now deal with the Committee of the Whole amendments circulated by the Australian Greens. The question is that part 2 of schedule 1 and item 1 of schedule 2 on sheet 3815 stand as printed. _Australian Greens' circulated amendments—_ (1) Schedule 1, Part 2, page 4 (lines 1 to 19), to be opposed. (2) Schedule 2, item 1, page 10 (lines 4 to 7), to be opposed.",
+   "stage": "Limitation of debate",
+   "ayes": 26,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/25"
+  },
+  {
+   "key": "federal-senate-10738",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines The question now is that the amendments on sheets 3795, 3798, 3799, 3800 and 3816 be agreed to. _Australian Greens_ _'_ _circulated amendments—_ SHEET 3795 (1) Schedule 1, heading to Part 1, page 3 (line 2), at the end of the heading, add \"and additional reporting\". (2) Schedule 1, item 1, page 3 (lines 4 and 5), omit the item, substitute: 1 Section 34JF Repeal the section, substitute: 34JF Periodic review of this Division _Inspector-General to conduct reviews_ (1) The Inspector-General of Intelligence and Security must conduct periodic reviews of the operation, effectiveness and implications of this Division. _Timing of reviews_ (2) The first review must be completed before the end of 3 years after the commencement of this section. (3) Each later review must be completed before the end of 3 years after the completion of the previous review. _Attorney to be given report of review_ (4) The Inspector-General of Intelligence and Security must give the Attorney-General a written report of the review. _Attorney to table report_ (5) The Attorney-General must cause a copy of the report of each review to be tabled in each House of the Parliament within 15 sitting days of that House after the Attorney-General receives the report. (3) Schedule 1, page 3 (after line 5), after item 1, insert: _Inspector-General of Intelligence and Security Act 1986_ 1A After subsection 35(2C) Insert: (2CA) The Inspector-General must include in a report referred to in subsection (2) the Inspector-General's comments on any activity of the Inspector-General, during the period to which the report relates, relating to Division 3 of Part III of the _Australian Security Intelligence Organisation Act 1979_. \\_\\_\\_\\_\\_ SHEET 3798 (1) Schedule 1, page 5 (after line 22), after Part 3, insert: Part 3A — Appointment of judges as a prescribed authority to be preferred _Australian Security Intelligence Organisation Act 1979_ 4A After subsection 34AD(1) Insert: (1A) In making appointments under subse",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/26"
+  },
+  {
+   "key": "federal-senate-10739",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with amendments circulated by the United Australia Party. The question is that the amendment on sheet 3788, circulated by the United Australia Party, be agreed to. _United Australia Party_ _'s_ _circulated amendment—_ (1) Schedule 1, item 1, page 3 (lines 4 and 5), omit the item, substitute: 1 Section 34JF Omit \"7 March 2027\", substitute \"1 May 2028\".",
+   "stage": "Limitation of debate",
+   "ayes": 3,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/27"
+  },
+  {
+   "key": "federal-senate-10740",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with amendments circulated by One Nation. They are on sheets 3807 and 3809. I have been asked to consider them separately. If it suits the chamber, I will deal with the amendment on sheet 3807 first. The question is that One Nation's amendment on sheet 3807 be agreed to. _One Nation's circulated amendment—_ (1) Schedule 1, item 3, page 4 (line 13), omit subparagraph (a)(iv) of the definition of _adult questioning matter_ in section 34A.",
+   "stage": "Limitation of debate",
+   "ayes": 15,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/28"
+  },
+  {
+   "key": "federal-senate-10741",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the last One Nation amendment, on sheet 3809. The question is that One Nation's amendment on sheet 3809 be agreed to. _One Nation's circulated amendment_ (1) Schedule 1, item 3, page 4 (after line 15), after subparagraph (a)(vi) of the definition of _adult questioning matter_ in section 34A, insert: (vii) serious threats from radical Islamic extremism;",
+   "stage": "Limitation of debate",
+   "ayes": 26,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/29"
+  },
+  {
+   "key": "federal-senate-10742",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the amendments on sheet 3787, circulated by Senator David Pocock. The first question is that items 7 and 9 of schedule 1 stand as printed. _Senator David Pocock's circulated amendments—_ (1) Schedule 1, item 7, page 8 (lines 4 and 5), to be opposed. (2) Schedule 1, item 9, page 8 (lines 17 to 19), to be opposed.",
+   "stage": "Limitation of debate",
+   "ayes": 26,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/30"
+  },
+  {
+   "key": "federal-senate-10743",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines The question now is that the remaining amendment on sheet 3787 be agreed to. _Senator David Pocock's circulated amendment—_ (3) Schedule 1, page 9 (after line 2), at the end of the Schedule, add: Part 7 — Legal representation and repeal of minor questioning warrants _Australian Security Intelligence Organisation Act 1979_ 12 Section 34A Repeal the following definitions: (a) definition of _minor questioning matter_; (b) definition of _minor questioning warrant_; (c) definition of _minor's representative_. 13 Section 34A (definition of _questioning warrant_ ) Repeal the definition, substitute: _questioning warrant_ means an adult questioning warrant. 14 Section 34AA Repeal the section. 15 Subsection 34B(1) Repeal the subsection, substitute: _Request for warrant_ (1) The Director-General may request the Attorney-General to issue, in relation to a person, an adult questioning warrant. 16 Paragraph 34B(4)(e) Omit \"person; and\", substitute \"person.\". 17 Paragraph 34B(4)(f) Repeal the paragraph. 18 Sections 34BB and 34BC Repeal the sections, substitute: 34BC Warrant has no effect if person under 18 A questioning warrant has no effect if the subject of the warrant is under 18 years old. 19 Paragraph 34BD(1)(b) Repeal the paragraph, substitute: (b) subject to subsection (3A), authorise the Organisation to question the subject of the warrant before a prescribed authority by requesting the subject to give information, or produce a record or other thing, that is, or may be, relevant to intelligence that is important in relation to an adult questioning matter; and 20 Subsections 34BD(2) and (3) Repeal the subsections. 21 Paragraph 34BE(3)(b) Repeal the paragraph, substitute: (b) a record or other thing is found during the search that the officer reasonably believes is relevant to the collection of intelligence that is important in relation to an adult questioning matter; 22 Subsection 34BE(4) Repeal the subsection, substitute: _Warrant may request production of records",
+   "stage": "Limitation of debate",
+   "ayes": 11,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/31"
+  },
+  {
+   "key": "federal-senate-10744",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines The question now is that the remaining stages of the bill be agreed to, and the bill be now passed.",
+   "stage": "Limitation of debate",
+   "ayes": 26,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/32"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1195135",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200103",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200104",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200183",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2026-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200623",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202914",
+   "speaker": "Maria Kovacic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205918",
+   "speaker": "David Pocock",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205925",
+   "speaker": "Sue Lines",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Security Intelligence Organisation Amendment Act (No. 2) 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00081",
+   "assent_date": "2026-08-26"
+  }
+ ]
+}

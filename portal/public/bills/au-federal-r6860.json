@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6860",
+ "title": "Health Insurance Amendment (Administrative Actions) Bill 2022",
+ "short_title": "Health Insurance Amendment (Administrative Actions) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6860%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6860%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6860%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6860_ems_fae5e828-6343-4908-9492-2b6fe0641062%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6860%22",
+   "document_date": "2022-02-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-418788",
+   "speaker": "Stuart Rowland Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Administrative Actions) Bill 2022 was introduced to streamline Medicare administrative processes by enabling automated systems for placing doctors on and removing them from the Register of Approved Placements, based on decisions by specified bodies, to reduce processing times and allow doctors to start work sooner."
+  }
+ ],
+ "acts": []
+}

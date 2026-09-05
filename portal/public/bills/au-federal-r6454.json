@@ -1,0 +1,201 @@
+{
+ "key": "au-federal-r6454",
+ "title": "Family Law Amendment (Western Australia De Facto Superannuation Splitting and Bankruptcy) Bill 2020",
+ "short_title": "Family Law Amendment (Western Australia De Facto Superannuation Splitting and Bankruptcy) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-11-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2020-12-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6454%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6454%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6454%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6454%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6454%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6454%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6454%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6454%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6454%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6454%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6454%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6454%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6454%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6454_ems_4cb94a2f-9a59-43ba-8bfa-b5958f3d66c5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6454_ems_112c7978-b23e-487a-85de-00742d743441%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6454_ems_94726e8a-0217-4371-a0e4-030d54e65139%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/7604386%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6454%22",
+   "document_date": "2019-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00112",
+   "document_date": "2020-12-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2019-11-27",
+  "sentences": [
+   "This bill would let separating de facto couples in Western Australia divide their superannuation, either by mutual agreement or through a court order.",
+   "It introduces a new part to the Family Law Act that applies only to Western Australia, with rules similar to those already in place for other states and territories.",
+   "The bill also covers payment flags, which stop a super fund from paying out while negotiations continue, and allows these flags to be lifted under certain conditions."
+  ],
+  "changes": [
+   "Creates a new part in the Family Law Act for Western Australian de facto couples to split superannuation.",
+   "Allows superannuation to be divided by consent or court order.",
+   "Sets out rules for payment flags and their lifting, including requirements for independent legal advice.",
+   "Makes the new provisions override other laws and trust deeds."
+  ],
+  "affected": "Separating de facto couples in Western Australia, their superannuation funds, and the courts that handle family law in that state.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:33:23Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-384951",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-27",
+   "stage_hint": null,
+   "brief": "The Family Law Amendment (Western Australia De Facto Superannuation Splitting and Bankruptcy) Bill 2019 was introduced to allow separating de facto couples in Western Australia to split their superannuation in property settlements and to have bankruptcy matters heard concurrently with family law proceedings, ending a decade of inequality."
+  },
+  {
+   "slug": "speech-398079",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Family Law Amendment (Western Australia De Facto Superannuation Splitting and Bankruptcy) Bill 2019 would make the system fairer for de facto couples in Western Australia by allowing superannuation splitting and concurrent bankruptcy proceedings, but criticised the Morrison government for delaying the bill for almost a year and for proposing to abolish the Family Court based on a six-week review by two PwC accountants."
+  },
+  {
+   "slug": "speech-398081",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Family Law Amendment (Western Australia De Facto Superannuation Splitting and Bankruptcy) Bill 2019 addresses a 14-year delay in extending superannuation splitting and bankruptcy jurisdiction to de facto couples in Western Australia, and criticised the Commonwealth for actively discriminating against same-sex couples in the state. They welcomed the bill as providing equality but urged its swift passage, noting the Western Australian referral of power occurred in 2006 and the Commonwealth Attorney-General foreshadowed the legislation in March 2018."
+  },
+  {
+   "slug": "speech-398082",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The Family Law Amendment (Western Australia De Facto Superannuation Splitting and Bankruptcy) Bill 2019 was supported as a long-overdue measure to let Western Australian de facto couples split superannuation on separation, matching the rest of Australia. The Attorney-General was criticised for delaying the non-controversial bill for almost a year, with the delay cited as further evidence of government neglect of the family law system."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Family Law Amendment (Western Australia De Facto Superannuation Splitting and Bankruptcy) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00112",
+   "assent_date": "2020-12-08"
+  }
+ ]
+}

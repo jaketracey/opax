@@ -1,0 +1,468 @@
+{
+ "key": "au-federal-r6521",
+ "title": "Coronavirus Economic Response Package Omnibus Bill 2020",
+ "short_title": "Coronavirus Economic Response Package Omnibus Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-03-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-03-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6521_ems_84ea9dda-1a44-44b8-878b-68c376cbed56%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6521_ems_64759256-8ca2-4609-8ed2-6374637e1fa3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6521_ems_d0c22b21-29e6-4160-9f79-c6934b28ef4e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6521%22",
+   "document_date": "2020-03-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00022",
+   "document_date": "2020-03-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6310",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "question": "The majority voted to disagree with the [amendment](https://www.openaustralia.org.au/debate/?id=2020-03-23.18.1) below being added to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) \"*that the bills be read for a second time*\". Reading a bill for a second time is parliamentary jargon for agreeing with the main idea of the bill. Because this amendment was unsuccessful, the words below will not be added. It was introduced by Whitlam MP [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor). ### What do these bills do? These bills [were introduced to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6521_ems_84ea9dda-1a44-44b8-878b-68c376cbed56%22;rec=0) \"*implement the Government’s economic response to the spread of the Coronavirus, which the Government announced between 12 and 22 March 2020.*\" You can find a copy of the bills' text on the bills' homepages by clicking on the bill hyperlinks provided on this page (each bill has its own hyperlink), or read about the Government's intentions with the bill on the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6521_ems_84ea9dda-1a44-44b8-878b-68c376cbed56%22;rec=0). Due to the speed with which the bills went through parliament, there is currently no bills digest. ### Amendment text > *That the following words be added after paragraph (7):* > > *\"(8)(a) every Australian deserves a dignified retirement;* > >> *(b) Australians are proud of our world-class superannuation system;* >> >> *(c) drawing down on superannuation when the market is at historic lows will have negative implications for most Australians, and should only be an option of last resort; and* >> >> *(d",
+   "stage": "Second reading",
+   "ayes": 49,
+   "noes": 38,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 37
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 87
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-03-23/1"
+  },
+  {
+   "key": "federal-representatives-6311",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "question": "The majority voted to disagree with the [amendment](https://www.openaustralia.org.au/debate/?id=2020-03-23.14.1) below being added to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) \"*that the bills be read for a second time*\". Reading a bill for a second time is parliamentary jargon for agreeing with the main idea of the bill. Because this amendment was unsuccessful, the words below will not be added. It was introduced by Watson MP [Tony Burke](https://theyvoteforyou.org.au/people/representatives/watson/tony_burke) (Labor). ### What do these bills do? These bills [were introduced to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6521_ems_84ea9dda-1a44-44b8-878b-68c376cbed56%22;rec=0) \"*implement the Government’s economic response to the spread of the Coronavirus, which the Government announced between 12 and 22 March 2020.*\" You can find a copy of the bills' text on the bills' homepages by clicking on the bill hyperlinks provided on this page (each bill has its own hyperlink), or read about the Government's intentions with the bill on the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6521_ems_84ea9dda-1a44-44b8-878b-68c376cbed56%22;rec=0). Due to the speed with which the bills went through parliament, there is currently no bills digest. ### Amendment text > *That the following words be added:* > > *''(6) there is no conditionality on assistance measures to business to keep workers employed; and* > > *(7) calls on the Government to legislate for a mechanism that provides sufficient incentive for employers to keep employees in work''*",
+   "stage": "Second reading",
+   "ayes": 46,
+   "noes": 38,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 37
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 84
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-03-23/2"
+  },
+  {
+   "key": "federal-representatives-6312",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) unchanged. The usual second reading motion is \"*that the bills be read for a second time*\", which is parliamentary jargon for agreeing with the main idea of the bill. The proposal to change the usual text and replace it with the [amendment](https://www.openaustralia.org.au/debate/?id=2020-03-23.10.1) below was introduced by Rankin MP [Jim Chalmers](https://theyvoteforyou.org.au/people/representatives/rankin/jim_chalmers) (Labor). The purpose of the amendment was to draw attention to the starting date of the measures included in the bill (see below). ### What do these bills do? These bills [were introduced to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6521_ems_84ea9dda-1a44-44b8-878b-68c376cbed56%22;rec=0) \"*implement the Government’s economic response to the spread of the Coronavirus, which the Government announced between 12 and 22 March 2020.*\" You can find a copy of the bills' text on the bills' homepages by clicking on the bill hyperlinks provided on this page (each bill has its own hyperlink), or read about the Government's intentions with the bill on the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6521_ems_84ea9dda-1a44-44b8-878b-68c376cbed56%22;rec=0). Due to the speed with which the bills went through parliament, there is currently no bills digest. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give these bills a second reading, the House calls on the Government to more quickly implement the measures it is proposing, noting that under the current proposa",
+   "stage": "Second reading",
+   "ayes": 49,
+   "noes": 38,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 37
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 87
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-03-23/3"
+  },
+  {
+   "key": "federal-representatives-6313",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "question": "The majority voted in favour of disagreeing with the [opposition amendments](https://www.openaustralia.org.au/debate/?id=2020-03-23.91.1), which were introduced by Whitlam MP Stephen Jones (Labor). This means that the amendments failed. ### What did the amendments do? Mr Jones [explained the purpose of the amendments](https://www.openaustralia.org.au/debate/?id=2020-03-23.91.1), which relate to provisions that give workers early access to funds from their superannuation. Mr Jones argued that the provisions are \"poorly implemented\": > *We are advised by the government that 1.6 million applicants are expected to take avail of the new provisions within this schedule. Those 1.6 million applicants will make their application to access superannuation through the myGov portal. [...]* > > *We are deeply concerned because of the mechanisms around which this schedule will operate. The 1.6 million applicants go to myGov, they make their applications through myGov and myGov sends it through to the regulator, who, in this instance, is the ATO—and the ATO is the assessing authority. Most people will think, 'Well, if the ATO is the approving authority, a payment can be easily issued from the ATO'—but this is not the case. The ATO sends a notice to the trustees of the member's superannuation fund, saying, 'Please pay this money into this member's bank account.' That sounds reasonable. The only problem is the superannuation accounts don't have that information. With all the goodwill in the world, the minister might wish they did and the parliament may wish they did, but the simple fact of the matter is they don't. They don't have that information.* > > *[...] Labor's amendments ... ensure that, when the ATO contacts the superannuation fund, and says, 'This fund member is eligible to receive early relief,' the ATO must provide the superannuation fund with all the information that they have that will enable the superannuation fund to make an early release of the funds.* Deakin MP [Mic",
+   "stage": "Consideration in detail",
+   "ayes": 49,
+   "noes": 38,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 37
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 87
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-03-23/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-390488",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The government announced a $189 billion coronavirus economic response package, including $750 payments to social security recipients, a $550 fortnightly supplement for jobseekers, increased instant asset write-off thresholds to $150,000, and cash flow boosts of up to $100,000 for businesses, alongside measures to support apprentices, aviation, superannuation, and insolvency relief."
+  },
+  {
+   "slug": "speech-390492",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "Supported the Coronavirus Economic Response Package Omnibus Bill 2020 as necessary but called for testing all Australians with symptoms, expanding telehealth rebates to all Australians and doctors working from home, and increasing mental health support, warning against complacency by citing the Spanish flu pandemic."
+  },
+  {
+   "slug": "speech-390494",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "Labor supported the Coronavirus Economic Response Package Omnibus Bill 2020 but criticised the government for insufficient urgency, noting that a Labor government would have reconvened parliament earlier and made immediate payments. The speech highlighted specific concerns: Qantas stood down 20,000 workers, the UK offers an 80% wage subsidy compared to Australia's 20% with no guarantee of job retention, and the government's superannuation drawdown policy undermines retirement savings."
+  },
+  {
+   "slug": "speech-390495",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment to add conditions to the Coronavirus Economic Response Package Omnibus Bill 2020, arguing the government’s wage subsidy provides only a 20% median wage subsidy based on past payroll, not current employment, and fails to keep workers in jobs. They called for a mechanism to incentivise employers to retain staff, criticised the lack of a targeted arts sector package, and warned that encouraging early superannuation withdrawals harms retirement savings."
+  },
+  {
+   "slug": "speech-390499",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "Labor supported the government's coronavirus economic packages but argued the response was too slow and insufficient, particularly in guaranteeing small and medium enterprises retain workers, citing the UK's 80% wage subsidy and New Zealand's weekly subsidies as stronger models. The speaker also called for faster cash-flow delivery, more support for sole traders, industry-specific measures, and consideration of government equity in bailouts and patent-use provisions."
+  },
+  {
+   "slug": "speech-390501",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment to the Coronavirus Economic Response Package Omnibus Bill 2020, arguing that early superannuation withdrawal at historic market lows is a bad idea that crystallises losses—for example, a $20,000 withdrawal could cost an average worker $80,000–$100,000 in retirement—and called for increased funding for financial counselling, monitoring of advisers, APRA certification, and consultation with stakeholders, while warning that administrative failures like the myGov crash risk harming vulnerable Australians."
+  },
+  {
+   "slug": "speech-390504",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued against allowing early access to superannuation during the pandemic, calling it a bad idea that robs the future, but supported the broader coronavirus bill. They proposed four measures for people with disability: mandatory virus tests for all disability workers, maintaining cash flow for disability service providers, a workforce plan for when carers must self-isolate, and creating an \"army reserve\" of carers from displaced workers, while also calling for Australia to build sovereign capability in manufacturing medical equipment like ventilators and PPE."
+  },
+  {
+   "slug": "speech-390506",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued for immediate action on COVID-19 economic measures, criticising delays and urging one-off payments to avoid Centrelink queues, while supporting amendments on superannuation and calling for multilingual public health information, condemnation of racism, and support for temporary visa holders and asylum seekers."
+  },
+  {
+   "slug": "speech-390562",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's stimulus measures were too slow and modest, criticising the wage subsidy as a 25% effective subsidy with no job guarantee and the jobseeker payment's spousal income test that could deny assistance to families losing over half their income. He also raised concerns about Centrelink staffing cuts and website failures, a 10% cut to Pacific health assistance over five years, and inadequate personal protective equipment for healthcare workers, warning that without it doctors and nurses could die."
+  },
+  {
+   "slug": "speech-390563",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued for national unity and urgent action during the COVID-19 crisis, supporting strict social-distancing policies and thanking health officials including NSW Health Minister Brad Hazzard, Chief Health Officer Dr Kerry Chant, and local hospital leaders."
+  },
+  {
+   "slug": "speech-390564",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "Bushfire-affected communities in the Indi electorate face a compounded crisis from COVID-19 and require accelerated recovery with reduced bureaucracy, including unconditional cash transfers similar to those for small businesses. The member called for national job retraining into health and infrastructure roles, direct grants to artists, serious investment in mental health, and stronger worker security than an unwritten contract."
+  },
+  {
+   "slug": "speech-390565",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The crossbench member supported the Coronavirus Economic Response Package Omnibus Bill 2020, highlighting $22 billion in supply bills and urging additional financial assistance for local governments to deliver community wellbeing support, particularly in regional areas."
+  },
+  {
+   "slug": "speech-390566",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The speaker urged the government to accelerate financial support for sole traders and casuals, noting 22.8% of Warringah’s workforce are casuals, and called for direct wage subsidies for closed businesses, additional aid for arts, fitness, and disability sectors, clearer crisis messaging, and safe repatriation of Australians stranded overseas."
+  },
+  {
+   "slug": "speech-390568",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The speaker announced the Coronavirus Economic Response Package Omnibus Bill 2020, which includes measures such as increasing the instant asset write-off threshold to $150,000, providing cash flow boosts of $20,000–$100,000 to 690,000 businesses, and delivering $750 payments to 6.6 million social security recipients, a $550 fortnightly COVID-19 supplement, and early superannuation access of up to $20,000 tax-free. The bill also supports apprentices, aviation, and childcare, and temporarily waives the Great Barrier Reef environmental management charge."
+  },
+  {
+   "slug": "speech-390576",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-390590",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Coronavirus Economic Response Package Omnibus Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00022",
+   "assent_date": "2020-03-24"
+  }
+ ]
+}

@@ -1,0 +1,261 @@
+{
+ "key": "au-federal-r6472",
+ "title": "Student Identifiers Amendment (Higher Education) Bill 2019",
+ "short_title": "Student Identifiers Amendment (Higher Education) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2020-03-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6472%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6472%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6472%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6472%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6472%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6472%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6472_ems_7d66d80f-d486-429f-af5b-ab753cdaef06%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6472%22",
+   "document_date": "2019-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00019",
+   "document_date": "2020-03-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-04",
+  "sentences": [
+   "The bill would extend the unique student identifier system from vocational training to university students.",
+   "The Student Identifiers Registrar would gain powers to assign, collect, use, disclose and verify identifiers for higher education students, and the Education Minister could direct the Registrar by legislative instrument.",
+   "From 1 January 2023, universities could not give a regulated higher education award to a student without a student identifier or an exemption."
+  ],
+  "changes": [
+   "Extends the student identifier system to the higher education sector.",
+   "Expands the Registrar's powers to include higher education operations.",
+   "Allows the Education Minister to direct the Registrar via legislative instrument.",
+   "Requires higher education providers to withhold awards from students without an identifier from 2023.",
+   "Enables the Education Minister to recommend regulations for higher education matters.",
+   "Extends authorisations for collecting, using and disclosing identifiers under several education Acts."
+  ],
+  "affected": "Higher education students, registered higher education providers, the Student Identifiers Registrar, and the Education Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6225",
+   "date": "2020-02-24",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2020-02-24.25.2) to the usual [second reading motion](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which means it failed. The usual second reading motion is \"that the bill be read for a second time\", which is parliamentary jargon for agreeing with the main idea of the bill. The amendment was introduced by Sydney MP [Tanya Plibersek](https://theyvoteforyou.org.au/people/representatives/sydney/tanya_plibersek) (Labor). ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the Government has damaged the quality of Australia's world-class education system by:* > > *(1) cutting billions from universities by effectively capping undergraduate places;* > > *(2) slashing research funding; and* > > *(3) failing to develop a long-term education policy for the nation\".*",
+   "stage": "Second reading",
+   "ayes": 65,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-24/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-386162",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The Student Identifiers Amendment (Higher Education) Bill 2019 extends the Unique Student Identifier (USI) from vocational education to all higher education, starting in 2021, with all graduating students needing a USI by 2023. An estimated 300,000 USIs will be issued in 2020-21, rising to 1.4 million in 2021-22, replacing the existing CHESSN identifier."
+  },
+  {
+   "slug": "speech-388412",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "Labor supported the Student Identifiers Amendment Bill to create a single tertiary student identifier, but criticised the government for taking seven years to act and for cutting $2.2 billion from universities, $328 million from research, and over $3 billion from TAFE, arguing these cuts damage the education system and economy."
+  },
+  {
+   "slug": "speech-388414",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The member for Curtin supported the Student Identifiers Amendment (Higher Education) Bill 2019, which extends the Unique Student Identifier (USI) to higher education students from 1 January 2021 and decommissions the CHESSN, to improve data integration and student transitions between vocational and higher education. He noted that over 52% of Curtin residents hold post-secondary qualifications, compared to the national average of 30%."
+  },
+  {
+   "slug": "speech-388415",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Student Identifiers Amendment (Higher Education) Bill 2019 to extend the Unique Student Identifier to higher education students, but argued it should also cover school students as recommended by the 2018 Gonski review, and criticised the coalition government for cutting $2.2 billion from universities and $328.5 million from research, locking over 200,000 students out of university places."
+  },
+  {
+   "slug": "speech-388416",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-388417",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "Labor supported the Student Identifiers Amendment (Higher Education) Bill 2019 and amendments by the member for Sydney, arguing the Liberal-National government had cut $2.2 billion from universities, denied 200,000 people places, and delayed the student identifier reform for seven years. The bill extends the Unique Student Identifier to higher education, which Labor said would improve data and policy, while noting the sector contributes $140 billion to GDP and international education is a $33 billion export industry supporting 130,000 jobs."
+  },
+  {
+   "slug": "speech-388418",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Student Identifiers Amendment (Higher Education) Bill 2019 will create a seamless system linking vocational and university education, supporting Australians who will change careers multiple times. He noted record coalition funding of $18 billion for higher education, $172 million for the University of the Sunshine Coast in 2018-19, and highlighted skill shortages in trades like glazing, tiling and cabinetmaking in Queensland."
+  },
+  {
+   "slug": "speech-388419",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The Student Identifiers Amendment (Higher Education) Bill 2019 extends the Unique Student Identifier (USI) from vocational education and training to all tertiary education, enabling better data collection and easier student movement between sectors, with privacy protections as the top priority."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Student Identifiers Amendment (Higher Education) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00019",
+   "assent_date": "2020-03-06"
+  }
+ ]
+}

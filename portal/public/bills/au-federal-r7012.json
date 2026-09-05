@@ -1,0 +1,478 @@
+{
+ "key": "au-federal-r7012",
+ "title": "National Security Legislation Amendment (Comprehensive Review and Other Measures No. 2) Bill 2023",
+ "short_title": "National Security Legislation Amendment (Comprehensive Review and Other Measures No. 2) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2023-08-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-08-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7012_ems_6b5ad4ad-471d-4833-aa02-1e58f98c16a8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7012_ems_62a96774-2b41-4dde-8791-4ab935954f0e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7012%22",
+   "document_date": "2023-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00053",
+   "document_date": "2023-08-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-29",
+  "sentences": [
+   "This bill would adopt several recommendations from a review of the national intelligence community's legal framework.",
+   "It would clarify the Attorney-General's role regarding ASIO, expand the Parliamentary Joint Committee on Intelligence and Security, and adjust oversight by the Inspector-General of Intelligence and Security.",
+   "The bill would also remove the Attorney-General's power to delegate certain ASIO Act and TIA Act authorities, except through legislative amendment or a Governor-General order in exceptional circumstances."
+  ],
+  "changes": [
+   "Remove the Attorney-General's ability to delegate powers under the ASIO Act and TIA Act.",
+   "Add a defence for ASIO employees or affiliates acting in good faith under certain Criminal Code sections.",
+   "Increase the Parliamentary Joint Committee on Intelligence and Security membership from 11 to 13 members.",
+   "Exclude ASIO from Division 3 of Part VIIC of the Crimes Act regarding spent conviction information.",
+   "Require the Inspector-General of Intelligence and Security to report complaint and disclosure details annually.",
+   "Exclude several intelligence agencies from the Commonwealth Ombudsman's jurisdiction."
+  ],
+  "affected": "The Australian Security Intelligence Organisation, the Parliamentary Joint Committee on Intelligence and Security, the Inspector-General of Intelligence and Security, and the Australian Secret Intelligence Service, Australian Geospatial-Intelligence Organisation, Australian Signals Directorate, Defence Intelligence Organisation, and Office of National Intelligence are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:38:19Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8075",
+   "date": "2023-03-30",
+   "house": "senate",
+   "question": "Committees - Selection of Bills Committee; Report - National Security Legislation Amendment (Comprehensive Review and Other Measures No. 2) Bill 2023",
+   "stage": "Committee motion",
+   "ayes": 27,
+   "noes": 17,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-30/1"
+  },
+  {
+   "key": "federal-senate-8270",
+   "date": "2023-08-07",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping [part 3 of schedule 1](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr7012_first-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr7012_first-reps%2F0000%22;rec=0#17f52f8861d04fb9b42b85f38de1a30a) unchanged. In parliamentary jargon, they voted that it might *stand as printed*. This part related to the membership of the [Parliamentary Joint Committee on Intelligence and Security](https://en.wikipedia.org/wiki/Parliamentary_Joint_Committee_on_Intelligence_and_Security) (PJCIS). ### Text of Part 3 of Schedule 1 > *Part 3 — Membership of the Parliamentary Joint Committee on Intelligence and Security* > > *Intelligence Services Act 2001* > > *11 Subsection 28(2)* > >> *Repeal the subsection, substitute:* >> >> *(2) The Committee is to consist of 13 members and must include at least:* >> >>> *(a) 2 Senators who are Government members; and* >>> >>> *(b) 2 members of the House of Representatives who are Government members; and* >>> >>> *(c) 2 Senators who are non-Government members; and* >>> >>> *(d) 2 members of the House of Representatives who are non-Government members.* > > *12 Paragraph 18(1)(a) of Schedule 1* > >> *Omit “6 members”, substitute “7 members”.* > > *13 Application provision* > >> *The amendments of the Intelligence Services Act 2001 made by this Part:* >> >> *(a) apply, on and after the commencement of this item, in relation to the Committee established in respect of the 47th Parliament; and* >> >> *(b) do not affect the appointment of a member of that Committee made before the commencement of this item.*",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 7,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-07/1"
+  },
+  {
+   "key": "federal-senate-8271",
+   "date": "2023-08-07",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-08-07.58.1) introduced by Victorian Senator [James Paterson](https://theyvoteforyou.org.au/people/senate/victoria/james_paterson) (Liberal), which means it failed. The purpose of the amendments was to ensure the presence of Opposition members on the [Parliamentary Joint Committee on Intelligence and Security](https://en.wikipedia.org/wiki/Parliamentary_Joint_Committee_on_Intelligence_and_Security) (PJCIS). ### Amendment text > *(1) Schedule 1, item 11, page 7 (lines 4 to 13), omit the item, substitute:* > > *11 Subsections 28(2) and (3)* > >> *Repeal the subsections (not including the note), substitute:* >> >> *(2) The Committee is to consist of 13 members and must include at least:* >> >>> *(a) 4 members of the Senate; and* >>> >>> *(b) 4 members of the House of Representatives.* >> >> *(3) The members must consist of the following:* >> >>> *(a) 7 members who are Government members;* >>> >>> *(b) 6 members who are Opposition members.* ### Current wording of that part > *11 Subsection 28(2)* > >> *Repeal the subsection, substitute:* >> >> *(2) The Committee is to consist of 13 members and must include at least:* >> >>> *(a) 2 Senators who are Government members; and* >>> >>> *(b) 2 members of the House of Representatives who are Government members; and* >>> >>> *(c) 2 Senators who are non-Government members; and* >>> >>> *(d) 2 members of the House of Representatives who are non-Government members.*",
+   "stage": "In committee",
+   "ayes": 24,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 7,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-07/2"
+  },
+  {
+   "key": "federal-senate-8272",
+   "date": "2023-08-07",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-08-07.65.3) \"*that part 4 of schedule 1 stand as printed.*\" In other words, they voted to keep that part unchanged. This vote took place after NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens) introduced a [motion](https://www.openaustralia.org.au/senate/?gid=2023-08-07.60.1) to oppose that part. ### Why did the Greens Party oppose this part? [Part 4 of Schedule 1](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr7012_first-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr7012_first-reps%2F0000%22;rec=0#7d5ac8eca0bb4a418288f90eeaee447e) relates to spent convictions. According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd074): > *Spent convictions are those criminal convictions which may no longer be disclosed on a person’s record because a period of time has elapsed (for example, 10 years) where no further reoffending has occurred. There are some exceptions to the ‘automatic spending of convictions’. For example, some sexual assault offences may never be spent and are thus always disclosable. Each state and territory (as well as the Commonwealth) has its own spent convictions legislation (or ‘scheme’) that defines a spent conviction and sets out the exemptions that apply.* Senator Shoebridge [explained that](https://www.openaustralia.org.au/senate/?gid=2023-08-07.60.1) the Greens seek: > *to remove from the bill the provisions that give expanded power to ASIO to use, record and disclose spent convictions information. ... The purpose of the spent convictions regime is to allow people to get on with their lives after they've been convicted of a more minor offence so that, after 10 years, that offence doesn't keep coming back and haunting them.*",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-07/3"
+  },
+  {
+   "key": "federal-senate-8273",
+   "date": "2023-08-07",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2023-08-07.74.1) to pass [the bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7012) in the Senate. In parliamentary jargon, they voted to read it for a third time. Since the bill has already passed in the House of Representatives, it will now become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd074): > *The purpose of the National Security Legislation Amendment (Comprehensive Review and Other Measures Bill 2023 (the Bill) is to amend Commonwealth legislation relating to national security and intelligence. Specifically, the Bill seeks to:* > > * *implement ten recommendations from the 2019 [Comprehensive review of the legal framework of the national intelligence community](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22library%2Flcatalog%2F01268304%22) (the Richardson Review)* > > * *make changes to the composition of the Parliamentary Joint Committee on Intelligence and Security (PJCIS)* > > * *clarify the level of detail required in a Ministerial direction to the Australian Secret Intelligence Service (ASIS) under the Intelligence Services Act 2001.* More specifically, the bills digest [summarises that the bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd074): * *Removes the ability of the Attorney-General to delegate powers under the ASIO Act (except financial assistance powers). Limits the ability of the Executive to confer the Attorney-General’s powers with respect to ASIO on another Minister.* * *Provides new defences for ASIO relating to interference with facilities, unauthorised modification of data and impairment of electronic communication.* * *Increases the membership of PJCIS from 11 to 13 and specifies the composition of Senate and House members.* * *Allo",
+   "stage": "Third reading",
+   "ayes": 37,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 9,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-07/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-829445",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-29",
+   "stage_hint": null,
+   "brief": "The government introduced the National Security Legislation Amendment (Comprehensive Review and Other Measures No. 2) Bill 2023 to implement 10 outstanding recommendations from the 2019 Richardson Review of the national intelligence community’s legal framework and expand the Parliamentary Joint Committee on Intelligence and Security from 11 to 13 members."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Security Legislation Amendment (Comprehensive Review and Other Measures No. 2) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00053",
+   "assent_date": "2023-08-11"
+  }
+ ]
+}

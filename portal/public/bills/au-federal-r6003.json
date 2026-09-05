@@ -1,0 +1,311 @@
+{
+ "key": "au-federal-r6003",
+ "title": "Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2017",
+ "short_title": "Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-10-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6003%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6003%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6003%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6003%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6003%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6003%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6003%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6003%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6003%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6003%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6003%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6003_ems_59003535-7fa7-4bf0-a239-592299bb96b9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6003%22",
+   "document_date": "2017-10-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-19",
+  "sentences": [
+   "This bill would tighten rules on funds that hold worker benefits, following a royal commission's findings on union misconduct.",
+   "It would add governance, reporting and disclosure duties for worker entitlement funds and related entities under the Fair Work (Registered Organisations) Act 2009.",
+   "Awards and enterprise agreements could not require employee contributions to funds other than superannuation, registered worker entitlement funds or registered charities."
+  ],
+  "changes": [
+   "The bill would apply financial management and reporting rules to worker entitlement funds.",
+   "It would ban award or agreement terms that require employee contributions to election funds for industrial associations.",
+   "It would prohibit coercing an employer to pay a particular worker entitlement fund or similar fund.",
+   "Registered organisations would have to adopt and review financial management policies.",
+   "They would also need to keep credit card records and report certain loans, grants and donations.",
+   "New penalties would enforce compliance with financial management and disclosure rules."
+  ],
+  "affected": "Registered organisations, worker entitlement funds, employers and employees covered by modern awards or enterprise agreements.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:41:03Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4972",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "question": "Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2017 - Report from Federation Chamber - Penalty rates",
+   "stage": "Report from Federation Chamber",
+   "ayes": 68,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-10-26/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-355372",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-10-19",
+   "stage_hint": null,
+   "brief": "The Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill implements 10 recommendations from the Heydon royal commission to regulate worker entitlement funds, requiring independent directors, transparent management, and arm's-length spending to ensure the estimated $2 billion in funds is used solely for workers' benefits, not for unions or employer groups."
+  },
+  {
+   "slug": "speech-355878",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment calling on the government to abandon support for the Fair Work Commission’s penalty rate cuts, which will affect nearly 700,000 Australians by up to $77 a week, and to legislate to prevent the cuts. The speaker opposed the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2017, arguing it was rushed without consultation and would harm worker entitlement funds that provide essential services like training, health checks, and suicide prevention."
+  },
+  {
+   "slug": "speech-356091",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2017, arguing it was a rushed, union-targeting bill based on the discredited Heydon royal commission, and defended worker entitlement funds' secondary functions like safety services."
+  },
+  {
+   "slug": "speech-356096",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2017, arguing it attacks workers' entitlement funds and relies on a discredited royal commission, and criticised the government's penalty rate cuts, citing a $77 weekly loss for some workers and a $667 million annual loss for regional communities."
+  },
+  {
+   "slug": "speech-356097",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Laws Amendment Bill represents a rushed, ideologically driven attack on unions and worker rights, citing wasteful AFP raids on AWU offices and low wage growth of 2.6%. They opposed the bill, noting it would limit worker entitlement funds and training services, while 700,000 hospitality workers had already lost penalty rates."
+  },
+  {
+   "slug": "speech-356098",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2017, arguing it would undermine worker entitlement funds, restrict services like suicide prevention programs such as MATES in Construction, and unfairly target unions, while noting ASU and CPSU opposition and naming union secretaries Nadine Flood and Bill Marklew."
+  },
+  {
+   "slug": "speech-356100",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The speaker condemned police raids on union offices as a disgraceful misuse of state power against political enemies, and criticised the government for cutting penalty rates and workers' conditions while corporate profits are high; they also noted that Bill Shorten has promised to restore AFP officers to Hobart Airport."
+  },
+  {
+   "slug": "speech-356380",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2017 was rushed through parliament without consultation to hobble union-employer cooperation, and condemned Senator Xenophon for fast-tracking it. They also criticised the employment minister for failing to act on lawbreaking by ABCC head Nigel Hadgkiss, for inaction on 7-Eleven worker exploitation and phoenix companies, and for backing penalty rate cuts while 28 construction workers died this year."
+  },
+  {
+   "slug": "speech-356382",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2017 but supported the member for Gorton's amendment, arguing that penalty rate cuts affecting 700,000 low-paid workers would reduce wages for four years and that the government's anti-union legislation and abolition of the Road Safety Remuneration Tribunal harm vulnerable workers."
+  },
+  {
+   "slug": "speech-356383",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker supported an amendment to the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2017, arguing the government’s bill attacks unions and workers, and criticised rushed passage, penalty rate cuts, and rising inequality—citing $27 million recovered for 11,000 workers and a $77-a-week pay cut from penalty rate reductions."
+  },
+  {
+   "slug": "speech-356385",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2017 was opposed as an attack on bargaining rights and safety programs such as MATES in Construction and MATES in Mining, which are funded by union-negotiated entitlement funds. Figures cited included 1,803 miner deaths in northern coalfields, nearly one construction worker death per week, and enterprise agreement pay rises at a record low of 2.6%."
+  },
+  {
+   "slug": "speech-356386",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2017 is an ideological attack on workers' rights and unions, opposing it alongside Labor colleagues and the shadow minister. They cited record low wages growth, record company profits, and 700,000 Australians facing penalty rate cuts, while supporting an amendment to address these issues."
+  },
+  {
+   "slug": "speech-356391",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2017 is an unnecessary attack on unions, citing existing mechanisms to address misconduct, and criticized the government for rushing the inquiry while ignoring the impact of penalty rate cuts on low-paid workers, such as fast-food workers losing $24.30 per hour from $29.16."
+  },
+  {
+   "slug": "speech-356393",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2017, arguing it attacks workers and unions by rushing through without proper consultation, and criticised the Turnbull government for supporting penalty rate cuts that will reduce take-home pay for low-paid workers, particularly young people and women, while inequality reaches a 75-year high."
+  },
+  {
+   "slug": "speech-356394",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2017 would drastically cut funding for organisations like MATES in Construction, which provides suicide prevention for construction workers—a sector where 191 workers die by suicide each year and the suicide rate is 71% higher than other employed men. He criticised the government and Minister Michaelia Cash for rushing the bill without proper scrutiny, and noted that MATES in Construction has trained over 120,000 workers and saved up to 30 lives."
+  },
+  {
+   "slug": "speech-356395",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

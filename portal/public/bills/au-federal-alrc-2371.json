@@ -1,0 +1,207 @@
+{
+ "key": "au-federal-alrc-2371",
+ "title": "Australia Council (Consequential and Transitional Provisions) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Regional Australia, Local Government, Arts and Sport",
+ "status": "passed",
+ "status_as_of": "2013-06-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-27",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00072",
+   "document_date": "2013-06-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-2959",
+   "date": "2013-06-25",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 57,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-25/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-271363",
+   "speaker": "Simon Crean",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822825",
+   "speaker": "Simon Crean",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272404",
+   "speaker": "Michael Danby",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272544",
+   "speaker": "Anna Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272545",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823410",
+   "speaker": "Anna Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australia Council (Consequential and Transitional Provisions) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00072",
+   "assent_date": "2013-06-27"
+  }
+ ]
+}

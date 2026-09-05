@@ -1,0 +1,385 @@
+{
+ "key": "au-federal-r5289",
+ "title": "Fair Work (Registered Organisations) Amendment Bill 2014",
+ "short_title": "Fair Work (Registered Organisations) Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2015-03-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5289%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5289%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-07-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5289%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5289%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5289_ems_537644f3-f833-4d7a-aaf9-8e655c1f16d5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5289_ems_ca52bada-b8ed-4b28-ae6f-bef847d8fda6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5289_ems_5a8f3042-e32e-4cc7-8362-50b618591fcb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5289_ems_f76a359b-315e-4115-a89a-824de4ce1b8f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5289%22",
+   "document_date": "2014-06-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2014-06-19",
+  "sentences": [
+   "The bill would create stronger governance and financial transparency rules for unions and employer associations.",
+   "It would set up a new body called the Registered Organisations Commission to monitor these groups and investigate wrongdoing.",
+   "The commissioner would have powers similar to those of the Australian Securities and Investments Commission under the Corporations Act 2001."
+  ],
+  "changes": [
+   "Establishes the Registered Organisations Commission as an independent regulator.",
+   "Requires officers to disclose material personal interests and restricts their voting and decision-making rights.",
+   "Increases civil penalties and creates criminal offences for serious breaches of officers' duties.",
+   "Strengthens financial accounting, disclosure and transparency obligations by making rule obligations enforceable as civil remedy provisions."
+  ],
+  "affected": "Registered organisations, their branches and their officers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:06:21Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3699",
+   "date": "2015-03-02",
+   "house": "senate",
+   "question": "Fair Work (Registered Organisations) Amendment Bill 2014 - Second Reading - Agree to bill's main idea",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 48,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-02/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-293653",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293654",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2014-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293662",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2014-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294278",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294280",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294281",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294283",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294286",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294288",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294290",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294291",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294297",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294298",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294299",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294465",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294645",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294646",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294647",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-15",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

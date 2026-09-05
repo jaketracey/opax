@@ -1,0 +1,309 @@
+{
+ "key": "au-federal-r5691",
+ "title": "Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016",
+ "short_title": "Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2017-02-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5691%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5691%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5691%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5691%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5691%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5691%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5691%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5691%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5691%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5691%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5691%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5691%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5691%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5691%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5691_ems_0c935c8f-adb2-4e37-ac8a-843fc66f3854%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5691%22",
+   "document_date": "2016-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00010",
+   "document_date": "2017-02-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-09-01",
+  "sentences": [
+   "This bill would fix gaps in the Migration Act so that 2014 changes to visa cancellation rules work as intended.",
+   "It would align definitions, detention powers, removal rules and review pathways for non-citizens who fail the character test.",
+   "The bill would also protect confidential information given to the Department from disclosure except in specified circumstances."
+  ],
+  "changes": [
+   "Broadens the definition of 'character concern' to match the amended character test.",
+   "Ensures the Minister's visa cancellation power under section 501BA does not affect other cancellation powers.",
+   "Allows detention of a person whose visa is suspected of being cancelled under section 501BA.",
+   "Requires release if the officer becomes aware the visa will not be cancelled.",
+   "Makes decisions under sections 501BA and 501CA reviewable by the Federal Court instead of the Federal Circuit Court.",
+   "Protects confidential information given to the Department from further disclosure except in specified circumstances."
+  ],
+  "affected": "Non-citizens who may be of character concern, the Minister, immigration officers, the Federal Court, the Administrative Appeals Tribunal and the Department.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:24:27Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4537",
+   "date": "2017-02-13",
+   "house": "senate",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/senate/?id=2017-02-13.3.2) introduced by Greens Senator [Nick McKim,](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) which means the motion failed. ### Motion text > *At the end of the motion [that the bill be read for a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html)], add:* >> *\", but the Senate is of the opinion that the Australian Parliament should have the right to deny entry to any Head of State or Head of Government on character grounds.\".*",
+   "stage": "Second reading",
+   "ayes": 8,
+   "noes": 50,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 34,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-13/1"
+  },
+  {
+   "key": "federal-senate-4538",
+   "date": "2017-02-13",
+   "house": "senate",
+   "question": "The majority supported the main idea of [the bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5691), which means the Senate can now discuss the bill in greater detail. In parliamentary jargon, they voted to read the bill [for a second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What was the bill's main idea? This bill makes changes to our visa system, particularly in terms of the power to cancel visas and the the disclosure of identifying information of non-citizens. For more information, see the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd005).",
+   "stage": "Second reading",
+   "ayes": 50,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 35,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-13/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-332945",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-01",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016 amends the Migration Act to fully implement the 2014 character cancellation provisions, including mandatory visa cancellation for non-citizens in prison who fail the character test, protection of confidential information, and ensuring those subject to cancellation are removable if they do not seek revocation or are unsuccessful."
+  },
+  {
+   "slug": "speech-334336",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016, which makes technical amendments to ensure consistent application of character-related visa cancellation provisions, broadens the character test risk threshold, clarifies ministerial override powers, and ensures removal powers align with appeal rights. Labor will support the bill but will monitor how the minister exercises ministerial discretion."
+  },
+  {
+   "slug": "speech-334337",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-10",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016 is a technical bill ensuring mandatory visa cancellation for noncitizens serving prison sentences of 12 months or more, or convicted of child sex offences, operates effectively. The government argued the bill makes the community safer by targeting repeat and violent offenders, with most cancellations involving noncitizens with multiple convictions or serious crimes."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Character Cancellation Consequential Provisions) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00010",
+   "assent_date": "2017-02-22"
+  }
+ ]
+}

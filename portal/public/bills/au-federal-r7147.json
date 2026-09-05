@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7147",
+ "title": "Prohibition on the Purchase of Residential Property by Foreign Entities Bill 2024",
+ "short_title": "Prohibition on the Purchase of Residential Property by Foreign Entities Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-02-12",
+ "originating_house": "representatives",
+ "sponsor": "GEE, Andrew, MP",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10883",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-08-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7147%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7147%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7147%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7147_ems_f7da087d-91a5-4676-afba-eab49489edc5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7147%22",
+   "document_date": "2024-02-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-12",
+  "sentences": [
+   "The bill would ban foreign entities from buying Australian homes for two years.",
+   "It would let the Federal Court order the sale of any property bought in breach of the ban, on the minister's request.",
+   "The penalty for breaking the ban is 800 penalty units, which can be multiplied by five for a foreign company."
+  ],
+  "changes": [
+   "Introduces a two-year prohibition on non-Australian foreign entities buying residential property.",
+   "Empowers the Federal Court to dispose of property obtained in contravention of the prohibition.",
+   "Sets a penalty of 800 penalty units, with a higher amount possible for foreign corporate offenders."
+  ],
+  "affected": "Non-Australian foreign entities, as well as Australian citizens or permanent residents buying jointly with a foreign spouse or de facto partner, and foreign countries buying property for diplomatic or consular purposes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

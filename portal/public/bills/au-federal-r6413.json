@@ -1,0 +1,536 @@
+{
+ "key": "au-federal-r6413",
+ "title": "Treasury Laws Amendment (Recovering Unpaid Superannuation) Bill 2019",
+ "short_title": "Treasury Laws Amendment (Recovering Unpaid Superannuation) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-03-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6413_ems_d5231957-82d8-4145-be0f-3e5e245a7dfd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6413%22",
+   "document_date": "2019-09-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00021",
+   "document_date": "2020-03-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-18",
+  "sentences": [
+   "The bill would give employers a one-off chance to fix past failures to pay superannuation guarantee without facing the usual penalties.",
+   "It would stop the Tax Commissioner from waiving penalties for past super shortfalls unless the employer voluntarily comes forward with the relevant information.",
+   "The amnesty is part of a broader government effort that recently made it easier for the tax office to track super payments and impose tougher penalties."
+  ],
+  "changes": [
+   "Creates a one-off amnesty for employers to self-correct historical superannuation guarantee non-compliance.",
+   "Limits the Commissioner's power to remit penalties for historical super shortfalls when an employer does not disclose relevant information.",
+   "Introduces legislated minimum penalties for employers who fail to come forward during the amnesty."
+  ],
+  "affected": "Employers who have not met their superannuation guarantee obligations in the past.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6014",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Recovering Unpaid Superannuation) Bill 2019 - Second Reading - Stop MP Wilson from speaking",
+   "stage": "Second reading",
+   "ayes": 60,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-28/7"
+  },
+  {
+   "key": "federal-representatives-6015",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Recovering Unpaid Superannuation) Bill 2019 - Second Reading - Stop Falinski MP from speaking",
+   "stage": "Second reading",
+   "ayes": 61,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-28/8"
+  },
+  {
+   "key": "federal-representatives-6016",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debates/?id=2019-11-28.36.2) introduced by Whitlam MP [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor), which means it failed. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"the House:* > > *(1) declines to give the bill a [second reading](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/);* > > *(2) notes that the Government is not doing enough to combat the blatant theft of workers' entitlements by dodgy bosses;* > > *(3) calls on the Government to help protect Australian unions protect Australian workers from superannuation theft; and* > > *(4) further calls on the Government to end policy uncertainty on superannuation and ensure Australians can enjoy a comfortable retirement by committing to the legislated increases to the superannuation guarantee\".*",
+   "stage": "Second reading",
+   "ayes": 63,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-28/9"
+  },
+  {
+   "key": "federal-representatives-6017",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2019-11-28.46.4) to agree with the main idea of the bill. In parliamentary jargon, they voted to read it [for a second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means it can now be discussed in more detail. ### What is the bill's main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6413), the bill was introduced to: > *provide for a one-off amnesty to encourage employers to self-correct historical superannuation guarantee non compliance; and ... to limit the Commissioner of Taxation’s ability to remit penalties for historical superannuation guarantee non-compliance, where an employer fails to disclose information relevant to their historical superannuation guarantee shortfall.*",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 60
+    },
+    "Liberal": {
+     "ayes": 44,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-28/10"
+  },
+  {
+   "key": "federal-representatives-6018",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2019-11-28.50.1) to pass the bill. In parliamentary jargon, they voted to read it [for a third time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means it can now be sent to the Senate for their consideration. ### What does the bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6413), the bill was introduced to: > *provide for a one-off amnesty to encourage employers to self-correct historical superannuation guarantee non compliance; and ... to limit the Commissioner of Taxation’s ability to remit penalties for historical superannuation guarantee non-compliance, where an employer fails to disclose information relevant to their historical superannuation guarantee shortfall.*",
+   "stage": "Third reading",
+   "ayes": 77,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 44,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-28/11"
+  },
+  {
+   "key": "federal-senate-6227",
+   "date": "2020-02-24",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2020-02-24.37.1) introduced by NSW Senator [Jenny McAllister](https://theyvoteforyou.org.au/people/senate/nsw/jenny_mcallister) (Labor), which means they failed. Senator McAllister explained the amendments in [her contribution](https://www.openaustralia.org.au/senate/?gid=2020-02-24.37.1). ### Motion text > *(1) Clause 2 , page 2 (at the end of the table), add:* > > *[commencement]* > > *(2) Page 9 (after line 28) , at the end of the Bill, add:* > > *Schedule 2—Superannuation contributions in National Employment Standards* > > *Fair Work Act 2009* > > *1 After paragraph 61(2 )( h)* > > *Insert:* > >> *(ha) superannuation contributions (Division 10A);* > > *2 After Division 10 of Part 2-2 of Chapter 2* > > *Insert:* > >> *Division 10A—Superannuation contributions* >> >> *116A Superannuation contributions* >> >> *Obligation in relation to contributions* >> >> *(1) An employer must make contributions to a superannuation fund for the benefit of an employee so as to avoid liability to pay superannuation guarantee charge under the Superannuation Guarantee Charge Act 1992 in relation to the employee.* >> >> *Amount of contributions* >> >> *(2) The amount of the contributions relating to the employee is to be worked out:* >> >>> *(a) in accordance with the Superannuation Guarantee (Administration) Act 1992 ; or* >>> >>> *(b) if a modern award or enterprise agreement applies to the employee and provides for an amount higher than the amount applicable under paragraph (a)—in accordance with the modern award or enterprise agreement (as the case requires).* >> >> *Superannuation fund* >> >> *(3) The superannuation fund to which the contributions relating to the employee are made must be:* >> >>> *(a) if a superannuation fund is a chosen fund (within the meaning of the Superannuation Guarantee (Administration) Act 1992 ) for the employee—that superannuation fund; or* >>> >>> *(b) if there is no c",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 31,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-02-24/1"
+  },
+  {
+   "key": "federal-senate-6228",
+   "date": "2020-02-24",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2020-02-24.40.1) to pass the [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6413) in the Senate. Because it had already passed in the House, it will now become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd075), the bill: > *proposes amendments to superannuation and related tax laws to encourage the recovery of unpaid Superannuation Guarantee (SG) by introducing a temporary amnesty from late payment penalties for employers who disclose that they have underpaid SG in the past.*",
+   "stage": "Third reading",
+   "ayes": 37,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 31,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-02-24/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-385200",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-27",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment to reject the Treasury Laws Amendment (Recovering Unpaid Superannuation) Bill 2019, arguing it provides an amnesty for employers who have not paid superannuation for 26 years and that the government is not doing enough to combat theft of workers' entitlements. The amendment calls on the government to help unions protect workers from superannuation theft and to end policy uncertainty by committing to legislated increases to the superannuation guarantee."
+  },
+  {
+   "slug": "speech-385327",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Recovering Unpaid Superannuation) Bill 2019 provides a business amnesty for unpaid superannuation, improves system integrity through expanded Single Touch Payroll, and is backed by $133.7 million for ATO compliance. He contrasted this approach with the opposition's focus on grandstanding rather than practical solutions."
+  },
+  {
+   "slug": "speech-385332",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Recovering Unpaid Superannuation) Bill 2019 as a small step, but noted only $230 million of the estimated $6 billion in unpaid super would be recovered, warned of moral hazard, and called for a 10-year moratorium on future amnesties, better ATO funding, and listing superannuation under the National Employment Standards."
+  },
+  {
+   "slug": "speech-385333",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the ATO’s Single Touch Payroll will identify unpaid superannuation more quickly, and dismissed industry super’s multibillion-dollar figure as unverified. They also noted that the member for Whitlam declined to provide the source of his research and numbers."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Recovering Unpaid Superannuation) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00021",
+   "assent_date": "2020-03-06"
+  }
+ ]
+}

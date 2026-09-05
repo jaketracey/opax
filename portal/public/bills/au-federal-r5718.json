@@ -1,0 +1,224 @@
+{
+ "key": "au-federal-r5718",
+ "title": "Social Services Legislation Amendment (Simplifying Student Payments) Bill 2017",
+ "short_title": "Social Services Legislation Amendment (Simplifying Student Payments) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2017-04-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5718%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5718%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5718%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5718%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5718%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5718%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5718%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5718%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5718%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5718%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5718%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5718%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-04-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5718%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5718_ems_9eca149e-7fdf-4257-9456-64e5c19e6094%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5718_ems_54b35cf7-7509-4c73-866e-064b228a3324%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5718_ems_aff2e24e-2847-46ba-95c3-c5f39b21a9f3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5718%22",
+   "document_date": "2016-09-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00024",
+   "document_date": "2017-04-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2016-09-14",
+  "sentences": [
+   "This bill would simplify how student payments are assessed and managed.",
+   "It would change the tests for assets, income, and family support used to calculate student payments, and would give all student income support recipients an automatic health care card from 2019.",
+   "Rules for updating the remoteness classification used to decide eligibility would be automated, and the work period for independence from 18 months would be reduced to 14 months for regional students."
+  ],
+  "changes": [
+   "Remove the exemption from the assets test for partnered youth allowance and austudy recipients.",
+   "Apply trust and company means test rules to independent youth allowance and austudy recipients.",
+   "Treat gift payments from immediate family members under the benefit income test the same as for pensions.",
+   "Include tax-free pensions and benefits in the parental income test for family tax benefit.",
+   "Automatically issue a health care card to all student income support recipients from 1 January 2019.",
+   "Reduce the workforce independence period from 18 months to 14 months for remote or regional students."
+  ],
+  "affected": "Students receiving youth allowance, austudy, and family tax benefit, and the Department of Social Services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:46Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-343684",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "Labor supported the bill, which changes means testing for student payments, grants automatic health-care cards, updates remoteness definitions, and allows regional/remote students to qualify as independent after 14 months of work. Labor opposed government measures including university deregulation, a five-week Newstart wait, and moving 22–24-year-olds to lower youth allowance, a cut of $48 per week."
+  },
+  {
+   "slug": "speech-343685",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's amendments reducing the work requirement for regional students to qualify as independent from 18 to 14 months, but criticised the government for hypocrisy in simultaneously cutting other youth supports and noted that no government minister spoke on the bill."
+  },
+  {
+   "slug": "speech-343687",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The member supported the Social Services Legislation Amendment (Simplifying Student Payments) Bill 2016, noting it aligns means-testing for student payments, automatically issues healthcare cards, and updates geographical classifications for youth allowance. She also called for the creation of a minister for youth affairs to ensure legislation considers impacts on young people, particularly in rural and regional areas."
+  },
+  {
+   "slug": "speech-343688",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (Simplifying Student Payments) Bill 2016, noting it aligns means testing for student payments, automatically issues Health Care Cards to 240,000 students from 2019, and updates remoteness classifications for eligibility. However, they argued the government’s broader policies—including penalty rate cuts, pushing jobseekers under 25 onto lower payments, and a $48 weekly cut for 22–24 year olds—harm young people, with over 50% of youth allowance recipients living in poverty."
+  },
+  {
+   "slug": "speech-343689",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (Simplifying Student Payments) Bill 2016 and its amendment on regional and remote student access, noting it would help about 3,700 students qualify for youth allowance. They criticised the government for cuts to youth allowance, proposed $100,000 degrees, penalty rate reductions, and declining apprenticeship numbers, arguing these harm young people."
+  },
+  {
+   "slug": "speech-343690",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (Simplifying Student Payments) Bill 2016, arguing it would help regional and remote students qualify as independent for youth allowance, but criticised the government for only benefiting about 3,700 students while cutting penalty rates and Newstart, and failing on broader higher education reform. The speaker cited a 14% youth unemployment rate in their electorate of Brand and noted that only 33% of students in Rockingham-Kwinana finished year 12 with an ATAR in 2015."
+  },
+  {
+   "slug": "speech-343691",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The bill introduces four changes to simplify student payment means testing from 2018, including harmonising income tests and extending concession cards to all student payment recipients from January 2019, covering around 240,000 students. It also updates geographical classification for student eligibility and reduces from 18 to 14 months the workforce independence period for regional and remote youth allowance applicants, benefiting approximately 3,700 students from January 2018."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (Simplifying Student Payments) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00024",
+   "assent_date": "2017-04-04"
+  }
+ ]
+}

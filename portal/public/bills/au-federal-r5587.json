@@ -1,0 +1,194 @@
+{
+ "key": "au-federal-r5587",
+ "title": "Insolvency Law Reform Bill 2015",
+ "short_title": "Insolvency Law Reform Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2016-02-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5587%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5587%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5587%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5587%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5587%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5587%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5587%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5587%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5587%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5587%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5587%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5587%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5587%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5587_ems_5f133c85-4ee4-46ef-9ef7-fff3c5c426da%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5587%22",
+   "document_date": "2015-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00011",
+   "document_date": "2016-02-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-03",
+  "sentences": [
+   "This bill would reform Australia's insolvency laws to reduce costs and improve efficiency.",
+   "It would create common rules for handling personal bankruptcies and corporate collapses, affecting how liquidators and trustees are registered and disciplined.",
+   "The changes are expected to save the insolvency industry $50.1 million in compliance costs and generate $1 million in annual revenue."
+  ],
+  "changes": [
+   "Removes unnecessary costs and boosts efficiency in insolvency administrations.",
+   "Aligns registration and disciplinary rules for registered liquidators and trustees.",
+   "Enhances communication and transparency between stakeholders.",
+   "Promotes market competition on price and quality.",
+   "Gives the corporate regulator stronger powers for the insolvency market.",
+   "Raises confidence in the professionalism of insolvency practitioners."
+  ],
+  "affected": "The insolvency industry, including registered liquidators, registered trustees, and the corporate regulator.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:31:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-327548",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "Labor will support the Insolvency Law Reform Bill 2015, which strengthens registration and discipline for insolvency practitioners and expands regulator powers, but raised four concerns: unreleased insolvency practice rules, a disputed $50 million compliance saving, the need to release all further reforms together, and ASIC resourcing."
+  },
+  {
+   "slug": "speech-327549",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Insolvency Law Reform Bill 2015 should minimise unnecessary company insolvencies, maximise creditor returns, and preserve business assets. They announced specific measures: greater ASIC oversight of insolvency practitioners, easier creditor removal of underperforming administrators, and reforms to ipso facto clauses and directors' liability for insolvent trading under the National Innovation and Science Agenda."
+  },
+  {
+   "slug": "speech-327589",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The government argued the Insolvency Law Reform Bill 2015 is the first major step since 2007 to restore confidence in the insolvency profession by raising practitioner standards, strengthening ASIC oversight, and reducing compliance costs by $50 million annually. The speaker also raised concerns about the Personal Property Securities Act unfairly loading financial risk onto small businesses, citing the Maiden Civil v Queensland Excavation Services case as an example."
+  },
+  {
+   "slug": "speech-327590",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Insolvency Law Reform Bill 2015 is needed to support entrepreneurship and creative destruction, citing that 40% of businesses operating in 2010 had closed by 2014 and half of businesses started in 2010 failed by 2014. The bill includes five measures: empowering creditors, reducing regulatory costs, increasing competition among insolvency practitioners, boosting ASIC powers, and strengthening disciplinary mechanisms for liquidators."
+  },
+  {
+   "slug": "speech-327591",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The Insolvency Law Reform Bill 2015 was introduced to strengthen and streamline Australia's personal bankruptcy and corporate insolvency regimes, with measures including higher registration standards for practitioners, increased ASIC oversight, and creditor empowerment, expected to achieve net deregulatory savings of around $50 million per year. The bill represents the first phase of reforms, with a second phase focusing on business rescue and small business insolvencies."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Insolvency Law Reform Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00011",
+   "assent_date": "2016-02-29"
+  }
+ ]
+}

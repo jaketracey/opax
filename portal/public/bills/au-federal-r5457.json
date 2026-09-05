@@ -1,0 +1,163 @@
+{
+ "key": "au-federal-r5457",
+ "title": "Private Health Insurance (Collapsed Insurer Levy) Amendment Bill 2015",
+ "short_title": "Private Health Insurance (Collapsed Insurer Levy) Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5457%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5457%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5457%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5457%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5457%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5457%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5457%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5457_ems_d932971e-cdd2-4bba-8294-2cb12df4e3aa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5457%22",
+   "document_date": "2015-05-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00086",
+   "document_date": "2015-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-27",
+  "sentences": [
+   "This bill is part of a package that transfers the prudential regulation of private health insurers from the Council to the Australian Prudential Regulation Authority from 1 July 2015.",
+   "The package creates a new regulatory regime for private health insurers under APRA and makes consequential amendments to relevant legislation, including repealing parts of the Private Health Insurance Act.",
+   "The package also includes bills to continue imposing levies on the private health insurance industry to pay for regulatory activities."
+  ],
+  "changes": [
+   "Transfers the Council's prudential and regulatory functions to APRA.",
+   "Creates a regime for prudential regulation of private health insurers by APRA.",
+   "Repeals provisions relating to the Council in the Private Health Insurance Act.",
+   "Provides transitional arrangements for the transfer.",
+   "Continues the imposition of levies on the private health insurance industry to fund regulation."
+  ],
+  "affected": "Private health insurers and the private health insurance industry.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:55:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-310809",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The bill transfers responsibility for administering and collecting the collapsed insurer levy from the council and health minister to APRA and a Treasury minister."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Private Health Insurance (Collapsed Insurer Levy) Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00086",
+   "assent_date": "2015-06-26"
+  }
+ ]
+}

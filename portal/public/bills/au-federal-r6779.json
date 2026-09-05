@@ -1,0 +1,121 @@
+{
+ "key": "au-federal-r6779",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Stopping PEP11) Bill 2021",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Stopping PEP11) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-18",
+ "originating_house": "representatives",
+ "sponsor": "STEGGALL, Zali, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10941",
+ "portfolio": "(s) STEGGALL, Zali, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6779%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6779%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6779%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6779_ems_a554e06c-b44e-4bf1-9fad-995fbf6ad01b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6779%22",
+   "document_date": "2021-10-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-18",
+  "sentences": [
+   "This bill would cancel a specific petroleum exploration permit and ban all future oil and gas activity in its area.",
+   "It would prevent the decision-making body from considering or continuing to consider applications related to that permit.",
+   "The permit covers 4,575 square kilometres off the New South Wales coast, and the two companies that hold it are the only current titleholders."
+  ],
+  "changes": [
+   "The bill cancels Petroleum Exploration Permit 11 (PEP11).",
+   "It stops the Joint Authority from dealing with any PEP11 applications.",
+   "It blocks the Titles Administrator from granting new titles over PEP11 blocks.",
+   "It ends PEP11 two months after the bill becomes law.",
+   "It prohibits any future petroleum exploration or production in the PEP11 area."
+  ],
+  "affected": "The permit's current holders (two companies), the Joint Authority, the Titles Administrator, and communities along the New South Wales coast from Newcastle to Manly Beach.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:31:23Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7463",
+   "date": "2021-10-21",
+   "house": "representatives",
+   "question": "Business - Rearrangement - Offshore Petroleum and Greenhouse Gas Storage Amendment (Stopping PEP11) Bill 2021",
+   "stage": "Business motion",
+   "ayes": 53,
+   "noes": 48,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 100
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-10-21/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

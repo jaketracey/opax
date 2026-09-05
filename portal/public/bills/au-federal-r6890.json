@@ -1,0 +1,237 @@
+{
+ "key": "au-federal-r6890",
+ "title": "Treasury Laws Amendment (2022 Measures No. 2) Bill 2022",
+ "short_title": "Treasury Laws Amendment (2022 Measures No. 2) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-08-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2022-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6890%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6890%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6890%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6890%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6890%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6890%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-09-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6890%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6890%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6890%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6890%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6890%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6890%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6890%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6890_ems_4ec3b394-f46e-415e-8f25-ea86e84d4ff0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6890%22",
+   "document_date": "2022-08-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00084",
+   "document_date": "2022-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-08-03",
+  "sentences": [
+   "This bill gives the tax commissioner a new option for dealing with businesses that do not keep proper tax records.",
+   "Instead of imposing a fine, the commissioner could require the business to take an approved course on record-keeping, if the commissioner has a reasonable belief that the business broke its tax record-keeping duties.",
+   "The new power would start on the first of January, April, July, or October after the bill becomes law, but the commissioner could issue a direction three months after that date."
+  ],
+  "changes": [
+   "The bill allows the commissioner to order a business to complete an approved record-keeping course.",
+   "The bill makes this course an alternative to existing financial penalties for record-keeping failures.",
+   "The bill sets a start date for the new power based on the next quarter after royal assent."
+  ],
+  "affected": "Businesses that have failed to comply with their tax-related record-keeping obligations.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:11:31Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7752",
+   "date": "2022-09-26",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2022-09-08.38.2) to the usual second reading motion, which is \"*that the bill be read a second time*\". To read a bill a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is to agree with its main idea. The amendment was introduced by Griffith MP [Max Chandler-Mather](https://theyvoteforyou.org.au/people/representatives/griffith/max_chandler-mather) (Greens). ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > >> *(1) notes this bill delivers a Liberal Party election commitment adopted by the Labor Party, namely the downsizer contribution, adding to the list of Liberal Party economic policies adopted by the Labor Party, such as the stage three tax cuts; and* >> >> *(2) calls on the Labor government to stop adopting taxation measures that will increase inequality and instead ease cost of living pressures by getting dental into Medicare, making childcare free, wiping student debt and freezing rents\".*",
+   "stage": "Second reading",
+   "ayes": 68,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 43,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 74
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-09-26/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-422532",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The coalition supports the Treasury Laws Amendment (2022 Measures No. 2) Bill 2022, which implements delayed measures from the previous government to assist small businesses with ATO compliance, support gig economy tax reporting, and help Australians over 55 downsize properties and contribute to superannuation."
+  },
+  {
+   "slug": "speech-422538",
+   "speaker": "Luke Howarth",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The member for Petrie argued the Greens' position on the Treasury Laws Amendment Bill is \"total rubbish,\" claiming the Greens do not love Australia, want to cut the Defence Force budget in half, and ban private schools. He defended stage 3 tax cuts as benefiting most Australians and criticised Greens MPs for being elected with around 35-40% of the vote due to Labor preferences."
+  },
+  {
+   "slug": "speech-422540",
+   "speaker": "Elizabeth Watson-Brown",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor's stage 3 tax cuts should be repealed, stating they will cost $244 billion over a decade and mostly benefit the wealthiest Australians, and that the money could instead fund public housing, Medicare, JobSeeker, and other social programs."
+  },
+  {
+   "slug": "speech-422541",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The bill implements coalition-era measures to support small business, including alternative record-keeping courses instead of penalties, a third-party reporting regime for gig economy platforms, and the ability to pause ATO debt recovery during AAT reviews. It also removes tax barriers for sole traders upskilling and extends a downsizer superannuation contribution measure for Australians over 55."
+  },
+  {
+   "slug": "speech-422542",
+   "speaker": "Nola Bethwyn Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The coalition will support the Treasury Laws Amendment (2022 Measures No. 2) Bill 2022, arguing it provides practical support for small businesses through measures including ATO dispute resolution, gig-economy tax obligations, and the instant asset write-off, alongside support for Australians over 55 to downsize and contribute to superannuation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2022 Measures No. 2) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00084",
+   "assent_date": "2022-12-12"
+  }
+ ]
+}

@@ -1,0 +1,181 @@
+{
+ "key": "au-federal-alrc-2412",
+ "title": "Competition and Consumer Amendment Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2013-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-29",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00104",
+   "document_date": "2013-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-275428",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275758",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275759",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275761",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275769",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825287",
+   "speaker": "Scott Ryan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-27",
+   "stage_hint": null,
+   "brief": "The opposition supported the Competition and Consumer Amendment Bill 2013, which exempts restaurants and cafes from requiring separate menus for surcharge days, implementing a Productivity Commission recommendation and reducing compliance costs estimated at $8,000–$10,000 per business. The coalition also announced a future root-and-branch review of competition law, including unfair contract provisions for small businesses."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Competition and Consumer Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00104",
+   "assent_date": "2013-06-29"
+  }
+ ]
+}

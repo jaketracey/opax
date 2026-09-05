@@ -1,0 +1,323 @@
+{
+ "key": "au-federal-s1063",
+ "title": "Human Rights Legislation Amendment Bill 2017",
+ "short_title": "Human Rights Legislation Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-22",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2017-04-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-04-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1063_ems_b4e1870b-6673-4a96-999b-99b1d3799a07%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1063_ems_ad4cc6e8-3410-4a53-9f4b-03073ca46abf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1063_ems_ec1e1286-7a08-43d9-be79-a47fa0f317c8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1063_ems_78a0a589-625c-473d-b0b8-6e83f3fb99b3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1063%22",
+   "document_date": "2017-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00032",
+   "document_date": "2017-04-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2017-03-22",
+  "sentences": [
+   "This bill would overhaul how the Australian Human Rights Commission handles discrimination complaints.",
+   "It would require the commission to treat both sides fairly and to throw out weak complaints early.",
+   "The changes implement most of a parliamentary committee's recommendations from a February 2017 report on free speech."
+  ],
+  "changes": [
+   "The bill would set new rules for lodging, investigating and referring discrimination complaints to court.",
+   "It would make the commission notify people accused of discrimination when a complaint is lodged.",
+   "It would remove unmeritorious claims at the outset and speed up the process.",
+   "The bill would also cut red tape for the commission by easing reporting duties and clarifying its mediation procedures."
+  ],
+  "affected": "Anyone who makes or faces a complaint of unlawful discrimination, as well as the Australian Human Rights Commission itself.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4665",
+   "date": "2017-03-30",
+   "house": "senate",
+   "question": "Human Rights Legislation Amendment Bill 2017 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 38,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-30/2"
+  },
+  {
+   "key": "federal-senate-4666",
+   "date": "2017-03-30",
+   "house": "senate",
+   "question": "Human Rights Legislation Amendment Bill 2017 - in Committee - Change 18C wording",
+   "stage": "In committee",
+   "ayes": 22,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 35,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-30/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-345420",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The Human Rights Legislation Amendment Bill was introduced to reform the Australian Human Rights Commission’s complaints handling processes, implementing unanimous recommendations from the Parliamentary Joint Committee on Human Rights' 2017 report on freedom of speech, and aiming to prevent unmeritorious complaints like those involving QUT students and cartoonist Bill Leak."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Human Rights Legislation Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00032",
+   "assent_date": "2017-04-12"
+  }
+ ]
+}

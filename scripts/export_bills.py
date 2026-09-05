@@ -534,6 +534,36 @@ def load_speech_candidates(db: sqlite3.Connection) -> list[dict]:
     return [dict(r) for r in db.execute(SPEECH_CANDIDATE_SQL)]
 
 
+SPEECH_BY_ID_SQL = """
+SELECT speech_id, person_id, COALESCE(speaker_name_clean, speaker_name) speaker,
+       party_canonical, state, date, topic
+FROM speeches WHERE speech_id IN ({placeholders})
+"""
+
+
+def load_speeches_by_ids(db: sqlite3.Connection, ids: set[str]) -> dict[str, dict]:
+    """Speech rows for exactly the ids `bill_links` names, with no topic
+    filter. The registry's speech join matches on speech text corroborated by
+    a same-day progress event (see bills_speeches_ready), not on `topic` --
+    federal Hansard topics from 2013 on are almost always the bare string
+    "Bills" or, for most of the rows this join actually names, NULL. The
+    `SPEECH_CANDIDATE_SQL` topic filter above is for the legacy title-matching
+    path only; applying it here silently drops the great majority of linked
+    speeches (measured: 930 of 12,247 linked ids carry a topic matching that
+    filter)."""
+    out: dict[str, dict] = {}
+    if not ids:
+        return out
+    ids_list = list(ids)
+    chunk_size = 500  # stay well under SQLite's default variable limit
+    for i in range(0, len(ids_list), chunk_size):
+        chunk = ids_list[i:i + chunk_size]
+        sql = SPEECH_BY_ID_SQL.format(placeholders=",".join("?" for _ in chunk))
+        for r in db.execute(sql, chunk):
+            out[str(r["speech_id"])] = dict(r)
+    return out
+
+
 def speech_entry(row: dict, timeline: PartyTimeline) -> dict:
     """The speech row's own `party_canonical` is already the party the speaker
     sat for that day; the timeline only stands in when the row has none."""
@@ -716,8 +746,6 @@ def build(db: sqlite3.Connection, legacy: bool) -> tuple[list[dict], dict]:
 
     divisions = load_divisions(db, timeline)
     log(f"divisions: {len(divisions)} federal")
-    speeches = load_speech_candidates(db)
-    log(f"speech candidates: {len(speeches)}")
     act_index, acts_by_id = load_acts(db)
     sources = load_sources(db, bills, legacy)
     summaries = load_summaries(db)
@@ -729,6 +757,8 @@ def build(db: sqlite3.Connection, legacy: bool) -> tuple[list[dict], dict]:
     matcher = TitleMatcher(bills)
 
     if legacy or not links:
+        speeches = load_speech_candidates(db)
+        log(f"speech candidates: {len(speeches)}")
         for d in divisions.values():
             for key in matcher.match(d["_name"], d["date"]):
                 bill_divisions[key].append(d)
@@ -739,7 +769,14 @@ def build(db: sqlite3.Connection, legacy: bool) -> tuple[list[dict], dict]:
         log(f"title match: {len(bill_divisions)} bills with divisions, "
             f"{len(bill_speeches)} with speeches, {len(matcher.ambiguous)} ambiguous titles")
     else:
-        by_speech_id = {str(s["speech_id"]): s for s in speeches}
+        # bill_links names a speech by speeches.speech_id. The join that put
+        # it there matches on speech text corroborated by a same-day progress
+        # event, not on topic (see bills_speeches_ready), so the rows it names
+        # must be read directly by id -- SPEECH_CANDIDATE_SQL's topic filter
+        # would silently drop most of them.
+        speech_ids = {str(t) for kinds in links.values() for t in kinds.get("speech", [])}
+        by_speech_id = load_speeches_by_ids(db, speech_ids)
+        log(f"speech rows: {len(by_speech_id)} of {len(speech_ids)} linked speech ids resolved")
         for key, kinds in links.items():
             for target in kinds.get("division", []):
                 if target in divisions:

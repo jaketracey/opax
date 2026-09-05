@@ -1,0 +1,220 @@
+{
+ "key": "au-federal-r5333",
+ "title": "Tax and Superannuation Laws Amendment (2014 Measures No. 6) Bill 2014",
+ "short_title": "Tax and Superannuation Laws Amendment (2014 Measures No. 6) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2014-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5333%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5333%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5333%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5333%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5333%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5333%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5333%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5333%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5333%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5333%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5333%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5333%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5333%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5333_ems_09515688-1633-4a53-81af-5cea368135cd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5333%22",
+   "document_date": "2014-10-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00133",
+   "document_date": "2014-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-10-30",
+  "sentences": [
+   "The bill would let some investors delay paying income tax when they restructure their business.",
+   "It would allow investors to swap units in a trust for shares in a company without immediate tax, and expand similar roll-overs for share exchanges to cover more ownership arrangements.",
+   "The changes would also fix technical problems in existing roll-over rules for share exchanges and trust restructures."
+  ],
+  "changes": [
+   "Creates roll-overs for revenue assets and trading stock when investors exchange trust units for company shares.",
+   "Broadens existing roll-overs for share exchanges so they are not limited to consolidated group ownership.",
+   "Ensures the new roll-overs only apply when the acquired asset has the same tax character as the exchanged asset.",
+   "Fixes technical defects in the revenue asset roll-over for share exchanges and in certain capital gains tax trust restructure roll-overs."
+  ],
+  "affected": "Investors who restructure their business by exchanging interests in a unit trust or company.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:15Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3635",
+   "date": "2014-12-02",
+   "house": "senate",
+   "question": "Christine Milne I rise to move the Australian Greens' amendment. As I indicated in my speech during the second reading debate, this amendment relates to schedule 4, which provides for the fuel tax rebates to the mining sector. In particular, it is at the end of section 41-5 to add: _Mining or quarrying operations on or after 10 November 2014_ (4) Subsection (1) does not apply to taxable fuel that you acquire or manufacture in, or import into, Australia on or after 10 November 2014, to the extent that you do so for use in \\*carrying on your \\*enterprise of mining and quarrying operations (within the meaning of the _Income Tax Assessment Act 1997_). That would effectively remove the provision of the rebate applying to the mining industry, as I indicated in my speech. I so move: (1) Schedule 4, page 26 (before line 4), before item 1, insert: 1A At the end of section 41 -5 Add: _Mining or quarrying operations on or after 10__November 2014_ (4) Subsection (1) does not apply to taxable fuel that you acquire or manufacture in, or import into, Australia on or after 10 November 2014, to the extent that you do so for use in \\*carrying on your \\*enterprise of mining and quarrying operations (within the meaning of the _Income Tax Assessment Act 1997_). Doug Cameron Labor does not support the Greens' amendment. Carving out particular industries will distort the fuel tax credit system that provides for a rebate on fuel where it is used as a business input. Mathias Cormann The government thanks the opposition for the bipartisan approach that they have taken to this particular issue. It has long been the case that firms and individuals have been exempted from fuel tax—since the 1950s in fact—for off-road use. This recognised at the time that the excise was to be set aside for road construction and maintenance and mining firms were eligible for the exemption. Under current arrangements, generally all fuels used off-road for all business purposes are effectively free of fuel tax. Fir",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "earliest": 4,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-12-02/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-302226",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax and Superannuation Laws Amendment (2014 Measures No. 6) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00133",
+   "assent_date": "2014-12-12"
+  }
+ ]
+}

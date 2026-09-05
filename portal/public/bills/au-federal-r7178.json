@@ -1,0 +1,452 @@
+{
+ "key": "au-federal-r7178",
+ "title": "Net Zero Economy Authority (Transitional Provisions) Bill 2024",
+ "short_title": "Net Zero Economy Authority (Transitional Provisions) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-03-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister and Cabinet",
+ "status": "passed",
+ "status_as_of": "2024-09-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7178%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7178%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7178%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7178%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7178%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7178%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7178_ems_4adb89d9-9676-48e4-801f-66134c5d3670%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7178_ems_94758fef-ff1d-4614-9d1b-9947b07d6f57%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/9743943%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7178%22",
+   "document_date": "2024-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00082",
+   "document_date": "2024-09-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8951",
+   "date": "2024-06-04",
+   "house": "representatives",
+   "question": "Net Zero Economy Authority (Transitional Provisions) Bill 2024 - Second Reading - Agree with the main idea of the bill",
+   "stage": "Second reading",
+   "ayes": 86,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 136,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-06-04/8"
+  },
+  {
+   "key": "federal-senate-9371",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-08-22.152.3) to the usual second reading motion, which is \"*that the bills be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bills). Had this vote been successful, the usual words would have been replaced with the text below. ### Amendment text > *Omit all words after \"that\", substitute \"the Senate:* > > *(a) acknowledges that the Net Zero Economy Authority is a long-held union wish list item that masks itself as being an Authority for the regions and for the net zero transition, but is really another Canberra bureaucracy that:* > >> *(i) adds another level of federal government duplication by mimicking the role of the CEFC and ARENA by 'facilitating new investment in the net zero transition',* >> >> *(ii) significantly overlaps with existing enterprise agreements, industrial obligations, and localised transition plans with its Energy Industry Jobs Plan,* >> >> *(iii) gives unions access to the personal information of the employees of closing coal and gas-fired power stations, as well as the personal information of the employees of the businesses in commercial relationships with closing coal and gas-fired power stations, and* >> >> *(iv) aims to centrally-plan employment opportunities for the employees of closing coal and gas-fired power stations without guarantees that such employment opportunities would leave employees better off than their current employment; and* > > *(b) recognises that as coal-fired power stations close, zero-emissions nuclear technology will provide well-paid employment opportunities and economic security for generations in rural, regional, and remote communities\".*",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/24"
+  },
+  {
+   "key": "federal-senate-9372",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "Net Zero Economy Authority Bill 2024, Net Zero Economy Authority (Transitional Provisions) Bill 2024 - Second Reading - Agree with bills' main idea",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/25"
+  },
+  {
+   "key": "federal-senate-9373",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2024-08-22.156.1) introduced by the Australian Greens Party, which means they will now be included in the bill. ### Amendment text > *(1) Clause 3, page 2 (lines 16 to 18), omit paragraph (3)(c), substitute:* > >> *(c) ensure Australia's regions, communities and workers are supported to manage the impacts, and share in the benefits, of Australia's transition to a net zero emissions economy.* > > *(2) Clause 4, page 4 (line 9), omit \"delegations\", substitute \"delegations, review of this Act\".* > > *(3) Clause 68, page 73 (after line 27), at the end of the clause, add:* > >> *(7) The Minister must cause a copy of the report of the review to be tabled in each House of the Parliament within 15 sitting days of that House after the report is given to the Minister.* > > *(4) Clause 69, page 74 (after line 10), after the paragraph beginning \"The Board and the CEO\", insert:* > >> *There are to be reviews of the operation of this Act.* > > *(5) Clause 74, page 77 (lines 6 to 11), omit the clause, substitute:* > >> *74 Annual report* >> >> *The annual report prepared by the Board and given to the Minister under section 46 of the PGPA Act for a period must include:* >> >>> *(a) particulars of any directions given to the Board by the Minister under section 20 of this Act during the period to which the report relates; and* >>> >>> *(b) a report on the operation of the Act in the period, including in response to the needs and circumstances of communities, regions, industries and workers that are, or will be, significantly affected by Australia's transition to a net zero emissions economy.* > > *(6) Page 85 (after line 7), after clause 80, insert:* > >> *80A Reviews of the operation of this Act* >> >> *(1) The Minister must cause an independent review to be conducted of the operation of this Act:* >> >>> *(a) on a recommendation of the Board under subsection (3); or* >>> >>> *(b) if no recomme",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/26"
+  },
+  {
+   "key": "federal-senate-9374",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2024-08-22.158.1) introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe), which means they will now be included in the bill. ### Amendment text > *(1) Clause 21, page 23 (line 5), omit \"5\", substitute \"6\".* > > *(2) Clause 21, page 23 (line 8), omit \"6\", substitute \"7\".* > > *(3) Clause 23, page 24 (after line 13), after paragraph (2)(d), insert:* > >> *(da) 1 other Board member with expertise or experience, professional credibility and significant standing in any of the fields mentioned in paragraph (3)(i); and* > > *(4) Clause 23, page 24 (line 14), omit \"3\", substitute \"2\".* > > *(5) Clause 23, page 24 (line 17), omit \"and (d)\", substitute \", (d) and (da)\".* > > *(6) Clause 23, page 24 (line 32), omit \"engagement,\".*",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 20,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/27"
+  },
+  {
+   "key": "federal-senate-9375",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "Net Zero Economy Authority Bill 2024, Net Zero Economy Authority (Transitional Provisions) Bill 2024 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 35,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/28"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Net Zero Economy Authority (Transitional Provisions) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00082",
+   "assent_date": "2024-09-05"
+  }
+ ]
+}

@@ -1,0 +1,199 @@
+{
+ "key": "au-federal-r6189",
+ "title": "Treasury Laws Amendment (2018 Measures No. 5) Bill 2018",
+ "short_title": "Treasury Laws Amendment (2018 Measures No. 5) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-03-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6189%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6189%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6189%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6189%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6189%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6189%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6189%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6189%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6189%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6189%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6189%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-03-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6189%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6189_ems_0e8520fa-5d3a-4af8-851f-72849ceaca67%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6189_ems_c0b5b8b0-ff3c-4238-955c-c67796d53280%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6189%22",
+   "document_date": "2018-09-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00015",
+   "document_date": "2019-03-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-371117",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-17",
+   "stage_hint": null,
+   "brief": "The Labor Party moved a second reading amendment noting the Coalition Government had six ministers responsible for charities over five years, and expressed disapproval of the appointment of Gary Johns as chair of the Australian Charities and Not-for-profits Commission, calling him a prominent anti-charity advocate."
+  },
+  {
+   "slug": "speech-371120",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-17",
+   "stage_hint": null,
+   "brief": "The speaker supported an amendment to the Treasury Laws Amendment Bill, arguing the government has made it harder for charities to advocate for the vulnerable, citing that two-thirds of Australian charities find it harder to be heard. The speaker criticised the appointment of Gary Johns as Commissioner of the Australian Charities and Not-for-profits Commission, calling him an \"anti-charity advocate\" and the appointment \"inappropriate.\""
+  },
+  {
+   "slug": "speech-371123",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-17",
+   "stage_hint": null,
+   "brief": "The government advanced the Treasury Laws Amendment Bill to improve taxation and investment certainty for managed funds, update deductible gift recipient status for eight named organisations, extend such status to entities promoting Indigenous languages, and repeal subsection 51(3) of the Competition and Consumer Act to remove the intellectual property exemption from anti-competitive conduct prohibitions."
+  },
+  {
+   "slug": "speech-375497",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The government’s Protecting Your Super reforms passed both houses and will proceed to executive council, reuniting three million inactive super accounts worth over $6 billion with the ATO and capping fees for accounts under $6,000 or for those under 25. The government also reaffirmed its commitment to insurance in super and noted the return of the Treasury Laws Amendment (2018 Measures No. 5) Bill 2018 from the Senate."
+  },
+  {
+   "slug": "speech-375498",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment Bill is a win for small businesses, noting the government adopted Labor's access to justice policy allowing no adverse costs orders, and proposed additional measures including a second ATO commissioner, $10 million penalties for unfair contract terms, and an NBN service guarantee."
+  },
+  {
+   "slug": "speech-375499",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The National Party member argued that the Treasury Laws Amendment Bill's access to justice provisions protect small businesses and farmers from being exploited by large corporations, citing the party's past support for the Birdsville amendment, the effects test, and divestiture powers. He criticised Labor for opposing divestiture powers and claimed National Party pressure secured the bill's passage, while calling for divestiture powers as the next step to enforce the banking royal commission's recommendations."
+  },
+  {
+   "slug": "speech-375500",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government is strategically changing its voting position on bills it previously opposed, after being defeated in the House, without explaining what changed. They specifically referenced upcoming votes on the royal commission, access to justice, and penalties, while noting the \"big stick\" legislation will not be voted on."
+  },
+  {
+   "slug": "speech-375506",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill 2018, arguing that prohibitive legal costs prevent small and medium businesses from challenging anticompetitive behaviour, and praised the Small Business and Family Enterprise Ombudsman’s role in providing advice and cost protections. They also advocated for general divestment powers, citing their use in Canada, the UK and the US, as longstanding National Party policy."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2018 Measures No. 5) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00015",
+   "assent_date": "2019-03-12"
+  }
+ ]
+}

@@ -1,0 +1,142 @@
+{
+ "key": "au-federal-r5459",
+ "title": "Private Health Insurance Supervisory Levy Imposition Bill 2015",
+ "short_title": "Private Health Insurance Supervisory Levy Imposition Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5459%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5459%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5459%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5459%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5459%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5459%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5459%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5459%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5459%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5459%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5459%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5459%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5459%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5459%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5459_ems_3bc1026a-03ad-40f5-b32e-216142566fea%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5459%22",
+   "document_date": "2015-05-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00083",
+   "document_date": "2015-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-310807",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The bill imposes a supervisory levy on private health insurers to recover APRA’s regulatory costs, with the levy to be set by a legislative instrument from 2016–17 and collected quarterly in 2015–16 under existing arrangements."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Private Health Insurance Supervisory Levy Imposition Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00083",
+   "assent_date": "2015-06-26"
+  }
+ ]
+}

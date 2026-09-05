@@ -1,0 +1,584 @@
+{
+ "key": "au-federal-r6486",
+ "title": "Paid Parental Leave Amendment (Flexibility Measures) Bill 2020",
+ "short_title": "Paid Parental Leave Amendment (Flexibility Measures) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-06",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2020-06-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-06-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6486_ems_8ceed27f-2d4a-4934-ace7-b841ffec2a6f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6486_ems_6b80d043-0f3b-4b5d-9701-6ef481400e99%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6486%22",
+   "document_date": "2020-02-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00053",
+   "document_date": "2020-06-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 8,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-06",
+  "sentences": [
+   "This bill would allow parents to take paid parental leave in separate chunks rather than one continuous block.",
+   "A parent could claim 12 weeks of paid leave in a single initial block and then take up to 30 extra days flexibly any time before the child turns two.",
+   "The new system would start on 1 July 2020, but people could apply from 1 April 2020."
+  ],
+  "changes": [
+   "Reduces the initial paid parental leave block from 18 weeks to 12 weeks.",
+   "Creates a new flexible period of up to 30 days that can be used in single days or small blocks until the child's second birthday.",
+   "Lets the government pay the flexible days directly to the claimant if the employer would otherwise be burdened.",
+   "Keeps the total paid leave at a maximum of 18 weeks or 90 days."
+  ],
+  "affected": "Eligible parents, particularly birth mothers and adoptive parents who run their own business or work for a small business.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:44:25Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6232",
+   "date": "2020-02-25",
+   "house": "representatives",
+   "question": "Paid Parental Leave Amendment (Flexibility Measures) Bill 2020 - Second Reading - Criticism of welfare cuts",
+   "stage": "Second reading",
+   "ayes": 68,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-25/1"
+  },
+  {
+   "key": "federal-senate-6361",
+   "date": "2020-06-11",
+   "house": "senate",
+   "question": "The majority voted against an amendment introduced by WA Senator [Louise Pratt](https://theyvoteforyou.org.au/people/senate/wa/louise_pratt) (Labor), which means it failed. The amendment was to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add:* > > *\", but the Senate:* > > *(a) notes that the Government has allowed JobKeeper payments to satisfy the paid parental leave (PPL) work test; and* > > *(b) calls on the Government to use the Minister for Families and Social Services' regulation making power under coronavirus laws to enable women who have lost their job because of the coronavirus to access PPL, if they would otherwise have been eligible had they not lost their job\".*",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 27,
+    "member": 10,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-11/1"
+  },
+  {
+   "key": "federal-senate-6362",
+   "date": "2020-06-11",
+   "house": "senate",
+   "question": "Because the same number of senators voted for and against the [amendments](https://www.openaustralia.org.au/senate/?gid=2020-06-11.58.5) introduced by Queensland Senator [Larissa Waters](https://theyvoteforyou.org.au/people/senate/queensland/larissa_waters) (Greens), the amendments failed. ### What did the amendments do? Senator Waters [explained that](https://www.openaustralia.org.au/senate/?gid=2020-06-11.58.1): > *if you lost your job because of COVID, but you weren't eligible for JobKeeper, for whatever reason, now you're also not eligible for paid parental leave. We think that's unfair and it's very easily fixed. Amendments (1) and (2) on sheet 8927, which I will move provide that, if through no fault of your own you've lost your job because of COVID-19 but you had expected to otherwise remain in employment and be eligible for PPL, then you should still be eligible for PPL.*",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 11,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-11/2"
+  },
+  {
+   "key": "federal-senate-6363",
+   "date": "2020-06-11",
+   "house": "senate",
+   "question": "Paid Parental Leave Amendment (Flexibility Measures) Bill 2020 - in Committee - Stay at home dads",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 12,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-11/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-387201",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-06",
+   "stage_hint": null,
+   "brief": "The Paid Parental Leave Amendment (Flexibility Measures) Bill 2020 proposes changes to allow parents to split their 18 weeks of parental leave pay into blocks over a two-year period, with an initial 12-week block taken within the first 12 months and the remaining six weeks used before the child turns two. The government expects around 4,000 parents per year to use the flexible option, and will also seek complementary amendments to the Fair Work Act 2009 to align unpaid parental leave entitlements."
+  },
+  {
+   "slug": "speech-388163",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Paid Parental Leave Amendment (Flexibility Measures) Bill 2020 and moved an amendment noting financial difficulties for parents, government cuts to family assistance, and the persistent gender pay gap of 14 per cent. She argued the bill’s split of 18 weeks into a 12-week continuous block and a 6-week flexible period would improve access, but criticised the government’s record on penalty rates, housing affordability, and youth unemployment."
+  },
+  {
+   "slug": "speech-388165",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Morrison government's Paid Parental Leave Amendment (Flexibility Measures) Bill 2020, which allows mothers to take an initial 12 weeks of paid parental leave and then use the remaining six weeks flexibly over two years after birth or adoption, with the option to transfer leave to a partner or use it alongside part-time work. The bill would apply to children born on or after 1 July 2020, and an estimated 4,000 parents are expected to take up the new flexible option."
+  },
+  {
+   "slug": "speech-388591",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The Paid Parental Leave Amendment (Flexibility Measures) Bill 2020 would allow parents to take an initial 12 weeks of paid parental leave and then use the remaining six weeks flexibly within two years, in blocks as small as one day. The speaker argued the changes would support over 180,000 annual claimants, help close the gender workforce participation gap by 25% by 2025, and benefit parents in the electorate of Mallee."
+  },
+  {
+   "slug": "speech-388592",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "Labor supported the Paid Parental Leave Amendment (Flexibility Measures) Bill 2020 while criticising the government for cuts to family assistance, penalty rates, and rising childcare costs, noting Australia’s 14% gender pay gap and women earning $242.90 less per week than men. The speaker argued more action is needed to close the gender pay gap, encourage both parents to take parental leave, and improve childcare affordability."
+  },
+  {
+   "slug": "speech-388594",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Paid Parental Leave Amendment (Flexibility Measures) Bill 2020, which allows parents to split 18 weeks of paid parental leave into a 12-week continuous block and a six-week flexible period that can be taken over two years from 1 July 2020, but noted the bill does not increase overall entitlements and that Australia’s scheme remains among the lowest in the OECD."
+  },
+  {
+   "slug": "speech-388595",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The Paid Parental Leave Amendment (Flexibility Measures) Bill 2020 was supported, allowing families to split 18 weeks of parental leave pay into blocks over two years from July 2020, with an initial 12-week block and up to six weeks taken flexibly before the child turns two, benefiting self-employed, casual, seasonal workers and small-business owners, with around 4,000 parents expected to use the flexible option annually."
+  },
+  {
+   "slug": "speech-388598",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Paid Parental Leave Amendment (Flexibility Measures) Bill 2020, arguing it would allow 18 weeks of leave to be split into 12 weeks standard and six weeks flexible leave over two years. They noted Australia invests only a third of the OECD average in parental leave, cited a 13.9% gender pay gap and women’s superannuation at half men’s at retirement, and urged the government to adopt Nordic-style policies like Finland’s seven months per parent and Iceland’s three months for fathers."
+  },
+  {
+   "slug": "speech-388739",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "Labor supports the Paid Parental Leave Amendment (Flexibility Measures) Bill 2020, which allows families to split 18 weeks of leave into a 12-week continuous block and a six-week flexible period usable over two years. The speaker noted that over 1.2 million families have used the scheme since its 2011 introduction under Labor, and argued for further reforms including extending leave to 26 weeks, attaching superannuation, and addressing the gender pay gap, which remains at 14 percent."
+  },
+  {
+   "slug": "speech-388740",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Paid Parental Leave Amendment (Flexibility Measures) Bill 2020 but argued it was a missed opportunity, noting the gender pay gap at 14% costs women $360,163 over 45 years, and that Australian paid parental leave covers only 42% of previous earnings for 7.6 weeks—far less than countries like Norway (35 weeks) or Estonia (85 weeks)."
+  },
+  {
+   "slug": "speech-388741",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Paid Parental Leave Amendment (Flexibility Measures) Bill 2020, an initiative of former minister Kelly O'Dwyer, arguing it promotes gender equality by allowing fathers more opportunities for childcare and benefiting both men and women."
+  },
+  {
+   "slug": "speech-388744",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Paid Parental Leave Amendment (Flexibility Measures) Bill 2020, which allows splitting 18 weeks of leave into a 12-week block and a six-week flexible period usable over two years. They criticised past government rhetoric calling parents \"double-dippers\" and argued Australia ranks near the bottom of the OECD for paid parental leave, urging further reforms including paying superannuation on leave."
+  },
+  {
+   "slug": "speech-388745",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Paid Parental Leave Amendment (Flexibility Measures) Bill 2020, which splits the 18-week scheme into a 12-week continuous block and a six-week flexible period usable within two years, benefiting about 4,000 families. He argued Australia still lags behind OECD averages in parental leave and criticised the government for not addressing the gender pay gap and rising childcare costs."
+  },
+  {
+   "slug": "speech-388746",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Paid Parental Leave Amendment (Flexibility Measures) Bill 2020 and an amendment by the member for Barton, noting the bill splits the 18-week paid parental leave into a 12-week continuous period and a six-week flexible period that can be taken over two years with the primary carer able to be changed. However, the speaker stated the bill does not increase the total entitlement and that Australia is falling behind internationally in support for new parents."
+  },
+  {
+   "slug": "speech-388887",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "Supported the Paid Parental Leave Amendment (Flexibility Measures) Bill 2020 and amendments by the member for Barton. Argued Labor introduced the national scheme in 2010, that it helps 150,000 parents annually, addresses the gender pay gap still at 14%, and criticised the government for cutting penalty rates which widens that gap."
+  },
+  {
+   "slug": "speech-388888",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Paid Parental Leave Amendment (Flexibility Measures) Bill 2020 should be supported, as it allows families to split the 18-week entitlement into a 12-week continuous block and 6 flexible weeks usable over two years from 1 July. The bill builds on Labor’s 2011 scheme, which provides 18 weeks at minimum wage for primary carers and two weeks for partners, and aims to support workforce participation, gender equality, and families' financial stability."
+  },
+  {
+   "slug": "speech-388890",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill allowing six of 18 weeks paid parental leave to be taken flexibly within two years, noting that 861 Indi residents accessed the scheme in 2017–18, but argued for removing the primary/secondary carer distinction, legislating shared parental leave, and introducing Medicare‑listed mental health check‑ups for expectant fathers, citing that only 2% of leave is transferred to fathers and that 49% of fathers took leave in 2013–15."
+  },
+  {
+   "slug": "speech-388892",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-388893",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Paid Parental Leave Amendment (Flexibility Measures) Bill 2020, which allows parents to split their 18 weeks of parental leave pay into flexible blocks over two years rather than taking it continuously, and opposed a Labor amendment. The bill is estimated to help 4,000 parents per year, particularly self-employed and small-business owners, and includes complementary amendments to the Fair Work Act to increase unpaid parental leave flexibility."
+  },
+  {
+   "slug": "speech-388894",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "The Paid Parental Leave Amendment (Flexibility Measures) Bill 2020 introduces reforms allowing families to split parental leave pay into blocks over a two-year period from 1 July 2020, with periods of work in between. The changes prevent loss of unused leave and allow eligible mothers to transfer the entitlement to eligible partners who become primary carers."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Paid Parental Leave Amendment (Flexibility Measures) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00053",
+   "assent_date": "2020-06-16"
+  }
+ ]
+}

@@ -1,0 +1,188 @@
+{
+ "key": "au-federal-r7155",
+ "title": "Fair Work Amendment Bill 2024",
+ "short_title": "Fair Work Amendment Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-02-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2024-05-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7155%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7155%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7155%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7155%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7155%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7155%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7155%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7155%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-02-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7155%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7155%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7155%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7155%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7155%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-05-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7155%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7155_ems_6113a885-435e-41c1-922a-e7fa90574442%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7155%22",
+   "document_date": "2024-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00032",
+   "document_date": "2024-05-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-8916",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?id=2024-05-16.204.1) moved by West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal) on behalf of the Opposition, which means they failed. The amendments related to repealing the right to disconnect, civil penalties and excluded employers. ### Amendment text SHEET 2415 - Repeal the right to disconnect > *(1) Clause 2, page 2 (table item 1), omit the table item, substitute:* > >> *1. The whole of this Act* >> >>> *Immediately after the commencement of Part 8 of Schedule 1 to the Fair Work Legislation Amendment (Closing Loopholes No. 2) Act 2024.* >>> >>> *However, the provisions do not commence at all if that Part does not commence.* > > *(2) Schedule 1, item 1, page 3 (lines 4 to 7), omit the item, substitute:* > >> *1 Section 12 (definition of right to disconnect term)* >> >>> *Repeal the definition.* >> >> *2 Section 149F* >> >>> *Repeal the section.* >> >> *3 Section 321 (paragraph beginning \"Division 6\")* >> >>> *Repeal the paragraph.* >> >> *4 Division 6 of Part 2-9* >> >>> *Repeal the Division.* >> >> *5 Subsection 539(2) (table item 10E)* >> >>> *Repeal the item.* >> >> *6 Division 5A of Part 16 of Schedule 1* >> >>> *Repeal the Division.* SHEET 2416 - Civil penalties > *(1) Clause 2, page 2 (table item 1), omit the table item, substitute:* > >> *1. The whole of this Act* >> >>> *Immediately after the commencement of Part 8 of Schedule 1 to the Fair Work Legislation Amendment (Closing Loopholes No. 2) Act 2024 .* >>> >>> *However, the provisions do not commence at all if that Part does not commence.* > > *(2) Page 3 (after line 7), at the end of the Bill, add:* > >> *Schedule 2 — Civil penalties* >> >>> *Fair Work Act 2009* >>> >>> *1 Section 333Q (note)* >>> >>>> *Repeal the note.* >>> >>> *2 Subsection 539(2) (table item 10E)* >>> >>>> *Repeal the item.* SHEET 2417 - Excluded employers > *(1) Clause 2, page 2 (table ite",
+   "stage": "Committee of the Whole",
+   "ayes": 26,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/23"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Fair Work Amendment Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00032",
+   "assent_date": "2024-05-31"
+  }
+ ]
+}

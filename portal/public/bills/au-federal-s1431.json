@@ -1,0 +1,141 @@
+{
+ "key": "au-federal-s1431",
+ "title": "Environment Protection and Biodiversity Conservation Amendment (Reconsideration of Decisions) Bill 2024",
+ "short_title": "Environment Protection and Biodiversity Conservation Amendment (Reconsideration of Decisions) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-10-08",
+ "originating_house": "senate",
+ "sponsor": "COLBECK, Sen Richard",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10131",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1431%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1431%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1431%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1431%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1431_ems_c77c5b08-c457-405e-8c8e-221974505444%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1431%22",
+   "document_date": "2024-10-08",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-10-08",
+  "sentences": [
+   "The bill would add time limits and eligibility rules to the process for revisiting environmental approval decisions under the EPBC Act.",
+   "It would allow anyone other than a state or territory minister to ask for a decision to be reconsidered only within 36 months of that decision, after which only the relevant state or territory minister could make such a request.",
+   "The explanatory memorandum does not specify what happens to requests made after the 36-month period or how the new limits interact with the existing three criteria for changing a decision."
+  ],
+  "changes": [
+   "Set a 36-month deadline for non-ministerial requests to reconsider a decision.",
+   "Restrict the right to request reconsideration after 36 months to the relevant state or territory minister.",
+   "Amend the EPBC Act to introduce these time and eligibility limits."
+  ],
+  "affected": "People and organisations seeking to challenge environmental decisions under the EPBC Act, and state and territory ministers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9557",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Reconsideration of Decisions) Bill 2024 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 7,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1194456",
+   "speaker": "Richard Colbeck",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

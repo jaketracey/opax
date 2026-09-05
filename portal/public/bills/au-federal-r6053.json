@@ -1,0 +1,176 @@
+{
+ "key": "au-federal-r6053",
+ "title": "Treasury Laws Amendment (2018 Measures No. 3) Bill 2018",
+ "short_title": "Treasury Laws Amendment (2018 Measures No. 3) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-08-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6053%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6053%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6053%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6053%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6053%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6053%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6053%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6053%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6053%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6053%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6053%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6053%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6053_ems_5a01e85b-80d4-4b8a-b6f3-121d9a64cd41%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6053%22",
+   "document_date": "2018-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00093",
+   "document_date": "2018-08-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-15",
+  "sentences": [
+   "This bill would raise the maximum financial penalties for breaches of the Australian Consumer Law.",
+   "It would align consumer law penalties with the higher competition law penalties by introducing new maximums based on a fixed amount, three times the benefit gained, or 10 per cent of annual turnover.",
+   "The new penalties would apply from the later of 1 July 2018 or the day after the bill receives royal assent, for acts or omissions on or after that date."
+  ],
+  "changes": [
+   "Aligns Australian Consumer Law penalties with competition law penalties under the Competition and Consumer Act.",
+   "Increases the maximum civil pecuniary penalty for a body corporate to the greater of $10 million, three times the benefit gained, or 10 per cent of annual turnover.",
+   "Increases the maximum fine for a person other than a body corporate to $500,000 for both civil contraventions and criminal offences."
+  ],
+  "affected": "Businesses and individuals who may breach Australian Consumer Law provisions will be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-359684",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The bill increases maximum penalties for breaches of the Australian Consumer Law to $10 million or three times the benefit or 10% of annual turnover for corporations, and to $500,000 for individuals; provides a safe harbour for egg producers complying with the Free Range Egg Labelling Information Standard; and amends the Competition and Consumer Act to enable the Australian Energy Regulator to monitor wholesale electricity markets."
+  },
+  {
+   "slug": "speech-366006",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (2018 Measures No. 3) Bill, which updates consumer law penalties, strengthens free-range egg labeling protections, and improves confidentiality for the Australian Energy Regulator, as part of the government’s broader energy and consumer protection agenda."
+  },
+  {
+   "slug": "speech-366007",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "The speaker argued the government has failed to act on consumer protection, particularly by not cracking down on payday lenders after 1,055 days since the review began, and by not requiring car manufacturers to share technical information with independent mechanics. They cited a childcare worker named Jane who incurred over $10,000 in debt from a payday loan."
+  },
+  {
+   "slug": "speech-366011",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "The bill increases maximum penalties for Australian Consumer Law breaches to $10 million or three times the benefit gained (or 10% of annual turnover), and $500,000 for individuals; introduces a safe harbour for free-range egg producers complying with the labelling standard (max 10,000 hens per hectare); and amends the Competition and Consumer Act to protect confidential Australian Energy Regulator information under the National Electricity Law."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2018 Measures No. 3) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00093",
+   "assent_date": "2018-08-31"
+  }
+ ]
+}

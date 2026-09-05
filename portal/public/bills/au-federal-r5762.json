@@ -1,0 +1,200 @@
+{
+ "key": "au-federal-r5762",
+ "title": "Superannuation (Objective) Bill 2016",
+ "short_title": "Superannuation (Objective) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5762%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5762%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5762%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5762%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5762%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5762%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5762%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5762%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5762_ems_3e13dbab-f4b3-41a3-95c8-204b79c1ed92%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5762%22",
+   "document_date": "2016-11-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-09",
+  "sentences": [
+   "This bill is part of a package of legislation on superannuation, which also includes the Treasury Laws Amendment (Fair and Sustainable Superannuation) Bill 2016.",
+   "The bill would set the main goal of the superannuation system in law as providing retirement income that replaces or adds to the age pension, and allow additional goals to be set by regulation.",
+   "Future superannuation bills and regulations would need to include a written check of how they align with these stated goals, and the package makes related changes to the Legislation Act 2003."
+  ],
+  "changes": [
+   "The bill writes the primary objective of superannuation into legislation.",
+   "It permits subsidiary objectives to be defined by regulation.",
+   "It requires that superannuation-related bills and regulations come with a statement showing they fit the objectives."
+  ],
+  "affected": "People who save for retirement through the superannuation system, as well as those who make or administer superannuation policy.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:05Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4418",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "question": "Scott Morrison I am pleased to summarise and conclude this debate. I first of all want to thank members who have contributed to this debate. The measures that are included in this set of bills make important changes to superannuation, to make it fairer and more sustainable from a fiscal point of view, but also to ensure that our—I think—world-leading superannuation scheme continues to be that. It ensures that Australians are able to save over the course of their working lives in a much more flexible and fair way to ensure that they can provide for their retirement. There are three great economic goals that I think Australians share: to be able to own your own home; to be able to raise your children—where you have been given that great blessing—and to be able to provide for your children and support you children by obtaining work and becoming self-sufficient as a family; and, thirdly, to be able to be independent in your retirement years. These are important economic objectives and goals that I think Australians share and aspire to. As a government, we want to facilitate and support all of those goals. These bills do exactly that, by making the superannuation system fairer, more flexible and, of course, more sustainable. This is to reflect also the more precisely defined objective of superannuation; it is not there to provide a tax minimisation vehicle and it is not there to provide an estate planning tool. It is there to ensure that people can save and provide for an income in retirement where they can support themselves, and that is what these bills achieve. I note the second reading amendment that has been brought forward by the opposition. I make a couple of comments in relation to that second reading amendment. Firstly, it makes reference to the budget being under threat and hitting the pay packets of Australians and risking our triple-A credit rating. The greatest threat to our triple-A credit rating sits on the opposition benches. When the Labor Party faces up",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-11-22/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-338000",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government broke its promise not to tax superannuation, then bungled the retrospective measure, but Labor will not block the legislation while seeking amendments including a $75,000 annual cap and a $200,000 division 293 threshold to improve budget fairness, and called for a bipartisan superannuation objective."
+  },
+  {
+   "slug": "speech-338003",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Superannuation (Objective) Bill 2016 and related bills modernise the retirement income system by enshrining a clear objective for superannuation, improving flexibility for workers like the example of Sarah, and removing the 10 per cent rule to benefit over 800,000 Australians. The bills also introduce an unused concessional cap carry-forward from 1 July 2018, expected to help around 230,000 people in 2019-20, and are available to anyone with a balance under $500,000."
+  },
+  {
+   "slug": "speech-338004",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to the Superannuation (Objective) Bill 2016, arguing the government's superannuation reforms were flawed and \"shambolic,\" and proposed alternative measures to make the system fairer, including lowering the non-concessional contributions cap to $75,000 and the high-income super contribution threshold to $200,000, while also supporting elements like the $1.6 million transfer cap and reinstating the low-income super contribution."
+  },
+  {
+   "slug": "speech-338005",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Superannuation (Objective) Bill 2016 will reduce inequality, improve fairness and sustainability, and benefit most Australians—including low-income earners, women with interrupted work patterns, and small businesses—through measures such as a $1.6 million transfer balance cap, a $25,000 annual concessional cap, a low-income superannuation offset for incomes under $37,500 (affecting 3.1 million people), catch-up contributions for balances under $500,000, and raising the spouse offset threshold to $40,000, citing constituent Mr Bill Snodgrass of Palm Beach."
+  },
+  {
+   "slug": "speech-338006",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-338007",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Superannuation (Objective) Bill 2016 and related bills need Labor's proposed amendments to ensure fairness and equity, contrasting Labor's consistent approach with the government's chaotic policies. Concrete figures cited include average superannuation balances of $160,000 nationally, $156,000 in Queensland, $128,000 in Tasmania, and a gender gap of $100,000 for men versus $28,000 for women aged 60–64, with Labor opposing catch-up concessional contributions and proposing a $75,000 annual cap."
+  }
+ ],
+ "acts": []
+}

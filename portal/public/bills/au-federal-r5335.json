@@ -1,0 +1,350 @@
+{
+ "key": "au-federal-r5335",
+ "title": "Australian Education Amendment Bill 2014",
+ "short_title": "Australian Education Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-09-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2014-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-09-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5335%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5335%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5335%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5335%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5335%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5335%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5335_ems_1454474c-5b96-4c7d-8e8a-45ae626d6e15%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5335%22",
+   "document_date": "2014-09-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00120",
+   "document_date": "2014-11-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-09-25",
+  "sentences": [
+   "The bill would provide extra money in 2014 to schools that educate many Indigenous students who board and come from distant regions.",
+   "It would stop funding reductions for students with disabilities and those in certain independent special schools by aligning their transition rules with other schools.",
+   "The bill would fix mistakes in the Australian Education Act 2013 that cause uncertainty for schools."
+  ],
+  "changes": [
+   "The bill creates the Indigenous Boarding Initiative, worth about $6.8 million, for eligible schools.",
+   "The bill ensures transitional funding for some special schools matches the rules for other schools.",
+   "The bill corrects errors in the original Act that affect funding and regulation."
+  ],
+  "affected": "Schools with Indigenous boarding students from remote areas, students with disabilities, and independent special schools are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:07Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-299010",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299033",
+   "speaker": "Kate Ellis",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299044",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299045",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299048",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299206",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299207",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299304",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299305",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299306",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299307",
+   "speaker": "Russell Broadbent",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299461",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299469",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299470",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299471",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299473",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299475",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299476",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299480",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299481",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299482",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299483",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Education Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00120",
+   "assent_date": "2014-11-26"
+  }
+ ]
+}

@@ -1,0 +1,498 @@
+{
+ "key": "au-federal-r6619",
+ "title": "Higher Education Support Amendment (Freedom of Speech) Bill 2020",
+ "short_title": "Higher Education Support Amendment (Freedom of Speech) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2021-03-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-03-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-03-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6619_ems_040a43f2-4cb4-4030-8116-2ea3c51288a7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6619%22",
+   "document_date": "2020-10-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00022",
+   "document_date": "2021-03-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-28",
+  "sentences": [
+   "This bill would change the main law governing university funding to better protect free speech and academic freedom.",
+   "It would add a formal definition of 'academic freedom' and replace the existing term 'free intellectual inquiry' with 'freedom of speech' and 'academic freedom' in the Higher Education Support Act 2003.",
+   "The changes follow recommendations from a 2019 review led by former High Court Chief Justice Robert French."
+  ],
+  "changes": [
+   "The bill inserts a new definition of 'academic freedom' into the Higher Education Support Act 2003.",
+   "It replaces the term 'free intellectual inquiry' with 'freedom of speech' and 'academic freedom' in relevant provisions.",
+   "It aligns the language of the Act with the French Model Code."
+  ],
+  "affected": "Australian higher education providers and universities are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7626",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion unchanged. The usual second reading motion is \"*that the bill be read a second time*\" and to read a bill for a second time is to agree with its main idea. This vote occurred in response to an amendment (see below). Because this vote was successful, the amendment failed. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the Government has damaged the quality of Australia's world-class post-secondary education system by:* > > *(1) cutting billions from universities and slashing research funding;* > > *(2) making it harder and more expensive for Australian students to get a university education; and* > > *(3) failing to develop a long-term policy for the Australian post-secondary education system\".*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 123
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-24/1"
+  },
+  {
+   "key": "federal-senate-7025",
+   "date": "2021-03-15",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-03-15.167.2) introduced by Victorian Senator [Kim Carr](https://theyvoteforyou.org.au/people/senate/victoria/kim_carr) (Labor), which means it failed. ### What would the amendment do? Senator Carr [explained that](https://www.openaustralia.org.au/senate/?gid=2021-03-15.167.2) the amendment: > *The purpose of this amendment is to add a very simple term, 'or in relation to the Commonwealth government'. At schedule 1, item 4, there is a definition of academic freedom. The bill seeks to put in context what academic staff can look to in terms of academic freedom. It lists the freedom of academic staff to teach, discuss, research, disseminate and publish; the freedom of academic staff and students to engage in intellectual inquiry; and the freedom of academic staff and students to express their opinions in relation to the higher education provider in which they work or are enrolled. I wish to add the words 'or in relation to the Commonwealth government' so that staff or students can make their views known in relation to not just the education provider but also the Commonwealth government.* ### Amendment text > *(1) Schedule 1, item 4, page 3 (line 24), at the end of paragraph (c), add \"or in relation to the Commonwealth Government\".*",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 28,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-15/6"
+  },
+  {
+   "key": "federal-senate-7026",
+   "date": "2021-03-15",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-03-15.173.1) introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens), which means it failed. ### What do the amendments do? Senator Faruqi [explained the amendments](https://www.openaustralia.org.au/senate/?gid=2021-03-15.173.1): > *These amendments will ensure that the academic freedom provisions apply not only to those university workers who are considered academic staff but to those across the institution who may undertake academic activities, including teaching, scholarship and research. As I said in my speech on the second reading, at a modern university much academic work is undertaken by others in the university system who may not be classified as or considered academic staff. They can include research assistants and other professional staff who may from time to time deliver lectures, engage in research or otherwise contribute to the academic activities of the institution. These amendments will extend the academic freedom provisions to more people doing academic work on our campuses and not necessarily confine their operation to a limited cohort of university workers.* ### Amendment text > *(1) Schedule 1, item 4, page 3 (line 16), omit \"academic staff\", substitute \"staff engaged in academic activities\".* > > *(2) Schedule 1, item 4, page 3 (line 18), omit \"academic staff\", substitute \"staff engaged in academic activities\".* > > *(3) Schedule 1, item 4, page 3 (line 22), omit \"academic staff\", substitute \"staff engaged in academic activities\".* > > *(4) Schedule 1, item 4, page 3 (line 25), omit \"academic staff\", substitute \"staff engaged in academic activities\".*",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 28,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-15/7"
+  },
+  {
+   "key": "federal-senate-7027",
+   "date": "2021-03-15",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-03-15.177.1) introduced by Queensland Senator [Malcolm Roberts](https://theyvoteforyou.org.au/people/senate/queensland/malcolm_roberts) (One Nation), which means it failed. Victorian Senator Jane Hume (Liberal) [explained why](https://www.openaustralia.org.au/senate/?gid=2021-03-15.180.1) the Government would not be supporting the amendment: > *Employers and employees are free to make enterprise agreements which include terms that pertain to the employment relationship. The proposed amendment seeks to constrain university employers' and employees' ability to freely agree to the terms and conditions of employment in their enterprise agreement. It also seeks to constrain the standards and policies that universities may set in relation to freedom of speech and academic freedom. Item (b) of the proposed amendment is also unnecessary, as in practice it simply reflects the operation provisions in Mr French's proposed model code on freedom of speech and academic freedom. Effectively, the amendment proposes that other institutional policies should reflect and be consistent with the institution's policies on freedom of speech and academic freedom, which the government expects will be consistent with the model code.* ### Amendment text > *(1) Schedule 1, page 3 (after line 12), after item 3, insert:* > > *3A At the end of Subdivision 19-G* > > *Add:* > > *19-120 Provider's enterprise agreement to uphold freedom of speech and academic freedom* > > *A higher education provider that is a *Table A provider or a *Table B provider must take reasonable steps to ensure that:* > >> *(a) any enterprise agreement under which academic staff of the higher education provider are employed includes provisions to uphold the freedom of speech and academic freedom of the provider's academic staff, consistent with the provider's policy under section 19-115; and* >> >> *(b) no other provisions of such an e",
+   "stage": "In committee",
+   "ayes": 3,
+   "noes": 45,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 22,
+    "dated": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-15/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-397393",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-28",
+   "stage_hint": null,
+   "brief": "The bill amends the Higher Education Support Act 2003 to strengthen protections for academic freedom and freedom of speech by implementing the 2019 French review recommendations, including a new definition of academic freedom and replacing \"free intellectual inquiry\" with \"freedom of speech\" and \"academic freedom.\" The government has accepted all 2019 French review recommendations, with all universities undertaking to adopt the French model code, and a review by Professor Sally Walker AM evaluating policy alignment."
+  },
+  {
+   "slug": "speech-403249",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-23",
+   "stage_hint": null,
+   "brief": "The speaker moved to amend the Higher Education Support Amendment (Freedom of Speech) Bill 2020, arguing the government has damaged higher education through funding cuts and increased student costs, and that the bill is unnecessary because the French review found no free speech crisis and universities have voluntarily adopted its model code. The speaker also criticised the government for introducing the bill as part of a deal with One Nation and cited the case of Yassmin Abdel-Magied, who was driven out of Australia after a social media post, as an example of free speech not being protected."
+  },
+  {
+   "slug": "speech-403252",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-23",
+   "stage_hint": null,
+   "brief": "The speech supported the Higher Education Support Amendment (Freedom of Speech) Bill 2020, which implements French review recommendations by inserting a definition of 'academic freedom' and replacing 'free intellectual inquiry' with 'freedom of speech' and 'academic freedom'. The speaker agreed with the review's finding that there is no free speech crisis on campus, but argued the amendments provide greater clarity for addressing disputes, though they will not resolve all tensions."
+  },
+  {
+   "slug": "speech-403253",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2021-02-23",
+   "stage_hint": null,
+   "brief": "The Greens do not oppose the Higher Education Support Amendment (Freedom of Speech) Bill 2020 but argue the government undermines academic freedom by ridiculing and defunding research, vetoing ARC grants (e.g., Simon Birmingham’s 2018 veto of 11 humanities grants), denying JobKeeper to universities, and doubling humanities fees. The speaker calls for free education funded by taxing big corporations and billionaires, such as Gina Rinehart."
+  },
+  {
+   "slug": "speech-403254",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-23",
+   "stage_hint": null,
+   "brief": "The Morrison government introduced the Higher Education Support Amendment (Freedom of Speech) Bill 2020 to strengthen legal protections for academic freedom and free speech in universities, including a new statutory definition of academic freedom aligned with the French model code. The bill follows a review finding only nine of 45 universities fully aligned with the code, alongside record university funding of over $18 billion in 2020 rising to around $20 billion in 2024 and 30,000 new Commonwealth supported places by 2021."
+  },
+  {
+   "slug": "speech-403255",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-23",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the Higher Education Support Amendment (Freedom of Speech) Bill 2020, which inserts a new definition of academic freedom into the Act. The speaker argued that the government’s sustained attacks on the humanities and universities pose the greatest threat to academic freedom, drawing on over a decade of personal experience in academia."
+  },
+  {
+   "slug": "speech-403298",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speech argued that universities have failed their core purpose by silencing or intimidating free inquiry, citing the Ramsay Centre for Western Civilisation and rejected climate consensus centres. It defended the Higher Education Support Amendment (Freedom of Speech) Bill 2020 as needed to align the Higher Education Support Act 2003 with the French model code recommended by Robert French’s 2019 review, framing free speech as essential to liberal democracy and progress."
+  },
+  {
+   "slug": "speech-403299",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "Labor supported the Higher Education Support Amendment (Freedom of Speech) Bill 2020 but argued the government’s deal with One Nation to raise university fees undermines academic freedom, citing former education minister Simon Birmingham’s veto of over $4 million in ARC grants and average degree costs of $60,000."
+  },
+  {
+   "slug": "speech-403300",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The Higher Education Support Amendment (Freedom of Speech) Bill 2020 amends the Higher Education Support Act 2003 to require universities to adopt policies protecting freedom of speech and academic freedom, replacing the term \"free intellectual inquiry.\" The speech cited examples of suppression, including the ANU rejecting a Ramsay Centre course, UQ disciplining a student over a Hong Kong protest, and a 2019 IPA survey where 41% of students felt unable to express opinions, while noting only 9 of 33 universities had enacted the French model code by December."
+  },
+  {
+   "slug": "speech-403303",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued the Higher Education Support Amendment (Freedom of Speech) Bill 2020 is necessary to protect academic freedom, noting only nine of 42 universities had adopted the French model code by December 2020, and cited examples of free speech issues including Colonel Kemp, Drew Pavlou and Professor Patrick Parkinson. The speaker also opposed an Australian bill of rights and raised concerns about unintended consequences for faith-based tertiary providers."
+  },
+  {
+   "slug": "speech-403304",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The bill strengthens protections for academic freedom and freedom of speech in Australian universities, aligning with the French review's recommendations and a model code adopted by institutions including the University of Sydney, La Trobe and RMIT. It introduces a new definition of academic freedom in the Higher Education Support Act 2003."
+  },
+  {
+   "slug": "speech-403306",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Higher Education Support Amendment (Freedom of Speech) Bill 2020, which strengthens protections for academic freedom and freedom of speech in universities by defining 'academic freedom' and aligning with the French model code. The speaker cited the cases of student Drew Pavlou at the University of Queensland and Professor Peter Ridd at James Cook University as examples of suppression of free speech."
+  },
+  {
+   "slug": "speech-403307",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The Higher Education Support Amendment (Freedom of Speech) Bill 2020 amends the Higher Education Support Act 2003 to define 'academic freedom' and require public universities to adopt policies upholding freedom of speech and academic freedom, implementing recommendations from the 2019 French review; 23 of 42 institutions have fully or mostly implemented the model code."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Higher Education Support Amendment (Freedom of Speech) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00022",
+   "assent_date": "2021-03-22"
+  }
+ ]
+}

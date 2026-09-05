@@ -1,0 +1,229 @@
+{
+ "key": "au-federal-r7108",
+ "title": "Crimes and Other Legislation Amendment (Omnibus No. 2) Bill 2023",
+ "short_title": "Crimes and Other Legislation Amendment (Omnibus No. 2) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2023-11-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7108%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7108%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7108%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7108%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7108%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7108%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7108%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7108%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7108%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7108%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7108%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7108%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7108_ems_f0595623-a353-48c8-a715-48be9d20de7f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7108%22",
+   "document_date": "2023-11-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00098",
+   "document_date": "2023-11-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-14",
+  "sentences": [
+   "The bill would strengthen import controls on dual-use substances that have both legitimate industrial uses and can be used to make illicit drugs.",
+   "It would change regulation-making powers under the Criminal Code so that known and emerging dual-use substances can be listed consistently as border controlled drugs, plants or precursors.",
+   "Unregistered importers of these substances would face penalties under the Criminal Code and the Australian Border Force could seize the substances."
+  ],
+  "changes": [
+   "Enhances import controls on dual-use substances.",
+   "Ensures regulation-making powers can list known and emerging dual-use substances consistently.",
+   "Subjects unregistered importers to Criminal Code penalties and seizure powers under the Customs Act.",
+   "Makes consequential amendments to the Customs Act and Defence Force Discipline Act 1982."
+  ],
+  "affected": "Importers of dual-use substances, particularly unregistered entities, and law enforcement agencies such as the Australian Border Force.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:57Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8481",
+   "date": "2023-11-16",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-11-16.28.4) to agree with the main idea of the bill (technically known as giving the bill a second reading). This means our senators can now consider it in greater detail. ### What is the bill's main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7108), the bill will: > *clarify the Attorney-General’s duty to make, or refuse to make, a parole order after the non-parole period has ended; [...] and enhance import controls on substances that are commonly used as illicit drugs and precursors but which also have legitimate uses in industry (dual-use substances). [It also] validates things done in reliance on certain authorisations or determinations by the Australian Criminal Intelligence Commission Board.*",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-16/2"
+  },
+  {
+   "key": "federal-senate-8498",
+   "date": "2023-11-17",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2023-11-17.4.2) to agree with passing the bill in the Senate (technically known as giving the bill a third reading). Since the bill was already passed in the House of Representative, the bill will now become law. ### What is the bill's main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7108), the bill will: > *clarify the Attorney-General’s duty to make, or refuse to make, a parole order after the non-parole period has ended; [...] and enhance import controls on substances that are commonly used as illicit drugs and precursors but which also have legitimate uses in industry (dual-use substances). [It also] validates things done in reliance on certain authorisations or determinations by the Australian Criminal Intelligence Commission Board.*",
+   "stage": "Third reading",
+   "ayes": 21,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 27,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-17/1"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Crimes and Other Legislation Amendment (Omnibus No. 2) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00098",
+   "assent_date": "2023-11-27"
+  }
+ ]
+}

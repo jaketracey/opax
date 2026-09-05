@@ -1,0 +1,381 @@
+{
+ "key": "au-federal-r6875",
+ "title": "Aged Care and Other Legislation Amendment (Royal Commission Response) Bill 2022",
+ "short_title": "Aged Care and Other Legislation Amendment (Royal Commission Response) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-07-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2022-08-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6875%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6875%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6875%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6875%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6875%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-07-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6875%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-07-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6875%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-07-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6875%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6875%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6875%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6875%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6875%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6875%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-08-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6875%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6875_ems_2bd91c75-0e39-4557-8747-7fc07dd57e14%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6875%22",
+   "document_date": "2022-07-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00034",
+   "document_date": "2022-08-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-07-27",
+  "sentences": [
+   "This bill changes several existing laws to put in place urgent aged care measures, many of which follow the findings of the royal commission's final report.",
+   "It would introduce a new funding model for residential care, require the publication of star ratings, establish a code of conduct with enforcement powers, and extend incident reporting to home care.",
+   "The new funding model would start on 1 October 2022, or on a later date set by proclamation if the bill is not enacted by then."
+  ],
+  "changes": [
+   "Replace the current residential care subsidy method with a new classification system.",
+   "Require the Department of Health and Aged Care's secretary to publish quality information and star ratings for residential services.",
+   "Make approved providers and their staff follow a code of conduct, with the Aged Care Quality and Safety Commissioner able to issue penalties or banning orders for breaches.",
+   "Extend the Serious Incident Response Scheme to home care and flexible care in home or community settings from 1 December 2022.",
+   "Amend several acts including the Aged Care Act 1997 and the Aged Care (Transitional Provisions) Act 1997."
+  ],
+  "affected": "Residential aged care services, their approved providers, aged care workers, and older Australians and their families.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:22:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7708",
+   "date": "2022-08-01",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"that the bill be read a second time.\" To read a bill for a second time is to agree with its main idea. Because this division was unsuccessful, the original motion will remain unchanged. The amendment had been introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal). ### Amendment text > *At the end of the motion, add \", but the Senate is of the opinion that the Government has disrespected older Australians, their families and aged care providers due to their political restriction of the passage of similar legislation in the last Parliament when they were in Opposition\".*",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 17,
+    "earliest": 36,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-08-01/1"
+  },
+  {
+   "key": "federal-senate-7709",
+   "date": "2022-08-01",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"that the bill be read a second time.\" To read a bill for a second time is to agree with its main idea. Because this division was unsuccessful, the original motion will remain unchanged. The amendment had been introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) the Royal Commission into Aged Care Quality and Safety called for the use of restrictive practices in aged care to be based on an independent expert assessment and be subject to ongoing reporting and monitoring; and* >> >> *(ii) a lack of legislative provisions to ensure aged care residents can access allied health services may reduce the level of care they receive, with clear implications for their health and wellbeing; and* > > *(b) urges the Government to ensure that its response to the Royal Commission includes urgent action to reduce the use of restrictive practices and ensure that allied health care is appropriately funded.*",
+   "stage": "Second reading",
+   "ayes": 16,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 12,
+    "earliest": 28,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-08-01/2"
+  },
+  {
+   "key": "federal-senate-7710",
+   "date": "2022-08-01",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2022-08-01.232.5) that [items (3) and (4)](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6875_first-reps%2F0009;query=Id%3A%22legislation%2Fbills%2Fr6875_first-reps%2F0000%22;rec=0) of schedule 9 stand as printed. In other words, they voted to keep those items unchanged. ### What are items (3) and (4) of schedule 9? Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens), who proposed to remove these items from the bill, [explained that](https://www.openaustralia.org.au/senate/?gid=2022-08-01.232.1): > *I didn't receive any good rationale as to why there should be immunity from prosecution for restrictive practices after they've gone through all of the various hoops. Yes, let's make sure that the provisions are appropriate, but at the end of the day there does not seem to be any justification for giving immunity from prosecution to providers for those circumstances. My amendment would remove the second half of schedule 9.* ### Text of items (3) and (4) of schedule 9 > *3 At the end of Division 54* > > *Add:* > >> *54-11 Immunity from civil or criminal liability in relation to the use of a restrictive practice in certain circumstances* >> >> *(1) This section applies if:* >> >>> *(a) an approved provider provides aged care of a kind specified in the Quality of Care Principles made for the purposes of paragraph 54-1(1)(f) to a care recipient; and* >>> >>> *(b) a restrictive practice is used in relation to the care recipient; and* >>> >>> *(c) the care recipient lacked capacity to give informed consent to the use of the restrictive practice.* >> >> *(2) A protected entity is not subject to any civil or criminal liability for, or in relation to, the use of the restrictive practice in relation to the care recipient if:* >> >>> *(a) informed consent to the use of the restrictive",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "earliest": 28,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-08-01/3"
+  },
+  {
+   "key": "federal-senate-7711",
+   "date": "2022-08-01",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6875_amend_73081d92-77d6-4342-a3df-90428c73ce50%22;rec=0) introduced by Queensland Senator [Malcolm Roberts](https://theyvoteforyou.org.au/people/senate/queensland/malcolm_roberts) (One Nation), which means they failed. ### What were the amendments? Senator Roberts [explained that](https://www.openaustralia.org.au/senate/?gid=2022-08-01.235.1): > *Our amendments directly contribute to improved safety and quality for our respected seniors in aged-care facilities, providing for 24 hours a day, seven days a week nursing support on site from a registered nurse. So many problems were identified in the royal commission's report, and this addresses a significant gap in care and response times that will help to alleviate the concerns of many aged-care residents and their families.* > > *We recognise that remote and regional areas have problems in attracting and retaining a skilled workforce. Accordingly, we have provided for exemptions subject to reasonable conditions.*",
+   "stage": "In committee",
+   "ayes": 18,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 17,
+    "earliest": 28,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-08-01/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-420187",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-07-27",
+   "stage_hint": null,
+   "brief": "The bill implements Royal Commission recommendations including a new aged-care funding model (AN-ACC), star ratings, a code of conduct, extension of the Serious Incident Response Scheme, and other governance and oversight measures. The speaker argued that aged care has been in crisis for decades, with 23 reports over nine years ignored by previous governments, and that this government is now acting."
+  },
+  {
+   "slug": "speech-420190",
+   "speaker": "Sussan Penelope Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-07-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill mirrors the opposition's own royal commission response bill from the previous parliament and accused Labor of delaying its passage for political gain, while also criticising the government for ending free rapid antigen tests for aged-care homes and reversing Australian Defence Force COVID support."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care and Other Legislation Amendment (Royal Commission Response) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00034",
+   "assent_date": "2022-08-05"
+  }
+ ]
+}

@@ -1,0 +1,130 @@
+{
+ "key": "au-federal-r5411",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Miscellaneous Matters) Bill 2015",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Miscellaneous Matters) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-02-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry and Science",
+ "status": "passed",
+ "status_as_of": "2015-04-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5411%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5411%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5411%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5411%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5411%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5411%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5411_ems_722b6317-1f92-47e9-8c80-b50fef6dc086%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5411%22",
+   "document_date": "2015-02-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00033",
+   "document_date": "2015-04-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-306216",
+   "speaker": "Ian Macfarlane",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Miscellaneous Matters) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00033",
+   "assent_date": "2015-04-02"
+  }
+ ]
+}

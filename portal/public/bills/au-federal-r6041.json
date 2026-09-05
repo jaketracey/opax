@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6041",
+ "title": "Fair Work Amendment (Making Australia More Equal) Bill 2018",
+ "short_title": "Fair Work Amendment (Making Australia More Equal) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-21",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-10-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6041%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6041%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6041%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6041_ems_45aa8303-4d45-426c-b886-9c9923917352%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6041%22",
+   "document_date": "2018-05-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-362487",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2018-05-21",
+   "stage_hint": null,
+   "brief": "The Greens introduced the Fair Work Amendment (Making Australia More Equal) Bill 2018 to give the Fair Work Commission power to extend minimum wages, leave, superannuation and unfair dismissal protections to gig economy workers like Uber drivers and food delivery riders, citing reports of riders paid as little as $6 an hour."
+  }
+ ],
+ "acts": []
+}

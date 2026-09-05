@@ -1,0 +1,849 @@
+{
+ "key": "au-federal-r5734",
+ "title": "Social Security Legislation Amendment (Youth Jobs Path: Prepare, Trial, Hire) Bill 2016",
+ "short_title": "Social Security Legislation Amendment (Youth Jobs Path: Prepare, Trial, Hire) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "passed",
+ "status_as_of": "2017-05-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-05-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5734_ems_d5756521-50de-48bf-aca9-2dd011ab2ff4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/4926547%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5734%22",
+   "document_date": "2016-10-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00042",
+   "document_date": "2017-05-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4420",
+   "date": "2016-11-23",
+   "house": "representatives",
+   "question": "Craig Kelly It is a privilege to have the opportunity to continue my comments on the Social Security Legislation Amendment (Youth Jobs Path: Prepare, Trial, Hire) Bill 2016. I actually was not going to speak on this bill but I heard the member for Lalor talk about the movie _The Pursuit of Happyness_. It is actually a true story based on an American gentleman named Chris Gardner. He was born in 1954 to an underprivileged background. His childhood was racked with poverty, domestic violence, alcoholism and family illiteracy. In his late 20s he found himself in jail. Coming out of jail with no experience, no college education, no degree and no connections, he took on an internship, which is what this legislation is all about. He took on an internship at a stockbroking firm to learn the ropes. He realised that with that background, without having an education, he had to strive harder, work harder and work smarter. He had to use his time as best he could. They say he was the first to arrive at work and the last to leave, even though he was unpaid on an internship. Eventually, he got a job. He then went on to work for another broking firm and then took the risk of breaking out on his own. With $10,000 in capital and the only piece of furniture being a single desk, he started up his own broking firm, called Gardner Rich. The rest is history. He went on to have a net worth today of over $60 million. He made his first million dollars by the age of 34 and, to celebrate, he bought himself a black Ferrari previously owned by Michael Jordan. He owns a multimillion dollar apartment in Chicago's Trump Tower, and President-elect Trump has said of Chris Gardner that his story is a tremendous lesson in tenacity. He has also recently written a book titled _Start Where You Are: Life Lessons in Getting from Where You Are to Where You Want to Be_. One of the chapters is 'Learn the ropes first, then conquer Rome'. The story of the movie _The Pursuit of Happyness_, the true life story of C",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-11-23/1"
+  },
+  {
+   "key": "federal-senate-4669",
+   "date": "2017-05-09",
+   "house": "senate",
+   "question": "Malcolm Roberts Previously I had almost finished my speech indicating that we would not be supporting the Social Security Legislation Amendment (Youth Jobs Path: Prepare, Trial, Hire) Bill 2016. However, in subsequent discussions between our party leader, Senator Hanson, and the minister, we have learned more details and have been reassured in relation to some of our concerns, so we will now be supporting this bill. I still stand by the comments that I made last time that this is, in effect, window-dressing. It has been successful in some part. But we need to get to the basics of employment, which is comprehensively fixing the taxation system, reducing overregulation, removing overregulation and reducing energy prices. These are crippling employment in this country, especially in regional Australia, and indeed along the coastal fringes of Australia, right up and down our coast. So we must get back to basics. However, we will support this bill and look forward to the government going much, much further on employment, especially in regional and coastal areas of Queensland, by getting back to basics—taxation, energy prices and overregulation. Helen Polley What a surprise to come back on the first day of parliament to see that One Nation have sold out again and are backing a piece of government legislation! But I rise to speak in opposition to the Social Security Legislation Amendment (Youth Jobs Path: Prepare, Trial, Hire) Bill 2016. I want to say at the outset that I believe that this legislation to establish the Youth Jobs PaTH program is poorly constructed and will put young Australian jobseekers at risk of exploitation. Youth unemployment is a huge problem. In my home state of Tasmania we have amongst the highest rates of youth unemployment in the country. In some parts of Tasmania the unemployment rate amongst 15- to 24-year-olds is as high as 27 per cent. Twenty-seven per cent of our young people are unemployed. We have a youth unemployment crisis, and we should",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 43,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-05-09/1"
+  },
+  {
+   "key": "federal-senate-4672",
+   "date": "2017-05-10",
+   "house": "senate",
+   "question": "Peter Whish-Wilson I seek leave to move a motion relating to the budget. Leave not granted. I move: That so much of the standing orders be suspended as would prevent Senator Whish-Wilson moving a motion to give precedence to a motion relating to the budget. Stephen Parry Senator Whish-Wilson, the suspension of standing orders has to be relevant to where we are at now, and we have gone back into a bill. I just advise you of that as you move into your remarks. Peter Whish-Wilson I just want to clarify, Mr President. It was busy, but I was on my feet. Stephen Parry I did see you rise to your feet at the prompting of your whip, after the Clerk started to call on the legislation, and there was time before that. So I think we are treating you very fairly in this instance. Peter Whish-Wilson I appreciate that, Mr President, because this is a very important subject. The day after the federal budget— Stephen Parry Point of order, Senator Fifield? Mitch Fifield Mr President, my understanding is that we actually need to be between items in order to seek to move such a motion, and the Clerk had already called on the bill. Stephen Parry Thank you, Senator Fifield. I will go back to what I indicated earlier, Senator Whish-Wilson. You cannot move a suspension pursuant to contingent motion, but you can move a suspension of standing orders because leave was denied. You have used that provision to move a suspension of standing orders, but it must be relevant: you must explain why we need to have a suspension of standing orders at this particular juncture in relation to this bill. Peter Whish-Wilson The bill before us is about social security and young people, and my motion for a suspension of standing orders relates to the budget and the fact that the budget is screwing young Australians. This is a very important issue for a large proportion of our country and for future generations of our country, who rely on us to do our job in here today and make sure they get fair outcomes. I kno",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 47,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 35,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-05-10/1"
+  },
+  {
+   "key": "federal-senate-4673",
+   "date": "2017-05-10",
+   "house": "senate",
+   "question": "Stephen Parry Prior to the motion on the suspension of standing orders, the bill had been called upon, so I invite Senator Hanson-Young, if she wishes, to move her second reading amendment to the bill. Sarah Hanson-Young I move the motion as circulated in the chamber: At the end of the motion, add: \", but the Senate calls on the Government to cap the fortnightly hours of the PaTH program at 30 to ensure participants in the program are receiving the minimum wage for the hours of work undertaken.\". Stephen Parry The question is that the motion be agreed to.",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 41,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-05-10/2"
+  },
+  {
+   "key": "federal-senate-4674",
+   "date": "2017-05-10",
+   "house": "senate",
+   "question": "Social Security Legislation Amendment (Youth Jobs Path: Prepare, Trial, Hire) Bill 2016 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 41,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-05-10/3"
+  },
+  {
+   "key": "federal-senate-4675",
+   "date": "2017-05-10",
+   "house": "senate",
+   "question": "Stirling Griff I move Nick Xenophon Team amendment (1) on sheet 8034 revised: (1) Schedule 2, page 5 (after line 27), at the end of the Schedule, add: 5 At the end of Part 7 Add: 243A Review of operation of Youth Jobs PaTH program (1) Before the end of the period of 2 years after the commencement of Schedule 2 to the _Social Security Legislation Amendment (Youth Jobs Path: Prepare, Trial, Hire) Act 2017_, the Employment Minister must cause to be conducted a review into the operation of the program established by the Commonwealth and known as \"Youth Jobs PaTH\". (2) The Employment Minister must cause to be prepared a report of a review under subsection (1). (3) The Employment Minister must cause a copy of the report to be tabled in each House of the Parliament within 15 sitting days of that House after the completion of the preparation of the report. (4) In this section: _Employment Minister_ means the Minister administering the _Fair Entitlements Guarantee Act 2012_. Doug Cameron In relation to the NXT amendment, I need some clarity from the Xenophon party. The proposal is for a review by the minister after two years. Given the history of the problems that have arisen with Work for the Dole, even to the extent where a young person was killed in Work for the Dole, despite the checks and balances that are supposedly there to look after not only the conditions that these young people would be working under but also their health and safety, from Labor's point of view we have severe concerns that they will not be carried out effectively or properly. An example is that, under Minister Cash, apprentices, who get far more checks and balances in their employment conditions than anyone would have under this bill, are still being ripped off mercilessly by employers around the country. In fact, the Fair Work Ombudsman has conducted two investigations into the pay and conditions of apprentices, and what it found was that about 50 per cent of apprentices were not receiving proper",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 38,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-05-10/4"
+  },
+  {
+   "key": "federal-senate-4676",
+   "date": "2017-05-10",
+   "house": "senate",
+   "question": "Social Security Legislation Amendment (Youth Jobs Path: Prepare, Trial, Hire) Bill 2016 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 38,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-05-10/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-337090",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-08",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill, arguing the PaTH program would create a pool of cheap labour for businesses, potentially displacing jobs, undercutting wages, and compromising participant safety, and moved an amendment demanding the government guarantee against job displacement, wage undercutting, safety risks, sidestepping of unfair dismissal protections, and prioritisation of small to medium enterprises."
+  },
+  {
+   "slug": "speech-337092",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-11-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Youth Jobs PaTH program will prepare unemployed young Australians for real workplaces through internships, training and wage subsidies, citing 600,000 people in jobless households as a key concern. He linked job creation to free trade agreements with China, Japan and South Korea, and referenced local examples like nectarine exports to China and table grapes to support the claim that market access is generating employment opportunities."
+  },
+  {
+   "slug": "speech-337093",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the PaTH program in the bill is poorly designed, likely to exploit young jobseekers with below-award wages and internships that don't lead to jobs, and cited criticisms from ACOSS, the ACTU, NUS, and the Institute of Public Affairs. They noted youth unemployment rates of 12.8% nationally, nearly 20% in southeast Melbourne, and over 30% in some migrant communities in their electorate of Bruce."
+  },
+  {
+   "slug": "speech-337094",
+   "speaker": "Ann Sudmalis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Youth Jobs PaTH program will break cycles of intergenerational welfare dependency by providing employability training, paid work experience ($200 per fortnight on top of welfare), and employer incentives, targeting 120,000 young people over four years. The bill ensures participants' extra payments do not affect other entitlements and allows easy return to income support if a job ends through no fault of their own."
+  },
+  {
+   "slug": "speech-337095",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-08",
+   "stage_hint": null,
+   "brief": "The opposition criticised the PaTH program as a hastily cobbled-together scheme that could exploit young jobseekers with below-award wages and inadequate workers' compensation, citing youth unemployment at 12.8% (271,400 aged 15–24) and 170,900 underemployed; they called for a Senate inquiry and noted that 90% of Work for the Dole participants do not gain full-time work."
+  },
+  {
+   "slug": "speech-337096",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-11-08",
+   "stage_hint": null,
+   "brief": "The bill establishes the Youth Jobs PaTH program, investing $751.7 million over four years to provide pre-employment training, paid internships, and wage subsidies for jobseekers under 25, alongside additional measures like the Youth Bonus wage subsidy and expanded New Enterprise Incentive Scheme."
+  },
+  {
+   "slug": "speech-337097",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-08",
+   "stage_hint": null,
+   "brief": "The speech called for the Youth Jobs PaTH bill to be referred to a Senate inquiry, arguing the program could lead to exploitation of young workers, undermine wages, and displace existing employees, and noting that 90% of Work for the Dole participants did not find full-time work after the program."
+  },
+  {
+   "slug": "speech-337098",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-08",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Youth Jobs PaTH program, which includes employability skills training, voluntary internships with a $200 fortnightly payment to participants, and wage subsidies of $6,500–$10,000 for employers hiring young jobseekers, with up to 120,000 placements over four years. The bill ensures internship payments are not counted as income for social security purposes."
+  },
+  {
+   "slug": "speech-337100",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Youth Jobs PaTH program will help young jobseekers avoid long-term welfare dependency by providing practical work experience, using the Bunbury Senior High School's Shed Works program in Western Australia as a successful example. The speaker cited the $200 fortnightly incentive for interns and provisions to protect social security payments, and urged support for the 2016 bill."
+  },
+  {
+   "slug": "speech-337101",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-08",
+   "stage_hint": null,
+   "brief": "The speaker opposed the 2016 Youth Jobs Path bill, arguing it is not a jobs plan but an exploitation program that lacks safeguards, depresses wages, and displaces existing jobs, citing examples such as $4‑per‑hour supermarket internships and wage subsidies for companies like Coles and Safeway that already hire young people. The speaker also criticised the government for expanding backpacker visas, which creates direct competition for young Australians, and noted that 120,000 apprenticeships have been lost."
+  },
+  {
+   "slug": "speech-337460",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-10",
+   "stage_hint": null,
+   "brief": "The speaker argued the Youth Jobs PaTH Bill would increase job opportunities for young Australians through three stages — prepare, trial, hire — with 120,000 placements over four years, a $200 fortnightly incentive payment, and wage subsidies of $6,500 to $10,000 for employers."
+  },
+  {
+   "slug": "speech-337461",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-10",
+   "stage_hint": null,
+   "brief": "The Labor opposition announced it would refer the Youth Jobs Path Bill to a Senate inquiry rather than oppose it, arguing the PaTH program risks exploiting young people as cheap labour and fails to guarantee jobs, citing that only 10% of Work for the Dole participants are in full-time work three months after exiting."
+  },
+  {
+   "slug": "speech-337601",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-10",
+   "stage_hint": null,
+   "brief": "The PaTH bill would provide up to 120,000 voluntary internships over four years, with participants receiving $200 per fortnight on top of income support and businesses receiving $1,000, giving young people job skills and experience; the speaker rebutted Labor concerns about labour displacement and low job conversion rates."
+  },
+  {
+   "slug": "speech-338136",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Youth Jobs PaTH Bill 2016, which includes an $840 million package to help up to 120,000 young people through three stages of prepare, trial, and hire, and criticised Queensland Labor's lockout laws for costing 6,000 jobs and $150 million annually, as well as state minister Grace Grace for downplaying youth unemployment."
+  },
+  {
+   "slug": "speech-338137",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The government has failed to deliver inclusive economic growth, with record underemployment, record low wages growth, and 260,000 young people unemployed. The speaker supported active labour market programs but raised concerns that the Youth Jobs PaTH bill may not ensure value for money, protect wages, or provide real skills and jobs."
+  },
+  {
+   "slug": "speech-338139",
+   "speaker": "Chris Crewther",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The member for Dunkley argued the Youth Jobs PaTH bill would help 120,000 vulnerable young jobseekers through a three-stage prepare-trial-hire program, with $200 fortnightly internship payments, $1,000 employer upfront payments, and wage subsidies of $6,500 or $10,000, plus $88.6 million for the New Enterprise Incentive Scheme."
+  },
+  {
+   "slug": "speech-338227",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-23",
+   "stage_hint": null,
+   "brief": "The Social Security Legislation Amendment (Youth Jobs Path: Prepare, Trial, Hire) Bill 2016 enacts the $840 million Youth Jobs PaTH program, providing employability skills training from 1 April 2017, internships with a youth bonus wage subsidy, and aiming to help 120,000 young jobseekers over four years, with up to 30,000 participants per year."
+  },
+  {
+   "slug": "speech-338231",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Security Legislation Amendment (Youth Jobs PaTH) Bill 2016, arguing it will help up to 120,000 young people over four years through three stages—prepare, trial, and hire—with $200 fortnightly internship payments on top of Newstart and wage subsidies of $6,500 to $10,000 for employers. The speaker criticised the Greens and Labor Party for offering no alternative ideas while citing a 4% unemployment rate in Geelong and defending the program against claims it pays $4 an hour."
+  },
+  {
+   "slug": "speech-338235",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's bill and the Australian Building and Construction Commission criminalise legitimate union activity, citing the case of construction worker Ark Tribe, who faced legal action for holding a safety meeting. The speaker asserted that industrial relations should remain separate from criminal law."
+  },
+  {
+   "slug": "speech-338247",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-23",
+   "stage_hint": null,
+   "brief": "该议员为《2016年社会保障立法修正案（青年就业路径：准备、试用、雇用）法案》辩护，称其将通过“准备、试用、雇用”三阶段帮助12万名弱势年轻人进入职场，包括提供实习安排和工资补贴；同时批评工党以增加福利开支和再分配税收解决不平等的主张只会固化贫困。"
+  },
+  {
+   "slug": "speech-338249",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's intent to help young people find work but raised concerns about it subsidising existing jobs, undercutting wages, and lacking safety and insurance protections, while also criticising the government's one-month suspension of support for young jobseekers and cuts to youth allowance for 22- and 23-year-olds."
+  },
+  {
+   "slug": "speech-338250",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-23",
+   "stage_hint": null,
+   "brief": "The member for Brand argued that the PaTH program is a poorly designed, exploitative scheme that fails to address youth unemployment, citing 13.6% unemployment in their electorate and calling for investment in the Kwinana outer harbour project to create 25,000 jobs; they urged a Senate inquiry into the bill due to concerns about below‑award wages, lack of detail, and potential job displacement."
+  },
+  {
+   "slug": "speech-338251",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-23",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Youth Jobs PaTH program, arguing it is exploitative unpaid work that subsidises businesses rather than creating sustainable employment for young people, and warned it would drive down wages and conditions."
+  },
+  {
+   "slug": "speech-338252",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Turnbull government's PaTH program would exploit young unemployed Australians by allowing below-minimum-wage work, potentially replacing real jobs with cheap labour, and noted that youth unemployment stands at 12.8% with over 270,000 unemployed youth. The speaker also called for the government to honour a 2013 election commitment to hold a Moreton jobs summit and criticised the program's lack of worker compensation protections and undefined intern roles."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Security Legislation Amendment (Youth Jobs Path: Prepare, Trial, Hire) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00042",
+   "assent_date": "2017-05-19"
+  }
+ ]
+}

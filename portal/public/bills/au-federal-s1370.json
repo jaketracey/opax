@@ -1,0 +1,147 @@
+{
+ "key": "au-federal-s1370",
+ "title": "Ending Native Forest Logging Bill 2023",
+ "short_title": "Ending Native Forest Logging Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-09",
+ "originating_house": "senate",
+ "sponsor": "RICE, Sen Janet",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10836",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-06-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1370%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1370_ems_2094302e-281e-47eb-b046-e1be9b8a9bab%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1370%22",
+   "document_date": "2023-03-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-09",
+  "sentences": [
+   "The bill would stop the logging of native forests by removing laws that allow exemptions from environmental protections.",
+   "It would repeal the Regional Forest Agreements Act 2002 and require the Minister and Threatened Species Commissioner to report on logging's impact on Australia's international commitments.",
+   "The changes would take effect the day after the bill receives Royal Assent."
+  ],
+  "changes": [
+   "Repeals the Regional Forest Agreements Act 2002.",
+   "Ends exemptions from the Environment Protection and Biodiversity Conservation Act 1999 for forestry operations.",
+   "Requires the Minister and Threatened Species Commissioner to provide statements on native forest logging effects.",
+   "Terminates existing Regional Forest Agreements between the Commonwealth and states.",
+   "Applies export control laws to wood from Regional Forest Agreements."
+  ],
+  "affected": "Native forest logging operations, the federal Minister, the Threatened Species Commissioner, and the states of Victoria, Tasmania, Western Australia, and New South Wales.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:30:30Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8148",
+   "date": "2023-06-15",
+   "house": "senate",
+   "question": "Ending Native Forest Logging Bill 2023 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-15/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-828428",
+   "speaker": "Janet Rice",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2023-03-09",
+   "stage_hint": null,
+   "brief": "The Ending Native Forest Logging Bill 2023 was introduced to repeal the Regional Forest Agreements Act 2002 and amend the Environment Protection and Biodiversity Conservation Act 1999."
+  },
+  {
+   "slug": "speech-828429",
+   "speaker": "Janet Rice",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2023-03-09",
+   "stage_hint": null,
+   "brief": "The speaker moved the Ending Native Forest Logging Bill 2023, which would repeal the Regional Forest Agreements Act 2002 and close the loophole exempting native forest logging from federal environmental protections. They argued logging increases carbon emissions and fire risk, threatens endangered species such as the Greater Glider and Leadbeater’s Possum, and cited findings that logging emits nearly five tonnes of CO₂ annually in Tasmania and over three tonnes in Victoria."
+  }
+ ],
+ "acts": []
+}

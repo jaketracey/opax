@@ -1,0 +1,152 @@
+{
+ "key": "au-federal-r5439",
+ "title": "Private Health Insurance (Risk Equalisation Levy) Amendment (Norfolk Island) Bill 2015",
+ "short_title": "Private Health Insurance (Risk Equalisation Levy) Amendment (Norfolk Island) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure",
+ "status": "passed",
+ "status_as_of": "2015-05-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5439%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5439%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5439%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5439%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5439%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5439%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5439%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5439%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5439%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5439%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5439%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-05-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5439%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5439_ems_620450b2-a581-4a99-a4d7-4f3d859f6d6d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5439%22",
+   "document_date": "2015-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00056",
+   "document_date": "2015-05-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-26",
+  "sentences": [
+   "This bill is part of a package that overhauls Norfolk Island's government and extends mainland social security, immigration, health and tax systems to the island.",
+   "The package would abolish the Norfolk Island Legislative Assembly, give the Governor-General legislative power, and create an Advisory Council and an Executive Director to run day-to-day administration.",
+   "The new governance would start in two phases: an interim transition from a day to be proclaimed, and a final phase from 1 July 2016 that applies New South Wales law as Commonwealth law."
+  ],
+  "changes": [
+   "The package reforms Norfolk Island's governance arrangements.",
+   "The package extends mainland social security, immigration, health and tax arrangements to Norfolk Island.",
+   "The interim phase abolishes the Legislative Assembly and establishes an Advisory Council.",
+   "The second phase from 1 July 2016 applies New South Wales state law as Commonwealth law.",
+   "The Governor-General gains broad ordinance-making power for the territory.",
+   "An Executive Director will be appointed to manage daily operations of the Norfolk Island Administration."
+  ],
+  "affected": "The people, government and administration of Norfolk Island are affected, along with the Australian Government and Commonwealth Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:03Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-309202",
+   "speaker": "Jamie Briggs",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-26",
+   "stage_hint": null,
+   "brief": "The Private Health Insurance (Risk Equalisation Levy) Amendment (Norfolk Island) Bill 2015 extends mainland private health insurance risk equalisation arrangements to Norfolk Island as part of the broader Norfolk Island reform legislative package."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Private Health Insurance (Risk Equalisation Levy) Amendment (Norfolk Island) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00056",
+   "assent_date": "2015-05-26"
+  }
+ ]
+}

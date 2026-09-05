@@ -1,0 +1,191 @@
+{
+ "key": "au-federal-r5257",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment Bill 2014",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-05-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry",
+ "status": "passed",
+ "status_as_of": "2014-07-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5257%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5257%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5257%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5257%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5257%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5257%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5257%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5257%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5257%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5257%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5257%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5257%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5257%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5257_ems_09dcdf17-7de9-4d22-a9b1-d2e6ac69c21f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5257%22",
+   "document_date": "2014-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00079",
+   "document_date": "2014-07-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-29",
+  "sentences": [
+   "This bill updates how levies are charged under offshore petroleum and greenhouse gas laws.",
+   "It would make the environmental plan levy payable by someone who submits a plan before getting a title, not just after.",
+   "The bill also ensures the annual titles administration levy applies even if a title lasts less than a full year or beyond its original term."
+  ],
+  "changes": [
+   "The bill extends the environment plan levy to applicants for certain titles who submit a plan before the title is granted.",
+   "It makes the levy payable by holders of petroleum scientific investigation consents or greenhouse gas research consents.",
+   "It clarifies that annual titles administration levy is imposed for each anniversary of the title's start, even if the title continues past its nominal term or ends early."
+  ],
+  "affected": "Offshore petroleum and greenhouse gas titleholders, applicants for certain titles, and holders of scientific investigation or research consents.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:09Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-291290",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291291",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291478",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291479",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291483",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00079",
+   "assent_date": "2014-07-17"
+  }
+ ]
+}

@@ -1,0 +1,166 @@
+{
+ "key": "au-federal-r6473",
+ "title": "Treasury Laws Amendment (Research and Development Tax Incentive) Bill 2019",
+ "short_title": "Treasury Laws Amendment (Research and Development Tax Incentive) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2020-11-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6473%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6473%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6473%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6473%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6473%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6473%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6473%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6473%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6473_ems_a861d314-41c0-489b-b96e-875db0d25b75%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6473%22",
+   "document_date": "2019-12-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-387216",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-06",
+   "stage_hint": null,
+   "brief": "The speaker moved a second reading amendment noting that R&D spending has fallen to 1.79% of GDP, private R&D to 0.9%, and Australia is near the bottom of OECD ratings for industry-researcher collaboration, while criticising the government's CSIRO staffing cap and politicisation of science. They argued the proposed R&D tax incentive bill requires further scrutiny through a Senate inquiry."
+  },
+  {
+   "slug": "speech-387220",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Research and Development Tax Incentive) Bill 2019 would remove nearly $2 billion from R&D investment, citing negative impacts on projects like Northern Minerals' Browns Range heavy rare‑earth project and Fastbrick Robotics. They noted Australia ranks 21st in the OECD for R&D investment and called for the bill to be referred to a Senate committee to examine unintended consequences."
+  },
+  {
+   "slug": "speech-387221",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Research and Development Tax Incentive) Bill 2019 fails to implement key recommendations from the 2015 Turnbull-commissioned review, particularly the collaboration premium for university-industry partnerships, and criticised the government for delaying action and cutting $2.2 billion from universities. The speaker supported Labor’s commitment to a collaboration premium and a target of 3% of GDP on R&D by 2030, and highlighted concerns from manufacturers, miners, renewable energy firms, biotech, and small businesses about the bill’s impact on existing investments."
+  },
+  {
+   "slug": "speech-387222",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-06",
+   "stage_hint": null,
+   "brief": "Labor will support the bill but refer it to a Senate committee for further scrutiny. The speaker argued that business R&D investment has fallen 30% under the Liberal government to 0.9% of GDP, ranking Australia 21st in the OECD, and criticised the bill's $150 million expenditure cap and complex intensity premium as insufficient to reverse this decline."
+  },
+  {
+   "slug": "speech-387223",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia's R&D investment is declining—gross expenditure fell from 1.88% to 1.79% of GDP, business R&D hit 0.9% of GDP, and total R&D person-years contracted from 78,839 to 74,991—and that the bill would disproportionately cut benefits for small and medium enterprises, with R&D specialist Daniel Ronai estimating a nearly 50% reduction for firms with R&D intensity of 4% or lower. The speaker called for reforms to prevent abuse while increasing investment in R&D to avoid falling behind countries like China."
+  },
+  {
+   "slug": "speech-387224",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-06",
+   "stage_hint": null,
+   "brief": "The member commended the member for Chifley’s critique of the Treasury Laws Amendment (Research and Development Tax Incentive) Bill 2019, and argued that Australia needs better policy settings and investment to become a world leader in research and development, citing talent in the electorate of Cowan."
+  },
+  {
+   "slug": "speech-387225",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Treasury Laws Amendment (Research and Development Tax Incentive) Bill 2019 treats R&D as a spend rather than an investment, reducing concessions and harming small businesses and startups, while Australia's total R&D spending has fallen to 1.79% of GDP and business R&D to 0.9%. They urged the government to heed industry concerns, implement a collaboration premium, and avoid disadvantaging Australian businesses."
+  },
+  {
+   "slug": "speech-387226",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-06",
+   "stage_hint": null,
+   "brief": "The government's economic management has led to weak investment and low productivity, and the Treasury Laws Amendment (Research and Development Tax Incentive) Bill 2019 will not fix this. The bill should undergo a Senate inquiry to examine its impact on industries with high operating costs, particularly the steel industry in the speaker's electorate."
+  },
+  {
+   "slug": "speech-387227",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-06",
+   "stage_hint": null,
+   "brief": "The government argued the Treasury Laws Amendment (Research and Development Tax Incentive) Bill 2019 will improve the effectiveness, sustainability and integrity of the R&D tax incentive, based on a 2016 review by John Fraser, Bill Ferris and Alan Finkel. The reforms aim to ensure the incentive encourages additional R&D rather than subsidising existing activity."
+  }
+ ],
+ "acts": []
+}

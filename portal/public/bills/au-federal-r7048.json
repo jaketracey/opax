@@ -1,0 +1,402 @@
+{
+ "key": "au-federal-r7048",
+ "title": "Counter-Terrorism Legislation Amendment (Prohibited Hate Symbols and Other Measures) Bill 2023",
+ "short_title": "Counter-Terrorism Legislation Amendment (Prohibited Hate Symbols and Other Measures) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-06-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2023-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7048_ems_e001b60e-63f3-402e-b7a6-3d2519c39247%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7048_ems_7b485a7a-34b0-4099-946f-44be589a9e02%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7048_ems_8991c52b-5b73-4f78-99ea-06625f06a0ac%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7048_ems_e316be6e-4d40-40d6-a18f-9f01ba7c3808%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7048%22",
+   "document_date": "2023-06-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00113",
+   "document_date": "2023-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8541",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "question": "The majority voted against an amendment introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal), which means it failed. ### What did this amendment do? Mr Fletcher explained that: > *This amendment is straightforward and uncontroversial. It's designed to do two specific things. The first is to ensure there is a review of the subdivision. To explain this to members, the effect of this provision is that the parliament and the people of Australia will have the opportunity to revisit these new offences to see if they remain appropriate after two years. The opposition submits that this is a reasonable period of time. The second thing that this amendment does is seek to ensure that the clauses in the bill do not infringe any implied constitutional doctrine of the implied freedom of political communication. This is a straightforward measure that is intended to preserve validity.* ### Amendment text > *(1) Schedule 1, item 5, page 3 (after line 22), after paragraph 80.2E(c), insert:* > >> *(ca) the Nazi salute;* > > *(2) Schedule 1, item 5, page 3 (line 24), omit \"(b) or (c)\", substitute \"(b), (c) or (ca)\".* > > *(3) Schedule 1, item 5, page 4 (after line 4), at the end of subsection 80.2F(1), add:* > >> *Example: If the Nazi salute is performed or otherwise displayed in a public place and is capable of being seen by a member of the public in that place, then the Nazi salute is displayed in a public place under this subsection.* > > *(4) Schedule 1, item 5, page 6 (line 3), omit \"Note\", substitute \"Note 1\".* > > *(5) Schedule 1, item 5, page 6 (after line 3), after note 1, insert:* > >> *Note 2: This section is not intended to apply to the exclusion of a law of a State or Territory to the extent that the law is capable of operating concurrently with this section (see section 80.6).* > > *(6) Schedule 1, item 5, page 9 (after line 9), after subparagraph 80.2H(10)(g)(ii), insert:* > >> *(iia) the Nazi",
+   "stage": "Consideration in detail",
+   "ayes": 62,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 73
+    },
+    "Liberal": {
+     "ayes": 29,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-30/1"
+  },
+  {
+   "key": "federal-senate-8603",
+   "date": "2023-12-06",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2023-12-06.44.1) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This amendment was introduced by the Australian Greens. ### Motion text > *At the end of the motion, add \", but the Senate:* > > *(a) is of the opinion that while criminalising the use of Nazi symbols and salutes is a valid and appropriate public policy outcome, certain other provisions of the bill that go beyond this potentially criminalise speech and conduct in a manner that risks exacerbating over policing of marginalised communities, such as Muslim and Arab communities, including by the potential for aggressive policing of conduct that is in fact not criminalised by this bill; and* > > *(b) notes that these concerns have been raised by stakeholders but have not been addressed\".*",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-06/6"
+  },
+  {
+   "key": "federal-senate-8609",
+   "date": "2023-12-06",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping items 3, 4 and 5 of [schedule 4](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr7048_first-reps%2F0004;query=Id%3A%22legislation%2Fbills%2Fr7048_first-reps%2F0000%22;rec=0) as they are, which means they will remain unchanged. This vote was put after NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens) proposed that [they should be opposed](https://www.openaustralia.org.au/senate/?gid=2023-12-06.194.1). Senator Shoebridge was seeing to retain relevant [sunsetting provisions](https://en.wikipedia.org/wiki/Sunset_provision).",
+   "stage": "In committee",
+   "ayes": 24,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 25,
+    "member": 6,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-06/12"
+  },
+  {
+   "key": "federal-senate-8610",
+   "date": "2023-12-06",
+   "house": "senate",
+   "question": "The majority voted against two [amendments](https://www.openaustralia.org.au/senate/?gid=2023-12-06.196.1) moved by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means they failed. ### Amendment text > *SHEET 2251* > > *(1) Schedule 4, item 1, page 34 (lines 5 to 7), omit the item, substitute:* > >> *1 Subsection 102.1(1) of the Criminal Code (paragraph (b) of the definition of terrorist organisation )* >> >> *After \"(2),\", insert \"(2A),\".* > > *(3) Schedule 4, page 34 (lines 19 and 20), omit the heading.* _____ > *SHEET 2280* > > *(1) Schedule 4, page 34 (lines 19 and 20), omit the heading.*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 22,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 27,
+    "member": 6,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-06/13"
+  },
+  {
+   "key": "federal-senate-8611",
+   "date": "2023-12-06",
+   "house": "senate",
+   "question": "The majority voted against an amendment moved by West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal), which means it failed. ### Amendment text > *(1) Schedule 1, item 5, page 25 (after line 25), at the end of Subdivision CA, add:* > >> *80.2N Review of this Subdivision* >> >> *(1) The Minister must cause a review of the operation of this Subdivision to be undertaken as soon as possible after the end of 2 years after the commencement of this section.* >> >> *(2) The person undertaking the review must give the Minister a written report of the review.* >> >> *(3) The Minister must cause a copy of the report of the review to be tabled in each House of the Parliament within 15 sitting days of that House after the report is given to the Minister.*",
+   "stage": "In committee",
+   "ayes": 21,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 6,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-06/14"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Counter-Terrorism Legislation Amendment (Prohibited Hate Symbols and Other Measures) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00113",
+   "assent_date": "2023-12-11"
+  }
+ ]
+}

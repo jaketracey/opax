@@ -1,0 +1,122 @@
+{
+ "key": "au-federal-r7298",
+ "title": "Commonwealth Workplace Protection Orders Bill 2024",
+ "short_title": "Commonwealth Workplace Protection Orders Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7298%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7298%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7298%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7298%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7298%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7298%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7298%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7298%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7298%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7298%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7298%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7298_ems_0bb93eb5-cb45-4816-b2eb-1f5503eca392%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7298%22",
+   "document_date": "2024-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-27",
+  "sentences": [
+   "This bill would create a new Act to protect Commonwealth workers and workplaces from violent or harmful behaviour by members of the public.",
+   "A court could issue a workplace protection order on application by an authorised person if it finds the respondent has committed personal violence related to a worker's duties and there is a real risk of further violence.",
+   "A final order would last no more than two years and could not be made against someone under 14, with breach punishable by up to 120 penalty units and imprisonment."
+  ],
+  "changes": [
+   "Establishes the Commonwealth Workplace Protection Orders Act 2024 as a new principal Act.",
+   "Allows an authorised person to apply to a court for a workplace protection order on behalf of a worker or workplace.",
+   "Creates a criminal offence for contravening a workplace protection order.",
+   "Requires a review of the Act's operation after three years."
+  ],
+  "affected": "Commonwealth workers, especially those in frontline service delivery such as at Services Australia and the Australian Taxation Office, and members of the public who visit Commonwealth workplaces.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

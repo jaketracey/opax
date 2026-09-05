@@ -1,0 +1,458 @@
+{
+ "key": "au-federal-r7243",
+ "title": "Anti-Money Laundering and Counter-Terrorism Financing Amendment Bill 2024",
+ "short_title": "Anti-Money Laundering and Counter-Terrorism Financing Amendment Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-09-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2024-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7243_ems_d299fdc8-59a6-47a7-b36f-3adf0782996e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7243_ems_9efef3de-baf6-4074-86d5-ecd1b80d5bcb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7243_ems_1d858cc1-ca38-419b-8948-c5fa61ee39f9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7243%22",
+   "document_date": "2024-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00110",
+   "document_date": "2024-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-09-11",
+  "sentences": [
+   "This bill would overhaul Australia's system for fighting money laundering and terrorist financing.",
+   "It would expand the regime to cover lawyers, accountants, real estate agents and precious stone dealers, and repeal the Financial Transaction Reports Act 1988.",
+   "The changes aim to avoid Australia being 'grey listed' by the Financial Action Task Force when it is next assessed in 2026–27."
+  ],
+  "changes": [
+   "Extends anti-money laundering rules to high-risk services from professionals such as lawyers and real estate agents.",
+   "Simplifies and clarifies compliance obligations for businesses.",
+   "Modernises the regime to address new business structures, technologies and illicit financing methods.",
+   "Repeals the Financial Transaction Reports Act 1988."
+  ],
+  "affected": "Real estate professionals, lawyers, accountants, trust and company service providers, and dealers in precious stones and metals would be newly regulated, and Australian national security and law enforcement agencies and AUSTRAC would gain improved tools.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:15Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-10458",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "James McGrath This bill, the Anti-Money Laundering and Counter-Terrorism Financing Amendment Bill 2024, is a disgrace, ladies and gentlemen. This is an attack on every small business in Australia, if you run a small business, if you work in a small business, if you buy from a small business, if you walk past a small business—shame on you, because you should go into the small business and buy off them! This bill, notwithstanding the fancy title, the nice big words and all the acronyms, is an attack on every small business in Australia, and this government should be ashamed of itself for the war that it has declared upon small business. Why is small business important? It employs millions of Australians. Why is small business important? From every small business comes a medium business and a large business. From every small business comes the tax revenue that is so important for the public services that help make this country a great place but also for ensuring that Australians have the quality of life that we should have in such a rich country. But we have a Labor Party in power who have never seen a business that they don't want to tax into the ground, which is what this bill effectively is about. It is a de facto tax on every small business in Australia. It is a full-on attack on every small business in Australia. COSBOA, one of the great representative bodies of small business, have expressly noted the Attorney-General's failure to follow best practice and said that the bill 'leaves the door open to cost confusion and compliance headaches for small businesses'. Why is that important? If you run a small business, if you own a small business, guess what—you're the director of finance, you're the director of HR, you're the director of maintenance, you're the director of operations and you're the director of governance, because it's just you running that small business. There is no bureaucracy of people, as you see in large businesses and in the public sector, to help",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/20"
+  },
+  {
+   "key": "federal-senate-10459",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Penny Wong I table an addendum to the explanatory memorandum relating to the Anti-Money Laundering and Counter-Terrorism Financing Amendment Bill 2024. The addendum responds to matters raised by the Scrutiny of Bills Committee and the Legal and Constitutional Affairs Legislation Committee. In addition, I table a supplementary explanatory memorandum relating to the government's amendments to this bill. Sue Lines The question is that the government amendments on sheet ZB355 be agreed to. _Government's circulated amendments—_ (1) Clause 2, page 2 (after table item 3), insert: (2) Clause 2, page 2 (table item 4, column 1), after \"Part 1\", insert \", Division 2\". (3) Clause 2, page 2 (table item 5, column 2), omit \"table item 4\", substitute \"table item 3B\". (4) Clause 2, page 3 (table item 11, column 2), omit \"table item 4\", substitute \"table item 3B\". (5) Schedule 1, item 19, page 9 (line 11), omit \"or\", substitute \"and\". (6) Schedule 1, item 19, page 9 (after line 11), at the end of paragraph 10A(1)(a), add: (iv) the conditions (if any) relating to changes in membership, dissolution, administration or operation of the group that are specified in the AML/CTF Rules are satisfied; or (7) Schedule 1, item 19, page 9 (line 22), at the end of paragraph 10A(1)(b), add: ; and (vi) the conditions (if any) relating to changes in membership, dissolution, administration or operation of the group that are specified in the AML/CTF Rules are satisfied. (8) Schedule 1, item 19, page 9 (after line 22), after subsection 10A(1), insert: (1A) Subject to subsection (2A), a person may be a member of a group to which paragraph (1)(b) applies even if the person is a member of a group to which paragraph (1)(a) applies. (1B) The requirement in subparagraph (1)(b)(i) to make a written election does not apply in relation to a member of a group in the circumstances specified in the AML/CTF Rules. (9) Schedule 1, item 19, page 9 (after line 24), after subsection 10A(2), insert: (2A) If a person is a",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/21"
+  },
+  {
+   "key": "federal-senate-10460",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines The question is that the amendment on sheet 3204, circulated by the Australian Greens, be agreed to. _Australian Greens' circulated amendment—_ (1) Schedule 5, item 2, page 83 (after line 29), after subsection 123(4), insert: _Exception_ _information sharing when person no longer able to supply professional legal services to customer_ (4A) Subsection (1) does not apply to the disclosure of information covered by paragraphs (2)(a), (e), (f), (g) or (h) by a person if: (a) the person is a reporting entity, or an officer, employee or agent of a reporting entity that is: (i) a legal practitioner (however described); or (ii) a partnership or company that carries on a business of using legal practitioners (however described) to supply professional legal services; and (b) the person makes the disclosure to a customer of the person, a court or tribunal, or a regulatory body, for the purposes of stating the reasons why the person is no longer able to supply professional legal services to the customer; and (c) the person does not disclose the content of any report, information or document given or produced, or required to be given or produced, under subsections 41(2), 49(1) or 49B(2). Note: A defendant bears an evidential burden in relation to the matter in subsection (4A) (see subsection 13.3(3) of the _Criminal Code_).",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/22"
+  },
+  {
+   "key": "federal-senate-10461",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines The question is that the amendment on sheet 3066, circulated by the Jacqui Lambie Network, be agreed to. _Jacqui Lambie Network's circulated amendment—_ (1) Schedule 3, page 58 (before line 3), before Part 1, insert: Part 1A — Small business exemption _Anti-Money Laundering and Counter-Terrorism Financing Act 2006_ 1A Section 5 Insert: _small business_ _employer_ has the same meaning as in the _Fair Work Act 2009_. 1B Subsection 6(1) After \"this Act\", insert \"and subject to subsection (1A)\". 1C After subsection 6(1) Insert: (1A) A small business employer is taken not to provide a designated service covered by the tables in subsections (3), (5A) and (5B).",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/23"
+  },
+  {
+   "key": "federal-senate-10462",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines The question now is that the remaining stages of the bill be agreed to and the bill be now passed.",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/24"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Anti-Money Laundering and Counter-Terrorism Financing Amendment Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00110",
+   "assent_date": "2024-12-10"
+  }
+ ]
+}

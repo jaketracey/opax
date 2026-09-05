@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-s1256",
+ "title": "Intelligence and Security Legislation Amendment (Implementing Independent Intelligence Review) Bill 2020",
+ "short_title": "Intelligence and Security Legislation Amendment (Implementing Independent Intelligence Review) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-26",
+ "originating_house": "senate",
+ "sponsor": "MCALLISTER, Sen Jenny",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10839",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1256%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1256%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1256%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1256_ems_a99cd29d-5571-45ea-b5d6-c9e30ed67d8c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1256%22",
+   "document_date": "2020-02-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-26",
+  "sentences": [
+   "This bill would put into practice the oversight and evaluation recommendations from the 2017 Independent Intelligence Review for Australia's intelligence community.",
+   "It would expand the parliamentary committee's oversight to cover ten agencies of the National Intelligence Community instead of the current six of the Australian Intelligence Community.",
+   "The explanatory memorandum does not specify the exact legislative changes or a start date for the bill."
+  ],
+  "changes": [
+   "The bill would implement recommendations from the 2017 Independent Intelligence Review.",
+   "It would strengthen oversight arrangements for the intelligence community.",
+   "It would extend the jurisdiction of the parliamentary committee to all ten National Intelligence Community agencies.",
+   "The bill would support the work of the committee with appropriate legislative arrangements."
+  ],
+  "affected": "The affected entities are the ten agencies of the National Intelligence Community, including the Australian Federal Police, the Department of Immigration and Border Protection, and others.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

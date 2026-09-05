@@ -1,0 +1,200 @@
+{
+ "key": "au-federal-r6046",
+ "title": "Bankruptcy Amendment (Debt Agreement Reform) Bill 2018",
+ "short_title": "Bankruptcy Amendment (Debt Agreement Reform) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2018-09-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-09-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-09-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6046_ems_f61ce550-9e96-4dc8-ae47-e92c4d62d687%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6046_ems_990db9a1-de96-44f0-8fef-2d8f9906fb7c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6046_ems_b7221373-a688-4aae-a863-09a08e7ce8b0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6046%22",
+   "document_date": "2018-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00118",
+   "document_date": "2018-09-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2018-02-14",
+  "sentences": [
+   "The bill would give debtors more flexibility to change their debt agreements after a major unforeseen change in circumstances.",
+   "It would let homeowners propose debt agreements of up to five years and exempt them from the payment to income ratio rule.",
+   "Most provisions would start nine months after Royal Assent, rather than the original six months."
+  ],
+  "changes": [
+   "Allow debtors to extend a debt agreement to five years if a substantial and unforeseen change prevents completion.",
+   "Let homeowners with equity in their home propose a five-year debt agreement without the payment to income ratio requirement.",
+   "Improve the payment to income ratio formula to target low-income debtors better.",
+   "Give debtors the option to propose payments above the payment to income ratio if the payment source is viable.",
+   "Align offence descriptions in the bill and the Bankruptcy Act with Criminal Code standards.",
+   "Prohibit debtors from self-administering their own debt agreement."
+  ],
+  "affected": "Debtors, registered debt agreement administrators, registered trustees, and the Official Trustee.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:41:36Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-360475",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "Labor supported the Bankruptcy Amendment (Debt Agreement Reform) Bill 2018, which tightens regulation of debt agreement administrators to protect vulnerable debtors. It endorsed measures like expense disclosure, a cap on repayments, and stricter registration, but argued the repayment percentage cap should be set in statute rather than by ministerial discretion and the repayment timeframe extended from three to five years."
+  },
+  {
+   "slug": "speech-360476",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The member supported the Bankruptcy Amendment (Debt Agreement Reform) Bill 2018, citing 32,000 Australians bankrupt in 2017 (a 6.1% year-on-year increase) and 46% of households reporting cost of necessities as their biggest financial stress. He also criticised the government for failing to enact its own previously approved small-amount credit contract reforms, noting Labor had introduced an identical private member's bill."
+  },
+  {
+   "slug": "speech-360477",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The Bankruptcy Amendment (Debt Agreement Reform) Bill 2018 limits new debt agreements to a maximum of three years and raises the required standards for debt agreement administrators, marking the first major overhaul of the system in over a decade as the number of debt agreements has nearly doubled."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Bankruptcy Amendment (Debt Agreement Reform) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00118",
+   "assent_date": "2018-09-27"
+  }
+ ]
+}

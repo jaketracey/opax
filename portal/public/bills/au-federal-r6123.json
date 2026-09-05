@@ -1,0 +1,324 @@
+{
+ "key": "au-federal-r6123",
+ "title": "Aged Care (Single Quality Framework) Reform Bill 2018",
+ "short_title": "Aged Care (Single Quality Framework) Reform Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2018-09-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6123%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6123%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6123%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6123%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6123%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6123%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-09-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6123%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6123_ems_60ec63d4-a203-4fea-b609-fdf20ed925eb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6123%22",
+   "document_date": "2018-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00102",
+   "document_date": "2018-09-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-24",
+  "sentences": [
+   "The bill would create a single set of quality standards for all aged care providers.",
+   "It would update the role of the Australian Aged Care Quality Agency's chief executive to refer to these new standards.",
+   "Documents containing protected information held by the Quality Agency would be exempt from freedom of information requests, and unauthorised disclosure would be a criminal offence."
+  ],
+  "changes": [
+   "Establishes a single set of aged care quality standards in the Quality of Care Principles.",
+   "Changes the functions of the Quality Agency's chief executive to reference the new standards.",
+   "Exempts documents with protected information from freedom of information disclosure.",
+   "Makes unauthorised disclosure of protected information a criminal offence."
+  ],
+  "affected": "Aged care providers and the Australian Aged Care Quality Agency.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:28:57Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5399",
+   "date": "2018-09-10",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2018-09-10.163.1) moved by Senator [Derryn Hinch](https://theyvoteforyou.org.au/people/senate/victoria/derryn_hinch), which means they failed. The amendments would have introduced the concept of staff-resident ratios into the bill to address staffing shortage issues.",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 24,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-09-10/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-363309",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-24",
+   "stage_hint": null,
+   "brief": "The Aged Care (Single Quality Framework) Reform Bill 2018 introduces a single set of Aged Care Quality Standards to replace four existing standards across all Commonwealth-funded aged care programs, aiming to improve quality, reduce regulatory burden, and place consumers at the centre of care. The bill also grants the Chief Executive Officer of the Australian Aged Care Quality Agency new powers to accredit residential services and conduct quality reviews of home-care and other services."
+  },
+  {
+   "slug": "speech-364885",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "Labor supported the Aged Care (Single Quality Framework) Reform Bill 2018 but raised concerns about new FOI exemptions that could limit consumer access to investigation information, and criticised the government for not acting on numerous aged-care reports, for billions in funding cuts, and for the Prime Minister's remark that aged-care workers should \"aspire to get a better job.\""
+  },
+  {
+   "slug": "speech-364887",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care (Single Quality Framework) Reform Bill 2018 will simplify aged-care standards, reduce red tape, and create a consumer-driven system, praising Minister Ken Wyatt’s commitment. The speaker also highlighted community-led aged-care facilities in their electorate, including Hocart Lodge in Harvey, which received $11.23 million in federal capital grants, and named local contributors Gary van Burgel and Ron Newby."
+  },
+  {
+   "slug": "speech-364888",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care (Single Quality Framework) Reform Bill 2018, which introduces a single set of Aged Care Quality Standards from 1 July 2019, and criticised the government for cutting billions from aged care since 2013 and for a 105,000-person waiting list for home-care packages. They called for a positive vision and whole-of-government planning to address the needs of an ageing population, citing examples of elder abuse at Oakden and Mitcham facilities."
+  },
+  {
+   "slug": "speech-364889",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The member for Macarthur supported the Aged Care (Single Quality Framework) Reform Bill 2018 for a second reading but criticised its premature debate before committee inquiries and unclear Freedom of Information exclusions, emphasising the need for transparent aged-care standards and government oversight as Australia’s population ages and spending rises to over $22 billion by 2021–2022."
+  },
+  {
+   "slug": "speech-364890",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The member for Shortland supported the Aged Care (Single Quality Framework) Reform Bill 2018, arguing it would improve quality and accountability in aged care while criticising the government for funding 14,000 new home care packages over four years without new money. They cited over 100,000 people on home care waiting lists and cited constituents Joyce Simmons and Hilary Wills as examples of failures in the My Aged Care system."
+  },
+  {
+   "slug": "speech-365024",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care (Single Quality Framework) Reform Bill 2018, which introduces eight new aged-care quality standards from 1 July 2019, but criticised the Turnbull government for cutting billions from aged care, failing to fund new home care packages beyond 3,500 per year, and delaying release of quarterly data showing over 100,000 Australians waiting for home care, including 750 on the Central Coast."
+  },
+  {
+   "slug": "speech-365025",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care (Single Quality Framework) Reform Bill 2018 but criticised the government for delaying its implementation to 1 July 2019 and for announcing only 14,000 new home care packages when over 110,000 people are on the waiting list, a number growing by 10,000–20,000 per quarter."
+  },
+  {
+   "slug": "speech-365026",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care (Single Quality Framework) Reform Bill for introducing uniform quality standards, but criticised the government for failing to allocate new funding, cutting billions from aged care, and prioritising tax cuts for big business and banks over care for older Australians."
+  },
+  {
+   "slug": "speech-365027",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Liberal government cut over $2 billion from aged care, leaving a home care waiting list of over 105,000, and that the 2018 budget contained no new funding for aged care while providing $80 billion in tax cuts to corporations. The bill establishes a single set of aged-care quality standards effective July 2019, but the speaker criticized the government's delays and lack of focus on home care."
+  },
+  {
+   "slug": "speech-365030",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care (Single Quality Framework) Reform Bill 2018 but argued the government has failed to prioritise aged care, citing no extra funding in the budget, a 20,000-person increase in the waiting list in the last six months of 2017, and inadequate new packages of only 3,500 per year."
+  },
+  {
+   "slug": "speech-365031",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care (Single Quality Framework) Reform Bill 2018 but argued it was overdue and insufficient, citing 2,862 assault notifications in 2015–16, 4,713 complaints in 2017, and 3,000 avoidable deaths over 15 years (Professor Joe Ibrahim’s report). They criticised the government for not allocating new funding and for providing only 14,000 home care packages over four years against 20,000 applications in six months."
+  },
+  {
+   "slug": "speech-365037",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The government is introducing the Aged Care (Single Quality Framework) Reform Bill 2018 to establish new aged-care quality standards focused on consumer outcomes, with a 12-month transition period; the bill also exempts certain protected information from FOI but maintains publication of accreditation decisions."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care (Single Quality Framework) Reform Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00102",
+   "assent_date": "2018-09-21"
+  }
+ ]
+}

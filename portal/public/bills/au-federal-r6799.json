@@ -1,0 +1,211 @@
+{
+ "key": "au-federal-r6799",
+ "title": "National Health Amendment (Enhancing the Pharmaceutical Benefits Scheme) Bill 2021",
+ "short_title": "National Health Amendment (Enhancing the Pharmaceutical Benefits Scheme) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2021-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6799_ems_8812668a-6b85-4028-8a69-034fe4858fad%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6799%22",
+   "document_date": "2021-10-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00139",
+   "document_date": "2021-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-414766",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-28",
+   "stage_hint": null,
+   "brief": "The bill implements reforms negotiated with Medicines Australia and the Generic and Biosimilar Medicines Association, including new statutory price reductions expected to save around $1.9 billion, a requirement for manufacturers to hold at least four to six months of stock for certain medicines to guarantee supply, and one-off increases to subsidised prices for low-cost PBS medicines under $3.50."
+  },
+  {
+   "slug": "speech-416380",
+   "speaker": "Mark Christopher Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The Labor Party supported the National Health Amendment (Enhancing the Pharmaceutical Benefits Scheme) Bill 2021, which implements price reduction measures and a medicine supply guarantee from strategic agreements with Medicines Australia and the Generic and Biosimilar Medicines Association, delivering $1.9 billion in PBS savings to be reinvested in new listings. The opposition moved a second reading amendment urging the government to do more to support Australia's pharmaceutical industry for new jobs, medicines and investment."
+  },
+  {
+   "slug": "speech-416382",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Health Amendment (Enhancing the Pharmaceutical Benefits Scheme) Bill 2021, which implements a new agreement with Medicines Australia to secure supply chains and generate net savings of approximately $1.9 billion for reinvestment in the PBS. The bill introduces statutory price reductions at 5, 10 and 15 years after listing and requires manufacturers to hold four to six months of additional stock for over 600 PBS items, including medicines for high blood pressure, diabetes and mental health conditions."
+  },
+  {
+   "slug": "speech-416383",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Health Amendment (Enhancing the Pharmaceutical Benefits Scheme) Bill 2021, which is estimated to generate $1.9 billion in PBS savings, and urged the government to reinvest those savings into listing Trikafta for cystic fibrosis and extending continuous glucose monitor eligibility for type 1 diabetes patients."
+  },
+  {
+   "slug": "speech-416384",
+   "speaker": "Katie Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued for the National Health Amendment (Enhancing the Pharmaceutical Benefits Scheme) Bill 2021, which implements five-year agreements with Medicines Australia and the Generic and Biosimilar Medicines Association to secure medicine supply, ensure early access to breakthrough medicines, and save nearly $2 billion over five years while guaranteeing over $5 billion in new PBS listings to 2027. The bill introduces price reduction floors for low-cost medicines, requires manufacturers to hold four months’ stock of medicines priced at or below $4, and addresses supply chain disruptions that affected over 500 PBS medicines during 2019–2020, including paracetamol."
+  },
+  {
+   "slug": "speech-416385",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Morrison government for failing to proactively address medicine supply chain disruptions, noting 263 medicines in shortage and citing a constituent unable to access Actemra; they argued for Labor's proposed $15 billion reconstruction fund to support local manufacturing and called for Trikafta to be listed on the PBS for cystic fibrosis patients."
+  },
+  {
+   "slug": "speech-416388",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the PBS price for ivermectin is excessively high ($41.30 for four tablets versus less than $1 from India) and that the TGA's 10 September 2021 restrictions on prescribing it for COVID-19 deny Australians access to a potentially life-saving treatment, citing a study of 600 patients where triple therapy (ivermectin, doxycycline, zinc) resulted in 0.83% hospitalisations and zero deaths versus 11.5% and six deaths in a control group. He moved a second reading amendment with six points, including that the TGA's decision was criticised by Emeritus Professor Robert Clancy and that no increase in adverse events was recorded."
+  },
+  {
+   "slug": "speech-416551",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "The bill implements new five-year agreements with Medicines Australia and the Generic Biosimilar Medicines Association, including a $5 billion uncapped investment in new PBS medicines, mandatory four-to-six month stockholding for commonly prescribed drugs, and a one-off statutory price reduction on 1 April 2023 for brands listed 15 years or more without prior price disclosure reductions. The government also announced the listing of Venetoclax for acute myeloid leukaemia, reducing patient cost from $88,000 to as little as $41.30 per script."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Health Amendment (Enhancing the Pharmaceutical Benefits Scheme) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00139",
+   "assent_date": "2021-12-13"
+  }
+ ]
+}

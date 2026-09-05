@@ -1,0 +1,331 @@
+{
+ "key": "au-federal-r6346",
+ "title": "Australian Security Intelligence Organisation Amendment (Sunsetting of Special Powers Relating to Terrorism Offences) Bill 2019",
+ "short_title": "Australian Security Intelligence Organisation Amendment (Sunsetting of Special Powers Relating to Terrorism Offences) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2019-08-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6346%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6346%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6346%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6346%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6346%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6346%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6346%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6346%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6346%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6346%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6346%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6346%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6346%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6346%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6346_ems_57678783-14de-4653-89bb-3ec5406d4eb0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/6796844%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6346%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00061",
+   "document_date": "2019-08-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5812",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2019-07-30.118.1) introduced by MP for Isaacs [Mark Dreyfus](https://theyvoteforyou.org.au/people/representatives/isaacs/mark_dreyfus), which means it failed. Mr Dreyfus [explained his amendment](https://www.openaustralia.org.au/debates/?id=2019-07-30.118.1) as: > *a very simple amendment. The effect of it would be to extend the sunset date for the questioning warrant power until 7 December 2019 and to retain the existing sunset date for the questioning and detention warrant power of 7 September 2019. That's the power that's never been used.* ### What does the bill do? This bill was introduced to extend the operation of certain special powers relating to suspected terrorism offences to 7 September 2020. Currently, those powers are due to sunset (that is, stop being part of our law) on 7 September 2019. ### What are the special powers? The special powers extended by this bill are the power to issue questioning warrants (QWs) and questioning and detention warrants (QDWs) in relation to suspected terrorism offences. They are extraordinary because they can be issued in relation to someone even though they are not suspected of, or charged with, any offence. In other words, these warrants are an intelligence-gathering and preventative power. Someone might be subject to these warrants because they can provide information about a potential terrorism offence and they may be detained in order to prevent them from damaging evidence or alerting someone involved in a terrorism offence that their actions are being investigated. These powers have been extended several times since they were first introduced in 2002. More information is available in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd004).",
+   "stage": "Consideration in detail",
+   "ayes": 64,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Labor": {
+     "ayes": 62,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 137,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-07-30/3"
+  },
+  {
+   "key": "federal-senate-5834",
+   "date": "2019-08-01",
+   "house": "senate",
+   "question": "Australian Security Intelligence Organisation Amendment (Sunsetting of Special Powers Relating to Terrorism Offences) Bill 2019 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 48,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "earliest": 22,
+    "dated": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-08-01/4"
+  },
+  {
+   "key": "federal-senate-5840",
+   "date": "2019-08-01",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2019-08-01.48.2) introduced by NSW Senator [Kristina Keneally](https://theyvoteforyou.org.au/people/senate/nsw/kristina_keneally) (Labor), which means it failed. Senator Keneally [explained that](https://www.openaustralia.org.au/senate/?gid=2019-08-01.48.2): > *The government are proposing to not act on the requirements put on them by the Parliamentary Joint Committee on Intelligence and Security some 18 months ago, the requests made of them by three Independent National Security Legislation Monitors and, indeed, the evidence given by ASIO to the Parliamentary Joint Committee on Intelligence and Security to repeal questioning and detention warrants and to reform questioning warrants.* > > *[...]* > > *So Labor are moving an amendment to say the government don't need 365 days; they've already had 1,000 days. Our amendment is that the government should have three more months—90 more days—to bring forward the changes that our national security agencies want and need and to repeal a power that has been described by Roger Gyles AO QC as 'odious' and that three Independent National Security Legislation Monitors say has no role in our Australian democracy.* ### Motion text > *Amdt 8713 - Australian Security Intelligence Organisation Amendment (Sunsetting of Special Powers Relating to Terrorism Offences) Bill 2019* > > *(1) Schedule 1, item 1, page 3 (lines 4 and 5), omit the item, substitute:* > > *1 Section 34ZZ* > > *Repeal the section, substitute:* > > *34ZZ Cessation of effect of Division* > >> *(1) This Division (apart from Subdivision C of this Division) ceases to have effect on 7 December 2019.* >> >> *(2) Subdivision C of this Division ceases to have effect on 7 September 2019.* > > *[sunsetting dates]* ### What is the bill's main idea? This bill was introduced to extend the operation of certain special powers relating to suspected terrorism offences to 7 September 2020. Currentl",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 25,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-08-01/10"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-379181",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-30",
+   "stage_hint": null,
+   "brief": "The speaker defended the Australian Security Intelligence Organisation Amendment (Sunsetting of Special Powers Relating to Terrorism Offences) Bill 2019 as a substantive national security measure, while criticising the shadow Attorney-General's amendment as cheap and partisan. They also noted personal reservations about national security powers but argued the bill is necessary for balancing liberties and security."
+  },
+  {
+   "slug": "speech-379183",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2019-07-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Liberal Party no longer upholds individual liberties, citing the repeated renewal of temporary ASIO powers to detain and question people without charges as a permanent erosion of rights and the rule of law. They opposed the Australian Security Intelligence Organisation Amendment (Sunsetting of Special Powers Relating to Terrorism Offences) Bill 2019, claiming the government uses national security as a pretext to permanently suspend freedoms and lacks a genuine agenda beyond political wedge issues."
+  },
+  {
+   "slug": "speech-379184",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-30",
+   "stage_hint": null,
+   "brief": "The Australian Security Intelligence Organisation Amendment (Sunsetting of Special Powers Relating to Terrorism Offences) Bill 2019 extends ASIO’s questioning and detention powers for 12 months until 7 September 2020, following reviews by the Parliamentary Joint Committee on Intelligence and Security and the Independent National Security Legislation Monitor."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Security Intelligence Organisation Amendment (Sunsetting of Special Powers Relating to Terrorism Offences) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00061",
+   "assent_date": "2019-08-12"
+  }
+ ]
+}

@@ -1,0 +1,212 @@
+{
+ "key": "au-federal-r6332",
+ "title": "Treasury Laws Amendment (Making Sure Multinationals Pay Their Fair Share of Tax in Australia and Other Measures) Bill 2019",
+ "short_title": "Treasury Laws Amendment (Making Sure Multinationals Pay Their Fair Share of Tax in Australia and Other Measures) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-09-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6332%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6332%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6332%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6332%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6332%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6332%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6332%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6332%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6332%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6332%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6332%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6332%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6332_ems_c991eff2-ddba-4407-927c-ae60d797a221%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6332%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00065",
+   "document_date": "2019-09-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "The bill would change tax rules to make it harder for multinational companies to reduce their Australian tax through debt arrangements.",
+   "It would require businesses to use the same values for assets, liabilities and equity in their thin capitalisation calculations as they do in their financial statements, and stop them from revaluing assets just for those calculations.",
+   "Certain corporate groups with foreign investments or operations would be treated as both outward and inward investing entities under the tightened rules."
+  ],
+  "changes": [
+   "The bill would require entities to use financial-statement values for thin capitalisation calculations.",
+   "The bill would remove the ability to revalue assets specifically for thin capitalisation purposes.",
+   "The bill would treat certain corporate groups with foreign investments as both outward and inward investing entities."
+  ],
+  "affected": "Multinational companies and corporate groups with foreign investments or operations that are subject to Australia's thin capitalisation rules.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-379413",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "Labor will support the Treasury Laws Amendment Bill 2019 to tighten thin capitalisation rules, equalise GST on offshore hotel bookings, and remove luxury car tax on reimported refurbished cars, but argues the bill does not go far enough. The speaker cited OECD estimates that governments lose 4–10% of global corporate income tax revenue annually ($100–240 billion USD), criticised the government for failing to adequately crack down on multinational tax avoidance, and noted net debt has more than doubled and economic growth is the slowest since the GFC under the current government."
+  },
+  {
+   "slug": "speech-379416",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill tightens thin capitalisation rules and GST on offshore hotel accommodation to curb multinational tax avoidance, but called it a half-hearted attempt, supporting it while urging adoption of Labor's 19 stronger reforms from the last election."
+  },
+  {
+   "slug": "speech-379419",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government must address the overly strict interpretation of the R&D tax incentive rules for software companies, which has turned the incentive into a liability for startups like Airtasker and risks driving firms offshore. He demanded the industry minister provide reassurance to Australian startups and criticised the minister for doing nothing on the issue, while noting the bill aims to make multinationals pay their fair share of tax."
+  },
+  {
+   "slug": "speech-379421",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "Labor argued the bill is a step in the right direction but does not go far enough, citing that multinationals move $16 billion from Australia to tax havens annually and that one-third of large Australian companies paid no tax; the party proposed 19 election measures to close loopholes and called for stronger government action."
+  },
+  {
+   "slug": "speech-379422",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Making Sure Multinationals Pay Their Fair Share of Tax in Australia and Other Measures) Bill 2019 but argued it is insufficient, citing examples like Chevron, Exxon Mobil, Google, and Facebook paying minimal or no tax despite large profits. They called for stronger action, including adopting more OECD BEPS recommendations and implementing Labor's proposed policies to close tax loopholes."
+  },
+  {
+   "slug": "speech-379423",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill's measures are too weak to address widespread multinational tax avoidance, citing five energy companies that paid almost no tax on $100 billion in Australian income, and called on the government to block the Brookfield group’s takeover of Healthscope and Aveo."
+  },
+  {
+   "slug": "speech-379424",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill 2019 but argued it only nibbles at the larger issue of multinational tax avoidance, citing France’s 3% revenue tax on tech giants as a model. They provided specific figures: Facebook paid $12.5 million tax (3.8% of $331 million revenue), Google $33 million (2.2% of $1.5 billion), and Amazon $10.4 million (2.3% of $454 million) in Australia in 2016-17, and recommended Martin Feil’s book *The Great Multinational Tax Rort*."
+  },
+  {
+   "slug": "speech-379425",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The government argued the Treasury Laws Amendment (Making Sure Multinationals Pay Their Fair Share of Tax in Australia and Other Measures) Bill 2019 strengthens thin cap rules by aligning asset valuations with financial statements, levels GST treatment for offshore hotel bookings from 1 July 2019, and removes luxury car tax on cars reimported after overseas service or repair."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Making Sure Multinationals Pay Their Fair Share of Tax in Australia and Other Measures) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00065",
+   "assent_date": "2019-09-13"
+  }
+ ]
+}

@@ -1,0 +1,298 @@
+{
+ "key": "au-federal-r7172",
+ "title": "Crimes and Other Legislation Amendment (Omnibus No. 1) Bill 2024",
+ "short_title": "Crimes and Other Legislation Amendment (Omnibus No. 1) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-03-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2024-10-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-10-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7172_ems_8e1e41ac-7426-4887-b5e3-eaa3f5ebfca1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7172_ems_33cb6845-44b8-4800-8967-6d11dc953953%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7172_ems_248811a1-e2cd-471f-97df-df44dfa93b12%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7172%22",
+   "document_date": "2024-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00093",
+   "document_date": "2024-10-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-9199",
+   "date": "2024-10-10",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7172_amend_7929ee2e-d5b1-4531-bc43-0c4c48da9bfe%22;rec=0) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the usual motion will remain unchanged. The amendment was introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens). ### Motion text > *At the end of the motion, add “, but the Senate:* > > *(a) notes that the bill seeks to increase the value of the Commonwealth penalty unit;* > > *(b) recognises that set financial penalties produce unfair and uneven impacts when they are not levied according to income, so that people on high incomes can easily afford to pay a fine that would be financially crippling to someone on Commonwealth income support such as Jobseeker or the aged pension; and* > > *(c) urges the Government to explore a fairer system for fines that would reduce penalty amounts for those on Commonwealth income support, and increase penalty amounts for those earning over $180,000 a year”.*",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-10-10/7"
+  },
+  {
+   "key": "federal-senate-9200",
+   "date": "2024-10-10",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2024-10-10.42.2) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the usual motion will remain unchanged. The amendment was introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent). ### Amendment text > *Omit all words after \"That\", substitute:* > > *\"(a) the Senate notes the significant human rights concerns raised by the Parliamentary Joint Committee on Human Rights (PJCHR) in relation to this bill, which remain unresolved, including recommendations that foundational human rights assessments be conducted of the:* > >> *(i) Crimes Act 1914,* >> >> *(ii) Proceeds of Crime Act 2002, and* >> >> *(iii) Telecommunications (Interception and Access) Act 1979, with particular focus on the right to privacy;* > > *(b) the Senate calls on the PJCHR to exercise its function under section 7 of the Human Rights (Parliamentary Scrutiny) Act 2011 to examine laws for compatibility with human rights and examine the above Acts that the bill seeks to amend and report to both Houses of the Parliament on their compatibility with human rights; and* > > *(c) further consideration of the bill be made an order of the day for the first sitting day after the PJCHR has presented a report of its examination of the above Acts to the Senate\".*",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-10-10/8"
+  },
+  {
+   "key": "federal-senate-9201",
+   "date": "2024-10-10",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7172_amend_4995f4fd-a275-43e5-ad59-29a884c7524a%22;rec=0) moved by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent) and Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie) (Jacqui Lambie Network), which means they failed. ### Amendment text > *(1) Clause 2, page 2 (at the end of the table), add:* > >> *8. Schedule 8* >> >> *The day after this Act receives the Royal Assent.* > > *(2) Page 90 (after line 10), at the end of the Bill, add:* > >> *Schedule 8—National Anti-Corrpution Commission Hearings* >> >> *1 Subsection 73(2)* >> >>> *Repeal the subsection, substitute:* >>> >>> *(2) The Commissioner may decide to hold a hearing, or part of a hearing, in public if the Commissioner is satisfied that it is in the public interest to do so.* >> >> *2 Subsection 73(3)* >> >>> *Omit “may”, substitute “must”.* #### Error in the record Note that West Australian Senator [Fatima Payman]( https://theyvoteforyou.org.au/people/senate/wa/fatima_payman) (Independent) and Queensland Senator [Gerard Rennick](https://theyvoteforyou.org.au/people/senate/queensland/gerard_rennick) (Independent) are currently listed as a rebel voters but this is inaccurate because these senators are both now independent senators.",
+   "stage": "In committee",
+   "ayes": 18,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-10-10/9"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Crimes and Other Legislation Amendment (Omnibus No. 1) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00093",
+   "assent_date": "2024-10-24"
+  }
+ ]
+}

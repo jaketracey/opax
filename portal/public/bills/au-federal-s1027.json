@@ -1,0 +1,100 @@
+{
+ "key": "au-federal-s1027",
+ "title": "Social Security Legislation Amendment (Community Development Program) Bill 2015",
+ "short_title": "Social Security Legislation Amendment (Community Development Program) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-12-02",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Indigenous Affairs",
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1027%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1027%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1027%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1027%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1027%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1027%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1027_ems_02f82de6-1761-4a55-9dd9-a450e1637a5a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1027_ems_cdfda618-b41d-4030-bd2c-621cff00a833%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1027%22",
+   "document_date": "2015-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-02",
+  "sentences": [
+   "The bill would change welfare rules for job seekers in remote Australia to push them toward work and away from long-term reliance on payments.",
+   "The Secretary could let local providers make income support payments, and the Minister would set participation and compliance rules for those recipients.",
+   "The new system would start in no more than four regions, with the Minister deciding which areas qualify as remote income support regions based on disadvantage levels."
+  ],
+  "changes": [
+   "The bill would let the Minister determine participation activities and compliance rules for remote job seekers.",
+   "It would allow the Secretary to arrange for local providers to pay income support directly.",
+   "It would increase the amount a job seeker can earn before their payment is reduced under the income test.",
+   "It would replace complex penalty thresholds with simpler, immediate penalties for missed activities.",
+   "It would make payments weekly instead of less frequently.",
+   "It would phase in the new arrangements region by region, starting with up to four areas."
+  ],
+  "affected": "Job seekers in remote Australia who are on income support and participate in the Community Development Programme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:21Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

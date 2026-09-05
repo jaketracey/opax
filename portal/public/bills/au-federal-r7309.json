@@ -1,0 +1,133 @@
+{
+ "key": "au-federal-r7309",
+ "title": "Appropriation (Parliamentary Departments) Bill (No. 2) 2024-2025",
+ "short_title": "Appropriation (Parliamentary Departments) Bill (No. 2) 2024-2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-02-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2025-02-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7309%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7309%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7309%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7309%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7309%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7309%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7309%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7309%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7309%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7309%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7309%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7309_ems_b19146ad-87b6-41e2-a7dc-934a1f3c4c27%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7309%22",
+   "document_date": "2025-02-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00003",
+   "document_date": "2025-02-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1194232",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194522",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation (Parliamentary Departments) Act (No. 2) 2024-2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00003",
+   "assent_date": "2025-02-14"
+  }
+ ]
+}

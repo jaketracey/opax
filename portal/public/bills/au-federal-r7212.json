@@ -1,0 +1,479 @@
+{
+ "key": "au-federal-r7212",
+ "title": "Fair Work (Registered Organisations) Amendment (Withdrawal from Amalgamation) Bill 2024",
+ "short_title": "Fair Work (Registered Organisations) Amendment (Withdrawal from Amalgamation) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-06-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2024-07-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7212%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7212%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7212%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7212%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7212%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7212%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7212%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7212%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7212%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7212%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7212%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7212%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7212%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-07-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7212%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7212_ems_a3608721-c2b7-4e33-939f-3b05de97768b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7212%22",
+   "document_date": "2024-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00069",
+   "document_date": "2024-07-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-06-24",
+  "sentences": [
+   "This bill would let the manufacturing part of the CFMEU union split off by a formal process.",
+   "It allows an application to the Fair Work Commission before 31 October 2024 for a member ballot on withdrawal.",
+   "If the ballot succeeds, the bill specifies coverage rules for the new organisation and requires agreement on rule changes affecting both parties before 1 January 2034."
+  ],
+  "changes": [
+   "Allow an application to the Fair Work Commission for a ballot on withdrawal.",
+   "Use the old version of the Registered Organisations Act and regulations with modifications.",
+   "Set coverage rules for the new organisation if a majority of members vote yes.",
+   "Provide an alternative consensus pathway if both parties agree and notify the Minister.",
+   "Require consensus on eligibility rule changes that affect both parties before 1 January 2034."
+  ],
+  "affected": "The Manufacturing Division of the CFMEU and the CFMEU itself.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:38:19Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8980",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2024-06-26.116.1) to the usual second reading motion (which is \"*that the bill be read a second time*\" - parliamentary jargon for agreeing with the main idea of the bill), which means the usual second reading motion will remain unchanged. This amendment was introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the Bill a second reading, the House:* > > *(1) notes:* > >> *(a) the Government abolished the Australian Building and Construction Commission (ABCC) upon being elected to Government;* >> >> *(b) the abolition of the ABCC has given the CFMEU effective control of the construction sector in Australia;* >> >> *(c) the Fair Work Ombudsman has not brought a single action against the CFMEU since the ABCC was abolished;* >> >> *(d) the threats made by Mr John Setka against the Australian Football League (AFL) are completely unacceptable; and* > > *(2) calls on the Government to:* > >> *(a) reinstate the ABCC and to apologise to the Australian people for abolishing this body to appease the CFMEU in the hope of receiving further donations to the Australian Labor Party; and* >> >> *(b) amend the Fair Work (Registered Organisations) Act to ensure that anyone convicted of more than 10 criminal offences cannot be appointed as an officer of a registered organisation\".*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 59,
+   "noes": 80,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-06-26/4"
+  },
+  {
+   "key": "federal-senate-9008",
+   "date": "2024-07-02",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-07-02.4.30) to the usual second reading motion (which is, \"that the bill be read a second time\" - parliamentary jargon for agreeing with the main idea of the bill). The amendment would have added the words below. ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Government to allow any division of any amalgamated registered organisation to withdraw from the amalgamated organisation after a vote of members within the division, to ensure that unions remain true representatives of the workers they represent\".*",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-02/1"
+  },
+  {
+   "key": "federal-senate-9014",
+   "date": "2024-07-02",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?id=2024-07-02.98.2) to the usual second reading motion, which is \"*that the bill be read a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Government to amend the Fair Work (Registered Organisations) Act 2009 to ensure that anyone convicted of more than 10 criminal offences cannot be appointed as an officer of a registered organisation\".*",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 7,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-02/7"
+  },
+  {
+   "key": "federal-senate-9015",
+   "date": "2024-07-02",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-07-02.100.1) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill a second time. This means the Senate can now discuss the bill in more detail. ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7212), the bill: > *Amends the Fair Work (Registered Organisations) Act 2009 to enable the Manufacturing Division to de-merge from the Construction, Forestry and Maritime Employees Union, if supported by a ballot of relevant members.* According to the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7212_ems_a3608721-c2b7-4e33-939f-3b05de97768b%22;rec=0) (which is a political document prepared by the Government, who introduced this bill): > *The Fair Work (Registered Organisations) Amendment (Withdrawal from Amalgamation) Bill 2024 would amend the Fair Work (Registered Organisations) Act 2009 (Registered Organisations Act) to enable the Manufacturing Division of the Construction, Forestry and Maritime Employees Union (the CFMEU, an organisation registered under the Registered Organisations Act) to de-merge from the CFMEU.* > > *The Bill would:* > > * *enable an application to be made to the Fair Work Commission (FWC) before 31 October 2024 for a ballot to be held to decide whether the Manufacturing Division should withdraw;* > > * *apply the provisions of the Registered Organisations Act and the Fair Work (Registered Organisations) Regulations 2009 as they were immediately before commencement of Part 13 of Schedule 1 to the Fair Work Legislation Amendment (Closing Loopholes No. 2) Act 2024 , with appropriate modifications;* > > * *specify coverage rules for the new registered organisation, if the ballot is supported by a majo",
+   "stage": "Second reading",
+   "ayes": 45,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 8,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-02/8"
+  },
+  {
+   "key": "federal-senate-9016",
+   "date": "2024-07-02",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-07-02.102.1) introduced by West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal), which means they failed. ### Amendment text > *(1) Title, page 1 (line 1), omit \"certain\".* > > *(2) Schedule 1, item 2, page 3 (after line 27), after the definition of CFMEU in clause 1, insert:* > >> *Division means a Division as defined in the rules of the CFMEU at the commencement of this clause.* > > *(3) Schedule 1, item 2, page 4 (lines 1 to 3), omit the definition of new organisation in clause 1, substitute:* > >> *new organisation means the organisation that is registered pursuant to section 110 of the old Act as a result of the withdrawal of a Division from the CFMEU.* > > *(4) Schedule 1, item 2, page 4 (line 19), omit \"the Manufacturing\", substitute \"a\".* > > *(5) Schedule 1, item 2, page 4 (line 22), omit \"Manufacturing\".* > > *(6) Schedule 1, item 2, page 4 (line 26), omit \"Manufacturing\".* > > *(7) Schedule 1, item 2, page 4 (line 35), omit \"Manufacturing\".* > > *(8) Schedule 1, item 2, page 4 (line 36), omit \"Manufacturing\".* > > *(9) Schedule 1, item 2, page 5 (line 4), omit \"Manufacturing\".* > > *(10) Schedule 1, item 2, page 5 (line 19), omit \"Manufacturing\".* > > *(11) Schedule 1, item 2, page 5 (line 26), omit \"the Manufacturing\", substitute \"a\".* > > *(12) Schedule 1, item 2, page 5 (lines 32 and 33), omit subclause 3(3).* > > *(13) Schedule 1, item 2, page 6 (line 5), omit \"by deadline\".* > > *(14) Schedule 1, item 2, page 6 (line 7), omit \"on or before 30 August 2024\".* > > *(15) Schedule 1, item 2, page 6 (lines 25 and 26), omit subclause 4(3).* > > *(16) Schedule 1, item 2, page 6 (line 28), omit \"by deadline\".* > > *(17) Schedule 1, item 2, page 6 (line 30), omit \"on or before 30 August 2024\".* > > *(18) Schedule 1, item 2, page 7 (line 19), omit \"the Manufacturing\", substitute \"a\".* > > *(19) Schedule 1, item 2",
+   "stage": "Committee of the Whole",
+   "ayes": 26,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-02/9"
+  },
+  {
+   "key": "federal-senate-9017",
+   "date": "2024-07-02",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2024-07-02.104.1) that the remaining stages of the bill be agreed to and the bill be now passed. Because the bill has already passed in the House of Representatives, it can now become law. ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7212), the bill: > *Amends the Fair Work (Registered Organisations) Act 2009 to enable the Manufacturing Division to de-merge from the Construction, Forestry and Maritime Employees Union, if supported by a ballot of relevant members.* According to the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7212_ems_a3608721-c2b7-4e33-939f-3b05de97768b%22;rec=0) (which is a political document prepared by the Government, who introduced this bill): > *The Fair Work (Registered Organisations) Amendment (Withdrawal from Amalgamation) Bill 2024 would amend the Fair Work (Registered Organisations) Act 2009 (Registered Organisations Act) to enable the Manufacturing Division of the Construction, Forestry and Maritime Employees Union (the CFMEU, an organisation registered under the Registered Organisations Act) to de-merge from the CFMEU.* > > *The Bill would:* > > * *enable an application to be made to the Fair Work Commission (FWC) before 31 October 2024 for a ballot to be held to decide whether the Manufacturing Division should withdraw;* > > * *apply the provisions of the Registered Organisations Act and the Fair Work (Registered Organisations) Regulations 2009 as they were immediately before commencement of Part 13 of Schedule 1 to the Fair Work Legislation Amendment (Closing Loopholes No. 2) Act 2024 , with appropriate modifications;* > > * *specify coverage rules for the new registered organisation, if the ballot is supported by a majori",
+   "stage": "Third reading",
+   "ayes": 46,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "member": 8,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-02/10"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Fair Work (Registered Organisations) Amendment (Withdrawal from Amalgamation) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00069",
+   "assent_date": "2024-07-09"
+  }
+ ]
+}

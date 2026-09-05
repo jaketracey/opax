@@ -1,0 +1,590 @@
+{
+ "key": "au-federal-r5535",
+ "title": "Higher Education Support Amendment (VET FEE-HELP Reform) Bill 2015",
+ "short_title": "Higher Education Support Amendment (VET FEE-HELP Reform) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-10-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2015-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5535_ems_70f921f2-7cd5-40b5-99d0-90ddf526f2e8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5535_ems_f3823490-24d1-4d13-9dcb-16b540c0c5ad%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5535_ems_0183911d-52b3-42d1-a33c-570964f2608a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5535%22",
+   "document_date": "2015-10-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00168",
+   "document_date": "2015-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-10-15",
+  "sentences": [
+   "This bill would tighten the rules for the VET FEE-HELP loan scheme to stop providers from using aggressive marketing and targeting vulnerable students.",
+   "It would require training providers to assess students' academic suitability before enrolment, ban certain marketing practices, and introduce fines for breaches.",
+   "The bill would also require parental approval for students under 18 to get a loan and allow students to have their debt cancelled if a provider behaved unacceptably."
+  ],
+  "changes": [
+   "Introduces new student entry procedure requirements for VET providers.",
+   "Requires parental approval before a student under 18 can request a VET FEE-HELP loan.",
+   "Broadens circumstances for re-crediting a VET FEE-HELP loan debt and remitting a debt due to unacceptable provider behaviour.",
+   "Introduces a minimum registration and trading history requirement for new VET providers.",
+   "Introduces an infringement notice scheme and civil penalties for inappropriate marketing and administrative practices.",
+   "Extends monitoring and investigation powers of the department and the National VET Regulator."
+  ],
+  "affected": "VET FEE-HELP approved training providers, students (including those under 18), the Department, the National VET Regulator, and the broader vocational education and training sector.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:21Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3974",
+   "date": "2015-11-11",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/debate/?id=2015-11-09.107.2) introduced by Labor MP [Sharon Bird](https://theyvoteforyou.org.au/people/representatives/cunningham/sharon_bird), which means that the motion failed. ### What did the motion do? Ms Bird MP's motion would have amended an earlier motion that asked for the bill to be read a [second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). If you read a bill for a second time, it means that you agree with the main idea of the bill and want to discuss it in more detail. The motion asked for a National [Vocational Education & Training](http://www.australia.gov.au/information-and-services/education-and-training/vocational-education-and-training) (**VET**) [Ombudsman](https://en.wikipedia.org/wiki/Ombudsman) and an audit of [VET FEE-HELP](http://studyassist.gov.au/sites/studyassist/helppayingmyfees/vet-fee-help/pages/vet-fee-help). See [ABC News](http://www.abc.net.au/news/2015-10-20/only-one-in-three-private-training-providers-fully-compliant/6869174) for more information about why Ms Bird MP may have thought her changes were needed. ### Motion text > *That all words after “That” be omitted with a view to substituting the following words:* > *“while not declining to give the bill a second reading, the House calls on the Government to:* >> *(1) appoint a National [VET](http://www.australia.gov.au/information-and-services/education-and-training/vocational-education-and-training) [Vocational Education & Training] [Ombudsman](https://en.wikipedia.org/wiki/Ombudsman) with the power to:* >>> *(a) investigate consumer complaints;* >>> *(b) order [Registered Training Organisations](http://www.training.com.au/rto/) (RTOs) which have been found to have acted unscrupulously to refund course fees to the student; and* >>> *(c) order RTOs to refund the course fee to the Government and have the student’s [VET FEE-HELP](http://studyassist.gov.au/sites/studyassist/helppayingmyfees",
+   "stage": "Second reading",
+   "ayes": 49,
+   "noes": 81,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 46,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-11-11/1"
+  },
+  {
+   "key": "federal-representatives-3975",
+   "date": "2015-11-11",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](http://www.openaustralia.org.au/debates/?id=2015-11-11.99.1) to the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5535) introduced by Labor MP [Sharon Bird](https://theyvoteforyou.org.au/people/representatives/cunningham/sharon_bird). Although the Coalition Government voted against the amendments, they did not oppose the intent of them (see National Party MP [Luke Hartsuyker](https://theyvoteforyou.org.au/people/representatives/cowper/luke_hartsuyker)'s [comments](http://www.openaustralia.org.au/debate/?id=2015-11-11.100.1)). The amendments were introduced to address the problem of training providers using salespeople to target disadvantaged areas and using high-pressure sales tactics to encourage poor students to enrol. Read more about this on [ABC News](http://www.abc.net.au/news/2015-02-26/careers-australia-salespeople-accused-of-dubious-sales-tactics/6265790). ### What does the bill do? The bill introduces a new compliance regime for the [Vocational Education and Training](http://www.australia.gov.au/information-and-services/education-and-training/vocational-education-and-training) (**VET**) sector. It also introduces new measures such as requiring students under 18 years old to get their parent's approval before getting a [VET FEE-HELP](http://studyassist.gov.au/sites/studyassist/helppayingmyfees/vet-fee-help/pages/vet-fee-help) loan. To read more about the bill see the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1516a/16bd060).",
+   "stage": "Consideration in detail",
+   "ayes": 50,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 47,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 128
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-11-11/2"
+  },
+  {
+   "key": "federal-senate-4026",
+   "date": "2015-12-02",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](http://www.openaustralia.org.au/senate/?gid=2015-12-02.35.1) introduced by Senator [Glenn Lazarus](https://theyvoteforyou.org.au/people/senate/queensland/glenn_lazarus). [Senator Lazarus explained](http://www.openaustralia.org.au/senate/?gid=2015-12-02.35.1) that his amendment addresses possible *\"unintended consequences on industry training sectors such as the aviation training sector\"*. ### What does the bill do? The [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5535) introduces a new compliance regime for the [Vocational Education and Training](http://www.australia.gov.au/information-and-services/education-and-training/vocational-education-and-training) (**VET**) sector. It also introduces new measures such as requiring students under 18 years old to get their parent's approval before getting a [VET FEE-HELP](http://studyassist.gov.au/sites/studyassist/helppayingmyfees/vet-fee-help/pages/vet-fee-help) loan. To read more about the bill see the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1516a/16bd060).",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 48,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-12-02/1"
+  },
+  {
+   "key": "federal-senate-4027",
+   "date": "2015-12-02",
+   "house": "senate",
+   "question": "An equal number of senators voted for and against an [amendment](http://www.openaustralia.org.au/senate/?gid=2015-12-02.54.1) introduced by Labor Senator [Kim Carr](https://theyvoteforyou.org.au/people/senate/victoria/kim_carr), which means it didn't pass. Senator Carr explains the amendment: > *Labor are proposing one simple proposition here, and the intent of the amendment is simple: it gives the minister an additional tool to control the rorts in the VET sector. It allows the minister, through a delegated responsibility to the secretary of the department, to control prices, as we do within the universities. The minister could seek to fix the costs of all courses or only some courses.* Read his full explanation, which is in two parts: [part one](http://www.openaustralia.org.au/senate/?gid=2015-12-02.54.1) and [part two](http://www.openaustralia.org.au/senate/?gid=2015-12-02.54.66). ### What does the bill do? The bill introduces a new compliance regime for the [Vocational Education and Training](http://www.australia.gov.au/information-and-services/education-and-training/vocational-education-and-training) (**VET**) sector. It also introduces new measures such as requiring students under 18 years old to get their parent's approval before getting a [VET FEE-HELP](http://studyassist.gov.au/sites/studyassist/helppayingmyfees/vet-fee-help/pages/vet-fee-help) loan. To read more about the bill see the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1516a/16bd060).",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 47,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-12-02/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-322139",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Higher Education Support Amendment (VET FEE-HELP Reform) Bill 2015, citing orchestrated fraud in Coonamble where providers paid $50 for signatures, leaving vulnerable people with $14,500 debts, and estimated the national fraud totalled hundreds of millions of dollars."
+  },
+  {
+   "slug": "speech-322141",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The bill introduces a two-day cooling-off period, prerequisites for enrolment, parental consent for under-18s, easier debt cancellation, and an infringement notice scheme to crack down on unscrupulous VET FEE-HELP providers, protecting students and taxpayers."
+  },
+  {
+   "slug": "speech-322142",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Abbott-Turnbull government has failed to address widespread rorting in the VET FEE-HELP sector, citing exploitative marketing targeting vulnerable people, a 151% increase in loan costs to $1.75 billion in 2014, and $2 billion cut from skills. Labor proposes a national VET ombudsman and supports TAFE, while criticising the bill's two-day cooling-off period as insufficient."
+  },
+  {
+   "slug": "speech-322143",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker strongly supported the VET FEE-HELP Reform Bill 2015, citing a scandalous rise in fees from $699 million to $1.7 billion in one year, $5 billion in debt over three years, and 40% of trainees unlikely to ever repay loans; they gave examples of providers charging double or more for the same course via loan versus upfront payment, and backed reforms including bans on inducements, withdrawal fees, and broker commissions, plus tougher penalties and ASQA oversight."
+  },
+  {
+   "slug": "speech-322144",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Higher Education Support Amendment (VET FEE-HELP Reform) Bill 2015, citing needed changes including language and literacy assessments, a two-day cooling-off period, parental involvement for under-18s, easier debt cancellation, and an infringement notice scheme. They also backed opposition proposals for an industry ombudsman and an Australian National Audit Office investigation, noting VET FEE-HELP costs rose from $325 million in 2012 to $1.76 billion in 2014, with a 440% enrolment increase and completion rates as low as 21%."
+  },
+  {
+   "slug": "speech-322145",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Higher Education Support Amendment (VET FEE-HELP Reform) Bill 2015, which introduces a two-day cooling-off period, parental consent for under-18s, bans on inducements like free laptops, and minimum enrolment prerequisites, after the number of VET providers rose from 119 to 254 and loan value reached $1.75 billion between 2012 and 2014. Examples of exploitation included a student charged $12,000 after withdrawing, temporary foreign workers with confiscated passports, and misleading job ads that enrolled people in courses without disclosing costs."
+  },
+  {
+   "slug": "speech-322147",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Higher Education Support Amendment (VET FEE-HELP Reform) Bill 2015, citing VET FEE-HELP debt growth from $699 million in 2013 to $1.7 billion in 2014 and a 103% increase in student numbers. They proposed amendments including a national VET ombudsman, an Australian National Audit Office investigation, and requiring the department to send students a clear debt statement before raising a loan."
+  },
+  {
+   "slug": "speech-322152",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the VET FEE-HELP reform bill is a modest and belated attempt to address a rapidly escalating problem, with debt levels rising from $699 million to $1.7 billion in one year, and that a two-day cooling-off period is insufficient; they urged the government to consider stronger amendments and noted a WA auditor-general report finding 50% non-compliance among registered training organisations."
+  },
+  {
+   "slug": "speech-322153",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Higher Education Support Amendment (VET FEE-HELP Reform) Bill 2015, which introduces measures to protect vulnerable students and taxpayers from dishonest training providers. Key changes include a two-day cooling-off period, minimum prerequisites, parental consent for students under 18, easier debt cancellation, and penalties for provider misconduct."
+  },
+  {
+   "slug": "speech-322154",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's VET FEE-HELP reform bill does not go far enough or come fast enough after 18 months of scandal, with VET FEE-HELP loans rising from $699 million in 2013 to $1.7 billion in 2014. Labor proposed amendments including an industry-funded national VET Ombudsman, an Auditor-General audit of VET FEE-HELP, and direct departmental verification of student loans to prevent rorting by private training providers."
+  },
+  {
+   "slug": "speech-322155",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued the Higher Education Support Amendment (VET FEE-HELP Reform) Bill 2015 would protect students and crack down on dodgy training providers by introducing a two-day cooling-off period, parental consent for under-18s, easier debt cancellation, and bans on misleading marketing, with support from local providers including ET Australia and Eagle Wing Education and Training."
+  },
+  {
+   "slug": "speech-322156",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that both major parties share responsibility for failures in the VET FEE-HELP system, but the Coalition government has been slow to act over two years in power, and announced Labor will support the Higher Education Support Amendment (VET FEE-HELP Reform) Bill 2015 while calling for a national VET ombudsman and an Auditor-General investigation. Key figures cited include a 103% increase in students accessing VET FEE-HELP, a 151% rise in Commonwealth funding, a 24% increase in average loan amounts, and a 44% growth in providers."
+  },
+  {
+   "slug": "speech-322158",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The coalition government is passing the Higher Education Support Amendment (VET FEE-HELP Reform) Bill 2015 to strengthen student protections and push out unscrupulous training providers, citing that VET FEE-HELP nominal loans grew from $225 million in 2012 to $1.757 billion in 2014, with student numbers rising from 55,115 to 202,776 and approved providers from 119 to 254."
+  },
+  {
+   "slug": "speech-322160",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that taxpayer-funded vocational education should benefit the community, not private companies, and criticised the Abbott-Turnbull government's $2 billion cuts to skills funding. They highlighted the VET FEE-HELP scandal, noting that private providers like Careers Australia and Evocca College received millions in taxpayer money with low completion rates, and called for stronger government action and Labor's amendments to crack down on dodgy practices."
+  },
+  {
+   "slug": "speech-322161",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the VET FEE-HELP Reform Bill 2015 is necessary to fix problems created by the former Labor government's 2012 expansion of the scheme, which lacked safeguards and led to unscrupulous provider behaviour. The bill introduces a two-day cooling-off period, prerequisites for higher-level courses, parental consent for under-18s, easier debt cancellation, minimum registration requirements for providers, and infringement notices, with $18.2 million allocated for compliance in the 2015–16 budget."
+  },
+  {
+   "slug": "speech-322162",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to the VET FEE-HELP Reform Bill, highlighting a 103% increase in loan scheme access since 2013 and predatory practices by private providers, and proposed additional reforms including a national VET ombudsman, an Auditor-General audit, and requiring the department to notify students of their debt amount."
+  },
+  {
+   "slug": "speech-322166",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speech argued that the government's VET FEE-HELP reforms are insufficient, citing a 24% average loan increase to $8,666, 40% of loans unlikely to be repaid, and predatory practices at colleges like Unique International College and Evocca College. It announced Labor amendments to cap tuition fees, lower loan lifetime limits, require clear debt statements, establish a national VET Ombudsman, and audit the scheme."
+  },
+  {
+   "slug": "speech-322945",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Higher Education Support Amendment (VET FEE-HELP Reform) Bill 2015 but argued it did not go far enough, calling for Labor's amendments including a National VET Ombudsman, an Auditor-General audit, and a requirement for the department to write to students about their debt before enrolment. The speaker also condemned the government for $2 billion in skills cuts, the proposed sale of TAFE sites in New South Wales including Murwillumbah and Ballina, and $100,000 university degrees, while pledging Labor would guarantee TAFE funding."
+  },
+  {
+   "slug": "speech-322946",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The speaker supported amendments to the VET FEE-HELP Reform Bill 2015, calling for a national VET ombudsman and an Auditor-General audit, citing a cost blowout from $325 million in 2012 to $1.7 billion in 2014, only 24% of students completing courses, and 4,609 registered training organisations (3,440 privately owned)."
+  },
+  {
+   "slug": "speech-322948",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The government argued the bill is necessary to address Labor's failure in allowing unethical VET FEE-HELP providers to flourish, and announced reforms including a new electronic application system by 1 January 2017, a two-day cooling-off period from 1 January 2016, and provider requirements to issue invoices before census dates."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Higher Education Support Amendment (VET FEE-HELP Reform) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00168",
+   "assent_date": "2015-12-11"
+  }
+ ]
+}

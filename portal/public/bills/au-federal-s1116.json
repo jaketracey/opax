@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-s1116",
+ "title": "Family Law Amendment (Parenting Management Hearings) Bill 2017",
+ "short_title": "Family Law Amendment (Parenting Management Hearings) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-06",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1116%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1116%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1116%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1116_ems_c68ed7da-763e-4718-ac6c-741d82ffa33c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1116%22",
+   "document_date": "2017-12-06",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-12-06",
+  "sentences": [
+   "The bill would create a new body, the Parenting Management Hearings Panel, to handle parenting disputes outside the court system for people who represent themselves.",
+   "The Panel would be an independent statutory body that holds hearings and issues binding decisions about parenting arrangements, using an inquisitorial approach rather than an adversarial one.",
+   "The pilot program would start in Parramatta, then a second location in late 2018, and an independent review must report within three years of commencement."
+  ],
+  "changes": [
+   "Establishes the Parenting Management Hearings Panel as an independent statutory authority",
+   "Creates a consent-based forum where parties cannot be forced to participate",
+   "Requires the Principal Member to have specialist knowledge and experience in family violence",
+   "Amends several Acts to include references to 'parenting determinations' alongside 'parenting orders'"
+  ],
+  "affected": "Self-represented litigants involved in parenting disputes, and their families.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:28:06Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

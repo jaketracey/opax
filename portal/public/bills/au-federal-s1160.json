@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-s1160",
+ "title": "Environment Protection and Biodiversity Conservation Amendment (Great Australian Bight) Bill 2018",
+ "short_title": "Environment Protection and Biodiversity Conservation Amendment (Great Australian Bight) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-11-29",
+ "originating_house": "senate",
+ "sponsor": "STORER, Sen Tim",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10909",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1160%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1160%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1160%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1160_ems_14d0ae9c-e5a8-4bb0-802e-664cfab45455%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1160%22",
+   "document_date": "2018-11-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-11-29",
+  "sentences": [
+   "The bill would add a second environmental assessment under the EPBC Act for petroleum and greenhouse gas activities in the Great Australian Bight that have already been approved by the offshore regulator.",
+   "The Minister would decide whether the second assessment uses an environmental impact statement or a public inquiry, while keeping the regulator's initial review.",
+   "The bill also transfers final decision-making for these activities back to the Minister and makes the 2014 class approval not apply to the Bight, so activities there must go through the new process."
+  ],
+  "changes": [
+   "Requires a second assessment under the EPBC Act for regulated activities in the Bight.",
+   "Gives the Minister ultimate oversight and responsibility for approving such activities.",
+   "Makes the Minister's approval of actions under an endorsed policy a legislative instrument for parliamentary scrutiny.",
+   "Removes certain requirements for making approvals under section 146B because the Legislation Act will apply.",
+   "Modifies the 2014 approval so it no longer covers petroleum and greenhouse gas activities in the Great Australian Bight."
+  ],
+  "affected": "Companies proposing petroleum or greenhouse gas activities in the Great Australian Bight, the offshore regulator NOPSEMA, and the Minister for the Environment.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:50Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

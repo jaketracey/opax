@@ -1,0 +1,95 @@
+{
+ "key": "au-federal-r6356",
+ "title": "Aged Care Amendment (Staffing Ratio Disclosure) Bill 2019",
+ "short_title": "Aged Care Amendment (Staffing Ratio Disclosure) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-22",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": "(s) SHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2020-02-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6356%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6356%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6356%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6356_ems_65743795-0918-474d-a518-2fa392ec84f3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6356%22",
+   "document_date": "2019-07-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-22",
+  "sentences": [
+   "The bill would require aged care providers to publish staff-to-resident ratios for each residential service every three months.",
+   "Providers would report ratios by staff category to the Secretary, counting part-time staff as fractions of full-time equivalents, and the Secretary would make the information public.",
+   "Services would be grouped into four categories based on their average ACFI quartile, and providers could add an optional explanation of up to 250 words."
+  ],
+  "changes": [
+   "Requires quarterly publication of staff-to-resident ratios for each residential care service.",
+   "Requires providers to notify the Secretary of ratios by staff category, with part-time staff counted as full-time equivalent fractions.",
+   "Requires the Secretary to make the information publicly available.",
+   "Places residential services into four categories based on their average ACFI quartile.",
+   "Allows providers to submit an optional explanation of up to 250 words for publication.",
+   "Requires providers to notify the Secretary within 28 days if a ratio changes by more than 10% between quarterly reports."
+  ],
+  "affected": "Approved providers of residential aged care services and members of the public choosing residential care.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:01Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-377577",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "Rebekha Sharkie introduced the Aged Care Amendment (Staffing Ratio Disclosure) Bill 2019, which would amend the Aged Care Act 1997 to require aged care providers to publicly disclose their staffing ratios."
+  },
+  {
+   "slug": "speech-377590",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The speaker moved the Aged Care Amendment (Staffing Ratio Disclosure) Bill, which would require residential aged-care facilities to disclose staffing ratios quarterly, broken down by staff category and funding level, to improve transparency and consumer choice. The bill does not mandate minimum staffing ratios and had broad support from a House committee inquiry, with the speaker calling on the Morrison government to implement it."
+  }
+ ],
+ "acts": []
+}

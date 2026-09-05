@@ -1,0 +1,93 @@
+{
+ "key": "au-federal-r6357",
+ "title": "Aged Care Quality and Safety Commission Amendment (Worker Screening Database) Bill 2019",
+ "short_title": "Aged Care Quality and Safety Commission Amendment (Worker Screening Database) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-22",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": "(s) SHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2020-02-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6357%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6357%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6357%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6357_ems_c12c9bdc-1071-4a76-82cd-7e768b344f83%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6357%22",
+   "document_date": "2019-07-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-22",
+  "sentences": [
+   "The bill would create a national worker screening database for aged care staff.",
+   "All paid and unpaid workers would be screened before their details are entered into a register kept by the Aged Care Quality and Safety Commission.",
+   "Employers would check the database for warning signs such as criminal records, reportable incidents or disciplinary findings."
+  ],
+  "changes": [
+   "Establishes a database for nationally consistent worker screening.",
+   "Requires all workers and volunteers in aged care to undergo screening.",
+   "Lets employers search the database for a worker's history of misconduct.",
+   "Includes criminal history, reportable incidents and disciplinary proceedings in the database."
+  ],
+  "affected": "Workers, volunteers and employers in the aged care sector, plus state and territory governments that would need to enact matching laws.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:01Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-377578",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "Rebekha Sharkie presented a bill to amend the Aged Care Quality and Safety Commission Act 2018, introducing the Aged Care Quality and Safety Commission Amendment (Worker Screening Database) Bill 2019."
+  },
+  {
+   "slug": "speech-377591",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The Aged Care Quality and Safety Commission Amendment (Worker Screening Database) Bill 2019 was introduced to establish a national database requiring all aged-care workers and volunteers to undergo screening, implementing recommendation 4.9 of the 2017 Australian Law Reform Commission report on elder abuse, to minimise the risk of harm to older Australians. The database, operated by the Aged Care Quality and Safety Commission, will include information on reportable incidents, disciplinary proceedings, and complaints, enabling employers to screen potential employees for misconduct beyond criminal history."
+  }
+ ],
+ "acts": []
+}

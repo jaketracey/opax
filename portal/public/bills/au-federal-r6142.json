@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-r6142",
+ "title": "Customs Tariff Amendment (Incorporation of Proposals) Bill 2018",
+ "short_title": "Customs Tariff Amendment (Incorporation of Proposals) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Law Enforcement and Cyber Security",
+ "status": "passed",
+ "status_as_of": "2018-09-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6142%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6142%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6142%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6142%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6142%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6142%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6142_ems_3c330a40-476b-43cd-b204-dfe4dbec47e9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6142%22",
+   "document_date": "2018-06-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00114",
+   "document_date": "2018-09-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-365985",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "The bill amends the Customs Tariff Act 1995 to introduce a free rate of duty for Indonesian insecticides and herbicides under the ASEAN-Australia-New Zealand Free Trade Agreement, remove customs duty on clinical trial kits and placebos, and make a technical correction to the China-Australia Free Trade Agreement schedule."
+  },
+  {
+   "slug": "speech-367325",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "Labor supported the Customs Tariff Amendment (Incorporation of Proposals) Bill 2018, which removes customs duties on certain pesticides and herbicides from Indonesia and simplifies import rules for clinical trial materials, with a minimal financial impact of $3 million over forward estimates. The bill also implements Indonesia’s commitment to reduce tariffs on Australian sugar exports, benefiting Queensland sugarcane growers after Australian sugar exports to Indonesia fell from one million to 200,000 tonnes per year."
+  },
+  {
+   "slug": "speech-367326",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment (Incorporation of Proposals) Bill 2018 introduces a free rate of duty for certain herbicides and pesticides from Indonesia under the Indonesia-Australia Closer Economic Partnership Agreement, creates a concessional item for eligible blinded clinical trial kits and placebos to remove customs duty and simplify imports, and removes a redundant item from schedule 12."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Incorporation of Proposals) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00114",
+   "assent_date": "2018-09-25"
+  }
+ ]
+}

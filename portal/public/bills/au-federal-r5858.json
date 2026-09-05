@@ -1,0 +1,539 @@
+{
+ "key": "au-federal-r5858",
+ "title": "Electoral and Other Legislation Amendment Bill 2017",
+ "short_title": "Electoral and Other Legislation Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Special Minister of State",
+ "status": "passed",
+ "status_as_of": "2017-09-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5858_ems_a20ff289-4bb0-4991-ad22-3bb32aba22ba%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5858_ems_9852509d-1237-4f7e-9716-5a7db3f3011f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5858_ems_47fbfb2f-d2ee-4b19-985e-22cf94370b77%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5858%22",
+   "document_date": "2017-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00099",
+   "document_date": "2017-09-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2017-03-30",
+  "sentences": [
+   "The bill would update rules for identifying who is behind political ads and messages, covering modern channels like social media.",
+   "It would shift enforcement from criminal penalties to civil penalties managed by the Australian Electoral Commission.",
+   "The bill exempts clothing, news reporting, satire, opinion polls, personal messages, and real-time communications from authorisation requirements."
+  ],
+  "changes": [
+   "Requires authorisation for all paid electoral advertising regardless of the source.",
+   "Makes disclosure entities include their status in political communications.",
+   "Places the main authorisation duty on those who decide to communicate the material.",
+   "Replaces criminal penalties with a civil penalty regime run by the Australian Electoral Commission.",
+   "Harmonises authorisation rules across broadcasting, electoral, and referendum laws.",
+   "Introduces a similar authorisation regime for referendums with modifications for issue-based events."
+  ],
+  "affected": "Political parties, disclosure entities, referendum campaigners, and anyone producing political or referendum communications.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:22:33Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4893",
+   "date": "2017-09-11",
+   "house": "senate",
+   "question": "The majority voted against [Greens amendments](https://www.openaustralia.org.au/senate/?gid=2017-09-11.15.2) that would have: > *lower[ed] the minimum age of a voter in an Australian federal election and referendum from 18 years to 16 years of age but [kept] the age of compulsory voting eligibility to standing as a federal parliamentarian at 18 years of age* ### Amendment text > *(1) Clause 2, page 2 (at the end of the table), add:* > >> *3. Schedule 2 The day after this Act receives the Royal Assent.* > > *(2) Page 45 (after line 5), at the end of the Bill, add:* > >> *Schedule 2—Lowering the Voting Age* >> >> *Commonwealth Electoral Act 1918* >> >> *1 Subsection 4(3)* >> >>> *Omit \"age 16\", substitute \"age 14\".* >> >> *2 Subsection 55(2)* >> >>> *Omit \"18\", substitute \"16\".* >> >> *3 Subsection 90B(10) (subparagraph (g)(iii) of the definition of additional information )* >> >>> *Omit \"18\", substitute \"16\".* >> >> *4 Paragraph 93(1)(a)* >> >>> *Omit \"18\", substitute \"16\".* >> >> *5 Paragraph 93(3)(b)* >> >>> *Omit \"18\", substitute \"16\".* >> >> *6 Subsection 93(4)* >> >>> *Omit \"18\", substitute \"16\".* >> >> *7 Paragraphs 95(1)(c) and (f)* >> >>> *Omit \"18\", substitute \"16\".* >> >> *8 Paragraphs 95(6)(a) and (b)* >> >>> *Omit \"18\", substitute \"16\".* >> >> *9 Subsection 95(7)* >> >>> *Omit \"18\", substitute \"16\".* >> >> *10 Paragraph 95(8)(a)* >> >>> *Omit \"18\", substitute \"16\".* >> >> *11 Paragraph 95(13)(e)* >> >>> *Omit \"18\", substitute \"16\".* >> >> *12 Subsection 98(1)* >> >>> *Omit \"16\", substitute \"14\".* >> >> *13 Subsection 98(3)* >> >>> *Omit \"16\", substitute \"14\".* >> >> *14 Section 100 (heading)* >> >>> *Repeal the heading, substitute:* >>> >>> *100 Claims for age 14 enrolment* >> >> *15 Paragraph 100(1)(a)* >> >>> *Omit \"has turned 16, but is under 18, years of age\", substitute \"has turned 14, but is under 16, years of age\".* >> >> *16 Paragraph 100(1)(b)* >> >>> *Omit \"18\", substitute \"16\".* >> >> *17 Subsection 100(2)* >> >>> *Omit \"18\", substitute \"16\".*",
+   "stage": "In committee",
+   "ayes": 7,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 30,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-11/2"
+  },
+  {
+   "key": "federal-senate-4894",
+   "date": "2017-09-11",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2017-09-11.22.1) introduced by Victorian Senator [Richard Di Natale](https://theyvoteforyou.org.au/people/senate/victoria/richard_di_natale) (Greens), which means they failed. ### What did these amendments do? Senator Di Natale [explained that](https://www.openaustralia.org.au/senate/?gid=2017-09-11.22.1): > *This amendment provides a mechanism whereby Australians who are eligible to vote but who might not be on the electoral role—or, alternatively, are on the role but not at the correct address—can enrol to vote or update their address at a polling centre on election day, or, if they go earlier, at an early voting centre. It's a very straightforward amendment. It basically says: if you're not enrolled or if you're enrolled at the incorrect address, you can update your enrolment details when you go to vote at a polling booth. Effectively it means that those people who, for whatever reason, don't have the correct details on the electoral role are able to update them on the day of the election.* ### Amendment text > *(1) Clause 2, page 2 (at the end of the table), add:* > >> *[See [Hansard](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hanssen261110) for this addition.]* > > *(2) Page 45 (after line 5), at the end of the Bill, add:* > >> *Schedule 3—Polling Day Enrolment* >> >> *Commonwealth Electoral Act 1918* >> >> *1 At the end of section 98* >> >>> *Add:* >>> >>> *(6) A provisional vote cast under section 235 by a person who is entitled to enrolment, but is not currently enrolled, shall qualify as a claim to enrolment under this section.* >> >> *2 At the end of subsection 102(5)* >> >>> *Add:* >>> >>> *(5A) If a claim under section 101 is made on the polling day for an election; then, despite subsection (4):* >>> >>>> *(a) the claim must be regarded as having been received before the start of the suspension period; and* >>>> >>>> *(b) if the claimant's name is entered on t",
+   "stage": "In committee",
+   "ayes": 7,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "member": 12,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-11/3"
+  },
+  {
+   "key": "federal-senate-4895",
+   "date": "2017-09-11",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2017-09-11.26.1) introduced by Victorian Senator [Richard Di Natale](https://theyvoteforyou.org.au/people/senate/victoria/richard_di_natale) (Greens), which means it failed. ### What did this amendment do? Senator Di Natale [explained that](https://www.openaustralia.org.au/senate/?gid=2017-09-11.26.1): > *This amendment creates an offence for any election advertisement which includes a statement that purports to be a fact but is misleading to a material extent. It effectively prohibits any advertisement that is wrong in fact. Under this amendment, we would have the Electoral Commissioner make an application to the Federal Court to grant an injunction to withdraw the advertisement from further publication and/or to publish a retraction. It's very straightforward: if someone makes a statement that is simply wrong in fact, rather than saying, 'You've got to put your name to it,' which is what the bill currently does, we're saying you shouldn't be able to make a statement that is wrong in fact.* ### Amendment text > *(1) Schedule 1, item 11, page 15 (lines 29 and 30), omit the item, substitute:* > > *11 Sections 328 and 328B* > > *Repeal the sections, substitute:* > > *328 Inaccurate or misleading advertising* > >> *(1) This section applies in relation to electoral matter if all of the following apply:* >> >>> *(a) the matter is an electoral advertisement;* >>> >>> *(b) all or part of the distribution or production of the advertisement was paid for;* >>> >>> *(c) the content of the advertisement was approved by a person (the notifying entity) (whether or not that person is a person who paid for the distribution or production of the advertisement).* >> >> *(2) The notifying entity commits an offence if:* >> >>> *(a) the notifying entity publishes, or causes to be published, an electoral advertisement; and* >>> >>> *(b) the advertisement contains a statement purporting to be a statement",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 25,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-11/4"
+  },
+  {
+   "key": "federal-senate-4896",
+   "date": "2017-09-11",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2017-09-11.34.1) moved by South Australian Senator [Nick Xenophon](https://theyvoteforyou.org.au/people/senate/sa/nick_xenophon), which means they failed. ### What did these amendments do? Senator Xenophon [explained that](https://www.openaustralia.org.au/senate/?gid=2017-09-11.34.1): > *These are what would colloquially be known as the 'robocall amendments'. These amendments relate to bulk voice calls. What these amendments essentially do is the following. If a notifying entity communicates or approves the communication of an electoral matter to a person by bulk voice call—that is, a robocall—the notifying entity must ensure, essentially, that upfront you are told who is the body responsible for it, whether it is the Liberal Party, the Labor Party or a union. It is all about ensuring that upfront you know who is authorising the call. Secondly, the important safeguard is that you are then given an option to specifically opt in if you want to take that call. This amendment is technology-neutral in relation to that, but you can decide—it could be a voice command for yes or no, or 'Press 1 to hear the rest of the call.'* ### Amendment text > *(1) Schedule 1, page 11 (after line 7), after subclause 321D(5), insert:* > >> *Bulk voice calls* >> >> *(5A) If a notifying entity communicates, or approves the communication of, electoral matter to a person by bulk voice call, the notifying entity must ensure that:* >> >>> *(i) the particulars required to be given in respect of that communication by subsection (5), or any other particulars determined under subsection (7) for the purposes of subsection (5), are given at the beginning of the call; and* >>> >>> *(ii) immediately after those particulars are given, a statement is given that the call is an automated political call and the call will not proceed unless the recipient of the call takes the necessary steps to allow the call to proceed.* >>",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 25,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-11/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-345177",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-345181",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The Electoral and Other Legislation Amendment Bill 2017 was introduced to amend the Commonwealth Electoral Act 1918, the Criminal Code Act 1995, and related legislation."
+  },
+  {
+   "slug": "speech-345183",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The Electoral and Other Legislation Amendment Bill 2017 updates authorisation requirements for voter communications to cover modern technologies like robocalls and SMS, requiring paid advertising and communications from political parties and major campaign groups to identify their source, while creating new criminal offences for impersonating Commonwealth bodies with penalties of up to five years' imprisonment."
+  },
+  {
+   "slug": "speech-352759",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The Labor opposition will support the Electoral and Other Legislation Amendment Bill 2017 subject to government amendments, after the government removed \"purely and quite ridiculously political measures\" in schedule 2 that were contrary to the Joint Standing Committee on Electoral Matters recommendations. The speaker criticised the Prime Minister's \"dummy spit\" on election night and noted the government will continue to pursue those measures elsewhere."
+  },
+  {
+   "slug": "speech-352761",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that the 2016 \"Mediscare\" campaign by Labor and the ACTU, involving one million fake Medicare cards authorised by ACTU Secretary Dave Oliver, was a deceitful attempt to steal the election, and announced the Electoral and Other Legislation Amendment Bill 2017 to close legal loopholes on electoral material authorisation and impersonation of agencies."
+  },
+  {
+   "slug": "speech-352762",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The speaker criticised the opposition for ignoring the Electoral and Other Legislation Amendment Bill 2017 and instead refighting the last election, noting the member for Fairfax discussed a non-existent bill."
+  },
+  {
+   "slug": "speech-352765",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Electoral and Other Legislation Amendment Bill 2017, subject to a caveat from the member for Rankin, and noted the bill reflected a constructive process between parties."
+  },
+  {
+   "slug": "speech-352767",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Electoral and Other Legislation Amendment Bill 2017 would modernise electoral law and stop deception, specifically citing the 2016 \"Mediscare\" campaign where the Labor Party misrepresented Medicare to intimidate voters. The bill includes an authorisation regime to hold political parties accountable for deceptive practices."
+  },
+  {
+   "slug": "speech-352770",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The speaker noted that no opposition members spoke on the Electoral and Other Legislation Amendment Bill 2017 and praised contributions from their own side."
+  },
+  {
+   "slug": "speech-352875",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-06",
+   "stage_hint": null,
+   "brief": "The Electoral and Other Legislation Amendment Bill 2017 updates authorisation requirements for electoral communications to cover new technologies, requiring all paid advertising and communications from entities with disclosure obligations to be authorised. A deceptive text message sent by the Labor Party at the 2016 federal election was cited as an example of the need for reform."
+  },
+  {
+   "slug": "speech-352881",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-06",
+   "stage_hint": null,
+   "brief": "The speaker argued the Electoral and Other Legislation Amendment Bill is needed to stop impersonation of Commonwealth agencies in election campaigns, citing the Labor Party's Medicare scare campaign as an example of deceptive text messages. He claimed the Labor Party was proud of misleading voters and warned they could impersonate other agencies like Centrelink or Veterans' Affairs in future elections."
+  },
+  {
+   "slug": "speech-352882",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Electoral and Other Legislation Amendment Bill 2017 is necessary to prevent deceptive political communications, citing Labor's \"Mediscare\" robocalls as a dishonest campaign that targeted vulnerable Australians, and to protect voters' ability to make informed decisions."
+  },
+  {
+   "slug": "speech-352883",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-06",
+   "stage_hint": null,
+   "brief": "The government argued the bill would require clear authorisation of electoral communications, harmonise rules across channels, and give the Australian Electoral Commission new enforcement powers including civil penalties. The government will remove schedule 2 (criminalising impersonation of a Commonwealth entity) for separate legislation, and the changes will take effect six months after royal assent, not affecting the marriage law postal survey."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Electoral and Other Legislation Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00099",
+   "assent_date": "2017-09-14"
+  }
+ ]
+}

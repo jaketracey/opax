@@ -1,0 +1,92 @@
+{
+ "key": "au-federal-r6239",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Regulations References) Bill 2018",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Regulations References) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-12-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Innovation and Science",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6239%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6239%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6239%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6239_ems_3ead6e08-3c8b-4b94-a058-8b1d58d037a5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6239%22",
+   "document_date": "2018-12-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-12-05",
+  "sentences": [
+   "This bill would update Australia's offshore petroleum and gas storage law so that references to regulations stay valid when those regulations expire and are remade.",
+   "It would remove specific regulation titles from the Act and let future regulations instead prescribe which regulation titles or provisions apply.",
+   "The change covers provisions related to monitoring, investigation and polluter pays obligations under the Regulatory Powers (Standard Provisions) Act 2014."
+  ],
+  "changes": [
+   "Remove fixed references to regulation titles from the OPGGS Act.",
+   "Allow regulation titles or provisions to be set by future regulations under the same Act.",
+   "Prevent the Act from needing amendment each time regulations sunset and are remade."
+  ],
+  "affected": "Entities subject to monitoring, investigation and financial assurance obligations under the offshore petroleum and greenhouse gas storage regime.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:11Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-374013",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-12-05",
+   "stage_hint": null,
+   "brief": "The Offshore Petroleum and Greenhouse Gas Storage Amendment (Regulations References) Bill makes technical amendments to future-proof references to regulations in the act, allowing titles to be prescribed by regulation so the act does not need amending each time regulations sunset and are remade."
+  },
+  {
+   "slug": "speech-374014",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-12-05",
+   "stage_hint": null,
+   "brief": "The Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment (Regulations References) Bill 2018 makes technical amendments to future-proof references to regulations in the levies act, mirroring changes to the OPGGS Act and ensuring cost-recovery levies for the National Offshore Petroleum Safety and Environmental Management Authority."
+  }
+ ],
+ "acts": []
+}

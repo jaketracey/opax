@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r5383",
+ "title": "Sex Discrimination Amendment (Boosting Superannuation for Women) Bill 2014",
+ "short_title": "Sex Discrimination Amendment (Boosting Superannuation for Women) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-12-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2015-06-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5383%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5383%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5383%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5383_ems_16f8c294-1725-4468-9424-7d0af803bc0a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5383%22",
+   "document_date": "2014-12-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-12-01",
+  "sentences": [
+   "The bill would let companies pay more into the retirement savings of female staff without breaking sex discrimination rules.",
+   "It would add a new part to the Sex Discrimination Act 1984 so that employers do not need a special exemption to make these extra payments.",
+   "The explanatory memorandum notes that in 2011–12, average superannuation balances were $82,615 for men and $44,866 for women."
+  ],
+  "changes": [
+   "Employers could boost superannuation for women employees without violating the Sex Discrimination Act 1984.",
+   "The bill would remove the requirement for employers to apply for an exemption under section 44 of the Act to make higher contributions for women.",
+   "It would insert a new section into the Act to permit this practice."
+  ],
+  "affected": "Employers and women employees covered by the Sex Discrimination Act 1984.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:00:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-303004",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

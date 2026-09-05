@@ -1,0 +1,254 @@
+{
+ "key": "au-federal-r6176",
+ "title": "Treasury Laws Amendment (Supporting Australian Farmers) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Supporting Australian Farmers) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-10-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6176%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6176%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6176%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6176%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6176%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6176%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-10-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6176%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6176_ems_2318f779-9353-4ed5-8ce4-e1744f3dfd9f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6176%22",
+   "document_date": "2018-09-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00123",
+   "document_date": "2018-10-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5432",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debates/?id=2018-09-19.16.2) introduced by Labor MP [Andrew Leigh](https://theyvoteforyou.org.au/people/representatives/fenner/andrew_leigh) that would have changed the wording of the motion \"that the bill be read a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html)\" (which is parliamentary jargon for agreeing with the main idea of the bill) with the following: > *That all words after \"That\" be omitted with a view to substituting the following words:* > *\"whilst not declining to give the bill a second reading, the House makes note of the Government's lack of long term policy and planning to assist primary producers and rural Australians facing drought conditions\".*",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 72,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-09-19/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-369877",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "Labor supported the Treasury Laws Amendment (Supporting Australian Farmers) Bill 2018, which provides immediate deductions for fodder storage assets, but criticised the government's haphazard drought response and lack of long-term policy, noting the $75 million fiscal impact and the need for climate action. The opposition also flagged a review of the measure if elected, and highlighted concerns over the government's handling of drought assistance, including a controversial tweet by the Prime Minister."
+  },
+  {
+   "slug": "speech-369880",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Supporting Australian Farmers) Bill 2018, which allows immediate tax deductions for fodder storage assets rather than spreading them over three years, as part of a $1.9 billion drought support package. They called for ramped-up assistance including more rural financial counsellors, concessional loans, and measures to source feed and fodder for drought-affected regions like central western New South Wales."
+  },
+  {
+   "slug": "speech-369883",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "Labor supported the bill allowing immediate tax deductions for fodder storage assets at a cost of $75 million, but argued the Abbott-Turnbull-Morrison governments have failed to deliver long-term drought policy and planning, including on climate change adaptation."
+  },
+  {
+   "slug": "speech-369884",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Supporting Australian Farmers) Bill 2018, arguing it provides practical tax measures like instant asset write-offs for fodder storage and small business assets. They also highlighted the government's investment in the Myalup-Wellington water project, praised farmers' efficiency and landcare participation, and condemned the strawberry contamination crisis for harming jobs and Australia's clean, green reputation."
+  },
+  {
+   "slug": "speech-369885",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's drought response has been piecemeal and inadequate, criticising the lack of a coordinated strategy and the dismissal of climate change, while supporting the Treasury Laws Amendment (Supporting Australian Farmers) Bill 2018 as a modest measure with a $75 million fiscal impact. The speech also noted the appointment of Major General Stephen Day as National Drought Coordinator and referenced the organisation Rural Alive and Well (RAW) in Oatlands for mental health support."
+  },
+  {
+   "slug": "speech-369888",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Supporting Australian Farmers) Bill 2018, citing $1.8 billion in federal drought assistance, instant asset write-offs for fodder storage and farm infrastructure, and the farm management deposits scheme, while rejecting Labor’s criticism and asserting that farmers are innovative and not victims."
+  },
+  {
+   "slug": "speech-369901",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The government introduced the Treasury Laws Amendment (Supporting Australian Farmers) Bill 2018 to support farmers, with the aim of enabling fodder transport from Western Australia to regions like Tamworth, Gunnedah and the Upper Hunter, arguing that only the National Party and Liberal Party can be relied upon by regional Australia."
+  },
+  {
+   "slug": "speech-369906",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Supporting Australian Farmers) Bill 2018 introduces an accounting procedure to encourage fodder storage for future droughts, and criticised the Labor Party and Greens for water policies that harm irrigators in the Murray-Darling Basin. He noted the government has increased the farm household allowance to $37,000, reduced paperwork for access, provided low-interest loans, and appointed Major General Stephen Day as Drought Coordinator and Barnaby Joyce as drought envoy."
+  },
+  {
+   "slug": "speech-369907",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Supporting Australian Farmers) Bill 2018 introduces instant depreciation for fodder storage assets such as silos and hay sheds, allowing primary producers to immediately deduct costs from 19 August 2018 instead of over three years."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Supporting Australian Farmers) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00123",
+   "assent_date": "2018-10-03"
+  }
+ ]
+}

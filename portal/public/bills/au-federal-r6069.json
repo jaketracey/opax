@@ -1,0 +1,2153 @@
+{
+ "key": "au-federal-r6069",
+ "title": "Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018",
+ "short_title": "Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2019-03-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-03-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6069_ems_fc1b4615-aa5a-4cc5-b802-277c7b8ffb6c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6069_ems_aeb588b8-5462-4742-9907-dcfa2526e036%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6069_ems_7fbb977e-7142-41e8-8bd9-28709ee63d78%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6069_ems_d49fbafd-a7a4-435b-b32b-83637d35721e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6069_ems_4b463a67-d494-4c34-bc76-319b282ba08f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6069_ems_d62651ad-2a0a-4678-9ef4-d9459d182726%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6069_ems_56be445b-ca97-4c36-93d2-811748c25e01%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6069_ems_efc258fd-57e6-43ae-af09-f53542d4e54c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6069_ems_c85287f6-c94e-4ca5-81f7-589435489385%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6069_ems_452cea94-15d8-4f86-b632-471fe938708d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6069%22",
+   "document_date": "2018-03-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00003",
+   "document_date": "2019-03-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "The bill would allow a person removed from Australia who is returned because the removal was aborted or the receiving country refused entry to re-enter lawfully without a visa.",
+   "It would let the Department of Home Affairs use online accounts like ImmiAccount to send legally required communications to clients.",
+   "The bill would also add a new power to make regulations setting fees for paying or recovering the passenger movement charge."
+  ],
+  "changes": [
+   "Amends the Migration Act to provide a lawful basis for return without a visa for certain unsuccessful removals.",
+   "Amends the Customs Act to allow the department to make recoverable payments to entitled persons.",
+   "Amends the Passenger Movement Charge Collection Act to allow regulations for charging and recovering fees related to the passenger movement charge."
+  ],
+  "affected": "Unlawful non-citizens subject to removal, the Department of Home Affairs, persons entitled to recoverable payments, and entities paying or dealing with the passenger movement charge.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:29:16Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5621",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2018-12-06.91.1) to adjourn debate, which was introduced by WA Senator [Mathias Cormann](https://theyvoteforyou.org.au/people/senate/wa/mathias_cormann) (Liberal). This means the motion failed so debate will continue.",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 22,
+    "dated": 31,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/4"
+  },
+  {
+   "key": "federal-senate-5622",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted against paragraph (a) of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-12-06.89.1) introduced by SA Senator [Cory Bernardi](https://theyvoteforyou.org.au/people/senate/sa/cory_bernardi) (Australian Conservatives), which means it failed. This motion would have amended the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) which is that \"*that the bill be read a second time*\" (in other words, that the majority agree with the main idea of the bill). ### Motion text > *At the end of the motion, add:* > > *\", but the Senate is of the view that:* > > *(a) the government should promptly release the statutory review of the Administrative Appeals Tribunal, particularly those aspects relating to the Migration and Refugee Divisions, conducted by the Honourable Ian Callinan AC QC;* > > ... ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd112): > *The Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 (the Bill) is an omnibus Bill which makes various amendments to migration, customs and passenger movement laws. The Bill:* > > * *amends the Migration Act 1958 to:* > >> * *clarify that where the removal of a non-citizen from the migration zone to another country is unsuccessful, a visa is not required to bring the person back to Australia and they remain subject to statutory bars on subsequent visa applications, where applicable (Schedule 1)* >> >> * *provide that the Minister may make documents available to a person by way of an online account (Schedule 2)* > > * *amends the Customs Act 1901 to:* > >> * *provide that the Commonwealth may appropriate money from the Consolidated Revenue Fund to pay refunds, rebates or drawbacks of customs duty in circumstances where those payments have no other statutory basis (Schedule 3)* >> >> * *make minor technical amendments (Schedule 5) and* > > * *amends the P",
+   "stage": "Second reading",
+   "ayes": 5,
+   "noes": 55,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 31,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/5"
+  },
+  {
+   "key": "federal-senate-5623",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted against paragraph (b) of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-12-06.89.1) introduced by SA Senator [Cory Bernardi](https://theyvoteforyou.org.au/people/senate/sa/cory_bernardi) (Australian Conservatives), which means it failed. This motion would have amended the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) which is that \"*that the bill be read a second time*\" (in other words, that the majority agree with the main idea of the bill). ### Motion text > *At the end of the motion, add:* > > *\", but the Senate is of the view that:* > > ... > > *(b) the government should take all possible steps to prevent the presentation of late evidence in migration and refugee cases;* > > ... ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd112): > *The Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 (the Bill) is an omnibus Bill which makes various amendments to migration, customs and passenger movement laws. The Bill:* > > * *amends the Migration Act 1958 to:* > >> * *clarify that where the removal of a non-citizen from the migration zone to another country is unsuccessful, a visa is not required to bring the person back to Australia and they remain subject to statutory bars on subsequent visa applications, where applicable (Schedule 1)* >> >> * *provide that the Minister may make documents available to a person by way of an online account (Schedule 2)* > > * *amends the Customs Act 1901 to:* > >> * *provide that the Commonwealth may appropriate money from the Consolidated Revenue Fund to pay refunds, rebates or drawbacks of customs duty in circumstances where those payments have no other statutory basis (Schedule 3)* >> >> * *make minor technical amendments (Schedule 5) and* > > * *amends the Passenger Movement Charge Collection Act 1978 to specify that regulations may make provision f",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 31,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/6"
+  },
+  {
+   "key": "federal-senate-5624",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted against paragraph (c) of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-12-06.89.1) introduced by SA Senator [Cory Bernardi](https://theyvoteforyou.org.au/people/senate/sa/cory_bernardi) (Australian Conservatives), which means it failed. This motion would have amended the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) which is that \"*that the bill be read a second time*\" (in other words, that the majority agree with the main idea of the bill). ### Motion text > *At the end of the motion, add:* > > *\", but the Senate is of the view that:* > > ... > > *(c) only Australian citizens should be given access to legal aid assistance in cases in the Migration and Review Division of the Administrative Appeals Tribunal; and* > > ... ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd112): > *The Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 (the Bill) is an omnibus Bill which makes various amendments to migration, customs and passenger movement laws. The Bill:* > > * *amends the Migration Act 1958 to:* > >> * *clarify that where the removal of a non-citizen from the migration zone to another country is unsuccessful, a visa is not required to bring the person back to Australia and they remain subject to statutory bars on subsequent visa applications, where applicable (Schedule 1)* >> >> * *provide that the Minister may make documents available to a person by way of an online account (Schedule 2)* > > * *amends the Customs Act 1901 to:* > >> * *provide that the Commonwealth may appropriate money from the Consolidated Revenue Fund to pay refunds, rebates or drawbacks of customs duty in circumstances where those payments have no other statutory basis (Schedule 3)* >> >> * *make minor technical amendments (Schedule 5) and* > > * *amends the Passenger Movement Charge Collection Act 1978 to specif",
+   "stage": "Second reading",
+   "ayes": 5,
+   "noes": 56,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 32,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/7"
+  },
+  {
+   "key": "federal-senate-5625",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted against paragraph (d) of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-12-06.89.1) introduced by SA Senator [Cory Bernardi](https://theyvoteforyou.org.au/people/senate/sa/cory_bernardi) (Australian Conservatives), which means it failed. This motion would have amended the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) which is that \"*that the bill be read a second time*\" (in other words, that the majority agree with the main idea of the bill). ### Motion text > *At the end of the motion, add:* > > *\", but the Senate is of the view that:* > > ... > > *(d) if legal aid is granted in the Migration and Review Division of the Administrative Appeals Tribunal to persons who are not Australian citizens, then the quantum of the grant of legal aid should be recovered via the taxation system in future years\".* ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd112): > *The Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 (the Bill) is an omnibus Bill which makes various amendments to migration, customs and passenger movement laws. The Bill:* > > * *amends the Migration Act 1958 to:* > >> * *clarify that where the removal of a non-citizen from the migration zone to another country is unsuccessful, a visa is not required to bring the person back to Australia and they remain subject to statutory bars on subsequent visa applications, where applicable (Schedule 1)* >> >> * *provide that the Minister may make documents available to a person by way of an online account (Schedule 2)* > > * *amends the Customs Act 1901 to:* > >> * *provide that the Commonwealth may appropriate money from the Consolidated Revenue Fund to pay refunds, rebates or drawbacks of customs duty in circumstances where those payments have no other statutory basis (Schedule 3)* >> >> * *make minor technical amendments (Schedule 5)",
+   "stage": "Second reading",
+   "ayes": 5,
+   "noes": 56,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 32,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/8"
+  },
+  {
+   "key": "federal-senate-5626",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=CHAMBER;id=chamber%2Fjournals%2Fa8500a04-b5f6-4a78-a954-a25c5e052610%2F0025;query=Id%3A%22chamber%2Fjournals%2Fa8500a04-b5f6-4a78-a954-a25c5e052610%2F0000%22) to amend the usual second reading motion *that the bill be read for a second time* with the text below. Reading a bill for a second time means that they agree with the main idea of the bill. This amendment was introduced by Senator [Cory Bernardi](https://theyvoteforyou.org.au/people/senate/sa/cory_bernardi) (SA), which means it failed. ### Motion text > *At the end of the motion, add “and that further consideration of this bill be deferred until after the Parliamentary Joint Committee on Intelligence and Security has inquired and reported into all of the amendments circulated on this bill by no later than 30 March 2019”.*",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 30,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/9"
+  },
+  {
+   "key": "federal-senate-5627",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=CHAMBER;id=chamber%2Fjournals%2Fa8500a04-b5f6-4a78-a954-a25c5e052610%2F0025;query=Id%3A%22chamber%2Fjournals%2Fa8500a04-b5f6-4a78-a954-a25c5e052610%2F0000%22) to amend the usual second reading motion *that the bill be read for a second time* with the text below. Reading a bill for a second time means that they agree with the main idea of the bill. This amendment was introduced by Senator [Brian Burston](https://theyvoteforyou.org.au/people/senate/nsw/brian_burston) (NSW), which means it failed. ### Motion text > *Omit all words after “That”, substitute “the Senate insists consideration of the bill be postponed until formal advice from the Director-General of the Australian Security Intelligence Organisation and the Australian Federal Police Commissioner has been tabled in the Senate about the national security implications of the amendments circulated to this bill”.*",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 30,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/10"
+  },
+  {
+   "key": "federal-senate-5628",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 - Second Reading - Let a vote happen",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 30,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/11"
+  },
+  {
+   "key": "federal-senate-5629",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 31,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/12"
+  },
+  {
+   "key": "federal-senate-5630",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2018-12-06.109.2) introduced by South Australian Senator [Cory Bernardi](https://theyvoteforyou.org.au/people/senate/sa/cory_bernardi): > *That so much of standing order 142 be suspended as would prevent further consideration of the [Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6069) without limitation of time.* [Standing orders](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/standing-orders/) are the usual procedural rules of parliament.",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 31,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/13"
+  },
+  {
+   "key": "federal-senate-5631",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 31,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/14"
+  },
+  {
+   "key": "federal-senate-5632",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2018-12-06.116.1) introduced by Senator [Pauline Hanson](https://theyvoteforyou.org.au/people/senate/queensland/pauline_hanson): > *That so much of standing orders be suspended as would prevent further consideration of [the bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6069) until 5 pm.* [Standing orders](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/standing-orders/) are the usual procedural rules of parliament.",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 31,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/15"
+  },
+  {
+   "key": "federal-senate-5633",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-12-06.122.1) to agree with the main idea of the [bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6069) - in parliamentary jargon, they voted to read it for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means they can now consider the bill in greater detail. ### What does this bill do? According to its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd112), the purpose of the [Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6069) is to: * *clarify that where the removal of a non-citizen from the migration zone to another country is unsuccessful, a visa is not required to bring the person back to Australia and they remain subject to statutory bars on subsequent visa applications, where applicable (Schedule 1)* * *provide that the Minister may make documents available to a person by way of an online account (Schedule 2)* * *provide that the Commonwealth may appropriate money from the Consolidated Revenue Fund to pay refunds, rebates or drawbacks of customs duty in circumstances where those payments have no other statutory basis (Schedule 3)* * *specify that regulations may make provision for the charging and recovery of fees in relation to the Passenger Movement Charge (Schedule 4).*",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 31,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/16"
+  },
+  {
+   "key": "federal-senate-5634",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted against a [government amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6069_amend_60abd0e7-adf3-4b01-a24d-88065b31ccbf%22) to [amendments](https://theyvoteforyou.org.au/divisions/senate/2018-12-06/20) moved by South Australian Senator [Tom Storer](https://theyvoteforyou.org.au/people/senate/sa/tim_storer) (Independent) and Tasmanian [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens). This means the government amendment failed. ### Government amendment text > *(1) After proposed subsection 198C(5), insert:* > >> *(5A) An officer must not bring a person to Australia from a regional processing country in accordance with subsections (3) to (5) if the officer knows or reasonably suspects that the person does not pass the character test under section 501(6).* ### What does this bill do? According to its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd112), the purpose of the [Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6069) is to: * *clarify that where the removal of a non-citizen from the migration zone to another country is unsuccessful, a visa is not required to bring the person back to Australia and they remain subject to statutory bars on subsequent visa applications, where applicable (Schedule 1)* * *provide that the Minister may make documents available to a person by way of an online account (Schedule 2)* * *provide that the Commonwealth may appropriate money from the Consolidated Revenue Fund to pay refunds, rebates or drawbacks of customs duty in circumstances where those payments have no other statutory basis (Schedule 3)* * *specify that regulations may make provision for the charging and recovery of fees in relation to the Passenger Movement Charge (Schedule 4).*",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 2
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 31,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/17"
+  },
+  {
+   "key": "federal-senate-5635",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted against a [government amendment](https://www.openaustralia.org.au/senate/?gid=2018-12-06.126.5) to [amendments](https://theyvoteforyou.org.au/divisions/senate/2018-12-06/20) moved by South Australian Senator [Tom Storer](https://theyvoteforyou.org.au/people/senate/sa/tim_storer) (Independent) and Tasmanian [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens). This means the government amendment failed. ### Government amendment text > *(1) After proposed subsection 198C(5), insert:* > >> *(5A) An officer must not bring a person to Australia from a regional processing country in accordance with subsections (3) to (5) if the officer knows or reasonably suspects that the person has a substantial criminal record as defined in s 501(7).* ### What does this bill do? According to its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd112), the purpose of the [Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6069) is to: * *clarify that where the removal of a non-citizen from the migration zone to another country is unsuccessful, a visa is not required to bring the person back to Australia and they remain subject to statutory bars on subsequent visa applications, where applicable (Schedule 1)* * *provide that the Minister may make documents available to a person by way of an online account (Schedule 2)* * *provide that the Commonwealth may appropriate money from the Consolidated Revenue Fund to pay refunds, rebates or drawbacks of customs duty in circumstances where those payments have no other statutory basis (Schedule 3)* * *specify that regulations may make provision for the charging and recovery of fees in relation to the Passenger Movement Charge (Schedule 4).*",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 31,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/18"
+  },
+  {
+   "key": "federal-senate-5636",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendment (1)](https://www.openaustralia.org.au/senate/?gid=2018-12-06.129.1) on sheet 8619, which was introduced by South Australian Senator [Tom Storer](https://theyvoteforyou.org.au/people/senate/sa/tim_storer) (Independent) and Tasmanian [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it will now be included in the bill. This amendment related to the commencement of a [newly proposed Schedule 6](https://theyvoteforyou.org.au/divisions/senate/2018-12-06/20) of the bill. ### Amendment text > *(1) Clause 2, page 2 (at the end of the table), add:* > >> *7. Schedule 6 | The day after this Act receives the Royal Assent.* ### What does this bill do? According to its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd112), the purpose of the [Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6069) is to: * *clarify that where the removal of a non-citizen from the migration zone to another country is unsuccessful, a visa is not required to bring the person back to Australia and they remain subject to statutory bars on subsequent visa applications, where applicable (Schedule 1)* * *provide that the Minister may make documents available to a person by way of an online account (Schedule 2)* * *provide that the Commonwealth may appropriate money from the Consolidated Revenue Fund to pay refunds, rebates or drawbacks of customs duty in circumstances where those payments have no other statutory basis (Schedule 3)* * *specify that regulations may make provision for the charging and recovery of fees in relation to the Passenger Movement Charge (Schedule 4).*",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 30,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/19"
+  },
+  {
+   "key": "federal-senate-5637",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendment (2)](https://www.openaustralia.org.au/senate/?gid=2018-12-06.129.1) on sheet 8619, which was introduced by South Australian Senator [Tom Storer](https://theyvoteforyou.org.au/people/senate/sa/tim_storer) (Independent) and Tasmanian [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it will now be included in the bill. These amendments related to people who are in regional detention and in need of medical care in Australia. ### Amendment text The amendment introduces a new Schedule 6 to the bill. See [sheet 8619](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6069_amend_daa31cc4-f3cb-44ba-b10d-fd7ad1ec0f9a%22) for the actual text. ### What does this bill do? According to its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd112), the purpose of the [Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6069) is to: * *clarify that where the removal of a non-citizen from the migration zone to another country is unsuccessful, a visa is not required to bring the person back to Australia and they remain subject to statutory bars on subsequent visa applications, where applicable (Schedule 1)* * *provide that the Minister may make documents available to a person by way of an online account (Schedule 2)* * *provide that the Commonwealth may appropriate money from the Consolidated Revenue Fund to pay refunds, rebates or drawbacks of customs duty in circumstances where those payments have no other statutory basis (Schedule 3)* * *specify that regulations may make provision for the charging and recovery of fees in relation to the Passenger Movement Charge (Schedule 4).*",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 31,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/20"
+  },
+  {
+   "key": "federal-senate-5638",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted against [Government amendments](https://www.openaustralia.org.au/senate/?gid=2018-12-06.133.12), which means they failed. The amendments related to the commencement of the bill. ### Amendment text See [sheet JC580](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6069_amend_dec4f910-39fe-4e49-935a-c38725c85995%22) for amendment text. ### What does this bill do? According to its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd112), the purpose of the [Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6069) is to: * *clarify that where the removal of a non-citizen from the migration zone to another country is unsuccessful, a visa is not required to bring the person back to Australia and they remain subject to statutory bars on subsequent visa applications, where applicable (Schedule 1)* * *provide that the Minister may make documents available to a person by way of an online account (Schedule 2)* * *provide that the Commonwealth may appropriate money from the Consolidated Revenue Fund to pay refunds, rebates or drawbacks of customs duty in circumstances where those payments have no other statutory basis (Schedule 3)* * *specify that regulations may make provision for the charging and recovery of fees in relation to the Passenger Movement Charge (Schedule 4).*",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 31,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/21"
+  },
+  {
+   "key": "federal-senate-5639",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 - in Committee - Prohibiting items in immigration detention facilities (including mobile phones)",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 31,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/22"
+  },
+  {
+   "key": "federal-senate-5640",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted against [Government amendments](https://www.openaustralia.org.au/senate/?gid=2018-12-06.137.1), which means they failed. The amendments would have stopped a particular group of people seeking asylum in Australia from applying for an Australian visa. ### What did the amendments do? According to the relevant [supplementary explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6069_ems_d62651ad-2a0a-4678-9ef4-d9459d182726%22): > *These government amendments to the Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018, amend the Migration Act 1958 (Migration Act) and the Migration Regulations 1994 (the Migration Regulations) to prevent unauthorised maritime arrivals (UMAs) who were at least 18 years of age and were taken to a regional processing country after 19 July 2013 from making a valid application for an Australian visa.* > > *These government amendments will also apply to transitory persons who were at least 18 years of age and were taken to a regional processing country after 19 July 2013 under Division 7 or 8 of Part 3 of the Maritime Powers Act 2013 (the Maritime Powers Act).* > > *These groups of people will be referred to as the designated regional processing cohort.* > > *Thee government amendments will include a personal power of the Minister to permit a member of the designated regional processing cohort, or a class of persons within the designated regional processing cohort, to make a valid application for a visa if the Minister thinks it is in the public interest to do so.* > > *These government amendments include measures to prevent a member of the designated regional processing cohort from being deemed to have been granted a Special Purpose visa under section 33 of the Migration Act, or being deemed to have applied for particular visas under the Migration Regulations.* > > *These government amendments will apply to a member of the designated regiona",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 31,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/23"
+  },
+  {
+   "key": "federal-senate-5641",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted against [Government amendments](https://www.openaustralia.org.au/senate/?gid=2018-12-06.139.1), which means they failed. ### What did the amendments do? According to the relevant [supplementary explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6069_ems_d62651ad-2a0a-4678-9ef4-d9459d182726%22): > *Government amendments in Schedule 8 of the Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 (the Bill) ensure that the appointment of a proclaimed port in the Territory of Ashmore and Cartier Islands contained in the Commonwealth of Australia Gazette No. GN 3, 23 January 2002 (the appointment) has always had the legal effect that was intended and that it was thought to have had, and to ensure that things done which relied on the validity of the appointment are valid and effective.* > > *Specifically, the amendments in Schedule 8 of the Bill:* > > * *clarify that the term “appointment” will include a purported appointment;* > * *clarify the geographical coordinates of the area of waters within the Territory of Ashmore and Cartier Islands specified in the appointment;* > * *confirm that there was a properly proclaimed port at Ashmore and Cartier Islands at all relevant times; and* > * *confirm the validity of things done under the Migration Act 1958 (such as actions taken or decisions made) which relied directly or indirectly on the validity of the appointment, before the commencement of this Act.* ### Amendment text See [sheet JC576](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6069_amend_38daf8d0-fb28-40d6-ad07-17bfa151fe90%22) for amendment text. ### What does this bill do? According to its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd112), the purpose of the [Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018](https://www.aph.gov.au/Parlia",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 31,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/24"
+  },
+  {
+   "key": "federal-senate-5642",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted against [Government amendments](https://www.openaustralia.org.au/senate/?gid=2018-12-06.142.1), which means they failed. They would have added a presumption against bail into the bill. ### What did the amendments do? According to the relevant [supplementary explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6069_ems_56be445b-ca97-4c36-93d2-811748c25e01%22): > *These government amendments amend the Crimes Act 1914 (the “Crimes Act”) to insert a presumption against bail for Commonwealth child sex offences that attract the highest maximum penalties.* > > *Part 1 of Schedule 9 amends the existing section 15AA of the Crimes Act and creates a presumption against bail for a person alleged to have committed the most serious Commonwealth child sex offences and most second or subsequent offences (excluding section 474.25C). The presumption is intended as a starting point for determining bail as it is inappropriate that such a person be granted bail in relation to these offences unless circumstances exist justifying the grant of bail.* > > *The part also makes a minor amendment to section 15AA of the Crimes Act.* > > *Part 2 of Schedule 9 introduces an offence-based presumption for certain Commonwealth child sex offences. The Government considers that the criminal conduct involved in this crime type targets one of the most vulnerable groups in the community­: children.* > > *While bail conditions may act as an effective deterrent, they are only as good as the practical measures taken to enforce those conditions. The ease in utilising anonymising practices such as encryption and virtual private networks makes the enforcement of conditions particularly difficult where that relates to internet offending.* ### Amendment text See [sheet JC577](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6069_amend_55a793df-a6a8-4e22-a557-3f6296208806%22",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 31,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/25"
+  },
+  {
+   "key": "federal-senate-5645",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 31,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 21,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/28"
+  },
+  {
+   "key": "federal-representatives-5650",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "question": "Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 - Consideration of Senate Message - Put the question",
+   "stage": "Consideration of Senate message",
+   "ayes": 75,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 149
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-02-12/1"
+  },
+  {
+   "key": "federal-representatives-5651",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/debate/?id=2019-02-12.107.1) to a [motion](https://www.openaustralia.org.au/debate/?id=2019-02-12.106.1), which means the amendment succeeded. The purpose of the amendment is to speed things along. ### Original motion text > *That:* > *(1) the House endorse the statement of the Speaker in relation to the constitutional questions raised by Message No. 493 transmitted by the Senate in relation to the Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018; and* > *(2) that consideration of the Senate's amendments be made an order of the day for the next sitting.* ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words* > *\"(1) the House notes the statement of the Speaker in relation to the constitutional questions raised by message transmitted by the Senate in relation to the Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018;* > *(2) the House, having regard to the fact that the public interest demands the early enactment of the legislation, refrains from the determination of its constitutional rights in respect of the Senate message; and* > *(3) the amendments be considered immediately.\"* ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd112), the bill was introduced to make various amendments to migration, customs and passenger movement laws, including: * *clarifying that where the removal of a non-citizen from the migration zone to another country is unsuccessful, a visa is not required to bring the person back to Australia and they remain subject to statutory bars on subsequent visa applications, where applicable;* * *providing that the Minister may make documents available to a person by way of an online account;* * *providing that the Commonwealth may appropriate money from the Consolidated Revenue Fund to pay r",
+   "stage": "Consideration of Senate message",
+   "ayes": 75,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 149
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-02-12/2"
+  },
+  {
+   "key": "federal-representatives-5652",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2019-02-12.114.1) *that the motion, as amended, be agreed to*, which means the motion succeeded. ### Motion text > *That:* > *(1) the House notes the statement of the Speaker in relation to the constitutional questions raised by message transmitted by the Senate in relation to the Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018;* > *(2) the House, having regard to the fact that the public interest demands the early enactment of the legislation, refrains from the determination of its constitutional rights in respect of the Senate message; and* > *(3) the [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr6069_sched_9d2d6cb4-dc4d-48cc-a77f-d43aca912365%22;rec=0) be considered immediately.* ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd112), the bill was introduced to make various amendments to migration, customs and passenger movement laws, including: * *clarifying that where the removal of a non-citizen from the migration zone to another country is unsuccessful, a visa is not required to bring the person back to Australia and they remain subject to statutory bars on subsequent visa applications, where applicable;* * *providing that the Minister may make documents available to a person by way of an online account;* * *providing that the Commonwealth may appropriate money from the Consolidated Revenue Fund to pay refunds, rebates or drawbacks of customs duty in circumstances where those payments have no other statutory basis; and* * *amending the Passenger Movement Charge Collection Act 1978 to specify that regulations may make provision for the charging and recovery of fees in relation to the Passenger Movement Charge.*",
+   "stage": "Consideration of Senate message",
+   "ayes": 75,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 149
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-02-12/3"
+  },
+  {
+   "key": "federal-representatives-5653",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "question": "Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 - Consideration of Senate Message - Put the question",
+   "stage": "Consideration of Senate message",
+   "ayes": 75,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 149
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-02-12/4"
+  },
+  {
+   "key": "federal-representatives-5654",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "question": "Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 - Consideration of Senate Message - Amendment",
+   "stage": "Consideration of Senate message",
+   "ayes": 75,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 149
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-02-12/5"
+  },
+  {
+   "key": "federal-representatives-5655",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "question": "Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 - Consideration of Senate Message - Agree with the amendments",
+   "stage": "Consideration of Senate message",
+   "ayes": 75,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 149
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-02-12/6"
+  },
+  {
+   "key": "federal-senate-5668",
+   "date": "2019-02-13",
+   "house": "senate",
+   "question": "The majority voted in favour of clauses (a), (b), (c) and (d) of the [motion](https://www.openaustralia.org.au/senate/?gid=2019-02-13.15.1) moved by Victorian Senator [Jacinta Collins](https://theyvoteforyou.org.au/people/senate/victoria/jacinta_collins) (Labor), which means they passed. ### Motion text > *That:* > > > *(a) the message from the House of Representatives relating to the Senate amendments to the [Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6069) be reported immediately,* > > *(b) consideration of the message shall have precedence over all other business, including senators' statements and question time, until determined,* > > *(c) immediately after the message is reported, the following motion in respect of the message shall be proposed from the Chair and considered without amendment:* > >> *That the Senate agrees to the amendments made by the House of Representatives to the Senate amendments to the bill.* > > *(d) a senator speaking to the motion shall not speak for more than 5 minutes and, if the debate is not concluded at the expiration of 30 minutes after the motion is proposed, the question on the motion shall then be put, [...]*",
+   "stage": "Business motion",
+   "ayes": 33,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 20,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-02-13/4"
+  },
+  {
+   "key": "federal-senate-5670",
+   "date": "2019-02-13",
+   "house": "senate",
+   "question": "Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 - Returned from the House of Representatives - Agree with amendments to pass bill",
+   "stage": "Returned from the House of Representatives",
+   "ayes": 36,
+   "noes": 34,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 21,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-02-13/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-361543",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 amends the Migration Act to allow return of unlawful noncitizens without a visa in more circumstances, such as transit refusal or UN Human Rights Committee interim measures, and clarifies that visa application bars continue as if they never left. It also enables document delivery via online accounts, inserts a power to refund duty when overpaid, recovers merchant fees for credit card payments, and makes minor technical amendments to the Customs Act."
+  },
+  {
+   "slug": "speech-367561",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The speech supported the Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 while accusing the Minister for Home Affairs of mismanagement. It cited partner visa processing times rising from 19 to 30 months for 90% of applications, more than 176,000 bridging visas, and an ANAO report finding only two of 33 consultant contracts were evaluated."
+  },
+  {
+   "slug": "speech-367564",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The Greens argued the Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 contains provisions that bar asylum seekers returned to Australia after a third country refuses them from reapplying for protection, which the Parliamentary Joint Committee on Human Rights flagged as a human rights concern. The Greens will further examine the bill in the Senate and do not support it."
+  },
+  {
+   "slug": "speech-367565",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018 amends the Migration Act 1958, Customs Act 1901, and Passenger Movement Charge Collection Act 1978. Key changes include allowing unlawful noncitizens returned to Australia after a failed removal to re-enter without a visa, permitting the Department of Home Affairs to use ImmiAccount for legal communications, enabling recoverable customs payments, controlling movement between sea installations and the coast, regulating disposal of narcotic-related goods, and prescribing fees for passenger movement charge collection."
+  },
+  {
+   "slug": "speech-374607",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-374624",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-12",
+   "stage_hint": null,
+   "brief": "The government moved to reject Senate amendments to the Home Affairs Legislation Amendment Bill, arguing they would unconstitutionally increase public expenditure from standing appropriations by requiring the minister to appoint at least six doctors to a health panel. The speaker claimed Labor had supported the amendments in December 2018 without security agency advice, then withdrew support months later, and warned that accepting the amendments would breach 109 years of House of Representatives practice and section 53 of the Constitution by allowing the Senate to initiate spending."
+  },
+  {
+   "slug": "speech-374625",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-12",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment to set aside constitutional disputes with the Senate over the Home Affairs Legislation Amendment (Miscellaneous Measures) Bill 2018, citing public interest in speedy passage, and noted that the Howard government had moved an identical resolution in November 1996."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Home Affairs Legislation Amendment (Miscellaneous Measures) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00003",
+   "assent_date": "2019-03-01"
+  }
+ ]
+}

@@ -1,0 +1,211 @@
+{
+ "key": "au-federal-alrc-2349",
+ "title": "Water Efficiency Labelling and Standards (Registration Fees) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Sustainability, Environment, Water, Population and Communities",
+ "status": "passed",
+ "status_as_of": "2013-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-26",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00063",
+   "document_date": "2013-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-270235",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270236",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822292",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822293",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271370",
+   "speaker": "Greg Combet",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271584",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271587",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271589",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824738",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": "The Water Efficiency Labelling and Standards (Registration Fees) Bill 2013 is a housekeeping bill to correct the labelling system for shower heads, and the speaker commended it to the Senate."
+  },
+  {
+   "slug": "speech-824766",
+   "speaker": "Kate Lundy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": "The speaker tabled an addendum to the explanatory memorandum for the Export Finance and Insurance Corporation Amendment Bill 2013 and an additional statement on water efficiency legislation, and announced the government will review financial participants in the scheme and develop options for wider participation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Water Efficiency Labelling and Standards (Registration Fees) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00063",
+   "assent_date": "2013-06-26"
+  }
+ ]
+}

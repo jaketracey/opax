@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6040",
+ "title": "Competition and Consumer Amendment (Free Range Eggs) Bill 2018",
+ "short_title": "Competition and Consumer Amendment (Free Range Eggs) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-12",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Nick Xenophon Team",
+ "sponsor_person_id": "10874",
+ "portfolio": "(s) SHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-09-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6040%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6040%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6040%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6040_ems_ccd34846-3c53-4548-be66-8dc38287af3c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6040%22",
+   "document_date": "2018-02-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-358828",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-02-12",
+   "stage_hint": null,
+   "brief": "The Competition and Consumer Amendment (Free Range Eggs) Bill 2018 proposes to limit 'free range' labelling to eggs from hens stocked at no more than 1,500 birds per hectare that actually roam outdoors during daylight, and to require stocking density displayed as 'hens per hectare' on cartons. The current standard allows up to 10,000 hens per hectare, which the speaker argues misleads consumers and contrasts with international standards like the EU's 2,500 birds per hectare."
+  }
+ ],
+ "acts": []
+}

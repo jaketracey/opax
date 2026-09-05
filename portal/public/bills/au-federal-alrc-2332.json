@@ -1,0 +1,247 @@
+{
+ "key": "au-federal-alrc-2332",
+ "title": "Superannuation Legislation Amendment (Reform of Self Managed Superannuation Funds Supervisory Levy Arrangements) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2013-05-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-03-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-03-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-05-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-05-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00055",
+   "document_date": "2013-05-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-269426",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-821690",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271401",
+   "speaker": "Deb O'Neill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271402",
+   "speaker": "Deb O'Neill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271403",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822851",
+   "speaker": "Deborah O'Neill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271741",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271742",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271743",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271745",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271746",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823036",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823180",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-14",
+   "stage_hint": null,
+   "brief": "The Superannuation Legislation Amendment (Reform of Self Managed Superannuation Funds Supervisory Levy Arrangements) Bill 2013 increases the maximum SMSF supervisory levy from $200 to $300 per year, with an actual levy of $259 from 2013-14, and changes collection timing so the levy is paid in the same financial year, phased in over two years, to fully recover the ATO's regulatory costs for the growing SMSF sector (478,000 funds as of June 2012, up 27% since 2008)."
+  },
+  {
+   "slug": "speech-823480",
+   "speaker": "Mathias Cormann",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": "The Coalition criticised the Superannuation Legislation Amendment (Reform of Self Managed Superannuation Funds Supervisory Levy Arrangements) Bill 2013 as an Orwellian Labor cash grab and blamed Treasurer Wayne Swan's fiscal mismanagement, but nonetheless chose not to oppose the bill."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Superannuation Legislation Amendment (Reform of Self Managed Superannuation Funds Supervisory Levy Arrangements) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00055",
+   "assent_date": "2013-05-28"
+  }
+ ]
+}

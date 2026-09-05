@@ -1,0 +1,240 @@
+{
+ "key": "au-federal-r6990",
+ "title": "National Vocational Education and Training Regulator (Data Streamlining) Amendment Bill 2023",
+ "short_title": "National Vocational Education and Training Regulator (Data Streamlining) Amendment Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "passed",
+ "status_as_of": "2023-07-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6990%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6990%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6990%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6990%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6990%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6990%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6990%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-07-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6990%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6990_ems_d6d1c6b4-b992-45f5-9cca-c3ef8ba9ae08%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6990%22",
+   "document_date": "2023-03-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00049",
+   "document_date": "2023-07-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-09",
+  "sentences": [
+   "This bill would update how vocational education and training data is collected, used and shared under the national regulator's act.",
+   "It would let the Ministerial Council name another person or body to approve data requirements, and allow the Department of Employment and Workplace Relations' top official to release some training information to the public.",
+   "Decisions made by the National VET Regulator to exempt a provider from reporting data under the new rules would not be open to merits review."
+  ],
+  "changes": [
+   "Allows the Ministerial Council to designate an alternative person or body to agree to the Data Provision Requirements.",
+   "Permits the senior official of the Department of Employment and Workplace Relations to make public certain VET training information, excluding personal details except the training provider's name.",
+   "Lets the Secretary issue a determination for collecting, using or disclosing information to build or run a VET data system.",
+   "Provides that administrative decisions by the National VET Regulator on data reporting exemptions will not be subject to merits review."
+  ],
+  "affected": "Registered training organisations, students, government policy makers, VET regulators, researchers, employers, and the Australian Skills Quality Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:06:37Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8206",
+   "date": "2023-06-22",
+   "house": "senate",
+   "question": "A large majority supported [passing the bill](https://www.openaustralia.org.au/senate/?id=2023-06-22.181.1) in the Senate. In parliamentary jargon, they voted to give it a third reading. Since the bill had already passed in the House of Representatives, it will now become law. ### What does the bill do? According to the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6990_ems_d6d1c6b4-b992-45f5-9cca-c3ef8ba9ae08%22;rec=0): > *The purpose of the Bill is to better support data collection and other related measures being implemented as part of the VET Data Streamlining (VDS) reforms.* > > *The Bill seeks to amend the National Vocational Education and Training Regulator Act 2011 (the Act) to support data collection and arrangements in relation to the use and disclosure of Vocational Education Training (VET) data and will allow skills ministers to delegate their powers to agree to all, or parts, of the National Vocational Education and Training Regulator ( Data Provision Requirements) Instrument 2020 (the DPRs) to other individuals or bodies, such as senior officials of the Commonwealth and States and Territories.* > > *The amendments will ensure that the information collected from students and training providers, and the data systems being built to facilitate the transfer of that data into the national Vocational Education and Training (VET) data set, are flexible and responsive to the needs of governments and other users of VET data.* Note that the explanatory memorandum is a document that is written by Members of Parliament and not the parliamentary library, so are often biased in favour of the bill they are describing.",
+   "stage": "Third reading",
+   "ayes": 44,
+   "noes": 3,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-22/17"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-828324",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-09",
+   "stage_hint": null,
+   "brief": "The National Vocational Education and Training Regulator (Data Streamlining) Amendment Bill 2023 was introduced to modernise VET data collection, reducing reporting lags of up to 20 months to improve responsiveness to skills shortages. The bill enables streamlined data obligations, authorises ICT system operators to access VET data, and supports 180,000 fee-free TAFE places and the $50 million TAFE Technology Fund."
+  },
+  {
+   "slug": "speech-828653",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-21",
+   "stage_hint": null,
+   "brief": "Bills on financial accountability, financial services compensation, health, national security, education and vocational training were referred to the Federation Chamber for further consideration. The speaker also remarked that they hoped their next speech would be more interesting."
+  },
+  {
+   "slug": "speech-828659",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-21",
+   "stage_hint": null,
+   "brief": "The coalition supported the bill to improve VET data collection but warned against the government's bias towards TAFE over private providers, and criticised Labor's record on VET, including the VET FEE-HELP scheme and insufficient new fee-free TAFE places."
+  },
+  {
+   "slug": "speech-829044",
+   "speaker": "Anne Urquhart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-23",
+   "stage_hint": null,
+   "brief": "The Selection of Bills Committee report recommended referrals for several bills; an amendment to not refer the Financial Accountability Regime Bill 2023 and related bills was opposed by the Greens, who argued for an inquiry into the Australian Banking Association's influence and the removal of million-dollar fines for bankers."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Vocational Education and Training Regulator (Data Streamlining) Amendment Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00049",
+   "assent_date": "2023-07-03"
+  }
+ ]
+}

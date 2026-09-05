@@ -1,0 +1,206 @@
+{
+ "key": "au-federal-r6087",
+ "title": "Treasury Laws Amendment (Enhancing ASIC’s Capabilities) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Enhancing ASIC’s Capabilities) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-10-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6087%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6087%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6087%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6087%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6087%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6087%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6087%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6087%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6087%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6087%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6087%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6087%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-10-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6087%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6087_ems_b2774b3e-08d8-4f73-a463-bfb363e12e65%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6087%22",
+   "document_date": "2018-03-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00122",
+   "document_date": "2018-10-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-5425",
+   "date": "2018-09-17",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2018-09-17.150.1) to keep schedule 1 unchanged. In parliamentary jargon they voted \"Yes\" to the question \"*that schedule 1 stand as printed*\". ### What is schedule 1? Schedule 1 relates to [competition in the financial system](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd111). According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd111): > *Item 1 of Schedule 1 inserts proposed subsection 1(2A) into the ASIC Act to require ASIC ... to consider the effects that the performance of its functions and the exercise of its powers will have on competition in the financial system. ASIC will be required to consider competition in conjunction with the elements in subsection 1(2), including to:* >> *(a) maintain, facilitate and improve the performance of the financial system and the entities within that system in the interests of commercial certainty, reducing business costs, and the efficiency and development of the economy.* > *ASIC is required to determine the weight it will give to competition based on the relevant circumstances. The measure is not designed to limit or expand the scope of ASIC’s regulatory responsibilities.* When [arguing that schedule 1 should be opposed](https://www.openaustralia.org.au/senate/?id=2018-09-17.150.1), Greens Senator [Peter Whish-Wilson](https://theyvoteforyou.org.au/people/senate/tasmania/peter_whish-wilson) said that: > *we [the Greens Party] don't believe we should be giving anything to ASIC at this stage. It's premature. The royal commission hasn't delivered its findings yet.*",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 22,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-09-17/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-366000",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Enhancing ASIC's Capabilities) Bill 2018 adds a requirement for ASIC to consider competition when performing its functions and removes the requirement for ASIC staff to be employed under the Public Service Act. The speaker criticised the government for taking 18 months to introduce the bill, cutting ASIC's funding by $120 million, and failing to resource the regulator adequately despite expanding its responsibilities."
+  },
+  {
+   "slug": "speech-366001",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "Labor supported the Treasury Laws Amendment (Enhancing ASIC's Capabilities) Bill 2018, which adds competition to ASIC's mandate and allows it to employ staff outside the Public Service Act, while criticising the Abbott and Turnbull governments for past ASIC funding cuts and delays in implementing Financial System Inquiry recommendations."
+  },
+  {
+   "slug": "speech-366002",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Enhancing ASIC's Capabilities) Bill 2018 mandates ASIC to consider competition effects and removes ASIC from the Public Service Act to improve recruitment, implementing recommendations from the Financial System Inquiry and the 2015 ASIC capability review."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Enhancing ASIC’s Capabilities) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00122",
+   "assent_date": "2018-10-03"
+  }
+ ]
+}

@@ -1,0 +1,252 @@
+{
+ "key": "au-federal-r7099",
+ "title": "Social Security and Other Legislation Amendment (Supporting the Transition to Work) Bill 2023",
+ "short_title": "Social Security and Other Legislation Amendment (Supporting the Transition to Work) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-10-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2023-11-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7099%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7099%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7099%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7099%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7099%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7099%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7099%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7099%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7099%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7099%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7099%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7099%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7099%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7099%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7099_ems_50460745-52ae-4067-84ae-7657bf022dff%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7099%22",
+   "document_date": "2023-10-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00106",
+   "document_date": "2023-11-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-10-18",
+  "sentences": [
+   "The bill would change social security and veterans' laws to help recipients take up paid work.",
+   "It would increase the pension work bonus and extend the employment income nil rate period to 24 weeks.",
+   "Eligible pensioners could earn up to $4,000 before the income test affects their payments."
+  ],
+  "changes": [
+   "Increases the work bonus unused concession balance by $4,000 for new eligible recipients.",
+   "Makes the temporary $4,000 increase to the maximum unused concession balance permanent for all eligible pensioners.",
+   "Extends the employment income nil rate period to 24 weeks for eligible social security recipients."
+  ],
+  "affected": "Social security pensioners over age pension age, certain veterans' entitlement recipients over qualifying age, and other eligible social security recipients.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8462",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2023-11-14.6.2) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means that the usual motion will remain unchanged. The amendment was introduced by Deakin MP [Michael Sukkar](https://theyvoteforyou.org.au/people/representatives/deakin/michael_sukkar) (Liberal). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes:* > >> *(a) the severe workforce shortages across the country, high levels of job vacancies and employing businesses having difficulty finding suitable staff;* >> >> *(b) hiring and retaining employees remains a key challenge for small businesses;* >> >> *(c) under the Government, the cost of food is up by 8.2 per cent; the cost of housing is up 10.4 per cent; the cost of insurance is up by 17 per cent; the cost of electricity is up by 18.2 per cent and the cost of gas is up 28 per cent; and* >> >> *(d) the failure of the Government to tackle the escalating cost of living that is impacting older Australians; and* > > *(2) calls on the Government to:* > >> *(a) increase the work bonus from $300 to $600 a fortnight to incentivise eligible pensioners to work more hours without penalty from 1 January 2024; and* >> >> *(b) review this increase every 12 months to ensure these settings remain appropriate\".*",
+   "stage": "Second reading",
+   "ayes": 62,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 75
+    },
+    "Liberal": {
+     "ayes": 33,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-15/1"
+  },
+  {
+   "key": "federal-senate-8515",
+   "date": "2023-11-17",
+   "house": "senate",
+   "question": "The majority voted against [Greens Party amendments](https://www.openaustralia.org.au/senate/?gid=2023-11-17.199.1) on [sheet 2154](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7099_amend_e7dbcb19-4456-4037-90d4-ef9cc1345645%22;rec=0) and [sheet 2155](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7099_amend_d3d45e99-65ac-42f4-b1e8-a318bbdca993%22;rec=0), which means they failed. ### What do the amendments do? The amendments would have introduced a number of changes into the bill, including an increase to the income free areas for certain payments. Read the text of the amendments for more.",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-17/18"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Social Security and Other Legislation Amendment (Supporting the Transition to Work) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00106",
+   "assent_date": "2023-11-28"
+  }
+ ]
+}

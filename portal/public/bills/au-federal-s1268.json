@@ -1,0 +1,184 @@
+{
+ "key": "au-federal-s1268",
+ "title": "Sport Integrity Australia Amendment (World Anti-Doping Code Review) Bill 2020",
+ "short_title": "Sport Integrity Australia Amendment (World Anti-Doping Code Review) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-08-26",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Youth and Sport",
+ "status": "passed",
+ "status_as_of": "2020-12-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1268%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1268%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1268%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1268%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1268%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1268%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1268%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1268%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1268%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1268%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1268%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1268%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1268_ems_16dad5bc-2c61-419c-bc0d-e230a31278a1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1268_ems_77d55291-0ccd-4676-a5bf-38bfcc935fc5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1268%22",
+   "document_date": "2020-08-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00126",
+   "document_date": "2020-12-15",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-08-26",
+  "sentences": [
+   "This bill updates Australia's anti-doping laws to match a revised international anti-doping code taking effect on 1 January 2021.",
+   "It amends the Sport Integrity Australia Act 2020 to give the agency's chief executive more discretion over publishing doping violations and to create a new category of person called a 'non-participant' who can be subject to anti-doping rules.",
+   "The bill also expands the definition of 'athlete' to include people who took part in sport during the previous six months, and allows non-participants to apply to the National Sports Tribunal for arbitration."
+  ],
+  "changes": [
+   "Introduce a 'non-participant' category into the anti-doping scheme.",
+   "Give the Sport Integrity Australia CEO more discretion not to publish violation details in certain cases.",
+   "Broaden the situations in which the CEO may respond to public comment on unfinished matters.",
+   "Amend the definition of athlete to cover anyone who competed in sport in the past six months.",
+   "Allow non-participants to seek arbitration at the National Sports Tribunal for anti-doping disputes."
+  ],
+  "affected": "Sport Integrity Australia, its chief executive, national sporting organisations, athletes, support persons, and a new category of 'non-participants'.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-400930",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-10",
+   "stage_hint": null,
+   "brief": "The member for Shortland supported the Sport Integrity Australia Amendment Bill but moved a second reading amendment calling on the government to fund all projects recommended by Sport Australia under the Community Sport Infrastructure Grants Program, citing the government's failure to deliver on promises after the sports rorts affair and highlighting the Garden Suburb Football Club's need for $300,000 for female changing rooms."
+  },
+  {
+   "slug": "speech-400933",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-10",
+   "stage_hint": null,
+   "brief": "The Sport Integrity Australia Amendment (World Anti-Doping Code Review) Bill 2020 aligns Australia’s anti-doping framework with the revised 2021 World Anti-Doping Code, commencing 1 January 2021, and amends the Sport Integrity Australia Act 2020. The bill extends the anti-doping scheme to cover sporting administration bodies’ executives and senior management, and redefines an athlete to remain subject to the code for six months after their last competition to close a loophole for those retiring temporarily to avoid detection."
+  },
+  {
+   "slug": "speech-400934",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-12-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Sport Integrity Australia Amendment (World Anti-Doping Code Review) Bill 2020, which expands anti-doping rules to cover non-participants and updates athlete definitions. They highlighted personal experience as a Winter Olympian and ASADA panel member, stressed the need for clean sport, and noted 51 changes in the 2021 WADA code, including new violations for threatening whistleblowers and proportional consequences for inadvertent doping."
+  },
+  {
+   "slug": "speech-400936",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-10",
+   "stage_hint": null,
+   "brief": "The Sport Integrity Australia Amendment (World Anti"
+  }
+ ],
+ "acts": [
+  {
+   "title": "Sport Integrity Australia Amendment (World Anti-Doping Code Review) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00126",
+   "assent_date": "2020-12-15"
+  }
+ ]
+}

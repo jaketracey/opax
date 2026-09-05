@@ -1,0 +1,163 @@
+{
+ "key": "au-federal-alrc-2415",
+ "title": "Superannuation Laws Amendment (MySuper Capital Gains Tax Relief and Other Measures) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2013-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00089",
+   "document_date": "2013-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-276736",
+   "speaker": "Stephen Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276944",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824610",
+   "speaker": "Stephen Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825328",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2013-06-28",
+   "stage_hint": null,
+   "brief": "Tabled the annual report of the Standing Committee on Appropriations and Staffing for 2012–13, the register of Senate senior executive officers' interests, the government response to outstanding parliamentary committee reports, a replacement explanatory memorandum for the Superannuation Laws Amendment (MySuper Capital Gains Tax Relief and Other Measures) Bill 2013, and a schedule of special purpose flights paid by the Department of Defence for July–December 2012. Also tabled several committee and delegation reports, including those on the Indian Ocean Territories, the Parliamentary Triangle, financial sector reform in China, and Inter-Parliamentary Union assemblies."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Superannuation Laws Amendment (MySuper Capital Gains Tax Relief and Other Measures) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00089",
+   "assent_date": "2013-06-28"
+  }
+ ]
+}

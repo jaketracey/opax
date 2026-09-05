@@ -1,0 +1,410 @@
+{
+ "key": "au-federal-r6971",
+ "title": "National Housing Supply and Affordability Council Bill 2023",
+ "short_title": "National Housing Supply and Affordability Council Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-02-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2023-09-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6970_ems_65319d44-1295-43e7-8718-251583e588fd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6971_ems_e0f7f7b4-0987-48fc-a1d9-91ec28cb5c67%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6971_ems_5fa3f4fc-3a6a-4986-916f-109882f61ea7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6971%22",
+   "document_date": "2023-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00080",
+   "document_date": "2023-09-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7955",
+   "date": "2023-02-16",
+   "house": "representatives",
+   "question": "National Housing Supply and Affordability Council Bill 2023 - Consideration in Detail - Regional Australia and critical infrastructure",
+   "stage": "Consideration in detail",
+   "ayes": 74,
+   "noes": 17,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 91
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-02-16/1"
+  },
+  {
+   "key": "federal-representatives-7956",
+   "date": "2023-02-16",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2023-02-15.145.1) introduced by Fowler MP [Dai Le](https://theyvoteforyou.org.au/people/representatives/fowler/dai_le) (Independent), which means it failed. Ms Le [explained that](https://www.openaustralia.org.au/debate/?id=2023-02-15.145.1): > *I agree with the minister that we should have a board with diverse skills and experience, but it must obviously have people with firsthand experience of community and social housing. It is therefore incredibly disappointing that the government won't be mandating a community housing provider representative. Without the government's mandate, the idea that it will happen—it just won't. To some extent I agree with the member for Griffith about the representation on the council, but co-investment from property developers and CHPs is crucial to the social housing sector.* ### Amendment text > *(1) Clause 22, page 13 (lines 26 to 29), omit subclause (3), substitute:* > >> *(3) In appointing members, the Minister must ensure that:* >> >>> *(a) the appointed members collectively have an appropriate balance of qualifications, skills or experience in the fields mentioned in subsection (2); and* >>> >>> *(b) at least 1 appointed member is a representative of the Community Housing Provider sector; and* >>> >>> *(c) consideration is given to appointing members who have personal experience of social and affordable housing; and* >>> >>> *(d) there is gender and cultural diversity within the National Housing Supply and Affordability Council.*",
+   "stage": "Consideration in detail",
+   "ayes": 71,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-02-16/2"
+  },
+  {
+   "key": "federal-senate-8365",
+   "date": "2023-09-13",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-09-13.69.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means it will now be included in the bill. ### Amendment text > *(1) Clause 22, page 13 (after line 20), after paragraph (2)(h), insert:* > >> *(ha) accessibility for people with disability;*",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-13/6"
+  },
+  {
+   "key": "federal-senate-8367",
+   "date": "2023-09-13",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6971_amend_13ffeb4b-d480-4120-bd76-917a7309fe2b%22;rec=0) introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which means it failed. ### Amendment text > *Clause 22, page 13 (lines 27 to 30), omit subclause (3), substitute:* > > *(3) In appointing members, the Minister must ensure that:* > >> *(a) the appointed members collectively have an appropriate balance of qualifications, skills or experience in the fields mentioned in subsection (2); and* >> >> *(b) at least one of the appointed members has a substantial connection to, or substantial experience in, one or more regional areas of Australia through business, industry or community involvement.*",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 10,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-13/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-827436",
+   "speaker": "Anne Urquhart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-09",
+   "stage_hint": null,
+   "brief": "The Selection of Bills Committee presented its first report of 2023, referring multiple bills to committees for inquiry, including the Housing Australia Future Fund Bill 2023 and related housing bills to the Economics Legislation Committee with a reporting date of 22 March. Senator McKim moved an unsuccessful amendment to extend that reporting date to 22 April, arguing the government's housing response is inadequate and a longer inquiry is needed to hear from renters and housing sector stakeholders."
+  },
+  {
+   "slug": "speech-829857",
+   "speaker": "Anne Ruston",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-05-09",
+   "stage_hint": null,
+   "brief": "The opposition argued the Housing Australia Future Fund would increase inflation and interest rates while providing no guaranteed funding for housing projects, costing $400 million annually in interest, and announced they would oppose the bill but support the National Housing Supply and Affordability Council Bill. The Greens argued the fund is inadequate, calling for $5 billion per year in direct investment for social and affordable housing, a two-year rent freeze, and phase-out of negative gearing and capital gains tax discounts, while noting a shortage of 640,000 social and affordable homes and 2.7 million people in rental stress."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Housing Supply and Affordability Council Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00080",
+   "assent_date": "2023-09-28"
+  }
+ ]
+}

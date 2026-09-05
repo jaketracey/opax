@@ -1,0 +1,287 @@
+{
+ "key": "au-federal-r5175",
+ "title": "Tertiary Education Quality and Standards Agency Amendment Bill 2014",
+ "short_title": "Tertiary Education Quality and Standards Agency Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-02-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2014-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5175%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5175%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5175%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5175%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5175%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5175%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5175%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5175%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5175%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5175%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5175%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5175%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5175%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5175%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5175_ems_87c2cd2a-5b9f-49fc-9ddd-d1530ec6ace7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5175_ems_120c5ab5-80af-4d54-8f5a-351c2b4fc366%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5175%22",
+   "document_date": "2014-02-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00130",
+   "document_date": "2014-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-02-27",
+  "sentences": [
+   "This bill would change the Tertiary Education Quality and Standards Agency Act to make the regulator more efficient and reduce red tape for universities.",
+   "It would let the Tertiary Education Quality and Standards Agency extend registration or accreditation periods on its own, give the minister more power to direct the agency and set its fees, and remove the requirement for a fixed number of commissioners.",
+   "All current commissioners would lose their positions 21 days after the bill becomes law for the chief commissioner and three months after for others, and they could reapply for the new roles."
+  ],
+  "changes": [
+   "Refines the agency's functions to focus on provider registration and course accreditation.",
+   "Enables the agency to extend registration or accreditation periods on its own initiative.",
+   "Enhances delegation powers to allow internal review of decisions instead of going to the Administrative Appeals Tribunal.",
+   "Improves the minister's ability to give general directions and allows a specific direction on fees the agency charges.",
+   "Requires the agency to seek the minister's approval before changing fees.",
+   "Removes requirements to appoint a specific number of commissioners and separates the roles of chief commissioner and chief executive officer."
+  ],
+  "affected": "The Tertiary Education Quality and Standards Agency, higher education institutions, and current commissioners are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:44Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-283531",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284450",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284454",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284455",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284456",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284457",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284458",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284459",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284460",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284462",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284648",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284649",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284650",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284654",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-05",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tertiary Education Quality and Standards Agency Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00130",
+   "assent_date": "2014-12-12"
+  }
+ ]
+}

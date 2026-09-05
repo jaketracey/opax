@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-s1367",
+ "title": "Fair Work Amendment (Prohibiting COVID-19 Vaccine Discrimination) Bill 2023",
+ "short_title": "Fair Work Amendment (Prohibiting COVID-19 Vaccine Discrimination) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-02-08",
+ "originating_house": "senate",
+ "sponsor": "CANAVAN, Sen Matthew",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10827",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1367%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1367%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1367_ems_c7b9318c-a014-4b94-95a7-5a906634e84a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1367%22",
+   "document_date": "2023-02-08",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-02-08",
+  "sentences": [
+   "The bill would add COVID-19 vaccination status to the list of attributes protected from discrimination under the Fair Work Act 2009.",
+   "It would prohibit employers from taking adverse action, such as not hiring or dismissing someone, based on vaccination status, and would extend this protection to state public sector employers and employees, including police officers in most states and territories.",
+   "The changes would start the day after the Act receives Royal Assent, and the protection would not apply where vaccination is an inherent requirement of the job."
+  ],
+  "changes": [
+   "Adds COVID-19 vaccination status as a protected attribute in the Fair Work Act 2009.",
+   "Prohibits adverse action against employees or prospective employees based on vaccination status.",
+   "Extends protection to state public sector employers and employees, and to police officers in most states and territories.",
+   "Requires the Fair Work Commission to consider preventing and eliminating discrimination based on vaccination status.",
+   "Applies the changes to enterprise agreements made on or after commencement and to adverse action taken on or after commencement."
+  ],
+  "affected": "Employees, prospective employees, employers, state public sector employers and employees, and police officers (excluding ACT police officers) under the Fair Work Act 2009.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:15Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

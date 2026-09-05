@@ -1,0 +1,584 @@
+{
+ "key": "au-federal-r6488",
+ "title": "Social Services and Other Legislation Amendment (Simplifying Income Reporting and Other Measures) Bill 2020",
+ "short_title": "Social Services and Other Legislation Amendment (Simplifying Income Reporting and Other Measures) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-06",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2020-03-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6488_ems_d1d3d087-21ee-4ce1-8045-0af2e7554d8b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6488%22",
+   "document_date": "2020-02-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00017",
+   "document_date": "2020-03-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-06",
+  "sentences": [
+   "This bill would change how employment income is assessed for social security payments, using actual paid amounts instead of estimates.",
+   "Services Australia would use data from the Australian Taxation Office's Single Touch Payroll system to determine a person's rate of payment.",
+   "The bill would commence on 1 July 2020 if it receives Royal Assent before 15 May 2020, or on the first day of the first calendar month after two months from Royal Assent otherwise."
+  ],
+  "changes": [
+   "Amends the Social Security Act 1991 to assess employment income once it is paid to a recipient.",
+   "Amends the Social Security (Administration) Act 1999 to allow Services Australia to use Single Touch Payroll data.",
+   "Amends the A New Tax System (Family Assistance) (Administration) Act 1999 and the Student Assistance Act 1973 for the same purpose.",
+   "Amends provisions regarding the work bonus and pension bonus scheme."
+  ],
+  "affected": "Social security recipients who report employment income.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6212",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2020-02-12.13.3) to the usual [second reading motion](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which means it failed. The usual second reading motion is \"that the bill be read for a second time\", which is parliamentary jargon for agreeing with the main idea of the bill. The amendment was introduced by Barton MP [Linda Burney](https://theyvoteforyou.org.au/people/representatives/barton/linda_burney) (Labor). ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes the Government's:* > > *(1) stubborn defence for three years of its failed Robodebt program which frightened thousands of innocent Australians with false or inflated debts; and* > > *(2) repeated attempts to cut the pension and social security\".*",
+   "stage": "Second reading",
+   "ayes": 65,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 40
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-12/2"
+  },
+  {
+   "key": "federal-senate-6260",
+   "date": "2020-02-26",
+   "house": "senate",
+   "question": "Social Services and Other Legislation Amendment (Simplifying Income Reporting and Other Measures) Bill 2020 - Second Reading - Robodebt",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 27,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-02-26/1"
+  },
+  {
+   "key": "federal-senate-6261",
+   "date": "2020-02-26",
+   "house": "senate",
+   "question": "**NOTE: Although it appears from [Hansard](https://parlinfo.aph.gov.au/parlInfo/download/chamber/hansards/d636e948-ad32-4123-a451-4f3e200901fa/toc_pdf/Senate_2020_02_26_7549.pdf;fileType=application%2Fpdf) (PDF 2MB, pp 28-29) that this division is on the amendment set out below, the Greens are reported as voting against this division, which doesn't make sense if it was indeed a division on their own amendment.** --- The same number of senators voted for and against the [amendment](https://www.openaustralia.org.au/senate/?gid=2020-02-26.54.1) introduced by WA Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert) (Greens), which means it failed. Senator Siewert explained that: > *While I did hear the government say that they're going to review this, I think, and the Greens believe, that the matter needs to actually be in the legislation itself.* ### Amendment text > *(2) Page 2 (after line 14), after clause 3, insert:* > > *4 Public and independent review of this Act* > >> *(1) The Minister must cause an independent review to be conducted of the operation of the amendments made by this Act.* >> >> *(2) The review must start as soon as practicable after the end of 12 months after this Act commences.* >> >> *(3) The persons who conduct the review must give the Minister a written report of the review within 6 months of the commencement of the review.* >> >> *(4) The persons who conduct the review must consult:* >> >>> *(a) income support recipients impacted by the amendments made by this Act; and* >>> >>> *(b) any stakeholders considered relevant by the persons who conduct the review.* >> >> *(5) The review must provide for public submissions as part of the review.* >> >> *(6) The Minister must cause a copy of the report to be tabled in each House of the Parliament within 15 sitting days of that House after the report is given to the Minister.* >> >> *(7) In this section, Minister means the Minister administering the Social Security Act",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 26,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-02-26/2"
+  },
+  {
+   "key": "federal-senate-6273",
+   "date": "2020-02-26",
+   "house": "senate",
+   "question": "Social Services and Other Legislation Amendment (Simplifying Income Reporting and Other Measures) Bill 2020 - in Committee - Review",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 29,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-02-26/14"
+  },
+  {
+   "key": "federal-senate-6287",
+   "date": "2020-02-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-02-27.6.1) introduced by WA Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert) (Greens), which means it failed. Senator Siewert [explained that the amendment](https://www.openaustralia.org.au/senate/?gid=2020-02-27.6.1) related to the secretary's discretion. ### Amendment text > *(1) Schedule 1, item 37, page 10 (after line 32), after subsection 1073BA(2), insert:* > > *(2A) For the purposes of subsection (2), when determining such period a person is taken to have received employment income over, the Secretary must consider the following:* > >> *(a) the nature of the person's remunerative work;* >> >> *(b) the nature of the person's employment income, including the matters in subsections 8(1A)-(1C);* >> >> *(c) any hardship which may be caused to the person by attributing employment income over such period;* >> >> *(d) whether the employment income relates to remunerative work that was undertaken at a time when the person was not receiving a social security pension or a social security benefit.* ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd085), the bill was introduced in order to: * *change the way employment income is assessed for the purposes of the social security income test so that rather than assessing income ‘earned, derived or received’ during the assessment period, the income test will assess employment income that is paid during the assessment period and* * *allow for data collected by the Australian Tax Office, particularly employment income reported through the Single Touch Payroll (STP) system, to be shared with Services Australia for the purposes of administering social security, family assistance and student payments.*",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 13,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-02-27/1"
+  },
+  {
+   "key": "federal-senate-6288",
+   "date": "2020-02-27",
+   "house": "senate",
+   "question": "The same number of senators voted for and against an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-02-27.14.1), which means it failed. The amendment was introduced by WA Senator [Patrick Dodson](https://theyvoteforyou.org.au/people/senate/wa/patrick_dodson) (Labor), [who explained that](https://www.openaustralia.org.au/senate/?gid=2020-02-27.14.1): > *This amendment seeks to stop the unfair robodebt disaster that this government has presided over from ever happening again. Labor's amendment will prevent another robodebt by preventing social security debts being raised based solely on the income averaging of the Australian tax office data, making it clear that there is a statutory duty of care on the government to ensure debts are accurate, ensuring human oversight before debts are issued and requiring the government to use all available powers, resources and data across government to verify the accuracy of alleged debts before they are issued.* ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd085), the bill was introduced in order to: * *change the way employment income is assessed for the purposes of the social security income test so that rather than assessing income ‘earned, derived or received’ during the assessment period, the income test will assess employment income that is paid during the assessment period and* * *allow for data collected by the Australian Tax Office, particularly employment income reported through the Single Touch Payroll (STP) system, to be shared with Services Australia for the purposes of administering social security, family assistance and student payments.* ### Motion text > *(1) Page 31 (after line 16), at the end of the Bill, add:* > > *Schedule 2 — Amendments relating to debts due to the Commonwealth* > > *A New Tax System (Family Assistance) (Administration) Act 1999* > > *1 After subsection 77(1)* > > *Insert:* > > *(1A) The Se",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 13,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-02-27/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-387884",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment criticising the government's three-year defence of the failed Robodebt program and repeated attempts to cut pensions and social security, while supporting the bill's shift to income reporting when paid and use of Single Touch Payroll data to improve accuracy. The speaker also argued the government cannot be trusted due to past pension cuts, increased pension age proposals, and a bill to double the liquid assets waiting period for Newstart, which would force vulnerable Australians to wait up to six months for support."
+  },
+  {
+   "slug": "speech-387886",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services and Other Legislation Amendment (Simplifying Income Reporting and Other Measures) Bill 2020, which allows 1.2 million welfare recipients to report earnings as they appear on payslips using Single Touch Payroll, with no rate changes and projected annual savings of $650 million. The speaker also noted the government reduced welfare dependency to 13.5%—the lowest in 30 years—and created 1.4 million jobs since 2013."
+  },
+  {
+   "slug": "speech-387887",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services and Other Legislation Amendment (Simplifying Income Reporting and Other Measures) Bill 2020 but criticised the government's track record with digital projects, citing failures like My Health Record ($2 billion), the 2016 census outage ($30 million cost blowout), and the 2019 myGov outage. They also condemned the robodebt scheme, noting nearly 2,000 people died after receiving notices, money was taken from 73 estates of deceased individuals, and internal documents revealed the government lacked legal authority to issue the debts."
+  },
+  {
+   "slug": "speech-387890",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The member argued for the Social Services and Other Legislation Amendment (Simplifying Income Reporting and Other Measures) Bill 2020, which will change employment income reporting to Centrelink from when earned to when paid, aligning with Single Touch Payroll, and claimed it will simplify reporting, reduce overpayments, and save $2.1 billion over four years, while criticising Labor for politicising the issue."
+  },
+  {
+   "slug": "speech-387894",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services and Other Legislation Amendment (Simplifying Income Reporting and Other Measures) Bill and the shadow minister's second reading amendment, citing a news.com.au survey showing 28% of Australians on \"Struggle Street\" and 14% \"barely coping\" due to low wages and inadequate welfare payments. They criticised the government for not increasing Newstart, highlighted ongoing robodebt issues including incorrect debts and 73 deceased estates affected, and called for the government to admit mistakes and repay victims."
+  },
+  {
+   "slug": "speech-387895",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's income reporting changes but criticised the government's record on Centrelink digitisation, citing the robodebt scheme, and argued that Newstart’s $559 per fortnight and its income test thresholds ($104 and $254) are inadequate, calling for a payment increase and refund of algorithm-based debts."
+  },
+  {
+   "slug": "speech-387896",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The Social Services and Other Legislation Amendment (Simplifying Income Reporting and Other Measures) Bill 2020 was characterized as an attempt to fix the robodebt failure, with a commitment to closely monitor its implementation. The critique cited that 80 per cent of constituents with robodebt issues had debts dropped or refunded, and cited historical Coalition pension cuts, including a 2014 $80 weekly cut, a 2015 assets-test change affecting 370,000 pensioners, and a 2016 proposal for 190,000 pensioners limiting overseas travel to six weeks."
+  },
+  {
+   "slug": "speech-389527",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill addresses the government’s illegal robodebt scheme, which used faulty data to wrongly demand repayments from welfare recipients, and noted that thousands of victims still face legal battles despite partial government acknowledgment of wrongdoing."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services and Other Legislation Amendment (Simplifying Income Reporting and Other Measures) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00017",
+   "assent_date": "2020-03-06"
+  }
+ ]
+}

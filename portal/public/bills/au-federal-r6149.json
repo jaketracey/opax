@@ -1,0 +1,517 @@
+{
+ "key": "au-federal-r6149",
+ "title": "Defence Amendment (Call Out of the Australian Defence Force) Bill 2018",
+ "short_title": "Defence Amendment (Call Out of the Australian Defence Force) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2018-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6149_ems_e37f78f9-4cce-462c-ad89-c8b719973e42%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6149_ems_c54c3e18-c403-4cfa-bd0e-8302b42fe7b7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6149%22",
+   "document_date": "2018-06-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00158",
+   "document_date": "2018-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-28",
+  "sentences": [
+   "The bill would make it easier to call out the Australian Defence Force to respond to domestic violence, including terrorism, in Australia.",
+   "It would remove the current requirement that states and territories cannot protect themselves, and would let ministers consider whether the ADF would improve the response.",
+   "The bill would also expand contingent call-out to cover land and sea threats, not just aviation threats, and would add the Minister for Home Affairs as an alternative authorising minister for expedited call-out."
+  ],
+  "changes": [
+   "States and territories would no longer need to show they cannot protect themselves before requesting ADF support.",
+   "The ADF could be pre-authorised to respond to threats on land and at sea, as well as in the air.",
+   "The ADF would have to consult more with state and territory police.",
+   "Search, seizure and movement control powers would be simplified, expanded and clarified.",
+   "The distinction between general security areas and designated areas would be removed.",
+   "Acting ministers would be treated as substantive ministers for expedited call-out."
+  ],
+  "affected": "The Australian Defence Force, state and territory governments, the Minister for Home Affairs, and state and territory police.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:12:48Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5541",
+   "date": "2018-11-27",
+   "house": "senate",
+   "question": "Defence Amendment (Call Out of the Australian Defence Force) Bill 2018 - Second Reading - Make disallowable instruments",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 20,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-11-27/1"
+  },
+  {
+   "key": "federal-senate-5542",
+   "date": "2018-11-27",
+   "house": "senate",
+   "question": "Defence Amendment (Call Out of the Australian Defence Force) Bill 2018 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 36,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 19,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-11-27/2"
+  },
+  {
+   "key": "federal-senate-5543",
+   "date": "2018-11-27",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2018-11-27.45.1) to pass the bill in the Senate. In parliamentary jargon, they voted to read the bill [for a third time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). Since the bill was already passed in the House of Representatives, it will now become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1819a/19bd043), the main purpose of the bill is: > *to clarify and streamline the processes under which the Australian Defence Force (ADF) may be called out to protect Commonwealth interests and states and self-governing territories from domestic violence.* It was introduced following \"*a Defence review of the ADF’s support to domestic counter-terrorism arrangements undertaken after the Lindt café siege in Sydney.*\"",
+   "stage": "Third reading",
+   "ayes": 39,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 21,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-11-27/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-366276",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-28",
+   "stage_hint": null,
+   "brief": "The Defence Amendment (Call Out of the Australian Defence Force) Bill 2018 was introduced to streamline legal procedures for deploying the ADF to support state and territory police in domestic security incidents, particularly terrorism. Key changes include lowering the threshold for call-outs, expanding contingent call-outs to state and territory interests, enabling multijurisdictional operations, simplifying ADF powers, and adding the Minister for Home Affairs as a named alternative minister for expedited call-outs."
+  },
+  {
+   "slug": "speech-371193",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-18",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor's support for the Defence Amendment (Call Out of the Australian Defence Force) Bill 2018, which makes it easier for states and territories to request ADF support, simplifies and expands ADF powers, enables pre-authorisation for land, sea and air threats, and enhances multi-jurisdictional responses. The government also tabled an amended explanatory memorandum providing clearer definitions of \"specified circumstances\" and \"Commonwealth interests\" as recommended by the Senate Legal and Constitutional Affairs Committee."
+  },
+  {
+   "slug": "speech-371194",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence Amendment (Call Out of the Australian Defence Force) Bill 2018, arguing it would make it easier for states and territories to request ADF support during terrorist attacks by removing complex criteria and enabling faster, multi-jurisdictional responses. The bill implements recommendations from a 2017 review prompted by the Lindt Cafe siege, adds the Minister for Home Affairs as an alternative minister for expedited call-outs, and extends contingent call-out to protect state and territory interests."
+  },
+  {
+   "slug": "speech-371195",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence Amendment (Call Out of the Australian Defence Force) Bill 2018, arguing it updates the legal framework for deploying the ADF domestically against terrorism, citing the 1978 Hilton bombing, the 1995 Aum Shinrikyo attack, and the 2014 Lindt Cafe siege as examples of evolving threats. He noted the bill expands ADF powers to search, detain persons, and operate across multiple jurisdictions, while maintaining civilian primacy and democratic oversight."
+  },
+  {
+   "slug": "speech-371196",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Defence Amendment (Call Out of the Australian Defence Force) Bill 2018 should be passed to expedite ADF call-outs for terror threats, including by expanding authorising ministers to the Deputy Prime Minister, Minister for Foreign Affairs, Minister for Home Affairs, and Treasurer, and extending contingent call-outs to land and maritime threats, while clarifying that the ADF will not be used to disperse peaceful protests."
+  },
+  {
+   "slug": "speech-371197",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-18",
+   "stage_hint": null,
+   "brief": "The Defence Amendment (Call Out of the Australian Defence Force) Bill 2018 lowers the threshold for state and territory requests for ADF assistance, introduces contingent call-outs for major events like the G20 and Commonwealth Games, and clarifies definitions including \"domestic violence\" to exclude peaceful protests. The bill was supported by Labor as a reasonable improvement following the Lindt cafe siege coroner's report."
+  },
+  {
+   "slug": "speech-371198",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Defence Amendment (Call Out of the Australian Defence Force) Bill 2018, which would lower the threshold for military call-out to allow the ADF to more easily support state and territory police during domestic terrorist incidents, citing the 2017 Etihad Airways bomb plot and the Lindt Cafe siege as examples of evolving threats. The bill was defended as a necessary update to legislation unchanged since 2000, with 27,000 calls to the National Security Hotline in the past year underscoring the ongoing threat level."
+  },
+  {
+   "slug": "speech-371199",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-18",
+   "stage_hint": null,
+   "brief": "Labor supports the Defence Amendment (Call Out of the Australian Defence Force) Bill 2018, which simplifies call-out powers, allows pre-authorisation for events like the G20 or Commonwealth Games, and makes it easier for states to request ADF support while keeping state police as first responders. The bill was reviewed by the Parliamentary Joint Committee on Human Rights and the Senate Legal and Constitutional Affairs Legislation Committee, leading to an amended explanatory memorandum clarifying definitions of specified circumstances, Commonwealth interest, and domestic violence."
+  },
+  {
+   "slug": "speech-371200",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence Amendment (Call Out of the Australian Defence Force) Bill 2018, arguing it would implement review recommendations, give ministers flexibility, and unlock ADF counterterrorism capabilities including the Tactical Assault Groups from the 2nd Commando Regiment and SASR. The bill removes the threshold requirement that states must be unable to protect themselves before requesting ADF support, and the speaker considered the Lindt Cafe siege had met the threshold for ADF involvement."
+  },
+  {
+   "slug": "speech-371201",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence Amendment (Call Out of the Australian Defence Force) Bill 2018, arguing it would streamline state and territory requests for ADF assistance in counterterrorism and other incidents, expand pre-authorisation for ADF response to land, sea and air threats, and enhance training cooperation with local authorities, while keeping police and emergency services as first responders."
+  },
+  {
+   "slug": "speech-371202",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-18",
+   "stage_hint": null,
+   "brief": "Labor supported the Defence Amendment (Call Out of the Australian Defence Force) Bill 2018, which streamlines ADF call-out procedures for domestic counterterrorism by easing state/territory requests, expanding search and detention powers, enabling multijurisdictional response, and allowing pre-authorisation for threats on land, sea and air, while maintaining civilian control and state police as first responders."
+  },
+  {
+   "slug": "speech-371203",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-18",
+   "stage_hint": null,
+   "brief": "Labor supported the Defence Amendment (Call Out of the Australian Defence Force) Bill 2018, arguing that national security arrangements must remain agile against evolving terrorist threats. The speaker also commended the 5,622 ADF personnel involved in Operation Gold during the 2000 Sydney Olympics, including Joint Task Forces 112 and 643 under Brigadier Phil McNamara."
+  },
+  {
+   "slug": "speech-371332",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-18",
+   "stage_hint": null,
+   "brief": "Supported the Defence Amendment (Call Out of the Australian Defence Force) Bill 2018, noting it has bipartisan support and that major events require safety coordination. Highlighted Bendigo and central Victoria as proud defence communities with a long history of hosting defence families."
+  },
+  {
+   "slug": "speech-371429",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "Labor supported the Defence Amendment (Call Out of the Australian Defence Force) Bill 2018 to simplify state requests for ADF support and expand its powers. The speaker also urged the government to broaden Australia’s critical infrastructure sectors beyond the current eight—noting the UK lists 13, the US 16, Canada 10 and Singapore 11—and to include electoral systems, citing 84 terrorism-related charges in four years and 734 cyber incidents affecting critical infrastructure in 2016–17."
+  },
+  {
+   "slug": "speech-371430",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence Amendment (Call Out of the Australian Defence Force) Bill 2018, arguing it streamlines ADF call-out procedures to assist state and territory police as secondary responders in terrorist incidents, while emphasising police remain primary first responders. The speaker also acknowledged the member for Canberra's warnings about cybersecurity threats to critical infrastructure and democratic processes."
+  },
+  {
+   "slug": "speech-371432",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Defence Amendment (Call Out of the Australian Defence Force) Bill 2018 should not pass in its current form because it allows military call-out in undefined \"specified circumstances\" rather than only exceptional circumstances like terrorism, removes rights such as the right to silence, and grants broad legal immunity to defence personnel, contrary to warnings from the Law Council of Australia."
+  },
+  {
+   "slug": "speech-371433",
+   "speaker": "Michael Danby",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence Amendment (Call Out of the Australian Defence Force) Bill 2018, endorsing the member for Canberra's proposal to include electoral systems as critical infrastructure, and criticised the Greens party for opposing anti-terrorism legislation, specifically citing their leader Senator Di Natale's view that foreign fighters should be allowed to return to Australia."
+  },
+  {
+   "slug": "speech-371435",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The Defence Amendment (Call Out of the Australian Defence Force) Bill 2018 was argued to modernise call-out powers for responding to complex terrorist threats, removing the requirement that states must be unable to protect themselves before the ADF can assist, and allowing pre-authorisation and expanded search, seizure and movement control powers."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Defence Amendment (Call Out of the Australian Defence Force) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00158",
+   "assent_date": "2018-12-10"
+  }
+ ]
+}

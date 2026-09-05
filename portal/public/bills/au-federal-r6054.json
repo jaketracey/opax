@@ -1,0 +1,185 @@
+{
+ "key": "au-federal-r6054",
+ "title": "Crimes Amendment (National Disability Insurance Scheme—Worker Screening) Bill 2018",
+ "short_title": "Crimes Amendment (National Disability Insurance Scheme—Worker Screening) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2018-05-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6054%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6054%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6054%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6054%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6054%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6054%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6054%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6054%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6054%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6054%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6054%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-05-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6054%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6054_ems_535d182e-7748-442d-b463-536c9ac16c06%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6054%22",
+   "document_date": "2018-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00033",
+   "document_date": "2018-05-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-15",
+  "sentences": [
+   "This bill would let agencies share and consider certain criminal records of people in disability services under the NDIS.",
+   "It creates an exception to the usual rules on spent convictions under Part VIIC of the Crimes Act 1914.",
+   "State and territory worker screening units would use the disclosed information to decide if someone is fit to work in the NDIS."
+  ],
+  "changes": [
+   "Creates an exception for convictions of people employed or applying to work with NDIS participants.",
+   "Allows Commonwealth, state and territory agencies to disclose and consider those convictions.",
+   "Enables state and territory worker screening units to assess suitability for NDIS work."
+  ],
+  "affected": "People who work or seek work with people with disability in the NDIS, and Commonwealth, state and territory agencies involved in worker screening.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-359677",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The Crimes Amendment (National Disability Insurance Scheme–Worker Screening) Bill 2018 creates exceptions to allow disclosure of spent, quashed and pardoned convictions for people working with NDIS participants, establishing a nationally consistent worker screening check to be rolled out from July 2018 to July 2020 across states and territories, supported by a $209 million NDIS Quality and Safeguards Commission."
+  },
+  {
+   "slug": "speech-360654",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The Labor MP moved an amendment noting the need for a royal commission into violence against people with disability, citing that children with disability are three times more likely to experience abuse and 90% of women with intellectual disability have been sexually abused, while supporting the bill's worker screening provisions and condemning the government's refusal to establish a royal commission."
+  },
+  {
+   "slug": "speech-360657",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The MP argued that the government neglected 2016 advice to mandate worker screening for the NDIS, leaving people with disability exposed to exploitation, and cited that 92% of women with intellectual disability have been sexually assaulted, 60% of those assaults before age 18, and children with disability are three times more likely to experience abuse."
+  },
+  {
+   "slug": "speech-360660",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Crimes Amendment (National Disability Insurance Scheme-Worker Screening) Bill 2018, arguing it will allow criminal history checks for NDIS workers to protect people with disabilities, but expressed disappointment that the bill does not establish a royal commission into violence and abuse against people with disabilities, citing statistics that 92% of women with intellectual disability have been sexually assaulted and that children with disability are three times more likely to experience abuse."
+  },
+  {
+   "slug": "speech-360661",
+   "speaker": "David Littleproud",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Crimes Amendment (National Disability Insurance Scheme–Worker Screening) Bill 2018, which allows disclosure of spent, quashed or pardoned convictions to improve nationally consistent NDIS worker screening and protect the approximately 460,000 Australians with a disability supported by the scheme."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Crimes Amendment (National Disability Insurance Scheme—Worker Screening) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00033",
+   "assent_date": "2018-05-22"
+  }
+ ]
+}

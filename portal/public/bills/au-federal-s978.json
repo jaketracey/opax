@@ -1,0 +1,84 @@
+{
+ "key": "au-federal-s978",
+ "title": "Racial Discrimination Amendment Bill 2014",
+ "short_title": "Racial Discrimination Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-09-25",
+ "originating_house": "senate",
+ "sponsor": "DAY, Sen Bob",
+ "sponsor_party": "Liberal Party candidate for the federal seat of Makin, SA",
+ "sponsor_person_id": "10828",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s978%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s978%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s978%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s978%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s978%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s978%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s978%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s978_ems_967cd142-e34b-4218-ba17-0f811ff8844e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s978_ems_80f3b48d-026c-4d0f-b2ef-601f89584a93%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s978%22",
+   "document_date": "2014-09-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

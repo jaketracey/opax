@@ -1,0 +1,326 @@
+{
+ "key": "au-federal-r6409",
+ "title": "Australian Citizenship Amendment (Citizenship Cessation) Bill 2020",
+ "short_title": "Australian Citizenship Amendment (Citizenship Cessation) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2020-09-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6409%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6409%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6409%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6409%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6409%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6409%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6409%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6409%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6409%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6409%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6409%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6409%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6409%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6409%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6409_ems_d8aa8fd3-3dbd-466a-97e1-4e72347cba0a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6409_ems_e4e0f677-c049-4fc2-ad9f-f81df14dd8f0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6409_ems_d367df45-e64d-43d9-9822-07fec19d3867%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6409_ems_269aa41c-b6f7-4e9d-9b0d-1d20bb20bd44%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6409%22",
+   "document_date": "2019-09-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00088",
+   "document_date": "2020-09-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2019-09-19",
+  "sentences": [
+   "The bill would change how Australians with dual citizenship can lose their citizenship for terrorism-related conduct, moving from automatic loss to a decision by the Minister for Home Affairs.",
+   "Under the proposed law, the Minister could decide to strip citizenship from a dual national who engages in specified terrorism conduct, fights for a declared terrorist organisation, or is convicted of a terrorism offence and jailed for at least three years.",
+   "The bill would also lower the prison sentence threshold from six years to three years and extend the time period for considering such cases back to 29 May 2003."
+  ],
+  "changes": [
+   "Replaces the automatic loss of citizenship with a ministerial decision model.",
+   "Allows the Minister to revoke a citizenship cessation determination on request or on their own initiative.",
+   "Lowers the sentence threshold for citizenship cessation from six years to three years.",
+   "Extends the eligibility period for citizenship cessation to include conduct or convictions from 29 May 2003.",
+   "Adds transitional provisions for cases where a person lost citizenship without ministerial awareness."
+  ],
+  "affected": "Dual nationals who engage in terrorism-related conduct or are convicted of terrorism offences, and the Minister for Home Affairs who would make the decisions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-6620",
+   "date": "2020-09-03",
+   "house": "senate",
+   "question": "Australian Citizenship Amendment (Citizenship Cessation) Bill 2020 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 4,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 16,
+    "dated": 15,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-03/12"
+  },
+  {
+   "key": "federal-senate-6621",
+   "date": "2020-09-03",
+   "house": "senate",
+   "question": "Australian Citizenship Amendment (Citizenship Cessation) Bill 2020 - in Committee - PJCIS oversight",
+   "stage": "In committee",
+   "ayes": 7,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "earliest": 16,
+    "dated": 16,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-03/13"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-381958",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-19",
+   "stage_hint": null,
+   "brief": "The government introduced the Australian Citizenship Amendment (Citizenship Cessation) Bill 2019 to replace automatic citizenship loss for dual citizens involved in terrorism with a ministerial decision-making model, implementing recommendations from the Independent National Security Legislation Monitor and expanding the timeframe for relevant conduct to 2003."
+  },
+  {
+   "slug": "speech-394770",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government must prioritise national security and announced the Australian Citizenship Amendment (Citizenship Cessation) Bill 2019, which gives the Minister for Home Affairs discretion to revoke citizenship of dual nationals convicted of terrorism offences (sentenced to three years instead of six) or involved with declared terrorist organisations overseas, with actions considered back to May 2003. The speaker cited $3 billion in increased security funding since 2013, 250 passport cancellations, 75 terrorism convictions, 17 disrupted plots, and named Khaled Sharrouf as the first person to lose citizenship under existing laws."
+  },
+  {
+   "slug": "speech-394774",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "Labor supported the Australian Citizenship Amendment (Citizenship Cessation) Bill 2019 to urgently replace the automatic citizenship loss provisions (sections 33AA and 35) with a ministerial decision-making model, but raised concerns about the lack of merits review and other unaddressed recommendations from the Independent National Security Legislation Monitor."
+  },
+  {
+   "slug": "speech-394775",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The Greens argued that the Australian Citizenship Amendment (Citizenship Cessation) Bill 2019 gives the minister excessive discretionary power to strip citizenship without adequate procedural safeguards, potentially rendering individuals stateless, and criticised Minister Peter Dutton for using racial rhetoric that increases social exclusion rather than fostering inclusion."
+  },
+  {
+   "slug": "speech-394776",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "Labor supported the bill, which replaces automatic citizenship loss for dual citizens convicted of terrorism with a ministerial decision-making model, but criticised the government for not adopting all recommendations from the Independent National Security Legislation Monitor, including merits review and retrospective application."
+  },
+  {
+   "slug": "speech-394777",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The Australian Citizenship Amendment (Citizenship Cessation) Bill 2019 replaces automatic citizenship loss with a ministerial decision-making model for dual citizens engaged in terrorism-related conduct, and the government supports three recommendations from the Parliamentary Joint Committee on Intelligence and Security, including a mandatory review in three years."
+  },
+  {
+   "slug": "speech-394779",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The government moved an amendment to the Australian Citizenship Amendment (Citizenship Cessation) Bill 2019, requiring a review of terrorism-related citizenship loss provisions to commence by the third anniversary of the act's commencement, rather than by 30 June 2021."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Citizenship Amendment (Citizenship Cessation) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00088",
+   "assent_date": "2020-09-17"
+  }
+ ]
+}

@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-s1483",
+ "title": "Defence Amendment (Sexual Assault Prevention, Intervention and Response Commission) Bill 2025",
+ "short_title": "Defence Amendment (Sexual Assault Prevention, Intervention and Response Commission) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-27",
+ "originating_house": "senate",
+ "sponsor": "LAMBIE, Sen Jacqui",
+ "sponsor_party": "Jacqui Lambie Network",
+ "sponsor_person_id": "10830",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-11-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1483%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1483%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1483_ems_57a51959-d507-4fd9-83c2-e7d238d996f8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1483%22",
+   "document_date": "2025-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1199274",
+   "speaker": "David Pocock",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199275",
+   "speaker": "David Pocock",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199276",
+   "speaker": "David Pocock",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-11-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

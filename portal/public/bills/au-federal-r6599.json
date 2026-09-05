@@ -1,0 +1,229 @@
+{
+ "key": "au-federal-r6599",
+ "title": "Native Title Amendment (Infrastructure and Public Facilities) Bill 2020",
+ "short_title": "Native Title Amendment (Infrastructure and Public Facilities) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2020-12-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6599%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6599%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6599%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6599%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6599%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6599%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6599%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6599%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6599%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6599%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6599%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6599%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6599%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6599%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6599_ems_e759764f-730d-4a88-aa7e-e8f299d08c15%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6599%22",
+   "document_date": "2020-10-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00113",
+   "document_date": "2020-12-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-6781",
+   "date": "2020-12-03",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2020-12-03.90.1) to read the bill for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). In other words, they voted to agree with the bill's main idea. This means they can now discuss it in greater detail. ### What is the bill's main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6599), the bill: > *Amends the Native Title Act 1993 to extend the operation of Subdivision JA, which requires native title holders and claimants to be notified about proposed public works and provides them with an opportunity to be consulted about the impact of the proposed future act on their native title rights and interests, for a further 10 years.*",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "earliest": 21,
+    "dated": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-03/11"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-395670",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "The Native Title Amendment (Infrastructure and Public Facilities) Bill 2020 extends section 24JAA of the Native Title Act for 10 years to streamline approvals for public housing and infrastructure on Indigenous land, citing 42% overcrowding in remote communities and $5.4 billion in federal investment since 2008. The provision has been used 126 times on 961 residential lots, primarily in Queensland and Western Australia, to deliver 778 public houses in Queensland and 312 in Western Australia."
+  },
+  {
+   "slug": "speech-398053",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The Native Title Amendment (Infrastructure and Public Facilities) Bill 2020 extends for a further 10 years provisions that allow urgent construction of public housing and community facilities on Indigenous-held land, and Labor supports the extension while urging proper consultation with affected communities, citing the destruction of 46,000-year-old rock shelters at Juukan Gorge as a reminder of the need for respect and ongoing consultation."
+  },
+  {
+   "slug": "speech-398054",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Native Title Amendment (Infrastructure and Public Facilities) Bill 2020 should be supported to extend a sunset clause for 10 years, enabling faster delivery of public housing and infrastructure on native title land. The bill has been used 126 times since 2011, including for 778 public houses in Queensland and 312 in Western Australia, and aims to balance native title rights with community needs during COVID-19 economic recovery."
+  },
+  {
+   "slug": "speech-398056",
+   "speaker": "Luke Howarth",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The Native Title Amendment (Infrastructure and Public Facilities) Bill 2020 was commended to the House, with support for the minister's statements on Indigenous overcrowding and the $5.4 billion invested since 2008 to address it."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Native Title Amendment (Infrastructure and Public Facilities) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00113",
+   "assent_date": "2020-12-08"
+  }
+ ]
+}

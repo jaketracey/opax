@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6236",
+ "title": "Migration Amendment (Urgent Medical Treatment) Bill 2018",
+ "short_title": "Migration Amendment (Urgent Medical Treatment) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-12-03",
+ "originating_house": "representatives",
+ "sponsor": "PHELPS, Kerryn, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10913",
+ "portfolio": "(s) PHELPS, Kerryn, MPWILKIE, Andrew, MPBANDT, Adam, MPBANKS, Julia, MPSHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6236%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6236%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6236_ems_207193cc-aa34-40b5-8aea-76232742ce56%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6236%22",
+   "document_date": "2018-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-373395",
+   "speaker": "Kerryn Phelps",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Urgent Medical Treatment) Bill 2018 was moved to allow temporary transfer of people in offshore detention to Australia for medical assessment and treatment, citing a worsening medical crisis with 1,224 people on Manus and Nauru, including 12 children, and 12 deaths over five years. The bill requires that orders from two treating doctors for medical transfer be followed, without ending offshore detention or contradicting major party policies."
+  }
+ ],
+ "acts": []
+}

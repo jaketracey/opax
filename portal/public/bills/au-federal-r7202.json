@@ -1,0 +1,88 @@
+{
+ "key": "au-federal-r7202",
+ "title": "Keeping Cash Transactions in Australia Bill 2024",
+ "short_title": "Keeping Cash Transactions in Australia Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-06-03",
+ "originating_house": "representatives",
+ "sponsor": "GEE, Andrew, MP",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10883",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7202%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7202%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7202%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7202_ems_bdb0a98e-421f-440c-b86a-6a74f3d745a7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7202%22",
+   "document_date": "2024-06-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9317",
+   "date": "2025-02-12",
+   "house": "representatives",
+   "question": "The majority voted against a motion introduced by Calare MP [Andrew Gee](https://theyvoteforyou.org.au/people/representatives/calare/andrew_gee) (Independent), which means it failed. ### Motion text > *That so much of the standing and sessional orders be suspended as would prevent the following from occurring immediately:* > > *(1) the Member for Calare introducing the [Keeping Cash Transactions in Australia Bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7202); and* > > *(2) debate on the second reading of the bill proceeding for a period of no longer than one hour, after which any questions required to complete passage of the bill then being put without delay.* Standing and sessional orders are the usual procedural rules of parliament.",
+   "stage": "Business motion",
+   "ayes": 12,
+   "noes": 43,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    }
+   },
+   "party_coverage": {
+    "dated": 55
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-12/2"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

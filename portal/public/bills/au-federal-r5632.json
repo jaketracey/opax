@@ -1,0 +1,261 @@
+{
+ "key": "au-federal-r5632",
+ "title": "Northern Australia Infrastructure Facility (Consequential Amendments) Bill 2016",
+ "short_title": "Northern Australia Infrastructure Facility (Consequential Amendments) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-03-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Innovation and Science",
+ "status": "passed",
+ "status_as_of": "2016-05-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5632%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5632%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5632%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-04-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5632%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-04-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5632%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-04-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5632%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5632%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5632%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5632%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5632%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5632%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5632%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5632%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5632%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5632_ems_bbdfaf5f-6663-45d4-a34d-f0dc78bb0328%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5632%22",
+   "document_date": "2016-03-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00042",
+   "document_date": "2016-05-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-17",
+  "sentences": [
+   "The bill would give the Export Finance and Insurance Corporation new roles supporting the Northern Australia Infrastructure Facility and state and territory governments.",
+   "It would allow Efic to charge fees for services it provides to the Facility and to the states and territories.",
+   "The Facility could choose to use Efic's services, drawing on existing Commonwealth expertise."
+  ],
+  "changes": [
+   "Gives Efic functions to assist the Northern Australia Infrastructure Facility.",
+   "Gives Efic functions to assist states and territories on agreement.",
+   "Allows Efic to charge fees for services to the Facility and states and territories."
+  ],
+  "affected": "The Export Finance and Insurance Corporation, the Northern Australia Infrastructure Facility, and state and territory governments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4237",
+   "date": "2016-05-02",
+   "house": "senate",
+   "question": "Matthew Canavan I table a supplementary explanatory memorandum relating to the government amendments to be moved to the Northern Australia Infrastructure Facility Bill 2016. Gavin Marshall Thank you, Minister. Amendments (1) to (3) on sheet GX128 circulated by the government are claimed to be covered by section 53 of the Constitution. The third paragraph of section 53 provides that the Senate may not amend any proposed law so as to increase any proposed charge or burden on the people. Clause 41 of this bill appropriates up to $5 billion from the consolidated revenue fund for the purpose of providing grants of financial assistance to the states and territories for the construction of northern Australia economic infrastructure. Amendments (1) to (3) on sheet GX128 circulated by the government do not change the amount appropriated by the bill. They extend the geographical locations which the facility may consider when determining grants of financial assistance. Quick and Garran in their famous commentaries on the Constitution stated: … the Senate is only forbidden to amend tax bills and the annual appropriation bill; it may amend two kinds of expenditure bills, those for permanent and extraordinary appropriations … The Senate may amend such money bills so as to reduce the total amount of expenditure or to change the method, object, and destination of the expenditure, but not to increase the total expenditure originated in the House of Representatives. That can be found on page 671. Amending a bill to change the allocation of proposed expenditure and the purposes for which money is to be appropriated has long been considered to be within the power of the Senate, provided that the total proposed or available expenditure is not increased. In these circumstances, the Senate has taken the view that changing definitions to extend the allocation of funding are appropriately made by amendments rather than requests for amendments. The amendments will therefore be treated as ame",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "dated": 29,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-05-02/4"
+  },
+  {
+   "key": "federal-senate-4238",
+   "date": "2016-05-02",
+   "house": "senate",
+   "question": "Larissa Waters I move Australian Greens amendment (5) on sheet 7907: (5) Page 6 (after line 13), at the end of Part 2, add: 8A Cost - benefit analysis to be undertaken The Facility must not make a decision to provide financial assistance for the construction of Northern Australia economic infrastructure unless: (a) a cost-benefit analysis has been prepared in relation to the infrastructure; and (b) the cost-benefit analysis has been published on the Facility's website for a period of at least 30 days before the decision is made; and (c) the public has been consulted in relation to the infrastructure; and (d) regard has been had to any submissions received as result of the consultation. This amendment relates to the requirement, which we say should apply to any project that is seeking support under the Northern Australia Infrastructure Facility, for a cost-benefit analysis to be undertaken. As people out there listening might assume, to do that would in fact be a good requirement, but sadly our environmental laws, whilst alluding to that, do not explicitly require it. It is my understanding that the bill does not explicitly require it either. Again, I would have thought that the bar for seeking not just project approval but actual taxpayer support for your project would mean that the highest standards would be applied to make sure not only that your project met all of the legal requirements in relation to environmental approvals and other project approvals but also that you had done a proper and fulsome cost-benefit analysis about whether or not this was a good spend of public money. This amendment proposes that all proposals be subject to an independent cost-benefit analysis—not one done by the proponent, like environmental impact statements so often are, but a genuinely independent cost-benefit analysis that not just looks at the economic costs and benefits but genuinely looks at the environmental, climatic, cultural and social costs of the project. We will be seek",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 30,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-05-02/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-331381",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-04-19",
+   "stage_hint": null,
+   "brief": "Moved to suspend standing orders to allow immediate resumption of proceedings on the Northern Australia Infrastructure Facility Bill 2016 and the Northern Australia Infrastructure Facility (Consequential Amendments) Bill 2016, which lapsed on 15 April 2016."
+  },
+  {
+   "slug": "speech-331385",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-04-19",
+   "stage_hint": null,
+   "brief": "Moved to reinstate debate on the Northern Australia Infrastructure Bill 2016 and related consequential amendments bill, which lapsed on 15 April 2016."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Northern Australia Infrastructure Facility (Consequential Amendments) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00042",
+   "assent_date": "2016-05-04"
+  }
+ ]
+}

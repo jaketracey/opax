@@ -1,0 +1,140 @@
+{
+ "key": "au-federal-r5940",
+ "title": "Nation-building Funds Repeal (National Disability Insurance Scheme Funding) Bill 2017",
+ "short_title": "Nation-building Funds Repeal (National Disability Insurance Scheme Funding) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-08-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5940%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5940%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5940%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5940%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5940%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5940%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5940%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5940%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5940%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5940%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5940_ems_242f5403-4912-4f39-8e62-fc979918a9e5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5940%22",
+   "document_date": "2017-08-17",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4963",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "question": "The majority voted to agree with the main idea of the bill. In parliamentary jargon, they voted to give the bill a [second reading](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What is the bill's main idea? The [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5940) is: > *Part of a package of 11 bills to fund the Commonwealth’s contribution to the National Disability Insurance Scheme ... [and] repeals the [Nation-building Funds Act 2008](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r3099); and makes consequential amendments to five Acts.* That Act established *\"three financial asset funds to provide capital investment in transport, communications, energy, water, higher and vocational education and health infrastructure: the Building Australia Fund, the Education Investment Fund and the Health and Hospitals Fund.\"*",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-10-25/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-355715",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "Opposition argued the Nation-building Funds Repeal Bill 2017 closes the Education Investment Fund (EIF) and Building Australia Fund, stripping nearly $4 billion from education infrastructure. The member pointed to EIF-funded projects including $73.8 million for CQUniversity's dual-sector merger, $50 million for the University of Queensland's Advanced Engineering Building, and noted international education exports contribute over $22 billion annually to the Australian economy."
+  }
+ ],
+ "acts": []
+}

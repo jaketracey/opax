@@ -1,0 +1,212 @@
+{
+ "key": "au-federal-r6047",
+ "title": "Intelligence Services Amendment (Establishment of the Australian Signals Directorate) Bill 2018",
+ "short_title": "Intelligence Services Amendment (Establishment of the Australian Signals Directorate) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "passed",
+ "status_as_of": "2018-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6047%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6047%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6047%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6047%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6047%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6047%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6047%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6047%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6047%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6047%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6047%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6047%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-04-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6047%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6047_ems_971b2a45-d794-4b0b-bd29-3a57a8c1d5ac%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6047%22",
+   "document_date": "2018-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00025",
+   "document_date": "2018-04-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-15",
+  "sentences": [
+   "This bill would turn the Australian Signals Directorate into a standalone body that answers to the Defence Minister rather than sitting inside the Defence Department.",
+   "The director-general of the new agency would gain control over its staff and operations, with hiring done outside the usual public service rules, while the agency's remit would grow to cover helping industry and fighting cybercrime.",
+   "The bill also moves the Computer Emergency Response Team from the Attorney-General's Department to the new agency and adds a duty for the director-general to brief the Opposition leader."
+  ],
+  "changes": [
+   "It creates the Australian Signals Directorate as a separate statutory agency.",
+   "It expands the agency's functions to include assisting a broader range of bodies and preventing cybercrime.",
+   "It transfers the Computer Emergency Response Team and its cyber policy duties to the new agency.",
+   "It lets the director-general hire staff outside the Public Service Act.",
+   "It adds a new function to protect the agency's specialised technologies.",
+   "It includes transitional provisions for the changeover."
+  ],
+  "affected": "The Australian Signals Directorate, its staff, the Department of Defence, the Attorney-General's Department, and the Opposition leader.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-359680",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The speaker moved the second reading of the Intelligence Services Amendment (Establishment of the Australian Signals Directorate) Bill 2018, which establishes the Australian Signals Directorate as an independent statutory agency within the Defence portfolio from 1 July 2018, implements 23 recommendations from the 2017 Independent Intelligence Review, and transfers the Australian Cyber Security Centre into the ASD. The bill also appoints Mike Burgess as Director-General, expands ASD's functions to include combating cybercrime and providing cybersecurity advice to the private sector, and allows ASD staff to operate outside the Public Service Act."
+  },
+  {
+   "slug": "speech-360493",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the Intelligence Services Amendment (Establishment of the Australian Signals Directorate) Bill 2018, which gives ASD new functions to prevent and disrupt cybercrime outside Australia, including child exploitation, and brings the Australian Cyber Security Centre into ASD. The speaker also criticised the fragmented \"spaghetti junction\" of cybersecurity responsibilities across multiple agencies and called for further consolidation."
+  },
+  {
+   "slug": "speech-360494",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "Supported the Intelligence Services Amendment (Establishment of the Australian Signals Directorate) Bill 2018 and endorsed the contribution of the member for Canberra."
+  },
+  {
+   "slug": "speech-360496",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Intelligence Services Amendment (Establishment of the Australian Signals Directorate) Bill 2018, noting it resolved internal ASD issues and was bipartisan; they also highlighted the need to share cybersecurity skills with private industry, citing a Data61 PhD student assisting the AFP, and praised the Information Warfare Division under Major General Thompson."
+  },
+  {
+   "slug": "speech-360650",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Intelligence Services Amendment Bill received full Labor cooperation, noted no change to ASD's role supporting Defence, and highlighted workforce challenges for security agencies. Concrete points include: ASD reports directly to the defence minister; an Information Warfare Division led by Major General Thompson (PhD in cybersecurity, special forces) will grow from 100 to about 900 personnel by the end of the decade, requiring a supply pool of around 3,000; and comparisons were drawn to Singapore's national service and Israel's Talpiot program."
+  },
+  {
+   "slug": "speech-360652",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Intelligence Services Amendment (Establishment of the Australian Signals Directorate) Bill 2018, which makes ASD an independent statutory agency within Defence, as recommended by the 2017 Independent Intelligence Review. He highlighted ASD's expanded role in national cybersecurity, noted a shortage of 11,000 cybersecurity specialists over the next decade, and called for broader skills development including through vocational education and lateral approaches like Singapore's national service cybersecurity pathway."
+  },
+  {
+   "slug": "speech-360653",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The Intelligence Services Amendment (Establishment of the Australian Signals Directorate) Bill 2018 establishes the Australian Signals Directorate as an independent statutory agency within the Defence portfolio from 1 July 2018, reporting directly to the Minister for Defence. The bill implements 2017 Independent Intelligence Review recommendations, including allowing ASD to operate outside the Public Service Act for staff recruitment and retention, enabling the Australian Cyber Security Centre to cooperate with industry, and adding functions to prevent and disrupt cybercrime and protect ASD's technologies."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Intelligence Services Amendment (Establishment of the Australian Signals Directorate) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00025",
+   "assent_date": "2018-04-11"
+  }
+ ]
+}

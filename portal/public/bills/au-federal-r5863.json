@@ -1,0 +1,415 @@
+{
+ "key": "au-federal-r5863",
+ "title": "Appropriation Bill (No. 1) 2017-2018",
+ "short_title": "Appropriation Bill (No. 1) 2017-2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2017-06-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5863_ems_48955376-c783-4ec1-8122-a250e6e3c6fc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5863%22",
+   "document_date": "2017-05-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00060",
+   "document_date": "2017-06-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-345663",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-05-09",
+   "stage_hint": null,
+   "brief": "Appropriation Bill (No. 2) 2017-2018 seeks over $15 billion from the consolidated revenue fund, including $9 billion for an NBN Co loan, over $2 billion for Defence equipment and facilities, and $162 million for Human Services including $24 million for veteran‑centric ICT reforms."
+  },
+  {
+   "slug": "speech-346319",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the 2017-18 budget favours millionaires and multinationals over middle Australia, citing a $65 billion tax cut for high earners, $22 billion in school cuts, a deficit tripled to $37.6 billion, net debt increase of $100 billion, and 100,000 fewer jobs expected. They also noted Labor’s alternative savings of over $120 billion and prioritised investment in apprenticeships and TAFE."
+  },
+  {
+   "slug": "speech-346320",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the budget's deferral of the Future Fund drawdown from 2020 to 2026 provides an effective tax cut for Australians under 20, supported the instant asset write-off for small businesses, and accepted the bank levy as a measure to level the playing field between large and small banks, while calling for a broader rebasing of the tax system to address rising costs from an ageing population and a shrinking taxpayer base."
+  },
+  {
+   "slug": "speech-346438",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The speaker announced that, unless otherwise ordered, the Appropriation Bill (No. 1) 2017-2018, Appropriation Bill (No. 2) 2017-2018, and Appropriation (Parliamentary Departments) Bill (No. 1) 2017-2018 would be referred to the Federation Chamber for further consideration at the adjournment of the House."
+  },
+  {
+   "slug": "speech-346440",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The Turnbull government's 2017 budget allocates over $32 billion to Defence, $350 million extra for veterans' mental health, $11 billion for health including $3 billion for home support and $500 million for PBS listings for chronic heart failure, and $5 billion for social services with improvements to Disability Employment Services."
+  },
+  {
+   "slug": "speech-346447",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The 2017-18 budget is the most political in 21 years, not the worst, and the Prime Minister has abandoned his former progressive positions on the republic, climate change, asylum seekers and same-sex marriage."
+  },
+  {
+   "slug": "speech-346449",
+   "speaker": "Warren Entsch",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the 2017-18 budget, highlighting a $10 billion infrastructure fund, a bank levy on the four major banks plus Macquarie, and $7.9 million for ACCC insurance monitoring, while arguing for a lower compensation threshold and inclusion of historical cases in banking accountability, and supporting welfare reforms including cashless cards for drug test failures."
+  },
+  {
+   "slug": "speech-346451",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The speaker argued the NDIS was underfunded by the previous government and supported the budget’s bank levy and Medicare levy increase to fully fund it, while announcing $110 million for solar thermal storage in Port Augusta, lifted freezes on council grants and Medicare payments, reinstated road funding for South Australia, company tax cuts, and expanded cashless debit card and drug testing trials for welfare recipients."
+  },
+  {
+   "slug": "speech-346452",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the budget is unfair, delivering a $65 billion tax cut to millionaires while freezing Medicare patient rebates until 2020, cutting billions from Medicare and public hospitals, and failing to invest in prevention or address elective surgery and emergency department wait times, with the freeze driving out-of-pocket costs up 42% since 2014."
+  },
+  {
+   "slug": "speech-346453",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The member for Hinkler welcomed the 2017–18 budget’s $10 billion National Rail Program and called for state and local support to extend inland rail to the Port of Bundaberg for container development. He highlighted $1.295 million for five road black spots, the $272 million Regional Growth Fund, the extended $200 million Building Better Regions Fund, small business tax cuts and the $20,000 instant asset write-off, and supported expanding the cashless debit card to reduce welfare dependence and improve social outcomes."
+  },
+  {
+   "slug": "speech-346456",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The member for Brisbane argued that the 2017-2018 budget was well received by constituents, citing small business tax cuts, a $75 billion infrastructure package, and $211 million in additional school funding for the electorate over 10 years, while criticising Labor’s policies on Medicare, school funding and small business taxes."
+  },
+  {
+   "slug": "speech-346457",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the 2017-18 federal budget betrayed Tasmania by providing no infrastructure investment ($75 billion for the rest of Australia but zero for Tasmania), slashing $85 million from schools and $11 million from TAFE, and maintaining a Medicare rebate freeze that raised out-of-pocket GP costs by $5.90 per visit. They also claimed the government reneged on $10,000 solar panel grants promised to community groups."
+  },
+  {
+   "slug": "speech-346458",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 1) 2017-2018 was presented as a chance for members to speak freely, with a stated intention to speak forcefully."
+  },
+  {
+   "slug": "speech-346462",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The speaker expressed condolences for Sue Riley, who died from mesothelioma contracted by washing her husband's clothes. The speaker argued the 2017-2018 budget fails fairness and economic credibility, particularly criticising education cuts that will leave the Northern Territory $254 million worse off over a decade, with per-student funding for NT government schools growing from $6,445 in 2017 to $7,369 in 2027. The speaker also criticised a lack of new funding for Aboriginal and Torres Strait Islander health, noted the re-announcement of $40 million for the Australian Nurse-Family Partnership Program first allocated in 2014, and called for renewed funding for the Central Australian Aboriginal Legal Aid Service (CAALAS), whose funding expires in December 2017."
+  },
+  {
+   "slug": "speech-346463",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The Turnbull government announced a $75 billion infrastructure funding program from 2017-18 to 2026-27, including a $10 billion National Rail Program, $8.4 billion for the Melbourne-to-Brisbane inland rail, and $5.3 billion for Western Sydney Airport, alongside specific road and rail projects in Western Australia, New South Wales, Queensland, and Victoria."
+  },
+  {
+   "slug": "speech-346464",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2017-2018 budget fails the fairness test, citing $22 billion in cuts to schools and universities alongside $65 billion in tax cuts for big business. He named specific losses of $3.9 million for Cabramatta High School and $3.6 million for Canley Vale High School, and criticised health cuts that undermine Medicare."
+  },
+  {
+   "slug": "speech-346466",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-22",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2017-18 federal budget is fiscally responsible and practical, forecasting 2.75% growth in 2017-18 and 3% in 2018-19, with net debt peaking in 2018-19. They highlighted small business measures—extending the $20,000 instant asset write-off and raising the small business turnover threshold to $10 million—and criticised Labor for opposing legislated tax cuts."
+  },
+  {
+   "slug": "speech-347018",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-05-24",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the 2017-2018 budget, highlighting the $8.4 billion Inland Rail project and $25 million for a Dubbo integrated cancer centre, and defended the budget's school funding increases for 153 local schools and small business tax measures."
+  },
+  {
+   "slug": "speech-347019",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-24",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the appropriation bills but argued the 2017–18 budget is unfair, favouring millionaires and multinationals over ordinary Australians. The speech cited specific concerns including a likely extra $2 billion for Snowy Hydro 2.0, $15 million for Testers Hollow only after shaming the government, $23 million in school cuts for the Paterson electorate, and the impact of the Medicare freeze and robo-debt on pensioners."
+  },
+  {
+   "slug": "speech-347023",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Coalition government's 2017-18 budget delivers fairness, security and opportunity, citing 26 years of continuous economic growth, half a million new jobs since 2013, reduced debt growth from 34% to under 10%, and a projected $7.4 billion surplus by 2020-21. Concrete measures include extending the instant asset write-off for small businesses, a super saver scheme for first home buyers, releasing Commonwealth land for housing, $75 billion in infrastructure spending, a 0.5% Medicare levy increase to fund the NDIS, $18.6 billion extra for schools, and a banking levy on the five largest banks raising $6.2 billion."
+  },
+  {
+   "slug": "speech-347024",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-24",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2017-18 budget is not fair, claiming the Liberal Party spent $200,000 on polling by Crosby Textor to determine the use of the word \"fairness\" in the budget."
+  },
+  {
+   "slug": "speech-347027",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the 2017-2018 budget is unfair, tripling the deficit to $37 billion and pushing net debt toward $500 billion, while giving $16,500 tax cuts to millionaires and raising taxes on those earning $50,000–$60,000, along with cutting $22 billion from schools, $3.8 billion from universities, and $600 million from TAFE. Labor will not oppose supply but criticised the government for failing to tackle negative gearing or capital gains tax to improve housing affordability."
+  },
+  {
+   "slug": "speech-347031",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-24",
+   "stage_hint": null,
+   "brief": "The member for Banks announced $2.5 million in federal funding for a new car park in Beverly Hills, $15 million for the M5 east-facing ramps at Riverwood, and funding for upgrades to the Hurstville Aquatic Leisure Centre, including additional basketball courts. He also highlighted federal contributions to the M5 East duplication and environmental projects at Myles Dunphy Reserve in Oatley."
+  },
+  {
+   "slug": "speech-347032",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-24",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2017 budget is unfair, citing a $50 billion handout to big business, $22 billion in school funding cuts, a $16,400 tax cut for millionaires, and a $325 tax increase for those earning $65,000, while supporting penalty rate cuts affecting 700,000 workers, including hospitality workers in the electorate of Cowan."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 1) 2017-2018",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00060",
+   "assent_date": "2017-06-23"
+  }
+ ]
+}

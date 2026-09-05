@@ -1,0 +1,338 @@
+{
+ "key": "au-federal-r5379",
+ "title": "Biosecurity Bill 2014",
+ "short_title": "Biosecurity Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-11-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2015-06-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5379_ems_97aa862c-089c-4fc2-abe5-ce1204f1bfc6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5379_ems_fb4410dc-48b1-499b-aa44-5e610489d4ee%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5379_ems_04a0b2d4-5143-4126-9ba4-ea967aed8e23%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5379%22",
+   "document_date": "2014-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00061",
+   "document_date": "2015-06-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2014-11-27",
+  "sentences": [
+   "This bill would create a new legal framework for stopping pests and diseases from reaching Australia and for limiting the harm they can cause.",
+   "It sets up a watchdog role, the Inspector-General of Biosecurity, to independently check how biosecurity officials do their jobs.",
+   "That watchdog would not look at the work of the Director of Human Biosecurity or the officers who handle human health risks."
+  ],
+  "changes": [
+   "The bill establishes a modern regulatory framework for managing biosecurity risks, including listed human diseases, ballast water, and emergencies.",
+   "It creates the statutory position of Inspector-General of Biosecurity to review the performance and powers of biosecurity officials.",
+   "It excludes the Director of Human Biosecurity and Human Biosecurity Officers from those reviews."
+  ],
+  "affected": "The Australian Government, biosecurity officials, and stakeholders in Australia's biosecurity system are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:00:07Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-302668",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302669",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302670",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304412",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304413",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304415",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304416",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304417",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304418",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304420",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304421",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304422",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304423",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304426",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304429",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304430",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304432",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-309919",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-05-14",
+   "stage_hint": null,
+   "brief": "The amendment enshrines the Inspector-General of Biosecurity as a statutory position to ensure independent reviews and transparency, updating Australia’s biosecurity legislation for the first time in over 100 years and replacing the Quarantine Act 1908."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Biosecurity Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00061",
+   "assent_date": "2015-06-16"
+  }
+ ]
+}

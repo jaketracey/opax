@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-r6137",
+ "title": "Regional, Rural and Remote Education Commissioner Bill 2018",
+ "short_title": "Regional, Rural and Remote Education Commissioner Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-25",
+ "originating_house": "representatives",
+ "sponsor": "MCGOWAN, Cathy, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10798",
+ "portfolio": "(s) MCGOWAN, Cathy, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6137%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6137%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6137%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6137_ems_33501b31-8c52-46d2-8ad0-2fe9be825b72%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6137%22",
+   "document_date": "2018-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-25",
+  "sentences": [
+   "The bill would create a dedicated commissioner to oversee education, training and research across regional Australia.",
+   "The commissioner would advise the minister and develop a long-term national strategy for regional education, training and research.",
+   "A draft of the national strategy must be completed within six months of the commissioner starting, with revisions every four years."
+  ],
+  "changes": [
+   "Establishes the Regional, Rural and Remote Education Commissioner.",
+   "Requires the commissioner to provide advice to the minister on education and training for students outside cities.",
+   "Requires the commissioner to create a national strategic framework for regional education, training and research.",
+   "Sets a six‑month deadline for the first strategy and a four‑year review cycle."
+  ],
+  "affected": "Students, educational institutions and communities in regional, rural and remote Australia, as well as governments, education providers and industry bodies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

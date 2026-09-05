@@ -1,0 +1,427 @@
+{
+ "key": "au-federal-r5448",
+ "title": "Appropriation Bill (No. 1) 2015-2016",
+ "short_title": "Appropriation Bill (No. 1) 2015-2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2015-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5448_ems_045e118d-40a1-4083-8d68-da864eb56f17%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5448%22",
+   "document_date": "2015-05-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00076",
+   "document_date": "2015-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-309576",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-05-12",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 2) 2015-2016 seeks approval for over $15 billion in spending, including $7.4 billion for the National Broadband Network, $3 billion for infrastructure (including a $2 billion loan for WestConnex stage 2 and $250 million for ACT asbestos remediation), and $2.9 billion for defence capital funding. The bill also sets debit limits for nation-building funds, with no new projects to commence as the funds are being wound up."
+  },
+  {
+   "slug": "speech-310281",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-25",
+   "stage_hint": null,
+   "brief": "The speaker referred five appropriation bills to the Federation Chamber for further consideration at the adjournment of the House."
+  },
+  {
+   "slug": "speech-310399",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-25",
+   "stage_hint": null,
+   "brief": "The member for Canning argued that the Western Australian environmental offsets policy is uncoordinated and lacks value for money, citing examples where developers were forced to purchase offset lands far from affected areas, such as the Tuckey family paying $100,000 for a one-hectare development to offset cockatoo habitat in Gingin, 200 kilometres away. He called for a pooled regional fund for offset payments, similar to the Reef Trust Investment Strategy, and criticised the Bush Forever program for causing financial ruin to landowners like Stephen and Margaret Day and Peter Swift."
+  },
+  {
+   "slug": "speech-310401",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-25",
+   "stage_hint": null,
+   "brief": "The coalition government's 2015 budget includes a $50 billion infrastructure package for Western Sydney, with $3.6 billion for roads, $1.1 million for planning the Northern Road, and $45 million for the Werrington arterial road. It also funds an innovation corridor with the University of Western Sydney, a $20 million NDIS rollout for 2,000 young people with disabilities, and environmental projects including 15 Green Army teams and one million trees."
+  },
+  {
+   "slug": "speech-310404",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-25",
+   "stage_hint": null,
+   "brief": "The 2015-16 budget was attacked for breaking pre-election promises, specifically cutting $40.2 million from the Aged Care Workforce Fund, $20.1 million from the Dementia and Aged Care Services Fund, and $146 million from Indigenous affairs (including $46 million for health). The budget was also criticized for failing to fund the Ipswich Motorway Darra to Rocklea upgrade until 2018-19 and for overall unfairness, including cuts to health and job training."
+  },
+  {
+   "slug": "speech-310408",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-25",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2015-2016 budget was a political document to protect Tony Abbott and Joe Hockey, not Australians, citing unemployment rising to 6.5%, cuts to family tax benefits (e.g., a single-income family of four losing over $20,000 over four years), increased petrol excise, pension age rise to 70, university deregulation, and over $80 billion in health and education cuts. They also criticised Tasmania missing out on infrastructure funding while facing $100 million cut to the Midland Highway, $120 million cut to rail, and $125 million cut to the University of Tasmania, with no budget allocation for the promised Cadbury's investment."
+  },
+  {
+   "slug": "speech-310429",
+   "speaker": "Bruce Scott",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-05-25",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2015–2016 budget is a forward-looking plan that addresses inherited debt, supports small business and agriculture, and announced doubled Roads to Recovery funding ($150 million for Maranoa) and changes to Youth Allowance to help rural students, while stressing the need for drought relief, local economic support, and improved certification for agricultural exports."
+  },
+  {
+   "slug": "speech-310751",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The budget locks in $80 billion in cuts to schools and hospitals, cuts to higher education and science research, and reduced climate funding, while maintaining tax breaks for big business and fossil fuel industries. It also cuts paid parental leave, imposes a waiting period on youth unemployment payments, slashes arts funding, and reduces foreign aid, particularly to African countries by 70 percent."
+  },
+  {
+   "slug": "speech-310755",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The opposition's reckless spending on programs like pink batts and school halls created a $13 billion annual interest burden on national debt, which the government must now address."
+  },
+  {
+   "slug": "speech-310782",
+   "speaker": "Michelle Landry",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the 2015-2016 budget delivers the most significant small business package in 50 years, including a $5.5 billion Growing Jobs and Small Business Package with tax cuts and immediate deductions for assets up to $20,000, and outlined measures for farmers, regional infrastructure, drought support, and doctor incentives for towns like Clermont and Middlemount."
+  },
+  {
+   "slug": "speech-310783",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2015-2016 budget is fundamentally unfair, citing NATSEM modelling that nine out of ten lowest-income families lose while nine out of ten wealthiest families benefit, and criticised cuts to family tax benefits, paid parental leave, and the impact on South Australian jobs at Holden and in shipbuilding."
+  },
+  {
+   "slug": "speech-310785",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2015‑2016 budget is unfair, hitting the poorest households while benefiting the wealthiest, and criticised the government for increasing net debt to $285 billion and the deficit to $35.1 billion despite earlier claims of a budget emergency. The speaker specifically opposed new court filing fees for family law matters (dubbed a “divorce tax”), cuts to legal aid and community legal centres, and the failure to replace two retired Family Court judges."
+  },
+  {
+   "slug": "speech-310788",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the 2015-2016 budget is a short-term political fix that doubles the deficit, retains $80 billion in health and education cuts, reduces family payments by nearly $6,000 for single-income families, cuts foreign aid by $11.3 billion, and abolishes the after-hours GP hotline, while failing to address job creation or innovation. The speaker also criticised the government's handling of Badgerys Creek airport planning and supported Labor's alternative investments in STEM education and small business incentives."
+  },
+  {
+   "slug": "speech-310789",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The budget supports women's economic empowerment through small business initiatives like the $20,000 immediate deduction, and the speaker highlighted the G7 and G20 focus on women's workforce participation, noting Australia's 17% gender pay gap and the need for better access to contraception and family planning in the Indo-Pacific region."
+  },
+  {
+   "slug": "speech-310790",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2015-2016 budget lacks a coherent vision for Australia’s future, is driven by political calculation and ideology, and exacerbates inequality. They criticised the government for relying on $80 billion in cuts to health and education, $100,000 degrees, and a GP tax by stealth, citing NATSEM modelling that shows the poorest 20% of households with children will lose over $6,000 annually by 2018-19 while high-income families gain."
+  },
+  {
+   "slug": "speech-310792",
+   "speaker": "Wyatt Roy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker announced $1.16 billion for widening the Gateway Motorway, $8 billion for the Bruce Highway, $84 million for the Boundary Road overpass, $16 million for the D'Aguilar Highway, and $3.4 million for local black spots, along with small business measures including a $20,000 instant asset write-off and $6.8 billion for Job Active employment services."
+  },
+  {
+   "slug": "speech-311018",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The 2015 budget was argued to be unfair, continuing cuts from the previous year while favouring the wealthy: families in the lowest 20% could lose up to 7.1% of disposable income (some $6,000 per year), 80,000 new parents could lose up to $11,500 each, and superannuation tax concessions will cost $50.6 billion by 2018–19. The speaker also criticised the government's prior 'budget emergency' claims and the continuation of cuts to schools, hospitals, family payments, and university deregulation."
+  },
+  {
+   "slug": "speech-311024",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The speaker argued the budget is a complete package that should not be cherry-picked, highlighting the $5.5 billion Jobs and Small Business package, $4.4 billion Families Package, tax cuts for small businesses, and increased science funding, while noting improved economic indicators such as 250,000 new jobs and a 3.6% rise in consumer confidence."
+  },
+  {
+   "slug": "speech-311031",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Abbott government's 2015 budget was unfair and broke promises, citing a doubled deficit to $35 billion, 17 new taxes, $80 billion in cuts to schools and hospitals, and specific family losses such as $6,164 for a single-income family earning $65,000. The speech also criticised cuts to pensioner concessions, parental leave, and regional school bus seatbelt funding, and noted that Victoria received only 13% of infrastructure investment despite having 25% of the population."
+  },
+  {
+   "slug": "speech-311032",
+   "speaker": "Mal Brough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The speaker argued for bold federal reform through the Federation white paper, proposed allowing international graduates to stay and work in Australian start-ups, and advocated removing fringe benefits tax for businesses earning under $2 million. They also highlighted Uber’s ride-sharing model as an example of innovation reducing congestion and pollution without taxpayer cost."
+  },
+  {
+   "slug": "speech-311037",
+   "speaker": "Russell Broadbent",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The speaker cited economist Mike Keating’s argument that low‑skilled, less‑educated workers are the main cause of Australia’s low employment participation, not women. He then highlighted that Australian Paper in the Latrobe Valley supports nearly 6,000 jobs and contributes $754 million to GDP, called on all government departments to buy Australian‑made copy paper, and advocated converting brown coal into diesel and fertiliser to create jobs for disadvantaged workers."
+  },
+  {
+   "slug": "speech-311038",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2015-2016 budget lacked vision, a plan for the future, and fairness, building on the inequities of the 2014 budget. They criticised cuts to schools, hospitals, skills training, and family tax benefit B, and noted debt at $39 billion, a doubled deficit, and increased unemployment."
+  },
+  {
+   "slug": "speech-311055",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2015-2016 budget failed to match its rhetoric on family violence as a national priority, citing unmet demand: 50,000 calls to 1800RESPECT with 18,631 unanswered, 38 women killed by family violence that year, and 423 people turned away from homelessness services nightly. Labor pledged nearly $50 million for legal services, $15 million for \"safe at home\" grants, and $8 million for perpetrator accountability, calling for a national crisis summit on family violence."
+  },
+  {
+   "slug": "speech-311246",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the 2015-16 budget is unfair and lacks vision, targeting schools, universities, pensioners, working families, and low-income earners. Specific figures cited include $80 billion cut from hospitals and schools, over $150 million cut from Hunter New England area health, a deficit increase from $17 billion to $35.1 billion, and 17 new taxes and charges."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 1) 2015-2016",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00076",
+   "assent_date": "2015-06-26"
+  }
+ ]
+}

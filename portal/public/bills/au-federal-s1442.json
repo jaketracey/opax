@@ -1,0 +1,70 @@
+{
+ "key": "au-federal-s1442",
+ "title": "Superannuation Guarantee (Administration) Amendment (Frontline Emergency Service Workers) Bill 2025",
+ "short_title": "Superannuation Guarantee (Administration) Amendment (Frontline Emergency Service Workers) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-02-05",
+ "originating_house": "senate",
+ "sponsor": "MCKIM, Sen Nick",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10841",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-07-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1442%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1442%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1442%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1442%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1442_ems_4762ad25-2bf5-4636-a314-99f4e920eab4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1442%22",
+   "document_date": "2025-02-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195265",
+   "speaker": "Malcolm Roberts",
+   "party": "One Nation",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,188 @@
+{
+ "key": "au-federal-s1030",
+ "title": "Restoring Territory Rights (Assisted Suicide Legislation) Bill 2015",
+ "short_title": "Restoring Territory Rights (Assisted Suicide Legislation) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2015-12-02",
+ "originating_house": "senate",
+ "sponsor": "LEYONHJELM, Sen David",
+ "sponsor_party": "Liberal Democratic Party",
+ "sponsor_person_id": "10832",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2018-08-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1030%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1030%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1030%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1030%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1030%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1030%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1030%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1030%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1030%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1030%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1030_ems_33b32ca3-1493-49e6-8d89-0e71d62cd0b5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1030%22",
+   "document_date": "2015-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-02",
+  "sentences": [
+   "This bill would reduce Commonwealth control over laws made by the Australian Capital Territory and the Northern Territory.",
+   "It would also promote competition among states in law-making and recognise the territories' right to pass laws on assisted suicide.",
+   "The bill would ensure the Northern Territory's old assisted suicide law is not automatically brought back, letting that parliament decide the issue later."
+  ],
+  "changes": [
+   "Reduces Commonwealth interference with territory laws.",
+   "Encourages competitive federalism among states.",
+   "Recognises the territories' right to legislate on assisted suicide.",
+   "Prevents automatic revival of the Rights of the Terminally Ill Act (NT)."
+  ],
+  "affected": "The Australian Capital Territory and the Northern Territory, and their parliaments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:21Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5354",
+   "date": "2018-08-15",
+   "house": "senate",
+   "question": "Restoring Territory Rights (Assisted Suicide Legislation) Bill 2015 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 36,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 8
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 39,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-15/8"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

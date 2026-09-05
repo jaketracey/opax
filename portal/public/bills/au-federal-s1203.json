@@ -1,0 +1,243 @@
+{
+ "key": "au-federal-s1203",
+ "title": "National Rental Affordability Scheme Amendment Bill 2019",
+ "short_title": "National Rental Affordability Scheme Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Families and Social Services",
+ "status": "passed",
+ "status_as_of": "2019-10-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1203%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-07-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1203%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1203%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1203%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1203%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1203%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1203%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1203_ems_65982c06-6b72-4d66-8ddb-5aa82c86db2b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1203_ems_f57de2f7-b529-4e4e-81eb-4e3a492a9ade%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1203%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00097",
+   "document_date": "2019-10-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "This bill would fix unclear parts of the National Rental Affordability Scheme Act 2008 and give more flexibility to run the scheme.",
+   "It would clarify the scheme's goals, including protecting tenants and investors, and identify the constitutional powers the Act relies on.",
+   "The bill would also support making new regulations to replace the current ones, which expire on 1 April 2020."
+  ],
+  "changes": [
+   "Clarifies ambiguous provisions in the National Rental Affordability Scheme Act 2008.",
+   "Provides further flexibility in administering the National Rental Affordability Scheme.",
+   "Expressly identifies the constitutional powers the Act relies on.",
+   "Supports making new regulations to replace the National Rental Affordability Scheme Regulations 2008 before they sunset."
+  ],
+  "affected": "Tenants, investors, and state and territory governments involved in the National Rental Affordability Scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-383075",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-10-17",
+   "stage_hint": null,
+   "brief": "The National Rental Affordability Scheme Amendment Bill 2019 amends the NRAS Act to streamline administration until the scheme ends in 2026-27, clarify that rent must be at least 20% below market rent each time it is charged, and allow the secretary to accept enforceable undertakings from approved participants. No new allocations will be made under the scheme."
+  },
+  {
+   "slug": "speech-383076",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-17",
+   "stage_hint": null,
+   "brief": "Labor supported the National Rental Affordability Scheme Amendment Bill 2019, citing improved tenant and investor protections and the retention of the departmental secretary’s power to make new allocations, but moved an amendment criticising the government’s housing record, noting the scheme’s cap was cut to 38,000 dwellings and that around 37,000 families will exit it by 2026 amid rising rental stress, homelessness and construction job losses."
+  },
+  {
+   "slug": "speech-383079",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's National Rental Affordability Scheme Amendment Bill makes only minor administrative changes and fails to address the housing crisis, noting that the government's cuts will remove 1,100 people from the scheme this year, 1,300 in 2020, and 3,000 in 2021, totalling about 36,000 people losing subsidised rent."
+  },
+  {
+   "slug": "speech-383080",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-17",
+   "stage_hint": null,
+   "brief": "The speech criticised the National Rental Affordability Scheme Amendment Bill as inadequate, arguing it does nothing to improve housing affordability or reduce rents, and condemned coalition governments' housing record since the Abbott government's 2014 budget cuts capped the scheme at 38,000 rentals. It cited 120,000 homeless Australians and rising rental stress, and called for greater Commonwealth involvement, while noting Labor supported retaining the scheme in improved form beyond 2026."
+  },
+  {
+   "slug": "speech-383082",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-17",
+   "stage_hint": null,
+   "brief": "The government should resume funding for the National Rental Affordability Scheme to address a shortfall of over 525,000 affordable rental properties and prevent 10,229 Queensland households from losing support. Without new funding, rising rental stress, youth homelessness, and poverty among vulnerable groups like single mothers and pensioners will worsen."
+  },
+  {
+   "slug": "speech-383083",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Rental Affordability Scheme, a 2008 Labor initiative, was cut by the Abbott government from 50,000 to 38,000 places, saving money at the expense of vulnerable Australians needing rental assistance."
+  },
+  {
+   "slug": "speech-383091",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-17",
+   "stage_hint": null,
+   "brief": "The Labor MP argued the National Rental Affordability Scheme Amendment Bill supports a 10‑year plan to build 250,000 homes and provide $8,500 annual subsidies for investors who rent at 20% below market rate, but stressed the government must do more as housing affordability is worsening and stock remains insufficient."
+  },
+  {
+   "slug": "speech-383092",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment moved by the member for Blaxland to the National Rental Affordability Scheme Amendment Bill 2019, arguing the bill would prevent future governments from expanding the scheme by removing the secretary’s power to make new allocations. The speaker noted the Abbott government capped the scheme at 38,000 dwellings, down from Labor’s original 50,000, and criticised this as short-sighted, citing criticism from organisations including the Property Council, Homelessness Australia, and Anglicare."
+  },
+  {
+   "slug": "speech-383093",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-10-17",
+   "stage_hint": null,
+   "brief": "The National Rental Affordability Scheme Amendment Bill 2019 was debated, with the speaker noting that South Australia had 3,542 allocations (10% of the scheme despite 7% of the population) and citing HYPA Housing’s expansion from 7 to 39 units. The speaker argued that the 2014 budget capped the scheme at 34,000 places instead of the planned 50,000, and warned that without new stock, affordable housing will drop sharply when contracts end in 2026, urging the government to plan for a looming crisis."
+  },
+  {
+   "slug": "speech-383094",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-17",
+   "stage_hint": null,
+   "brief": "The bill amends the National Rental Affordability Scheme to clarify that rent must be at least 20 per cent below market rent each time it is charged, provide greater flexibility for vacancy periods, and add express authority to vary conditions of allocation, streamlining administration until the scheme ceases in 2026."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Rental Affordability Scheme Amendment Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00097",
+   "assent_date": "2019-10-30"
+  }
+ ]
+}

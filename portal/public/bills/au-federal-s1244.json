@@ -1,0 +1,54 @@
+{
+ "key": "au-federal-s1244",
+ "title": "Commonwealth Electoral Amendment (Donation Reform and Other Measures) Bill 2020",
+ "short_title": "Commonwealth Electoral Amendment (Donation Reform and Other Measures) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-05",
+ "originating_house": "senate",
+ "sponsor": "LAMBIE, Sen Jacqui",
+ "sponsor_party": "Jacqui Lambie Network",
+ "sponsor_person_id": "10830",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1244%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1244%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1244%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1244_ems_3ea7bfd2-34aa-4d93-b5bf-f2367305417b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1244%22",
+   "document_date": "2020-02-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,198 @@
+{
+ "key": "au-federal-r7358",
+ "title": "Telecommunications Amendment (Enhancing Consumer Safeguards) Bill 2025",
+ "short_title": "Telecommunications Amendment (Enhancing Consumer Safeguards) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-08-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+ "status": "before_parliament",
+ "status_as_of": "2026-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-08-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7358%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7358%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7358%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7358%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7358%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7358%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7358%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7358%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7358%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7358%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7358%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7358_ems_81064d74-d5c0-4c98-bb39-d065dc9fe440%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/10469500%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7358%22",
+   "document_date": "2025-08-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2025-08-28",
+  "sentences": [
+   "The bill would make compliance with telecommunications industry codes compulsory rather than voluntary.",
+   "It would let the Australian Communications and Media Authority enforce codes directly through civil penalties, without first issuing a direction to comply.",
+   "The new enforcement rules would apply to conduct that happened before the bill starts, which the explanatory memorandum says the ACMA would handle with a common-sense approach."
+  ],
+  "changes": [
+   "Removes references to industry codes being voluntary from the simplified outlines of the Telecommunications Act.",
+   "Requires all participants in a section of the industry to comply with a registered industry code, with non-compliance attracting a civil penalty.",
+   "Repeals the requirement for ACMA to maintain a register of directions to comply with industry codes.",
+   "Repeals the category of reviewable decisions related to ACMA directions under section 121.",
+   "Removes the obligation for ACMA to consult the Information Commissioner before enforcement action involving privacy principles."
+  ],
+  "affected": "Telecommunications industry participants, including providers and individuals subject to industry codes, and the Australian Communications and Media Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10216",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7358_amend_03376d77-4883-4999-bef9-1a3144ee64e0%22;rec=0) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the usual second reading motion will remain unchanged. The amendment had been introduced by Lindsay MP [Melissa McIntosh](https://theyvoteforyou.org.au/people/representatives/lindsay/melissa_mcintosh) (Liberal). ### Amendment text > *That all words after “That” be omitted with a view to substituting the following words:* > > *“whilst not declining to give the bill a second reading, the House notes the Government’s telecommunications failure:* > > *(1) on the botched closure of the 3G network that has left many Australians without telephone services in peri-urban, regional, rural and remote Australia;* > > *(2) to respond to the 2024 Regional Telecommunications Independent Review Committee Report which was tabled in December last year to ensure regional communities have access to reliable telecommunications; and* > > *(3) to release the consultation paper on the Universal Outdoor Mobile Obligation, despite committing to legislate this by the end of 2025”.*",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 96,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 91
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-05-14/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1197224",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2025-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202697",
+   "speaker": "Rowan Holzberger",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-13",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

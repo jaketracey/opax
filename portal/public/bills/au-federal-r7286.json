@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-r7286",
+ "title": "Online Safety Amendment (Digital Duty of Care) Bill 2024",
+ "short_title": "Online Safety Amendment (Digital Duty of Care) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-25",
+ "originating_house": "representatives",
+ "sponsor": "DANIEL, Zoe, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10979",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7286%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7286%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7286%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7286_ems_59663586-5b56-48de-b4da-e4344312213c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7286%22",
+   "document_date": "2024-11-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-25",
+  "sentences": [
+   "The bill would give the eSafety Commissioner new powers to regulate how large online platforms design and run their systems and processes.",
+   "Large providers with a monthly active user base of 10% of the Australian general or child population would have to assess risks, create mitigation plans, report publicly, and give users control over features like targeted advertising.",
+   "Non-compliance could lead to fines of up to 10% of annual turnover and liability for senior Australian managers."
+  ],
+  "changes": [
+   "Imposes a duty of care on large providers for the wellbeing of Australian users.",
+   "Requires mandatory risk assessments and risk mitigation plans for systems and processes.",
+   "Mandates transparency reporting and data access for independent research.",
+   "Creates enforcement mechanisms including fines of up to 10% of annual turnover and senior manager liability.",
+   "Gives end-users the ability to opt out of targeted advertising and reset or turn off personal recommender systems."
+  ],
+  "affected": "Large online service providers with a monthly active user base of 10% of the Australian general or child population, including prominent social media platforms and lesser-known services with extensive underage user bases.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

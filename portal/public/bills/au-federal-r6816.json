@@ -1,0 +1,157 @@
+{
+ "key": "au-federal-r6816",
+ "title": "Migration Amendment (Strengthening the Character Test) Bill 2021",
+ "short_title": "Migration Amendment (Strengthening the Character Test) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-11-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6816%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6816%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6816%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6816%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6816%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6816%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6816%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6816%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6816_ems_5573b4eb-0f10-4f98-87f1-a96273b6447e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6816%22",
+   "document_date": "2021-11-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-415648",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The bill creates a new objective ground for refusing or cancelling visas for noncitizens convicted of designated serious offences—including violence, sexual non-consent, protection-order breaches or weapon offences—regardless of sentence length, while excluding low-level common assault unless it causes harm or involves family violence."
+  },
+  {
+   "slug": "speech-419036",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "Labor opposed the Migration Amendment (Strengthening the Character Test) Bill 2021, citing concerns over retrospectivity, low-level offending, and damage to New Zealand relations, and will move amendments in the Senate; the bill has been on the Notice Paper for almost 1,200 days."
+  },
+  {
+   "slug": "speech-419037",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Migration Amendment (Strengthening the Character Test) Bill 2021, stating it is needed to close a loophole that allows judges to give sentences of less than two years to convicted criminals, preventing their deportation. The speaker claimed the government has cancelled over 10,000 visas, including 154 for child sex offenders, 46 for murderers, and 88 for rapists, and accused Labor of opposing the bill in the Senate despite claiming to support it in the House."
+  },
+  {
+   "slug": "speech-419039",
+   "speaker": "Adam Paul Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Strengthening the Character Test) Bill 2021 is unnecessary and harmful, giving ministers unchecked power to deport long-term residents, including those with families in Australia, when the government already has sufficient powers. They criticised the Labor Party for supporting the bill and called for it to be opposed."
+  },
+  {
+   "slug": "speech-419040",
+   "speaker": "Phillip Thompson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Strengthening the Character Test) Bill 2021 targets paedophiles, murderers, rapists and domestic violence offenders for deportation, and criticised the Greens for supporting such individuals remaining in Australia."
+  },
+  {
+   "slug": "speech-419046",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Strengthening the Character Test) Bill 2021 is unnecessary because the government and minister already have sweeping powers to cancel visas on character grounds. The speaker argued the bill panders to racism, hate and xenophobia, and criticised both the government and Labor opposition for lacking principle and abandoning high standards for political gain."
+  },
+  {
+   "slug": "speech-419048",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Strengthening the Character Test) Bill 2021, arguing the minister already has excessive discretionary power, as shown by the deportation of Novak Djokovic, whom he called a political prisoner, and called for an apology to Djokovic and removal of the minister's ability to deport based on political views."
+  },
+  {
+   "slug": "speech-419049",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The minister argued the Migration Amendment (Strengthening the Character Test) Bill 2021 is a straightforward, non-racist bill targeting serious violent crimes by non-citizens, including retrospective provisions for offshore offences, and urged the House to support it after 1,200 days of debate."
+  }
+ ],
+ "acts": []
+}

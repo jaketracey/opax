@@ -1,0 +1,54 @@
+{
+ "key": "au-federal-r6460",
+ "title": "Commonwealth Electoral Amendment (Lowering the Donation Disclosure Threshold) Bill 2019",
+ "short_title": "Commonwealth Electoral Amendment (Lowering the Donation Disclosure Threshold) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-02",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": "(s) SHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2020-10-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6460%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6460%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6460%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6460_ems_16c0e987-b0f8-4f29-b9af-65ddf8fb1900%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6460%22",
+   "document_date": "2019-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

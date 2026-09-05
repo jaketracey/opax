@@ -1,0 +1,329 @@
+{
+ "key": "au-federal-r6101",
+ "title": "National Redress Scheme for Institutional Child Sexual Abuse Bill 2018",
+ "short_title": "National Redress Scheme for Institutional Child Sexual Abuse Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2018-06-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6101_ems_3475681d-40d9-44dd-8d46-19dc713fce13%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6101%22",
+   "document_date": "2018-05-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00045",
+   "document_date": "2018-06-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-10",
+  "sentences": [
+   "This bill is part of a package that creates the National Redress Scheme for people who experienced child sexual abuse in an institutional setting.",
+   "The scheme would offer eligible survivors up to $150,000, counselling services, and a personal response from the responsible institution.",
+   "A person would be eligible if the abuse happened before 1 July 2018 and they are an Australian citizen or permanent resident at the time of application."
+  ],
+  "changes": [
+   "Establishes the National Redress Scheme for Institutional Child Sexual Abuse.",
+   "Sets out eligibility criteria including that the abuse occurred before 1 July 2018.",
+   "Requires applicants to release participating institutions from liability if they accept an offer of redress.",
+   "Provides for a review of the scheme after the second and eighth anniversaries of its start.",
+   "Exempts scheme payments from income testing under social security and veterans' legislation.",
+   "Exempts scheme decisions from judicial review under the Administrative Decisions (Judicial Review) Act 1977."
+  ],
+  "affected": "Survivors of institutional child sexual abuse, participating Commonwealth, state and territory institutions, and non-government institutions that choose to join the scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:08Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-362271",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "The companion bill to the National Redress Scheme for Institutional Child Sexual Abuse Bill 2018 makes consequential amendments to Commonwealth laws, ensuring redress payments are exempt from income testing, social security means tests, bankruptcy distribution, and Commonwealth debt recovery. It also removes external judicial review, allows the scheme to access social security information, protects information from FOI requests, and exempts the scheme from the Age Discrimination Act 2004 to prevent minors under 18 from applying before the scheme closes."
+  },
+  {
+   "slug": "speech-363316",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Redress Scheme for Institutional Child Sexual Abuse Bill 2018, recounting a decade-long advocacy for the scheme and noting over 20,000 survivors identified by the royal commission. They also called for all states and institutions to join the scheme, and personally advocated for the reintroduction of the death penalty for paedophiles."
+  },
+  {
+   "slug": "speech-363318",
+   "speaker": "Ann Sudmalis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-24",
+   "stage_hint": null,
+   "brief": "The speaker argued for the National Redress Scheme for Institutional Child Sexual Abuse Bill 2018, which will begin on 1 July and run for 10 years, offering monetary payments of up to $150,000 (average $76,000), counselling, and a direct personal response from participating institutions. New South Wales, Victoria and the Australian Capital Territory have already announced their participation, and the scheme could eventually provide redress to around 60,000 survivors if all states and institutions opt in."
+  },
+  {
+   "slug": "speech-363321",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-24",
+   "stage_hint": null,
+   "brief": "The National Redress Scheme for institutional child sexual abuse survivors was outlined, commencing 1 July 2018 and running for 10 years, with monetary payments up to $150,000 (average around $76,000), counselling, and direct personal responses. New South Wales, Victoria and the ACT had committed to participate; Western Australia and South Australia had yet to formally join, with the scheme estimated to potentially cover around 60,000 survivors if all states and institutions opted in."
+  },
+  {
+   "slug": "speech-363500",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "Supported the National Redress Scheme for Institutional Child Sexual Abuse Bill 2018, while noting it is imperfect: the $150,000 cap is $50,000 below the royal commission’s recommendation, indexation is unfair, and people with criminal records are excluded. The scheme begins on 1 July; the speech also remembered Anthony Sheedy, a survivor who died before receiving compensation."
+  },
+  {
+   "slug": "speech-363502",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Redress Scheme for Institutional Child Sexual Abuse but raised concerns about the $150,000 maximum redress value (below the recommended $200,000), indexation reducing payments, a six-month acceptance period, exclusion of survivors with custodial sentences over five years, and the need for lifelong counselling access."
+  },
+  {
+   "slug": "speech-363504",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Redress Scheme must be inclusive, accessible and adequate, and raised concerns about the six-month decision timeframe, the $150,000 cap, restrictions to Australian citizens, and exclusion of survivors with criminal records. The speaker also noted the conviction of Archbishop Philip Wilson for concealing child sexual abuse in the Hunter region and acknowledged the work of the Royal Commission into Institutional Responses to Child Sexual Abuse, established by the Gillard government in 2013."
+  },
+  {
+   "slug": "speech-363505",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Redress Scheme for Institutional Child Sexual Abuse but argued that restricting redress for survivors with criminal histories is wrong and deeply unfair, and raised concerns that the six-month deadline to accept offers is too short compared to the royal commission's recommended one year."
+  },
+  {
+   "slug": "speech-363623",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Redress Scheme's $150,000 maximum payment is too low (royal commission recommended $200,000), its counselling provision is inadequate, and it unfairly excludes survivors living overseas and those with criminal records. They urged the government to address these issues and called on all jurisdictions and institutions to join the scheme."
+  },
+  {
+   "slug": "speech-363626",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Redress Scheme for Institutional Child Sexual Abuse Bill 2018, acknowledging it fell short of the royal commission's recommendations on compensation amounts, acceptance timeframes, and lifelong counselling, but urged passage to begin the scheme. They thanked survivors like Stan, advocates Leonie Sheedy and Joanne McCarthy, and others who drove the royal commission."
+  },
+  {
+   "slug": "speech-363629",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "Labor supported the National Redress Scheme for Institutional Child Sexual Abuse Bill 2018 but raised concerns about the $150,000 cap on payments (royal commission recommended $200,000), the six-month decision period (recommended one year), inadequate counselling provisions, restrictions on survivors with criminal histories, and eligibility excluding non-citizens, while calling for all states and territories to sign up."
+  },
+  {
+   "slug": "speech-363630",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Redress Scheme for Institutional Child Sexual Abuse Bill 2018 but argued it does not go far enough, praising survivors like Carl Beauchamp of Charlton Boys Home and advocates like Pamella Vernon and Leonie Sheedy. The speech cited 42,041 calls, 25,964 emails, 8,013 private sessions, and 2,575 referrals from the Royal Commission into Institutional Responses to Child Sexual Abuse, and noted ongoing abuse in the speaker's electorate."
+  },
+  {
+   "slug": "speech-363632",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The speech supported the National Redress Scheme for Institutional Child Sexual Abuse Bill 2018 but criticised it for providing a reduced payment, excluding some survivors, capping psychological support, and imposing a 1 July deadline, while paying tribute to survivors and to Julia Gillard and other MPs."
+  },
+  {
+   "slug": "speech-363635",
+   "speaker": "Russell Broadbent",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that no single area, including the Hunter region, was the epicentre of institutional child sexual abuse, as abuse occurred in every location where it was perpetrated. They also stated that the royal commission has not fully exposed the extent of abuse across Australia, and acknowledged survivors who have not disclosed their experiences."
+  },
+  {
+   "slug": "speech-363637",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Redress Scheme must fully implement the Royal Commission's recommendations, criticising the government for excluding victims serving over five years in prison and imposing restrictive time limits on claims. Concrete concerns included the failure to act on prior inquiries, the case of Brian Perkins at St Ann’s Special School, and the need for cultural change across institutions, law enforcement, and government."
+  },
+  {
+   "slug": "speech-363639",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The speaker outlined Labor's concerns with the National Redress Scheme Bill, including residency requirements, counselling access, redress period, imprisonment issues, and legal assistance, and highlighted the case of Marist College Canberra, where 63 claims of child sexual abuse were made, making it the most notorious Catholic school in Australia for such claims."
+  },
+  {
+   "slug": "speech-363640",
+   "speaker": "Maria Vamvakinou",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The speaker urged the government to address Labor's concerns about the National Redress Scheme for Institutional Child Sexual Abuse Bill 2018, highlighting the healing value of the royal commission and the advocacy of survivor Wendy Dyckhoff, while expressing concerns that the bill's provisions for support services and its exclusion of those sentenced to five or more years' imprisonment may be inadequate."
+  },
+  {
+   "slug": "speech-364742",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-19",
+   "stage_hint": null,
+   "brief": "The speaker tabled two reports from the Parliamentary Joint Committee on Human Rights: Report 5 of 2018 and the Annual Report 2016-17. Of the new bills in Report 5, 26 were assessed as not raising human rights concerns, while 11 require further information, including the National Redress Scheme for Institutional Child Sexual Abuse Bill 2018. The Annual Report covers August 2016 to end of 2017, noting the committee examined 405 bills and 2,942 legislative instruments, with 309 bills initially assessed as compatible, and tabled an inquiry report on freedom of speech with 22 recommendations."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Redress Scheme for Institutional Child Sexual Abuse Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00045",
+   "assent_date": "2018-06-21"
+  }
+ ]
+}

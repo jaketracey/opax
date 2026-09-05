@@ -1,0 +1,177 @@
+{
+ "key": "au-federal-r5476",
+ "title": "Customs Amendment (Australian Trusted Trader Programme) Bill 2015",
+ "short_title": "Customs Amendment (Australian Trusted Trader Programme) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2015-06-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5476%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5476%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5476%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5476%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5476%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5476%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5476%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5476%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5476%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5476%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5476%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5476%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5476_ems_157fa29a-652d-4f7e-b6b8-7224778412c0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5476%22",
+   "document_date": "2015-06-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00073",
+   "document_date": "2015-06-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-03",
+  "sentences": [
+   "This bill would create the Australian Trusted Trader Programme under the Customs Act 1901.",
+   "The Comptroller-General of Customs could enter into agreements with businesses that meet qualification criteria set out in rules, and provide them with administrative or legislative benefits.",
+   "Decisions to refuse, vary, suspend or terminate an agreement could be reviewed by the Administrative Appeals Tribunal."
+  ],
+  "changes": [
+   "Entities can apply to join the programme.",
+   "The Comptroller-General of Customs may grant benefits to qualifying businesses.",
+   "Agreements can be varied, suspended or terminated if conditions are not met.",
+   "The Comptroller-General of Customs can maintain a public register of agreements."
+  ],
+  "affected": "Entities that want to participate in the Australian Trusted Trader Programme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-311906",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-03",
+   "stage_hint": null,
+   "brief": "The Customs Amendment (Australian Trusted Trader Programme) Bill 2015 establishes the Australian Trusted Trader Program, a voluntary framework for entities meeting supply chain security and trade compliance standards to receive streamlined customs procedures, with a pilot phase commencing 1 July 2015. The program aims to reduce regulatory burden for low-risk traders and divert resources toward noncompliance, consistent with international trade facilitation standards."
+  },
+  {
+   "slug": "speech-313069",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "Labor supported the Customs Amendment (Australian Trusted Trader Programme) Bill 2015, which establishes a quality assurance framework for trading entities and creates the Trusted Trader Program from 1 July 2015, aligning with the WCO SAFE Framework to provide streamlined customs processes for low-risk entities, with a pilot phase involving 40 companies."
+  },
+  {
+   "slug": "speech-313070",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The Customs Amendment (Australian Trusted Trader Programme) Bill 2015 was supported, establishing a Trusted Trader Program from 1 July 2015 to give low-risk importers and exporters special rights and reduced examinations. The program aims to alleviate trade burdens and enhance competitiveness, with Labor noting that Australia's participation in global value chains is lower than 22 of the 25 largest exporting economies."
+  },
+  {
+   "slug": "speech-313071",
+   "speaker": "Jamie Briggs",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The Customs Amendment (Australian Trusted Trader Programme) Bill 2015 establishes the Australian Trusted Trader Program, allowing the Comptroller-General of Customs to enter into, vary, suspend or terminate trusted trader agreements, with decisions reviewable by the Administrative Appeals Tribunal, to improve border efficiency by focusing resources on higher-risk traders."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment (Australian Trusted Trader Programme) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00073",
+   "assent_date": "2015-06-25"
+  }
+ ]
+}

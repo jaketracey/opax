@@ -1,0 +1,364 @@
+{
+ "key": "au-federal-r5973",
+ "title": "Criminal Code Amendment (Impersonating a Commonwealth Body) Bill 2017",
+ "short_title": "Criminal Code Amendment (Impersonating a Commonwealth Body) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2018-06-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5973_ems_7cf66ffa-0b9c-4aa0-bac7-d2c88811d001%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/5767580%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5973%22",
+   "document_date": "2017-09-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00044",
+   "document_date": "2018-06-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-5209",
+   "date": "2018-05-10",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2018-05-10.187.1) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill [for a second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). This means that they can now discuss it in more detail. ### What is the bill's main idea? The [bill was introduced](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5973) to: * *create new offences \"for a person recklessly or intentionally representing themselves to be, or to be acting on behalf of, or with the authority of, a Commonwealth entity or service\"; and* * *introduce \"a new [injunction](https://en.wikipedia.org/wiki/Injunction) power to allow authorised persons to seek injunctive relief to prevent a person from engaging in conduct in contravention of the new offences.\"* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd069).",
+   "stage": "Second reading",
+   "ayes": 60,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 38,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-05-10/5"
+  },
+  {
+   "key": "federal-senate-5224",
+   "date": "2018-06-18",
+   "house": "senate",
+   "question": "The majority voted in favour of passing the bill. In parliamentary jargon, they voted to read the bill [for a third time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). Since the bill has already passed in the House of Representatives, it will now become law. ### What does the bill do? The bill [will create two new offences](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd069) for people *who engage in conduct which results in a representation that the person is, or is acting on behalf of, a Commonwealth body.* It was introduced because: > *During the 2016 federal election, the Australian Labor Party (ALP) campaign included a claim that the Coalition intended to privatise Medicare. This claim was dubbed ‘Mediscare’ by the media and was judged to have assisted the ALP position during the election period. Aspects of the ‘Mediscare’ campaign included the distribution of cardboard flyers containing messages which resembled Medicare cards, voice mail messages and bulk SMS text messages.* Read more about the background to the bill [in its digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd069).",
+   "stage": "Third reading",
+   "ayes": 46,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 27,
+    "earliest": 8,
+    "member": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-18/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-353900",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The bill introduces new criminal offences for impersonating a Commonwealth body, with penalties of up to two years imprisonment (or five years for aggravated offences), and provides an injunction power to prevent false representations."
+  },
+  {
+   "slug": "speech-357959",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-05",
+   "stage_hint": null,
+   "brief": "Labor supported the Criminal Code Amendment (Impersonating a Commonwealth Body) Bill 2017, which creates offences for falsely representing a person as a Commonwealth body with maximum penalties of two and five years' imprisonment, while criticising the bill as politically motivated and noting concerns about its drafting, particularly the narrow \"solely\" exemption for satirical, academic or artistic purposes."
+  },
+  {
+   "slug": "speech-357960",
+   "speaker": "Ted O'Brien",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2018-02-05",
+   "stage_hint": null,
+   "brief": "The Criminal Code Amendment (Impersonating a Commonwealth Body) Bill would make it illegal to impersonate a Commonwealth agency, with a maximum penalty of two years in prison, closing a loophole exploited during the 2016 election campaign when Labor and the ACTU distributed over one million mock Medicare cards and sent text messages falsely claiming the Coalition planned to privatise Medicare."
+  },
+  {
+   "slug": "speech-357961",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-05",
+   "stage_hint": null,
+   "brief": "The speaker argued the Criminal Code Amendment (Impersonating a Commonwealth Body) Bill 2017 is unnecessary, as existing offences already cover impersonation, and claimed the bill serves the Prime Minister's private political interests rather than the public interest. They also criticised the coalition's record on Medicare, referencing the 2016 election and the GP tax."
+  },
+  {
+   "slug": "speech-357967",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-05",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Criminal Code Amendment (Impersonating a Commonwealth Body) Bill 2017, which creates new offences and an injunction power to criminalise impersonating a Commonwealth body. The speaker specifically cited the 'Mediscare' incident during the 2016 federal election, accusing the Australian Labor Party of sending text messages that falsely appeared to come from Medicare."
+  },
+  {
+   "slug": "speech-358178",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-358350",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-06",
+   "stage_hint": null,
+   "brief": "The Criminal Code Amendment (Impersonating a Commonwealth Body) Bill 2017 was argued as necessary to criminalise impersonation of Commonwealth entities, citing the Labor Party and ACTU's \"Mediscare\" campaign during the 2016 election—including the distribution of one million replica Medicare cards and false claims about Medicare privatisation—and introduces a maximum penalty of two years imprisonment, or five years in aggravated circumstances."
+  },
+  {
+   "slug": "speech-358351",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-06",
+   "stage_hint": null,
+   "brief": "The Criminal Code Amendment (Impersonating a Commonwealth Body) Bill 2017 creates new offences for falsely representing oneself as a Commonwealth body, covering departments like the Attorney-General's Department, corporations like NBN Co, and services like Centrelink and Medicare, with exemptions for satire, academia, and art. The bill also introduces an injunction power to swiftly prevent such conduct, and the government notes that Labor supports the bill despite their own \"Mediscare\" campaign."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Criminal Code Amendment (Impersonating a Commonwealth Body) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00044",
+   "assent_date": "2018-06-21"
+  }
+ ]
+}

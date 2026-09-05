@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-r5880",
+ "title": "Social Services Legislation Amendment (Ending Carbon Tax Compensation) Bill 2017",
+ "short_title": "Social Services Legislation Amendment (Ending Carbon Tax Compensation) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5880%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5880%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5880%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5880_ems_8e9a0b37-4c31-4664-8aff-95548a6021e8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5880%22",
+   "document_date": "2017-05-31",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-31",
+  "sentences": [
+   "The bill would stop paying the energy supplement to people who start receiving welfare payments after 19 September 2016, with the cut taking effect from 20 September 2017.",
+   "It would change several laws, including the Social Security Act 1991 and the Veterans' Entitlements Act 1986, to prevent new welfare recipients from getting the supplement from that date.",
+   "People who were already getting the supplement before 20 September 2016 and meet the bill's conditions would keep receiving it after 20 September 2017, while those who first got it on or after that date would lose it from 20 September 2017."
+  ],
+  "changes": [
+   "The bill stops the energy supplement for new welfare recipients from 20 September 2017.",
+   "It closes the supplement to new welfare recipients from that date.",
+   "It preserves the supplement for existing recipients who meet the bill's requirements.",
+   "It ends the supplement for those who first received it on or after 20 September 2016, effective 20 September 2017."
+  ],
+  "affected": "People receiving welfare payments, including those under the Social Security Act, the Farm Household Support Act, the Veterans' Entitlements Act, and the Military Rehabilitation and Compensation Act.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:54Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

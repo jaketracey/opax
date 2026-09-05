@@ -1,0 +1,294 @@
+{
+ "key": "au-federal-r5794",
+ "title": "Enhancing Online Safety for Children Amendment Bill 2017",
+ "short_title": "Enhancing Online Safety for Children Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications",
+ "status": "passed",
+ "status_as_of": "2017-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5794%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5794%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5794%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5794%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5794%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5794%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5794%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5794%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5794%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5794%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5794%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5794%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5794%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5794_ems_98aee476-85b2-48a6-aaec-c9cf96786bb6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5794%22",
+   "document_date": "2017-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00051",
+   "document_date": "2017-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-4728",
+   "date": "2017-06-19",
+   "house": "senate",
+   "question": "Enhancing Online Safety for Children Amendment Bill 2017 - Second Reading - Criminalise \"revenge porn\"",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 16,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-06-19/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-340613",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-09",
+   "stage_hint": null,
+   "brief": "The Enhancing Online Safety for Children Amendment Bill expands the Children's eSafety Commissioner's role to cover all Australians, renaming it the eSafety Commissioner, and supports government commitments on women's safety, victims of non-consensual intimate image sharing, and a $50 million digital literacy initiative for older Australians."
+  },
+  {
+   "slug": "speech-348371",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The Labor speaker argued the bill only renames the Children's eSafety Commissioner and expands education functions, without granting new powers or criminalising non-consensual sharing of intimate images, and called on the government to introduce Commonwealth offences for revenge porn. The office received 186 complaints in 2015–16 and 334 in 2016–17."
+  },
+  {
+   "slug": "speech-348374",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The Enhancing Online Safety for Children Amendment Bill 2017 renames the Children's eSafety Commissioner to the eSafety Commissioner and expands its general functions to cover online safety for all Australians; the Member for Goldstein noted that the existing commissioner has handled hundreds of complaints through cooperation with social media platforms to remove inappropriate content."
+  },
+  {
+   "slug": "speech-348510",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "Labor supported the Enhancing Online Safety for Children Amendment Bill 2017, which expands the eSafety Commissioner’s role to all Australians, and criticised the Turnbull government for delaying criminalisation of non‑consensual sharing of private images, citing RMIT survey data showing 23% of Australians aged 16–45 had experienced image‑based abuse."
+  },
+  {
+   "slug": "speech-348511",
+   "speaker": "Llew O'Brien",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The Enhancing Online Safety for Children Amendment Bill 2017 expands the role of the Children’s eSafety Commissioner to cover all Australians, renaming it the eSafety Commissioner, after the office conducted over 15,000 investigations (including 9,000 cases of online sexual abuse) and reached 92,000 students and teachers; the government is also investing $50 million in digital literacy for older Australians and developing criminal and civil penalties for non-consensual sharing of intimate images."
+  },
+  {
+   "slug": "speech-348512",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The government's crisis communication during the WannaCry incident was mismanaged, with six agencies sending different messages, while the UK used a single National Cyber Security Centre; 18 reports of WannaCry victims occurred in Australia, 12 of them small businesses. The speaker supported the Enhancing Online Safety for Children Amendment Bill 2017 to expand the eSafety Commissioner's role to all Australians, citing revenge porn incidents at St Mary MacKillop College."
+  },
+  {
+   "slug": "speech-348513",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The speaker supported renaming the Children's eSafety Commissioner to eSafety Commissioner to cover all Australians, not just children. The speaker argued that the government should urgently criminalise the non-consensual sharing of intimate images (revenge porn) at the Commonwealth level, citing research that one in five Australians have experienced image-based abuse and noting that only South Australia and Victoria have specific laws."
+  },
+  {
+   "slug": "speech-348514",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "Labor supported the Enhancing Online Safety for Children Amendment Bill 2017, which expands the eSafety Commissioner’s role to cover all Australians, but criticised the Turnbull government for failing to criminalise revenge porn and for not supporting Labor’s 2015 bill on non‑consensual sharing of intimate images."
+  },
+  {
+   "slug": "speech-348515",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The speaker expressed support for the Enhancing Online Safety for Children Amendment Bill, which addresses non-consensual sharing of intimate images, citing research showing one in five Australians have experienced image-based abuse with higher rates among people with disabilities and Indigenous Australians, and endorsed a Labor amendment calling for criminalisation of such acts."
+  },
+  {
+   "slug": "speech-348516",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The Labor MP welcomed the expansion of the eSafety Commissioner’s remit to all Australians but argued the bill fell short by failing to criminalise revenge porn, address image‑based abuse, or provide new regulatory powers, citing a 60% increase in cyberbullying reports and 370 cases of image‑based abuse."
+  },
+  {
+   "slug": "speech-348517",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The speaker argued the Enhancing Online Safety for Children Amendment Bill 2017 expands the eSafety Commissioner's role to cover all Australians, not just children, and changes the office's name to reflect this. The speaker cited the government's record of prosecutions under existing laws, including a seven-year sentence for image-based abuse, and noted the office had received 370 complaints about non-consensual intimate image sharing since October 2016."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Enhancing Online Safety for Children Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00051",
+   "assent_date": "2017-06-22"
+  }
+ ]
+}

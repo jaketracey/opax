@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6792",
+ "title": "Commonwealth Electoral Amendment (Stop the Lies) Bill 2021",
+ "short_title": "Commonwealth Electoral Amendment (Stop the Lies) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-25",
+ "originating_house": "representatives",
+ "sponsor": "STEGGALL, Zali, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10941",
+ "portfolio": "(s) STEGGALL, Zali, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6792%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6792%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6792%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6792_ems_645f9e4b-88ae-417d-bf6d-2db49f1648c0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6792%22",
+   "document_date": "2021-10-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-25",
+  "sentences": [
+   "This bill would ban misleading and deceptive political advertising in federal elections.",
+   "It would let the Australian Electoral Commissioner order a retraction or apology for such ads, and complaints could also go to court.",
+   "The bill targets impersonation of candidates, including through deep fakes, but does not specify when the changes would start."
+  ],
+  "changes": [
+   "Prohibits misleading or deceptive statements of fact in political advertising.",
+   "Bans parties, candidates and campaigners from impersonating another candidate or passing off material as theirs.",
+   "Creates a complaints process where the Australian Electoral Commissioner can order a retraction or apology."
+  ],
+  "affected": "Political parties, candidates and campaigners during federal elections.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-413999",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The Commonwealth Electoral Amendment (Stop the Lies) Bill was introduced to make it an offence to publish misleading or deceptive content in political advertising, citing examples such as the 2016 \"Mediscare\" campaign and the 2019 \"death taxes\" claims, and noting that 87% of voters support truth in political advertising, with similar laws already in place in South Australia and the ACT."
+  }
+ ],
+ "acts": []
+}

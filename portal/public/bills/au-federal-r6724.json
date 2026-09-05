@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6724",
+ "title": "No Domestic COVID Vaccine Passports Bill 2021",
+ "short_title": "No Domestic COVID Vaccine Passports Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-06-21",
+ "originating_house": "representatives",
+ "sponsor": "KELLY, Craig, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10750",
+ "portfolio": "(s) KELLY, Craig, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-02-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6724%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6724%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6724%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6724_ems_c3d54306-6c42-40f5-b515-2d57a69e97b1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6724%22",
+   "document_date": "2021-06-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-409056",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The speaker introduced the No Domestic COVID Vaccine Passports Bill 2021, arguing that COVID vaccines should be voluntary and opposing domestic vaccine passports, citing US data showing over 2,600 hospitalised breakthrough cases and nearly 550 deaths among fully vaccinated individuals as of 14 June, as well as concerns about vaccine safety and discrimination against Paralympians."
+  }
+ ],
+ "acts": []
+}

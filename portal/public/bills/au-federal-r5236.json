@@ -1,0 +1,263 @@
+{
+ "key": "au-federal-r5236",
+ "title": "Appropriation Bill (No. 5) 2013-2014",
+ "short_title": "Appropriation Bill (No. 5) 2013-2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2014-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5236_ems_b62f522d-b21e-4b53-96eb-17b137167a5f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5236%22",
+   "document_date": "2014-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00056",
+   "document_date": "2014-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-13",
+  "sentences": [
+   "This bill would authorise extra spending from the Consolidated Revenue Fund for the government's ongoing services.",
+   "It provides additional money on top of what was already approved through earlier appropriation laws for the 2013-2014 financial year.",
+   "The bill covers only ordinary annual services, as required by sections 53 and 54 of the Australian Constitution, with a separate bill for other appropriations."
+  ],
+  "changes": [
+   "The bill would draw extra funds from the Consolidated Revenue Fund for ordinary annual services.",
+   "It would supplement the appropriations already made in earlier acts for the 2013-2014 budget year.",
+   "The bill separates ordinary annual service appropriations from other spending, as the Constitution requires."
+  ],
+  "affected": "The government and its portfolio agencies that receive the additional appropriations.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:09Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-287849",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-05-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287850",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-05-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288185",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288849",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289133",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289501",
+   "speaker": "Anthony Byrne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293614",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 5) 2013-2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00056",
+   "assent_date": "2014-06-26"
+  }
+ ]
+}

@@ -1,0 +1,196 @@
+{
+ "key": "au-federal-r5388",
+ "title": "Enhancing Online Safety for Children (Consequential Amendments) Bill 2014",
+ "short_title": "Enhancing Online Safety for Children (Consequential Amendments) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications",
+ "status": "passed",
+ "status_as_of": "2015-03-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5388_ems_fe53ee6a-b360-4a60-96ca-f4011a8d9160%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5388%22",
+   "document_date": "2014-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00025",
+   "document_date": "2015-03-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-12-03",
+  "sentences": [
+   "This bill is part of a package creating a Children's e-Safety Commissioner and a complaint system to quickly remove harmful cyber-bullying material from major social media sites.",
+   "The Commissioner, an independent office within the Australian Communications and Media Authority, would manage the complaint system and could order social media services to take down material targeting a child within 48 hours.",
+   "The bill sets up a two-tiered system where social media services can be declared Tier 1 (self-regulating) or Tier 2 (directly regulated, with civil penalties for non-compliance)."
+  ],
+  "changes": [
+   "Creates the Children's e-Safety Commissioner and specifies powers and functions.",
+   "Establishes a complaints system for cyber-bullying material targeting an Australian child.",
+   "Sets up a 2-tiered scheme for rapid removal of such material from large social media services.",
+   "Allows the Commissioner to issue end-user notices requiring removal, cessation, or apology.",
+   "Transfers administration of the online content scheme under the Broadcasting Services Act 1992 from ACMA to the Commissioner."
+  ],
+  "affected": "Australian children, parents and guardians of children, and providers of large social media services are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:59:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-305482",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-02-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305579",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2015-02-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305585",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305596",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Enhancing Online Safety for Children (Consequential Amendments) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00025",
+   "assent_date": "2015-03-24"
+  }
+ ]
+}

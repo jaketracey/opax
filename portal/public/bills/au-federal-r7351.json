@@ -1,0 +1,256 @@
+{
+ "key": "au-federal-r7351",
+ "title": "Treasury Laws Amendment (Payments System Modernisation) Bill 2025",
+ "short_title": "Treasury Laws Amendment (Payments System Modernisation) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2025-09-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7351%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7351%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7351%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7351%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7351%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7351%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7351%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7351%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7351%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7351%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7351%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7351%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7351_ems_3a26a100-f1c6-4c38-860f-fcbf790ad3dd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7351%22",
+   "document_date": "2025-07-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00046",
+   "document_date": "2025-09-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-30",
+  "sentences": [
+   "The bill would update Australia's payments regulation to keep up with new risks.",
+   "It would expand the law's scope by changing key definitions, giving ministers new powers beyond the Reserve Bank's current authority, and updating penalties.",
+   "The bill would start three months after it receives royal assent."
+  ],
+  "changes": [
+   "Expands the regulatory coverage of the Payment Systems (Regulation) Act.",
+   "Updates key definitions in the Act.",
+   "Introduces new ministerial powers to address issues outside the Reserve Bank's existing remit.",
+   "Modernises the penalty regime in the Act."
+  ],
+  "affected": "Participants in the payments system and the regulator.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:28:49Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9740",
+   "date": "2025-09-02",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7351_amend_9bf0feba-5f49-49e0-8115-673b5341aae2%22;rec=0) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the usual motion will remain unchanged. ### Amendment text > *That all words after “That” be omitted with a view to substituting the following words:* > > *“whilst not declining to give the bill a second reading, the House:* > > *(1) notes:* > >> *(a) that the Bill implements recommendations of the 2021 Payments System Review, first initiated by the Coalition, to modernise the Payment Systems (Regulation) Act 1998 ;* >> >> *(b) that under the Bill, key decisions of the Reserve Bank of Australia and the Treasurer – including designating payment systems, imposing access regimes, and setting standards – will not be subject to parliamentary disallowance; and* >> >> *(c) concerns that the Reserve Bank’s narrow mandate does not allow for appropriate consideration of impacts on competition and innovation, and may not be suited to regulating fast-changing industries like fintech and digital payments; and* > > *(2) calls on the Government to ensure that major regulatory decisions made by the Reserve Bank and the Treasurer under the Payment Systems (Regulation) Act 1998 are subject to disallowance to provide an appropriate parliamentary oversight mechanism”.*",
+   "stage": "Second reading",
+   "ayes": 50,
+   "noes": 91,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 90
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-09-02/1"
+  },
+  {
+   "key": "federal-senate-9787",
+   "date": "2025-09-04",
+   "house": "senate",
+   "question": "The majority voted against [amendment (1) on sheet 3392](https://www.openaustralia.org.au/senate/?id=2025-09-04.69.1), which was introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), meaning it failed. The amendment was related to reducing conflicts of interest on Reserve Bank boards.",
+   "stage": "Committee of the Whole",
+   "ayes": 11,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-04/16"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1195692",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196881",
+   "speaker": "Pat Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2025-09-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196929",
+   "speaker": "Julie-Ann Campbell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-02",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Payments System Modernisation) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00046",
+   "assent_date": "2025-09-19"
+  }
+ ]
+}

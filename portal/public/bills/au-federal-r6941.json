@@ -1,0 +1,1501 @@
+{
+ "key": "au-federal-r6941",
+ "title": "Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022",
+ "short_title": "Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-10-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2022-12-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-12-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6941_ems_d310a6ae-0ff2-4129-bc25-32c2bf274f86%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6941_ems_cb817904-a37e-4123-9b77-9b033dc3a61e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6941_ems_465eaf38-214a-4ca7-8bca-40e697e10cad%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6941_ems_ea4f7abc-7d2e-4c06-98a3-a81030b14a5a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6941%22",
+   "document_date": "2022-10-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00079",
+   "document_date": "2022-12-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7811",
+   "date": "2022-10-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-10-27.99.1) to the [original motion](https://www.openaustralia.org.au/senate/?id=2022-10-27.89.2), which means it failed. The amendment was introduced by ACT Senator [David Pocock](https://www.openaustralia.org.au/senate/?id=2022-10-27.89.2) (Independent). ### Amendment text > *At the end of the motion, add:* > > *\"and, in respect of the Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022, the provisions of the bill be referred immediately to the Education and Employment Legislation Committee for inquiry and report by the first day of the second sitting week in 2023\"*",
+   "stage": "Committee motion",
+   "ayes": 32,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "earliest": 35,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-10-27/6"
+  },
+  {
+   "key": "federal-representatives-7824",
+   "date": "2022-11-08",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2022-11-08.97.1) to [another motion](https://theyvoteforyou.org.au/divisions/representatives/2022-11-08/2), which means it failed. ### Amendment text > *That all words after paragraph (1) be omitted and the following be inserted:* > > *(2) the question on the second reading of the Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022 not be put until such time as every other Member willing to speak on the question has spoken for up to 15 minutes as provided for under standing order 1.*",
+   "stage": "Business motion",
+   "ayes": 72,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-08/1"
+  },
+  {
+   "key": "federal-representatives-7825",
+   "date": "2022-11-08",
+   "house": "representatives",
+   "question": "Business  - Consideration of Legislation - Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022",
+   "stage": "Business motion",
+   "ayes": 72,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-08/2"
+  },
+  {
+   "key": "federal-representatives-7826",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2022-11-08.117.1) moved by Mayo MP [Rebekha Sharkie](https://theyvoteforyou.org.au/people/representatives/mayo/rebekha_sharkie) (Centre Alliance), which would have amended another [amendment](https://www.openaustralia.org.au/debate/?id=2022-11-08.111.1) moved by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent). ### Amendment text > *That the following words be added after the words 90 days: .\"; and* > > *(1) parts 1, 2 and 3 of the bill are added to the inquiry; and* > > *(2) calls on the Government to change the definition of a small business from 15 to 100 employees\".* ### Ms Spender's original amendment text > *That all words after \"reading\" be omitted with a view to substituting the following words:* > > *\"until an inquiry into parts 11, 15, 18, 19, 21 and 22 of the bill is undertaken by a House or Senate committee, with the inquiry lasting not less than 90 days\".*",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 6
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-10/1"
+  },
+  {
+   "key": "federal-representatives-7827",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "question": "Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 80,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 7
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-10/2"
+  },
+  {
+   "key": "federal-representatives-7828",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2022-11-10.17.4) introduced by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent), which means it failed. This would have amended government amendment (30). ### What does this amendment do? Ms Spender [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-10.14.1): > *The most concerning part about the government amendments is the provision giving unions veto power over enterprise agreements. This means that an unscrupulous individual can hold a business and its workforce to ransom, demanding concessions or private benefits that may not be in the interests of union members or other employees. The minister has argued that bad actors may seek to encourage workers to agree to something that is not in their interests. I accept that there are those bad actors. However, this veto power goes too far. It is unconscionable that any government would seek to provide a veto power of this nature, particularly to its financial backers.* > > *My amendment negates the veto power by saying that employers must have written agreement from the union or provide reasonable opportunities for unions to communicate their concerns to employees. I believe that the employees should be well informed about any change to any agreement that comes to them, and I support that the union can provide an important perspective on that. However, it is fundamentally up to individuals to decide whether or not they get to vote on an agreement and whether an agreement is in their interests. If a union thinks it's a dud then let them say so, but let employees decide for themselves what is best for them.* ### Ms Spender's amendment > *Amendment (30), item 506B, at the end of subsection 180A(2), add \", or must ensure bargaining representatives have a reasonable opportunity to communicate and reasons for not providing",
+   "stage": "Consideration in detail",
+   "ayes": 78,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-10/3"
+  },
+  {
+   "key": "federal-representatives-7829",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "question": "The majority voted in favour of [Government amendments](https://www.openaustralia.org.au/debate/?id=2022-11-10.9.2), which means they will now form part of the bill. Watson MP [Tony Burke](https://theyvoteforyou.org.au/people/representatives/watson/tony_burke) (Labor) [explained the amendments](https://www.openaustralia.org.au/debate/?id=2022-11-10.9.2), saying that \"*Since the introduction of these reforms on 27 October, my department and I have continued to consult closely with businesses and unions. These amendments make sensible changes to the bill to address issues arising during consultation.*\"",
+   "stage": "Consideration in detail",
+   "ayes": 85,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-10/4"
+  },
+  {
+   "key": "federal-representatives-7830",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "question": "Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022 - Consideration in Detail - Opposition amendments",
+   "stage": "Consideration in detail",
+   "ayes": 83,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 4
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-10/5"
+  },
+  {
+   "key": "federal-representatives-7831",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2022-11-10.26.1) introduced by Mayo MP [Rebekha Sharkie](https://theyvoteforyou.org.au/people/representatives/mayo/rebekha_sharkie) (Centre Alliance), which means they failed. ### What does this amendment do? Ms Sharkie [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-10.26.1): > *The purpose of this amendment is to amend section 23 of the Fair Work Act with the effect of changing the definition of a small business. Currently, section 23 defines a small business as a business comprising of 15 employees or less. Casuals are not included in this count unless there is a systematic or regular nature to their employment. For most businesses this would mean most, if not all, of their casual the employees would be included in the employee count for the purposes of defining a small business.* > > *My amendment seeks to change the number of employees that define a small business from 15 to 100. The rationale for this change is simple. Businesses with fewer than 100 staff do not have the human resources departments, they do not have the pay roster, they simply do not have capacity to expend resources—financial and human—to negotiate enterprise bargaining agreements that this bill will potentially force upon them. Without this change we are relegating the thousands of mum-and-dad businesses and entrepreneurial enterprises to an immediate future of costly union-led negotiations. These businesses, many of which are still trying to recover from COVID-19, cannot afford the time or the financial resources.* ### Amendment text > *That the following words be added after the words 90 days: .\"; and* > > *(1) parts 1, 2 and 3 of the bill are added to the inquiry; and* > > *(2) calls on the Government to change the definition of a small business from 15 to 100 employees\".*",
+   "stage": "Consideration in detail",
+   "ayes": 80,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 5
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-10/6"
+  },
+  {
+   "key": "federal-representatives-7832",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2022-11-10.34.1) introduced by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent), which means they failed. ### What were the amendments? Ms Spender [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-10.34.1): > *My amendments ... will make this bill more workable for businesses, particularly small businesses, who have had an incredibly tough time in recent years. It will make it more workable for workers, who desperately need a pay rise to cope with the rising cost of living.* > > *Many of the concerns of this bill can be undone with one simple amendment: let businesses consent to multi-party bargains in the single interest stream.*",
+   "stage": "Consideration in detail",
+   "ayes": 80,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 4
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-10/7"
+  },
+  {
+   "key": "federal-representatives-7833",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2022-11-10.38.1) introduced by Warringah MP [Zali Steggall](https://theyvoteforyou.org.au/people/representatives/warringah/zali_steggall) (Independent), which means they failed. ### What do the amendments do? Ms Steggall [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-10.38.28): > *Amendments (1) to (3) deal with potential impacts on the productivity of businesses being roped into multi-employer bargaining after it has been completed. They haven't even been part of the negotiations, and the bill currently allows an employee representative—the union—to join an employer to a multiparty EBA after the conclusion of the agreement. The Fair Work Commission should consider the potential impact on the productivity of a business as a result of being compelled to sign onto the EBA. This is a straightforward amendment that should not be objected to by the government.* > > *The public interest test is amendment (6). Again, the amendment deals with the potential effects on productivity and competition. The bill as currently drafted requires the Fair Work Commission to be satisfied that it is not contrary to the public interest to do so before making a single-interest authorisation. The problem is that the drafting does not specify what would be contrary to the public interest. There is, therefore, no guarantee that the Fair Work Commission would take into account the benefits to productivity, competition and consumer protection that come from enterprise-level collective bargaining. The proposed amendment would require the Fair Work Commission to take into account the need to achieve productivity and fairness through an emphasis on enterprise-level collective bargaining and the need to enhance the welfare of Australians through the promotion of competition and fair trading and the provision of consumer protections.* > > *Amendment (5) deals with common",
+   "stage": "Consideration in detail",
+   "ayes": 77,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 7
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-10/8"
+  },
+  {
+   "key": "federal-representatives-7834",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "question": "Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022 - Consideration in Detail - Mackellar MP amendments",
+   "stage": "Consideration in detail",
+   "ayes": 80,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 6
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-10/9"
+  },
+  {
+   "key": "federal-representatives-7835",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2022-11-10.58.1) introduced by Kennedy MP [Bob Katter](https://theyvoteforyou.org.au/people/representatives/kennedy/bob_katter) (Katter's Australian Party), which means it failed. ### What does the amendment do? Mr Katter [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-10.58.1): > *I'm moving for the exclusion of farming here. I'm supporting the Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022, but, in the area of farming, it's just not like it is everywhere else. To give you some idea, the banana industry employs about 6,000 people. I'm in the pub drinking and I say, 'What do you do, Mick?' He said, 'I work in bananas. ' I said, 'Well, you're not working today.' He said, 'I don't work on Tuesdays.' I said, 'Do you work later in the week?' He said: 'Sometimes I work on Thursdays. If you turn up at 6.30 in the morning at the corner of Eden Street, a bus picks you up and takes you out there. If you're not there, well, you're not there.' This is not the ordinary sort of arrangements—and I think everyone here are from cities—that you consider in a city. I just think it's so enormously different.* ### Amendment text > *(1) Schedule 1, item 660, page 229 (after line 18), after Division 1, insert:* > > *Division 1A — Application generally* > > *55A Amending Act does not apply to farming employment* > >> *The amendments of this Act made by Schedule 1 to the amending Act do not apply in relation to farming employment. Farming employment will be under general uniform base wage and conditions.* > > *55B Amending Act does not apply to certain businesses* > >> *The amendments of this Act made by Schedule 1 to the amending Act do not apply to businesses that employ under 50 full time equivalent employees in regional, rural and remote Australia.*",
+   "stage": "Consideration in detail",
+   "ayes": 83,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-10/10"
+  },
+  {
+   "key": "federal-representatives-7836",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "question": "Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022 - Consideration in Detail - Agree with the amended bill",
+   "stage": "Consideration in detail",
+   "ayes": 80,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 6
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-10/11"
+  },
+  {
+   "key": "federal-representatives-7837",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "question": "Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 6
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-10/12"
+  },
+  {
+   "key": "federal-representatives-7838",
+   "date": "2022-11-22",
+   "house": "representatives",
+   "question": "Business -  Consideration of Legislation Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022",
+   "stage": "Business motion",
+   "ayes": 77,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-22/1"
+  },
+  {
+   "key": "federal-senate-7875",
+   "date": "2022-11-24",
+   "house": "senate",
+   "question": "Documents - Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022 - Order for the Production of Documents",
+   "stage": "Documents",
+   "ayes": 30,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 20,
+    "earliest": 33,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-24/5"
+  },
+  {
+   "key": "federal-senate-7900",
+   "date": "2022-11-30",
+   "house": "senate",
+   "question": "Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022 - Second Reading - Withdraw",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "member": 7,
+    "earliest": 33
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-30/5"
+  },
+  {
+   "key": "federal-senate-7901",
+   "date": "2022-11-30",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-11-30.171.1) to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) \"that the bill be read a second time\" - parliamentary jargon for agreeing with the main idea. This means it failed. These motions don't make legal changes on their own, but they can be politically influential as they represent the will of the Senate. ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Government to:* > > *(a) remove all provisions of the bill which give their trade union donors the power to veto agreements; and* > > *(b) tighten the 'common interest test' under the 'single interest employer stream' to follow the current considerations the Minister is required to follow under the Fair Work Act 2009 as it stands\".*",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "member": 7,
+    "earliest": 32
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-30/6"
+  },
+  {
+   "key": "federal-senate-7902",
+   "date": "2022-11-30",
+   "house": "senate",
+   "question": "Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "member": 7,
+    "earliest": 34
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-30/7"
+  },
+  {
+   "key": "federal-senate-7908",
+   "date": "2022-12-01",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2022-12-01.402.1) to agree with [government amendments (1) to (34), (36) to (62) and (64) to (68)](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6941_amend_49517b6e-43b8-4806-92c7-ef97f392ac2b%22;rec=0), which means they will now be part of the bill. Read about the amendments and the reasoning behind them in the [supplementary explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6941_ems_ea4f7abc-7d2e-4c06-98a3-a81030b14a5a%22;rec=0).",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "earliest": 35,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-01/5"
+  },
+  {
+   "key": "federal-senate-7909",
+   "date": "2022-12-01",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2022-12-01.402.1) to keep items 584 and 667 of schedule 1 unchanged (i.e., \"stand as printed\"), which means those items will be removed from the bill. This vote took place in response to [Government amendments (35) and (63)](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6941_amend_49517b6e-43b8-4806-92c7-ef97f392ac2b%22;rec=0), which moved to opposed those items. ### Text of items 584 and 667 > *584 Subsection 443(3A)* > > *Repeal the subsection, substitute:* > >> *(3A) For the purposes of paragraph (3)(c), the FWC:* >> >>> *(a) subject to paragraph (b), must specify a date that will enable the protected action ballot to be conducted as expeditiously as practicable; and* >>> >>> *(b) must not specify a date that is earlier than 14 days after the day the order is made.* > *667 Subsection 7(8) (after table item 12)* > > *Insert:* > >> *12A - Malignant mesothelioma - 15 years* ### Text of Government amendment > *(35) Schedule 1, item 584, page 195 (lines 1 to 8), to be opposed .* > >> *[industrial action—period for protected action ballot]* > > *(63) Schedule 1, item 667, page 266 (lines 12 to 15), to be opposed .* > >> *[firefighters—cancers]* ### Explanation of amendment According to the [supplementary explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6941_ems_ea4f7abc-7d2e-4c06-98a3-a81030b14a5a%22;rec=0): > *This amendment [no. (35)] would remove item 584 from the Bill to restore the FWC’s discretion to determine the timetable for the conduct of protected action ballots. The requirement that the FWC specifies a date for the close of the ballot which will enable the ballot to be conducted as expeditiously as practicable remains in subsection 443(3A).* > > *This [amendment no.",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "earliest": 35,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-01/6"
+  },
+  {
+   "key": "federal-senate-7910",
+   "date": "2022-12-01",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2022-12-01.411.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they will now be included in the bill. ### What were the amendments? Senator Pocock [explained that](https://www.openaustralia.org.au/senate/?gid=2022-12-01.411.1): > *The amendments on Sheet 1780 ensure that there will be a statutory review no later than two years after the commencement of the legislation. The review will look at, among other things, whether the operation of the amendments made by this act is appropriate and effective and identify any unintended consequences of the amendment made by this act and whether amendments to the Fair Work Act 2009 or any other legislation are necessary to improve the operation of the amendments made by this act or rectify any unintended consequences identified. The persons who conduct the review must give the minister a written report of the review within six months of the commencement of the review, and the minister must then table a copy of the report within 15 sitting days. The amendment on sheet 1781 effectively extends the grace period from six months to nine months by altering the minimum bargaining period. This was something that came up repeatedly in the committee process.* ### Amendment text > *SHEET 1780* > > *(1) Clause 2, page 2 (table item 1, column 1), omit \"3\", substitute \"4\".* > > *(2) Page 6 (after line 8), after clause 3, insert:* > >> *4 Review of operation of amendments* >> >> *(1) The Minister must cause a review to be conducted of the operation of the amendments made by this Act.* >> >> *(2) Without limiting the matters that may be considered when conducting the review, the review must:* >> >>> *(a) consider whether the operation of the amendments made by this Act is appropriate and effective; and* >>> >>> *(b) identify any unintended consequences of the amendments ma",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "earliest": 34,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-01/7"
+  },
+  {
+   "key": "federal-senate-7911",
+   "date": "2022-12-01",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2022-12-01.415.1) introduced by Senator [Barbara Pocock](https://theyvoteforyou.org.au/people/senate/sa/barbara_pocock) (Greens), which means they failed. ### What were the amendments? Senator Pocock [explained that](https://www.openaustralia.org.au/senate/?gid=2022-12-01.415.1): > *This amendment does two things. It widens the eligibility for the right to request flexibility, and it establishes a positive duty in favour of creating flexible workplace in Australia. It's 2022. Flexibility should be available to all employees, not just those with narrowly defined family responsibilities. It's only when seeking flexibility is something available to all that the stigma will be removed from asking for it, and we will see more men seeking flexibility and hopefully sharing domestic and care duties as a consequence. Wider eligibility for flexibility has been adopted in the UK, based on clear evidence about its value. Guess what? The sky has not fallen.* > > *The second part of this amendment establishes a positive duty to create flexible workplaces. A modern workplace should create an environment that actively anticipates and responds to the needs of its workers and doesn't require individuals to have to push for it one by one individually, too often at risk of job security. So many employers already do this, talking to employees. This amendment will encourage others to create that positive flexible environment.* ### Amendment text > *(1) Schedule 1, Divisions 1 and 2, page 130 (line 2) to page 131 (line 17), omit the Divisions, substitute:* > >> *Division 1 — Requests for flexible working arrangements* >> >> *Fair Work Act 2009* >> >> *446 Subsections 65(1), (1A) and (1B)* >> >> *Repeal the subsections, substitute:* >> >>> *(1) If an employee would like to change his or her working arrangements, the employee may request the employer for a change in working arrangements.* >>> >>> *Note: Exa",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "earliest": 29,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-01/8"
+  },
+  {
+   "key": "federal-senate-7912",
+   "date": "2022-12-01",
+   "house": "senate",
+   "question": "Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022 - in Committee - Speed things along",
+   "stage": "In committee",
+   "ayes": 39,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 13,
+    "member": 7,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-01/9"
+  },
+  {
+   "key": "federal-senate-7913",
+   "date": "2022-12-01",
+   "house": "senate",
+   "question": "Fair Work Legislation Amendment (Secure Jobs, Better Pay) Bill 2022 - in Committee - COVID-19 vaccination status",
+   "stage": "In committee",
+   "ayes": 6,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "member": 6,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-01/10"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Fair Work Legislation Amendment (Secure Jobs, Better Pay) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00079",
+   "assent_date": "2022-12-06"
+  }
+ ]
+}

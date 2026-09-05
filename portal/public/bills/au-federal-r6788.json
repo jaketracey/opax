@@ -1,0 +1,101 @@
+{
+ "key": "au-federal-r6788",
+ "title": "Commonwealth Electoral Amendment (Disclosure of Political Donations) Bill 2021",
+ "short_title": "Commonwealth Electoral Amendment (Disclosure of Political Donations) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-25",
+ "originating_house": "representatives",
+ "sponsor": "HAINES, Helen, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10929",
+ "portfolio": "(s) HAINES, Helen, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6788%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6788%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6788%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6788_ems_48c87a9a-de44-4ae4-8a89-9b071c7ad1d2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6788%22",
+   "document_date": "2021-10-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-25",
+  "sentences": [
+   "The bill would require political parties, candidates and associated entities to report donations to the Australian Electoral Commission more frequently.",
+   "Donations of $1,000 or more from the same source would be reported quarterly, and donations at or above the indexed threshold (currently $14,500) would be reported within five business days.",
+   "New financial penalties would apply if the disclosure requirements are not met."
+  ],
+  "changes": [
+   "Requires quarterly disclosure of cumulative donations of $1,000 or more from the same person or entity.",
+   "Requires disclosure of cumulative donations at or above the indexed AEC threshold within five business days.",
+   "Introduces new financial penalties for non-compliance with disclosure requirements."
+  ],
+  "affected": "Registered political parties, state branches, individual candidates, groups of candidates, and associated entities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-413993",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The Independent MP introduced the Commonwealth Electoral Amendment (Disclosure of Political Donations) Bill 2021, which would require political parties to disclose donations above $1,000 quarterly and cumulative donations over $14,500 within five business days, arguing that current federal laws allowed major parties to hide over $1 billion in donations over two decades."
+  },
+  {
+   "slug": "speech-413994",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The speaker seconded the Commonwealth Electoral Amendment (Disclosure of Political Donations) Bill 2021, which would lower the donation disclosure threshold from $14,500 to $1,000, require quarterly reporting for donations of $1,000 or more, and mandate five-day reporting for donations above $14,500. The speaker noted that over 55% of ALP donations and over 65% of coalition donations were undisclosed, and that only 25% of Australians trusted the federal government at the last election."
+  },
+  {
+   "slug": "speech-414000",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The speaker seconded the Commonwealth Electoral Amendment (Disclosure of Political Donations) Bill 2021, which would ban inaccurate or misleading political advertisements during election campaigns, citing examples such as the Liberal Party's 2019 death tax claims and Labor's 2016 Mediscare campaign, and noting that 87% of the electorate support such laws, which already exist in South Australia and the ACT."
+  }
+ ],
+ "acts": []
+}

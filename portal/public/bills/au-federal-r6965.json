@@ -1,0 +1,641 @@
+{
+ "key": "au-federal-r6965",
+ "title": "Referendum (Machinery Provisions) Amendment Bill 2022",
+ "short_title": "Referendum (Machinery Provisions) Amendment Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-12-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2023-03-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6965_ems_da002ad7-3bf5-459e-984a-63cb6f3610b9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6965_ems_d9daf5c0-2dd6-4454-afd8-ba5b78677c62%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6965_ems_3f363f44-167b-4b2a-81b5-726e8762b984%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6965%22",
+   "document_date": "2022-12-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00011",
+   "document_date": "2023-03-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-12-01",
+  "sentences": [
+   "The bill would update the Referendum Act so that referendums use the same voting processes as federal elections.",
+   "It would apply recent improvements to the Electoral Act—such as transparency and integrity measures—to referendums.",
+   "The bill would also let the Commonwealth fund educational campaigns to help voters understand referendums and the proposal being voted on."
+  ],
+  "changes": [
+   "Aligns referendum voting procedures with current federal election practices.",
+   "Extends transparency and integrity measures from the Electoral Act to referendums.",
+   "Allows Commonwealth funding for voter education campaigns about referendums."
+  ],
+  "affected": "Voters, the Australian Electoral Commission, and the Commonwealth government.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7968",
+   "date": "2023-03-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2023-03-07.98.2) to agree with the main idea of the bill, which is known as giving it a [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that they can now discuss the bill in more detail. ### What is the bill's main idea? According to the [explanatory memorandum](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd045), the bill would: * *suspend the provisions in the Referendum (Machinery Provisions) Act 1984 (the Referendum Act) that require the production and distribution of a Yes and No case against a proposed constitutional change and impose restrictions on the Government otherwise spending money on a referendum campaign;* * *regulate donations and expenditure for referendum campaigns and impose reporting obligations. It would also ban foreign donations of $100 or more from being used for referendum campaigns and ban foreign campaigners authorising referendum material; and* * *update the Referendum Act to generally bring it into line with updates to the Commonwealth Electoral Act 1918 that have been legislated in recent years.*",
+   "stage": "Second reading",
+   "ayes": 87,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-07/1"
+  },
+  {
+   "key": "federal-representatives-7969",
+   "date": "2023-03-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2023-03-07.102.1) introduced by Warringah MP [Zali Steggall](https://theyvoteforyou.org.au/people/representatives/warringah/zali_steggall) (Independent), which means they failed. ### What would these amendments do? Ms Steggall [explained that](https://www.openaustralia.org.au/debate/?id=2023-03-07.102.1): > *These amendments seek to prevent misleading and deceptive advertising in the upcoming referendum campaign. These amendments, which will prohibit misleading or deceptive political advertising and referenda advertising, are a practical, popular and proven way to clean up our politics. They approach the regulation of political advertising with caution and respect for our constitutional freedom of political communication.* > > *They are also urgent. We live in a world where our democracy is under attack from disinformation. A vote based on lies and misleading information lacks social licence and divides our communities. It lacks legitimacy and erodes trust in election results.*",
+   "stage": "Consideration in detail",
+   "ayes": 62,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 41,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 78
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-07/2"
+  },
+  {
+   "key": "federal-senate-8014",
+   "date": "2023-03-22",
+   "house": "senate",
+   "question": "The majority voted against a [second reading amendment](https://www.openaustralia.org.au/senate/?gid=2023-03-20.12.3) introduced by Victorian Senator [Jane Hume](https://theyvoteforyou.org.au/people/senate/victoria/jane_hume) (Liberal), which means it failed. It would have added the text below to the usual second reading amendment: \"*that the bill be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \"and further consideration of the bill be made an order of the day for the first sitting day after the Government:* > > *(a) establishes official 'yes' and 'no' campaign organisations for the purpose of the referendum on an Aboriginal and Torres Strait Islander Voice; and* > > *(b) puts into place financial arrangements to provide for equal funding for those organisations\".*",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 56,
+    "member": 7,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-22/1"
+  },
+  {
+   "key": "federal-senate-8015",
+   "date": "2023-03-22",
+   "house": "senate",
+   "question": "The majority voted against a [second reading amendment](https://www.openaustralia.org.au/senate/?gid=2023-03-22.17.4) introduced by Queensland Senator [Pauline Hanson](https://theyvoteforyou.org.au/people/senate/queensland/pauline_hanson) (One Nation), which means it failed. It would have added the text below to the usual second reading amendment: \"*that the bill be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that holding referendums separately to a federal election costs the Australian public more than holding referendums simultaneously with a federal election; and* > > *(b) calls on the Government to manage the process to ensure that if the Voice to Parliament referendum is to proceed that it is held in conjunction with the next federal election\".*",
+   "stage": "Second reading",
+   "ayes": 3,
+   "noes": 54,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 6,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-22/2"
+  },
+  {
+   "key": "federal-senate-8020",
+   "date": "2023-03-22",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-03-22.349.1) introduced by Queensland Senator [Larissa Waters](https://theyvoteforyou.org.au/people/senate/queensland/larissa_waters) (Greens), which means it failed. ### What does the amendment do? Senator Waters [explained that](https://www.openaustralia.org.au/senate/?gid=2023-03-22.349.1): > *This amendment pertains to on-the-day enrolment not just for First Nations people but for anyone who wishes to have their voice heard in this and any other referendum, who has not been able for a variety of legitimate reasons to be able to enrol themselves prior to election day. As I said in my second reading speech, this bill is an important and timely opportunity to improve enfranchisement, particularly for First Nations communities and particularly on this topic, and we must not waste the opportunity. The government have consistently said that they want the referendum to be as close as possible to a normal election, but in the last election many people missed out on voting. That's something that we need to fix rather than replicate.* ### Amendment text > *(1) Page 63 (after line 2), at the end of the Bill, add:* > > *Schedule 9 — Provisional voting* > > *Referendum (Machinery Provisions) Act 1984* > > *1 After subsection 4(1)* > >> *Insert:* >> >> *(1A) Despite subsection (1), a person is entitled to vote at a referendum if the person makes a claim for enrolment under paragraph 37(1)(f).* > > *2 At the end of subsection 37(1)* > >> *Add:* >> >> *; or (f) the person wishes to make a claim for enrolment and each of the following applies:* >> >>> *(i) the person's name cannot be found on the certified list of voters, or an approved list of voters, for the Division for which the person claims to vote;* >>> >>> *(ii) the person is entitled to enrolment and to vote under section 93 of the Commonwealth Electoral Act 1918.* > > *3 After subsection 37(1)* > >> *Insert:* >> >>> *(1AA) A per",
+   "stage": "In committee",
+   "ayes": 15,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 2,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-22/7"
+  },
+  {
+   "key": "federal-senate-8021",
+   "date": "2023-03-22",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-03-22.358.1) introduced by Victorian Senator [Jane Hume](https://theyvoteforyou.org.au/people/senate/victoria/jane_hume) (Liberal), which means it failed. ### Amendment text > *(1) Page 63 (after line 2), at the end of the Bill, add:* > >> *Schedule 9 — Campaign organisations* >> >> *Referendum (Machinery Provisions) Act 1984* >> >> *1 At the end of subsection 11(4)* >> >>> *Add:* >>> >>> *; (d) a body nominated under section 11A.* >> >> *2 After section 11* >> >>> *Insert:* >>> >>> *11A Campaign organisations* >>> >>> *(1) Where a proposed law for the alteration of the Constitution is to be submitted to the electors, the Minister must, within 2 weeks of the passage of the proposed law, by writing nominate:* >>> >>>> *(a) a body (the Yes campaign organisation) to campaign in favour of the proposed law; and* >>>> >>>> *(b) a body (the No campaign organisation) to campaign against the proposed law.* >>> >>> *(2) The Minister must ensure that the Yes campaign organisation and the No campaign organisation are allocated equal amounts of money for the purposes of the administration and operation of each campaign organisation.* >>> >>> *(3) Payments under this section shall be made out of moneys appropriated by the Parliament by another Act.* >>> >>> *(4) A body nominated by the Minister under subsection (1) ceases to be a nominated body the day after the voting day of a referendum.* >> >> *3 After subsection 89(4A)* >> >>> *Insert:* >>> >>> *(4B) A body nominated by the Minister under subsection 11A(1), or a person authorised by the body to act under this section, may appoint persons to act as scrutineers during the scrutiny at each counting centre, but the number of scrutineers for each body must not exceed the number of officers who are engaged in the scrutiny at each counting centre.*",
+   "stage": "In committee",
+   "ayes": 24,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 7,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-22/8"
+  },
+  {
+   "key": "federal-senate-8022",
+   "date": "2023-03-22",
+   "house": "senate",
+   "question": "The majority voted against [amendment (1) on sheet 1851 and amendments (1) to (12) on sheet 1815](https://www.openaustralia.org.au/senate/?gid=2023-03-22.367.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they failed. ### What would the amendments have done? Senator Pocock [explained that](https://www.openaustralia.org.au/senate/?gid=2023-03-22.367.1): > *The first one is about simply having an exclusion zone around polling booths. This is done in Tasmania and the ACT. It works very effectively in taking the heat out of polling booths. In my opinion it's a much nicer experience for voters. Given the sensitivity of this referendum and some of the rhetoric we are already hearing, I believe it is a sensible amendment to ensure that people are safe when they're casting their vote.* > > *The amendments on sheet 1815 truncate the disclosure time frame. To me it's frankly ridiculous in 2023 that, six months after an election, we find out who funded it. We have plenty of technology to be able to do that in a much more timely manner. I'm proposing seven days to disclose, seven days to make that public. I understand the government's reason—that they're waiting for JSCEM [Joint Standing Committee on Electoral Matters] —but this is something that we know Australians want and something we have the technology to do, and it's disappointing not to have support for a sensible amendment like that.*",
+   "stage": "Exclusion zones and financial disclosure",
+   "ayes": 17,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-22/9"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-827855",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-06",
+   "stage_hint": null,
+   "brief": "The coalition opposed the Referendum (Machinery Provisions) Amendment Bill 2022, arguing it removed the requirement for 'yes' and 'no' pamphlets, lacked official campaign organisations, and failed to ensure balanced voter information. The government supported the bill to modernise referendum machinery and prepare for a referendum on the Aboriginal and Torres Strait Islander Voice to Parliament, later agreeing to reinstate the pamphlet provision."
+  },
+  {
+   "slug": "speech-828079",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-07",
+   "stage_hint": null,
+   "brief": "The question was put for a second reading of the Referendum (Machinery Provisions) Amendment Bill 2022, following a deferred division, with no further debate allowed."
+  },
+  {
+   "slug": "speech-828146",
+   "speaker": "Anne Urquhart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-07",
+   "stage_hint": null,
+   "brief": "The Joint Standing Committee on Electoral Matters presented its report on the Referendum (Machinery Provisions) Amendment Bill 2022, moving that the Senate take note of the report before adjourning debate."
+  },
+  {
+   "slug": "speech-828149",
+   "speaker": "James McGrath",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2023-03-07",
+   "stage_hint": null,
+   "brief": "The coalition criticised the government for rushing the Referendum (Machinery Provisions) Amendment Bill inquiry over the summer, argued the bill should not be passed, and expressed disappointment that official 'yes' and 'no' campaign entities will not be designated and funded for the Voice referendum."
+  },
+  {
+   "slug": "speech-828607",
+   "speaker": "Jane Hume",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-20",
+   "stage_hint": null,
+   "brief": "The opposition argued the bill should be amended to include official, equally funded \"yes\" and \"no\" campaign organisations and a restored pamphlet for voters, and stated they would oppose the bill unless these changes were made. The government supported the bill as a modernisation of referendum machinery, including updated donation and disclosure rules, a ban on foreign donations, and restored pamphlet provisions."
+  },
+  {
+   "slug": "speech-828648",
+   "speaker": "David Van",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Referendum (Machinery Provisions) Amendment Bill 2022 removes essential safeguards for the Voice referendum, including the requirement for an official pamphlet outlining both cases and the establishment of equally funded official \"yes\" and \"no\" campaign organisations, which they said would undermine voter information and integrity while risking foreign interference."
+  },
+  {
+   "slug": "speech-828742",
+   "speaker": "Peter Whish-Wilson",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2023-03-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's safeguard mechanism legislation is inadequate because it targets 2°C warming and permits new fossil fuel projects, contradicting the IPCC’s call for no new fossil fuels and net zero by 2035. The speaker criticised the government's defence that the bill is \"what is achievable.\""
+  },
+  {
+   "slug": "speech-828883",
+   "speaker": "Susan McDonald",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2023-03-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-828952",
+   "speaker": "Don Farrell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-22",
+   "stage_hint": null,
+   "brief": "The speaker moved a motion to allow divisions to occur between 6:30 pm and 7:30 pm that day for the Referendum (Machinery Provisions) Amendment Bill 2022, and the motion was agreed to."
+  },
+  {
+   "slug": "speech-828960",
+   "speaker": "Pauline Hanson",
+   "party": "One Nation",
+   "state": "federal",
+   "date": "2023-03-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Liberal Party's deal with Labor to pass the Referendum (Machinery Provisions) Amendment Bill 2022 will enable a divisive constitutional change. They cited an 11-point plan allegedly from National Indigenous Australians Agency staff, including quotas, reduced taxes, and land ownership for First Nations people, and demanded the Prime Minister clarify the Voice to Parliament's powers."
+  },
+  {
+   "slug": "speech-829301",
+   "speaker": "Matt O'Sullivan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-27",
+   "stage_hint": null,
+   "brief": "The speaker successfully moved a motion to refer the administration of the Voice referendum to the Finance and Public Administration References Committee, arguing the inquiry is needed to examine protections against foreign interference, misinformation, and the integrity of the process, particularly given the absence of official 'yes' and 'no' campaigns."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Referendum (Machinery Provisions) Amendment Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00011",
+   "assent_date": "2023-03-27"
+  }
+ ]
+}

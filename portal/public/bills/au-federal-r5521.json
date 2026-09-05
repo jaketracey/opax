@@ -1,0 +1,54 @@
+{
+ "key": "au-federal-r5521",
+ "title": "Trade Marks Amendment (Iconic Symbols of National Identity) Bill 2015",
+ "short_title": "Trade Marks Amendment (Iconic Symbols of National Identity) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-14",
+ "originating_house": "representatives",
+ "sponsor": "KATTER, Bob, Jnr, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10352",
+ "portfolio": "(s) KATTER, Bob, Jnr, MP",
+ "status": "lapsed",
+ "status_as_of": "2016-03-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5521%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5521%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5521%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5521_ems_1550cd7c-33d1-43b5-9086-0b1db748ad0f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5521%22",
+   "document_date": "2015-09-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

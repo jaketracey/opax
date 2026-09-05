@@ -1,0 +1,261 @@
+{
+ "key": "au-federal-r5212",
+ "title": "Migration Legislation Amendment Bill (No. 1) 2014",
+ "short_title": "Migration Legislation Amendment Bill (No. 1) 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2014-09-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5212%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5212%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5212%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5212%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5212%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5212%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5212%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5212%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5212%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5212%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5212%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-09-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5212%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5212_ems_5c9766aa-70d8-4961-bc3a-9b564f48b514%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5212%22",
+   "document_date": "2014-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00106",
+   "document_date": "2014-09-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-27",
+  "sentences": [
+   "This bill would make several changes to migration and citizenship law.",
+   "It would clarify when visa application limits apply, including to people who did not know about an application made on their behalf.",
+   "The bill would also allow material obtained under a Crimes Act search warrant to be used for migration and citizenship purposes."
+  ],
+  "changes": [
+   "Clarifies that visa application limits apply to people who held a visa that was refused or cancelled after last entering Australia.",
+   "Clarifies that limits apply to non-citizens who were refused a visa applied for on their behalf, even if they did not know about it due to mental impairment or being a minor.",
+   "Ensures a bridging visa application does not prevent removal under subsection 198(5).",
+   "Strengthens debt recovery provisions for convicted people smugglers and illegal foreign fishers.",
+   "Clarifies the role of authorised recipients and obligations to inform them of direct communication.",
+   "Amends subsection 494C(6) to realign with the Electronic Transactions Act 1999."
+  ],
+  "affected": "Non-citizens, visa applicants, authorised recipients, convicted people smugglers, illegal foreign fishers, the Migration Review Tribunal, the Refugee Review Tribunal, and the Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:32:50Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3420",
+   "date": "2014-09-03",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2014-09-03.13.1) to agree with [the bill's](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5212) main idea. In parliamentary jargon, they voted to read the bill for a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). This means that the Senate can now discuss it in more detail. ### What was the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1314a/14bd081), the bill was introduced to: * *clarify the restriction and scope on applying for further visas* * *ensure that an application for a bridging visa does not prevent the removal of a detainee who is otherwise eligible for removal* * *enable debt recovery from all persons convicted of people smuggling and illegal foreign fishing* * *clarify and restrict the role of authorised recipients* * *enable greater use of material and information obtained through a search warrant and* * *clarify the scope of the procedural fairness requirements.*",
+   "stage": "Second reading",
+   "ayes": 43,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "earliest": 5,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-03/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-287400",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291264",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291266",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291267",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291277",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291279",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Legislation Amendment Act (No. 1) 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00106",
+   "assent_date": "2014-09-24"
+  }
+ ]
+}

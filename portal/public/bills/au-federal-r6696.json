@@ -1,0 +1,511 @@
+{
+ "key": "au-federal-r6696",
+ "title": "Migration Amendment (Clarifying International Obligations for Removal) Bill 2021",
+ "short_title": "Migration Amendment (Clarifying International Obligations for Removal) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-03-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration, Citizenship, Migrant Services and Multicultural Affairs",
+ "status": "passed",
+ "status_as_of": "2021-05-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6696%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6696%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6696%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6696%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6696%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6696%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6696%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6696%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6696%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6696%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6696%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6696%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-05-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6696%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6696_ems_4833e01d-035c-4015-9b26-b7187fb2d2fa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6696_ems_af1bf686-7e79-4262-8d03-7ac1b1899d1b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6696_ems_b5bd7c14-8a16-4782-8418-21f2a0c27b3d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6696%22",
+   "document_date": "2021-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00035",
+   "document_date": "2021-05-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2021-03-25",
+  "sentences": [
+   "The bill would change how Australia removes certain non-citizens who have been found to need protection from being sent back to danger.",
+   "It would alter section 197C of the Migration Act so that the duty to remove does not apply unless a protection finding is overturned, the minister decides protection is no longer needed, or the person asks to leave.",
+   "The bill also requires the Parliamentary Joint Committee on Intelligence and Security to review the new rules within two years of the act starting."
+  ],
+  "changes": [
+   "Modifies the effect of section 197C to prevent removal of unlawful non-citizens who have been found to engage protection obligations unless certain conditions are met.",
+   "Ensures protection obligations are always assessed when considering a protection visa application, even if the applicant is ineligible due to criminal conduct or national security risks.",
+   "Provides access to merits review for individuals previously found to engage protection obligations but later determined by the minister no longer to need them."
+  ],
+  "affected": "Unlawful non-citizens who have been found to engage protection obligations, particularly those with serious character or national security concerns, and the minister and department administering removal decisions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:17Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7117",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-05-13.3.2) \"*that the Migration Amendment (Clarifying International Obligations for Removal) Bill 2021 be exempted from the cut-off.*\" In other words, they voted in favour of ignoring the usual rules - known as [standing orders](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/standing-orders/) - in order to discuss that bill in this sitting period.",
+   "stage": "Business motion",
+   "ayes": 36,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 18,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/2"
+  },
+  {
+   "key": "federal-senate-7120",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2021-05-13.28.1) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it failed. ### Motion text > *At the end of the motion, add:* > >> *\"and, in respect of the [Migration Amendment (Clarifying International Obligations for Removal) Bill 2021](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd063), the provisions of the bill be referred immediately to the [Legal and Constitutional Affairs Legislation Committee](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Legal_and_Constitutional_Affairs) for inquiry and report by 29 June 2021.\"*",
+   "stage": "Committee motion",
+   "ayes": 10,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 19,
+    "earliest": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/5"
+  },
+  {
+   "key": "federal-senate-7131",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "Migration Amendment (Clarifying International Obligations for Removal) Bill 2021 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "earliest": 20,
+    "dated": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/16"
+  },
+  {
+   "key": "federal-senate-7132",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-05-13.82.1) introduced by the Australian Greens, which means it failed. ### Amendment text > *(2) Schedule 1, [item 3F](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6696_third-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6696_third-reps%2F0000%22;rec=0), page 8 (lines 23 and 24), to be opposed.* ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd063): > *The purpose of the Migration Amendment (Clarifying International Obligations for Removal) Bill 2021 (the Bill) is to amend the Migration Act 1958 to clarify that the Act does not authorise the removal of a person who is found to attract Australia’s protection obligations under international law. The Bill responds to two recent Federal Court decisions which found that section 197C of the Migration Act effectively overrides Australia’s international obligations not to return a person to a country where they face persecution or a real risk of significant harm (known as non-refoulement obligations). The Federal Court has found that currently, the Migration Act requires a person who is owed such obligations but is refused a protection visa, to either be removed from Australia or released from immigration detention.* > > *The Bill also inserts an express requirement that Australia’s protection obligations be considered before a decision is made whether to grant or refuse a protection visa.* In a nutshell, this amendment will ensure that people can continue to be detained in immigration detention if they have been refused a protection visa but cannot be returned to their own countries of origin due to Australia's international obligations of [non-refoulement](https://en.wikipedia.org/wiki/Non-refoulement). Read more about this bill in the [bills digest](https://www.aph.gov.au/Parliam",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "earliest": 20,
+    "dated": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/17"
+  },
+  {
+   "key": "federal-senate-7133",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-05-13.84.1) introduced by the Australian Greens, which means they failed. ### Amendment text > *(1) Schedule 1, [items 2 to 3D](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6696_third-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6696_third-reps%2F0000%22;rec=0), page 4 (line 8) to page 8 (line 18), omit the items, substitute:* > >> *2 Section 197C* >> >> *Repeal the section.* > > *(3) Schedule 1, [item 4](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6696_third-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6696_third-reps%2F0000%22;rec=0), page 9 (lines 1 to 3), omit subitem (3).* ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd063): > *The purpose of the Migration Amendment (Clarifying International Obligations for Removal) Bill 2021 (the Bill) is to amend the Migration Act 1958 to clarify that the Act does not authorise the removal of a person who is found to attract Australia’s protection obligations under international law. The Bill responds to two recent Federal Court decisions which found that section 197C of the Migration Act effectively overrides Australia’s international obligations not to return a person to a country where they face persecution or a real risk of significant harm (known as non-refoulement obligations). The Federal Court has found that currently, the Migration Act requires a person who is owed such obligations but is refused a protection visa, to either be removed from Australia or released from immigration detention.* > > *The Bill also inserts an express requirement that Australia’s protection obligations be considered before a decision is made whether to grant or refuse a protection visa.* In a nutshell, this amendment will ensure that p",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "earliest": 20,
+    "dated": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/18"
+  },
+  {
+   "key": "federal-senate-7134",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "Migration Amendment (Clarifying International Obligations for Removal) Bill 2021 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 33,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "earliest": 21,
+    "dated": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/19"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-405396",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Clarifying International Obligations for Removal) Bill 2021 amends the Migration Act to clarify that removal is not required or authorised where a person has been assessed as engaging non‑refoulement obligations, and ensures that all valid protection visa applications will have their protection claims assessed."
+  },
+  {
+   "slug": "speech-405894",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Clarifying International Obligations for Removal) Bill 2021 and the Migration Amendment (Tabling Notice of Certain Character Decisions) Bill 2021 are necessary to prevent refoulement of 21 people in immigration detention who have been found to owe protection obligations but fail character or security tests. Labor supports the bills after securing amendments including merits review for ministerial decisions, tabling of certain character decisions, and a statutory review by the Parliamentary Joint Committee on Intelligence and Security within 24 months."
+  },
+  {
+   "slug": "speech-405899",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration Amendment (Clarifying International Obligations for Removal) Bill 2021, arguing it strikes a balance between Australia’s non-refoulement obligations and community safety by offering alternatives for 21 detained refugees who failed the character test, such as community detention, third-country options, or reassessment of protection. Labor secured amendments including merits review of ministerial determinations and a parliamentary committee review within two years."
+  },
+  {
+   "slug": "speech-405900",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the two bills clarify section 197C of the Migration Act to ensure removal does not breach non-refoulement obligations, and require the minister to table notice of certain character decisions under section 501(3) for greater transparency, except in cases of serious criminal offending or national security concerns."
+  },
+  {
+   "slug": "speech-405901",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Clarifying International Obligations for Removal) Bill 2021, arguing it would legalise indefinite mandatory detention and override Federal Court rulings, and noted they had introduced the Ending Indefinite and Arbitrary Immigration Detention Bill 2021 as an alternative to end offshore detention and ensure community-based detention with rights to housing, work, education and healthcare."
+  },
+  {
+   "slug": "speech-405902",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The government argued the bills are needed to prevent Australia from breaching non‑refoulement obligations while managing a small cohort of serious criminals owed protection, and announced amendments requiring parliamentary notice for certain character decisions except in national security cases."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Clarifying International Obligations for Removal) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00035",
+   "assent_date": "2021-05-24"
+  }
+ ]
+}

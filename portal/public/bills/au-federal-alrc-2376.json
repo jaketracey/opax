@@ -1,0 +1,169 @@
+{
+ "key": "au-federal-alrc-2376",
+ "title": "Aboriginal Land Rights and Other Legislation Amendment Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Families, Housing, Community Services and Indigenous Affairs",
+ "status": "passed",
+ "status_as_of": "2013-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00093",
+   "document_date": "2013-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-823084",
+   "speaker": "Anne McEwen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-21",
+   "stage_hint": null,
+   "brief": "The Selection of Bills Committee presented its fourth report of 2013, recommending 18 bills be referred to various Senate committees for inquiry and report by specific dates, and that certain other bills not be referred."
+  },
+  {
+   "slug": "speech-272315",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823297",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824745",
+   "speaker": "Nigel Scullion",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aboriginal Land Rights and Other Legislation Amendment Bill 2013, noting that the Northern Territory government, Northern Land Council, and local Aboriginal land trust back the scheduling of three land parcels, and that ERA seeks to avoid a painful native title negotiation. The speaker commended the parties for agreeing to reschedule the township of Jabiru under the act, despite criticism from others."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aboriginal Land Rights and Other Legislation Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00093",
+   "assent_date": "2013-06-28"
+  }
+ ]
+}

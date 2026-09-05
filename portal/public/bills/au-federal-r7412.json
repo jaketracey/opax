@@ -1,0 +1,535 @@
+{
+ "key": "au-federal-r7412",
+ "title": "Treasury Laws Amendment (Supporting Choice in Superannuation and Other Measures) Bill 2025",
+ "short_title": "Treasury Laws Amendment (Supporting Choice in Superannuation and Other Measures) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2026-03-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-03-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7412_ems_0541949c-0f69-44d0-8578-6798d538c76e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7412%22",
+   "document_date": "2025-11-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00012",
+   "document_date": "2026-03-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9913",
+   "date": "2026-03-02",
+   "house": "representatives",
+   "question": "Claire Clutterham I rise to speak in support of the Treasury Laws Amendment (Supporting Choice in Superannuation and Other Measures) Bill 2025. This bill is comprised of six sections touching on a range of different reforms. Today I will speak in relation to schedules 1 and 2—two of those reforms—and how they reflect and further the objective of superannuation as set out in the Superannuation (Objective) Act 2024. The core purpose of this bill is to implement two policy measures to support the transition to payday super. Firstly, the bill amends the Superannuation Guarantee (Administration) Act 1992 to support employers to streamline the choice of fund process during employee onboarding. These amendments are intended to provide greater flexibility for when an employer or their agent may request details of an employee's stapled superannuation fund from the commissioner so that the employer or their agent can provide those details to the employee during onboarding to inform the employee's choice of fund. Secondly, this bill amends the Corporations Act to ban advertising of certain superannuation products to new employees as part of that onboarding process. Schedule 2 will commence on 1 July 2026. The ban under this schedule is intended to reduce the risk that employees are induced or influenced to choose a superannuation product that is not appropriate to their needs, or if it results in the opening of multiple unnecessary superannuation accounts during that onboarding process. There are many reasons why people have multiple superannuation accounts, and frequent job changes is one of them. It's not uncommon—around four million Australians have more than one—and, of course, you can if you want to. You might want to keep multiple insurance covers, increase your variety of investment options, or, if your super is a defined benefit fund, you might want to retain that benefit. However, there are well documented disadvantages, like paying more than one set of fees, having t",
+   "stage": "Bill",
+   "ayes": 44,
+   "noes": 96,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 4
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 90
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-02/1"
+  },
+  {
+   "key": "federal-representatives-9914",
+   "date": "2026-03-02",
+   "house": "representatives",
+   "question": "Milton Dick The question before the House is that the bill be read a second time.",
+   "stage": "Bill",
+   "ayes": 100,
+   "noes": 38,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Labor": {
+     "ayes": 89,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-02/2"
+  },
+  {
+   "key": "federal-senate-10088",
+   "date": "2026-03-23",
+   "house": "senate",
+   "question": "Slade Brockman The committee is considering amendments (3) and (4) on sheet 3682 moved by Senator Chandler. The question is that items 4 and 20 on schedule 5 stand as printed.",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 21,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-23/6"
+  },
+  {
+   "key": "federal-senate-10089",
+   "date": "2026-03-23",
+   "house": "senate",
+   "question": "Claire Chandler I move amendment (2) on sheet 3682: (2) Schedules 1 and 2, page 3 (line 1) to page 6 (line 26), to be opposed. As foreshadowed in the second reading contributions on this bill, there are some elements of this bill that the coalition is supportive of, and there are others that we are not supportive of. In effect, this amendment on sheet 3682 would remove schedule 1 and schedule 2 from the bill. That is in relation to the superannuation changes proposed in the legislation. As I said in my second reading contribution—other colleagues also vocalised concerns—we are concerned that the government is rushing elements of this bill too quickly, but we want to provide the opportunity for other sensible aspects of this bill to pass quickly. Industry have made their concerns clear. We fear that the end result of these superannuation changes will be worse outcomes for Australian workers, more duplicate accounts, more fees and worse outcomes for employers attempting to comply with these new requirements on top of their new payday superannuation obligations. As I've said, there are also some parts of this bill that we are in agreement with—those in relation to the tax exemptions associated with hosting the Men's Rugby World Cup, the implementation of the Australia-Portugal tax treaty and the increases to the wine equalisation tax producer rebate cap. In effect, what this amendment would be seeking to achieve is to remove the sections of the bill that we are not in agreement with and keep the sections of the bill that we are in agreement with. For the ease of the chamber, that is what we are attempting to do here. That does, in effect, mean that, with this amendment, we would be remove schedules 1 and 2, which we find problematic, from this bill. Anthony Chisholm The government will be opposing the proposed amendment by Senator Chandler. Schedules 1 and 2 of this bill are important reforms to streamline and safeguard the process for when employees provide their supe",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-23/7"
+  },
+  {
+   "key": "federal-senate-10090",
+   "date": "2026-03-23",
+   "house": "senate",
+   "question": "Slade Brockman That means that amendment (1) on sheet 3682 lapses. Mehreen Faruqi by leave—I move Greens amendments (1) and (2) on sheet 3646 together: (1) Clause 2, Page 2 (at the end of the table), add: (2) Page 18 (after line 9), at the end of the Bill, add: Schedule 8 — Loss of deductible gift recipient status for supporting illegal occupation _Income Tax Assessment Act 1997_ 1 At the end of subsection 30-125(1) Add: Note: However, the entity is not entitled to be endorsed if the entity has supported an illegal occupation (see section 30-150). 2 At the end of subsection 30-125(2) Add: Note: However, the entity is not entitled to be endorsed if the entity has supported an illegal occupation (see section 30-150). 3 After section 30-130 Insert: 30-150 No entitlement to endorsement for entities supporting illegal occupation (1) An entity is not entitled to be endorsed as: (a) a \\*deductible gift recipient (despite subsection 30-125(1)); or (b) a \\*deductible gift recipient for the operation of a fund, authority or institution (despite subsection 30-125(2)); if the entity has supported an \\*illegal occupation. (2) The \\*Foreign Affairs Minister may, by legislative instrument, make a declaration specifying an occupation of the whole or part of a territory as an _illegal occupation_. _Application in relation to non-legal persons_ (3) An entity that is: (a) a partnership; or (b) a trust; or (c) an unincorporated body or association; is taken to have supported an \\*illegal occupation if an accountable person for the entity has supported the illegal occupation in the person's capacity as an accountable person for the entity. _Definitions_ (4) For the purposes of this section, an _accountable person_ for an entity is: (a) in the case of a partnership—a person who is a partner in the partnership; or (b) in the case of a trust—a person who is a trustee of the trust; or (c) in the case of an unincorporated body or association—a person who is a member of the governing body or",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-23/8"
+  },
+  {
+   "key": "federal-senate-10091",
+   "date": "2026-03-23",
+   "house": "senate",
+   "question": "Malcolm Roberts I have some questions, as I implied before. We're generally supportive, One Nation, of these superannuation modifications, except for what we see as dishonest provisions. In February's Senate estimates hearings I asked the office of the Governor-General about Equality Australia, because Australia's Governor-General is supposed to be neutral—to not take political positions. This leads to many questions of the government. Firstly, Minister, how is it that the Governor-General can be a patron of a political activist group, Equality Australia, that actively supports irreversible gender treatments for children—mutilation of children? This is not about people's support for Equality Australia, because that's what is essentially happening by giving it DGR—deductible gift recipient—status. This is about the law and Equality Australia's DGR status. My questions include: Why did assistant charities minister Mr Andrew Leigh intervene to give Equality Australia charity status when on three occasions the Administrative Appeals Tribunal and two Federal Court hearings had held that Equality Australia was not established for a benevolent purpose and should not be entitled to deductible gift recipient status? Deductible gift recipient status allows donors to claim tax deductions for donations. Why did the Labor government give Equality Australia a massive favour against the findings of the Administrative Appeals Tribunal and the Federal Court's full bench, on two occasions? Was it because the Governor-General is a patron of the activist group Equality Australia? Isn't this a clear conflict of interest and a breach of the requirements of neutrality by the Governor-General? Maria Kovacic Senator Ghosh. Varun Ghosh I hesitate to interrupt my colleague, but I think it's a contravention of the standing orders to cast aspersions on the motives of, or reflect disrespectfully on, the Governor-General of Australia. The TEMPORARY CHAIR: Noted, thank you. Please withdraw, Senato",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 22,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-23/9"
+  },
+  {
+   "key": "federal-senate-10092",
+   "date": "2026-03-23",
+   "house": "senate",
+   "question": "Maria Kovacic Pursuant to the order agreed to earlier today, the time allotted for debate on the bill has expired. I will now put the question before the chair and then put the questions on the remaining stages of the bill. I will deal with the remaining amendments circulated by the opposition. The question is that the amendments on sheets 3681, 3686, 3688, 3689, 3691 and 3693 be agreed to. To clarify, as the One Nation amendments on sheet 3683 are identical to opposition amendments negatived earlier today, the question on the One Nation amendments will not be put. _Opposition's circulated amendments—_ SHEET 3681 (1) Schedule 2, item 1, page 5 (line 28) to page 6 (line 8), omit paragraphs 992AB(4)(d) and (e), substitute: (d) the requirement in either subsection (4A) or (4B) is satisfied; and (2) Schedule 2, item 1, page 6 (after line 13), after subsection 992AB(4), insert: (4A) The requirement in this subsection is satisfied if: (a) the advertisement or statement occurs after the time the employer, or the employer's agent, makes a request (the _stapled fund request_) under subsection 32R(1) of the _Superannuation Guarantee (Administration) Act 1992_ in relation to the employee; and (b) if, in response to the stapled fund request, the employer is notified under subsection 32R(2) of that Act that the Commissioner is satisfied that there is a stapled fund for the employee—the advertisement or statement occurs at or after the time the employer, or the employer's agent, notifies the employee: (i) that the Commissioner is satisfied that there is a stapled fund for the employee; and (ii) about the details that the employer was notified about in relation to the stapled fund request under subparagraph 32R(2)(b)(ii) of that Act. (4B) The requirement in this subsection is satisfied if: (a) the advertisement or statement occurs after the time the employer, or the employer's agent, makes a request (the _regulated fund request_) under subsection (4C) in relation to the employee;",
+   "stage": "Limitation of debate",
+   "ayes": 24,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-23/10"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1200156",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200191",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200295",
+   "speaker": "Claire Clutterham",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201206",
+   "speaker": "Claire Chandler",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-03-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201560",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Supporting Choice in Superannuation and Other Measures) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00012",
+   "assent_date": "2026-03-26"
+  }
+ ]
+}

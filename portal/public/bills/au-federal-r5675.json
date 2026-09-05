@@ -1,0 +1,197 @@
+{
+ "key": "au-federal-r5675",
+ "title": "Registration of Deaths Abroad Amendment Bill 2016",
+ "short_title": "Registration of Deaths Abroad Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs and Trade",
+ "status": "passed",
+ "status_as_of": "2016-09-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5675%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5675%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5675%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5675%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5675%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5675%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5675%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5675%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5675%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5675%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5675%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5675%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5675_ems_97edfcd9-8f60-46ba-a099-9494a555fea0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/4804997%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5675%22",
+   "document_date": "2016-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00057",
+   "document_date": "2016-09-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4281",
+   "date": "2016-09-12",
+   "house": "representatives",
+   "question": "Registration of Deaths Abroad Amendment Bill 2016 - Third Reading - Suspend standing orders",
+   "stage": "Third reading",
+   "ayes": 79,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 129,
+    "earliest": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-09-12/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-333212",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-12",
+   "stage_hint": null,
+   "brief": "The opposition supported the Registration of Deaths Abroad Amendment Bill 2016, which validates the appointment of the ACT registrar-general as Registrar of Deaths Abroad and simplifies registration processes, but criticised the government for delaying the bill by calling an early election."
+  },
+  {
+   "slug": "speech-333213",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-12",
+   "stage_hint": null,
+   "brief": "The Registration of Deaths Abroad Amendment Bill 2016 corrects an anomaly that left applicants unable to register deaths of family members overseas because the ACT Registrar-General was not employed under the Commonwealth Public Service Act. In 2014–15, 1,282 Australians died overseas, with the most deaths recorded in Thailand, the Philippines and Indonesia, while 9.7 million Australians took short-term overseas trips in 2015."
+  },
+  {
+   "slug": "speech-333214",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-12",
+   "stage_hint": null,
+   "brief": "The Registration of Deaths Abroad Amendment Bill 2016 amends the Registration of Deaths Abroad Act 1984 to correct an anomaly that left some applicants unable to register overseas deaths of family members. It provides the Registrar of Deaths Abroad with clear discretion when a state or territory will not register a death, and continues the Minister for Foreign Affairs' authority to appoint registrars."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Registration of Deaths Abroad Amendment Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00057",
+   "assent_date": "2016-09-16"
+  }
+ ]
+}

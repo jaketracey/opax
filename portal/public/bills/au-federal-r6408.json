@@ -1,0 +1,256 @@
+{
+ "key": "au-federal-r6408",
+ "title": "Medical and Midwife Indemnity Legislation Amendment Bill 2019",
+ "short_title": "Medical and Midwife Indemnity Legislation Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2019-11-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6408%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6408%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6408%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6408%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6408%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6408%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6408_ems_b158f1df-df02-420b-9f78-cf32067a9912%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6408%22",
+   "document_date": "2019-09-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00105",
+   "document_date": "2019-11-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-18",
+  "sentences": [
+   "This bill would change the laws that support Australia's medical indemnity and midwife insurance schemes.",
+   "It would put obligations for universal cover and the Premium Support Scheme into legislation, instead of using contracts.",
+   "The bill would also require an actuarial report on the stability and affordability of the medical indemnity market to be tabled in Parliament."
+  ],
+  "changes": [
+   "Simplify the legislative structure for government support of medical indemnity insurance.",
+   "Repeal laws that are no longer needed.",
+   "Remove contract-based arrangements for the Premium Support Scheme and write the requirements into law.",
+   "Make all medical indemnity insurers offer cover to any medical practitioner who needs it.",
+   "Keep supporting high-cost and exceptional claims against allied health professionals and allow similar claims for them.",
+   "Extend support for high-cost and exceptional claims to private-sector employee midwives not in the Midwife Professional Indemnity Scheme."
+  ],
+  "affected": "Medical practitioners, allied health professionals, eligible midwives, medical indemnity insurers, and the Australian Government.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5898",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual [second reading motion](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) that \"*this bill be read for a second time*\", which is parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *That all words after “That” be omitted with a view to substituting the following words:* > > *“whilst not declining to give the bill a second reading, the House calls on the Government to address the lack of indemnity insurance for midwives who attend home births, as well as the lack of competition and choice in other midwifery cover”.*",
+   "stage": "Second reading",
+   "ayes": 65,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Labor": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-10-16/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-381648",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The bill amends the Medical Indemnity Act 2002 to streamline medical indemnity insurance, requiring all medical indemnity insurers to provide universal cover and embedding the Premium Support Subsidy Scheme in legislation, with $83 million provided in 2018-19. It also closes a coverage gap for employed privately practising midwives, with changes taking effect from 1 July 2020."
+  },
+  {
+   "slug": "speech-382818",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The Labor Party will support the Medical and Midwife Indemnity Legislation Amendment Bill 2019 but moved an amendment calling on the government to address the lack of indemnity insurance for midwives attending homebirths and the lack of competition and choice in midwifery cover."
+  },
+  {
+   "slug": "speech-382819",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Medical and Midwife Indemnity Legislation Amendment Bill 2019 and the shadow health minister’s amendment, noting that unresolved issues include the lack of indemnity insurance for midwives attending homebirths and a monopoly provider of midwifery cover. The speaker also referenced the Medicare Benefits Schedule Review Taskforce’s upcoming findings on homebirth rebates."
+  },
+  {
+   "slug": "speech-382820",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Medical and Midwife Indemnity Legislation Amendment Bill 2019 but argued it will do little to lower premiums, encourage private practice, or reduce public hospital waiting lists, noting rising indemnity costs have driven specialists like paediatricians and obstetricians away from private practice. They also called for the scheme to include midwives attending homebirths."
+  },
+  {
+   "slug": "speech-382822",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Medical and Midwife Indemnity Legislation Amendment Bill 2019 and the McMahon amendment, arguing it removes indemnity insurance barriers for privately practising midwives and improves maternity care choice. She cited a Cochrane review showing midwife-led care reduces fetal deaths by 12 per cent, and highlighted rural workforce shortages, including Yarrawonga’s maternity service closure."
+  },
+  {
+   "slug": "speech-382823",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to expand indemnity insurers beyond the current four, increasing competition and stabilising premiums, but noted it fails to cover midwives for home births and does not address the monopoly held by the only midwifery insurance provider."
+  },
+  {
+   "slug": "speech-382824",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The Medical and Midwife Indemnity Legislation Amendment Bill 2019 reduces and simplifies medical indemnity legislation, removes the requirement for insurers to contract with the Commonwealth, and establishes separate high-cost and exceptional claims schemes for allied health practitioners including midwives. The government will maintain support for high-cost claims and table an independent actuarial evaluation in parliament in 2021."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Medical and Midwife Indemnity Legislation Amendment Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00105",
+   "assent_date": "2019-11-28"
+  }
+ ]
+}

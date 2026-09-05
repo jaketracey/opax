@@ -1,0 +1,462 @@
+{
+ "key": "au-federal-r5656",
+ "title": "Road Safety Remuneration Amendment (Protecting Owner Drivers) Bill 2016",
+ "short_title": "Road Safety Remuneration Amendment (Protecting Owner Drivers) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-04-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5656%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5656%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5656%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5656%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5656%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5656%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5656_ems_be13db14-8645-445d-9007-171b484560ca%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5656%22",
+   "document_date": "2016-04-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4195",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "question": "Lisa Chesters What an extraordinary question time—again the government denied the link between pay and safety when it comes to roads and what has been decided by the tribunal. Let me remind the government what the Australian Productivity Commission report found in 2016. This is a government that is happy to support the Productivity Commission when they recommend cutting penalty rates but is not willing to support the Productivity Commission when they say there is a direct link between pay and safety. The cherry-picking of this government is extraordinary. And that is not the only report that linked pay to safety on our roads. There was another report, by Jaguar Consulting, in 2014. There was the National Transport Commission report in 2008. The Productivity Commission recognised in 2014 and 2016 that RSOS will result in a '10 per cent to 18 per cent reduction in the number of crashes'. This is on page 86, if government members would like to check it out. Perhaps they should read up on it before they make a statement in this House stating otherwise. The road transport industry has the highest fatality rate of any industry in Australia, with fatality rates 12 times higher than the average for other industries. That was on page 6 of the Productivity Commission review. Let me just state that again: '12 times higher'. Let's be real about our roads network. It is the workplace of Australian truck drivers. It is the responsibility of this place to do everything it can to ensure that safety is paramount on our roads, yet all the government plans to do—what they believe will improve road safety—is just build roads. That is not enough. It is not enough to just build roads. You also have to look at who is driving on our roads and the pressure on our truck drivers on our roads. In my previous statement I listed example after example of trucking accidents in my electorate. The Bendigo electorate has a vast network of highways. It is important that we have tribunals like this tha",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-04-18/11"
+  },
+  {
+   "key": "federal-representatives-4196",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "question": "Tony Smith The question now is that this bill be now read a second time.",
+   "stage": "Second reading",
+   "ayes": 84,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-04-18/12"
+  },
+  {
+   "key": "federal-representatives-4197",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "question": "Tony Smith Is leave granted for the third reading to be moved immediately? Tony Burke No, it is not. We want to have a consideration in detail stage. It is quite reasonable to be able to have it. This legislation did not reach the parliament until today. It is being gagged already. People are entitled to give five-minute speeches on it. Christopher Pyne I move: That so much of the standing orders be suspended as would prevent the motion for the third reading being moved without delay. Tony Burke I am opposed to standing orders being suspended, and Labor is opposed to standing orders being suspended here. All we are saying is we should be allowed to put our case to the Parliament of Australia. But those members opposite believe that somehow they have the right to just ignore that, to come straight over the top. Ross Vasta The question now is that the motion be agreed to. Tony Burke No, I am speaking in that debate. I am speaking in the debate. I have got the call. Christopher Pyne Mr Deputy Speaker Vasta, on a point of order— Tony Burke He is upset that he sat down and forgot to give a speech— Christopher Pyne I move: That the Member be no longer heard. Tony Burke Mr Deputy Speaker Vasta, on a point of order: it is just been argued that I did not have the call, so how can he move that I be no longer heard? You have to give me the call now that that has been stated and then, if he is upset, he can move that I be no longer heard—but he cannot move it if I do not have the call. Ross Vasta I give the Manager of Opposition Business the call. Tony Burke Thank you. North Korea would be proud of the Leader of the House tonight! They would be really impressed. Christopher Pyne I move: That the question be now put. Tony Smith The question is that the question be now put.",
+   "stage": "Third reading",
+   "ayes": 84,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-04-18/13"
+  },
+  {
+   "key": "federal-representatives-4198",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "question": "Tony Smith The question now is that the motion moved by the Leader of the House to suspend standing orders be agreed to.",
+   "stage": "Third reading",
+   "ayes": 82,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-04-18/14"
+  },
+  {
+   "key": "federal-representatives-4199",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "question": "Christopher Pyne I move: That this bill be now read a third time. Mr Brendan O'Connor interjecting— Tony Smith No, the member for Gorton will resume his seat. The motion requires the third reading be put immediately without debate. _A division having been called and the bells being/having been rung—_ I appoint the same tellers as per the previous division. Again, if members would remain in their seats during successive divisions, it would be helpful. If they did not vote in the previous division or are changing their vote, they should report to the tellers. Those who have changed their seats or come into the chamber: could they report to the tellers.",
+   "stage": "Third reading",
+   "ayes": 85,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-04-18/15"
+  },
+  {
+   "key": "federal-representatives-4200",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "question": "Tony Smith _(In division)_ If members have changed sides or come into the chamber, they need to report to the tellers and indicate to the tellers— Brett Whiteley And they have. Tony Smith and they have. Members cannot move now. Mr Burke interjecting— Mr Pyne interjecting— Mr Albanese interjecting— Members should not move around during—let's be very clear about this. This is a matter for the tellers to be satisfied that people have reported to them. Mr Burke interjecting— As I have said, this is a matter for the tellers to satisfy themselves. I am not going to take interjections on the subject. Mr Perrett interjecting— The member for Moreton! The Clerk is conversing with the tellers, as you know. Tony Burke Point of order, Mr Speaker. There has been a breach of the counting rules that have been carried by this House by the government whips. And this is a serious point of order, because the whips have put you in this position, Mr Speaker, and you have simply reported to the House what they have given you, but the numbers you have reported in terms of how many people have voted on the government side are not signed off on or agreed to in any way by the opposition whips. They are in direct contradiction to the rules that have been put in place by the Leader of the House. We did not like those rules when they were brought in, but the rules are: unless someone leaves their chair in an orderly way—they cannot do it in a disorderly way, which would put an obligation on you to consider naming them or removing them from the House—during the period when the doors are open, they must come up and report to the whips. We know that only happened with the member for Kennedy, and yet the count has changed by three. That is not possible as an outcome under the rules we have. Standing order 129 has been changed in this term of parliament. Standing order 129 now says: (c) Upon the doors being locked, the Speaker shall: (i) state the question to the House; (ii) direct the Members voting",
+   "stage": "Third reading",
+   "ayes": 85,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-04-18/16"
+  },
+  {
+   "key": "federal-representatives-4201",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "question": "Christopher Pyne I move: That the motion be put. Tony Smith The question is that the motion be put.",
+   "stage": "Second reading",
+   "ayes": 81,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-04-18/17"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-331155",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-04-18",
+   "stage_hint": null,
+   "brief": "The House was asked to suspend standing orders to allow the immediate introduction and debate of the Fair Work (Registered Organisations) Amendment Bill 2014 [No. 3], the Road Safety Remuneration Repeal Bill 2016, and the Road Safety Remuneration Amendment (Protecting Owner Drivers) Bill 2016. The speaker argued the Fair Work bill, passed three times by the House, targets dishonest union leaders, while the Road Safety bills address the impact on owner drivers from Labor’s previous legislation."
+  },
+  {
+   "slug": "speech-331170",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-04-18",
+   "stage_hint": null,
+   "brief": "The speaker argued against repealing the Road Safety Remuneration Tribunal, citing 25 heavy-vehicle-related road deaths last month and over 300 last year, and presenting evidence from PwC, NTC, and academic reports that link pay rates to safety. He named truck driver John Waltis, who had attended 52 funerals of killed drivers, and quoted Senator John Williams and researchers Michael Quinlan and Michael Belzer in support of the tribunal's role in preventing unsafe practices."
+  },
+  {
+   "slug": "speech-331174",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-04-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Road Safety Remuneration Tribunal should be repealed because it discriminates against owner-driver truck drivers by imposing above-market rates that only apply to them, not to large companies or employed drivers, causing owner-operators to lose contracts and park their trucks. The speaker cited examples of a driver named Greg from Melbourne and a contractor from Tomingley who could no longer compete, and noted that the coalition opposed the tribunal when it was established in 2012."
+  },
+  {
+   "slug": "speech-331290",
+   "speaker": "Ken O'Dowd",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-04-18",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Road Safety Remuneration Amendment Bill, arguing that the 2016 order imposes unfair price fixing and fines of up to $54,000 on owner-drivers while ignoring real safety issues, and called for the tribunal to be abolished."
+  },
+  {
+   "slug": "speech-331297",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-04-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Road Safety Remuneration Tribunal is a Labor-union initiative that unfairly targets owner-operator truck drivers, and supported the repeal bill to prevent a ruling that would impose minimum rates and cost the economy $2.3 billion over 15 years while threatening 3,500 jobs. He named several owner-operators from South Australia who would be driven out of business, and criticised the shadow minister for linking the tribunal's ruling to a fatal accident without evidence."
+  },
+  {
+   "slug": "speech-331299",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-04-18",
+   "stage_hint": null,
+   "brief": "Moved to suspend standing order 133 (deferred divisions on Mondays and Tuesdays) until the conclusion of consideration of the Road Safety Remuneration Repeal Bill 2016 and the Road Safety Remuneration Amendment (Protecting Owner Drivers) Bill 2016, to allow a vote on the RSRT at the earliest convenience of the House."
+  },
+  {
+   "slug": "speech-331338",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-04-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Road Safety Remuneration Amendment Bill 2016 to delay the contractor-driver minimum payment order to 1 January 2017, arguing that the industry—employing 200,000 drivers with 35,000 owner-drivers at risk—needed time to adjust due to widespread misunderstanding of the order and potential business viability issues."
+  },
+  {
+   "slug": "speech-331342",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-04-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Road Safety Remuneration Tribunal order was designed to make owner-drivers uncompetitive and destroy small businesses, citing a $54,000 fine threat to contractor Bryan Alley, and announced the Road Safety Remuneration Amendment (Protecting Owner Drivers) Bill 2016 as a backup to defer the order until 2017 if the Senate rejects the repeal bill."
+  },
+  {
+   "slug": "speech-331343",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-04-18",
+   "stage_hint": null,
+   "brief": "Labor opposed the Road Safety Remuneration Amendment (Protecting Owner Drivers) Bill 2016, arguing the government should delay the tribunal’s December order and consult affected parties rather than abolish the tribunal, which it called disproportionate. The speech emphasised improving road safety without harming owner-drivers and highlighted industry-wide problems with large companies paying drivers late."
+  }
+ ],
+ "acts": []
+}

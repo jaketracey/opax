@@ -1,0 +1,270 @@
+{
+ "key": "au-federal-r6891",
+ "title": "Narcotic Drugs (Licence Charges) Amendment Bill 2022",
+ "short_title": "Narcotic Drugs (Licence Charges) Amendment Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-08-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2022-11-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6891%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6891%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6891%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6891%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6891%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6891%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6891%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6891%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6891%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6891%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6891%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6891%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6891_ems_a3e72d9c-3aef-4aa0-83d1-989849e0f964%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6891%22",
+   "document_date": "2022-08-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00070",
+   "document_date": "2022-11-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-08-03",
+  "sentences": [
+   "This bill would change the law about fees charged to people licensed to grow or make medicinal cannabis.",
+   "It would let the regulations set charges in more flexible ways, including setting a flat amount or a way to calculate it, and allow multiple charges for different matters in one charging period.",
+   "The bill also includes savings provisions to handle the transition after these changes."
+  ],
+  "changes": [
+   "The bill would let regulations impose multiple separate charges on a licence holder during a charging period.",
+   "It would let regulations specify either a fixed charge amount or a method for working out the charge.",
+   "It would include savings provisions as a result of the other changes."
+  ],
+  "affected": "People and companies holding licences under the Narcotic Drugs Act 1967 for cultivating, producing, or manufacturing medicinal cannabis.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7873",
+   "date": "2022-11-24",
+   "house": "senate",
+   "question": "Narcotic Drugs (Licence Charges) Amendment Bill 2022 - Second Reading - Amnesty from criminal prosecution",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 13,
+    "earliest": 25,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-24/3"
+  },
+  {
+   "key": "federal-senate-7874",
+   "date": "2022-11-24",
+   "house": "senate",
+   "question": "Narcotic Drugs (Licence Charges) Amendment Bill 2022 - Second Reading - Increase accessibility",
+   "stage": "Second reading",
+   "ayes": 17,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "earliest": 26,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-24/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-421188",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-03",
+   "stage_hint": null,
+   "brief": "The bill amends the Narcotic Drugs (Licence Charges) Act to allow multiple separate charges for licence holders during a charging period and simplify charge calculations, supporting cost recovery for the medicinal cannabis regulatory scheme."
+  },
+  {
+   "slug": "speech-422006",
+   "speaker": "Sussan Penelope Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The Narcotic Drugs (Licence Charges) Amendment Bill 2022 updates fees and charges to align with a simplified single-licence model for medicinal cannabis, implementing 26 recommendations from the independent McMillan review. The speech also criticised the Albanese government for ending free rapid antigen tests, cutting telehealth consultations, and other health policy decisions."
+  },
+  {
+   "slug": "speech-422007",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker supported the Narcotic Drugs (Licence Charges) Amendment Bill 2022, arguing it simplifies the regulatory framework for medicinal cannabis while maintaining oversight, and noted the industry's potential for domestic medical use, primary production, and export earnings, with proponents in South Australia."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Narcotic Drugs (Licence Charges) Amendment Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00070",
+   "assent_date": "2022-11-30"
+  }
+ ]
+}

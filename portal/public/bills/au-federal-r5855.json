@@ -1,0 +1,200 @@
+{
+ "key": "au-federal-r5855",
+ "title": "National Vocational Education and Training Regulator Amendment (Annual Registration Charge) Bill 2017",
+ "short_title": "National Vocational Education and Training Regulator Amendment (Annual Registration Charge) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2017-06-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5855%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5855%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5855%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5855%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5855%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5855%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5855%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5855%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5855%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5855%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5855%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5855%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5855%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5855_ems_76dcca39-f5ef-4add-8b1e-3d92fc075301%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5855%22",
+   "document_date": "2017-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00065",
+   "document_date": "2017-06-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-30",
+  "sentences": [
+   "This bill would change how the national regulator for vocational education and training collects its annual registration fees, turning them into a formal charge backed by tax law.",
+   "It would amend the National Vocational Education and Training Regulator Act 2011 to make certain registered training organisations and overseas student course providers liable for the new annual charge, with the amount set by the Minister and agreed by the Ministerial Council.",
+   "The bill is mostly mechanical, moving existing fees into a separate tax act to avoid constitutional issues, and it does not set the charge amounts itself."
+  ],
+  "changes": [
+   "The bill would replace current annual registration fees with a new annual registration charge for certain providers.",
+   "It would clarify that the charge is recoverable as a debt to the Commonwealth.",
+   "It would align ASQA's fee structure with the Australian Government Charging Framework."
+  ],
+  "affected": "Registered training organisations and certain overseas student course providers regulated by the Australian Skills Quality Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-345189",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The government introduced the National Vocational Education and Training Regulator Amendment (Annual Registration Charge) Bill 2017 and its companion bill to allow the Australian Skills Quality Authority to recover costs of compliance monitoring and intelligence analysis through an annual registration charge, replacing existing fees without additional financial impact on businesses."
+  },
+  {
+   "slug": "speech-349537",
+   "speaker": "Kate Ellis",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-19",
+   "stage_hint": null,
+   "brief": "The bill was supported to amend ASQA's legislation to classify annual registration charges as a tax under section 55 of the Constitution, ensuring continued funding for intelligence collection and data analysis. Labor also announced policies including $637.6 million additional investment in TAFE, a guarantee that two-thirds of public VET funding goes to TAFE, a $100 million Building TAFE for the Future Fund, and targets for apprentices on Commonwealth projects."
+  },
+  {
+   "slug": "speech-349538",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Vocational Education and Training Regulator Amendment (Annual Registration Charge) Bill 2017 is an administrative measure to secure the VET sector, blaming Labor’s Rudd-Gillard-Rudd government for past failures including a $1.2 billion cut to employer incentives and a 22% drop in apprentices. He cited specific provider collapses—SmartCity Vocational College and Careers Australia—and highlighted the $1.5 billion Skilling Australians Fund, 300,000 new apprentices, and a review by Professor Valerie Braithwaite."
+  },
+  {
+   "slug": "speech-349540",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Vocational Education and Training Regulator Amendment (Annual Registration Charge) Bill 2017 and related bill, arguing they clarify ASQA’s annual registration fees as taxation under the Constitution to secure stable funding. They criticised the government for cutting $630 million from vocational training, ending national partnership agreements, promising an unreliable $1.5 billion Skilling Australia Fund, and neglecting TAFE, while Labor pledged to restore funding, invest $100 million in TAFE facilities, and direct two-thirds of federal investment to public providers."
+  },
+  {
+   "slug": "speech-349544",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the bills to secure ASQA’s funding and restore the VET sector’s reputation, while criticising the government for cutting $2.8 billion from TAFE and reducing apprenticeships by 130,000 since 2013, and welcomed Professor Valerie Braithwaite’s review into ASQA and VET regulation."
+  },
+  {
+   "slug": "speech-349642",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "The bills replace ASQA's annual registration fees with an annual registration charge, with an amendment ensuring the charge is set by a disallowable legislative instrument and limited to recovering ASQA's costs."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Vocational Education and Training Regulator Amendment (Annual Registration Charge) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00065",
+   "assent_date": "2017-06-23"
+  }
+ ]
+}

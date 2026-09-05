@@ -1,0 +1,356 @@
+{
+ "key": "au-federal-s1478",
+ "title": "National Disability Insurance Scheme Amendment (Integrity and Safeguarding) Bill 2026",
+ "short_title": "National Disability Insurance Scheme Amendment (Integrity and Safeguarding) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-26",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health, Disability and Ageing",
+ "status": "passed",
+ "status_as_of": "2026-04-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1478%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1478%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1478%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1478%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1478%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1478%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1478%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1478%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1478%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1478%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1478%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1478%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1478%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1478%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1478_ems_10de23e3-516d-4c2e-965f-da3bc682e567%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1478_ems_a01cf233-176b-44ef-b2bd-3d4f564c153e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1478_ems_b8c8f051-07f1-456d-92e8-5350435062a3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1478_ems_e7f4af52-2221-4009-ab40-8cc88a3ccd26%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1478%22",
+   "document_date": "2025-11-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00041",
+   "document_date": "2026-04-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2025-11-26",
+  "sentences": [
+   "The bill would increase penalties and expand safeguards in the National Disability Insurance Scheme to deter misconduct and improve service quality.",
+   "It would give the NDIS Quality and Safeguards Commissioner new powers to ban unsuitable providers, issue anti-promotion orders, and obtain information more quickly.",
+   "The government would allow plan variations to either raise or lower total funding, and require NDIA to handle provider claims only by electronic means."
+  ],
+  "changes": [
+   "Strengthening the penalty framework for offences and poor-quality services.",
+   "Adding categories of people who can be banned from providing NDIS services.",
+   "Empowering the Commissioner to issue anti-promotion orders against harmful promotional conduct.",
+   "Allowing the Commission to demand information within shorter timeframes.",
+   "Providing extra safeguards and electronic claiming options for participants and providers.",
+   "Ensuring plan variations may change total funding amounts up or down."
+  ],
+  "affected": "NDIS participants, providers, the NDIS Quality and Safeguards Commission, and the National Disability Insurance Agency.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-10154",
+   "date": "2026-03-31",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-03-31.11.1) to the usual second reading motion, which is \"*that the bill be read a second time\"* (parliamentary jargon for agreeing with the main idea of the bill). In other words, they voted to leave the usual second reading motion unchanged and not at the words below. ### Amendment text > *At the end of the motion, add \", but the Senate notes that:* > >> *(a) the Government and the National Disability Insurance Agency (NDIA) have been unable to clearly quantify the scale of fraud within the National Disability Insurance Scheme (NDIS);* >> >> *(b) the NDIA Fraud Fusion Taskforce estimates that up to 10 per cent of NDIS claims are inappropriate, mischievous or outright criminal;* >> >> *(c) the Government must do more to prevent the fraud and rorting that is rife within the NDIS;* >> >> *(d) the changes in the bill will do little to remove bad actors from defrauding participants and taxpayers;* >> >> *(e) the changes in the bill provide no direct regulation or fraud controls for the 94 per cent of NDIS providers who are not registered; and* >> >> *(f) robust integrity systems are critical to not only protect taxpayer funds but also to protect NDIS participants from exploitation by unscrupulous providers\".*",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-31/1"
+  },
+  {
+   "key": "federal-senate-10155",
+   "date": "2026-03-31",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2026-03-31.21.5) to keep part 3 of schedule 2 as it is (i.e., that the part should stand as printed). This vote was put after WA Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens) [proposed](https://www.openaustralia.org.au/senate/?gid=2026-03-31.21.1) that the part be opposed. ### What is Part 3 of Schedule 3 > *Part 3 — Plan variation* > > *National Disability Insurance Scheme Act 2013* > > *11 Before subsection 47A(1B)* > >> *Insert:* >> >> *Provisions to avoid doubt* > > *12 Before paragraph 47A(1B)(a)* > >> *Insert:* >> >>> *(aa) a variation of a total funding amount under subsection (1) may increase or decrease that total funding amount, unless either of the following expressly provides otherwise:* >>> >>>> *(i) this Act;* >>>> >>>> *(ii) the National Disability Insurance Scheme rules made for the purposes of another provision of this Act (including but not limited to paragraph (1)(b) of this section); and*",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-31/2"
+  },
+  {
+   "key": "federal-senate-10156",
+   "date": "2026-03-31",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1478_amend_0729ed86-9628-47dd-b53c-25559b467188%22;rec=0) introduced by the Greens party in respect to the definition of and use of the term NDIS supports, replacing it with the phrase \"*reasonable and necessary supports*\". This means the amendments were unsuccessful.",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-31/3"
+  },
+  {
+   "key": "federal-senate-10157",
+   "date": "2026-03-31",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-03-31.30.5) introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent), which means it failed. The amendment would have removed the requirement for wholly agency‑managed participant plans for people who have been convicted of criminal offences. ### Amendment text > *(1) Schedule 2, page 38 (after line 15), at the end of the Schedule, add:* > >> *Part 4 — Plan management* >> >> *National Disability Insurance Scheme Act 2013* >> >> *13 Subsection 43(2AA)* >> >>> *Repeal the subsection.* >> >> *14 Paragraph 43(3)(c)* >> >>> *Omit \"or (aa)\".* >> >> *15 Paragraph 43(6)(d)* >> >>> *Omit \"or (aa)\".* >> >> *16 Paragraph 43(7)(a)* >> >>> *Omit \"(2AA),\"* >> >> *17 Paragraphs 44(1)(aa) and (2A)(aa)* >> >>> *Repeal the paragraphs.* >> >> *National Disability Insurance Scheme Amendment (Getting the NDIS Back on Track No. 1) Act 2024* >> >> *18 Paragraph 132(e) of Schedule 1* >> >>> *Omit \"and\".* >> >> *19 Paragraphs 132(f) and (g) of Schedule 1* >> >>> *Repeal the paragraphs.*",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-31/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1199125",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202245",
+   "speaker": "Rebecca White",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-31",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Disability Insurance Scheme Amendment (Integrity and Safeguarding) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00041",
+   "assent_date": "2026-04-08"
+  }
+ ]
+}

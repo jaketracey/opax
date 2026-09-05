@@ -1,0 +1,557 @@
+{
+ "key": "au-federal-r6889",
+ "title": "Restoring Territory Rights Bill 2022",
+ "short_title": "Restoring Territory Rights Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-08-01",
+ "originating_house": "representatives",
+ "sponsor": "GOSLING, Luke, MP",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10877",
+ "portfolio": null,
+ "status": "passed",
+ "status_as_of": "2022-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-12-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6889_ems_0c15c8f1-325c-4cb2-9245-b60454b4d314%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6889%22",
+   "document_date": "2022-08-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00095",
+   "document_date": "2022-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-08-01",
+  "sentences": [
+   "The bill would undo federal restrictions placed on the ACT and NT parliaments in 1997.",
+   "It would give those territories the same lawmaking freedom as the states, including on voluntary assisted dying.",
+   "The bill would not automatically revive the Rights of the Terminally Ill Act (NT) that was previously overridden."
+  ],
+  "changes": [
+   "Removes 1997 constraints on the ACT and NT legislative powers.",
+   "Restores democratic rights for territory citizens to debate and legislate on complex issues.",
+   "Ensures the Rights of the Terminally Ill Act (NT) is not automatically revived."
+  ],
+  "affected": "Citizens and elected representatives of the Australian Capital Territory and the Northern Territory.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:11:31Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7714",
+   "date": "2022-08-03",
+   "house": "representatives",
+   "question": "Restoring Territory Rights Bill 2022 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 99,
+   "noes": 38,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 4,
+     "noes": 12
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 5
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-03/3"
+  },
+  {
+   "key": "federal-senate-7871",
+   "date": "2022-11-24",
+   "house": "senate",
+   "question": "Restoring Territory Rights Bill 2022 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 41,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "earliest": 34,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-24/1"
+  },
+  {
+   "key": "federal-senate-7914",
+   "date": "2022-12-01",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2022-12-01.426.2) introduced by Northern Territory [Jacinta Nampijinpa Price](https://theyvoteforyou.org.au/people/senate/nt/jacinta_nampijinpa_price) (Country Liberal Party), which means they failed. ### What do the amendments do? Senator Nampijinpa Price [explained that](https://www.openaustralia.org.au/senate/?gid=2022-12-01.426.2): > *The purpose of the Restoring Territory Rights Bill 2022 is to amend the Australian Capital Territory (Self-Government) Act 1988 and the Northern Territory (Self-Government) Act 1978 to remove the provisions currently preventing the territories from passing legislation which would allow for voluntary assisted dying. The bill would not legalise that in either of the territories but rather would allow the legislative assemblies of the ACT and the NT to pass laws allowing for VAD. Despite what the Labor Northern Territory and federal House of Representatives members have portrayed of me publicly, I do support the bill and am doing my job—which they should note how to better do themselves—in making a bad bill better for the Territory. I'll say this again: I absolutely support the rights of Territorians. The proposed amendments, drafted by the parliamentary clerk, have been developed to ensure that the exact restraints that are currently operative in state law are applied in the Territory, because we have some of the most vulnerable communities and people in Australia.* ### Why are the major parties split on how to vote? This was a [free vote](https://theyvoteforyou.org.au/help/faq#free) (also known as a conscience vote), which means our senators voted according to their own beliefs rather than voting along party lines. ### Amendment text > *(1) Schedule 1, item 1, page 3 (lines 4 and 5), omit the item, substitute:* > >> *1 Subsections 23(1A) and (1B)* >> >> *Repeal the subsections, substitute:* >> >> *(1A) The Assembly has no power to make laws permitti",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "earliest": 34,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-01/11"
+  },
+  {
+   "key": "federal-senate-7915",
+   "date": "2022-12-01",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-12-01.450.1) that would have added the words below to an original motion, which means the original motion will remain unchanged. The amendment was introduced by Tasmanian Senator [Jonathon Duniam](https://theyvoteforyou.org.au/people/senate/tasmania/jonathon_duniam) (Liberal). ### Original motion > *That the report from the committee be adopted.* This means that the changes agreed to by the committee would be agreed to and adopted by the Senate. ### Amendment text > *At the end of the motion, add “, but the Senate is of the opinion that if this bill is passed, the Government should ensure that:* > >> *(a) any drug intended for the use of ending human life requires the approval of the Therapeutic Goods Administration, by seeking to amend the Therapeutic Goods Act 1989 so that there is no capacity for exemptions from the provisions of Parts 3-2 and 3-2A of the Act to be granted in relation to such drugs; and* >> >> *(b) the importation of any drug intended for the use of ending human life is prohibited and that no regulation is made under the Customs (Prohibited Imports) Regulations 1956 to provide for the granting of a licence or permission to import any such drug”.* ### Why are the major parties split on how to vote? This was a [free vote](https://theyvoteforyou.org.au/help/faq#free) (also known as a conscience vote), which means our senators voted according to their own beliefs rather than voting along party lines.",
+   "stage": "In committee",
+   "ayes": 23,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "earliest": 36,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-01/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-420589",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-420595",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-01",
+   "stage_hint": null,
+   "brief": "The speaker seconded the Restoring Territory Rights Bill 2022, arguing that Australians in the ACT and Northern Territory have been denied the right to debate voluntary assisted dying since the 1997 Andrews bill, and urged parliament to support the bill to restore equal democratic rights."
+  },
+  {
+   "slug": "speech-420742",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-01",
+   "stage_hint": null,
+   "brief": "The speaker moved to suspend standing orders to allow immediate debate on the Restoring Territory Rights Bill 2022, with a two-hour time limit followed by referral to the Federation Chamber until all members have spoken, then return to the House for a vote. He also outlined plans to expedite the Australian Human Rights Commission Legislation Amendment (Selection and Appointment) Bill 2022 and the Treasury Laws Amendment (2022 Measures No. 1) Bill 2022 before question time, and noted a condolence for Archie Roach."
+  },
+  {
+   "slug": "speech-420756",
+   "speaker": "David Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Restoring Territory Rights Bill 2022 should pass to restore the ACT and Northern Territory’s power to legislate on euthanasia, a right they held until the Euthanasia Laws Act 1997 removed it. They emphasised that territory citizens deserve the same democratic rights as state citizens, noted the ACT now has over 450,000 residents, and stated their personal opposition to euthanasia while insisting the decision belongs to territory legislatures."
+  },
+  {
+   "slug": "speech-420758",
+   "speaker": "Terry Young",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-08-01",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Restoring Territory Rights Bill 2022, arguing that territories lack the legislative systems to properly handle euthanasia and that the federal government should address the issue itself rather than devolving power to lower levels of government."
+  },
+  {
+   "slug": "speech-420759",
+   "speaker": "Marion Scrymgour",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Restoring Territory Rights Bill 2022, arguing territories should have the same legislative powers as states, including on voluntary assisted dying. The bill repeals section 50A of the Northern Territory (Self-Government) Act without automatically reinstating the Rights of the Terminally Ill Act 1995, and the speaker called for a comprehensive education campaign before any new euthanasia laws."
+  },
+  {
+   "slug": "speech-420760",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-08-01",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Restoring Territory Rights Bill 2022, arguing it would enable territories to legalise euthanasia and voluntary assisted dying, which he believes violates the sanctity of life and should not be authorised by the federal parliament."
+  },
+  {
+   "slug": "speech-420761",
+   "speaker": "Luke Howarth",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-08-01",
+   "stage_hint": null,
+   "brief": "Opposed the Restoring Territory Rights Bill 2022, arguing it is a backdoor attempt to legalise euthanasia in the territories rather than granting them statehood, and referenced a letter from Catholic Archbishop Christopher Prowse."
+  },
+  {
+   "slug": "speech-421149",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Restoring Territory Rights Bill 2022, arguing that euthanasia legislation is too risky with insufficient safeguards and could undermine palliative care funding, despite supporting the principle of territorial self-determination."
+  },
+  {
+   "slug": "speech-421150",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Restoring Territory Rights Bill 2022 should be passed to give the ACT and Northern Territory the same right as states to legislate on voluntary assisted dying, citing his own 2010 stage 3 melanoma diagnosis as personal context. He noted that all six states have already passed such laws, making the current ban on territories \"incongruous\" and \"illogical.\""
+  },
+  {
+   "slug": "speech-421151",
+   "speaker": "Shayne Kenneth Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Restoring Territory Rights Bill 2022, which would remove federal restrictions on the ACT and Northern Territory to legislate on voluntary assisted dying, and stated that territories should have the same self-government as states, while also noting the need for improved palliative care as highlighted in a 2014 Grattan Institute report."
+  },
+  {
+   "slug": "speech-421152",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker argued against the Restoring Territory Rights Bill 2022, opposing the legalisation of euthanasia in the Northern Territory and ACT, citing risks to Indigenous Australians, inadequate safeguards given the NT government’s failures, and the slippery slope seen in overseas jurisdictions like the Netherlands and Canada. They noted particular figures: 331 deaths in Victoria’s first two years, 171 in Western Australia by May 2022, and an increase in Oregon from 34 to 134 annual deaths over a decade."
+  },
+  {
+   "slug": "speech-421154",
+   "speaker": "Jenny Ware",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Restoring Territory Rights Bill 2022, arguing that the ACT and Northern Territory should have the same ability as the states to legislate voluntary assisted dying, based on principles of self-determination and the harm principle. The speaker emphasized that the bill does not mandate new laws, but would allow territory governments to enact their own safe, patient-centered frameworks."
+  },
+  {
+   "slug": "speech-421156",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Restoring Territory Rights Bill 2022, arguing that no one has the right to kill another person and citing personal experience caring for his father."
+  },
+  {
+   "slug": "speech-421196",
+   "speaker": "Max Chandler-Mather",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2022-08-03",
+   "stage_hint": null,
+   "brief": "Apologised for missing the vote on the Restoring Territory Rights Bill 2022 and affirmed full support for the bill."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Restoring Territory Rights Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00095",
+   "assent_date": "2022-12-13"
+  }
+ ]
+}

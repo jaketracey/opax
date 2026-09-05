@@ -1,0 +1,644 @@
+{
+ "key": "au-federal-r6331",
+ "title": "Treasury Laws Amendment (Putting Members’ Interests First) Bill 2019",
+ "short_title": "Treasury Laws Amendment (Putting Members’ Interests First) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-10-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6331_ems_12f017ea-ea17-4e02-b784-618875c8d074%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6331_ems_11cf2075-dee5-4023-a154-c24595ebbaa5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6331%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00079",
+   "document_date": "2019-10-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5881",
+   "date": "2019-09-16",
+   "house": "representatives",
+   "question": "The majority voted against amendments introduced by MP for Whitlam [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones), which means they failed. Senator Jones explained his amendments: > *Why do we need to extend the time lines? It is because under the bill, as currently drafted, all of the funds are required to notify their members who fall within the class to be affected and then give those members enough time to advise them in writing if they wish to have their superannuation cover continued. The number of members who are under the age of 25 is about 15 per cent of the workforce, so it's a significant number of fund members indeed, and, if you're a fund in the hospitality industry or the retail industry, it could be as many as 50 per cent of the policyholders or the members within that fund. It is a significant burden of work indeed. Industry Super Australia provided evidence to the Senate inquiry on this particular matter. They have advised that it would be an enormous administrative burden that would very, very likely lead to mistakes and to members who wish to have cover falling out of cover because of that very short time frame.* ### Motion text (1) Schedule 1, item 1, page 3 (line 15), omit \"1 July 2019\", substitute \"1 April 2020\". (2) Schedule 1, item 8, page 7 (lines 5 and 6), omit \"1 October 2019\", substitute \"1 July 2020\". (3) Schedule 1, item 8, page 7 (line 7), omit \"1 July 2019\", substitute \"1 April 2020\". (4) Schedule 1, item 8, page 7 (line 11), omit \"1 July 2019\", substitute \"1 April 2020\". (5) Schedule 1, item 8, page 7 (line 14), omit \"1 August 2019\", substitute \"1 May 2020\". (6) Schedule 1, item 8, page 7 (line 18), omit \"1 October 2019\", substitute \"1 July 2020\". (7) Schedule 1, item 8, page 7 (line 23), omit \"1 July 2019\", substitute \"1 April 2020\". (8) Schedule 1, item 8, page 8 (line 9), omit \"1 July 2019\", substitute \"1 April 2020\". (9) Schedule 1, item 8, page 8 (line 20), omit \"1 July 2019\", substit",
+   "stage": "Consideration in detail",
+   "ayes": 64,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-09-16/1"
+  },
+  {
+   "key": "federal-representatives-5882",
+   "date": "2019-09-16",
+   "house": "representatives",
+   "question": "The majority voted against amendments introduced by MP for Whitlam [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor), which means they failed. ### What were the amendments about? Senator Jones explained that: > *While most young workers and workers with low-balance accounts would be able to access life insurance or income protection insurance other than through group insurance through superannuation, this is not the case for many workers in high-risk industries. Concerns about this group of workers were, indeed, raised by the Productivity Commission in the report which led to this bill, the Treasury Laws Amendment (Putting Members' Interests First) Bill 2019, coming before the House. Importantly, the Productivity Commission contemplated an exemption for these workers, recommending that exemptions to the under-25 opt-in restriction should only be granted if the trustee can demonstrate to APRA that opt-out disability or income protection insurance would be in the best interests of that specific cohort of young members. It's exactly that proposition that Labor's second group of amendments go to.* ### Amendments text > *(1) Schedule 1, item 1, page 4 (line 13), at the end of subsection 68AAB(4), add:* > >> *; or (e) a member to whom the occupation or industry exception applies (see section 68AAF).* > > *(2) Schedule 1, item 1, page 5 (line 29), at the end of subsection 68AAC(4), add:* > >> *; or (e) a member to whom the occupation or industry exception applies (see section 68AAF).* > > *(3) Schedule 1, page 5 (after line 35), after item 3, insert:* > >> *3A After section 68AAE* >> >> *Insert:* >> >> *68AAF Occupation or industry exception* >> >> *(1) The occupation or industry exception applies to a member of a regulated superannuation fund who holds a choice product or MySuper product in the fund if, at the time the member first holds the product, the member is working in an occupation or industry covered by an election",
+   "stage": "Consideration in detail",
+   "ayes": 64,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-09-16/2"
+  },
+  {
+   "key": "federal-representatives-5892",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "question": "The majority voted against amendments moved by the Member for Whitlam [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor), which means they failed. The amendments would have pushed back the commencement day of this legislation to January 2020 and inserted: > *an amendment to the government's amendment which requires that trustees make a decision on the basis of their reasonable belief. That will enable them to identify, with as much precision as the fund is able to, the members who are identified by the government as deserving default life cover. It also provides the trustees and the funds some protection against adverse action by an individual member or their dependant who has either been defaulted in and who shouldn't have been or defaulted out and shouldn't have been.* ### Amendments text > *(1) Amendment (1), omit “November 2019”, insert “January 2020”.* > > *(2) Amendment (4), item 3A, paragraph 68AAF(1)(c), before “the member”, insert “it is reasonable to conclude”.* > > *(4) Amendment (6), omit “ November 2019 ”, substitute “ January 2020 ”.* > > *(5) Amendment (7), omit “November 2019”, substitute “January 2020”.* > > *(6) Amendment (8), omit “December 2019”, substitute “February 2020”.* > > *(8) Amendment (10), omit “November 2019”, substitute “January 2020”.* > > *(9) Amendment (11), omit “November 2019”, substitute “January 2020”.* > > *(10) Amendment (12), omit “November 2019”, substitute “January 2020”.* > > *(11) Amendment (13), omit “November 2019”, substitute “January 2020”.* > > *(13) Amendment (15), omit “November 2019”, substitute “January 2020”.*",
+   "stage": "Consideration of Senate message",
+   "ayes": 60,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Labor": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-09-19/3"
+  },
+  {
+   "key": "federal-senate-10399",
+   "date": "2019-09-19",
+   "house": "senate",
+   "question": "Tony Sheldon by leave—At the request of Senator Ciccone, I withdraw the opposition's second reading amendment on sheet No. 8769. One concern raised yesterday regarding the superannuation bill was the emphasis of the risk the legislation poses to young people in high-risk occupations. It is a basic expectation that all Australian workers can have a safe workplace and come home uninjured and unharmed from a day's work. As a proud member of the union movement and as someone who for 30 years has represented workers' fight for fair pay, conditions and safety standards, I know how important to working people protecting and uplifting working people's rights is. Workers in the transport industry, to which I have devoted much of my working life, work in one of the most dangerous industries, with 10 times the number of workplace deaths than the average across all industries. Yesterday there were some questions raised about the ACTU figures, about the number of people who are injured. It wasn't raised from the point of view that the figures were wrong; it was raised for the fact that the Australian Council of Trade Unions had a view about it. It was an interesting debate last night. The ACTU recorded, between 2003 and 2016, more than 3,400 workers losing their lives on their job. Of those, close to 10 per cent were under the age of 25. This legislation, the Treasury Laws Amendment (Putting Members' Interests First) Bill 2019, would remove default superannuation for workers under 25. Some in government seem to think workers under 25 are less likely to have dependants and so insurance is less valuable for them. They also seem to think because workers are under 25, they're less likely to draw on disability insurance, that they don't need it. It's a ludicrous situation. They're talking about young construction workers, truck drivers, warehouse workers, forestry and farm workers, prison officers, nurses and healthcare workers. All those workers have a higher risk of suffering a wor",
+   "stage": "Second reading",
+   "ayes": 44,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 23,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-19/1"
+  },
+  {
+   "key": "federal-senate-10400",
+   "date": "2019-09-19",
+   "house": "senate",
+   "question": "Jane Hume by leave—I move amendments (1) to (16) on sheet TW114 together: (1) Schedule 1, item 1, page 3 (line 15), omit \"1 July 2019\", substitute \"1 November 2019\". (2) Schedule 1, item 1, page 4 (after line 13), at the end of subsection 68AAB(4), add: ; or (e) a member to whom the dangerous occupation exception applies (see section 68AAF). (3) Schedule 1, item 1, page 5 (after line 29), at the end of subsection 68AAC(4), add: ; or (e) a member to whom the dangerous occupation exception applies (see section 68AAF). (4) Schedule 1, page 5 (after line 35), after item 3, insert: 3A After section 68AAE Insert: 68AAF Dangerous occupation exception (1) The _dangerous occupation exception_ applies to a member of a regulated superannuation fund to, or in respect of, whom a benefit is provided by the fund under a choice product or MySuper product held by the member by taking out or maintaining insurance if: (a) the trustee or trustees of the fund make an election under this section that members holding that product will be covered by a dangerous occupation exception if they are employed in an occupation specified in the election; and (b) the election is in force; and (c) the member is employed in an occupation specified in the election; and (d) it is reasonable to expect that some or all of the contributions paid into the product will be paid in respect of that employment. (2) The trustee, or trustees, of a regulated superannuation fund may elect that members holding a choice product or MySuper product specified in the election are covered by a dangerous occupation exception if they are employed in an occupation specified in the election and either: (a) a Fellow of the Institute of Actuaries of Australia has certified that: (i) based on rates of death, or death and total and permanent disability; and (ii) using information from the most recent 5 years in relation to Australian occupations; the occupation is in the riskiest quintile of Australian occupations; or (b) the occu",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 27,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-19/2"
+  },
+  {
+   "key": "federal-senate-10401",
+   "date": "2019-09-19",
+   "house": "senate",
+   "question": "Sue Lines The question is that the government amendments, as amended, be agreed to. Question agreed to. Peter Whish-Wilson by leave—I move the Greens amendments (1) to (19) on sheet 8655: (1) Schedule 1, item 1, page 3 (line 8), at the end of the heading to section 68AAB, add \"in relation to choice products\". (2) Schedule 1, item 1, page 3 (line 11), omit \"or MySuper product\". (3) Schedule 1, item 1, page 3 (lines 26 and 27), omit \"or MySuper product\". (4) Schedule 1, item 1, page 4 (line 30), omit \"or MySuper product\". (5) Schedule 1, item 1, page 4 (line 33), at the end of the heading to section 68AAC, add \"in relation to choice products\". (6) Schedule 1, item 1, page 5 (line 1), omit \"or MySuper product\". (7) Schedule 1, item 1, page 5 (lines 11 and 12), omit \"or MySuper product\". (8) Schedule 1, item 1, page 5 (after line 29), after section 69AAC, insert: 68AACA Benefits providing by taking out insurance—MySuper members with low -balance account or who are under 25 years old (1) Each trustee of a regulated superannuation fund must ensure that a benefit is not provided by the fund to, or in respect of, a member of the fund under a MySuper product held by the member by taking out or maintaining insurance if: (a) both of the following apply: (i) the member has an account balance with the fund that relates to the product that is less than $6,000; (ii) on or after 1 November 2019, the member has not had an account balance with the fund that relates to the product that was equal to or greater than $6,000; or (b) the member is under the age of 25 years. (2) This section does not apply to: (a) a defined benefit member; or (b) an ADF Super member (within the meaning of the _Australian Defence Force Superannuation Act 2015_); or (c) a person who would be an ADF Super member apart from the fact that the regulated superannuation fund is or was, for the purposes of Part 3A of the _Superannuation Guarantee (Administration) Act 1992_, a chosen fund for contributions for the pe",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 29,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-19/3"
+  },
+  {
+   "key": "federal-senate-10406",
+   "date": "2019-09-19",
+   "house": "senate",
+   "question": "Mehreen Faruqi The committee is considering the Treasury Laws Amendment (Putting Members' Interests First) Bill 2019. The question is that the bill, as amended, be agreed to. Jenny McAllister by leave—I move amendments (1) to (3) on sheet 8765 together: (1) Schedule 1, item 1, page 4 (line 13), at the end of subsection 68AAB(4), add: ; or (e) a member to whom the occupation or industry exception applies (see section 68AAF). (2) Schedule 1, item 1, page 5 (line 29), at the end of subsection 68AAC(4), add: ; or (e) a member to whom the occupation or industry exception applies (see section 68AAF). (3) Schedule 1, page 5 (after line 35), after item 3, insert: 3A After section 68AAE Insert: 68AAF Occupation or industry exception (1) The _occupation or industry exception_ applies to a member of a regulated superannuation fund who holds a choice product or MySuper product in the fund if, at the time the member first holds the product, the member is working in an occupation or industry covered by an election referred to in subsection (2). (2) For the purposes of subsection (1), the trustees of a regulated superannuation fund may elect an occupation or industry if the trustees are satisfied that the election of the occupation or industry is appropriate having regard to either or both of the following: (a) evidence of risk and insurance claims in the industry or occupation; (b) the availability of insurance for people working in that industry or occupation that, if taken out on behalf of members of the fund working in that industry or occupation, would represent exceptionally good value for those members. (3) However, the trustees of a regulated superannuation fund must not elect an industry or occupation unless the trustees are satisfied that applying the occupation or industry exception to members of the fund working in that industry or occupation would not inappropriately erode those members' superannuation interests in the fund. (4) The election must be made by giving APR",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 26,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-19/8"
+  },
+  {
+   "key": "federal-senate-10407",
+   "date": "2019-09-19",
+   "house": "senate",
+   "question": "Jenny McAllister I have an additional question for the minister. As you're aware, Labor has sought to amend the legislation and been unsuccessful in the changes that we propose, particularly in relation to the opportunities and obligations of trustees to gain relevant information. Our feedback is that funds consider that they will require some level of support or guidance from APRA to assist them in interpreting those obligations, particularly given that the amendment that we had proposed in relation to reasonableness has been rejected by the chamber. I wonder if you could brief us on what discussions you have had with APRA in this regard? Jane Hume I'm not prepared to talk about discussions with APRA. Jenny McAllister Minister, the implementation arrangements for this bill are dependent on APRA. The timetable that's been set out by the government is tight. Indeed, it is less than the timetable recommended by APRA. I'm seeking to understand what advice you can provide about APRA's preparedness to implement the arrangements that are likely to pass the chamber this afternoon. Jane Hume The bill was originally announced on 24 May 2018. I think everybody in the chamber, everybody in the industry, and APRA and ASIC are entirely aware of this legislation. Jenny McAllister Do you expect that APRA will be providing written guidance to funds about their expectations if they do seek to utilise the provisions for high-risk fund members that were passed today? Jane Hume You'll get a chance to ask APRA at estimates. Jenny McAllister Minister, are you telling us that you've made no attempt to assure yourself about that question or that you have no advice to provide funds that might be listening to this debate? Amanda Stoker The question is that the bill, as amended, be agreed to.",
+   "stage": "In committee",
+   "ayes": 40,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 19,
+    "dated": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-19/9"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-377421",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-04",
+   "stage_hint": null,
+   "brief": "The government moved the Treasury Laws Amendment (Putting Members' Interests First) Bill 2019, which requires insurance in superannuation to be opt-in for members with balances below $6,000 and for new members under 25 from 1 October 2019, with a three-month delay to allow funds to notify members."
+  },
+  {
+   "slug": "speech-380843",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The speaker argued for amendments to exempt young workers in high-risk occupations from the removal of default life insurance and to extend the implementation timeframe to at least six months, as recommended by APRA, citing examples of workers Jason and Andrey who benefited from default cover."
+  },
+  {
+   "slug": "speech-380846",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's aim to prevent erosion of superannuation balances but proposed amendments to delay the start date to 1 July 2020 and to protect workers in high-risk industries such as police, construction, firefighters, transport workers, and miners, noting that nearly 30% of workers under 25 (340,000 employees) are in hazardous occupations."
+  },
+  {
+   "slug": "speech-380847",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Putting Members' Interests First) Bill 2019 but argued for delaying its operative date and adding amendments to protect workers in high-risk industries, noting that $1.9 billion of $9 billion in insurance premiums goes to duplicate policies and that high fees, particularly in retail funds where 56% do not report fees to APRA, can reduce retirement balances by $100,000."
+  },
+  {
+   "slug": "speech-381102",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Putting Members' Interests First) Bill and proposed amendments to protect workers in high-risk industries and delay the commencement date to 1 July 2020, citing concerns that the bill's removal of opt-out insurance for members under 25 or with balances below $6,000 could harm younger workers in hazardous occupations and that the original implementation timeline was too short."
+  },
+  {
+   "slug": "speech-381107",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Putting Members' Interests First) Bill 2019 risks harming young workers in high-risk industries like mining and construction by removing insurance safety nets, and criticised the government for rushing implementation by 1 July 2020. They proposed amendments to extend the operative date and protect high-risk workers, while highlighting that unpaid superannuation—affecting 173,224 workers in South Australia and 17,205 in the electorate of Adelaide, totalling $6 billion nationally per year—remains unaddressed."
+  },
+  {
+   "slug": "speech-381108",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Putting Members' Interests First) Bill 2019 is urgent and necessary to stop young Australians’ superannuation balances being eroded by insurance fees from a “cosy relationship” between super funds and insurers. The Productivity Commission estimates over $3 billion would be saved by making insurance opt-in rather than opt-out for low-balance accounts, under-25s and inactive accounts, and the bill targets the opposition’s defense of these “vested interests,” including the ACTU and Industry Super Australia head Greg Combet."
+  },
+  {
+   "slug": "speech-381114",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Putting Members' Interests First) Bill 2019 would prevent default insurance for new members under 25 and those with balances below $6,000, saving an estimated $3 billion in premiums for about five million individuals in the first year, and criticised Labor's opposition and amendments as protecting fund managers rather than low-income workers and women."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Putting Members’ Interests First) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00079",
+   "assent_date": "2019-10-02"
+  }
+ ]
+}

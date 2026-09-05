@@ -1,0 +1,235 @@
+{
+ "key": "au-federal-r6649",
+ "title": "Data Availability and Transparency Bill 2022",
+ "short_title": "Data Availability and Transparency Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister",
+ "status": "passed",
+ "status_as_of": "2022-03-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6649%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6649%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6649%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6649%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6649%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6649%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6649%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6649%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6649%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6649%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6649%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6649_ems_52b13c0d-a190-499e-9711-e4f0edfedf99%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6649_ems_a59313dc-0b7c-4244-8b78-c7c5e7380407%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6649_ems_452a2c9f-210a-4497-8c07-6a336ec6e0d0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6649%22",
+   "document_date": "2020-12-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00011",
+   "document_date": "2022-03-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2020-12-09",
+  "sentences": [
+   "The bill would create a new system for sharing Australian Government data.",
+   "Commonwealth bodies could give accredited users controlled access to public sector data for specific public interest purposes, with privacy safeguards.",
+   "The National Data Commissioner would oversee the scheme and educate data custodians, and non-compliance could be an offence or civil penalty."
+  ],
+  "changes": [
+   "Establishes a scheme for sharing Australian Government data.",
+   "Authorises Commonwealth bodies to share public sector data with accredited users.",
+   "Creates the National Data Commissioner to regulate the scheme.",
+   "Makes non-compliance with scheme obligations an offence or civil penalty."
+  ],
+  "affected": "Commonwealth bodies, accredited users, and data custodians.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7687",
+   "date": "2022-03-30",
+   "house": "senate",
+   "question": "The majority voted in favour of agreeing with the main idea of the bills - known as reading them [for a third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) - which means they are now passed in the Senate. Because they have already passed the House of Representatives, they will now become law. ### What do the bills do? According the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd018): > *The purpose of the Data Availability and Transparency Bill 2020 (the Bill) is to establish a new data sharing scheme (‘the scheme’) which will serve as a pathway and regulatory framework for sharing public sector data. The Bill also establishes a new independent regulator, the National Data Commissioner, to oversee this process, and an Advisory Committee to assist the Commissioner. The purpose of the Data Availability and Transparency (Consequential Amendments) Bill 2020 (the consequential Bill) is to make amendments to other existing Acts. These amendments are necessitated by provisions in the Bill.*",
+   "stage": "Third reading",
+   "ayes": 28,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 14,
+    "earliest": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/15"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-400589",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The Data Availability and Transparency (Consequential Amendments) Bill amends the ASIO Act, the ADJR Act, the Privacy Act and the FOI Act to support the principal data sharing scheme, including allowing ASIO to advise on accreditation, limiting foreign entities' notice and review rights, enabling complaint transfers between commissioners, and preserving FOI protections for shared data."
+  },
+  {
+   "slug": "speech-419720",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "Labor moved an amendment to pass the Data Availability and Transparency Bill 2022 on conditions including appointing a Data Commissioner, abolishing the Digital Transformation Agency's staffing cap, limiting consecutive labour-hire contracts, and publishing the Digital Review. Labor supported the revised bill after securing changes that removed foreign and private sector access and strengthened privacy safeguards, citing failures like robodebt and risks from big-tech data exploitation."
+  },
+  {
+   "slug": "speech-419725",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The Data Availability and Transparency Bill is a belated response to the Productivity Commission’s 2017 inquiry, aiming to enable controlled public-sector data use for public interest purposes. The speaker noted potential benefits such as on-demand buses and individualised services, but warned of risks including algorithmic failures like robodebt, privacy breaches, and manipulation, and welcomed the removal of the original bill’s provisions extending the scheme to foreign organisations and the private sector."
+  },
+  {
+   "slug": "speech-419727",
+   "speaker": "Stuart Rowland Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The Data Availability and Transparency Bill establishes a new scheme for sharing Australian government data, with amendments to enhance privacy protections and introduce national security safeguards, including that the scheme will not initially extend to the private sector and that foreign entities cannot become accredited. The government supports committee recommendations for ongoing security oversight, consideration of national security risks in higher education, and strengthened privacy protections such as prohibiting re-identification of de-identified data and requiring consent for biometric data sharing."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Data Availability and Transparency Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00011",
+   "assent_date": "2022-03-31"
+  }
+ ]
+}

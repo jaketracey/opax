@@ -1,0 +1,419 @@
+{
+ "key": "au-federal-s1458",
+ "title": "Health Legislation Amendment (Improved Medicare Integrity and Other Measures) Bill 2025",
+ "short_title": "Health Legislation Amendment (Improved Medicare Integrity and Other Measures) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-23",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health, Disability and Ageing",
+ "status": "passed",
+ "status_as_of": "2025-09-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-07-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-07-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1458_ems_216db4e0-369b-41e9-bef7-0effb70cf5c8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1458%22",
+   "document_date": "2025-07-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00038",
+   "document_date": "2025-09-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-9639",
+   "date": "2025-07-28",
+   "house": "senate",
+   "question": "Health Legislation Amendment (Improved Medicare Integrity and Other Measures) Bill 2025 - Second Reading - Senior Dental Benefits Scheme",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-28/1"
+  },
+  {
+   "key": "federal-senate-9640",
+   "date": "2025-07-28",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-07-28.20.1) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This amendment was introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) people are continuing to die preventable deaths in custody due to incarcerated people being denied the right to proper healthcare,* >> >> *(ii) entrenched and systemic racism throughout corrections and health systems in this country is the greatest barrier to equitable and culturally appropriate interventions and necessitates bold action to improve outcomes for First Peoples in custody,* >> >> *(iii) the 1991 Royal Commission into Aboriginal Deaths in Custody (the 'Royal Commission') provided a range of recommendations for addressing systemic racism and improving health outcomes for First Peoples in custody, which remain yet to be implemented,* >> >> *(iv) building on what families, coroners, Ombudsman reports, Commissioners and First Peoples advocates have called for, for decades, the National Review of First Nations Health Care in Prisons (the 'Review') identified urgent reforms needed to address substandard healthcare in prisons,* >> >> *(v) recent investigations revealed that at least 57 people died by suicide using known hanging points over the past two decades, despite numerous warnings from coroners to remove these over that time, and* >> >> *(vi) the Federal Government has obligations under international law, through the United Nations Standard Minimum Rules for the Treatment of Prisoners (the 'Nelson Mandela Rules'), to ensure people in custodial settings receive equitable healthcare; and* > > *(b) calls on the Government to:* > >> *(i) work with States and",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 5,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-28/2"
+  },
+  {
+   "key": "federal-senate-9641",
+   "date": "2025-07-28",
+   "house": "senate",
+   "question": "The majority voted against an [amendment (1) on sheet 3379](https://www.openaustralia.org.au/senate/?gid=2025-07-28.54.1), moved by Queensland Senator [Malcolm Roberts](https://theyvoteforyou.org.au/people/senate/queensland/malcolm_roberts) (One Nation), which means it failed. ### Amendment text > *(1) Schedule 2, Part 6, page 22 (line 1) to page 23 (line 22), omit the Part, substitute:* > > *Part 6 — Therapeutic goods approvals* > > *Therapeutic Goods Act 1989* > > *52 Subsection 19(1)* > >> *Repeal the subsection, substitute:* >> >> *(1) The Secretary may, by legislative instrument, grant an approval to a person for the importation into, or the exportation from, Australia or the supply in Australia of specified therapeutic goods that are not registered goods or listed goods:* >> >>> *(a) for use in the treatment of another person; or* >>> >>> *(b) for use solely for experimental purposes in humans;* >>> >>> *and such an approval may be given subject to such conditions as are specified in the instrument.* >>> >>> *Note: For variation of an approval for use of the kind referred to in paragraph (1)(b), see subsection (4B).* >> >> *(1AAA) A legislative instrument made under subsection (1) must set out the reasons for the approval.* > > *53 Subsection 19(4B)* > >> *Omit \"by notice in writing\", substitute \"by legislative instrument\".*",
+   "stage": "In committee",
+   "ayes": 5,
+   "noes": 45,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-28/3"
+  },
+  {
+   "key": "federal-senate-9642",
+   "date": "2025-07-28",
+   "house": "senate",
+   "question": "The majority voted against the [request for amendment (1) on sheet 3372](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1458_amend_f5477ab2-d5c4-4e6a-9ba1-7a92795cf862%22;rec=0), as moved by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent), which meant it failed. ### Amendment text > *(1) Page 31 (after line 28), after Schedule 2, insert:* > > *Schedule 2A—Medicare benefit payable for services provided to persons in places of detention* > > *Health Insurance Act 1973* > > *1 After subsection 19(2)* > > *Insert:* > >> *(2A) Despite subsection (2), a medicare benefit is payable in respect of a professional service if:* >> >>> *(a) the professional service has been rendered by, or on behalf of, or under an arrangement with:* >>> >>>> *(i) the Commonwealth;* >>>> >>>> *(ii) a State;* >>>> >>>> *(iii) a local governing body; or* >>>> >>>> *(iv) an authority established by a law of the Commonwealth, a law of a State or a law of an internal territory; and* >>> >>> *(b) the professional service has been rendered in relation to a person who is in prison or another place of detention or has been recently released from prison or another place of detention; and* >>> >>> *(c) the professional service is of a kind specified in an instrument made under subsection (2B).* >> >> *(2B) The Minister must, by legislative instrument, specify one or more kinds of professional services for the purposes of paragraph (2A)(c).* >> >> *(2C) The first instrument made under subsection (2B) must be made by the end of the period of 12 months beginning on the day this subsection commences.*",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-28/4"
+  },
+  {
+   "key": "federal-senate-9646",
+   "date": "2025-07-29",
+   "house": "senate",
+   "question": "The majority voted against [amendment (1) on sheet 3373](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1458_amend_a919b728-ca7b-43ba-af90-88991b83adbf%22;rec=0), moved by Queensland Senator [Pauline Hanson](https://theyvoteforyou.org.au/people/senate/queensland/pauline_hanson) (One Nation), which means it failed. ### Amendment text > *(1) Page 40 (after line 4), after Schedule 3, insert:* > > *Schedule 3A — Medicare benefit not payable unless government photographic identity document provided* > > *Health Insurance Act 1973* > > *1 After section 19C* > >> *Insert:* >> >> *19CAA Medicare benefit not payable unless government photographic identity document provided* >> >>> *(1) A medicare benefit is not payable in respect of a professional service rendered to a person, unless the person provided a government photographic identity document at the time, or as soon as practicable after, the service was rendered.* >>> >>> *(2) In this section:* >>> >>>> *government photographic identity document means an identity document providing photographic identification of a person that is issued by the government of the Commonwealth or a State or Territory.*",
+   "stage": "In committee",
+   "ayes": 5,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 4,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-29/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1195247",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195333",
+   "speaker": "Anne Ruston",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-07-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195508",
+   "speaker": "Marielle Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195560",
+   "speaker": "Glenn Sterle",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195634",
+   "speaker": "Andrew McLachlan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-07-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196044",
+   "speaker": "Rebecca White",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-08-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Legislation Amendment (Improved Medicare Integrity and Other Measures) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00038",
+   "assent_date": "2025-09-04"
+  }
+ ]
+}

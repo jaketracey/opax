@@ -1,0 +1,81 @@
+{
+ "key": "au-federal-s1309",
+ "title": "Ensuring Northern Territory Rights Bill 2021",
+ "short_title": "Ensuring Northern Territory Rights Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-04",
+ "originating_house": "senate",
+ "sponsor": "MCMAHON, Sen Sam",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10948",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1309%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1309%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1309%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1309%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1309_ems_ed6ca8bc-2fed-4530-af51-62d51aca2d87%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1309%22",
+   "document_date": "2021-08-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-04",
+  "sentences": [
+   "The bill would reduce Commonwealth interference with Northern Territory laws to match the level of interference with state laws.",
+   "It would amend the Northern Territory (Self-Government) Act 1978 to remove limits on the Territory's Legislative Assembly regarding property acquisition, voluntary assisted dying, and employment dispute powers.",
+   "The bill would commence the day after it receives Royal Assent."
+  ],
+  "changes": [
+   "Repeals subsection 50(1) of the Northern Territory (Self-Government) Act 1978, which prevented the Territory from making laws on property acquisition other than on just terms.",
+   "Repeals section 50A of the same Act, which prevented the Territory from enacting assisted dying legislation.",
+   "Repeals subsections 53(5) and (6) of the Act, which limited the Territory's ability to make laws on employment dispute powers.",
+   "Adds a note to subsection 53(4) about the Fair Work Act 2009, replacing an existing note.",
+   "Provides that the Northern Territory's Rights of the Terminally Ill Act 1995 continues to have effect for acts done before 27 March 1997, but no force for acts done on or after that day."
+  ],
+  "affected": "Residents of the Northern Territory, who would gain legal rights equivalent to residents of Australian states.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:11:31Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

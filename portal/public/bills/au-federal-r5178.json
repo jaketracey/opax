@@ -1,0 +1,383 @@
+{
+ "key": "au-federal-r5178",
+ "title": "Crimes Legislation Amendment (Unexplained Wealth and Other Measures) Bill 2014",
+ "short_title": "Crimes Legislation Amendment (Unexplained Wealth and Other Measures) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Justice",
+ "status": "passed",
+ "status_as_of": "2015-02-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-09-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5178_ems_9b86e97c-e200-46af-8f14-002c1ea774d0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5178%22",
+   "document_date": "2014-03-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00006",
+   "document_date": "2015-02-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-05",
+  "sentences": [
+   "The bill would change the Proceeds of Crime Act 2002 to strengthen how police and prosecutors investigate and remove unexplained wealth from crime.",
+   "It would adopt eight recommendations from a 2012 parliamentary committee to improve evidence gathering, streamline court orders, restrict legal access to restrained assets, and require annual reporting to Parliament.",
+   "The AFP would need to report annually to the Parliamentary Joint Committee on Law Enforcement on unexplained wealth investigations and litigation, and the committee could ask federal agencies for more details."
+  ],
+  "changes": [
+   "Add a statement to the law's objects clause about stopping the profit of crime.",
+   "Allow evidence for unexplained wealth cases to be taken under a search warrant.",
+   "Ease the number of sworn statements needed for a preliminary unexplained wealth order.",
+   "Let a court extend the deadline for serving notice on certain unexplained wealth orders.",
+   "Harmonise the rules on using restrained assets for legal fees with other proceeds of crime cases.",
+   "Require the AFP Commissioner to report yearly to the parliamentary committee on unexplained wealth litigation."
+  ],
+  "affected": "The AFP, the Parliamentary Joint Committee on Law Enforcement, and people who face unexplained wealth proceedings and their legal representatives.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:44Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3667",
+   "date": "2015-02-09",
+   "house": "senate",
+   "question": "Penny Wright Chair, I seek your guidance. I seek to move some amendments, but I have some questions to ask before that occurs. The TEMPORARY CHAIRMAN: Proceed with your questions and then we will determine the amendments. The Greens are seeking to move two amendments together. It is important to understand that these amendments are merely to oppose the schedules in the bill which would remove the judicial discretion as to whether a person who is subject to unexplained wealth proceedings can use their assets to defend themselves, to seek legal advice and to defend the application to seize those assets from them. We have heard some discussion from the minister about the problems that are posed in some cases where a person who is subject to unexplained wealth proceedings may wish to dissipate their assets by having protracted legal proceedings. These Greens amendments would not prevent a court apprised of all the information and evidence that is relevant to making a decision not to allow a person subject to the proceedings to use their assets; they merely seek to oppose the complete removal of any judicial discretion as to that. So it does not mean that the court could not order that a restrained person could not use their restrained assets for a legal defence; it merely means that it will remain a possibility for a judicial officer before the court to decide whether or not a person can use their assets. The issue at the nub of the government's defence of these far-reaching amendments is clear from the statement that was made by the minister earlier today. He said to the effect that this legislation is designed to turn the tables on criminals to force them to prove that their wealth has been lawfully acquired. Therein lies the assumption. The assumption is that these proceedings will only ever be brought against criminals who have unlawfully acquired wealth and it is therefore in everyone's interest for the government to be able to bring that proceeding. The difficulty",
+   "stage": "In committee",
+   "ayes": 38,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "earliest": 4,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-02-09/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-284433",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298095",
+   "speaker": "Craig Laundy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298097",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298098",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298101",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298102",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298104",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298106",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298165",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298166",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298167",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298168",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298169",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298170",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298172",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298173",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298174",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298175",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Crimes Legislation Amendment (Unexplained Wealth and Other Measures) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00006",
+   "assent_date": "2015-02-25"
+  }
+ ]
+}

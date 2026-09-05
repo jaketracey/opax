@@ -1,0 +1,277 @@
+{
+ "key": "au-federal-r6574",
+ "title": "Recycling and Waste Reduction (Consequential and Transitional Provisions) Bill 2020",
+ "short_title": "Recycling and Waste Reduction (Consequential and Transitional Provisions) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-08-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "passed",
+ "status_as_of": "2020-12-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6574_ems_d8338e15-bb2b-4c1f-8c46-046be8a42693%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6574%22",
+   "document_date": "2020-08-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00120",
+   "document_date": "2020-12-15",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-08-27",
+  "sentences": [
+   "This bill handles the legal cleanup needed when a new waste law starts operating.",
+   "It repeals an old Act and sets up rules to keep existing product stewardship programs running smoothly.",
+   "The explanatory memorandum says the transition aims to avoid disruption to arrangements like the TV and computer recycling program and other approved voluntary schemes."
+  ],
+  "changes": [
+   "Repeal the Product Stewardship Act 2011.",
+   "Provide transitional arrangements so existing stewardship schemes continue without interruption.",
+   "Let subordinate legislation made under the old Act stay in force unless the new bill provides otherwise."
+  ],
+  "affected": "Stakeholders in product stewardship schemes, including those managing the National Television and Computer Recycling Scheme and accredited voluntary arrangements.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6667",
+   "date": "2020-10-26",
+   "house": "representatives",
+   "question": "Recycling and Waste Reduction (Consequential and Transitional Provisions) Bill 2020 - Third Reading - Put the question",
+   "stage": "Third reading",
+   "ayes": 54,
+   "noes": 41,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 94
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-26/8"
+  },
+  {
+   "key": "federal-representatives-6668",
+   "date": "2020-10-26",
+   "house": "representatives",
+   "question": "Recycling and Waste Reduction (Consequential and Transitional Provisions) Bill 2020 - Third Reading - Let a vote happen",
+   "stage": "Third reading",
+   "ayes": 54,
+   "noes": 41,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 94
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-26/9"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-394001",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The Recycling and Waste Reduction (Consequential and Transitional Provisions) Bill 2020 repeals the Product Stewardship Act 2011 and transitions its provisions into the new Recycling and Waste Reduction Bill 2020, ensuring continuity for existing schemes like the National Television and Computer Recycling Scheme without disruption to industry or the public."
+  },
+  {
+   "slug": "speech-397397",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-28",
+   "stage_hint": null,
+   "brief": "The speaker moved to rescind the third readings of five recycling and waste reduction bills and to immediately call them on again, with a Minister moving each third reading and the question put without debate."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Recycling and Waste Reduction (Consequential and Transitional Provisions) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00120",
+   "assent_date": "2020-12-15"
+  }
+ ]
+}

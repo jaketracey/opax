@@ -1,0 +1,1148 @@
+{
+ "key": "au-federal-r5174",
+ "title": "Fair Work Amendment Bill 2014",
+ "short_title": "Fair Work Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-02-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "passed",
+ "status_as_of": "2015-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5174_ems_dce8061f-6031-419d-b863-4cd30318c285%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5174%22",
+   "document_date": "2014-02-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00156",
+   "document_date": "2015-11-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-02-27",
+  "sentences": [
+   "The bill would change the Fair Work Act 2009 to adopt recommendations from a 2012 review of the law.",
+   "It would alter rules on parental leave, annual leave, workers' compensation, individual flexibility arrangements, greenfields agreements, transfer of business, right of entry, protected action ballots, unfair dismissal hearings, and unclaimed money.",
+   "The changes include requiring employers to discuss extended unpaid parental leave requests, setting a 13-week notice period for ending individual flexibility arrangements, and creating a three-month negotiation timeframe for greenfields agreements."
+  ],
+  "changes": [
+   "Employers must give employees a reasonable chance to discuss a request for extended unpaid parental leave before refusing it.",
+   "Untaken annual leave on termination must be paid out according to the applicable industrial instrument.",
+   "Employees cannot take or accrue leave under the Fair Work Act while receiving workers' compensation.",
+   "Individual flexibility arrangements in modern awards and enterprise agreements must allow unilateral termination with 13 weeks' notice.",
+   "A new process for greenfields agreements extends good faith bargaining and provides an optional three-month negotiation period.",
+   "The Fair Work Ombudsman would be able to pay interest on unclaimed money."
+  ],
+  "affected": "Employers, employees, the Fair Work Commission, the Fair Work Ombudsman, and unions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:44Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3381",
+   "date": "2014-08-27",
+   "house": "representatives",
+   "question": "Bronwyn Bishop The question now is that the amendment be agreed to. I call the member for Bennelong, who is in continuum. John Alexander Furthermore, employers also have rights, including a right to go about their business without unnecessary disruption or unfairly imposed costs. Right of entry under the current act is not fair to employers because it places unfair demands and unfair financial imposts on them. These are in the form of an obligation on employers to pay the cost of transport for union officials to remote work sites as well as the cost of their accommodation. This has created an employer funded, union-boss joy-ride scheme. There is much evidence that this abuse, and abuse it is, in the spirit, in the act and even in the word. When the CFMEU national president Joe McDonald ignored a request to leave an iron ore site in Western Australia because he did not have a right-of-entry permit, he replied, 'I haven't had one for seven years and that hasn't [expletive] stopped me.' Consider also the costs of transport and accommodation required for the excessive and disruptive right-of-entry visits to the Pluto project and the BHP Billiton plant. These are costs imposed on all businesses where unions demand right of entry. This hardly constitutes fairness. Labor implemented the current right of entry after its election win in 2007. This, however, is utterly inconsistent with undertakings made by the then deputy opposition leader Julia Gillard, when she promised on multiple occasions prior to the 2007 election that there would be no changes to the union right-of-entry laws existing at the time. This is another broken promise. It is not fair and it is destructive of the common good of all. A weakened economy harms workers, families and communities. It harms the weakest and the most vulnerable. This is not consistent with coalition values. I trust the members opposite will recall the promises made by their former deputy leader, later leader and Prime Minister, and wi",
+   "stage": "Second reading",
+   "ayes": 54,
+   "noes": 86,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 51,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 70
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-08-27/1"
+  },
+  {
+   "key": "federal-representatives-3382",
+   "date": "2014-08-27",
+   "house": "representatives",
+   "question": "Rob Mitchell The question is that the bill be now read a second time. The House divided. [10:16] (The Deputy Speaker—Mr Mitchell) Question agreed to. Bill read a second time.",
+   "stage": "Second reading",
+   "ayes": 86,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-08-27/2"
+  },
+  {
+   "key": "federal-senate-3934",
+   "date": "2015-10-12",
+   "house": "senate",
+   "question": "Deborah O'Neill When I was last speaking in this debate, on 17 September, I was making the point that on the day that the bill was introduced Senator Leyonhjelm made a contribution which I think expanded on some of the mythology around this critical issue of penalty rates, which is at the heart of some of the points that many contributors to this debate will make. There is always an assumption in public conversation that it is young people who will be affected by this, that young people who are getting their first jobs should almost work for nothing, for the privilege of having a job, and once they have the skills they will transition to a proper wage in a proper way. This is a myth that simply needs to be called for what it is. It is not a reality. This piece of legislation sets up a structure for the underpayment of wages and attempts to put in place an absence of fair wages in the Australian context. We should make no mistake that this bill absolutely represents a race to the bottom for workers' rights and employment standards in this country. The bill clearly wants to keep unions away from the bargaining table, going as far as undermining a worker's right to organise and be represented by a union. The bill wants to do away with penalty rates, which will have a devastating effect on regional and rural economies. It will certainly erase any discretionary spending from the equation when it comes to the family budget. The bill further promotes casualisation of the workforce, and the knock-on effects of that for job security and even workplace safety, as we heard in evidence provided by nurses at the Fair Work Taskforce hearing in Gosford in recent weeks, would be very significant. One of the things that have happened in the interim, between the last time parliament sat and our return today, was a very important hearing of the Senate Education and Employment References Committee, chaired ably by my colleague Senator Lines, who is here in the chamber at this minute. S",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 45,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-10-12/1"
+  },
+  {
+   "key": "federal-senate-3935",
+   "date": "2015-10-12",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 11,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-10-12/2"
+  },
+  {
+   "key": "federal-senate-3940",
+   "date": "2015-10-12",
+   "house": "senate",
+   "question": "David Leyonhjelm Prior to adjourning the debate on this we heard from Senator Cameron. Senator Cameron was responding to the amendments which I moved—which are quite little amendments—which basically said that the government should not intrude into the process of negotiating an extension to paid parental leave between an employer and an employee. In the course of that opposition to my amendment he engaged in a fairly broad-ranging attack on me and my values—or what he assumes my values to be. So I think it is probably fairly appropriate that I respond, at least partially, in kind. His first point was that politicians on $200,000 a year were not qualified or entitled to talk about people on penalty rates. I guess the point there is that I was not always a politician. In fact, Senator Cameron has been a politician for a great deal longer than I, and earning $200,000 a year at the expense of taxpayers for many years, during which time I was earning in the private sector, working for a living. He also implies that one can only be compassionate about low-income people if you are poor or if you are in favour of spending other people's money. Clearly, that is not an appropriate argument. When we are getting into subjects like appropriateness, he used words which I thought were interesting. He used the word 'unacceptable', then he used the word 'obnoxious' and then he used the word 'fairness'. I do not take any of those personally, but I have to say—and, Senator Cameron, I am delighted that you have joined us; it really would be a waste of my breath to return fire without having somebody to aim at—I am an excellent judge of what is acceptable and unacceptable, I am an excellent judge of what is obnoxious and I am and excellent judge of fairness. In fact, I think I am probably the best judge of those things that I know. In fact, I have never met anybody else who I think is a better judge than me of what is unacceptable, obnoxious or fair. Perhaps you might disagree with me,",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 44,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-10-12/7"
+  },
+  {
+   "key": "federal-senate-3941",
+   "date": "2015-10-12",
+   "house": "senate",
+   "question": "Doug Cameron I would like to move amendments on sheet 7771 as a whole. The CHAIRMAN: There are a number of amendments in different parts of the running sheet on sheet 7771. We have not dealt with amendments (4) and (5), which we probably need to deal with separately. by leave—I move amendments (4) and (5) on sheet 771 together. (4) Schedule 1, item 28, page 13 (lines 11 to 32), to be opposed. (5) Schedule 1, items 30 to 39, page 14 (line 1) to page 15 (line 18), to be opposed. In relation to these amendments, I just want to go to the overall position again. What the government is seeking to do is ensure that there are realistic time frames for the negotiation of greenfield agreements. They are seeking to ensure that negotiations do not delay or jeopardise investment in major projects, and they are seeking to provide for the interests of employees to be covered by such agreement that they are protected. So I again want to say that I do not think the bill achieves these objectives; and our amendments, the Labor Party amendments, would achieve these objectives in what I believe is a more fair and equitable manner. In relation to greenfield agreements, the panel made four recommendations. The first recommendation, No. 27, was that good faith bargaining requirements apply to the negotiations of greenfield agreements. The second recommendation, No. 28, was that employers intending to negotiate a greenfield agreement take all reasonable steps to notify all unions with eligibility to represent relevant employees. And the third recommendation, No. 29, was that section 240 of the act should be available to be utilised to resolve disputes over greenfield agreement negotiations. The fourth recommendation was that, when an impasse in negotiations is reached, when a specified time period has elapsed and when conciliation by the commission has failed, the commission may conduct last offer arbitration upon application by a party on its own motion. Those were the overall recommendat",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 44,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-10-12/8"
+  },
+  {
+   "key": "federal-senate-3942",
+   "date": "2015-10-13",
+   "house": "senate",
+   "question": "Cory Bernardi We are considering the Fair Work Amendment Bill 2014, as amended. Doug Cameron I understand that we are dealing with opposition amendments (4) and (5) on sheet 7771—that is, schedule 1, items 28 and 30 to 39. I understand that we are happy for that to go to a vote. The CHAIRMAN: The question is that items 28 and 30 to 39 of schedule 1 stand as printed.",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 44,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-10-13/1"
+  },
+  {
+   "key": "federal-senate-3943",
+   "date": "2015-10-13",
+   "house": "senate",
+   "question": "Bob Day by leave—I move amendments (1) and (2) on sheet 7577: (1) Schedule 1, item 33, page 14 (lines 23 and 24), omit “the prevailing pay and conditions within the relevant industry for equivalent work”, substitute “the pay and conditions for work performed in similar circumstances, but takes into account the particular circumstances and needs of the employees and the employers who will be covered by the agreement and the enterprise to which the agreement relates”. (2) Schedule 1, item 33, page 14 (lines 25 to 27), omit the note. I am moving to replace the words 'consistent with the prevailing pay and conditions within the relevant industry' with 'for work performed in similar circumstances, but takes into account the particular circumstances and needs of the employees and the employers' and the enterprise. My amendments allow enterprise agreements to take into account local conditions, local labour force conditions and local economic conditions—in other words a new site, a new EBA. I commend the amendments. Michaelia Cash I thank Senator Day for his constructive contribution to this debate, and in particular for his engagement with the government on the important reforms in the Fair Work Amendment Bill. As canvassed in the debate yesterday, the purpose of the new prevailing pay and conditions criteria in the bill is to build an extra employee protection for greenfields agreements approved by the Fair Work Commission under the new optional six-month process. The new prevailing standards requirement is in addition to the existing agreement approval tests, including that the employees must be better off overall than they would have been under the award. The test start will be applied by the independent Fair Work Commission and will assist in assuring the expeditious resolution of greenfields agreements that provide new employment opportunities. We believe that clause 33 is drafted to meet these objectives. It requires the Fair Work Commission to be satisfied that the",
+   "stage": "In committee",
+   "ayes": 3,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "earliest": 5,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-10-13/2"
+  },
+  {
+   "key": "federal-senate-3944",
+   "date": "2015-10-13",
+   "house": "senate",
+   "question": "Doug Cameron I move opposition amendment (6) on sheet 7771 revised: (6) Schedule 1, page 16 (after line 15), after item 48, insert: 48A After subsection 240(3) Insert: _FWC may deal with greenfields agreement dispute_ (3A) The FWC may deal with a dispute about a proposed single-enterprise agreement that is a greenfields agreement on its own initiative if the FWC is satisfied that it is in the public interest to do so. 48B Before subsection 240(4) Insert: _Bargaining representatives may agree that FWC can arbitrate_ This is about expanding conciliation in relation to greenfields agreements. We heard much from the minister yesterday about bringing certain aspects of the Fair Work Act into the greenfields agreement making and why that was a good thing. If that is the principle then the principle of bringing the aspects of section 240 of the Fair Work Act, which provides a bargaining representative may apply to the Fair Work Commission to deal with a dispute by way of conciliation, should also be in this bill. It would allow the Fair Work Commission to deal with a dispute by way of conciliation on its own initiative, if the Fair Work Commission is satisfied that it is in the public interest to do so. It keeps that greenfields agreement negotiations consistent with the broader act. It was an argument that the opposition put forcefully yesterday. So, on that basis, I would think the government should accept this as part of the principle. Yesterday, they argued about bringing these issues into line. Minister, I want to go to some of the issues that you raised yesterday in your responses. You indicated that good faith bargaining provisions had been extended to greenfields agreements and you argued that that would improve accountability in the negotiation process. You then spoke about past practice. You said: … one would anticipate based on past practice that the majority of agreements are going to be negotiated … That is page 94 of _Hansard_. You say that in the majority of",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 44,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-10-13/3"
+  },
+  {
+   "key": "federal-senate-3945",
+   "date": "2015-10-13",
+   "house": "senate",
+   "question": "Michaelia Cash I move: That the bill be read a third time. Stephen Parry The question is that the bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 33,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 44,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-10-13/4"
+  },
+  {
+   "key": "federal-representatives-3976",
+   "date": "2015-11-11",
+   "house": "representatives",
+   "question": "Christian Porter I move: That the amendments be agreed to. I will take this opportunity to make a few comments with respect to the bill in the form that it is in before us. The Fair Work Amendment Bill 2014 has returned to the House of Representatives from the Senate. The measures that the House us now being asked to agree on are at the very least a significant first step in bringing balance back to the workplace relations system. That is, I think, an important initial point. A further important point is that all the measures that were contained in the original Fair Work Amendment Bill 2013 were clearly outlined in the coalition's election policy at the 2013 election. We obviously take the view that they were sensible, fair and balanced reforms. They were very well known at the point they went to a full general election. That bill progressed. The Senate has agreed to a number of the measures in the bill. The government just notes here its appreciation for the positive and constructive approach that was taken by the Senate crossbenchers in working with the government to pass at least some of the measures that were contained in the Fair Work Amendment Bill 2014 in its full form. Those measures that have been agreed are now being returned in the amended form of the bill. I just want to make the point, which has previously been made by the Minister for Employment and in the Senate, that the government remains absolutely committed to its election policy and indeed intends to continue discussion with the crossbenchers on the benefits of those measures that were contained in the full version of the bill but which are not proceeding in this amended version. The government looks forward to continuing to work constructively with the Senate crossbenchers to achieve that ultimate goal. Now I might make a few comments about the changes that have been agreed and that are now before the House. The changes are essentially to the greenfield agreement making process. The effect of th",
+   "stage": "Consideration of Senate message",
+   "ayes": 81,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-11-11/3"
+  },
+  {
+   "key": "federal-representatives-3977",
+   "date": "2015-11-11",
+   "house": "representatives",
+   "question": "No motion text available",
+   "stage": "Consideration of Senate message",
+   "ayes": 81,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-11-11/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-283532",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284783",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284985",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285018",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288205",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288207",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288209",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288217",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288218",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288219",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288220",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288226",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288227",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288228",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288360",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288366",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288370",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290718",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295355",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-08-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295356",
+   "speaker": "Bob Katter",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2014-08-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295357",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-08-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295360",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-08-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295512",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-08-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295516",
+   "speaker": "Anna Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-08-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fair Work Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00156",
+   "assent_date": "2015-11-26"
+  }
+ ]
+}

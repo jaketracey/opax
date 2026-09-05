@@ -1,0 +1,205 @@
+{
+ "key": "au-federal-r7452",
+ "title": "Customs Legislation Amendment (False Trade Marks Infringement Notices) Bill 2026",
+ "short_title": "Customs Legislation Amendment (False Trade Marks Infringement Notices) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2026-05-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7452%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7452%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7452%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7452%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7452%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7452%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7452%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7452%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7452%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7452%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7452%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7452%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-05-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7452%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7452_ems_03dc755e-4be8-4c93-afaf-69505a0a4257%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/10780708%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7452%22",
+   "document_date": "2026-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00043",
+   "document_date": "2026-05-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1201762",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202349",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202361",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202450",
+   "speaker": "Rowan Holzberger",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202513",
+   "speaker": "Lisa Darmanin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202788",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202890",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202909",
+   "speaker": "Susan McDonald",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2026-05-14",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Legislation Amendment (False Trade Marks Infringement Notices) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00043",
+   "assent_date": "2026-05-20"
+  }
+ ]
+}

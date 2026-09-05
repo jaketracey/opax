@@ -1,0 +1,160 @@
+{
+ "key": "au-federal-r7116",
+ "title": "Telecommunications Legislation Amendment (Enhancing Consumer Safeguards and Other Measures) Bill 2023",
+ "short_title": "Telecommunications Legislation Amendment (Enhancing Consumer Safeguards and Other Measures) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-12-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2024-05-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7116%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7116%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7116%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7116%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7116%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7116%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7116%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7116%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7116%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7116%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7116%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7116%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7116%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-05-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7116%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7116_ems_3b233ff5-98d4-4e26-bc83-f2a26a14557d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7116_ems_b9bc00bc-c854-4188-ae49-cfdd3298c566%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7116%22",
+   "document_date": "2023-12-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00036",
+   "document_date": "2024-05-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-12-07",
+  "sentences": [
+   "This bill would change several telecommunications laws to improve how broadband and phone services are provided to homes and businesses.",
+   "It would update the rules for who must supply internet connections, give regulators more power to enforce standards, and allow the minister to designate new service providers for certain areas.",
+   "The bill would also let the Australian Communications and Media Authority order developers to install fibre-ready cabling near new housing estates."
+  ],
+  "changes": [
+   "The bill would refine the statutory infrastructure provider regime, including how service areas are set, changed, or removed.",
+   "It would give the Australian Communications and Media Authority and the Australian Competition and Consumer Commission stronger enforcement and reporting powers.",
+   "The bill would allow the minister to decide service areas for a primary universal service provider, such as if the framework extends to Norfolk Island.",
+   "It would require developers to install functional fibre-ready facilities near new developments, or face remedial notices from the regulator.",
+   "The bill would let the regulator link carriers and providers to their customer service performance in public reports.",
+   "It would also make technical amendments to the Telecommunications Act 1997 and the Telecommunications (Consumer Protection and Service Standards) Act 1999."
+  ],
+  "affected": "Industry participants, including carriers, carriage service providers, developers, and consumers, as well as the Australian Communications and Media Authority, the Australian Competition and Consumer Commission, and the minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:21:14Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Telecommunications Legislation Amendment (Enhancing Consumer Safeguards and Other Measures) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00036",
+   "assent_date": "2024-05-31"
+  }
+ ]
+}

@@ -1,0 +1,89 @@
+{
+ "key": "au-federal-s1453",
+ "title": "Fair Work Amendment (Paid Reproductive Health Leave and Flexible Work Arrangements) Bill 2025",
+ "short_title": "Fair Work Amendment (Paid Reproductive Health Leave and Flexible Work Arrangements) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-03-26",
+ "originating_house": "senate",
+ "sponsor": "WATERS, Sen Larissa",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10764",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-07-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1453%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1453%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1453%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1453%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1453_ems_c9e1991f-68d8-4482-8aee-012eb2370ac7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1453%22",
+   "document_date": "2025-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-03-26",
+  "sentences": [
+   "The bill would give employees 12 days of paid reproductive health leave each year under the National Employment Standards and modern awards.",
+   "It would also let employees request flexible working arrangements if they experience symptoms of perimenopause or menopause.",
+   "The bill would change a 2023 gender equality instrument so the Workplace Gender Equality Agency can collect data on employer supports for staff experiencing menopause and perimenopause."
+  ],
+  "changes": [
+   "Provides 12 days of paid reproductive health leave per year for full-time, part-time and casual employees.",
+   "Allows employees to request flexible working arrangements when experiencing perimenopause or menopause symptoms.",
+   "Amends the Workplace Gender Equality (Matters in relation to Gender Equality Indicators) Instrument 2023 to enable data collection on employer supports for menopause and perimenopause."
+  ],
+  "affected": "Full-time, part-time and casual employees, and employers covered by the Fair Work Act 2009.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:03:16Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195265",
+   "speaker": "Malcolm Roberts",
+   "party": "One Nation",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

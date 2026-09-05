@@ -1,0 +1,149 @@
+{
+ "key": "au-federal-r7512",
+ "title": "Online Safety Amendment (Strengthening Enforcement for the Social Media Minimum Age) Bill 2026",
+ "short_title": "Online Safety Amendment (Strengthening Enforcement for the Social Media Minimum Age) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-06-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+ "status": "before_parliament",
+ "status_as_of": "2026-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-06-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7512%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7512%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7512%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7512%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7512%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7512%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7512%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7512%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7512_ems_24d52f21-720b-4448-98f3-3ad32ae8be53%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7512%22",
+   "document_date": "2026-06-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-06-29",
+  "sentences": [
+   "This bill strengthens how the social media minimum age framework is enforced.",
+   "It expands the eSafety Commissioner's powers to demand documents and information from anyone relevant to compliance checks.",
+   "Civil penalties for breaking minimum age rules would double to 60,000 penalty units, worth about $99 million for a body corporate."
+  ],
+  "changes": [
+   "Expands the eSafety Commissioner's information-gathering powers to compel production of documents from any person.",
+   "Doubles the maximum civil penalty for contraventions of Division 2, Part 4A from 30,000 to 60,000 penalty units.",
+   "Increases the maximum civil penalty for contraventions of Division 4, Part 4A from 500 to 1,000 penalty units."
+  ],
+  "affected": "Providers of age-restricted social media platforms and the eSafety Commissioner are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:03:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10534",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Tony Pasin I feel a little like an imposter talking on this bill. Many of my colleagues who know me know that I'm probably best described as a Luddite. Even as a Luddite, in this role one has to be across the role of online presences. In fact, I am wanted, recently, to describe myself to colleagues, members of the party and constituents otherwise as a 'content creator'. I've got to tell you, Mr Deputy Speaker, when I entered the parliament in 2013, if someone told me it was a condition of this role that I would have to become a digital content creator, I would have stayed in the law and transitioned to the farm. I wouldn't have sought preselection. I wouldn't have worked very hard to obtain that preselection and then worked very hard during the election of 2013 and subsequent elections since then. But the truth is that, in the modern age, if you want to share and communicate with your constituency, or if you're in business and you want to share and communicate with customers, if you're not on a digital platform then you're missing out. And young people have gained aptitude towards digital acumen faster than any other cohort in the country. I've got a 16-year-old and a 10-year-old, and their acumen around digital platforms and these things is just a sight to behold. I'm not one of those people who come in here and say that everything about online experiences is wrong. I don't conform to that view. Like everything, there need to be appropriate safeguards; there need to be appropriate barriers. That is what we're seeking to achieve here, and I of course support my colleague the member for Lindsay's amendment. But it is important that we understand that, as positive as experiences can be in the digital online environment, there are also substantial risks. Like others, I've read of very tragic circumstances. I've had constituents, parents, come to me concerned about the way algorithms are seeking to lock young people in. In fact, I myself am someone who has to check how",
+   "stage": "Second reading",
+   "ayes": 43,
+   "noes": 92,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 89
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/2"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

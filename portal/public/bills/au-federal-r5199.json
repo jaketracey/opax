@@ -1,0 +1,607 @@
+{
+ "key": "au-federal-r5199",
+ "title": "Omnibus Repeal Day (Autumn 2014) Bill 2014",
+ "short_title": "Omnibus Repeal Day (Autumn 2014) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister",
+ "status": "passed",
+ "status_as_of": "2014-10-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5199%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5199%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5199%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5199%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5199%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5199%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5199%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5199%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5199%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5199%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-09-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5199%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5199%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-09-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5199%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5199%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5199_ems_904dc708-fca5-4a50-a145-ed1a264af56e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5199%22",
+   "document_date": "2014-03-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00109",
+   "document_date": "2014-10-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-19",
+  "sentences": [
+   "The bill would remove or change laws across ten government portfolios to cut red tape for businesses, individuals and community groups.",
+   "It would simplify what telecom providers must report, drop duplicate building certification for aged care, and let small-scale importers skip ozone-protection licensing.",
+   "The bill also deletes several Acts that are no longer needed, including one that created two construction-industry bodies, one of which was shut down in 1995 and the other has no current members."
+  ],
+  "changes": [
+   "Streamlines reporting and information rules for telecom companies under the Competition and Consumer Act 2010.",
+   "Removes a certification requirement in the Aged Care Act 1997 that duplicates state, territory and local government building rules.",
+   "Exempts low-volume importers from licensing under the Ozone Protection and Synthetic Greenhouse Gas Management Act 1989.",
+   "Repeals the Act that set up two construction-industry bodies, one abolished in 1995 and the other with no current members.",
+   "Repeals the Commonwealth and State Housing Agreement (Service Personnel) Act 1990, which was fully spent after five years."
+  ],
+  "affected": "Businesses, individuals and the community sector affected by regulation in ten portfolios, plus telecommunications providers, aged care providers, low-volume importers, and entities linked to the repealed construction-industry and housing Acts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:44Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3425",
+   "date": "2014-09-22",
+   "house": "senate",
+   "question": "Omnibus Repeal Day (Autumn 2014) Bill 2014 - in Committee - Independent study before grant of mining licences",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 8,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-22/1"
+  },
+  {
+   "key": "federal-senate-3426",
+   "date": "2014-09-22",
+   "house": "senate",
+   "question": "Omnibus Repeal Day (Autumn 2014) Bill 2014 - in Committee - Independent study before grant of mining licences",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 35,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-22/2"
+  },
+  {
+   "key": "federal-senate-3428",
+   "date": "2014-09-22",
+   "house": "senate",
+   "question": "Omnibus Repeal Day (Autumn 2014) Bill 2014 - in Committee - Interactive Gambling Act and ACMA",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "earliest": 4,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-22/4"
+  },
+  {
+   "key": "federal-senate-3429",
+   "date": "2014-09-22",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/senate/?id=2014-09-22.180.1) that the bill be read for a third time, which means that the bill is now passed in the Senate. Because the bill has already passed in the House of Representatives, it will now become law. (Read more about the stages that a bill must pass through to become law [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) _Background to the bill_ The [bill](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5199) was introduced to \"reduce regulatory burden for business, individuals and the community sector\" (see the [explanatory memorandum](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fems%2Fr5199_ems_904dc708-fca5-4a50-a145-ed1a264af56e%22)) and to repeal redundant provisions that are either duplications or have ceased to have effect. The provisions of the bill that make material changes have been identified and discussed in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1314a/14bd067).",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "earliest": 4,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-22/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-285675",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286998",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287001",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287006",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287007",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287010",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287013",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287016",
+   "speaker": "The DEPUTY SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287020",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287034",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287037",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287038",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287039",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287040",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287041",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287044",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287054",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287057",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287291",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287292",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287294",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287295",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287296",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287297",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Omnibus Repeal Day (Autumn 2014) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00109",
+   "assent_date": "2014-10-16"
+  }
+ ]
+}

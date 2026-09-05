@@ -1,0 +1,385 @@
+{
+ "key": "au-federal-r6587",
+ "title": "National Commissioner for Defence and Veteran Suicide Prevention Bill 2020",
+ "short_title": "National Commissioner for Defence and Veteran Suicide Prevention Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-08-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6587%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6587%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6587%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6587%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6587%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6587%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6587%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6587%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6587_ems_8f4f6f18-1d81-479c-8f51-e038a1e734fa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6587_ems_d8fd73af-58aa-4ae8-bac7-5a654b713e64%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6587%22",
+   "document_date": "2020-08-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-6612",
+   "date": "2020-09-03",
+   "house": "senate",
+   "question": "The same number of senators voted for and against a [motion](https://www.openaustralia.org.au/senate/?gid=2020-09-03.36.1) introduced by Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie), which means it failed. ### Motion text > *At the end of the motion, add:* > > *\"but, in respect of the provisions of the [National Commissioner for Defence and Veteran Suicide Prevention Bill 2020](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6587) and [Veteran Suicide Prevention (Consequential Amendments) Bill 2020](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6587), the Foreign Affairs, Defence and Trade Legislation Committee report by 24 April 2021\".*",
+   "stage": "Committee motion",
+   "ayes": 25,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "member": 13,
+    "earliest": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-03/4"
+  },
+  {
+   "key": "federal-senate-6613",
+   "date": "2020-09-03",
+   "house": "senate",
+   "question": "The same number of senators voted for and against a [motion](https://www.openaustralia.org.au/senate/?gid=2020-09-03.35.1) introduced by Tasmanian Senator [Jonathon Duniam](https://theyvoteforyou.org.au/people/senate/tasmania/jonathon_duniam) (Liberal), which means it failed. ### Motion text > *At the end of the motion, add \"and, in respect of the provisions of the [National Commissioner for Defence and Veteran Suicide Prevention Bill 2020](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6587) and a related bill, the Foreign Affairs, Defence and Trade Legislation report on 30 November 2020.\".*",
+   "stage": "Committee motion",
+   "ayes": 25,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "member": 14,
+    "earliest": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-03/5"
+  },
+  {
+   "key": "federal-senate-6778",
+   "date": "2020-12-03",
+   "house": "senate",
+   "question": "The same number of senators voted for and against a [motion](https://www.openaustralia.org.au/senate/?id=2020-12-03.70.2) introduced by Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie) (Jacqui Lambie Network), which means it failed. ### Motion text > *That—* > > *(a) the Senate notes that:* > >> *(i) on 3 September 2020, the Leader of the Government in the Senate told the Senate that, with respect to the [National Commissioner for Defence and Veteran Suicide Prevention Bill 2020](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6587) 'we do want the Senate to have the opportunity to deal with this very important bill so that this very important legislation can be passed by the end of the year. We don't think a reporting date next year is appropriate, because it would delay the establishment of this very important standing commission',* >> >> *(ii) despite this, the Senate is yet to have the opportunity to consider the bill;* >> >> *(iii) there are four sitting days remaining before the end of the year in which to consider the legislation, and* >> >> *(iv) veterans and their families deserve certainty over the fate of this legislation before Christmas; and* > > *(b) if, by 11 December 2020, the government business order of the day relating to the National Commissioner for Defence and Veteran Suicide Prevention Bill 2020 and the National Commissioner for Defence and Veteran Suicide Prevention (Consequential Amendments) Bill 2020 has not been finally considered, the order of the day be discharged from the Notice Paper.*",
+   "stage": "Business motion",
+   "ayes": 28,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "earliest": 21,
+    "dated": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-03/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-393995",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The bill moves to amend Commonwealth legislation to enable the establishment of an independent National Commissioner for Defence and Veteran Suicide Prevention."
+  },
+  {
+   "slug": "speech-396454",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The Labor MP moved an amendment criticising the government for failing to address high rates of suicide and mental health conditions among current and former ADF personnel, and for not establishing a full independent royal commission into veteran suicide, arguing the proposed National Commissioner lacks the independence, resources, and powers of a royal commission."
+  },
+  {
+   "slug": "speech-396456",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Commissioner for Defence and Veteran Suicide Prevention Bill 2020, which establishes a permanent independent commissioner with royal commission-like powers to inquire into defence and veteran suicides since 2001, monitor recommendations, and allow families to choose public or private hearings. The government allocated $42.7 million over five years for the office and legal assistance, noting over 450 suicide deaths in the defence and veteran community since 2001, including 33 in 2018."
+  },
+  {
+   "slug": "speech-396460",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Commissioner for Defence and Veteran Suicide Prevention Bill 2020, arguing the commissioner will have all powers of a standing royal commission, be funded with $42.7 million, and be led by interim commissioner Dr Bernadette Boss, examining every suicide case since 2001. The speaker noted that between 2001 and 2017, 419 lives were lost, and that ex-serving women are more than twice as likely as other women to die by suicide."
+  },
+  {
+   "slug": "speech-396461",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that a royal commission, not the proposed National Commissioner for Defence and Veteran Suicide Prevention, is necessary to address veteran suicides, citing 419 suicides from 2001–2019, one veteran lost per week, and 5,800 homeless ex-serving personnel. They expressed concern that the national commissioner would lack the powers to compel evidence, hold public hearings, and provide the restorative justice needed."
+  },
+  {
+   "slug": "speech-396462",
+   "speaker": "Phillip Thompson",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The speech argued that the National Commissioner for Defence and Veteran Suicide Prevention Bill 2020 is a necessary, ongoing solution to the more than 400 defence and veteran suicides since 2001, with the commissioner—Dr. Boss—holding broad powers to investigate, hold hearings, and report annually, including an interim report within 12 months and a final report within 18 months. It also acknowledged past systemic failures and personal losses, including the speaker's own experience of PTSD after being wounded in Afghanistan."
+  },
+  {
+   "slug": "speech-396463",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government's proposed National Commissioner for Defence and Veteran Suicide Prevention does not go far enough and called for a royal commission, citing 41 veteran suicides this year, 465 between 2001 and 2018, and that ex-servicemen are 21% more likely to die by suicide."
+  },
+  {
+   "slug": "speech-396464",
+   "speaker": "Gavin Pearce",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Commissioner For Defence And Veteran Suicide Prevention Bill 2020, arguing for an ongoing commission with royal commission powers to prevent veteran suicides, and welcomed the appointment of Veteran Family Advocate Gwen Cherne."
+  },
+  {
+   "slug": "speech-396466",
+   "speaker": "Patrick Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Commissioner for Defence and Veteran Suicide Prevention Bill 2020, arguing for an independent statutory office with royal commission-like powers to address veteran suicide, noting 33 additional deaths in 2018 and higher suicide rates among those medically discharged."
+  },
+  {
+   "slug": "speech-396468",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the National Commissioner for Defence and Veteran Suicide Prevention Bill 2020, stating it establishes a rolling royal commission-style commissioner with inquisitorial powers to address veteran suicide, particularly among medically discharged veterans who have higher suicide rates. The speaker noted that ex-serving males discharged on medical grounds have higher suicide rates than Australian males, and that serving females discharged on medical grounds have rates 115 per cent higher."
+  },
+  {
+   "slug": "speech-396469",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The Labor Party reserved its final position on the National Commissioner for Defence and Veteran Suicide Prevention Bill 2020 pending a Senate inquiry, while continuing to advocate for a royal commission. The speaker cited AIHW data showing ex-serving men are 21% more likely to die by suicide than counterparts, and that suicide rates are over three times higher for those discharged on medical grounds than for voluntary discharges."
+  },
+  {
+   "slug": "speech-396470",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that a royal commission, not just a national commissioner, is needed to address veteran suicide, citing the case of Sergeant Ian Turner and data showing ex-serving men are 21% more likely to die by suicide than other Australian men. They urged the Prime Minister to reconsider holding a royal commission, noting that 465 serving and recently discharged Defence Force personnel died by suicide between 2001 and 2018."
+  },
+  {
+   "slug": "speech-396471",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment calling for a royal commission into veteran suicide, arguing that Australia's veteran suicide rate has doubled since 2001 and is higher than the UK's, with projections of 600 more deaths over seven years if no action is taken. They urged the Prime Minister to establish a royal commission, rejecting government claims that royal commissions are temporary, citing the lasting reforms from the child sexual abuse royal commission."
+  },
+  {
+   "slug": "speech-396581",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Commissioner for Defence and Veteran Suicide Prevention Bill 2020 but raised concerns about its $42 million funding being insufficient compared to other royal commissions, questioned government accountability given 19 pages of unanswered reports, and noted that many veterans and families oppose the bill, instead backing Senator Jacqui Lambie's call for a royal commission."
+  },
+  {
+   "slug": "speech-396584",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "Labor supports a royal commission into veteran suicide and criticises the government for refusing one; the Nowra veterans wellbeing centre, to be led by RSL LifeCare, is moving forward."
+  },
+  {
+   "slug": "speech-396585",
+   "speaker": "Trevor Evans",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The government argued for establishing a National Commissioner for Defence and Veteran Suicide Prevention with powers equivalent to a royal commission, including the ability to compel evidence, hold public hearings, and monitor recommendations, and noted that over 90 submissions were received during public consultation."
+  }
+ ],
+ "acts": []
+}

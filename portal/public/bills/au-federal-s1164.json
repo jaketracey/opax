@@ -1,0 +1,175 @@
+{
+ "key": "au-federal-s1164",
+ "title": "Major Sporting Events (Indicia and Images) Protection Amendment Bill 2018",
+ "short_title": "Major Sporting Events (Indicia and Images) Protection Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-12-05",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Regional Services, Sport, Local Government and Decentralisation",
+ "status": "passed",
+ "status_as_of": "2019-04-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1164%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1164%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1164%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1164%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1164%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1164%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1164%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1164%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1164%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1164%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1164%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1164%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1164_ems_627cffe4-9084-4134-8806-2c400154d762%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1164%22",
+   "document_date": "2018-12-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00039",
+   "document_date": "2019-04-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-376948",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-04-04",
+   "stage_hint": null,
+   "brief": "The bill extends ambush marketing protections to the 2020 ICC T20 World Cup by adding it to the Major Sporting Events Act, while removing expired schedules for the 2015 Asian Football Confederation Asian Cup and 2015 ICC Cricket World Cup."
+  },
+  {
+   "slug": "speech-376949",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-04",
+   "stage_hint": null,
+   "brief": "The Major Sporting Events (Indicia and Images) Protection Amendment Bill 2018 updates the 2014 act to designate the ICC T20 World Cup 2020 (men’s and women’s) as a major sporting event and protect its intellectual property until 30 November 2021. The speaker argued the legislation is necessary to safeguard sponsors’ exclusive rights and should be passed urgently to take effect before the women’s tournament in February–March 2020."
+  },
+  {
+   "slug": "speech-376950",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-04",
+   "stage_hint": null,
+   "brief": "The speaker argued for updating the Major Sporting Events (Indicia and Images) Protection Act 2014 to include the ICC T20 World Cup 2020, covering both men's and women's tournaments, and protect related intellectual property like logos and branding. The bill also received support from the industry and Labor, with the local organising committee urging passage at least one year before the women's T20 World Cup in February 2020."
+  },
+  {
+   "slug": "speech-376951",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-04",
+   "stage_hint": null,
+   "brief": "The Major Sporting Events (Indicia and Images) Protection Amendment Bill 2018 needs urgent passage to protect the ICC T20 World Cup in Australia in 2020, which now includes women's cricket and captain Meg Lanning."
+  },
+  {
+   "slug": "speech-376960",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the Major Sporting Events (Indicia and Images) Protection Amendment Bill 2018 and highlighted local netball achievements, including the Central Coast Heart winning the Netball New South Wales Premier League and Amy Wild being named player of the series."
+  },
+  {
+   "slug": "speech-376961",
+   "speaker": "Scott Buchholz",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-04-04",
+   "stage_hint": null,
+   "brief": "The Major Sporting Events (Indicia and Images) Protection Amendment Bill 2018 was introduced to protect sponsorship and licensing revenue for the ICC T20 World Cup 2020 from ambush marketing, and the World Cup will be recognised as a major sporting event under the 2014 Act."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Major Sporting Events (Indicia and Images) Protection Amendment Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00039",
+   "assent_date": "2019-04-05"
+  }
+ ]
+}

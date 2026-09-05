@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1502",
+ "title": "Superannuation Legislation Amendment (Fair Super for Young Workers) Bill 2026",
+ "short_title": "Superannuation Legislation Amendment (Fair Super for Young Workers) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-12",
+ "originating_house": "senate",
+ "sponsor": "POCOCK, Sen Barbara",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "11008",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1502%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1502%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1502%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1502_ems_5f3fe2bc-2687-4caf-b227-95d9f6959cad%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1502%22",
+   "document_date": "2026-08-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1205900",
+   "speaker": "Barbara Pocock",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205951",
+   "speaker": "Deborah O'Neill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

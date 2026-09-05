@@ -1,0 +1,278 @@
+{
+ "key": "au-federal-r6695",
+ "title": "Competition and Consumer Amendment (Motor Vehicle Service and Repair Information Sharing Scheme) Bill 2021",
+ "short_title": "Competition and Consumer Amendment (Motor Vehicle Service and Repair Information Sharing Scheme) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-03-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2021-06-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6695%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6695%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6695%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6695%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6695%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6695%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6695%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6695%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6695%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6695%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6695%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6695%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6695_ems_295e259b-1f16-4077-9b4d-1bdce7935f8b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6695%22",
+   "document_date": "2021-03-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00054",
+   "document_date": "2021-06-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-03-24",
+  "sentences": [
+   "The bill would create a mandatory scheme for car makers and other data holders to sell repair information to Australian mechanics and training providers at a fair price.",
+   "Data providers must offer the information, charge no more than fair market value, and supply it promptly after payment, with penalties of up to $10 million for companies and $500,000 for individuals for non-compliance.",
+   "Providers must also publish offers online, restrict access to safety and security information, protect personal data, and pay copyright compensation to third parties."
+  ],
+  "changes": [
+   "Establishes a mandatory information-sharing scheme for motor vehicle service and repair data.",
+   "Imposes obligations on data providers to supply information at fair market value.",
+   "Sets maximum penalties of $10 million for body corporates and $500,000 for other persons.",
+   "Requires publication of scheme offers and notification to the scheme adviser.",
+   "Restricts access to safety and security information to those meeting specified criteria.",
+   "Requires compensation to third parties holding copyright in scheme information."
+  ],
+  "affected": "Data providers (including vehicle manufacturers, information owners, licensees, and data aggregators), Australian repairers, and registered training organisations (RTOs) providing vehicle repair training.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-405165",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The bill establishes a mandatory scheme requiring car manufacturers to sell service and repair information to independent repairers at fair market value, aiming to address a lack of competition in the $23 billion Australian automotive sector. The scheme applies to passenger and light-goods vehicles from 2002, includes a maximum penalty of $10 million for non-compliance, and provides a $250,000 grant for an online information portal."
+  },
+  {
+   "slug": "speech-406086",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's delays in implementing a mandatory code for sharing vehicle repair data with independent mechanics have hurt small businesses and consumers, noting Labor first proposed the policy in 2018 after the ACCC's 2017 report. The bill requires manufacturers to supply diagnostic and repair information to all Australian repairers and training organisations at fair market value, with the scheme to take effect on 1 July 2022."
+  },
+  {
+   "slug": "speech-406088",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The Competition and Consumer Amendment (Motor Vehicle Service and Repair Information Sharing Scheme) Bill 2021 was supported to ensure independent repairers have equal access to vehicle service and repair information, creating a level playing field and promoting competition and consumer benefits."
+  },
+  {
+   "slug": "speech-406089",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The Labor MP argued that the Morrison government delayed too long in implementing mandatory data-sharing for independent mechanics, which the 2014 voluntary scheme failed to achieve. The bill requires car manufacturers to share service and repair information with independent repairers on fair terms, supporting small businesses, consumer choice, and apprenticeships."
+  },
+  {
+   "slug": "speech-406090",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Competition and Consumer Amendment (Motor Vehicle Service and Repair Information Sharing Scheme) Bill 2021 is necessary because overseas car manufacturers have illegally denied independent Australian repair shops access to vehicle data, constituting market failure and third line forcing. The speaker criticised the ACCC for failing to enforce existing laws against these manufacturers while pursuing small Australian businesses, and credited the member for Fenner for bringing the issue to public attention."
+  },
+  {
+   "slug": "speech-406228",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Competition and Consumer Amendment (Motor Vehicle Service and Repair Information Sharing Scheme) Bill 2021, which mandates car manufacturers to share diagnostic and repair information with independent repairers at a fair price, citing ACCC findings that voluntary arrangements cost Australian drivers over $1 billion annually and that the bill aligns Australia with the EU and US states."
+  },
+  {
+   "slug": "speech-406229",
+   "speaker": "Patrick Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The Competition and Consumer Amendment (Motor Vehicle Service and Repair Information Sharing Scheme) Bill 2021 aims to end manufacturer monopolies by mandating access to diagnostic and repair information on fair terms, promoting competition and lower prices. The speaker noted that around one in 10 repairs are currently affected by lack of access, and argued the change will particularly help regional repairers, reduce costs (e.g., from $1,000 to $400), and improve road safety by reducing delays that may contribute to the 1,127 annual road deaths."
+  },
+  {
+   "slug": "speech-406230",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Competition and Consumer Amendment Bill 2021, which mandates car manufacturers to share repair information with independent mechanics, ending a failed voluntary scheme from 2014 that had allowed a monopoly. This benefits 23,000 independent repair businesses, over 150,000 workers, and consumers, especially in rural areas, while also supporting the broader \"right to repair\" for environmental sustainability and consumer choice."
+  },
+  {
+   "slug": "speech-406231",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The mandatory data sharing scheme will end anticompetitive practices by car manufacturers, lowering costs for households and supporting independent mechanics. The speaker commended the member for Fenner for persisting with the policy after years of government inaction since David Bradbury first raised it in 2011."
+  },
+  {
+   "slug": "speech-406232",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Competition and Consumer Amendment (Motor Vehicle Service and Repair Information Sharing Scheme) Bill 2021 and the second reading amendment, arguing the government had delayed action since 2018 and that Labor’s advocacy—including by the member for Fenner—was essential to finally requiring car manufacturers to share technical information with independent mechanics on fair terms, benefiting 23,000 independent repairers and car owners."
+  },
+  {
+   "slug": "speech-406233",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "Labor argued for the Competition and Consumer Amendment (Motor Vehicle Service and Repair Information Sharing Scheme) Bill 2021, which would require car manufacturers to share technical information with independent mechanics on fair terms, benefiting over 50 independent repairers in the electorate of Burt and giving car owners more choice."
+  },
+  {
+   "slug": "speech-406234",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The Competition and Consumer Amendment (Motor Vehicle Service and Repair Information Sharing Scheme) Bill 2021 mandates that car manufacturers share service and repair data with independent mechanics at a fair price, benefiting 23,000 independent repairers and around 18 businesses in the Oxley electorate. The speaker credited the member for Fenner as a key advocate and noted that the policy, first committed to in 2018, levels the playing field for small operators against large dealerships."
+  },
+  {
+   "slug": "speech-406235",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that car manufacturers have withheld intellectual property and diagnostic tools from independent motor mechanics, harming small businesses and inflating repair costs—citing a $800 battery replacement—and supported the bill to drive competition."
+  },
+  {
+   "slug": "speech-406238",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the voluntary 2014 agreement on sharing motor vehicle service and repair information failed, and welcomed the 2021 bill to mandate access, noting that only Holden complied under the earlier scheme. The member for Macquarie praised the government for adopting the policy, named local businesses such as Windsor Ultra Tune and Active Automotives, and referenced David Bradbury’s 2011 report on consumer harm."
+  },
+  {
+   "slug": "speech-406239",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The government initiated the motor vehicle service and repair information sharing reforms in 2017, not borrowed from the Labor Party, and the bill establishes a mandatory scheme requiring information to be made available at fair market price—the first of its kind in Australia and the Asia-Pacific region—to promote competition and benefit independent repairers and consumers."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Competition and Consumer Amendment (Motor Vehicle Service and Repair Information Sharing Scheme) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00054",
+   "assent_date": "2021-06-24"
+  }
+ ]
+}

@@ -1,0 +1,249 @@
+{
+ "key": "au-federal-r5886",
+ "title": "Treasury Laws Amendment (2017 Enterprise Incentives No. 2) Bill 2017",
+ "short_title": "Treasury Laws Amendment (2017 Enterprise Incentives No. 2) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-09-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5886_ems_c467a515-bd64-4961-a9e2-4dfec65910d0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5886_ems_26faf2e5-e130-4e17-8795-01849ae084c7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5886%22",
+   "document_date": "2017-06-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00112",
+   "document_date": "2017-09-18",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-4904",
+   "date": "2017-09-11",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2017-09-11.230.1) introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor), which means they were not successful. Senator Gallagher [explained that](https://www.openaustralia.org.au/senate/?gid=2017-09-11.230.1): > *With the way the government's bill is drafted, the directors don't have to prove that they have the benefit of the defence. Instead, once directors bring evidence that satisfies an evidentiary burden that suggests a reasonable possibility that the matters exist or do not exist in that they are entitled to the safe harbour, the burden of proof or the legal burden falls on the party bringing proceedings to prove that the director is not entitled to the safe harbour. Our amendments on sheet 8224 would mean that directors who want to access the safe harbour bear the burden of proof in showing that they are genuinely taking a reasonable course of action to turn the company around. This is consistent with other existing defences to liability for insolvent trading.* ### Amendment text > *(1) Schedule 1, item 1, page 3 (lines 7 to 13), omit all the words from and including \"evidence\" to the end of subsection 588E(8A), substitute:* > >> *it has been proved that:* >> >> *(a) subsection 588GA(1) applies in relation to a person and a debt; or* >> >> *(b) subsection 588WA(1) applies in relation to a corporation and a debt;* >> >> *it must be presumed that the relevant subsection applies in relation to the person or the corporation and the debt.* > > *(2) Schedule 1, item 2, page 3 (line 16), after \"harbour\", insert \"defence\".* > > *(3) Schedule 1, item 2, page 3 (lines 19 and 20), omit \"Subsection 588G(2) does not apply in relation to a person and a debt if\", substitute \"In any proceedings against a person under subsection 588G(2), it is a defence if the person proves, in relation to a debt, that\".* > > *(4) Schedule 1, item 2",
+   "stage": "In committee",
+   "ayes": 20,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 15,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-11/13"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-350232",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government should immediately introduce a director identification number and other measures to combat illegal phoenix activity, which costs Australia $3 billion or more annually, and criticised the member for Fairfax for opposing Labor's proposal while supporting only a task force. The speaker noted that the Senate inquiry into the Treasury Laws Amendment Bill will not cause delays, with submissions closing on 12 July and a report due by 8 August."
+  },
+  {
+   "slug": "speech-350235",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (2017 Enterprise Incentives No. 2) Bill 2017, which creates a safe harbour for directors from personal liability for trading while insolvent and makes ipso facto clauses unenforceable during insolvency procedures. The speaker also urged the government to act on phoenixing activity by implementing director identification numbers, citing widespread concern from the Productivity Commission, the Institute of Company Directors and the ACTU."
+  },
+  {
+   "slug": "speech-350236",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2017 Enterprise Incentives No. 2) Bill 2017 introduces a safe harbour for company directors from personal liability for insolvent trading during corporate restructures and restricts ipso facto clauses that allow contract termination upon insolvency. The reforms aim to encourage entrepreneurship, reduce the stigma of failure, and preserve enterprise value, with support from the Australian Institute of Company Directors, the Australian Private Equity and Venture Capital Association, the Law Council of Australia, and the Australian Restructuring Insolvency and Turnaround Association."
+  },
+  {
+   "slug": "speech-353833",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-12",
+   "stage_hint": null,
+   "brief": "Labor argued for amendments to the Treasury Laws Amendment Bill that would strengthen the safe harbour for directors from insolvent trading liability by increasing evidentiary requirements, but only its amendment requiring a two-year review with three qualified reviewers and a tabled report was accepted; the party will monitor the safe harbour's effect on workers' entitlements and supports part 2 on ipso facto clauses."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2017 Enterprise Incentives No. 2) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00112",
+   "assent_date": "2017-09-18"
+  }
+ ]
+}

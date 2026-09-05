@@ -1,0 +1,241 @@
+{
+ "key": "au-federal-r5894",
+ "title": "Imported Food Control Amendment Bill 2017",
+ "short_title": "Imported Food Control Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2018-09-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-09-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5894_ems_241e4784-395c-4c39-808b-354d94122e61%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5894_ems_ef23cbc9-5d07-439a-b3d5-e597eeabde9b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5894_ems_24706862-9fcc-4d52-88be-ce1e50740f15%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5894%22",
+   "document_date": "2017-06-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00108",
+   "document_date": "2018-09-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-358394",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "Labor supported the Imported Food Control Amendment Bill 2017 to strengthen Australia's risk-based imported food system, but criticised the Turnbull Government's slow response and the then Minister Barnaby Joyce's \"childish\" comments during the 2015 hepatitis A outbreak linked to imported frozen berries. The opposition moved an amendment noting the government's failure to implement timely and effective agricultural policies, lamenting the lack of a strategic vision in the delayed agriculture white paper and the poor design of new country-of-origin labelling laws that cost small businesses like Brookfarm muesli $500,000."
+  },
+  {
+   "slug": "speech-358396",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-358566",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Imported Food Control Amendment Bill 2017 is necessary to prevent biosecurity threats like white spot disease, which cost tens of millions of dollars and devastated prawn farms on the Logan River. He highlighted the Sunshine Coast's fishing industry, worth $42.5 million in direct sales annually, and noted that the government has invested $200 million to strengthen biosecurity."
+  },
+  {
+   "slug": "speech-358567",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government must urgently strengthen biosecurity to protect Australia's agricultural exports, citing fruit fly outbreaks in Tasmania that caused cherry prices to drop from $20 to $11 per box after China banned imports, and criticised the slow response to the 2015 hepatitis A outbreak linked to frozen berries and to white spot disease in Queensland. The speaker supported the Imported Food Control Amendment Bill 2017 for improving risk management of imported foods, but called for greater investment and a coordinated federal-state action plan to prevent future outbreaks."
+  },
+  {
+   "slug": "speech-358568",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Imported Food Control Amendment Bill 2017, arguing that food safety is consumer safety. They welcomed country-of-origin labelling reforms but expressed concern that the government is reviewing whether to retain product measurement labelling on the front of packets, which they said would make it harder for consumers to know what they are buying."
+  },
+  {
+   "slug": "speech-358569",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The Imported Food Control Amendment Bill 2017 strengthens imported food safety by increasing importer accountability, with penalties including up to 10 years jail and fines over $100,000, in response to the 2015 hepatitis A outbreak from frozen berries. The bill received bipartisan support."
+  },
+  {
+   "slug": "speech-358570",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Imported Food Control Amendment Bill 2017 is necessary to strengthen food safety controls, but stressed that without adequate resourcing for enforcement agencies, the regulations will fail—citing examples such as 4.1 million annual foodborne illnesses, 33 hepatitis A cases from imported frozen berries, a child’s death from undeclared milk, white spot disease in prawns, and recent fruit fly outbreaks in Tasmania."
+  },
+  {
+   "slug": "speech-358571",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Imported Food Control Amendment Bill 2017 to strengthen Australia’s imported food safety system, citing $16 billion in food imports (2015–2016), 4.1 million food-borne illness episodes and 86 deaths in that period, and the 2015 hepatitis A outbreak from imported frozen berries that resurfaced in 2017. He also criticised the government’s delay in introducing the bill and called for better resourcing of regulatory agencies."
+  },
+  {
+   "slug": "speech-358572",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Imported Food Control Amendment Bill 2017 for strengthening risk-based management of imported food and mandating clearer country-of-origin labelling, while criticising the Tasmanian Liberal Premier for cutting biosecurity funding, which contributed to a fruit fly outbreak and economic losses, and called for a trial of mandatory seafood labelling in Tasmania."
+  },
+  {
+   "slug": "speech-358573",
+   "speaker": "David Littleproud",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The Imported Food Control Amendment Bill 2017 strengthens Australia's food safety system by requiring importers to prove supply chain safety controls, improving incident response, and recognising equivalent foreign regulatory systems to reduce border inspections. The government also highlighted agricultural successes, including $63.4 billion in total production (up 30%), free trade agreements with China, Japan, Korea and Peru, and $250 million annually in farm business concessional loans."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Imported Food Control Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00108",
+   "assent_date": "2018-09-21"
+  }
+ ]
+}

@@ -1,0 +1,139 @@
+{
+ "key": "au-federal-r6760",
+ "title": "Treasury Laws Amendment (2021 Measures No. 7) Bill 2021",
+ "short_title": "Treasury Laws Amendment (2021 Measures No. 7) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6760%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6760%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6760%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6760%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6760%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6760%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6760%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6760%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6760_ems_21251ef5-51e8-4e39-8141-a872c7503d50%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6760%22",
+   "document_date": "2021-08-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-411832",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2021 Measures No. 7) Bill 2021 extends third‑party reporting requirements to electronic platform operators for gig economy transactions, facilitates the closure of the Superannuation Complaints Tribunal with transitional arrangements for AFCA, and removes the first $250 exclusion for self‑education expense deductions from the 2022‑23 income year."
+  },
+  {
+   "slug": "speech-413181",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "Labor supported the bill but moved a second reading amendment criticising the government's failure to address the skills crisis, citing 105,000 unfilled skilled positions, 800 fewer TAFE teachers, a 20% fall in training places, and the closure of Dapto TAFE campus."
+  },
+  {
+   "slug": "speech-413183",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's infrastructure investment and stimulus successfully prevented predicted double-digit unemployment, and that skills shortages are a preferable problem to high unemployment. He announced support for the bill's measures requiring gig economy platforms to report transaction data to the ATO, transferring superannuation complaints to AFCA, and removing the $250 self-education expense deduction threshold."
+  },
+  {
+   "slug": "speech-413184",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2021 Measures No. 7) Bill’s requirement for gig economy platforms to report transactions to the ATO is supported, but the government is criticised for failing to also regulate worker pay and conditions in the sector. Evidence cited includes Uber drivers earning $21.55 per hour at peak times in Sydney, below the casual minimum wage of $24.80, and the global gig economy projected to grow from US$204 billion in 2018 to US$455 billion by 2023."
+  },
+  {
+   "slug": "speech-413187",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill, which from 1 July 2022 will require gig economy platforms like Uber and Airbnb to report transactions to the ATO, with further services included from 1 July 2023. The speaker argued the government should also regulate gig workers' wages, conditions and safety, citing workers Rosalina Pirozzi and Ashley Moreland, and said the government's focus on tax over workers' rights is a missed opportunity."
+  },
+  {
+   "slug": "speech-413188",
+   "speaker": "Lucy Elizabeth Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2021 Measures No. 7) Bill was supported, extending tax reporting to sharing economy platforms like Uber, Airbnb, and Deliveroo; transitioning complaints to the Australian Financial Complaints Authority; and removing the $250 self-education expenses threshold from 2022-23, benefiting 61,600 people in Robertson with up to $2,745 in tax relief."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,279 @@
+{
+ "key": "au-federal-r6687",
+ "title": "Sydney Harbour Federation Trust Amendment Bill 2021",
+ "short_title": "Sydney Harbour Federation Trust Amendment Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-03-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Water and the Environment",
+ "status": "passed",
+ "status_as_of": "2021-06-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6687%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6687%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6687%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6687%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6687%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6687%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6687%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6687%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6687%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6687%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6687%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6687%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6687%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6687_ems_5f572c40-2f44-4ae7-8cae-3a65e50188ec%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/7970532%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6687%22",
+   "document_date": "2021-03-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00049",
+   "document_date": "2021-06-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2021-03-18",
+  "sentences": [
+   "The bill would make the Sydney Harbour Federation Trust a permanent body rather than a transitional one.",
+   "It would remove the requirement for the Trust to transfer land to New South Wales and repeal the part of the Act that scheduled its repeal after 2033.",
+   "The bill would also change the preamble to state the Trust will protect heritage values, and it would alter membership rules for the Trust."
+  ],
+  "changes": [
+   "Repeals Part 10 of the Harbour Trust Act and related definitions so the Trust continues beyond 2033.",
+   "Amends the preamble to remove references to the Trust being a transitional body and to land being returned to New South Wales.",
+   "Changes membership provisions in Part 3 of the Act."
+  ],
+  "affected": "The Sydney Harbour Federation Trust, the Commonwealth Government, and stakeholders including the NSW Government and local councils.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7174",
+   "date": "2021-06-01",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) unchanged. The usual second reading motion is \"*that the bill be read a second time*\", which is parliamentary jargon for agreeing with the main idea of the bill. This vote took place after the MP for Fremantle [Josh Wilson](https://theyvoteforyou.org.au/people/representatives/fremantle/josh_wilson) (Labor) proposed the following amendment. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes the Government's failure to adequately respond to growing calls to review and modernise Australia's national heritage protection framework for the betterment of our natural, built, and First Nations cultural heritage\".*",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 62,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Liberal": {
+     "ayes": 39,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-01/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-404418",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The bill makes the Sydney Harbour Federation Trust an ongoing entity rather than a transitional body, keeping former Defence sites under federal management. It provides $40.6 million in funding and updates the Trust's membership requirements and commercial activity rules."
+  },
+  {
+   "slug": "speech-407526",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "Labor supported the Sydney Harbour Federation Trust Amendment Bill 2021, which secures the trust’s perpetual management of 11 heritage sites including North Head and Cockatoo Island, and proposed an amendment calling for the government to review and modernise Australia’s national heritage protection framework, noting a $40 million one-off funding allocation and the need for greater First Nations cultural heritage recognition."
+  },
+  {
+   "slug": "speech-407528",
+   "speaker": "Trent Zimmerman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The Sydney Harbour Federation Trust Amendment Bill 2021 makes the trust permanent, ensuring Commonwealth custodianship of harbour sites like Cockatoo Island and North Head. The bill reforms the trust board, limits standard leases to 25 years with rare 35-year extensions under strict conditions, and raises the contract approval threshold from $1 million to $5 million."
+  },
+  {
+   "slug": "speech-407530",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Sydney Harbour Federation Trust Amendment Bill 2021, which establishes the trust as an ongoing entity, caps leases at 35 years with leases over 25 years subject to parliamentary disallowance, and ensures public ownership and access to harbour sites including Cockatoo Island."
+  },
+  {
+   "slug": "speech-407531",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Sydney Harbour Federation Trust should become an ongoing entity rather than a transitional body, implementing four key recommendations from the 2020 independent review: making the trust permanent, revising appointment requirements, raising the contract threshold for ministerial approval, and reforming leasing protections beyond 25 years."
+  },
+  {
+   "slug": "speech-407532",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The Labor Party supported the Sydney Harbour Federation Trust Amendment Bill 2021, which ensures nationally significant heritage sites in Sydney Harbour remain publicly owned and managed in perpetuity and revises board appointment criteria to include expertise in heritage, tourism, military service, and business development. Labor called on the government to ensure any future commercial activities on these sites comply with their values and community wishes, and proposed establishing a national museum and cultural facility for First Nations Australians' culture and history on Sydney Harbour."
+  },
+  {
+   "slug": "speech-407533",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The Sydney Harbour Federation Trust Amendment Bill 2021 was supported, enabling the trust to operate as an ongoing entity, prohibiting leases over 35 years, and requiring board appointments based on expertise in areas like heritage, environment, and Indigenous engagement. The member also noted community concerns about land transfer to New South Wales and advocated for increased funding and continued protection of trust lands."
+  },
+  {
+   "slug": "speech-407534",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The Sydney Harbour Federation Trust Amendment Bill 2021 makes the trust an ongoing entity, implements recommendations from an independent review, reforms leasing and approval processes to prevent inappropriate commercialisation, and increases public confidence through clearer governance and member requirements."
+  },
+  {
+   "slug": "speech-407537",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The Sydney Harbour Federation Trust Amendment Bill 2021 ensures trust sites remain in Commonwealth hands as an ongoing entity, removing transitional language and retaining section 24 protections, with $60 million invested and endorsement from the Headland Preservation Group."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Sydney Harbour Federation Trust Amendment Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00049",
+   "assent_date": "2021-06-23"
+  }
+ ]
+}

@@ -1,0 +1,185 @@
+{
+ "key": "au-federal-r5925",
+ "title": "Migration Amendment (Regulation of Migration Agents) Bill 2018",
+ "short_title": "Migration Amendment (Regulation of Migration Agents) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5925%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5925%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5925%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5925%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5925%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5925%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5925%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5925%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-05-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5925%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5925%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5925%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5925%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5925_ems_05f495d5-430d-42fb-9c23-697201cd7767%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5925_ems_8ee538df-bf53-486a-9550-b8cdc7bdfaed%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5925_ems_e340439b-b688-4215-93aa-8f1709751c43%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5925_ems_d364e35b-7664-40b7-aa74-d49d8601c937%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5925%22",
+   "document_date": "2017-06-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2017-06-21",
+  "sentences": [
+   "The bill would tighten the rules for people who give immigration advice, changing who can register as a migration agent.",
+   "Unrestricted lawyers would be removed from the migration agent system and instead be governed only by their own professional bodies, while some restricted lawyers could stay registered for up to four years.",
+   "The bill would let the Migration Agents Registration Authority refuse applicants who fail to provide information or answer questions under oath."
+  ],
+  "changes": [
+   "Removes unrestricted legal practitioners from the migration agent registration scheme.",
+   "Allows eligible restricted legal practitioners to remain registered as migration agents for up to two years, extendable by another two years.",
+   "Provides transitional arrangements for existing restricted legal practitioner migration agents, also up to four years total.",
+   "Moves the time limit for repeat registration applications from the Act to delegated legislation and removes the 12-month deadline after finishing a prescribed course.",
+   "Repeals outdated provisions and clarifies that the Minister, through the Migration Agents Registration Authority, exercises powers under Part 3.",
+   "Requires migration agents to notify the Authority if they pay a non-commercial charge but give immigration assistance on a commercial basis."
+  ],
+  "affected": "Unrestricted and restricted legal practitioners, registered migration agents, and applicants for migration agent registration.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:34:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-349904",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-21",
+   "stage_hint": null,
+   "brief": "The speaker moved the second reading of the Migration Amendment (Regulation of Migration Agents) Bill 2017, which removes lawyers holding practising certificates from regulation by the Migration Agents Registration Authority, changes registration periods, repeals redundant provisions, closes a loophole on incomplete applications, requires notification of commercial activity, and expands definitions of immigration assistance — delivering on a Coalition election commitment to deregulate the migration advice industry."
+  },
+  {
+   "slug": "speech-361298",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-27",
+   "stage_hint": null,
+   "brief": "Labor will support the Migration Amendment (Regulation of Migration Agents) Bill and the associated rates of charge bill, which aim to deregulate the migration advice industry. The government must investigate complaints against unscrupulous agents to protect vulnerable migrants."
+  },
+  {
+   "slug": "speech-361427",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration Amendment (Regulation of Migration Agents) Bill 2017, which removes the requirement for lawyers to register as migration agents, implementing recommendation 1 of the 2014 OMARA review. Labor initiated a Senate inquiry that recommended a two-year transition period for migration agents with restricted practising certificates, which the government agreed to."
+  },
+  {
+   "slug": "speech-361488",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-27",
+   "stage_hint": null,
+   "brief": "The bill removes the requirement for lawyers to be registered as migration agents to provide immigration advice, implementing 2014 recommendations from Dr Christopher Kendall's review to end dual regulation, reduce consumer costs, and clarify definitions—though the speaker noted a four-year delay in debating the legislation."
+  }
+ ],
+ "acts": []
+}

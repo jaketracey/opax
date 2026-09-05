@@ -1,0 +1,45 @@
+{
+ "key": "au-federal-alrc-5061",
+ "title": "Telecommunications Amendment (Get a Warrant) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-06-18",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2013-06-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-06-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-18",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-824440",
+   "speaker": "Scott Ludlam",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": "The Telecommunications Amendment (Get a Warrant) Bill 2013 was introduced to amend the Telecommunications (Interception and Access) Act 1979 and passed its first reading without formalities."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,164 @@
+{
+ "key": "au-federal-r5355",
+ "title": "Social Services and Other Legislation Amendment (2014 Budget Measures No. 4) Bill 2014",
+ "short_title": "Social Services and Other Legislation Amendment (2014 Budget Measures No. 4) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5355%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5355%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5355%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5355%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5355%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5355%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5355%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5355%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5355_ems_c25ad6b3-89c6-494d-baa1-bc1e790609a6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5355_ems_3e36a05b-f932-4494-8cf9-092efcd3c2ed%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5355%22",
+   "document_date": "2014-10-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-10-02",
+  "sentences": [
+   "This bill would bring back several previously proposed changes to social security and family payments.",
+   "It would freeze various income test thresholds for working age allowances, student payments, and family tax benefits, and change how certain payments are indexed.",
+   "From January 2015, the bill would stop the pensioner education supplement and the education entry payment, and extend youth allowance to 22 to 24 year olds instead of newstart and sickness allowances."
+  ],
+  "changes": [
+   "Freeze income free areas for working age allowances and parenting payment single for three years from July 2015.",
+   "Index parenting payment single only to the Consumer Price Index from Royal Assent.",
+   "Maintain family tax benefit free areas at current levels for three years from July 2015.",
+   "Freeze student payment income free areas and means-test thresholds for three years from January 2015.",
+   "Limit family tax benefit Part B to families whose youngest child is under six, with a two-year transition for existing recipients.",
+   "Cease the pensioner education supplement and the education entry payment from January 2015."
+  ],
+  "affected": "Recipients of working age allowances, student payments, family tax benefits, parenting payment single, and veterans' disability pension, as well as young people aged 22 to 24.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:32:50Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3552",
+   "date": "2014-10-22",
+   "house": "representatives",
+   "question": "Ewen Jones In addressing the Social Services and Other Legislation Amendment (Senior Supplement Cessation) Bill 2014 and related bills, I will put in context why we are having this conversation and moving in these circles. In 2013, we went to the election with a four-pillar promise. We said we would axe the bad taxes—the carbon and mining taxes. We said we would stop the boats, that we would build the roads and the infrastructure of the 21st century, and that we would fix the budget mess. The carbon tax and the mining tax are gone. Tick. We have had one successful boat this year. We have announced $150 billion worth of roads and over $800 billion worth of approvals through the Department of the Environment to get this economy moving. The fourth pillar is to fix the budget mess, and that is taking a long time. And it will take a long time. First of all, I will take up the point made by the member for Jagajaga and state emphatically: this is a lot of money. The savings we are trying to put through with these bills is a lot of money. By my calculations, over the forward estimates it is about $8.7 billion. That is a tremendous amount of money. But then consider that social security is, at the moment, $146 billion per year. In the next four years we will be spending nearly $600 billion on social security payments. To put it in context, we are talking about $8 billion versus $600 billion—over half a trillion dollars. What we are trying to get through here is about 1.5 per cent of that. We have an economy growing at around four per cent, but our social security and health costs are rising at nine per cent and over. We have real issues here. The thing that gets to me the most is that rather than discuss the numbers the opposition always want to argue about the words. Was it a budget emergency? They say it was not an emergency. I say: is it an emergency as you are going over the cliff, or is it an emergency as you are getting close to the cliff? I have a real issue with the",
+   "stage": "Second reading",
+   "ayes": 80,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-10-22/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-299879",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-22",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

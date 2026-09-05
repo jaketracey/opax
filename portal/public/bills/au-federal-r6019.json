@@ -1,0 +1,92 @@
+{
+ "key": "au-federal-r6019",
+ "title": "Foreign Influence Transparency Scheme (Charges Imposition) Bill 2017",
+ "short_title": "Foreign Influence Transparency Scheme (Charges Imposition) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2018-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6019%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6019%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6019%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6019_ems_2e4e8532-eaea-46ed-b937-77882b75cc29%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6019%22",
+   "document_date": "2017-12-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-12-07",
+  "sentences": [
+   "This bill lets the government charge a fee when someone applies to register or renew their registration under the foreign influence transparency scheme.",
+   "The fee is part of a plan to recover some of the costs of running the scheme, which requires people acting for foreign clients to register and disclose their activities.",
+   "The scheme does not aim to stop or punish lawful activities, and the charge applies only when certain registration actions are taken."
+  ],
+  "changes": [
+   "The bill gives the government authority to impose a charge for registration or renewal applications.",
+   "The charge helps recover some of the scheme's establishment, administration and maintenance costs.",
+   "The scheme requires registration by people doing certain activities for foreign principals."
+  ],
+  "affected": "People who undertake certain activities in Australia on behalf of foreign principals.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-357699",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-12-07",
+   "stage_hint": null,
+   "brief": "The Foreign Influence Transparency Scheme (Charges Imposition) Bill 2017 imposes charges on individuals applying for or renewing registration under the scheme, with amounts set by regulations to partially recover administrative costs and promote transparency about foreign influence in Australian politics."
+  },
+  {
+   "slug": "speech-365899",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

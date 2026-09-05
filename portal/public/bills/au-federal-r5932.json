@@ -1,0 +1,193 @@
+{
+ "key": "au-federal-r5932",
+ "title": "Product Emissions Standards (Excise) Charges Bill 2017",
+ "short_title": "Product Emissions Standards (Excise) Charges Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-08-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment and Energy",
+ "status": "passed",
+ "status_as_of": "2017-09-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5932_ems_819d700c-c573-4493-9bff-f4644ff2ba40%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5932%22",
+   "document_date": "2017-08-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00106",
+   "document_date": "2017-09-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-10",
+  "sentences": [
+   "This bill is part of a package that creates a national framework to reduce air pollution from certain products.",
+   "The package allows the minister to designate emissions-controlled products and set rules for their certification, and the excise charges bill would impose a fee on importing or making those products to recover costs.",
+   "The first products expected to be covered are new non-road spark ignition engines and equipment, which at peak times contribute up to 10 per cent of urban air pollutants."
+  ],
+  "changes": [
+   "Establishes a national framework for emissions standards on certain products.",
+   "Allows the minister to prescribe products as emissions-controlled and make rules for them.",
+   "Creates offences and civil penalties for importing or supplying uncertified emissions-controlled products.",
+   "Enables cost recovery through a charge on import or domestic manufacture of emissions-controlled products.",
+   "Requires regular reviews of the framework's operation."
+  ],
+  "affected": "Importers and domestic manufacturers of emissions-controlled products, particularly non-road spark ignition engines and equipment.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:34:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-350949",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The Product Emissions Standards (Excise) Charges Bill 2017 imposes a charge on domestically manufactured products prescribed under product emissions standards legislation, enabling full cost recovery of regulatory costs alongside companion bills."
+  },
+  {
+   "slug": "speech-350950",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The Product Emissions Standards (Customs) Charges Bill 2017 imposes a charge on importing products prescribed under product emissions standards legislation, enabling full cost recovery of regulation costs alongside the Excise Charges Bill and the Product Emissions Standards Bill 2017."
+  },
+  {
+   "slug": "speech-352758",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The speaker moved that the Product Emissions Standards Bill 2017, the Product Emissions Standards (Excise) Charges Bill 2017, the Product Emissions Standards (Customs) Charges Bill 2017, and the Product Emissions Standards (Consequential Provisions) Bill be referred to the Federation Chamber for further consideration."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Product Emissions Standards (Excise) Charges Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00106",
+   "assent_date": "2017-09-14"
+  }
+ ]
+}

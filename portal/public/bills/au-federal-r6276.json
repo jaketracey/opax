@@ -1,0 +1,165 @@
+{
+ "key": "au-federal-r6276",
+ "title": "Customs Tariff Amendment (Craft Beer) Bill 2019",
+ "short_title": "Customs Tariff Amendment (Craft Beer) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2019-04-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6276%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6276%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6276%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6276%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6276%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6276%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6276%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6276%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6276%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6276%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6276_ems_be4cc128-40c3-4e40-ba6c-e8d249c3d21f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6276%22",
+   "document_date": "2019-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00047",
+   "document_date": "2019-04-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-14",
+  "sentences": [
+   "This bill reduces customs duty on certain draught beer containers between 8 and 48 litres to match the lower rate for larger containers.",
+   "It repeals and replaces tariff subheadings for beer in containers between 8 and 48 litres that connect to pressurised delivery systems.",
+   "The bill also updates schedules for free trade agreements and other parts of the Customs Tariff Act that reference the changed subheadings."
+  ],
+  "changes": [
+   "Reduces the excise-equivalent customs duty rate for beer in containers between 8 and 48 litres that connect to pressurised gas or pump systems.",
+   "Repeals and replaces subheadings 2203.00.6 and 2206.00.7 in Schedule 3 of the Customs Tariff Act.",
+   "Updates other schedules and the table at section 19AA to reflect the new subheadings.",
+   "Amends schedules for free trade agreements to incorporate the changes."
+  ],
+  "affected": "Small brewers of craft beer who cannot use containers of 48 litres or more.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:20:21Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375075",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-02-14",
+   "stage_hint": null,
+   "brief": "This bill lowers excise-equivalent customs duty on beer imported in containers of eight litres or more designed for pressurised gas or pump delivery from 1 July 2019, extending the lower rate to craft brewers while maintaining equal tax treatment for domestic and imported goods and ensuring compliance with free trade agreements."
+  },
+  {
+   "slug": "speech-376624",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment (Craft Beer) Bill 2019 extends concessional excise rates to brewers supplying draft beer in containers of eight litres or more, and increases the maximum annual tax rebate from $30,000 to $100,000. The speaker criticised the government for initially bundling the bill with unrelated superannuation legislation, but welcomed its separation, and noted the craft brewing sector's 547 independent breweries, 4,000 jobs, and $518 million value in 2018."
+  },
+  {
+   "slug": "speech-376625",
+   "speaker": "Scott Buchholz",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "The bill extends the lower excise equivalent customs duty rate from beer in containers over 48 litres to those in containers of eight litres or more, provided they connect to a pressurised gauge or pump device, effective 1 July 2019. The speaker noted that this aligns with domestic excise changes, benefiting craft brewers such as Scenic Rim Brewing in their electorate."
+  },
+  {
+   "slug": "speech-376627",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "Labor supported the bills extending concessional excise rates to domestic craft brewers supplying draught beer in kegs of eight litres or more, but opposed schedule 1, which would increase the maximum number of members in self‑managed superannuation funds from four to six, calling it an unrelated and unnecessary addition."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Craft Beer) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00047",
+   "assent_date": "2019-04-05"
+  }
+ ]
+}

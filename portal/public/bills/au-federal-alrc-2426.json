@@ -1,0 +1,751 @@
+{
+ "key": "au-federal-alrc-2426",
+ "title": "Migration Amendment (Temporary Sponsored Visas) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-06-06",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Citizenship",
+ "status": "passed",
+ "status_as_of": "2013-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-06-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-26",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-29",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00122",
+   "document_date": "2013-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-2911",
+   "date": "2013-06-26",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org/debates/?id=2013-06-19.27.2) introduced by Liberal MP [Scott Morrison](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Scott_Morrison&mpc=Cook&house=representatives). The motion amends a prior motion \"That this bill be now read a second time\" with the following: _That all words after That be omitted with a view to substituting the following words:_ _consideration of the bill not be concluded by the House until a:_ _(1) full research report is completed by the Department of Immigration and Citizenship on the true incidence and nature of abuses and non-compliance within the 457 visas programme in comparison to other programmes to substantiate the requirement for the measures proposed in the bill;_ _(2) full consultation programme with industry and other stakeholders has been conducted by the Department of Immigration and Citizenship on the impacts of the measures contained in the bill; and_ _(3) regulatory impact statement has been completed by the Government in relation to Schedule 2 of the bill relating to the proposed labour market testing regime as required by the Office of Best Practice Regulation and the statement be submitted to the Parliament._ Background to the Bill The [Migration Amendment (Temporary Sponsored Visas) Bill 2013](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5068) was introduced by Labor MP [Brendan O'Connor](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Brendan_O%26%2339%3BConnor&mpc=Gorton&house=representatives) to “enhance the government's ability to deter sponsor behaviour which is inconsistent with the policy intent of the subclass 457 visa program and other temporary employer sponsored visa programs”.(Read MP O'Connor's comments [here](http://www.openaustralia.org/debates/?id=2013-06-06.3.2). ) At the time this bill was introduced, the [457 visa program](http://en.wikipedia.org/wiki/45",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 71,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-26/4"
+  },
+  {
+   "key": "federal-representatives-2912",
+   "date": "2013-06-26",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/debate/?id=2013-06-26.32.1) to read the bill a second time. This means that the majority of members agree with the main idea of the bill, which was \"to enhance the Government’s ability to deter sponsor behaviour which is inconsistent with the policy intent of the Temporary Sponsored Visa Program (of which Subclass 457 visas are a part)\".(Read more about the bill [here](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5068), which you can find its explanatory memorandum and bills digest. ) _Background to the Bill_ The [Migration Amendment (Temporary Sponsored Visas) Bill 2013](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5068) was introduced by Labor MP [Brendan O'Connor](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Brendan_O%26%2339%3BConnor&mpc=Gorton&house=representatives) to “enhance the government's ability to deter sponsor behaviour which is inconsistent with the policy intent of the subclass 457 visa program and other temporary employer sponsored visa programs”.(Read MP O'Connor's comments [here](http://www.openaustralia.org/debates/?id=2013-06-06.3.2). ) At the time this bill was introduced, the [457 visa program](http://en.wikipedia.org/wiki/457_visa) was receiving extensive media attention with claims that it was being misused.(See [ABC News](http://www.abc.net.au/news/2013-06-02/an-457-crackdown/4728148). A simple explanation of the 457 visa scheme can be found on the Department of Immigration and Border Protection’s website [here](http://www.immi.gov.au/skilled/skilled-workers/sbs/).) References",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-26/5"
+  },
+  {
+   "key": "federal-representatives-2913",
+   "date": "2013-06-26",
+   "house": "representatives",
+   "question": "Migration Amendment (Temporary Sponsored Visas) Bill 2013 - Consideration in Detail - Government amendment",
+   "stage": "Consideration in detail",
+   "ayes": 73,
+   "noes": 72,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-26/6"
+  },
+  {
+   "key": "federal-representatives-2914",
+   "date": "2013-06-26",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org/debate/?id=2013-06-26.44.1) moved by Liberal MP [Scott Morrison](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Scott_Morrison&mpc=Cook&house=representatives). The motion amended the bill with the following: _(1) Schedule 2, item 2, page 6 (lines 10 to 22), omit subsection 140GBA(3), substitute:_ _(3) The labour market testing condition is satisfied if the Minister is satisfied that the approved sponsor has undertaken labour market testing in relation to the nominated position:_ _(a) within a period determined under subsection (4) in relation to the nominated occupation; and_ _(b) by means of advertising the position in the media in the manner prescribed by the regulations._ _(2) Schedule 2, item 2, page 6 (line 26) to page 7 (line 18), omit subsections 140GBA(5) and (6)._ _(3) Schedule 2, item 2, page 7 (line 26), at the end of the definition of labour market testing subsection 140GBA(7), add \", by the means and within the period referred to in subsection (3)\"._ MP Morrison explained that these amendments ensure that the advertising requirement contained in the bill will be satisfied by \"advertising the position in the media in the manner prescribed by the regulations\", which is what the government minister said was intended by the measures.(Read MP Morrison's explanation of the amendment [here](http://www.openaustralia.org/debate/?id=2013-06-26.44.1). ) _Background to the Bill_ The [Migration Amendment (Temporary Sponsored Visas) Bill 2013](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5068) was introduced by Labor MP [Brendan O'Connor](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Brendan_O%26%2339%3BConnor&mpc=Gorton&house=representatives) to “enhance the government's ability to deter sponsor behaviour which is inconsistent with the policy intent of the subclass 457 visa program and other temporary employer s",
+   "stage": "Consideration in detail",
+   "ayes": 72,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-26/7"
+  },
+  {
+   "key": "federal-representatives-1128",
+   "date": "2013-06-27",
+   "house": "representatives",
+   "question": "Migration Amendment (Temporary Sponsored Visas) Bill 2013 - Consideration in Detail - Put the question",
+   "stage": "Consideration in detail",
+   "ayes": 73,
+   "noes": 72,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-27/3"
+  },
+  {
+   "key": "federal-representatives-1129",
+   "date": "2013-06-27",
+   "house": "representatives",
+   "question": "Migration Amendment (Temporary Sponsored Visas) Bill 2013 - Consideration in Detail - Agree to the bill",
+   "stage": "Consideration in detail",
+   "ayes": 73,
+   "noes": 72,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-27/4"
+  },
+  {
+   "key": "federal-representatives-1130",
+   "date": "2013-06-27",
+   "house": "representatives",
+   "question": "Migration Amendment (Temporary Sponsored Visas) Bill 2013 - Pass the bill",
+   "stage": "Pass the bill",
+   "ayes": 73,
+   "noes": 72,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-27/5"
+  },
+  {
+   "key": "federal-senate-2437",
+   "date": "2013-06-28",
+   "house": "senate",
+   "question": "Migration Amendment (Temporary Sponsored Visas) Bill 2013 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 37,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 61,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-28/12"
+  },
+  {
+   "key": "federal-senate-2438",
+   "date": "2013-06-28",
+   "house": "senate",
+   "question": "Migration Amendment (Temporary Sponsored Visas) Bill 2013 - Third Reading - Read a third time",
+   "stage": "Third reading",
+   "ayes": 37,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 61,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-28/13"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-276412",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276455",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276469",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276470",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276653",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276657",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276662",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276729",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276731",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276738",
+   "speaker": "Janelle Saffin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276740",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276741",
+   "speaker": "Robert Oakeshott",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276757",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276759",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276760",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276761",
+   "speaker": "Jamie Briggs",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276764",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276776",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277131",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277132",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277136",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277139",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277140",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277141",
+   "speaker": "Warren Entsch",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Temporary Sponsored Visas) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00122",
+   "assent_date": "2013-06-29"
+  }
+ ]
+}

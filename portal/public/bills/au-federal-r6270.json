@@ -1,0 +1,84 @@
+{
+ "key": "au-federal-r6270",
+ "title": "National Health Amendment (Pharmaceutical Benefits) Bill 2019",
+ "short_title": "National Health Amendment (Pharmaceutical Benefits) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6270%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6270%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6270%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6270_ems_7c1ece7e-3bb4-4356-8a51-f5ca5cc72fd6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6270%22",
+   "document_date": "2019-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-14",
+  "sentences": [
+   "The bill would change how the Pharmaceutical Benefits Scheme handles pharmacy approvals and medicine supply after pharmacy insolvency.",
+   "It would introduce a fee for pharmacists applying to supply PBS medicines and let the Minister set the fee by regulation.",
+   "The bill would also let the Health Secretary temporarily allow a bankruptcy trustee to keep supplying PBS medicines at a bankrupt pharmacy until it is sold."
+  ],
+  "changes": [
+   "Introduce an application fee for pharmacists seeking approval to supply PBS medicines at specific premises.",
+   "Enable the Minister to determine the application fee by legislative instrument.",
+   "Allow the Secretary of the Department of Health to grant permission for a bankruptcy trustee to supply PBS medicines at a bankrupt pharmacy for a temporary period.",
+   "Permit an external administrator to request cancellation of a pharmacist's approval so another pharmacist can be approved at the same or different premises."
+  ],
+  "affected": "Pharmacists, bankruptcy trustees, external administrators, and consumers who rely on PBS medicines at affected pharmacies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:11Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375076",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-14",
+   "stage_hint": null,
+   "brief": "The bill amends the National Health Act 1953 to introduce application fees for pharmacists seeking to supply PBS medicines and to allow continued PBS medicine supply at pharmacies following bankruptcy or external administration, with an estimated 20 pharmacies affected annually. The government has made approximately 2,000 new or amended PBS listings since 2013 at a cost of over $10.5 billion."
+  }
+ ],
+ "acts": []
+}

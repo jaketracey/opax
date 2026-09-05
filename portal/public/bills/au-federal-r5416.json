@@ -1,0 +1,433 @@
+{
+ "key": "au-federal-r5416",
+ "title": "National Vocational Education and Training Regulator Amendment Bill 2015",
+ "short_title": "National Vocational Education and Training Regulator Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-02-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2015-04-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5416%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5416%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5416%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5416%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5416%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5416%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5416%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5416%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5416%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5416%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5416%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5416%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5416%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5416%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5416_ems_f3c2bb8f-6b29-477d-bb54-940da0c7652d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5416%22",
+   "document_date": "2015-02-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00032",
+   "document_date": "2015-04-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-02-25",
+  "sentences": [
+   "This bill would change the main law governing the national vocational education and training regulator.",
+   "It aims to protect the VET system's integrity, reduce regulatory burdens on training organisations, and improve how the regulator operates.",
+   "The changes include extending registration periods and requiring clearer marketing of VET courses, with no significant financial cost expected."
+  ],
+  "changes": [
+   "Extend the period for which training organisations can be registered.",
+   "Require clearer marketing of vocational education and training courses.",
+   "Make administrative amendments to clarify existing provisions."
+  ],
+  "affected": "Registered training organisations and the Australian Skills Quality Authority are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:59:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3709",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "question": "Christopher Pyne I would like to thank members who have contributed to this debate. The Australian government's focus on skills is working to restore trades and vocational education and training to their rightful place at the centre of our national economy. Ensuring Australian workers are highly skilled and job-ready is critical to national economic growth and productivity and a key plank of the government's industry innovation and competitiveness agenda. The Australian government has embarked on significant VET reform, which has included widespread consultation. Our reforms are focused on ensuring vocational education and training is led by industry and employer needs. They are also focused on ensuring the national VET system delivers quality training that has the confidence of students, employers and the wider community. The National Vocational Education and Training Regulator Amendment Bill 2015 strengthens the regulation of registered training providers and third-party brokers in order to address quality concerns. The bill amends the National Vocational Education and Training Regulator Act 2011 and introduces measures to protect the integrity of the national training system to provide better balance in the regulation of the training system and to improve the efficiency and operation of the act and consequently the national regulator, the Australian Skills Quality Authority, known as ASQA. In particular, extending the maximum period of registration for registered training providers from five to seven years will enable the ASQA to focus its compliance efforts on those doing the wrong thing rather than on registration or renewal audits, which providers expect and prepare for. The introduction of a quality standard-making power sends a clear signal to all in the training sector that, when required, the Commonwealth government will quickly take action against those who undermine the quality of training provided to students or abuse taxpayer funding. When exercising t",
+   "stage": "Second reading",
+   "ayes": 52,
+   "noes": 82,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 50,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-03-05/1"
+  },
+  {
+   "key": "federal-representatives-3710",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "question": "Sharon Bird by leave—I move amendments (1) and (2), as circulated in my name, together: (1) Schedule 1, item 6, page 6 (lines 4 and 5), omit the item, substitute: 6 Subsection 17(5) Omit \"more than 5 years\", substitute: more than: (a) 5 years; or (b) if the application is to renew the registration of an NVR registered training organisation that the Regulator has rated as low risk (using the Risk Assessment Framework)—7 years. (2) Schedule 2, item 2, page 16 (line 11), omit \"registration, including renewal of registration\", substitute \"renewal of registration\". The opportunity to discuss these matters in the previous debate on the second reading of the National Vocational Education and Training Regulator Amendment Bill 2015 gave me the opportunity to outline the reason that Labor has put this amendment forward in the consideration in detail section—and I just want to reiterate it in the few minutes in this part of the debate. I indicated that Labor recognises that the vast bulk of this bill is intended to provide really sensible amendments to the powers of the regulator and the government in order to increase or improve definitional terms—for example, as many members indicated, the fact that the original bill's RTO strict definition was hampering and tying the hands of the regulator with respect to some of those purported RTO activities that were going on in the market—and to provide some significant quality assurance improvements, particularly the ability for the minister to act more speedily to address some of the things that had emerged in the market. We absolutely endorse many of those. The message from those amendments is particularly important and useful for the general public at the moment—and that is why I commend the government for them. It is clear to see day by day from media reports the very unscrupulous behaviour that is going on in the VET market. Only this morning, I opened my own paper the _Illawarra Mercury_ to see another story about more students,",
+   "stage": "Consideration in detail",
+   "ayes": 50,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 48,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-03-05/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-306987",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306989",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306990",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306991",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306992",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306993",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306994",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306995",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306996",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306998",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-307000",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-307129",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-307137",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-307139",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-307140",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-307141",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-307142",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-307143",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-307144",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-307145",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-307194",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-307196",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-05",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Vocational Education and Training Regulator Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00032",
+   "assent_date": "2015-04-02"
+  }
+ ]
+}

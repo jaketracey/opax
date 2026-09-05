@@ -1,0 +1,366 @@
+{
+ "key": "au-federal-r6411",
+ "title": "Australian Research Council Amendment Bill 2019",
+ "short_title": "Australian Research Council Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2020-02-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6411_ems_994c1488-e5bb-48e8-9e42-30e38e8f6aae%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6411%22",
+   "document_date": "2019-09-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00007",
+   "document_date": "2020-02-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-18",
+  "sentences": [
+   "The bill would increase the money available for research programs run by the Australian Research Council by adding an extra $829.052 million over four years.",
+   "It would raise the maximum funding caps in the Australian Research Council Act 2001 by applying standard inflation adjustments to three existing annual figures and adding a new figure for the year starting 1 July 2022.",
+   "The changes affect only the special appropriation mechanism and do not change the substance of the Act, and the bill does not engage any human rights."
+  ],
+  "changes": [
+   "Apply indexation rates to existing appropriation amounts for the financial years starting 1 July 2019, 1 July 2020 and 1 July 2021.",
+   "Add a new appropriation for the financial year starting 1 July 2022, extending the forward estimate period.",
+   "Increase the total special appropriation by $829.052 million for the period 1 July 2019 to 30 June 2023."
+  ],
+  "affected": "The Australian Research Council and the research programs it administers under the National Competitive Grants Program.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6004",
+   "date": "2019-11-26",
+   "house": "representatives",
+   "question": "Australian Research Council Amendment Bill 2019 - Second Reading - Research cuts",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-26/10"
+  },
+  {
+   "key": "federal-representatives-6005",
+   "date": "2019-11-26",
+   "house": "representatives",
+   "question": "Australian Research Council Amendment Bill 2019 - Consideration in Detail - Anouncement process",
+   "stage": "Consideration in detail",
+   "ayes": 5,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 36
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 83
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-26/11"
+  },
+  {
+   "key": "federal-senate-6205",
+   "date": "2020-02-11",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-02-11.13.1) introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens), which means it failed. The amendment is an attempt to address the politicisation of the grants process. ### Amendment text > *(1) Schedule 1, page 3 (after line 11), at the end of the Schedule, add:* > > *4 After section 51* > > *Insert:* > > *51A Announcements about approval of expenditure on research programs* > > *(1) The Minister must, within 21 days after making a determination under paragraph 51(2) (b):* > >>*(a) make a public announcement of the determination; and* >> >> *(b) cause a copy of the announcement to be published on the internet.* > > *(2) The Minister must not make an announcement under subsection (1) together with any of the following:* > >> *(a) another member of parliament;* >> >> *(b) a candidate in an election for the Senate or the House of Representatives.* > > *(3) An announcement made under subsection (1) is not a legislative instrument.* > > *(4) To avoid doubt, subsection (1) applies in addition to subsection 51(3).* > > *(5) In this section, member of parliament means:* > >> *(a) a senator; or* >> >> *(b) a member of the House of Representatives; or* >> >> *(c) a Minister of State who is not a senator or member of the House of Representatives; or* >> >> *(d) a person who is taken to be the President of the Senate under the Parliamentary Presiding Officers Act 1965 and who is not a senator or member of the House of Representatives; or* >> >> *(e) a person who is taken to be the Speaker of the House of Representatives under the Parliamentary Presiding Officers Act 1965 and who is not a senator or member of the House of Representatives.*",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 52,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 25,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-02-11/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-381649",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The Australian Research Council Amendment Bill 2019 was introduced to update funding caps in the ARC Act until 30 June 2023, enabling continued ARC grant funding. The bill supports over $3 billion in ARC research funding over four years, with cited examples including a $5 million lobster aquaculture hub and a $1 million Indigenous cultural learning project."
+  },
+  {
+   "slug": "speech-384476",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the Australian Research Council Amendment Bill 2019 but criticised the government for cutting $328.5 million from research funding over four years, interfering in independent peer-reviewed grants, and failing to invest in education and research infrastructure."
+  },
+  {
+   "slug": "speech-384477",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The coalition government has cut federal R&D expenditure by 19% in real terms between 2015-16 and 2017-18, and Australia's R&D spending as a share of GDP is 1.8% against the OECD average of 2.4%; only 7% of mid-career NHMRC grant applications were funded, and 61% of young scientists have considered leaving the country to continue their research."
+  },
+  {
+   "slug": "speech-384478",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the ARC Amendment Bill but criticised the government for cutting research funding, interfering in peer-reviewed grants (including 11 grants totalling $4.2 million secretly vetoed by the minister, mostly in humanities and social sciences), and abandoning the Education Investment Fund."
+  },
+  {
+   "slug": "speech-384720",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-11-26",
+   "stage_hint": null,
+   "brief": "Centre Alliance supported the bill but criticised the politicisation of ARC grants, citing the 2018 blocking of 11 humanities grants and a new staggered announcement process that delays recruitment and harms Australia's research competitiveness."
+  },
+  {
+   "slug": "speech-384722",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-11-26",
+   "stage_hint": null,
+   "brief": "The bill amends funding gaps in the ARC Act to support research, with announcements of $24 million for training centres, $242 million for centres of excellence, and $54 million for Laureate Fellows, including Professors Belinda Medlyn and Lynette Russell. The ARC’s Gender and the research workforce report showed a slight improvement in the male-to-female researcher ratio from 57:43 in 2015 to 56:44 in 2018."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Research Council Amendment Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00007",
+   "assent_date": "2020-02-26"
+  }
+ ]
+}

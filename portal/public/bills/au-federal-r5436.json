@@ -1,0 +1,151 @@
+{
+ "key": "au-federal-r5436",
+ "title": "Health Insurance (Approved Pathology Specimen Collection Centres) Tax Amendment (Norfolk Island) Bill 2015",
+ "short_title": "Health Insurance (Approved Pathology Specimen Collection Centres) Tax Amendment (Norfolk Island) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure",
+ "status": "passed",
+ "status_as_of": "2015-05-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5436%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5436%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5436%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5436%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5436%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-05-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5436%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5436_ems_6eede1e4-44d2-403d-b61a-e4ec34179b86%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5436%22",
+   "document_date": "2015-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00050",
+   "document_date": "2015-05-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-26",
+  "sentences": [
+   "This bill is one of eight in a package that reforms Norfolk Island's governance and extends mainland social security, immigration, health, and tax arrangements to the island.",
+   "The package would abolish the Norfolk Island Legislative Assembly and Executive Council, replace them with an Advisory Council, and give the Governor-General broad power to make laws for the territory during a transition period.",
+   "The second phase, starting on 1 July 2016, would apply New South Wales laws to Norfolk Island and allow the Commonwealth to arrange for that state to deliver services, with an elected regional council expected to be created."
+  ],
+  "changes": [
+   "The package would abolish the Norfolk Island Legislative Assembly and Executive Council.",
+   "It would establish an Advisory Council to advise the Administrator during the transition.",
+   "It would confer legislative power on the Governor-General to make ordinances for the territory.",
+   "It would apply New South Wales laws to Norfolk Island from 1 July 2016.",
+   "It would allow the Commonwealth to make arrangements with New South Wales for service delivery."
+  ],
+  "affected": "Norfolk Island residents, the Norfolk Island Government, its employees, and the Commonwealth agencies involved in the reforms.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:56:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-309199",
+   "speaker": "Jamie Briggs",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-26",
+   "stage_hint": null,
+   "brief": "The Health Insurance (Approved Pathology Specimen Collection Centres) Tax Amendment (Norfolk Island) Bill 2015 extends the tax on approvals for specimen collection centres under the Health Insurance Act 1973 to residents of Norfolk Island."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Insurance (Approved Pathology Specimen Collection Centres) Tax Amendment (Norfolk Island) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00050",
+   "assent_date": "2015-05-26"
+  }
+ ]
+}

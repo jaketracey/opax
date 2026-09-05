@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r7047",
+ "title": "Broadcasting Services Amendment (Healthy Kids Advertising) Bill 2023",
+ "short_title": "Broadcasting Services Amendment (Healthy Kids Advertising) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-06-19",
+ "originating_house": "representatives",
+ "sponsor": "SCAMPS, Sophie, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10989",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-02-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7047%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7047%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7047%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7047_ems_f1ae9949-f15d-47d2-981c-8cb5a637dd90%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7047%22",
+   "document_date": "2023-06-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-19",
+  "sentences": [
+   "The bill would ban advertising of unhealthy food on TV, radio and online services.",
+   "TV and radio ads for unhealthy food would be prohibited between 6am and 9:30pm local time, while the online ban would apply at all hours.",
+   "Courts could impose penalties of up to $550,000 or 5% of a large corporation's unhealthy food turnover."
+  ],
+  "changes": [
+   "The bill prohibits airing unhealthy food marketing on broadcast services between 6am and 9:30pm local time.",
+   "The bill creates a general prohibition on providing or paying for unhealthy food marketing online at all hours.",
+   "The bill defines 'unhealthy food' by reference to the 2018 COAG Health Council guide and allows the minister to add further foods.",
+   "The bill extends the ban to sponsorship, promotional content, trademarks, domain names and branding devices linked to unhealthy food.",
+   "The bill gives courts the power to impose penalties of up to $550,000 or 5% of large corporations' unhealthy food turnover.",
+   "The bill requires a review of its operation after 4 years."
+  ],
+  "affected": "Broadcasters, online service providers, advertisers and sponsors of unhealthy food marketing, and large corporations selling unhealthy food products.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:41Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

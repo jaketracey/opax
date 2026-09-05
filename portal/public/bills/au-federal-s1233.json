@@ -1,0 +1,317 @@
+{
+ "key": "au-federal-s1233",
+ "title": "Defence Service Homes Amendment Bill 2019",
+ "short_title": "Defence Service Homes Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-19",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans’ Affairs",
+ "status": "passed",
+ "status_as_of": "2019-12-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1233%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1233%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1233%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1233%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1233%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1233%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1233%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1233%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1233%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1233%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1233%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1233%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1233_ems_576c4bab-d879-40e8-b4db-9ba0364f3a8f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1233%22",
+   "document_date": "2019-09-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00112",
+   "document_date": "2019-12-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6019",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "question": "Defence Service Homes Amendment Bill 2019 - Second Reading - Stop Mr Thompson from speaking",
+   "stage": "Second reading",
+   "ayes": 58,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-28/12"
+  },
+  {
+   "key": "federal-representatives-6020",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/debate/?id=2019-11-28.54.1) to the usual [second reading motion](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) *that the bill be read a second time*, which is parliamentary jargon for agreeing to the main idea of the bill. The amendment was introduced by Blair [Shayne Neumann](https://theyvoteforyou.org.au/people/representatives/blair/shayne_neumann) (Labor). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House criticises the Government for failing to:* > > *(1) address the high number of veterans experiencing homelessness, as highlighted by recent reports from the Australian Institute of Health and Welfare and Australian Housing and Urban Research Institute;* > > *(2) fix Australia's broken aged care services for veterans, as highlighted by the current Royal Commission into Aged Care Quality and Safety; and* > > *(3) respond to the Australian Competition and Consumer Commission's northern Australia insurance inquiry recommendations to urgently fix the wider crisis in the northern Australia insurance market\".*",
+   "stage": "Second reading",
+   "ayes": 58,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-28/13"
+  },
+  {
+   "key": "federal-representatives-6021",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "question": "Defence Service Homes Amendment Bill 2019 - Third Reading - Speed things along",
+   "stage": "Third reading",
+   "ayes": 78,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 44,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-28/14"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-385351",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "The minister introduced the Defence Service Homes Amendment Bill 2019, which expands eligibility for the Defence Services Homes Insurance Scheme to all current and former ADF members with at least one day's continuous full-time service from 1 January 2020, including reservists, peacekeepers, and widows or widowers previously ineligible."
+  },
+  {
+   "slug": "speech-385352",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "Labor supported the Defence Service Homes Amendment Bill 2019, which expands concessional homebuilding insurance to all ADF members with at least one day's continuous service, but moved a second reading amendment criticising the government for failing to address veteran homelessness (5.3% of veterans homeless versus 1.9% national average), broken aged care services for veterans, and inaction on ACCC northern Australia insurance recommendations."
+  },
+  {
+   "slug": "speech-385358",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "The Defence Service Homes Amendment Bill 2019 expands eligibility for Defence Service Homes Insurance to all ADF members with at least one day of service, addressing high premiums in northern Australia where home insurance costs rose 130% between 2008 and 2018. The speaker also urged the government to retain or replace Army Amenities Fund holiday homes in Goolwa, South Australia, rather than selling them."
+  },
+  {
+   "slug": "speech-385359",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "The Defence Service Homes Amendment Bill 2016 expands eligibility for the Defence Service Homes Insurance Scheme to all current and former ADF members, including reservists, peacekeepers, and widows/widowers, aiming to provide low-cost home building insurance especially in regional and high-risk areas like northern Australia."
+  },
+  {
+   "slug": "speech-385427",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Leader of the Opposition for voting to gag a veteran speaking on veteran suicide and for voting against the Defence Service Homes Amendment Bill, which expands eligibility for the Defence Service Homes Insurance Scheme to current and former ADF members."
+  },
+  {
+   "slug": "speech-385476",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Prime Minister failed to answer questions about his or the Minister's conduct and blocked debate 20 times, and called for the Prime Minister to acknowledge the Minister for Emissions Reduction deliberately misled the House, acknowledge that calling the NSW Police Commissioner was inappropriate, correct the record and apologise for misleading the House on two occasions, fully cooperate with the NSW Police criminal investigation, and stand down the Minister."
+  },
+  {
+   "slug": "speech-385477",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "The Opposition moved to suspend standing orders to debate a motion alleging the Minister for Emissions Reduction is under criminal investigation, that the Prime Minister called the NSW Police Commissioner about the probe, and that the Prime Minister misled Parliament; the motion called on the Prime Minister to apologise, correct the record, and stand down the minister."
+  },
+  {
+   "slug": "speech-385486",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "The opposition voted against the third reading of the Defence Service Homes Amendment Bill, which would have frustrated the bill."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Defence Service Homes Amendment Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00112",
+   "assent_date": "2019-12-09"
+  }
+ ]
+}

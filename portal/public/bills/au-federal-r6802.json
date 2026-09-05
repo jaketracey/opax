@@ -1,0 +1,379 @@
+{
+ "key": "au-federal-r6802",
+ "title": "Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021",
+ "short_title": "Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6802%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6802%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6802%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6802%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6802%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6802%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6802%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6802%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6802%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6802%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6802_ems_79dbb4de-7531-403d-bc80-7fb484636ae4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6802%22",
+   "document_date": "2021-10-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-27",
+  "sentences": [
+   "The bill would create a new category of managed investment scheme for class action lawsuits.",
+   "It would require court approval of how claim proceeds are shared between scheme members and non-members, such as litigation funders.",
+   "The court could adjust a proposed distribution to make it fair and reasonable."
+  ],
+  "changes": [
+   "Introduces a new type of managed investment scheme for class action litigation.",
+   "Requires court approval of the distribution of claim proceeds between scheme members and non-members.",
+   "Allows the court to modify a proposed distribution to ensure fairness."
+  ],
+  "affected": "Participants in class action litigation funding schemes, including investors and litigation funders.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7517",
+   "date": "2021-11-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2021-11-24.115.1) to pass [the bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6802) in the Senate. In parliamentary jargon, they voted to read the bill [for a third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). The bill will now go to the Senate for their consideration. There was one rebellion in this division, with Dawson MP [George Christensen](https://theyvoteforyou.org.au/people/representatives/dawson/george_christensen) (Nationals) [crossing the floor](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/crossing-the-floor/) to vote against the rest of the Nationals Party. ### What does this bill do? Unfortunately, the parliamentary library has not (yet?) produced a parliamentary digest on this bill, which is usually the best source of non-partisan information on bills. According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6802), the bill: > *Implements the government's response to the report of the Parliamentary Joint Committee on Corporations and Financial Services' inquiry into litigation funding and the regulation of the class action industry by amending the Corporations Act 2001 to: establish a new kind of managed investment scheme called a class action litigation funding scheme; and introduce additional requirements for the constitutions of managed investment schemes that are class action litigation funding schemes.* There was much disagreement in the House about what the actual effect of the bill would be, with opponents like Whitlam MP [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor) [arguing that](https://www.openaustralia.org.au/debates/?id=2021-11-23.103.1) it is an \"*",
+   "stage": "Third reading",
+   "ayes": 66,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Liberal": {
+     "ayes": 37,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 128
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-11-24/1"
+  },
+  {
+   "key": "federal-senate-7530",
+   "date": "2021-11-25",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-11-25.37.1) to a motion, which means it failed. ### Amendment text > *At the end of the motion, add \"and, in respect of the [Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr6802%22), the provisions of the bill be referred immediately to the Economics Legislation Committee for inquiry and report by 24 March 2022\".*",
+   "stage": "Committee motion",
+   "ayes": 24,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 18,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-11-25/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-414550",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021 was moved to require active consent from class action members, cap funder and lawyer shares at 30% of proceeds, and mandate court approval of distributions to ensure fair returns for claimants, citing cases like Banksia Securities and Wittenbury v Vocation where funders and lawyers took nearly 50% of settlements."
+  },
+  {
+   "slug": "speech-415601",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021 is Orwellian and will harm ordinary Australians' access to justice, citing a 30 per cent cap on costs and a switch to opt-in class actions as design features that benefit defendants. He announced Labor will oppose the bill and move a second reading amendment, referencing the robodebt scheme (430,000 victims, $1.7 billion restitution) and an underpaid Aboriginal wages case as examples of class actions that would be prevented."
+  },
+  {
+   "slug": "speech-415603",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021 is needed to regulate litigation funders and ensure class action members receive at least 70% of claim proceeds, with a rebuttable presumption against non-member distributions exceeding 30%. The bill responds to Australian Law Reform Commission findings showing median plaintiff returns drop from 85% (without funders) to 51% (with funders), and to a parliamentary committee’s 31 recommendations."
+  },
+  {
+   "slug": "speech-415604",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-23",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021 would restrict access to class actions for many Australians, particularly victims of financial fraud like those from the Trio Capital collapse, by imposing court approval requirements and a rebuttable presumption that distributions under 70% to plaintiffs are unfair. The bill was criticised for its rushed inquiry process, which gave the public only days to respond, and for potentially discouraging settlements, increasing costs, and benefiting wealthy defendants over ordinary plaintiffs."
+  },
+  {
+   "slug": "speech-415608",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-11-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021 addresses the free rider problem in open class actions by establishing a new managed investment scheme for litigation funding and requiring fair and reasonable returns to funders, based on recommendations from the Parliamentary Joint Committee on Corporations and Financial Services and the Australian Law Reform Commission."
+  },
+  {
+   "slug": "speech-415658",
+   "speaker": "Bob Katter",
+   "party": "Katter's Australian Party",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Corporations Amendment Bill, arguing that class actions are the only means of redress for people harmed by government and corporate actions—citing Queensland taxi owners, stolen wages for Indigenous Australians, and the live cattle export ban—and warned of personal retaliation against those who destroy livelihoods."
+  },
+  {
+   "slug": "speech-415661",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speech supported the Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021, arguing that litigation funders exploit vulnerable plaintiffs by taking large shares of court-awarded compensation. It argued for stronger regulation and court oversight of litigation funding contracts while affirming that class actions remain legal."
+  },
+  {
+   "slug": "speech-415662",
+   "speaker": "Graham Douglas Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021 is a deceptive attempt by the Morrison-Joyce government to protect wealthy defendants by making class actions harder for everyday Australians, contrary to its stated consumer protection purpose. They cited opposition from the Law Council, Phi Finney McDonald, and defendant lawyers at Herbert Smith Freehills, and noted constitutional concerns raised by Justice Beach and former Solicitor-General Justin Gleeson SC, as well as specific class actions—including stolen wages, stolen generations, Westpac overcharging, PFAS contamination, and Domino’s underpayment cases—that would not have proceeded under the bill."
+  },
+  {
+   "slug": "speech-415664",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Corporations Amendment Bill 2021 would harm access to justice by making class actions harder, citing that community legal centres turn away over 160,000 people annually and that the bill would have required 430,000 robodebt class action members to opt in. The speaker announced Labor's opposition to the bill."
+  },
+  {
+   "slug": "speech-415665",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021, arguing it would restrict class actions by requiring court approval for funding agreements over 30% and shifting from an opt-out to an opt-in system, thereby making it harder for ordinary Australians, particularly remote and Indigenous communities, to access justice."
+  },
+  {
+   "slug": "speech-415666",
+   "speaker": "David Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill is misleadingly titled and will actually hinder access to justice by protecting wealthy defendants, citing constitutional concerns, a rushed and inadequate consultation process, and examples of landmark class actions—such as stolen wages and environmental contamination cases—that would be blocked under its measures."
+  },
+  {
+   "slug": "speech-415667",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021, arguing it would harm access to justice by making class actions harder to bring. They cited examples such as a $500 million settlement for 2009 Victorian bushfire survivors, a $112 million robodebt class action for 450,000 people, and actions against major banks and Sigma Pharmaceuticals, and noted concerns from legal expert Justin Gleeson that the bill may be unconstitutional."
+  },
+  {
+   "slug": "speech-415668",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the 30% cap on litigation funder fees in the Corporations Amendment Bill, arguing it would reduce access to justice for small businesses and individuals by altering funders' risk-reward calculations. He cited high legal costs, a defamation case costing nearly $2 million without trial, and discrepancies between TGA and AusVaxSafety data on COVID vaccine adverse events."
+  },
+  {
+   "slug": "speech-415671",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021, arguing it would replace the opt-out class action model with an opt-in requirement and flawed fund distribution rules, making class actions harder for ordinary Australians while protecting large corporations. They urged the government to withdraw or vote against the bill."
+  },
+  {
+   "slug": "speech-415672",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021, arguing it would ensure class action claimants receive a fairer share of damages by capping litigation funders’ take at 30% and citing cases where claimants received as little as 33% of settlements."
+  },
+  {
+   "slug": "speech-415673",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill makes justice harder for ordinary Australians, citing expert John Sheahan's view that it \"makes things worse for everyone.\" They opposed the 70-30 cost split and opt-in requirement, claiming these will block meritorious claims and protect large corporate defendants, while criticizing the rushed three-week committee process and lack of a proper regulatory impact statement."
+  },
+  {
+   "slug": "speech-415675",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021 would fundamentally weaken class actions by shifting from an opt-out to an opt-in structure, denying access to justice for vulnerable people, especially in rural, regional and remote communities. They also criticised the bill's process as atrocious and biased, and claimed it was possibly unconstitutional and driven by ideology rather than evidence."
+  },
+  {
+   "slug": "speech-415845",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "Craig Kelly moved amendments to the Corporations Amendment (Improving Outcomes for Litigation Funding Participants) Bill 2021, proposing a discretionary triple-damages provision for Australian Consumer Law contraventions modelled on US antitrust law, and stated he would not support the bill unless the amendments passed."
+  }
+ ],
+ "acts": []
+}

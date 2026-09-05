@@ -1,0 +1,506 @@
+{
+ "key": "au-federal-r7010",
+ "title": "Fair Work Legislation Amendment (Protecting Worker Entitlements) Bill 2023",
+ "short_title": "Fair Work Legislation Amendment (Protecting Worker Entitlements) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2023-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7010_ems_f9ce8312-4615-4404-8902-af76bb3c8b43%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7010%22",
+   "document_date": "2023-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00043",
+   "document_date": "2023-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-29",
+  "sentences": [
+   "This bill would change workplace laws to better protect workers' entitlements.",
+   "It would amend the Fair Work Act and related laws to clarify migrant workers' status, improve parental leave access, and add superannuation to minimum employment standards.",
+   "Casual black coal miners would get the same long service leave treatment as permanent workers under the industry's funding scheme."
+  ],
+  "changes": [
+   "Clarifies how the Fair Work Act interacts with the Migration Act for migrant workers.",
+   "Inserts a superannuation entitlement into the National Employment Standards.",
+   "Expands when employers can deduct from employee payments for the employee's benefit.",
+   "Ensures casual black coal miners are treated no less favourably than permanent employees for long service leave."
+  ],
+  "affected": "Migrant workers, employees eligible for unpaid parental leave, all employees covered by the National Employment Standards, casual black coal miners, and employers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8122",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2023-05-24.185.2) (1), (5), (6), and (9) to (11), which were introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal). This means they failed. ### Amendment text Mr Fletcher [explained that](https://www.openaustralia.org.au/debate/?id=2023-05-24.185.2): > *Amendment (1) will insert into the bill a review of schedule 2 of the bill, which relates to the Paid Parental Leave scheme, which must start after a period of six months of operation of the schedule. Amendments (5) and (6) operate to guarantee that employers who are found to underpay super as a result of an administrative binding order or other arrangement provided by the Australian Taxation Office will not receive a pecuniary penalty from a court. Amendments (9) and (10) together have the effect of clarifying what in fact would constitute eligible wages for the purposes of the long service leave levy and will accordingly make it clearer for employers and employees as to what would constitute eligible wages. Amendment (11) would address the notice period required for flexible unpaid parental. I commend these amendments to the chamber.* ### Amendment text > *(1) Page 3 (after line 8), after clause 3, insert:* > >> *4 Review of operation of unpaid parental leave amendments* >> >> *(1) The Minister must cause a review to be conducted of the operation of the amendments made by Schedule 2 to this Act.* >> >> *(3) The review must start as soon as practicable after the end of the period of 6 months after the commencement of Schedule 2.* >> >> *(4) The persons who conduct the review must give the Minister a written report of the review within 3 months of the commencement of the review.* >> >> *(5) The Minister must cause a copy of the report of the review to be tabled in each House of the Parliament within 15 sitting days of that House after",
+   "stage": "Report from Federation Chamber",
+   "ayes": 79,
+   "noes": 62,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-25/1"
+  },
+  {
+   "key": "federal-representatives-8123",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendment (2)](https://www.openaustralia.org.au/debate/?id=2023-05-24.186.1), which was introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal). This means it failed. ### Amendment text Mr Fletcher [explained that](https://www.openaustralia.org.au/debate/?id=2023-05-24.186.1): > *the effect of amendment (2) ... would be to expand the notice period required for flexible unpaid parental leave to include the start and end dates and the number of days at the 10-week point of notice.* ### Amendment text > *(2) Schedule 2, item 49, page 11 (lines 11 to 13), omit the item, substitute:* > >> *49 Subsection 74(3C)* >> >> *Repeal the subsection, substitute:* >> >>> *(3C) If any of the leave covered by the notice is to be taken under section 72A, the notice must specify:* >>> >>>> *(a) the total number of days (flexible days) of flexible unpaid parental leave that the employee intends to take in relation to the child; and* >>>> >>>> *(b) the intended start and end dates of the leave, or each period of the leave.*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 81,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 6
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-25/2"
+  },
+  {
+   "key": "federal-representatives-8124",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendment (3)](https://www.openaustralia.org.au/debate/?id=2023-05-24.188.1), which was introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal). This means it failed. ### Amendment text Mr Fletcher [explained that](https://www.openaustralia.org.au/debate/?id=2023-05-24.188.1): > *this amendment, working together with amendments [(2)](https://theyvoteforyou.org.au/divisions/representatives/2023-05-25/2), [(4)](https://theyvoteforyou.org.au/divisions/representatives/2023-05-25/4) and [(11)](https://theyvoteforyou.org.au/divisions/representatives/2023-05-25/1), would be to expand the notice period required for flexible unpaid parental leave to include the start and end dates and the number of days at the 10-week point of notice.* ### Amendment text > *(3) Schedule 2, item 51, page 11 (lines 18 and 19), omit the item, substitute:* > >> *51 Subsection 74(4) (heading)* >> >> *Omit \"72\", substitute \"72A\".*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 78,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-25/3"
+  },
+  {
+   "key": "federal-representatives-8125",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendment (4)](https://www.openaustralia.org.au/debate/?id=2023-05-24.190.1), which was introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal). This means it failed. ### Amendment text Mr Fletcher [explained that](https://www.openaustralia.org.au/debate/?id=2023-05-24.190.1): > *This amendment would operate alongside amendments [(2)](https://theyvoteforyou.org.au/divisions/representatives/2023-05-25/2) and [(11)](https://theyvoteforyou.org.au/divisions/representatives/2023-05-25/1) and would have the effect of expanding the notice period required for flexible unpaid parental leave to include the start and end dates and the number of days at the 10-week point of notice.* ### Amendment text > *(4) Schedule 2, items 53 to 56, page 11 (line 23) to page 12 (line 8), omit the items, substitute:* > >> *53 Subsection 74(4)* >> >>> *Omit \"72\", substitute \"72A\".* >> >> *54 At the end of subsection 74(4)* >> >>> *Add:* >>> >>> *Note: Whether or not it is practicable for the employee to advise the employer of any changes to the intended start and end dates of the leave will depend on the employee's personal and family circumstances. For example, it may not be practicable for the employee to advise the employer of any changes to the intended start and end dates of the leave where the employee experiences a health issue, a pregnancy complication or an unexpected change in the employee's child care arrangements.* >> >> *55 Subsections 74(4A) to (4C)* >> >>> *Repeal the subsections.*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 82,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-25/4"
+  },
+  {
+   "key": "federal-representatives-8126",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendment (7)](https://www.openaustralia.org.au/debate/?id=2023-05-24.192.1), which was introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal). This means it failed. ### Amendment text Mr Fletcher [explained that](https://www.openaustralia.org.au/debate/?id=2023-05-24.192.1): > *The effect of this amendment would be to ensure the Australian Taxation Office would remain the administrator of superannuation legislation and legislative instruments, and the Fair Work Commission would not be able to deal with a dispute about the operation of those instruments.* ### Amendment text > *(7) Schedule 3, Part 2, page 20 (after line 21), at the end of the Part, add:* > >> *7 After subsection 739(2)* >> >> *Insert:* >> >>> *(2A) The FWC must not deal with a dispute to the extent that the dispute is about the operation of a Commonwealth Act or instrument relating to superannuation.*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 84,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-25/5"
+  },
+  {
+   "key": "federal-representatives-8127",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendment (8)](https://www.openaustralia.org.au/debate/?id=2023-05-24.194.1), which was introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal). This means it failed. ### Amendment text Mr Fletcher [explained that](https://www.openaustralia.org.au/debate/?id=2023-05-24.194.1): > *The effect of this amendment would be to protect workers from being put into a position where higher payments could be automatically deducted without their knowledge and would instead require the employee to specify in writing if the employee agreed to an increase, before the increase was deducted. It is somewhat mystifying that the government has chosen to put into this bill a provision that would essentially allow unions to charge higher fees without a member of the union giving express agreement to that.* ### Amendment text > *(8) Schedule 5, page 22 (after line 25), at the end of the Schedule, add:* > >> *4 At the end of section 324* >> >> *Add:* >> >> *(4) If the deductions are for amounts as varied from time to time, any variation that increases the amount of one or more of the deductions must be authorised in writing by the employee.*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 79,
+   "noes": 62,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-25/6"
+  },
+  {
+   "key": "federal-senate-8205",
+   "date": "2023-06-22",
+   "house": "senate",
+   "question": "The majority voted against [opposition amendments on sheets 1940 to 1946](https://www.openaustralia.org.au/senate/?gid=2023-06-22.173.2), which means they failed. Note that ACT Senator [Andrew Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent) wanted it [put on the record](https://www.openaustralia.org.au/senate/?gid=2023-06-22.175.1) that he \"*support[ed] the opposition amendments on [sheet 1942](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7010_amend_9ad361e7-4dc7-4fa1-9f55-468a558be901%22;rec=0) and [sheet 1943](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7010_amend_9ad361e7-4dc7-4fa1-9f55-468a558be901%22;rec=0).*\" ### What were the amendments about? The amendments concerned a [review of Schedule 2](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7010_amend_d44b4b35-fc9b-4e91-a4aa-9eeb2f8414dc%22;rec=0), [notice of flexible unpaid parental leave](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7010_amend_50d6e44d-5e88-4234-8f1d-6fae0ff11703%22;rec=0), [binding advice](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7010_amend_9ad361e7-4dc7-4fa1-9f55-468a558be901%22;rec=0), [superannuation disputes](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7010_amend_424835f0-ab1b-4b40-9116-33f6c9278256%22;rec=0), [employee authorised deducations](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislatio",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 7,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-22/16"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-829958",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-05-10",
+   "stage_hint": null,
+   "brief": "The coalition broadly supports the Fair Work Legislation Amendment (Protecting Worker Entitlements) Bill 2023 but will move amendments on unpaid parental leave, superannuation enforcement, employee authorised deductions, and coal mining long-service leave definitions, arguing schedule 5 could allow unions to increase deductions without explicit employee consent."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fair Work Legislation Amendment (Protecting Worker Entitlements) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00043",
+   "assent_date": "2023-06-30"
+  }
+ ]
+}

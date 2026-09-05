@@ -1,0 +1,335 @@
+{
+ "key": "au-federal-r6651",
+ "title": "Therapeutic Goods Amendment (2020 Measures No. 2) Bill 2020",
+ "short_title": "Therapeutic Goods Amendment (2020 Measures No. 2) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2021-02-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6651%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6651%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6651%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6651%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6651%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6651%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6651%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6651%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6651%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6651%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6651%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6651%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-02-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6651%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6651_ems_7d1b71ec-08ae-498f-b2d4-d5f6b2cc5849%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/7785279%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6651%22",
+   "document_date": "2020-12-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00008",
+   "document_date": "2021-02-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2020-12-09",
+  "sentences": [
+   "The bill would let pharmacists substitute one prescription medicine for another when the minister declares a serious shortage.",
+   "The minister could make a legislative instrument declaring a serious scarcity of a medicine and naming a substitute that pharmacists may dispense instead.",
+   "The scheme would apply only to Schedule 4 prescription medicines, not to Schedule 8 controlled drugs such as cocaine or morphine."
+  ],
+  "changes": [
+   "Inserts a new object into the Act to allow pharmacist substitution of medicines during a serious scarcity.",
+   "Creates a new division that lets the minister declare a serious scarcity and specify a substitutable medicine.",
+   "Authorises pharmacists to dispense the substitute even if state or territory law would otherwise prohibit it.",
+   "Allows the minister to delegate the power to make a serious scarcity declaration to the Secretary of Health or a senior executive.",
+   "Adds provisions for regulations to establish a database of unique device identifiers for medical devices."
+  ],
+  "affected": "Pharmacists, patients, the Minister for Health, the Department of Health, and manufacturers of prescription medicines and medical devices.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6897",
+   "date": "2021-02-03",
+   "house": "representatives",
+   "question": "The majority voted in favour of a motion to keep the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) unchanged. The usual second reading motion is \"*that the bill be read a second time,*\" which is parliamentary jargon for agreeing with the main idea of the bill. This vote was put after the MP for Hindmarsh [Mark Butler](https://theyvoteforyou.org.au/people/representatives/hindmarsh/mark_butler) (Labor) proposed an amendment. ### Proposed amendment text > *That all words after 'that' be omitted with a view to substituting the following words:* > > *'whilst not declining to give the Bill a second reading, the House condemns the ongoing campaign by some government members against the independent and expert Therapeutic Goods Administration, and urges the Prime Minister to finally censure those members.'*",
+   "stage": "Second reading",
+   "ayes": 62,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 118
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-03/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-400592",
+   "speaker": "Trevor Evans",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The bill removes impediments to importing and supplying COVID-19 vaccines, allows pharmacists to substitute scarce prescription medicines without prior prescriber authority, establishes a unique device identification database for medical devices, and strengthens scrutiny of dangerous and counterfeit therapeutic goods."
+  },
+  {
+   "slug": "speech-401320",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The opposition supported the Therapeutic Goods Amendment Bill but moved an amendment condemning the Prime Minister's refusal to censure government members for fearmongering about vaccines and the TGA. The speaker also raised concerns about vaccine supply timing, the online booking system, and the lack of a deal for the Moderna vaccine."
+  },
+  {
+   "slug": "speech-401322",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The bill allows pharmacists to substitute equivalent medicines during shortages, establishes a universal device indicator for tracking implants and prostheses, provides data protection for drug evaluation data, and clarifies the declaration of non-therapeutic goods, along with protections for TGA officers analysing illegal substances."
+  },
+  {
+   "slug": "speech-401323",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government must do more than thank healthcare workers and must back them in, criticising the Prime Minister for failing to stop backbencher Craig Kelly (member for Hughes) from spreading anti-vaccine conspiracy theories that undermine public health efforts."
+  },
+  {
+   "slug": "speech-401325",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's pandemic response has been inadequate, citing the failed COVIDSafe app and thousands of Australians still stranded overseas despite promises. He also called on the Prime Minister to repudiate the member for Hughes for spreading misinformation that endangers public safety."
+  },
+  {
+   "slug": "speech-401364",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The Morrison government’s Therapeutic Goods Amendment (2020 Measures No. 2) Bill 2020 introduces five measures: allowing pharmacists to substitute medicines during serious shortages, creating a unique device identification database for medical devices, protecting TGA investigators from criminal liability for test purchases, banning internationally prohibited therapeutic goods like mercury-containing products, and streamlining COVID-19 vaccine rollout by allowing labels without registration numbers. The bill includes penalties of up to $210,000 for non-compliance and references Minister Greg Hunt and the Pfizer vaccine’s -70°C storage requirement."
+  },
+  {
+   "slug": "speech-401365",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The speaker argued the Therapeutic Goods Amendment (2020 Measures No. 2) Bill is not routine, accusing the government of being \"loose with the truth\" and failing to address long-standing pharmaceutical supply chain shortages, including for EpiPens, Epilim, antibiotics, desmopressin and ADHD treatments. The speaker also criticised the government for selling health data to private companies, citing the breast cancer registry sale to Telstra Health and the Christmas Eve announcement of Accenture as data partner for the COVID-19 vaccine rollout, and expressed concern that the new device identification database could be similarly privatised."
+  },
+  {
+   "slug": "speech-401366",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The Labor opposition supported the Therapeutic Goods Amendment Bill to facilitate COVID-19 vaccine importation and distribution, but criticised the Prime Minister’s claim that Australia was “at the front of the queue” given that 99 million doses had been administered worldwide and none in Australia. The speaker also accused the member for Hughes of being a “one-man COVID-19 misinformation superspreader,” noting his Facebook posts were shared 10 times more than those of the Department of Health and constituted a quarter of all Australian political debate on the platform."
+  },
+  {
+   "slug": "speech-401371",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Therapeutic Goods Amendment Bill, which facilitates COVID-19 vaccine importation, allows medicine substitution during shortages, and creates a medical device identification database, but criticised the government for overpromising and underdelivering on the vaccine rollout, failing to secure enough vaccine deals, and lacking clear logistics and aged-care vaccination plans."
+  },
+  {
+   "slug": "speech-401378",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Therapeutic Goods Amendment Bill, which facilitates COVID-19 vaccine imports, creates a medical device database, and allows pharmacists to substitute medicines during shortages. They criticised the government for delays in the vaccine rollout, noting no Australians had been vaccinated by late January, and called for stronger domestic manufacturing of critical medical supplies."
+  },
+  {
+   "slug": "speech-401379",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "Labor supported the Therapeutic Goods Amendment (2020 Measures No. 2) Bill, but argued the government had failed to deliver on its promise that Australians would be among the first to receive a COVID-19 vaccine, with none of the 99 million vaccines administered worldwide given in Australia, and criticised the Prime Minister for not stopping the member for Hughes from spreading false and dangerous claims about vaccines and health authorities."
+  },
+  {
+   "slug": "speech-401380",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The Therapeutic Goods Amendment Bill was supported to expedite the COVID-19 vaccine rollout and address medicine shortages, with the TGA’s median approval time at 162 days and over 90% of its funding from industry fees. The speaker criticised the absence of a concrete medical device database, called for domestic pharmaceutical manufacturing, and stressed bipartisan support to build public confidence in the vaccine."
+  },
+  {
+   "slug": "speech-401381",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Therapeutic Goods Amendment Bill but raised concerns about the COVID-19 vaccine rollout logistics, including cold storage challenges and lack of local hubs in their electorate, and criticised the member for Hughes for spreading misinformation that undermines vaccination confidence. They also highlighted ongoing medicine shortages and the need for a medical devices register."
+  },
+  {
+   "slug": "speech-401382",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Therapeutic Goods Amendment Bill to allow the import of COVID-19 vaccines without label registration numbers, but argued the government must publicly condemn misinformation spread by the member for Hughes, citing that only 58% of Australians (ANU) and 46% (Newspoll) would \"definitely\" get the vaccine, and that regional areas need additional support for the rollout."
+  },
+  {
+   "slug": "speech-401383",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The Therapeutic Goods Amendment (2020 Measures No. 2) Bill 2020 was argued to remove impediments to COVID-19 vaccine importation and supply, improve access to therapeutic goods, enhance patient safety through a unique device identification database, address medicine scarcity, and enable ratification of international agreements."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Therapeutic Goods Amendment (2020 Measures No. 2) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00008",
+   "assent_date": "2021-02-19"
+  }
+ ]
+}

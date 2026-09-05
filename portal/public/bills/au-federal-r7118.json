@@ -1,0 +1,216 @@
+{
+ "key": "au-federal-r7118",
+ "title": "Customs Tariff Amendment (Incorporation of Proposals) Bill (No. 2) 2023",
+ "short_title": "Customs Tariff Amendment (Incorporation of Proposals) Bill (No. 2) 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2024-04-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7118%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7118%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7118%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7118%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7118%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7118%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7118%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7118%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7118_ems_f16d8077-f38c-4f9e-885c-f64fa9efd687%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7118%22",
+   "document_date": "2023-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00022",
+   "document_date": "2024-04-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-8857",
+   "date": "2024-03-27",
+   "house": "senate",
+   "question": "Customs Tariff Amendment (Incorporation of Proposals) Bill (No. 2) 2023 - Second Reading - Prohibit export of weapons to Israel",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 2,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-27/21"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-830123",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2024-02-06",
+   "stage_hint": null,
+   "brief": "The speaker announced that five bills—the Customs Tariff Amendment (Incorporation of Proposals) Bill (No. 2) 2023, the COAG Legislation Amendment Bill 2023, the Australian Research Council Amendment (Review Response) Bill 2023, the National Redress Scheme for Institutional Child Sexual Abuse Amendment Bill 2023, and the Modern Slavery Amendment (Australian Anti-Slavery Commissioner) Bill 2023—are referred to the Federation Chamber for further debate."
+  },
+  {
+   "slug": "speech-830127",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2024-02-06",
+   "stage_hint": null,
+   "brief": "The opposition supported the Customs Tariff Amendment Bill, which expands duty-free entry for European Space Agency equipment in WA, extends duty reductions for Ukrainian goods until July 2024, enables duty-free imports for international sporting events like the 2023 FIFA Women's World Cup from January 2022, and extends additional 35% tariffs on Russian and Belarusian goods until October 2025."
+  },
+  {
+   "slug": "speech-830192",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2024-02-06",
+   "stage_hint": null,
+   "brief": "The member for Riverina supported the Customs Tariff Amendment (Incorporation of Proposals) Bill (No. 2) 2023, which expands duty-free entry for European Space Agency equipment, extends the temporary duty reduction for Ukrainian goods by one year, allows duty-free imports for international sporting events such as the 2023 FIFA Women’s World Cup, and extends the 35 per cent additional duty on Russian and Belarusian goods for 24 months. He also called for more Australian military support for Ukraine, citing $910 million in aid and 120 Bushmasters."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Incorporation of Proposals) Act (No. 1) 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00022",
+   "assent_date": "2024-04-08"
+  }
+ ]
+}

@@ -1,0 +1,54 @@
+{
+ "key": "au-federal-alrc-5053",
+ "title": "Environment Protection and Biodiversity Conservation Amendment (Great Barrier Reef) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-20",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2013-03-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-822946",
+   "speaker": "Larissa Waters",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": "The speaker introduced the Environment Protection and Biodiversity Conservation Amendment (Great Barrier Reef) Bill 2013, which seeks to amend the Environment Protection and Biodiversity Conservation Act 1999 for the Great Barrier Reef. The bill was read a first time."
+  },
+  {
+   "slug": "speech-822947",
+   "speaker": "Larissa Waters",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": "The bill proposes a permanent ban on new port developments outside existing major port areas within or adjoining the Great Barrier Reef World Heritage Area, a moratorium on new developments until a strategic assessment is completed, and a requirement that projects deliver a net benefit for the reef, to implement World Heritage Committee recommendations and prevent the reef from being added to the World Heritage in Danger list."
+  }
+ ],
+ "acts": []
+}

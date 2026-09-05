@@ -1,0 +1,157 @@
+{
+ "key": "au-federal-s1280",
+ "title": "Electoral Amendment (Territory Representation) Bill 2020",
+ "short_title": "Electoral Amendment (Territory Representation) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-02",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2020-12-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1280%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1280%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1280%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1280%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1280%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1280%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1280_ems_6100c111-8bb6-495b-ab08-a7e84e317e40%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1280%22",
+   "document_date": "2020-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00127",
+   "document_date": "2020-12-15",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-400795",
+   "speaker": "Trevor Evans",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The government introduced the Electoral Amendment (Territory Representation) Bill 2020 to preserve two seats for the Northern Territory in the House of Representatives at the next election, overriding an Electoral Commissioner's determination that would have reduced it to one seat. The bill adopts a harmonic mean method for allocating seats to territories, lowering the quota needed for a second seat to 1.3333 and a third to 2.4, and treats both the Northern Territory and the Australian Capital Territory equally to avoid constitutional risks."
+  },
+  {
+   "slug": "speech-400797",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that reducing the Northern Territory’s House of Representatives representation from two members to one would be outrageous and endorsed the bill’s formula change to prevent that outcome, while affirming the principle of one vote, one value."
+  },
+  {
+   "slug": "speech-400799",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Electoral Amendment (Territory Representation) Bill 2020 is necessary to ensure fair representation for Northern Territory Australians, who risk being marginalised under a strict one-vote-one-value system. He named the member for Solomon, the member for Lingiari, and Malarndirri McCarthy as bipartisan supporters, and stated that Tasmania’s five seats set a precedent for protecting regional voices."
+  },
+  {
+   "slug": "speech-400800",
+   "speaker": "Trevor Evans",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The bill introduces a harmonic mean calculation for allocating seats to the territories, making it easier to round up quotas for additional House of Representatives seats, and removes the margin of error provisions to modernise the Electoral Act."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Electoral Amendment (Territory Representation) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00127",
+   "assent_date": "2020-12-15"
+  }
+ ]
+}

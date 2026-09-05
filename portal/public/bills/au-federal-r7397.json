@@ -1,0 +1,196 @@
+{
+ "key": "au-federal-r7397",
+ "title": "Environment Information Australia Bill 2025",
+ "short_title": "Environment Information Australia Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-10-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy, the Environment and Water",
+ "status": "passed",
+ "status_as_of": "2025-12-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7397_ems_bf8ab9cb-98ef-47b5-bc16-0c810c35eab0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7397%22",
+   "document_date": "2025-10-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00063",
+   "document_date": "2025-12-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-10-30",
+  "sentences": [
+   "The bill would create a new statutory officer called the Head of Environment Information Australia (HEIA) to improve the quality and accessibility of national environmental data.",
+   "This officer would work inside the climate change department, gather environmental information from many sources, maintain a public online register of important data assets, and report on the state of the environment.",
+   "The minister would have to table a response to each State of the Environment report within six months and arrange independent reviews every five years."
+  ],
+  "changes": [
+   "Creates an independent statutory position to lead environmental data and reporting.",
+   "Requires regular, independent State of the Environment reports and government responses to them.",
+   "Establishes and maintains environmental economic accounts with help from the Australian Bureau of Statistics.",
+   "Sets up a public online register of national environmental information assets.",
+   "Restricts disclosure of protected information, with civil penalties for unauthorised use or disclosure."
+  ],
+  "affected": "Federal government departments, the minister for the environment, the Australian Bureau of Statistics, data custodians, scientific bodies, academic institutions, project proponents, environmental groups, state and territory regulators, and the public.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:10Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1197771",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-10-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198472",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198780",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199266",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Environment Information Australia Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00063",
+   "assent_date": "2025-12-01"
+  }
+ ]
+}

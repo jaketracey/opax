@@ -1,0 +1,463 @@
+{
+ "key": "au-federal-r7457",
+ "title": "Treasury Laws Amendment (Delivering an Efficient and Trusted Tax System) Bill 2026",
+ "short_title": "Treasury Laws Amendment (Delivering an Efficient and Trusted Tax System) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2026-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7457_ems_3020d5f9-888a-4756-b874-68bcb73a091a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7457_ems_c890c620-a57a-41a6-b1f9-bf8c3a4d696b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7457_ems_507f16a4-cf18-4806-8b3d-193f200a2ad8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7457%22",
+   "document_date": "2026-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00058",
+   "document_date": "2026-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-10631",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines Pursuant to the order agreed on 23 June 2026, the time allotted for consideration of eight bills has expired. I'll now put the questions on the remaining stages of the bills. I will first deal with the Treasury Laws Amendment (Delivering an Efficient and Trusted Tax System) Bill 2026. I'll begin with the second reading amendment moved by Senator Hanson-Young. The question is that the amendment on sheet 3765 be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 11,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/8"
+  },
+  {
+   "key": "federal-senate-10632",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Committee of the Whole amendments, starting with amendments circulated by the opposition. The question is that the amendments on sheet 3909 be agreed to. _Opposition's circulated amendments_ (1) Clause 2, page 2 (at the end of the table), add: (2) Page 29 (after line 27), at the end of the Bill, add: Schedule 7 — Retaining concessions for certain transfers Part 1 — Retaining CGT concessions for certain transfers _Income Tax Assessment Act 1997_ 1 After Division 128 Insert: Division 129 — Retaining CGT concessions in relation to CGT assets that are inherited or acquired because of relationship breakdown etc. Guide to Division 129 129-1 What this Division is about This Division ensures that certain CGT concessions remain available where a CGT asset is inherited or acquired because of a relationship breakdown etc. Table of sections Operative provisions 129-5 Retaining CGT concessions in relation to CGT assets that are inherited or acquired because of relationship breakdown etc. Operative provisions 129-5 Retaining CGT concessions in relation to CGT assets that are inherited or acquired because of relationship breakdown etc. (1) This section applies in relation to a \\*CGT asset if: (a) you acquire an ownership interest in the CGT asset: (i) by inheriting the CGT asset; or (ii) because of something mentioned in subsection 126-5(1) (court orders under the _Family Law Act 1975_ etc.); and (b) you would have been entitled to a concession in respect of a \\*capital gain (including a concession to reduce or disregard a capital gain) under this Part or Part 3-1 if the amendments made by the _Treasury Laws Amendment (Tax Reform No. 1) Act 2026_ had not been made. (2) If you make a \\*capital gain from a \\*CGT event happening in relation to the \\*CGT asset, you can choose to apply a concession in respect of the gain that you would have been entitled to had the amendments made by the _Treasury Laws Amendment (Tax Reform No. 1) Act 2026_ not been m",
+   "stage": "Limitation of debate",
+   "ayes": 25,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/9"
+  },
+  {
+   "key": "federal-senate-10633",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the amendments circulated by the Australian Greens. The question is that schedule 6 stand as printed. _Australian Greens circulated amendment—_ (1) Title, page 1 (line 10), omit \"social security and veterans' affairs,\". (2) Clause 2, page 2 (table item 5), omit the table item. (3) Schedule 6, page 20 (line 1) to page 29 (line 26), to be opposed.",
+   "stage": "Limitation of debate",
+   "ayes": 36,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/10"
+  },
+  {
+   "key": "federal-senate-10634",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines As the last question was resolved in the affirmative, the consequential amendments on sheet 3848 will not be put. The question now is that the Australian Greens amendments on sheet 3764 be agreed to. _Australian Greens circulated amendments—_ (1) Schedule 4, item 3, page 14 (lines 15 to 17), omit \", unless the activity is covered by subsection (3) (harm minimisation purpose)\". (2) Schedule 4, item 3, page 14 (lines 22 to 24), omit \", unless the activity is covered by subsection (4) (harm minimisation purpose)\". (3) Schedule 4, item 3, page 15 (lines 14 to 29), omit subsections 355-25(3) and (4). (4) Schedule 4, item 4, page 16 (lines 6 to 20), omit subsections 355-30(3) and (4), substitute: _Gambling and tobacco related activities etc._ (3) Despite subsections (1) and (2), neither of the following are _supporting R&D activities_: (a) an activity referred to in paragraph 355-25(2)(i) (which deals with gambling etc.); (b) an activity referred to in paragraph 355-25(2)(j) (which deals with tobacco and vaping goods etc.).",
+   "stage": "Limitation of debate",
+   "ayes": 11,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/11"
+  },
+  {
+   "key": "federal-senate-10635",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines The question is that schedule 4 stand as printed. _One Nation_ _'s__circulated amendment—_ (2) Schedule 4, page 14 (line 1) to page 17 (line 20), to be opposed.",
+   "stage": "Limitation of debate",
+   "ayes": 36,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1202349",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202362",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202451",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202513",
+   "speaker": "Lisa Darmanin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203076",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204250",
+   "speaker": "Matthew Canavan",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2026-06-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204294",
+   "speaker": "Sue Lines",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-29",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Delivering an Efficient and Trusted Tax System) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00058",
+   "assent_date": "2026-06-30"
+  }
+ ]
+}

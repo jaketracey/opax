@@ -1,0 +1,166 @@
+{
+ "key": "au-federal-alrc-2342",
+ "title": "Foreign Affairs Portfolio Miscellaneous Measures Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs",
+ "status": "passed",
+ "status_as_of": "2013-05-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-03-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-03-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-03-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-05-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00054",
+   "document_date": "2013-05-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-270234",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822291",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271352",
+   "speaker": "Julie Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271353",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822763",
+   "speaker": "Julie Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Foreign Affairs Portfolio Miscellaneous Measures Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00054",
+   "assent_date": "2013-05-28"
+  }
+ ]
+}

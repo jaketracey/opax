@@ -1,0 +1,606 @@
+{
+ "key": "au-federal-r6420",
+ "title": "Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019",
+ "short_title": "Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6420_ems_4fad8867-15a7-4e53-8a35-2abed3bc3e74%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6420_ems_e5b972fb-c9ae-4a21-a59d-c64554c9b3b9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6420_ems_080dfd3b-2df2-4484-ad76-3eb60170c196%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6420%22",
+   "document_date": "2019-09-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00115",
+   "document_date": "2019-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5950",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual second reading motion, which is that the bill be read for a [second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by Rankin MP [Jim Chalmers](https://theyvoteforyou.org.au/people/representatives/rankin/jim_chalmers) (Labor). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the Government has proven unable to deliver sensible national energy policy to support well-functioning electricity markets that will:* > > *(1) support new clean energy investment;* > > *(2) safeguard energy reliability and security; and* > > *(3) deliver a modern and affordable energy system for a modern Australian economy\"*",
+   "stage": "Second reading",
+   "ayes": 64,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 62,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-10-23/1"
+  },
+  {
+   "key": "federal-senate-5963",
+   "date": "2019-11-12",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 45,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 22,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-12/1"
+  },
+  {
+   "key": "federal-senate-5964",
+   "date": "2019-11-12",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019 - in Committee - Non-registered agreements",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 30,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-12/2"
+  },
+  {
+   "key": "federal-senate-5965",
+   "date": "2019-11-12",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019 - in Committee - Coal-fired power generators",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "earliest": 21,
+    "dated": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-12/3"
+  },
+  {
+   "key": "federal-senate-5966",
+   "date": "2019-11-12",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2019-11-12.26.1) introduced by SA Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young) (Greens), which means they failed. Senator Hanson-Young [explained that](https://www.openaustralia.org.au/senate/?gid=2019-11-12.26.1) \"*These amendments relate specifically to the major concern that people have in relation to this bill and the motivation of the government: that it is to make it harder for the Liddell Power Station to close.*\" ### Amendments text > *(1) Schedule 1, item 1, page 21 (after line 3), at the end of subsection 153X(1), add:* > >> *Note: An order cannot be made under this section if it would have the effect of inhibiting, delaying or stopping a planned closure of a coal-fired generator: see section 153ZE.* > > *(2) Schedule 1, item 1, page 25 (after line 26), at the end of subsection 153ZB(1), add:* > >> *Note: An order cannot be made under this section if it would have the effect of inhibiting, delaying or stopping a planned closure of a coal-fired generator: see section 153ZE.* > > *(3) Schedule 1, item 1, page 28 (after line 19), at the end of Division 7, add:* > >> *153ZE No orders under this Part that would affect planned closure of coal - fired generator etc.* >> >> *Despite Divisions 5 and 6, an order must not be made in relation to a body corporate under either of those Divisions if the order would have the effect of inhibiting, delaying or stopping a planned closure of a coal-fired generator.*",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 57,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 27,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-12/4"
+  },
+  {
+   "key": "federal-senate-5968",
+   "date": "2019-11-12",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?id=2019-11-12.126.2) introduced by SA Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Centre Alliance), which means it failed. Senator Patrick [explained that](https://www.openaustralia.org.au/senate/?gid=2019-11-12.126.3): > *The Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019 opens up court-ordered divestitures for electricity retailers, to deal with misconduct. Once you accept the principle that it's relevant to one sector of the economy, you must then accept that it should apply to all sectors of the economy—anywhere where monopoly power or substantial market power exists and is being misused. That's what the Centre Alliance amendments do. They seek to enhance the bill to ensure that divestiture provisions apply universally across all Australian markets participating within the economy. This means that any business that engages in egregious market misconduct may be subject to having their business interests forcibly disposed of by a court.* ### What is the bill's main idea? The bill [was introduced](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd047) \"to implement a legislative framework consisting of new prohibitions and remedies in relation to electricity retail, contract and wholesale markets.\" You can learn more about these new prohibitions and remedies in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd047).",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "earliest": 20,
+    "dated": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-12/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-383612",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-22",
+   "stage_hint": null,
+   "brief": "The speaker announced support for the Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019, subject to three additional amendments, but argued the bill alone will not resolve Australia’s energy crisis. The speaker noted wholesale power prices have risen 158% since 2015 and criticised the government for failing to deliver a settled national energy policy or to act on the National Energy Guarantee."
+  },
+  {
+   "slug": "speech-383614",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-10-22",
+   "stage_hint": null,
+   "brief": "The government’s Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019 aims to lower power prices by strengthening competition and addressing ACCC findings of unsustainable retailer practices, contrasting with Labor’s support for a carbon tax which the speaker argued would increase prices. The speaker also noted that Labor members have shifted towards supporting the bill after initial opposition."
+  },
+  {
+   "slug": "speech-383781",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-22",
+   "stage_hint": null,
+   "brief": "The opposition will support the Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill if the government accepts amendments to close a loophole allowing privatisation of publicly owned electricity assets, protect workers' entitlements under the Fair Work Act, and require an independent review before the sunset clause. The speaker also argued the bill is no substitute for a coherent national energy policy, noting wholesale electricity prices have risen 158% since 2015 and the government's claimed price reductions only benefit less than 10% of consumers."
+  },
+  {
+   "slug": "speech-383783",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019 is a shallow response to six years of inaction on energy policy under the Abbott‑Turnbull‑Morrison governments, and that it will not reduce electricity prices, cut carbon emissions, or boost renewable investment. He noted that wholesale power prices have risen 158% since 2015 and gas prices have tripled, and criticised the government for failing to deliver a policy that addresses carbon emissions, while supporting the bill with amendments to prevent privatisation and requiring a review before its sunset."
+  },
+  {
+   "slug": "speech-383785",
+   "speaker": "Keith Pitt",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019 is needed to lower electricity prices for consumers and businesses, criticising the Queensland Labor government for taking $1.5 billion in profits from state-owned energy companies and citing examples such as Walkers foundry in Bundaberg, whose annual power bill rose from $1 million to $1.7 million."
+  },
+  {
+   "slug": "speech-383786",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-22",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019 after the government removed the most objectionable elements, but will move amendments to prevent part-privatisation and protect workers' rights. The speaker argued the government has failed on energy policy, citing a 158% rise in wholesale power prices since 2015 and disconnection rates of up to 6.4% in Newcastle postcodes."
+  },
+  {
+   "slug": "speech-383787",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-10-22",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019 was argued to address energy market misconduct identified by the ACCC, including retailers' confusing pricing, generators withholding supply to raise prices, and contract market restrictions. The bill would introduce graduated penalties, including fines up to $10 million or 10% of annual turnover, contracting orders, and divestiture powers for proven bad-faith conduct, with a sunset clause to 2025."
+  },
+  {
+   "slug": "speech-383790",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Abbott-Turnbull-Morrison governments failed to deliver a coherent energy policy, citing the \"big stick\" legislation as inadequate, and contrasted this with the Victorian Labor government's renewable energy targets and job creation. They also noted that the National Energy Guarantee was blocked by Peter Dutton and Christopher Pyne, and that the federal government has no plan for energy transition."
+  },
+  {
+   "slug": "speech-383791",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's 16 energy policies in six years have caused a 158% rise in wholesale electricity prices and a tripling of gas prices since 2015, and that the 'big stick' bill will not lower prices. Labor supports the bill conditionally after amendments removed the threat of privatisation and excessive ministerial powers, and is proposing further amendments to protect worker entitlements under the Fair Work Act and to review the bill's impact on affordability."
+  },
+  {
+   "slug": "speech-383792",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-22",
+   "stage_hint": null,
+   "brief": "Labor moved amendments to the Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019 to ensure workers affected by divestiture are covered under Fair Work Act transfer of business provisions and to rule out partial privatisation, with support for the bill conditional on these protections. The speaker highlighted the Queensland state Labor government under Premier Annastacia Palaszczuk as a model for effective energy price management."
+  },
+  {
+   "slug": "speech-383847",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the government has failed to deliver a national energy policy after six years, citing tripled gas prices and a 158% increase in wholesale power prices since 2015, and stated the Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019 will not end the energy crisis. The speaker also noted the abandoned National Energy Guarantee would have reduced power prices by $550 according to the government's own modelling."
+  },
+  {
+   "slug": "speech-383848",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the coalition’s Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill is a \"fake action\" stunt that will not lower power prices or emissions, stemming from internal coalition infighting and a lack of coherent energy policy. They criticised the government for threatening to break up energy companies while refusing to use similar divestiture powers against banks for failing to pass on Reserve Bank interest rate cuts, and noted wholesale power prices have risen nearly 160 per cent."
+  },
+  {
+   "slug": "speech-383849",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019 was debated, with the speaker arguing it is unnecessary because the Australian Energy Regulator and ACCC found no evidence of the market misconduct it targets. The speaker called for a settled energy policy like the National Energy Guarantee and investment in renewables, citing CSIRO data showing renewable energy at $45–$55 per MWh as the cheapest new generation, and warned the bill’s heavy-handed remedies would deter investment and raise prices."
+  },
+  {
+   "slug": "speech-383853",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The speaker supported amendments to the Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2019, arguing the original bill allowed a backdoor path to privatise public assets. The amendments ensure any divestiture of a public asset can only be bought by another public entity, and that workers' entitlements are protected under the Fair Work Act."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00115",
+   "assent_date": "2019-12-10"
+  }
+ ]
+}

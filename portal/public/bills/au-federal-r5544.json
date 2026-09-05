@@ -1,0 +1,453 @@
+{
+ "key": "au-federal-r5544",
+ "title": "Education Services for Overseas Students Amendment (Streamlining Regulation) Bill 2015",
+ "short_title": "Education Services for Overseas Students Amendment (Streamlining Regulation) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2015-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5544_ems_a79901d8-7ffe-461c-9a8f-199a40b29c0e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5544_ems_340269af-8afc-4fc7-941b-9bd6e5274784%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5544%22",
+   "document_date": "2015-09-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00171",
+   "document_date": "2015-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-17",
+  "sentences": [
+   "This bill would cut red tape and costs for education providers that teach overseas students.",
+   "It would remove rules on reporting student defaults, holding tuition fees in a designated account, and setting study periods, and would give the Tertiary Education Quality and Standards Agency and the Australian Skills Quality Authority direct powers.",
+   "The government estimates the changes would save around $75.9 million."
+  ],
+  "changes": [
+   "Removes the five-day reporting requirement for all student defaults, except where a refund is paid after a visa refusal.",
+   "Lets non-exempt private providers stop keeping prepaid tuition fees in a designated account.",
+   "Allows students to pay more than half of tuition fees upfront for courses longer than 24 weeks, and extends the exemption for shorter courses to 25 weeks.",
+   "Removes the definition of study period and the requirement for providers to have written agreements with students on study periods and fees.",
+   "Gives TEQSA and ASQA direct powers as ESOS agencies instead of acting as delegates of the Secretary or Minister.",
+   "Lets providers keep their registration active while renewal is being decided, or for limited purposes after expiry."
+  ],
+  "affected": "Education providers registered under the ESOS Act, their overseas students, and the Tertiary Education Quality and Standards Agency and the Australian Skills Quality Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:52:29Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4007",
+   "date": "2015-11-30",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendment (1)](http://www.openaustralia.org.au/senate/?id=2015-11-30.164.1), introduced by Labor Senator [Kim Carr](https://theyvoteforyou.org.au/people/senate/victoria/kim_carr). This means the amendment was successful, though it still needs to be agreed to by the members of the House of Representatives before it can be included in [the bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5544) (read more about the [process of making amendments in Parliament](http://www.peo.gov.au/learning/fact-sheets/amendments.html)). ### What is the amendment? The amendment relates to item 3 of schedule 5, which says: > *Division 2 deals with tuition fees. In general, a registered provider must not receive more than 50% of the total tuition fees for a course before an overseas student begins the course.* The amendment proposed to add the following words: '*The provider must keep those fees in a separate account*' into item 3 or Schedule 5. Senator Carr [explains that this amendment](http://www.openaustralia.org.au/senate/?id=2015-11-30.164.1) has been introduced to reduce financial risk to the [Tuition Protection Service](https://tps.gov.au/Home/NotLoggedIn), which assists students who are struggling to get a refund where their education provider cannot deliver their course. ### What do these bills do? These bills amend the [Educational Services for Overseas Students regulatory framework](https://internationaleducation.gov.au/regulatory-information/pages/regulatoryinformation.aspx), which has three main objectives: * '*to provide tuition assurance, and refunds, for overseas students for courses for which they have paid and* * *to protect and enhance Australia’s reputation for quality education and training services and* * *to complement Australia’s migration laws by ensuring providers collect and report information relevant to the administration of the law relating to student visas.*' Read more in th",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 44,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-30/2"
+  },
+  {
+   "key": "federal-senate-4008",
+   "date": "2015-11-30",
+   "house": "senate",
+   "question": "The majority voted against leaving unchanged items (9), (13), (15) and (18) in schedule 5. In parliamentary jargon, the voted against those items '*standing as printed*'. ### What do these items do? These items relate to the deregulatory aspects of the bills' proposed policy change. For example, item 9 removes the requirement that education providers keep all tuition fees that they receive before an international student begins their studies in a designated account. This requirement was introduced to reduce financial risk to the [Tuition Protection Service](https://tps.gov.au/Home/NotLoggedIn), which assists students who are struggling to get a refund where their education provider cannot deliver their course. Read more in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1516a/16bd059). ### What do these bills do? These bills amend the [Educational Services for Overseas Students regulatory framework](https://internationaleducation.gov.au/regulatory-information/pages/regulatoryinformation.aspx), which has three main objectives: * '*to provide tuition assurance, and refunds, for overseas students for courses for which they have paid and* * *to protect and enhance Australia’s reputation for quality education and training services and* * *to complement Australia’s migration laws by ensuring providers collect and report information relevant to the administration of the law relating to student visas.*'",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 43,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-30/3"
+  },
+  {
+   "key": "federal-senate-4009",
+   "date": "2015-11-30",
+   "house": "senate",
+   "question": "The majority voted in favour of passing the bills through the Senate. In parliamentary jargon, they voted to [give the bills a third reading](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). Since several opposition amendments were agreed to in the Senate, the bills will now return to the House of Representatives for the Members of Parliament (MPs) there to decide whether they agree with them or not (read more about the [process of making amendments in Parliament](http://www.peo.gov.au/learning/fact-sheets/amendments.html)). If they agree, the bills will be passed by both houses and so can become law (see the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1516a/16bd059)). ### What do these bills do? These bills amend the [Educational Services for Overseas Students regulatory framework](https://internationaleducation.gov.au/regulatory-information/pages/regulatoryinformation.aspx), which has three main objectives: * '*to provide tuition assurance, and refunds, for overseas students for courses for which they have paid and* * *to protect and enhance Australia’s reputation for quality education and training services and* * *to complement Australia’s migration laws by ensuring providers collect and report information relevant to the administration of the law relating to student visas.*' Read more about the bills in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1516a/16bd059).",
+   "stage": "Third reading",
+   "ayes": 51,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 12,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-30/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-319354",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-17",
+   "stage_hint": null,
+   "brief": "The Education Services for Overseas Students Amendment (Streamlining Regulation) Bill 2015 was introduced to amend the ESOS Act, removing duplicative regulation while retaining quality assurance, with estimated deregulatory savings of $75.9 million a year for institutions. The bill adjusts Tuition Protection Scheme requirements (allowing students to pay more than 50 per cent upfront, removing the designated account requirement for private institutions, and streamlining reporting), formalises ASQA, TEQSA and the Department of Education and Training as the ESOS agencies, aligns provider registration periods to a maximum of seven years, and adds an internal review option for registration decisions."
+  },
+  {
+   "slug": "speech-319355",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-17",
+   "stage_hint": null,
+   "brief": "The bill amends the Education Services for Overseas Students (Registration Charges) Act 1997 to remove the minimum registration period for institutions and clarify that entry to market charges are paid only once per actual year of registration."
+  },
+  {
+   "slug": "speech-320582",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "Labor offered reserved support for the Education Services for Overseas Students Amendment (Streamlining Regulation) Bill 2015 and related bill, but expressed concern that the package would water down protections for international students, including the Tuition Protection Service. The speaker noted international education contributes $15 billion annually to Australia’s economy, and contrasted the Howard government’s record (54 provider collapses affecting 13,000 students from 2008-2011) with Labor’s reforms (12 closures affecting 1,332 students from July 2012 to December 2014)."
+  },
+  {
+   "slug": "speech-320583",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Education Services for Overseas Students Amendment (Streamlining Regulation) Bill 2015, arguing it would reduce red tape and deliver $75 million in annual deregulatory savings for the international education sector, worth $18.1 billion to the economy. Key changes include allowing students to pay tuition fees upfront, removing restrictions on private providers holding prepaid fees in designated accounts, and streamlining compliance processes for regulators TEQSA and ASQA."
+  },
+  {
+   "slug": "speech-320585",
+   "speaker": "Matt Williams",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Education Services for Overseas Students Amendment (Streamlining Regulation) Bill 2015 would reduce regulatory burden on institutions by $76 million annually while maintaining student protections, and highlighted the University of Adelaide’s commercialisation initiatives, including Adelaide Commercial and a new copper research hub."
+  },
+  {
+   "slug": "speech-320587",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "Labor supported parts of the Education Services for Overseas Students Amendment (Streamlining Regulation) Bill 2015 but recommended other parts go to a Senate inquiry, arguing that safeguards must not be weakened to prevent exploitation of international students—citing 54 college collapses between 2008 and 2011 affecting 13,000 students, wage theft as low as $4 an hour at Australian Post and 7-Eleven, and systemic abuses in the cleaning industry."
+  },
+  {
+   "slug": "speech-320748",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "The bills amend the ESOS Act to cut red tape, saving education institutions an estimated $75.9 million a year, while maintaining student protections; they remove the requirement for private providers to hold prepaid tuition in designated accounts, reduce reporting on student defaults, and align registration periods across regulatory frameworks."
+  },
+  {
+   "slug": "speech-320844",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The bill strengthens the Tuition Protection Service by giving its director powers to issue production notices and recommend enforcement actions, aiming to reduce red tape while maintaining student protections."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Education Services for Overseas Students Amendment (Streamlining Regulation) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00171",
+   "assent_date": "2015-12-11"
+  }
+ ]
+}

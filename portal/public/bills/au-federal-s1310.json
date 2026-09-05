@@ -1,0 +1,427 @@
+{
+ "key": "au-federal-s1310",
+ "title": "Counter-Terrorism Legislation Amendment (Sunsetting Review and Other Measures) Bill 2021",
+ "short_title": "Counter-Terrorism Legislation Amendment (Sunsetting Review and Other Measures) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-04",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2021-09-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1310%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1310%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1310%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1310%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1310%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1310%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1310%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1310%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1310%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1310%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1310%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1310%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1310%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1310_ems_7e2db254-23eb-4ccb-be82-29a12fc70742%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/8136483%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1310%22",
+   "document_date": "2021-08-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00088",
+   "document_date": "2021-09-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7396",
+   "date": "2021-08-10",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-08-10.115.1): > *That the provisions of paragraphs (5) to (8) of standing order 111 not apply to the [Counter-Terrorism Legislation Amendment (Sunsetting Review and Other Measures) Bill 2021](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1310), allowing it to be considered during this period of sittings.* In other words, the majority voted to suspend the usual procedural rules - known as [standing orders](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/standing-orders/) - so that that bill could be considered in this sitting period.",
+   "stage": "Business motion",
+   "ayes": 29,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 17,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-10/6"
+  },
+  {
+   "key": "federal-senate-7413",
+   "date": "2021-08-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-08-12.92.1) introduced by Tasmanian Senator [Anne Urquhart](https://theyvoteforyou.org.au/people/senate/tasmania/anne_urquhart) (Labor), which means it failed. The amendment would have added the text below to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion \"*that the bill be read a second time*\" - parliamentary jargon fro agreeing with the main idea of the bill. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes:* > >> *(i) in February 2021, the Parliamentary Joint Committee on Intelligence and Security tabled a report in the Senate following its review of the \"declared areas\" provisions in the Criminal Code Act 1995;* >> >> *(ii) the Committee made four unanimous and bipartisan recommendations, including three recommendations to amend the Intelligence Services Act 2001 and the Criminal Code Act 1995; and* >> >> *(iii) this bill would implement Recommendations 1 and 2 of the Committee's report, but the Government has refused to implement Recommendation 4, which is to amend the Criminal Code Act 1995 \"to allow Australian citizens to request an exemption from the Minister for Foreign Affairs to travel to a declared area for reasons not listed in section 119.2, but which are not otherwise illegitimate under Australian Law\"; and* > > *(b) calls on the Government to implement Recommendation 4 of the Committee's unanimous and bipartisan report\".*",
+   "stage": "Second reading",
+   "ayes": 15,
+   "noes": 18,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 17,
+    "member": 6,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-12/9"
+  },
+  {
+   "key": "federal-senate-7414",
+   "date": "2021-08-12",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment (Sunsetting Review and Other Measures) Bill 2021 - in Committee - Declared areas offence amendments",
+   "stage": "In committee",
+   "ayes": 5,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 14,
+    "member": 5,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-12/10"
+  },
+  {
+   "key": "federal-senate-7415",
+   "date": "2021-08-12",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment (Sunsetting Review and Other Measures) Bill 2021 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 22,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 12,
+    "earliest": 12,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-12/11"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-411535",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "Labor supported the bill extending sunset dates for counter-terrorism powers until December 2022 and September 2024, but criticised the government for delaying its introduction and for not implementing a unanimous committee recommendation to allow Australian citizens to request exemptions from the Minister for Foreign Affairs to travel to declared areas for reasons not listed in the Criminal Code."
+  },
+  {
+   "slug": "speech-411537",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The Counter-Terrorism Legislation Amendment (Sunsetting Review and Other Measures) Bill 2021 extends key counterterrorism powers for three years (declared areas offence) and 15 months (control orders, preventative detention orders, and stop/search/seizure powers), citing 136 terrorism-related charges since 2014 and ongoing threats from both Islamist and far-right extremism."
+  },
+  {
+   "slug": "speech-411538",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker announced support for the Counter-Terrorism Legislation Amendment (Sunsetting Review and Other Measures) Bill 2021, which extends AFP counterterrorism powers—including control orders, preventative detention, and stop/search/seizure powers—for 15 months, and extends the Independent National Security Legislation Monitor’s reporting deadline and the ‘declared areas’ provision for three years. The speaker also noted the terrorism threat level is ‘probable’, cited 136 charges from 64 operations, and criticised the government for not including a committee recommendation to allow citizens to request exemptions for travel to declared areas."
+  },
+  {
+   "slug": "speech-411539",
+   "speaker": "Vince Connelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Counter-Terrorism Legislation Amendment (Sunsetting Review and Other Measures) Bill 2021, which extends declared areas provisions to 2024, control orders and preventative detention orders to December 2022, and emergency stop, search and seizure powers to December 2022. They cited a \"probable\" national terrorism threat level, noting 136 people charged in 64 counter-terrorism operations since 2014, nine attacks, and around 230 Australians having travelled to Syria or Iraq to support extremist groups."
+  },
+  {
+   "slug": "speech-411541",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speech argued for the passage of the Counter-Terrorism Legislation Amendment (Sunsetting Review and Other Measures) Bill 2021, citing the need to extend key counterterrorism powers including declared areas provisions, control orders, preventative detention orders, and stop-search-seizure powers, and noting that since 2014, 18 terrorist plots were disrupted, 128 people charged, 52 offenders imprisoned, and over $61 million allocated to countering violent extremism."
+  },
+  {
+   "slug": "speech-411542",
+   "speaker": "Gladys Liu",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The Morrison government argued for extending key counter-terrorism powers—including declared areas offences, control orders, preventative detention orders, and stop, search and seizure powers—for a further 15 months to prevent them from sunsetting while the Parliamentary Joint Committee on Intelligence and Security conducts a statutory review."
+  },
+  {
+   "slug": "speech-411543",
+   "speaker": "Patrick Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker argued for extending four key counter-terrorism powers—control orders, preventative detention orders, stop/search/seizure powers, and declared areas offences—citing that since 2014, 136 people have been charged in 64 counter-terrorism operations, and that the national terrorism threat level has remained ‘probable’ for seven years."
+  },
+  {
+   "slug": "speech-411544",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The Counter-Terrorism Legislation Amendment (Sunsetting Review and Other Measures) Bill 2021 extends the declared areas provision for three years to September 2024, and control orders and preventative detention orders for 15 months to December 2022, citing 52 people currently imprisoned for terrorism convictions, 230 individuals who travelled to Syria and Iraq, 250 cancelled passports, and 65 Australians who fought with terrorist groups."
+  },
+  {
+   "slug": "speech-411545",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Counter-Terrorism Legislation Amendment (Sunsetting Review and Other Measures) Bill 2021 is critical for national security, supporting the renewal of provisions such as declared area offences, control orders, preventative detention orders, and emergency powers, while emphasising the importance of regular parliamentary review and oversight by the PJCIS, IGIS, and INSLM to balance security and freedom."
+  },
+  {
+   "slug": "speech-411546",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Counter-Terrorism Legislation Amendment Bill 2021, noting that since 2013-14 the government allocated over $61 million to countering violent extremism programs, 18 major terrorist plots have been disrupted since September 2014, 128 people have been charged in 59 counterterrorism operations, and 20 people have lost Australian citizenship for terrorism-related actions. The bill extends key counterterrorism powers, including declared areas provisions, control orders, and preventative detention orders, until September 2024."
+  },
+  {
+   "slug": "speech-411631",
+   "speaker": "George Christensen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker supported extending the sunset clause in the Counter-Terrorism Legislation Amendment Bill by one year to allow further review of police powers, while cautioning against potential misuse of those powers and stressing the need to deter radicalised foreign fighters returning to Australia."
+  },
+  {
+   "slug": "speech-411632",
+   "speaker": "Anthony Byrne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The Labor Party supported the Counter-Terrorism Legislation Amendment Bill 2021, which extends sunset dates for four counter-terrorism powers (declared area provisions, control orders, preventative detention, and stop/search/seizure powers) from 7 September 2021 to 7 December 2022, and backed a second reading amendment calling for the government to implement a bipartisan recommendation to allow exemptions for travel to declared areas. The Morrison government was criticised for leaving the extension to the last minute, creating a safety risk."
+  },
+  {
+   "slug": "speech-411633",
+   "speaker": "Keith Pitt",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The Counter-Terrorism Legislation Amendment (Sunsetting Review and Other Measures) Bill 2021 continues key counter-terrorism powers including declared areas offences, control orders, preventative detention orders, and emergency stop, search and seizure powers, extends the Independent National Security Legislation Monitor's reporting date for reviewing Division 105A of the Criminal Code, and implements recommendations from the Parliamentary Joint Committee on Intelligence and Security to prevent these powers from sunsetting during ongoing reviews."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Counter-Terrorism Legislation Amendment (Sunsetting Review and Other Measures) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00088",
+   "assent_date": "2021-09-02"
+  }
+ ]
+}

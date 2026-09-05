@@ -1,0 +1,191 @@
+{
+ "key": "au-federal-r5909",
+ "title": "Passports Legislation Amendment (Overseas Travel by Child Sex Offenders) Bill 2017",
+ "short_title": "Passports Legislation Amendment (Overseas Travel by Child Sex Offenders) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs and Trade",
+ "status": "passed",
+ "status_as_of": "2017-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5909%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5909%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5909%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5909%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5909%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5909%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5909%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5909%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5909%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5909%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5909%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5909%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5909%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5909_ems_239d6e60-8ce8-4dc0-9b33-c776ce358c01%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5909%22",
+   "document_date": "2017-06-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00073",
+   "document_date": "2017-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-14",
+  "sentences": [
+   "The bill would stop Australians on child sex offender registers from leaving the country to harm children abroad.",
+   "It would force the Minister for Foreign Affairs to refuse a passport when a competent authority asks, and create a new crime for travelling without permission.",
+   "The bill would also remove merits review of passport decisions made under these provisions."
+  ],
+  "changes": [
+   "The bill makes passport denial for reportable offenders mandatory when a competent authority requests it.",
+   "The bill creates a new criminal offence for reportable offenders who travel overseas without permission.",
+   "The bill removes merits review for passport decisions by the Minister for Foreign Affairs."
+  ],
+  "affected": "Australians on state or territory child sex offender registers with reporting obligations, known as reportable offenders.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:29:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-348629",
+   "speaker": "Julie Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The government introduced the Passports Legislation Amendment (Overseas Travel by Child Sex Offenders) Bill 2017, which will deny or cancel passports for approximately 20,000 registered child sex offenders with reporting obligations and create a new offence for travelling overseas without permission. The bill responds to 770 registered offenders travelling overseas in 2016, with half deemed medium to high risk and a third violating travel notification requirements."
+  },
+  {
+   "slug": "speech-349652",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "The Passports Legislation Amendment (Overseas Travel by Child Sex Offenders) Bill 2017 will automatically cancel or deny passports to approximately 20,000 Australians listed on state and territory child sex offender registers, creating a new criminal offence for leaving Australia without permission, punishable by up to five years imprisonment. Labor supports the bill's intent to prevent child sex offenders from travelling overseas to exploit children, but argues some discretion should be available for lower-level offenders, such as young people convicted of consensual sexual activity or sexting, to avoid harsh or unjust outcomes."
+  },
+  {
+   "slug": "speech-349653",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "The Passports Legislation Amendment (Overseas Travel by Child Sex Offenders) Bill 2017 was strongly supported, following the 2016 statistic that over 770 registered child sex offenders travelled overseas. The legislation introduces a system for state and territory registers to request passport cancellation or refusal from the Department of Foreign Affairs and Trade for registered offenders, addressing the fact that up to 20,000 are currently listed."
+  },
+  {
+   "slug": "speech-349654",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Passports Legislation Amendment (Overseas Travel by Child Sex Offenders) Bill 2017, which would allow passport denial or cancellation for registered child sex offenders to prevent overseas travel for exploitation. The speech cited over 770 registered offenders traveling from Australia in 2016, UNICEF estimates of 2 million children exploited globally, and noted that current laws lack authority to deny passports based solely on child sex offence convictions."
+  },
+  {
+   "slug": "speech-349655",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "The Passports Legislation Amendment (Overseas Travel by Child Sex Offenders) Bill 2017 was defended as a world-leading crackdown on child sex tourism, with the speech urging its unamended passage. Amendments proposed by the shadow Attorney-General—merits review, scalability, and ministerial discretion—were rejected, citing that merits review had overturned three of five passport cancellations and that the register holds 20,000 offenders (2,500 added yearly) with two travelling overseas daily."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Passports Legislation Amendment (Overseas Travel by Child Sex Offenders) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00073",
+   "assent_date": "2017-06-26"
+  }
+ ]
+}

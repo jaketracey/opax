@@ -1,0 +1,85 @@
+{
+ "key": "au-federal-s1033",
+ "title": "Regulatory Powers (Standardisation Reform) Bill 2016",
+ "short_title": "Regulatory Powers (Standardisation Reform) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-03-02",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1033%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1033%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1033%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1033%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1033%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1033_ems_7c738bf0-3500-4059-b8a8-8ff0f833d265%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1033%22",
+   "document_date": "2016-03-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-02",
+  "sentences": [
+   "This bill would update the Building Energy Efficiency Disclosure Act 2010 to use the standard penalty and notice rules from the Regulatory Powers Act.",
+   "It would repeal the existing civil penalty and infringement notice provisions in the BEED Act and replace them with the corresponding framework under the Regulatory Powers Act.",
+   "The bill would also modify how the Regulatory Powers Act applies to keep certain existing powers in the BEED Act, such as the maximum penalty amounts."
+  ],
+  "changes": [
+   "Repeals the current civil penalty and infringement notice divisions in the BEED Act.",
+   "Applies the standard civil penalty and infringement notice provisions of the Regulatory Powers Act to the BEED Act.",
+   "Modifies the operation of the Regulatory Powers Act to preserve existing powers in the BEED Act."
+  ],
+  "affected": "Commercial building owners, sellers, and lessors subject to the Commercial Building Disclosure Scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

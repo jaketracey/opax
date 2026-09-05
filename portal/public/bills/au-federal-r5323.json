@@ -1,0 +1,383 @@
+{
+ "key": "au-federal-r5323",
+ "title": "Crimes Legislation Amendment (Psychoactive Substances and Other Measures) Bill 2014",
+ "short_title": "Crimes Legislation Amendment (Psychoactive Substances and Other Measures) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-07-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2015-03-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5323_ems_cc945b32-be3f-4b19-ac27-640b3237cec4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5323_ems_3ac51e99-21bf-422b-9116-1f29724c9e48%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5323_ems_03af0d94-40c6-4438-b339-0960f65b6e5d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5323_ems_10947641-047e-486e-b69f-3f314ac6b195%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5323_ems_db7f0af0-c626-4682-b82f-2080febe810b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5323%22",
+   "document_date": "2014-07-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00012",
+   "document_date": "2015-03-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2014-07-17",
+  "sentences": [
+   "The bill would ban importing substances that mimic illegal drugs but are not yet controlled, and substances presented as alternatives to illegal drugs.",
+   "Customs officers could search for, detain, seize and destroy these banned substances without a warrant, using powers similar to those for other prohibited goods.",
+   "A defendant charged with importing a banned substance would have to prove the substance is exempt, shifting the evidential burden to them."
+  ],
+  "changes": [
+   "Creates new offences for importing prohibited psychoactive substances and prohibited serious drug alternatives.",
+   "Gives Customs officers warrantless search, seizure and destruction powers for these substances.",
+   "Places an evidential burden on defendants to show their imported substance is exempt."
+  ],
+  "affected": "Importers of psychoactive substances and serious drug alternatives, and Australian Customs and Border Protection Service officers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:52Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3668",
+   "date": "2015-02-09",
+   "house": "senate",
+   "question": "Jan McLucas by leave—I move opposition amendments (1) and (2) on sheet 7657 together: (1) Schedule 2, item 14, page 16 (lines 17 to 24), to be opposed. (2) Schedule 2, item 18, page 21 (lines 13 to 18), section 361.5 to be opposed. These amendments oppose mandatory minimum sentences for the reasons that Senator Collins outlined during the second reading debate. Richard Colbeck The government does not support these amendments. Firearms trafficking is amongst the most serious of crimes, particularly given its ability to facilitate violent and potentially deadly criminal acts. The entry of even a small number of illegal firearms into the Australian community will have a significant impact on the threat posed by the illicit market and due to the enduring nature of firearms a firearm can remain within that market for many years. Mandatory minimum penalties send a very strong message on the seriousness of gun related crime and violence and certainly act as a deterrent for criminals. The government believes that mandatory minimum sentences are a stronger deterrent than increased maximum penalties. There are protections in place to ensure that mandatory minimums do not cause unjust results. Mandatory minimum sentences will not apply to children, and there is no minimum non-parole period. The offences preserve a level of judicial discretion to allow courts to take into account mitigating factors when setting the period offenders spend in custody. The government amended the explanatory memorandum in response to the Senate Legal and Constitutional Affairs Committee's report to make clear that mandatory minimum sentence is not intended as a guide to the non-parole period, which in some cases may result in significant differences between the head sentence and the non-parole period. Richard Di Natale I would like to put on record that the Greens will be supporting this amendment. For the reasons already described, we do not support the imposition of mandatory minimum sentences of",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "earliest": 4,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-02-09/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-301559",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301560",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301706",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301708",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301709",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301710",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301711",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301712",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301714",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301716",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301717",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301718",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301720",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301740",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305479",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Crimes Legislation Amendment (Psychoactive Substances and Other Measures) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00012",
+   "assent_date": "2015-03-05"
+  }
+ ]
+}

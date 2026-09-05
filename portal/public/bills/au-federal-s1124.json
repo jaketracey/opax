@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1124",
+ "title": "Australian Human Rights Commission Repeal (Duplication Removal) Bill 2018",
+ "short_title": "Australian Human Rights Commission Repeal (Duplication Removal) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-15",
+ "originating_house": "senate",
+ "sponsor": "BERNARDI, Sen Cory",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10038",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1124%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1124%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1124%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1124_ems_a20420e6-6c9d-48f7-8bbc-4fc16f874d1a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1124%22",
+   "document_date": "2018-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-15",
+  "sentences": [
+   "The bill would end federal funding for a human rights commission that advocates on behalf of people.",
+   "It expects state and territory governments to take over human rights advocacy and responsibility.",
+   "The bill would start the day after it receives royal assent."
+  ],
+  "changes": [
+   "Removes Commonwealth involvement in a publicly funded commission for human rights advocacy.",
+   "Leaves existing anti-discrimination laws unchanged.",
+   "Preserves the right of aggrieved people to take action under state or territory anti-discrimination regimes."
+  ],
+  "affected": "People who would have used the federal commission for human rights advocacy, and state and territory governments that would take up that role.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

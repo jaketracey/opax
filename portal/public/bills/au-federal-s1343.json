@@ -1,0 +1,288 @@
+{
+ "key": "au-federal-s1343",
+ "title": "Public Sector Superannuation Salary Legislation Amendment Bill 2022",
+ "short_title": "Public Sector Superannuation Salary Legislation Amendment Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-08-03",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2022-08-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1343%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1343%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1343%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1343%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1343%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1343%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1343_ems_fdd24e26-bfca-48bf-8e62-b1989aef687a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1343%22",
+   "document_date": "2022-08-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00036",
+   "document_date": "2022-08-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7716",
+   "date": "2022-08-03",
+   "house": "senate",
+   "question": "Business - Consideration of Legislation - Public Sector Superannuation Salary Legislation Amendment Bill 2022",
+   "stage": "Business motion",
+   "ayes": 45,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 19,
+    "earliest": 31,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-08-03/2"
+  },
+  {
+   "key": "federal-senate-7717",
+   "date": "2022-08-03",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2022-08-03.19.1) to read the [bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1343) for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). In other words, they voted to agree with the bill's main idea, which means they can now discuss it in more detail. ### What is the bill's main idea? In her second reading speech, ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor) [explained that](https://www.openaustralia.org.au/senate/?id=2022-08-03.19.1) the bill: > *repeals paragraph 5(e) of the Superannuation (Salary) Regulations with effect from 1 July 1986 and provides that the effect of the repeal does not apply to individuals where limited circumstances are satisfied.* > > *The changes in the bill are only relevant to current and former Commonwealth public sector civilian employees.* > > *The default superannuation salary of a member of the Commonwealth Superannuation Scheme established under the Superannuation Act 1976 includes the value of any allowance that, under the regulations, is to be treated as salary under the act.* > > *Prior to 1 March 2022 paragraph 5(e) of the regulations provided that the rent-free use of housing made available to a person by reason that they held a particular office or performed particular duties or work was an allowance that was to be treated as salary for the purpose of the act.* > > *The value of rent-free housing as per paragraph 5(e) of the regulations flowed through to the default superannuation salary of members of the Public Sector Superannuation Scheme, and members of the Public Sector Superannuation Accumulation Plan and certain members of non-Commonwealth choice funds.* > > *At the time the regulations were made in 1978, an employee's assessable incom",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 17,
+    "earliest": 28,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-08-03/3"
+  },
+  {
+   "key": "federal-representatives-7694",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/25975/&sid=0000) to read the bill for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). In other words, they voted to agree with the bill's main idea, which means they can now discuss it in more detail. ### What is the bill's main idea? In his second reading speech, Whitlam MP [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor) [explained that](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/25975/&sid=0000) the bill: > *repeals paragraph 5(e) of the Superannuation (Salary) Regulations with effect from 1 July 1986 and provides that the effect of the repeal does not apply to individuals where limited circumstances are satisfied.* > > *The changes in the bill are only relevant to current and former Commonwealth public sector civilian employees.* > > *The default superannuation salary of a member of the Commonwealth Superannuation Scheme established under the Superannuation Act 1976 includes the value of any allowance that, under the regulations, is to be treated as salary under the act.* > > *Prior to 1 March 2022 paragraph 5(e) of the regulations provided that the rent-free use of housing made available to a person by reason that they held a particular office or performed particular duties or work was an allowance that was to be treated as salary for the purpose of the act.* > > *The value of rent-free housing as per paragraph 5(e) of the regulations flowed through to the default superannuation salary of members of the Public Sector Superannuation Scheme, and members of the Public Sector Superannuation Accumulation Plan and certain members of non-Commonwealth choice funds.* > > *At the time the regulations were made in 1978, an employee's assessable income",
+   "stage": "Second reading",
+   "ayes": 117,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 119,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-04/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-421426",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-04",
+   "stage_hint": null,
+   "brief": "The bill retrospectively repeals paragraph 5(e) of the Superannuation (Salary) Regulations from 1 July 1986 to regularise the long-standing practice of not including rent-free housing in superannuation salary, except for a limited cohort where contributions were made on that basis between 1 July 1986 and 28 February 2022."
+  },
+  {
+   "slug": "speech-421431",
+   "speaker": "Stuart Rowland Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-08-04",
+   "stage_hint": null,
+   "brief": "The opposition supported the Public Sector Superannuation Salary Legislation Amendment Bill 2022, which retrospectively clarifies that rent-free housing for diplomats does not count as salary for superannuation, addressing the Peace case and avoiding a potential $8–11 billion budget impact."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Public Sector Superannuation Salary Legislation Amendment Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00036",
+   "assent_date": "2022-08-09"
+  }
+ ]
+}

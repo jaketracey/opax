@@ -1,0 +1,912 @@
+{
+ "key": "au-federal-r6969",
+ "title": "Treasury Laws Amendment (Energy Price Relief Plan) Bill 2022",
+ "short_title": "Treasury Laws Amendment (Energy Price Relief Plan) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-12-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2022-12-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-12-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6969%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6969%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6969%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6969%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-12-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6969%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-12-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6969%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-12-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6969%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6969%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6969%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6969%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-12-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6969%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-12-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6969%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-12-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6969%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-12-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6969%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6969_ems_1290e102-106a-42df-acb3-93e7aeb05a37%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6969%22",
+   "document_date": "2022-12-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00096",
+   "document_date": "2022-12-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7917",
+   "date": "2022-12-15",
+   "house": "representatives",
+   "question": "The majority voted in favour of the following [motion](https://www.openaustralia.org.au/debates/?id=2022-12-15.5.2): > *That so much of the [standing and sessional orders](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/standing-orders/) be suspended as would prevent the arrangement of business for this sitting being as follows:* > > *(1) a Minister presenting the Treasury Laws Amendment (Energy Price Relief Plan) Bill 2022;* > > *(2) following the Minister's second reading speech, debate continuing immediately;* > > *(3) the time limits for the second reading debate being 10 minutes for the Minister and first Opposition speaker, and five minutes each for all other Members;* > > *(4) the bill proceeding through all stages without interruption;* > > *(5) the second reading debate concluding no later than 11.15 am, and questions being immediately put on any amendments moved to the motion for the second reading and on the second reading of the bill and any message from the Governor-General under standing order 147 being announced;* > > *(6) if required, a consideration in detail stage of the bill, with all government amendments to be moved together, all opposition amendments to be moved together, and any crossbench Members' amendments to be moved as one set per Member, with:* > >> *(a) one question to be put on all government amendments;* >> >> *(b) one question to be put on all opposition amendments;* >> >> *(c) separate questions to be put on any sets of amendments moved by crossbench Members; and* >> >> *(d) one question to be put that the bill [as amended] be agreed to;* > > *(7) any question provided for under paragraph (6) being put after no more than 10 minutes of debate on each set of amendments, unless a Minister sets a further period of debate;* > > *(8) at 12 noon, any remaining questions required to conclude consideration in detail being put with no further debate;* > > *(9) when the bill has been agreed to, the question",
+   "stage": "Business motion",
+   "ayes": 81,
+   "noes": 46,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 4
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-12-15/2"
+  },
+  {
+   "key": "federal-representatives-7918",
+   "date": "2022-12-15",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2022-12-15.18.1), which means it failed. It would have added the words below to the usual second reading motion, which is \"*That this bill be now [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\" (parliamentary jargon for agreeing with the main idea of the bill). It was introduced by Melbourne MP [Adam Bandt](https://theyvoteforyou.org.au/people/representatives/melbourne/adam_bandt) (Greens). ### Amendment text > *That all words after \"the House\" be omitted with a view to substituting the following words:* > > *\"agrees to give the bill a second reading and:* > > *(1) notes that this legislation gives the government the power to stop power bills rising at all and to freeze electricity bills at pre-crisis levels;* > > *(2) calls on the government to immediately use those powers and address the urgent cost of living crisis by freezing electricity bills;* > > *(3) does not consider it acceptable that electricity bills are set to rise by over 20% while coal and gas corporations keep getting subsidies and don't pay their fair share of tax; and* > > *(4) considers that any price rise from here on in is squarely the government’s responsibility\".*",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 45,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 81
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-12-15/3"
+  },
+  {
+   "key": "federal-representatives-7919",
+   "date": "2022-12-15",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Energy Price Relief Plan) Bill 2022 - Second Reading - Don't disagree with the bill",
+   "stage": "Second reading",
+   "ayes": 84,
+   "noes": 41,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 124
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-12-15/4"
+  },
+  {
+   "key": "federal-representatives-7920",
+   "date": "2022-12-15",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Energy Price Relief Plan) Bill 2022 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 85,
+   "noes": 41,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 125
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-12-15/5"
+  },
+  {
+   "key": "federal-representatives-7921",
+   "date": "2022-12-15",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Energy Price Relief Plan) Bill 2022 - Consideration in Detail - Agree with the bill",
+   "stage": "Consideration in detail",
+   "ayes": 85,
+   "noes": 42,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-12-15/6"
+  },
+  {
+   "key": "federal-senate-7924",
+   "date": "2022-12-15",
+   "house": "senate",
+   "question": "The majority voted in favour of the following [motion](https://www.openaustralia.org.au/senate/?gid=2022-12-15.18.1): > *That today—* > > *(a) the hours of meeting be 1 pm till adjournment;* > > *(b) the routine of business be consideration of the Treasury Laws Amendment (Energy Price Relief Plan) Bill 2022 only;* > > *(c) if, by 4.30 pm, consideration of the bill has not concluded, the questions on all remaining stages be put without debate;* > > *(d) paragraph (c) operate as a limitation of debate under standing order 142;* > > *(e) divisions may take place after 4.30 pm for the purposes of the bill; and* > > *(f) the Senate adjourn without debate on the motion of a minister.*",
+   "stage": "Business motion",
+   "ayes": 27,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "earliest": 24,
+    "dated": 18,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-15/3"
+  },
+  {
+   "key": "federal-senate-7925",
+   "date": "2022-12-15",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-12-15.40.1). It would have added the words below to the usual second reading motion, which is \"*That this bill be now [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\" (parliamentary jargon for agreeing with the main idea of the bill). It was introduced by Queensland Senator [Larissa Waters](https://theyvoteforyou.org.au/people/senate/queensland/larissa_waters) (Greens). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) Australia's energy market is a mess, with big coal and gas companies making money hand over fist and consumers paying the price through skyrocketing energy bills, and* >> >> *(ii) this mess is the inevitable consequence of decades of Labor and Liberal policies to privatise Australia's energy system and their failure to properly tax the earnings of the big coal and gas producers; and* > > *(b) calls on the Government to:* > >> *(i) introduce a windfall tax on coal and gas companies,* >> >> *(ii) use the funds to freeze household electricity bills for two years at the same rates as prior to the invasion of Ukraine in February 2022, and* >> >> *(iii) raise the rate of income support payments above the poverty line\".*",
+   "stage": "Second reading",
+   "ayes": 7,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 22,
+    "dated": 15,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-15/4"
+  },
+  {
+   "key": "federal-senate-7926",
+   "date": "2022-12-15",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-12-15.43.1). It would have added the words below to the usual second reading motion, which is \"*That this bill be now read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). It was introduced by West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal). ### Amendment text > *At the end of the motion, add \", and Schedule 1 of the bill be referred to the Economics Legislation Committee for inquiry and report by 7 February 2023\".*",
+   "stage": "Second reading",
+   "ayes": 23,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 25,
+    "dated": 18,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-15/5"
+  },
+  {
+   "key": "federal-senate-7927",
+   "date": "2022-12-15",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Energy Price Relief Plan) Bill 2022 - Second Reading - Fossil fuel subsidies",
+   "stage": "Second reading",
+   "ayes": 8,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 2,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 26,
+    "dated": 17,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-15/6"
+  },
+  {
+   "key": "federal-senate-7928",
+   "date": "2022-12-15",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Energy Price Relief Plan) Bill 2022 - Second Reading - Agree with bill's main idea (and critique Government)",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 26,
+    "dated": 18,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-15/7"
+  },
+  {
+   "key": "federal-senate-7929",
+   "date": "2022-12-15",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-12-15.54.1) introduced by Pauline Hanson's One Nation party, which means it failed. ### Amendment text > *(1) Schedule 1, item 2, page 11 (after line 19), after section 53L, insert:* > >> *53LA When gas market code regulations take effect* >> >> *(1) This section applies to regulations made for the purposes of section 53L.* >> >> *(2) If neither House of Parliament passes a resolution disallowing the regulations or a provision of the regulations, the regulations take effect:* >> >>> *(a) on the day immediately after the last day upon which such a resolution could have been passed; or* >>> >>> *(b) if a later day is specified in the regulations—on that later day.* >> >> *(3) If either House of Parliament passes a resolution disallowing a provision of the regulations, the remaining provisions of the regulations take effect:* >> >>> *(a) on the day immediately after the last day upon which a resolution disallowing the regulations or a provision of the regulations could have been passed; or* >>> >>> *(b) if a later day is specified in the regulations—on that later day.* >> >> *(4) To avoid doubt, if either House of Parliament passes a resolution disallowing the regulations, the regulations do not take effect.*",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 26,
+    "dated": 18,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-15/8"
+  },
+  {
+   "key": "federal-senate-7930",
+   "date": "2022-12-15",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Energy Price Relief Plan) Bill 2022 - in Committee - Schedule 1",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 26,
+    "dated": 17,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-15/9"
+  },
+  {
+   "key": "federal-senate-7931",
+   "date": "2022-12-15",
+   "house": "senate",
+   "question": "The majority voted against an [opposition amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6969_amend_3900dc08-548e-4f7e-af80-3614fa6680b6%22;rec=0) to the [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6969), which means it failed. ### Motion text > *(1) Title, page 1 (lines 1 and 2), omit the title, substitute:* > >> *A Bill for an Act to amend the Federal Financial Relations Act 2009 , and for related purposes*",
+   "stage": "In committee",
+   "ayes": 24,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 25,
+    "dated": 17,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-15/10"
+  },
+  {
+   "key": "federal-senate-7932",
+   "date": "2022-12-15",
+   "house": "senate",
+   "question": "The majority voted against an [opposition amendment](https://www.openaustralia.org.au/senate/?id=2022-12-15.58.1), which means it failed. It was an amendment to a motion \"*that the remaining stages of the bill be agreed to and that the bill be now passed.*\" ### Amendment text > *At the end of the motion, add \", and that paragraph (1) of the resolution of appointment of the Select Committee on Cost of Living be amended as follows:* > > *(1) That a select committee, to be known as the Select Committee on the Cost of Living, be established to inquire into and report on:* > >> *(a) the cost of living pressures facing Australians;* >> >> *(b) the Government's fiscal policy response to the cost of living;* >> >> *(c) ways to ease cost of living pressures through the tax and transfer system;* >> >> *(d) measures to ease the cost of living through the provision of Government services;* >> >> *(e) the impact of the passage of the Treasury Laws Amendment (Energy Price Relief Plan) Bill 2022 on:* >> >>> *(i) energy markets,* >>> >>> *(ii) wholesale and retail energy prices or bills, and* >>> >>> *(iii) the Consumer Price Index; and* >> >> *(f) any other related matter\".*",
+   "stage": "Adoption of Report",
+   "ayes": 25,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 25,
+    "dated": 17,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-15/11"
+  },
+  {
+   "key": "federal-senate-7933",
+   "date": "2022-12-15",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Energy Price Relief Plan) Bill 2022 - Adoption of Report - Pass the bill",
+   "stage": "Adoption of Report",
+   "ayes": 28,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 24,
+    "dated": 17,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-15/12"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Energy Price Relief Plan) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00096",
+   "assent_date": "2022-12-16"
+  }
+ ]
+}

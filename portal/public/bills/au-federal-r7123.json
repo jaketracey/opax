@@ -1,0 +1,873 @@
+{
+ "key": "au-federal-r7123",
+ "title": "Help to Buy Bill 2023",
+ "short_title": "Help to Buy Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2024-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7123_ems_7a04198e-c38e-475d-aa7b-b7739767399f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7123_ems_c48e7609-b760-428f-9338-b31638b69c0e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7123%22",
+   "document_date": "2023-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00124",
+   "document_date": "2024-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-30",
+  "sentences": [
+   "This bill is part of a package that would create Help to Buy, a shared equity program to help low-to-middle-income earners buy homes.",
+   "The Commonwealth would contribute equity, and Housing Australia would run and oversee the program in states that have referred power or adopted the relevant laws, as well as in the territories.",
+   "The bill would start the day after it receives Royal Assent, and the accompanying Consequential Provisions Bill would start at the same time but only if this bill also starts."
+  ],
+  "changes": [
+   "Establishes the Help to Buy shared equity program.",
+   "Gives Housing Australia responsibility for administering and monitoring the program.",
+   "Sets the commencement date for the bill as the day after Royal Assent."
+  ],
+  "affected": "Low-to-middle-income earners, Housing Australia, and states and territories that participate in the program.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8557",
+   "date": "2023-11-30",
+   "house": "senate",
+   "question": "The majority voted in favour of an amendment moved by Senator Nick McKim, which means it failed and the wording of the original government amendment will remain unchanged. ### Amendment text > *At the end of the motion, add:* > > *\"and, in respect of:* > > *(a) the [Treasury Laws Amendment (Tax Accountability and Fairness) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7107), the provisions of the bill be referred immediately to the Economics Legislation Committee for inquiry and report by 18 April 2024; and* > > *(b) the [Help to Buy Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7123) and [Help to Buy Bill (Consequential Provisions) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7124), the provisions of the bill referred immediately to the Economics Legislation Committee for inquiry and report by 16 April 2024\".* ### Original government amendment text > *At the end of the motion, add \", and:* > > *(a) the provisions of the Help to Buy Bill 2023 and the Help to Buy (Consequential Provisions) Bill 2023 be referred immediately to the Economics Legislation Committee for inquiry and report by 22 February 2024;* > > *(b) the provisions of the Treasury Laws Amendment (Tax Accountability and Fairness) Bill 2023 be referred immediately to the Economics Legislation Committee for inquiry and report by 22 February 2024; and* > > *(c) the provisions of the National Security Legislation Amendment (Comprehensive Review and Other Measures No. 3) Bill 2023 not be referred to a committee\".*",
+   "stage": "Committee motion",
+   "ayes": 41,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-30/12"
+  },
+  {
+   "key": "federal-representatives-8689",
+   "date": "2024-02-27",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2024-02-27.10.1) introduced by Deakin MP [Michael Sukkar](https://theyvoteforyou.org.au/people/representatives/deakin/michael_sukkar) (Liberal) to an [original motion](https://www.openaustralia.org.au/debates/?id=2024-02-27.9.2) introduced by Watson MP [Tony Burke](https://theyvoteforyou.org.au/people/representatives/watson/tony_burke) (Labor), which means the amendment failed. ### Amendment text > *That paragraphs (3) to (5) be omitted.* ### Original motion text > *That so much of the standing and sessional orders be suspended as would prevent the following from occurring in relation to proceedings on the Help to Buy Bill 2023 and the Help to Buy (Consequential Provisions) Bill 2023:* > > *(1) on Tuesday, 27 February when the order of the day relating to the second reading debate on the Help to Buy Bill 2023 is called on following the matter of public importance, a cognate debate taking place with the Help to Buy (Consequential Provisions) Bill 2023, and continuing without interruption until:* > >> *(a) no further Members rise to speak, at which point, debate being adjourned; or* >> >> *(b) the commencement of the adjournment debate at 7.30 pm;* > > *(2) notwithstanding standing order 31, if the second reading debate has not concluded earlier, at 8 pm the adjournment debate being interrupted and the bills being called on for further consideration, with the second reading debate continuing until:* > >> *(a) no further Members rise to speak; or* >> >> *(b) 10 pm; or* >> >> *(c) a later time, specified by a Minister prior to 10 pm;* >> >> *at which point, debate being adjourned and the House immediately adjourning until Wednesday, 28 February at 9 am;* > > *(3) on Wednesday, 28 February when the order of the day relating to the second reading debate on the Help to Buy Bill 2023 is called on following the matter of public importance, a cognate debate taking place with the Help to Buy",
+   "stage": "Business motion",
+   "ayes": 65,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 33,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-02-27/1"
+  },
+  {
+   "key": "federal-representatives-8705",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "question": "Help to Buy Bill 2023 and Help to Buy (Consequential Provisions) Bill 2023 - Second Reading - Agree with the bills",
+   "stage": "Second reading",
+   "ayes": 85,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-02-28/1"
+  },
+  {
+   "key": "federal-representatives-8706",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2024-02-28.117.2) introduced by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent), which means it failed. ### What do the amendments do? Ms Spender [explained that](https://www.openaustralia.org.au/debate/?id=2024-02-28.117.2): > *My amendment would simply make the minister's directions a disallowable instrument. It will give the parliament the opportunity to scrutinise the minister's decisions about eligibility and reporting. Where the minister has tried to make directions that fall short of the community's expectations, parliament will have the power to veto those decisions. The minister's office have said that they do not support this amendment because the scheme needs certainty and because it would delay the commencement of the scheme. I appreciate the need for certainty with a scheme that involves our state and territory governments and a number of private lenders, but a disallowance only needs to stand for 15 sitting days before the directions become permanent and participants have complete certainty.* ### Amendment text > *(1) Clause 24, page 16 (line 14), omit \"Note 1\", substitute \"Note\".* > > *(2) Clause 24, page 16 (lines 17 to 19), omit the note.* > > *(3) Clause 24, page 16 (after line 27), at the end of the clause, add:* > >> *(5) Despite regulations made for the purposes of paragraph 44(2)(b) of the Legislation Act 2003, section 42 of that Act (about disallowance) applies in relation to a direction given under subsection (1) of this section.*",
+   "stage": "Consideration in detail",
+   "ayes": 16,
+   "noes": 67,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 62
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 83
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-02-28/2"
+  },
+  {
+   "key": "federal-representatives-8707",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "question": "The majority voted against amendments introduced by Fowler MP [Dai Le](https://theyvoteforyou.org.au/people/representatives/fowler/dai_le) (Independent), which means they were rejected. ### Amendment text > *(1) Clause 7, page 6 (line 21), omit “property; or”, substitute “property; and”.* > > *(2) Clause 7, page 6 (after line 21), at the end of paragraph (1)(a), add:* > >> *(iv) cooperates with lenders to support the individual’s or individuals’ eligibility for a loan, and ability to obtain a loan, relating to the residential property; or* > > *(3) Clause 25, page 17 (lines 16 and 17), omit paragraph (2)(b), substitute:* > >> *(b) the number of residential properties in relation to which Housing Australia may enter into Help to Buy arrangements, taking into consideration the current demand and need for housing;* > > *(4) Clause 25, page 17 (lines 20 and 21), omit paragraph (2)(d), substitute:* > >> *(d) the amount, or amounts, that Housing Australia may contribute under Help to Buy arrangements in order to enable individuals to obtain home loans with lenders;* >> >> *(e) the categories of individuals who will have priority under the Help to Buy Program, such as single parents, victims of domestic violence or individuals of a low socio-economic background.*",
+   "stage": "Consideration in detail",
+   "ayes": 12,
+   "noes": 62,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 74
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-02-28/3"
+  },
+  {
+   "key": "federal-senate-9135",
+   "date": "2024-09-18",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7123_amend_219ede42-c4a0-4aa3-b103-cac6129c8349%22;rec=0) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). That means that words below will replace the usual ones. ### Amendment text > *Omit all words after “That”, substitute:* > > *(a) further consideration of the bills be postponed until Tuesday, 26 November 2024; and* > > *(b) on Tuesday, 26 November 2024:* > >> *(i) the bills be called on prior to the first order of government business,* >> >> *(ii) the questions on all remaining stages of the bills be put at 1 pm,* >> >> *(iii) divisions may take place between 1.30 pm and 2 pm until consideration of the bills has concluded, and* >> >> *(iv) paragraph (b)(ii) operate as a limitation of debate under standing order 142.*",
+   "stage": "Second reading",
+   "ayes": 39,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-09-18/1"
+  },
+  {
+   "key": "federal-senate-9136",
+   "date": "2024-09-18",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2024-09-18.18.2): > *That -* > > *(a) further consideration of the bills be postponed until Tuesday, 26 November 2024; and* > > *(b) on Tuesday, 26 November 2024:* > >> *(i) the bills be called on prior to the first order of government business,* >> >> *(ii) the questions on all remaining stages of the bills be put at 1 pm,* >> >> *(iii) divisions may take place between 1.30 pm and 2 pm until consideration of the bills has concluded, and* >> >> *(iv) paragraph (b)(ii) operate as a limitation of debate under standing order 142.*",
+   "stage": "Second reading",
+   "ayes": 39,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-09-18/2"
+  },
+  {
+   "key": "federal-senate-9253",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2024-11-26.45.5) introduced by the Government, which means they'll now be included in the bill. The amendments related to how this bill should interact with State and Territory laws. ### Amendment text > *(1) Clause 34, page 24 (line 28), omit \"subsections 42(1) to (3)\", substitute \"section 41, 41A or 42\".* > > *(2) Clause 34, page 24 (lines 29 to 31), omit the note.* > > *(3) Clause 42, page 29 (line 21) to page 32 (line 7), omit the clause, substitute:* > >> *41A When Help to Buy program does not apply — exclusion by law of State or Territory* >> >> *(1) This section applies if a law of a participating State, a cooperating State, the Australian Capital Territory or the Northern Territory declares a matter to be an excluded matter for the purposes of this section in relation to:* >> >>> *(a) the whole of the Help to Buy program; or* >>> >>> *(b) a specified provision of the Help to Buy program; or* >>> >>> *(c) the Help to Buy program, other than a specified provision; or* >>> >>> *(d) the Help to Buy program, otherwise than to a specified extent.* >> >> *(2) The Help to Buy program, other than the provisions mentioned in section 42B, does not apply in relation to the excluded matter to the extent provided by the declaration.* >> >>> *Note: This subsection has effect subject to subsection (3) and section 42C.* >> >> *(3) Subsection (2) does not apply to a declaration to the extent (if any) prescribed by the regulations.* >> >>> *Note: See also section 42A (when declarations and regulations may take effect).* >> >> 42 Avoiding inconsistency with State and Territory laws* >> >> *(1) This section has effect despite anything else in the Help to Buy program.* >> >> *(2) Subsection (4) does not apply to a provision of a law of a State or Territory that is capable of concurrent operation with the Help to Buy program.* >> >>> *Note: This kind of provision is dealt with by section 41.*",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/1"
+  },
+  {
+   "key": "federal-senate-9254",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "Help to Buy Bill 2023, Help to Buy (Consequential Provisions) Bill 2023 - in Committee - Extend and focus on specific populations",
+   "stage": "In committee",
+   "ayes": 17,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 7,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/2"
+  },
+  {
+   "key": "federal-senate-9255",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "Help to Buy Bill 2023, Help to Buy (Consequential Provisions) Bill 2023 - in Committee - Prioritise certain groups",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 7,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/3"
+  },
+  {
+   "key": "federal-senate-9256",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "Help to Buy Bill 2023, Help to Buy (Consequential Provisions) Bill 2023 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 36,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/4"
+  },
+  {
+   "key": "federal-representatives-9443",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "question": "Help to Buy Bill 2023 - Consideration of Senate Message - Put the question",
+   "stage": "Consideration of Senate message",
+   "ayes": 74,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 135,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-27/17"
+  },
+  {
+   "key": "federal-representatives-9444",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "question": "Help to Buy Bill 2023 - Consideration of Senate Message - Agree with Senate amendments",
+   "stage": "Consideration of Senate message",
+   "ayes": 89,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 140,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-27/18"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Help to Buy Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00124",
+   "assent_date": "2024-12-10"
+  }
+ ]
+}

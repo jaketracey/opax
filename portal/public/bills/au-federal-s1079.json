@@ -1,0 +1,151 @@
+{
+ "key": "au-federal-s1079",
+ "title": "Social Security Amendment (Caring for People on Newstart) Bill 2017",
+ "short_title": "Social Security Amendment (Caring for People on Newstart) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-08-09",
+ "originating_house": "senate",
+ "sponsor": "SIEWERT, Sen Rachel",
+ "sponsor_party": "&#34;Australian Greens&#34;",
+ "sponsor_person_id": "10584",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2017-08-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1079%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1079_ems_93121a3e-5491-460f-b194-1c1164d0cce5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1079%22",
+   "document_date": "2017-08-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-09",
+  "sentences": [
+   "This bill would give more money to people receiving certain unemployment payments.",
+   "It would raise fortnightly payments for single recipients of Newstart and Youth Allowance.",
+   "The bill ties future increases to whichever is highest among several cost-of-living measures and starts a month after it becomes law."
+  ],
+  "changes": [
+   "Increases the single rate of Newstart by $110 per fortnight.",
+   "Increases the single independent rate of Youth Allowance by $110 per fortnight.",
+   "Applies the same indexation method as certain pensions, using the highest of the CPI, MTAWE or the pensioner and beneficiary living cost index."
+  ],
+  "affected": "Single people on Newstart and single independent Youth Allowance recipients.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:45:15Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4858",
+   "date": "2017-08-14",
+   "house": "senate",
+   "question": "Social Security Amendment (Caring for People on Newstart) Bill 2017 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 45,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 32,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-14/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

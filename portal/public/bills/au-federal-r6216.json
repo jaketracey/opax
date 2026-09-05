@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6216",
+ "title": "Equal Pay Standard Bill 2018",
+ "short_title": "Equal Pay Standard Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-11-26",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6216%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6216%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6216%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6216_ems_085efcee-30fb-49d2-a5db-bbfce51d38cc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6216%22",
+   "document_date": "2018-11-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-11-26",
+  "sentences": [
+   "The bill would create a new system to certify that employers pay men and women equally, with the goal of closing the gender pay gap.",
+   "A minister would set a standard banning wage differences based on gender, name independent bodies to issue certificates, and require employers with more than 25 workers to obtain a certificate proving compliance.",
+   "The sponsor says the model follows Iceland's law, but the source does not specify a start date or total cost to the budget."
+  ],
+  "changes": [
+   "Establishes a stand-alone certification scheme that adds to existing workplace and anti-discrimination laws.",
+   "Requires employers, including the Commonwealth and its authorities, to gain certification if they have more than 25 staff.",
+   "Allows the minister to direct an employer to fix non-compliance and sets a penalty for ignoring that direction."
+  ],
+  "affected": "Employers with more than 25 people, including the Commonwealth and Commonwealth authorities, would be required to obtain equal pay certification.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:50Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-372347",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2018-11-26",
+   "stage_hint": null,
+   "brief": "The Equal Pay Standard Bill 2018 was supported as a measure to require companies to pay men and women equally, citing a 14.6% gender pay gap and inequality at a 70-year high, with additional calls to amend the Fair Work Act to include equal pay as an objective."
+  }
+ ],
+ "acts": []
+}

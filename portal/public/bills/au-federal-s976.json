@@ -1,0 +1,822 @@
+{
+ "key": "au-federal-s976",
+ "title": "Counter-Terrorism Legislation Amendment (Foreign Fighters) Bill 2014",
+ "short_title": "Counter-Terrorism Legislation Amendment (Foreign Fighters) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-09-24",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2014-11-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-09-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s976%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s976%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s976%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s976%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s976%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s976%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s976%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s976%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s976%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s976%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s976%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s976%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s976%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-11-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s976%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s976_ems_d5aff32a-9c65-43b1-a13e-8ffd4c023831%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s976_ems_11c68f3b-9a58-4dea-97b2-25de6aa4d825%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s976_ems_c273a52a-709a-4967-bd22-b2642904dec4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s976_ems_c21ea737-5e59-4cdb-bceb-7af5e22aa6a9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s976%22",
+   "document_date": "2014-09-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00116",
+   "document_date": "2014-11-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2014-09-24",
+  "sentences": [
+   "The bill would strengthen Australia's counter-terrorism laws to address threats from Australians who fight or train with extremist groups overseas.",
+   "It would give security agencies extra powers, improve border security, and cancel welfare payments for people involved in terrorism.",
+   "The bill implements recommendations from the Independent National Security Legislation Monitor's second and fourth annual reports and the Council of Australian Governments Review of Counter-Terrorism Legislation."
+  ],
+  "changes": [
+   "Give security agencies additional powers to deal with terrorism within Australia and by Australians overseas.",
+   "Improve border security measures.",
+   "Cancel welfare payments for persons involved in terrorism."
+  ],
+  "affected": "Australians who participate in terrorist activities overseas and security agencies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:23Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3562",
+   "date": "2014-10-28",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment (Foreign Fighters) Bill 2014 — Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 47,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 10,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-10-28/3"
+  },
+  {
+   "key": "federal-senate-3563",
+   "date": "2014-10-28",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment (Foreign Fighters) Bill 2014 - In Committee - Extend sunset clauses",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 10,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-10-28/4"
+  },
+  {
+   "key": "federal-senate-3564",
+   "date": "2014-10-28",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment (Foreign Fighters) Bill 2014 - In Committee - Add extra defences to unauthorise disclosure offence",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "earliest": 5,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-10-28/5"
+  },
+  {
+   "key": "federal-senate-3565",
+   "date": "2014-10-28",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment (Foreign Fighters) Bill 2014 - In Committee - Add sunset clause for delayed notification search warrant",
+   "stage": "In committee",
+   "ayes": 15,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "earliest": 5,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-10-28/6"
+  },
+  {
+   "key": "federal-senate-3568",
+   "date": "2014-10-29",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment (Foreign Fighters) Bill 2014 - in Committee - Limit who the advocating terrorism offence applies to",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 9,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-10-29/1"
+  },
+  {
+   "key": "federal-senate-3569",
+   "date": "2014-10-29",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment (Foreign Fighters) Bill 2014 - in Committee - Support offence of entering and staying in a declared area",
+   "stage": "In committee",
+   "ayes": 39,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 10,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-10-29/2"
+  },
+  {
+   "key": "federal-senate-3570",
+   "date": "2014-10-29",
+   "house": "senate",
+   "question": "The majority did not want to change the exceptions to the offence of entering and staying in a declared area. Labor Senator [Penny Wong](https://theyvoteforyou.org.au/people/senate/sa/penny_wong) had proposed to delete the current exceptions and replace them with an [exception](http://www.openaustralia.org/senate/?gid=2014-10-29.57.1) of \"entering or remaining for a legitimate purpose\". ###Enter or stay in declared area offence The bill will make it an offence for someone to enter or stay in an area that the [Minister for Foreign Affairs](https://theyvoteforyou.org.au/people/representatives/curtin/julie_bishop) declares as a declared area. A whole country can be a declared area, which was [criticised](http://www.abc.net.au/news/2014-10-17/parliamentary-committee-recommends-passing-of-foreign-fighters-/5821514) by the [Joint Parliamentary Committee on Intelligence and Security](http://en.wikipedia.org/wiki/Parliamentary_Joint_Committee_on_Intelligence_and_Security). The current exceptions to this offence (in [proposed subsection 119.2(3)](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fs976_first-senate%2F0001;query=Id%3A%22legislation%2Fbills%2Fs976_first-senate%2F0001%22;rec=0)) include when a person is involved in: * [humanitarian aid](http://en.wikipedia.org/wiki/Humanitarian_aid) (but this has to be the sole act), * a court case, * work for an Australian government (state or federal), * work for a foreign government (so long as it's not violating Australian law), * work for the [United Nations](http://en.wikipedia.org/wiki/United_Nations), * journalism, and * visiting a family member. Read more about this new offence in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1415a/15bd034). ###Background to the bill A number of incidents happened before and after this bill's introduction. There was [one of the biggest counter-terrorism operations](http://www.abc.net.au/news/201",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 12,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-10-29/3"
+  },
+  {
+   "key": "federal-senate-3571",
+   "date": "2014-10-29",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment (Foreign Fighters) Bill 2014 - in Committee - Australian Greens amendments",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 10,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-10-29/4"
+  },
+  {
+   "key": "federal-senate-3572",
+   "date": "2014-10-29",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment (Foreign Fighters) Bill 2014 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 44,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 11,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-10-29/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-300909",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301250",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301251",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301253",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2014-10-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Counter-Terrorism Legislation Amendment (Foreign Fighters) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00116",
+   "assent_date": "2014-11-03"
+  }
+ ]
+}

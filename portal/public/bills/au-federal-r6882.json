@@ -1,0 +1,509 @@
+{
+ "key": "au-federal-r6882",
+ "title": "Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022",
+ "short_title": "Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-07-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2022-11-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-07-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-07-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-09-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6882_ems_805554bf-e778-4e8b-9820-9c463ff038bf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6882_ems_d146abbb-b154-4001-8cdb-e36e356cd6e8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6882_ems_5423a675-69b8-48a2-b69b-93cffe01949e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6882%22",
+   "document_date": "2022-07-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00050",
+   "document_date": "2022-11-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7789",
+   "date": "2022-10-26",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2022-10-25.9.2) to the usual second reading motion, which is \"*that the bill be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\" - parliamentary jargon for agreeing with the main idea of the bill. The amendment was introduced by West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that employers may become aware that an employee is experiencing family and domestic violence when accessing paid family and domestic violence leave; and* > > *(b) calls on the Government to:* > >> *(i) publish clear and comprehensive guidance to assist employers in understanding any obligations that they may have to inform authorities that an employee is experiencing family and domestic violence,* >> >> *(ii) clarify its intent regarding whether perpetrators are able to access paid family and domestic violence leave,* >> >> *(iii) provide greater details about the impact of the introduction of paid family and domestic violence leave on small and family businesses, particularly those that employ casual workers, and* >> >> *(iv) provide resources to ensure that small and family businesses are not:* >> >>> *(A) adversely affected by the administration of the scheme, or* >>> >>> *(B) worse off financially\".*",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "earliest": 31,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-10-26/3"
+  },
+  {
+   "key": "federal-senate-7798",
+   "date": "2022-10-26",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2022-10-26.210.1) introduced by Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie) (Jacqui Lambie Network), which means it failed. ### Amendment text Tasmanian Senator [Tammy Tyrrell](https://theyvoteforyou.org.au/people/senate/tasmania/tammy_tyrrell) (Jacqui Lambie Network) [explained the amendments](https://www.openaustralia.org.au/senate/?gid=2022-10-26.211.1): > *Calling this 'emergency leave' would not require you to self-identify as having experienced domestic violence. You'd only need it to be an emergency—an unforeseen emergency at home—that would prevent you from coming to work that day.* > > *[...]* > > *You should be entitled to privacy. You should be entitled to safety. No lawmaker should make you choose between them. That's us. We shouldn't be doing what we're doing. When you ask for domestic violence leave, even in asking the question, you're explaining why you need it, and it's absolutely none of your employer's business why you need safety in that moment. It's an emergency; get out of the way. When you ask for emergency leave, on the other hand, you're saying you're experiencing an emergency, one that prevents you from attending your work for a period of time. Your boss might ask for evidence, but all you need is evidence you're experiencing an emergency. That would be an improvement, but it wouldn't take long for businesses to realise that anybody who's requesting emergency leave is requesting what used to be called domestic violence leave. It's a rose by any other name.* > > *So the second bit of what I'm proposing is to combine domestic violence leave with compassionate leave. That's the leave you take when there has been a death in the family. Combining the two would mean you'd be eligible so long as there's a family emergency. The grounds for eligibility would be the same: if you're eligible for what's currently",
+   "stage": "In committee",
+   "ayes": 3,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "earliest": 23,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-10-26/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-420377",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-07-28",
+   "stage_hint": null,
+   "brief": "The minister introduced the Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022, which provides 10 days of paid leave for all employees—including casuals—to deal with family and domestic violence, with a phased commencement and additional lead time for small businesses. The bill ensures affected workers do not have to choose between their safety and their income, and covers up to 11 million employees."
+  },
+  {
+   "slug": "speech-421799",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-05",
+   "stage_hint": null,
+   "brief": "The minister argued that writing to the Fair Work Commission about upcoming legislation is routine, citing four letters on the annual wage review, aged-care wage review, family and domestic violence leave, and unilateral termination of agreements—all aimed at advancing wages and conditions—and contrasted this with former minister Christian Porter’s letter to cut penalty rates."
+  },
+  {
+   "slug": "speech-421863",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-05",
+   "stage_hint": null,
+   "brief": "The coalition argued the bill should be amended to match the Fair Work Commission's model of 10 days paid family and domestic violence leave for permanent employees with progressive accrual and base rate pay, rather than the government's broader version that includes casuals, upfront accrual, and full-rate pay. The coalition noted its previous $2 billion investment in women's safety and cited concerns from employer groups including Ai Group, ACCI, and COSBOA about the bill's costs and complexity for small businesses."
+  },
+  {
+   "slug": "speech-421864",
+   "speaker": "Amanda Louise Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-05",
+   "stage_hint": null,
+   "brief": "The speaker announced the Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022, which provides 10 days of paid leave per 12-month period to over 11 million Australian employees, including casuals, starting 1 February 2023 (1 August 2023 for small business). The speech referenced the 2004 murder of Carole Schaer and noted support from the Business Council of Australia, women's legal services, and the ACTU."
+  },
+  {
+   "slug": "speech-421865",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-422235",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022, which enshrines in the National Employment Standards the Fair Work Commission’s decision to provide 10 days of paid family and domestic violence leave for all employees, extending the entitlement from the previous five days of unpaid leave for award-covered workers."
+  },
+  {
+   "slug": "speech-422236",
+   "speaker": "Graham Douglas Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speech argued for the Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022, which provides 10 days of paid leave for victims of family and domestic violence as a universal workplace right in the National Employment Standards, noting that the average cost to flee a violent relationship is $18,000 and that the leave adds only 0.04c per hour worked for employers. The speaker also highlighted that similar legislation exists in New Zealand, the Philippines, Italy, and Canada."
+  },
+  {
+   "slug": "speech-422239",
+   "speaker": "Henry Pike",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022 provides important support for victims, but exceeds the independent Fair Work Commission’s recommended model by offering 10 days paid leave at full pay (including for casuals) and imposing costs on businesses, especially small ones, during a difficult economic period. The bill, commencing 1 February 2023 for most employers and 1 August 2023 for small businesses, expands an earlier Coalition-introduced unpaid leave entitlement; the speaker noted that one in four Australian women over 15 experience intimate partner violence, one woman is killed every 10 days, and 68% of victims are in paid work."
+  },
+  {
+   "slug": "speech-422240",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022, noting that 68% of women escaping domestic violence are employed and one in four women experience such violence, and that paid leave is vital to help them leave abusive partners without losing financial security or their job."
+  },
+  {
+   "slug": "speech-422243",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022, which provides 10 days of paid leave for full-time, part-time and casual employees, citing statistics that one in four women and one in 13 men experience intimate partner violence, Indigenous women are 35 times more likely to be hospitalised, and one woman is killed every 10 days. The speaker also announced related government investments including $1.6 billion for 4,000 social housing properties and $100 million for crisis housing for women and children fleeing violence."
+  },
+  {
+   "slug": "speech-422245",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022 is a necessary and long-overdue reform, replacing five days of unpaid leave with 10 days of paid leave for all employees including casuals, affecting over 11 million workers. Concrete positions include extending the definition of family and domestic violence to cover current and former intimate partners and household members, with the scheme commencing 1 February 2023 for most employees and August 2023 for small businesses."
+  },
+  {
+   "slug": "speech-422246",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022 provides all employees covered by the National Employment Standards with 10 days paid leave at full pay for those experiencing family or domestic violence, expands the definition to include former intimate partners and unrelated household members, extends the entitlement to casual employees, and delays implementation for small businesses. The speaker noted that in her electorate of Indi, women in Wodonga and Wangaratta experience family violence at a rate 33% higher than the Victorian average and in Benalla 76% higher, and referenced a PricewaterhouseCoopers estimate that violence against women by partners costs $12.6 billion per year."
+  },
+  {
+   "slug": "speech-422450",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022 was supported as critical for giving domestic violence victims paid time off to manage safety, housing and legal matters without losing income or employment, including casual employees. The legislation would also generate data on domestic violence’s impact on productivity and GDP, which the speaker argued could drive better future policy."
+  },
+  {
+   "slug": "speech-422452",
+   "speaker": "Sophie Scamps",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The MP for Mackellar argued in support of the Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022, which provides 10 days of paid leave for all employees including casuals, citing that one in four Australian women experience partner violence and that domestic violence is the leading cause of homelessness in her electorate. She noted research showing only 1.5% of women and 0.5% of men are likely to access the leave, and welcomed a six-month grace period for small businesses."
+  },
+  {
+   "slug": "speech-422454",
+   "speaker": "Pat Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Paid Family And Domestic Violence Leave) Bill 2022, arguing for 10 days of paid leave including for casual employees, while noting small business concerns about costs and suggesting further consideration of pay rates and casual worker provisions."
+  },
+  {
+   "slug": "speech-422455",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The member argued that the Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022 is a crucial reform after a 10-year campaign but stressed that addressing root causes such as gender inequality and outdated stereotypes, along with prevention and perpetrator programs, is also necessary."
+  },
+  {
+   "slug": "speech-422456",
+   "speaker": "Adam Paul Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The Greens supported the Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022, which provides 10 days of paid leave, and argued that all employees—full-time, part-time, and casual—should have full access without accrual, with Senator Larissa Waters proposing further improvements in the Senate."
+  },
+  {
+   "slug": "speech-422457",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022 provides 10 days paid leave per year from 1 February 2023 for all employees, including casuals, with small businesses given until August 2023 to comply, covering over 11 million Australians. The bill fulfills a Labor election commitment and follows a decade-long campaign by unions and advocates."
+  },
+  {
+   "slug": "speech-422458",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022 but argued it creates inequities for small and microbusinesses, noting 700,000 sole traders would face financial strain. They proposed the government fund the leave like parental leave, rather than placing the cost on employers, and raised concerns about employer liability when leave is granted without police reporting."
+  },
+  {
+   "slug": "speech-422459",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022 introduces 10 days of paid family and domestic violence leave as a minimum employment standard, covering all employees including 2.6 million casual workers, with leave provided upfront. The government also announced investments of $3 billion to end violence against women and children, $1.3 billion for the National Plan, $1.6 billion for social housing, $100 million for crisis accommodation, $157 million for 500 additional community sector workers, and $77 million for consent education, along with the appointment of a Family, Domestic and Sexual Violence Commissioner."
+  },
+  {
+   "slug": "speech-422460",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the 10 days paid domestic violence leave bill as a good first step but argued it is insufficient, calling for expanded leave, nationally consistent definitions of non-physical abuse, better resourcing of support services, and action on the $13.6 billion annual economic cost of domestic violence. They noted 427 domestic violence assaults and 229 breached AVOs in their electorate of Warringah over one year."
+  },
+  {
+   "slug": "speech-422462",
+   "speaker": "Rowan Eric Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that paid family and domestic violence leave should be funded by taxpayers, not employers, to avoid disincentives for hiring women and casual employees; they opposed the government’s proposal to give casual workers 10 days leave from day one and warned of potential negative impacts on small businesses."
+  },
+  {
+   "slug": "speech-422463",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Paid Family and Domestic Violence Leave) Bill 2022 provides 10 days of paid domestic violence leave, available upfront with no waiting period and no requirement to record it on pay slips. The leave covers the rate employees would have normally received, and the bill includes a phased commencement of six to 12 months to support small businesses."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fair Work Amendment (Paid Family and Domestic Violence Leave) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00050",
+   "assent_date": "2022-11-09"
+  }
+ ]
+}

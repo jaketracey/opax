@@ -1,0 +1,277 @@
+{
+ "key": "au-federal-r6163",
+ "title": "Veterans’ Entitlements Amendment Bill 2018",
+ "short_title": "Veterans’ Entitlements Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-08-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans' Affairs",
+ "status": "passed",
+ "status_as_of": "2018-09-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6163%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6163%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6163%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6163%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6163%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6163%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6163%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6163%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6163%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6163%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6163%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6163%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6163_ems_a6c03cf5-a7c3-476b-a390-f8ca26729edf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6163_ems_3bc59c30-9ddd-4de4-a10f-b33e4bfecb19%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6163%22",
+   "document_date": "2018-08-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00115",
+   "document_date": "2018-09-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5359",
+   "date": "2018-09-11",
+   "house": "representatives",
+   "question": "The majority voted against a motion introduced by Labor MP [Amanda Rishworth](https://theyvoteforyou.org.au/people/representatives/kingston/amanda_rishworth) (Kingston), which means it failed. This motion would have amended the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) \"that the bill be read a second time\" (which was parliamentary jargon \"that the main idea of the bill be agreed to\") with the words below. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > *\"whilst not declining to give the bill a second reading, the House notes with concern that the Government has undermined veterans' access to health services\".*",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-09-11/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-368008",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The Veterans' Entitlements Amendment Bill 2018 maintains the existing practice of recovering pension overpayments from bereavement payments to veterans' families through a single administrative process, providing legislative certainty for past and future recoveries."
+  },
+  {
+   "slug": "speech-368614",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-11",
+   "stage_hint": null,
+   "brief": "The Veterans' Entitlements Amendment Bill 2018 corrects an error in bereavement payment administration, allowing the Department of Veterans' Affairs to deduct overpayments from bereavement payments rather than issuing separate recovery notices. Labor supported the bill but moved an amendment noting the government's Medicare rebate freeze since 2014 has eroded DVA fee schedules, citing a $102.05 per session gap for clinical psychologists and a $149.55 gap for non-clinical psychologists, causing providers to turn away veterans."
+  },
+  {
+   "slug": "speech-368617",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-11",
+   "stage_hint": null,
+   "brief": "The speaker backed the Veterans' Entitlements Amendment Bill 2018, which retrospectively corrects a 2005 drafting oversight by allowing overpayments of the service pension to be debited against bereavement payments. He also highlighted government support for veterans, including the extended family support package and the extension of the Long Tan Bursary to grandchildren of Vietnam veterans."
+  },
+  {
+   "slug": "speech-368619",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Entitlements Amendment Bill 2018, which reinstates a provision allowing the Department of Veterans' Affairs to offset pension overpayments from bereavement payments in a single streamlined transaction, a practice inadvertently removed in 1995 under Labor. The speaker also noted that the Ex-Service Organisation Round Table (ESORT) had no concerns, and highlighted local RSL sub-branches in the Moore electorate, including the Joondalup City RSL serving an estimated 5,500 ex-service personnel."
+  },
+  {
+   "slug": "speech-368621",
+   "speaker": "Ken O'Dowd",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-11",
+   "stage_hint": null,
+   "brief": "The Veterans' Entitlements Amendment Bill 2018, with bipartisan support, reinserts provisions to offset pension overpayments from bereavement payments in one streamlined transaction, and the government will establish an Australian veterans' covenant."
+  },
+  {
+   "slug": "speech-368768",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-11",
+   "stage_hint": null,
+   "brief": "The Veterans' Entitlements Amendment Bill 2018 is an accounting mechanism to allow the Department of Veterans' Affairs to reconcile overpayments that occur after a veteran's death, fixing an administrative issue from 1995 while maintaining current practice with minimal impact on grieving families. The speaker also highlighted the need for continued support for veterans' mental health and assimilation, citing accommodation built in Richmond with the RSL Victoria."
+  },
+  {
+   "slug": "speech-368769",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-11",
+   "stage_hint": null,
+   "brief": "The speech supports the Veterans' Entitlements Amendment Bill 2018, which adjusts bereavement payments to prevent overpayments to surviving partners. It criticises the government's freeze on Medicare indexation since 2014, arguing it has caused health professionals to turn away DVA clients due to inadequate rebates, and calls for the freeze to be lifted."
+  },
+  {
+   "slug": "speech-368770",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-11",
+   "stage_hint": null,
+   "brief": "The Veterans' Entitlements Amendment Bill 2018 simplifies final payments to bereaved families by deducting overpaid pension from the bereavement payment instead of requiring debt recovery. The government also allocated $31 million for veterans' mental health and $8.3 million for employment support, following 84 veteran suicides in 2017."
+  },
+  {
+   "slug": "speech-368771",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-11",
+   "stage_hint": null,
+   "brief": "Labor supported the Veterans' Entitlements Amendment Bill 2018 and proposed an amendment arguing that the ongoing Medicare freeze has left the DVA fee schedule unchanged since 2014, causing nearly 30% of specialists to refuse treating veterans and reducing access to health services."
+  },
+  {
+   "slug": "speech-368773",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-11",
+   "stage_hint": null,
+   "brief": "The member supported the Veterans' Entitlements Amendment Bill 2018 and the shadow minister's second reading amendment, arguing that frozen Medicare rebates since 2014 have reduced veterans' access to health services, with nearly 30% of clinicians turning away DVA clients. He also announced Labor's pledge to legislate a formal agreement ensuring full support for ADF personnel during and after service."
+  },
+  {
+   "slug": "speech-368774",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-11",
+   "stage_hint": null,
+   "brief": "The Veterans' Entitlements Amendment Bill 2018 reinstates a provision to offset pension overpayment from bereavement payments. A soldier settlement scheme for returning veterans in agriculture was proposed, citing grain grower Ian Hastings, and criticism was made of the lack of support for veterans' injuries, including a case where a $4,000 knee reconstruction was not covered."
+  },
+  {
+   "slug": "speech-368775",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-11",
+   "stage_hint": null,
+   "brief": "The Veterans' Entitlements Amendment Bill 2018 maintains current bereavement payment practices—14 weeks of income support for surviving partners—and streamlines recovery of overpayments into a single administrative process to avoid disturbing grieving families. The government also noted that only 0.1% of veterans complained about health service access, with DVA providing alternative arrangements if needed."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Veterans’ Entitlements Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00115",
+   "assent_date": "2018-09-25"
+  }
+ ]
+}

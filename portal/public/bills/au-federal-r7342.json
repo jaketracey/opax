@@ -1,0 +1,540 @@
+{
+ "key": "au-federal-r7342",
+ "title": "Universities Accord (Cutting Student Debt by 20 Per Cent) Bill 2025",
+ "short_title": "Universities Accord (Cutting Student Debt by 20 Per Cent) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2025-08-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-07-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7342_ems_816f4e87-9ce3-45df-889a-180a5e980be6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7342%22",
+   "document_date": "2025-07-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00030",
+   "document_date": "2025-08-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-23",
+  "sentences": [
+   "This bill would cut certain student loan debts by 20 per cent and make the repayment system fairer.",
+   "It would reduce debts incurred on or before 1 June 2025 under several student loan schemes, and raise the minimum repayment threshold to $67,000 in 2025-26 with a marginal repayment method.",
+   "The debt reduction would affect 3 million Australians, with about 70% of HELP debt repayers aged 35 or younger."
+  ],
+  "changes": [
+   "Reduces certain student loan debts by 20 per cent.",
+   "Increases the minimum repayment threshold from $54,435 in 2024-25 to $67,000 in 2025-26.",
+   "Introduces a marginal repayment system where compulsory repayments apply only to income above the new threshold."
+  ],
+  "affected": "Australians with student loan debts under the Higher Education Support Act 2003, VET Student Loans Act 2016, Australian Apprenticeship Support Loans Act 2014, Student Assistance Act 1973, and Social Security Act 1991.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:03:16Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9655",
+   "date": "2025-07-30",
+   "house": "senate",
+   "question": "Universities Accord (Cutting Student Debt by 20 per Cent) Bill 2025 - Second Reading - Student debts, paid placements",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-30/1"
+  },
+  {
+   "key": "federal-senate-9656",
+   "date": "2025-07-30",
+   "house": "senate",
+   "question": "Universities Accord (Cutting Student Debt by 20 per Cent) Bill 2025 - in Committee - Wipe all student debt",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-30/2"
+  },
+  {
+   "key": "federal-senate-9657",
+   "date": "2025-07-30",
+   "house": "senate",
+   "question": "Universities Accord (Cutting Student Debt by 20 per Cent) Bill 2025 - in Committee - Cap HECS indexation at 3%",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-30/3"
+  },
+  {
+   "key": "federal-senate-9658",
+   "date": "2025-07-30",
+   "house": "senate",
+   "question": "Universities Accord (Cutting Student Debt by 20 per Cent) Bill 2025 - in Committee - Remove indexation from student debts",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-30/4"
+  },
+  {
+   "key": "federal-senate-9659",
+   "date": "2025-07-30",
+   "house": "senate",
+   "question": "The majority voted against the [amendment (1) on sheet 3371](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7342_amend_8571c10e-d411-4e9c-903d-75a0b831359e%22;rec=0) introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens), which means it failed. Senator Faruqi [explained that](https://www.openaustralia.org.au/senate/?gid=2025-07-30.51.1): > *This amendment changes the way indexation is calculated on student debt, because applying indexation to a debt that has already been repaid is plainly unreasonable and unjust. Repayments must be properly counted before any indexation is added. This amendment changes the timing of indexation and offers a modest but meaningful shift towards fairness.*",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-30/5"
+  },
+  {
+   "key": "federal-senate-9670",
+   "date": "2025-07-31",
+   "house": "senate",
+   "question": "Universities Accord (Cutting Student Debt by 20 per cent) Bill 2025 - in Committee - Maximum student contribution amounts for places",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-31/2"
+  },
+  {
+   "key": "federal-senate-9671",
+   "date": "2025-07-31",
+   "house": "senate",
+   "question": "Universities Accord (Cutting Student Debt by 20 per Cent) Bill 2025 - Adoption of Report - Adopt the Committee report",
+   "stage": "Adoption of Report",
+   "ayes": 36,
+   "noes": 3,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-31/3"
+  },
+  {
+   "key": "federal-senate-9672",
+   "date": "2025-07-31",
+   "house": "senate",
+   "question": "Universities Accord (Cutting Student Debt by 20 per Cent) Bill 2025 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 36,
+   "noes": 3,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-31/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1195112",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195568",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195569",
+   "speaker": "Zoe McKenzie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-07-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195603",
+   "speaker": "Matt Gregg",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195632",
+   "speaker": "Madonna Jarrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195671",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195701",
+   "speaker": "Matt Burnell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195711",
+   "speaker": "Kara Cook",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Universities Accord (Cutting Student Debt by 20 Per Cent) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00030",
+   "assent_date": "2025-08-02"
+  }
+ ]
+}

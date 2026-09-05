@@ -1,0 +1,219 @@
+{
+ "key": "au-federal-r6091",
+ "title": "Education and Other Legislation Amendment (VET Student Loan Debt Separation) Bill 2018",
+ "short_title": "Education and Other Legislation Amendment (VET Student Loan Debt Separation) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2018-09-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6091%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6091%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6091%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6091%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6091%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6091%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6091%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6091%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6091%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6091%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6091%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6091%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6091%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6091_ems_9acf27b8-fdfd-4792-88af-2b9bfe62e468%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6091_ems_34079d16-c24b-40ab-ac65-aeeb5852b8d0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6091_ems_3ea2972b-356b-4e65-a190-efde19159cb7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6091_ems_6d450cec-1a8f-45f0-9832-f0615d903941%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6091%22",
+   "document_date": "2018-03-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00116",
+   "document_date": "2018-09-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "This bill separates VET student loan debts from other Higher Education Loan Program (HELP) debts and makes them a separate income-contingent loan under the VET Student Loans Act 2016.",
+   "It moves the legal basis for these debts from the Higher Education Support Act 2003 into the VET Student Loans Act, with new repayment rules modelled on existing HELP provisions.",
+   "Debts incurred before 1 July 2019 remain under the old system, while those from that date onward are managed under the new Act."
+  ],
+  "changes": [
+   "Creates a separate category of VET student loan debts called VETSL debts, administered under the VET Student Loans Act.",
+   "Requires repayment of VETSL debts to start only after all HELP debts are repaid.",
+   "Applies the same repayment thresholds, rates, and indexation as for HELP debts.",
+   "Requires overseas residents with VETSL debts to pay a levy to the Commonwealth."
+  ],
+  "affected": "Students with VET student loans and the Department of Education and Training.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:29:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-361541",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The bill separates VET student loan debts from other HELP debts to improve transparency and fiscal reporting, and updates the course list process to allow automatic approval for superseded or reaccredited courses."
+  },
+  {
+   "slug": "speech-368184",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the two bills separating VET student loan debt and updating overseas repayment arrangements, but argued the government's cuts—$3 billion from TAFE, 140,000 fewer apprentices—have caused a crisis. The speaker announced Labor would establish a commission of review into post-secondary education, guarantee at least two-thirds of public funding to TAFE, waive fees for 100,000 TAFE students, invest $100 million in TAFE facilities, require one in ten jobs on Commonwealth projects be apprentices, and create 10,000 pre-apprenticeships and 20,000 adult apprenticeships."
+  },
+  {
+   "slug": "speech-368185",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the VET Student Loan Debt Separation Bill but argued it was a minor tweak that fails to address systemic problems in vocational education, including $3 billion in cuts to TAFE under the Abbott-Turnbull government. They announced Labor's plan for a post-secondary education inquiry and policies to guarantee secure funding for TAFE, including waiving fees for 100,000 students and investing $100 million."
+  },
+  {
+   "slug": "speech-368186",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speaker criticised the VET Student Loan Debt Separation Bill as minor tinkering that fails to address systemic issues, and announced Labor’s commitments to direct at least two-thirds of government funding to TAFE, establish a post-school education review, reverse $637 million in cuts, invest $100 million in TAFE, and require one in ten jobs on Commonwealth-funded projects to be apprentices."
+  },
+  {
+   "slug": "speech-368188",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the VET Student Loan Debt Separation Bill 2018 or the Student Loans (Overseas Debtors Repayment Levy) Amendment Bill 2018, but argued they create a fifth separate debt pot, complicate the system, and fail to address systemic VET issues, citing a $3 billion cut to skills funding and 140,000 fewer apprenticeships under the current government. As an alternative, a future Labor government would establish a review into post-school education, guarantee at least two-thirds of public VET funding to TAFE, reverse the $637 million skills budget cut, invest $100 million in rebuilding TAFE, and require one in ten jobs on Commonwealth-funded projects to be apprentices."
+  },
+  {
+   "slug": "speech-368191",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The Education and Other Legislation Amendment (VET Student Loan Debt Separation) Bill 2018 and the Student Loans (Overseas Debtors Repayment Levy) Amendment Bill 2018 establish VET student loans as a separate income-contingent loan under the VET Student Loans Act, with repayment thresholds and rates aligned to HELP loans, and require overseas debtors to repay as per current arrangements. The speaker tabled a correction to the explanatory memorandum, responded to committee reports, and will move parliamentary amendments to delay commencement of some items and provide for a renewable HELP balance, along with minor technical amendments."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Education and Other Legislation Amendment (VET Student Loan Debt Separation) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00116",
+   "assent_date": "2018-09-25"
+  }
+ ]
+}

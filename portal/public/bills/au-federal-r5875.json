@@ -1,0 +1,275 @@
+{
+ "key": "au-federal-r5875",
+ "title": "Veterans’ Affairs Legislation Amendment (Budget Measures) Bill 2017",
+ "short_title": "Veterans’ Affairs Legislation Amendment (Budget Measures) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans' Affairs",
+ "status": "passed",
+ "status_as_of": "2017-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5875%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5875%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5875%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5875%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5875%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5875%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5875%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5875%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5875%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5875%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5875%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5875%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5875_ems_411eec2a-6201-4aa1-bbbd-7ca3a4bac8c6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5875%22",
+   "document_date": "2017-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00059",
+   "document_date": "2017-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-24",
+  "sentences": [
+   "The bill would expand health coverage for Australian veterans and civilians affected by British nuclear tests and the British Commonwealth Occupation Force.",
+   "It would change work history rules for disability pensions to require 10 continuous years of work in any field, and allow early access to rehabilitation programs before liability is accepted.",
+   "The bill would amend the Australian Participants in British Nuclear Tests (Treatment) Act 2006 to provide treatment for all conditions, not just malignant neoplasia."
+  ],
+  "changes": [
+   "Amends the Australian Participants in British Nuclear Tests (Treatment) Act 2006 to extend full health coverage to Australian veterans of the British Commonwealth Occupation Force and civilians present at nuclear test areas.",
+   "Removes outdated work history restrictions for Special and Intermediate Rates of Disability Pension, replacing them with a requirement of 10 continuous years of work in any field.",
+   "Inserts instrument-making powers into the Safety, Rehabilitation and Compensation (Defence-related Claims) Act 1988 and the Military Rehabilitation and Compensation Act 2004 to allow the Military Rehabilitation and Compensation Commission to determine eligibility for an early access rehabilitation pilot program."
+  ],
+  "affected": "Australian participants in British nuclear tests, Australian veterans of the British Commonwealth Occupation Force, civilians present at British nuclear test areas, and veterans seeking disability pensions or rehabilitation services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:17:34Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-346820",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-24",
+   "stage_hint": null,
+   "brief": "The bill expands free mental health treatment to all conditions for veterans and defence personnel without requiring proof of service‑relatedness, extends Veterans and Veterans Families Counselling Service access to families and former partners, provides $9.8 million for suicide prevention pilots, invests $166.6 million in DVA system upgrades, grants Gold Card health coverage to British Commonwealth Occupation Force and British nuclear test veterans, and reforms work test requirements for disability pensions."
+  },
+  {
+   "slug": "speech-348102",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "Labor supported the Veterans' Affairs Legislation Amendment (Budget Measures) Bill 2017, which expands full health coverage to British nuclear test participants, BCOF veterans, and affected civilians including Indigenous people and pastoralists, updates work history requirements for disability pensions, and establishes a six-month pilot program for early rehabilitation access for 100 veterans."
+  },
+  {
+   "slug": "speech-348103",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Veterans' Affairs Legislation Amendment (Budget Measures) Bill 2017 provides medical treatment and gold cards to Australian participants of British nuclear tests and the British Commonwealth Occupation Force, removes outdated work history restrictions for disability pensions, and enables early access to rehabilitation through a pilot program. The bill implements three 2017 budget announcements, with the government investing an additional $350 million to support veterans."
+  },
+  {
+   "slug": "speech-348104",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The member supported the Veterans' Affairs Legislation Amendment (Budget Measures) Bill 2017, focusing on a pilot program providing early rehabilitation services to veterans while claims are processed. She highlighted systemic failures in veteran transition and mental health support, cited a veteran's criticism of bureaucratic delays, and called for cultural change including access to base amenities, employment recognition, and reduced red tape."
+  },
+  {
+   "slug": "speech-348106",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Budget Measures) Bill 2017, arguing it addresses long-overdue recognition of injustices from British atomic testing (1952–1963) at Montebello Islands, Emu Field, and Maralinga. The speaker noted fewer than 700 affected veterans remain, cited the case of fire safety officer Mick Lennon, and criticised governments for denying compensation and medical support while enforcing secrecy agreements."
+  },
+  {
+   "slug": "speech-348107",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Budget Measures) Bill 2017, announcing an additional $350 million in the budget and free mental health treatment for all full-time Australian Defence Force veterans. Specific measures include $9.8 million for suicide prevention, $2.7 million for a veterans' employment program, $166 million for DVA ICT modernisation, $18 million in energy payments, and gold cards for British nuclear test veterans."
+  },
+  {
+   "slug": "speech-348108",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the Veterans Affairs Legislation Amendment (Budget Measures) Bill 2017 as a long-overdue measure to provide better health care for those affected by British nuclear tests in Australia, noting that 30% of test participants died of cancer. They also criticised the government for boycotting a UN treaty to ban nuclear weapons and for supplying uranium to Ukraine."
+  },
+  {
+   "slug": "speech-348109",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Budget Measures) Bill 2017, which extends non-liability mental health treatment to all past and current serving members, aligns incapacity payments with the age pension age, and provides health coverage to British nuclear test veterans, including Anangu people and other Indigenous Australians affected by the Maralinga tests. The speaker also acknowledged the dedication of the National Boer War Memorial and named contributors including Colonel John Haynes, Lieutenant Colonel Ron McElwaine, and others."
+  },
+  {
+   "slug": "speech-348110",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The bill expands treatment eligibility to all British Nuclear Test and British Commonwealth Occupied Force veterans and civilians, updates work history requirements for disability pensions to ten years in any field, and enables early access to rehabilitation; all three measures are supported. The speaker noted the exclusion of veterans' wives, widows, and children from expanded coverage and called for improving the DVA claims process to reduce delays."
+  },
+  {
+   "slug": "speech-348111",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the Veterans' Affairs Legislation Amendment (Budget Measures) Bill 2017, which extends full health coverage for all conditions to approximately 1,800 British nuclear test participants, 1,100 British Commonwealth Occupation Force participants, and civilians—including Indigenous Australians—exposed to radiation from British nuclear tests in Australia between 1952 and 1963. The bill also updates work history restrictions for disability pensions and enables early access to rehabilitation services."
+  },
+  {
+   "slug": "speech-348112",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "Schedule 1 of the Veterans' Affairs Legislation Amendment (Budget Measures) Bill 2017 provides full health coverage for all conditions to participants in the British Nuclear Testing Program, including the British Commonwealth Occupation Force, civilians, and Indigenous Australians such as the Pitjantjatjara and Yankunytjatjara peoples. The speaker noted around 16,000 Australians served in the British Commonwealth Occupation Force and welcomed the amendments as recognition for long-endured consequences."
+  },
+  {
+   "slug": "speech-348113",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Budget Measures) Bill, welcomed mental health funding of $92 million and $145 million annually, and called on the government to reconsider removing the energy supplement for veterans and war widows. They also expressed concern about insufficient staff in the Defence portfolio."
+  },
+  {
+   "slug": "speech-348114",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Budget Measures) Bill 2017, which expands eligibility for treatment to a broader range of civilians and veterans affected by British nuclear tests, including Indigenous people near Maralinga, Emu Field and the Montebello Islands. He highlighted that this support comes 60 years too late for many affected individuals, such as Yankunytjatjara elder Yami Lester, who was blinded by a nuclear test black mist, and expressed regret for the delayed recognition while thanking the minister."
+  },
+  {
+   "slug": "speech-348115",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The speech supported the Veterans' Affairs Legislation Amendment (Budget Measures) Bill 2017, which legislates treatment for all conditions for British nuclear test participants and British Commonwealth Occupation Force veterans, updates work history restrictions for disability pensions, and enables a six-month early access to rehabilitation pilot program for 100 participants over the next 12 months. The speaker also acknowledged Minister Tehan and the shadow minister for Kingston for their work on the bill."
+  },
+  {
+   "slug": "speech-348116",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The bill grants gold card health coverage to British nuclear test participants and BCOF veterans (costing $133.1 million for an estimated 2,800 people), removes outdated work history restrictions for disability pensions, and funds a six‑month rehabilitation pilot for 100 participants."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Veterans' Affairs Legislation Amendment (Budget Measures) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00059",
+   "assent_date": "2017-06-22"
+  }
+ ]
+}

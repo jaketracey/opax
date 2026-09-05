@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6730",
+ "title": "Ransomware Payments Bill 2021",
+ "short_title": "Ransomware Payments Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-06-21",
+ "originating_house": "representatives",
+ "sponsor": "WATTS, Tim, MP",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10794",
+ "portfolio": "(s) WATTS, Tim, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-02-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6730%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6730%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6730%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6730_ems_d739fac8-4027-422a-ae6a-b4c9af752b4c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6730%22",
+   "document_date": "2021-06-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-21",
+  "sentences": [
+   "This bill would force some organisations to report payments made to hackers who have locked their computer systems.",
+   "Organisations that pay a ransom would have to tell the Australian Cyber Security Centre details about the attack, the attacker and the payment.",
+   "The information collected would be shared with law enforcement, used to shape policy and given to businesses in a de-identified form through a threat-sharing platform."
+  ],
+  "changes": [
+   "Creates a duty to notify the Australian Cyber Security Centre about ransomware payments.",
+   "Requires organisations to disclose information about the attack, the attacker and the payment.",
+   "Allows the centre to share de-identified information with the private sector."
+  ],
+  "affected": "Commonwealth entities, state and territory agencies, corporations and partnerships that make ransomware payments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-409057",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The Ransomware Payments Bill would require Australian organisations to notify the Australian Cyber Security Centre before making ransomware payments. The bill was introduced arguing the Morrison government has failed to act on the escalating ransomware threat, which has increased by 200% and cost an estimated $1 billion annually."
+  }
+ ],
+ "acts": []
+}

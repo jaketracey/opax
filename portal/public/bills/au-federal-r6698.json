@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6698",
+ "title": "Family Law Amendment (Federal Family Violence Orders) Bill 2021",
+ "short_title": "Family Law Amendment (Federal Family Violence Orders) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-03-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6698%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6698%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6698%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6698_ems_728be575-6d94-44da-a7a1-e03e63d1b866%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6698%22",
+   "document_date": "2021-03-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-405233",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The government introduced the Family Law Amendment (Federal Family Violence Orders) Bill to establish federal family violence orders in family law courts, and acknowledged three Indigenous women—Jacinta Price, Cheron Long and Becky Long—visiting parliament to speak on women's safety in Indigenous communities."
+  }
+ ],
+ "acts": []
+}

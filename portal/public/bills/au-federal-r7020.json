@@ -1,0 +1,142 @@
+{
+ "key": "au-federal-r7020",
+ "title": "Australian Security Intelligence Organisation Amendment Bill 2023",
+ "short_title": "Australian Security Intelligence Organisation Amendment Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2023-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7020%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7020%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7020%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7020%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7020%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7020%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7020%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7020%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7020%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7020%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7020%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7020_ems_881fb571-90e0-4162-920d-bcdf8f8fc23b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7020_ems_f5b1d0cb-8727-4714-aaaf-a79bdef492ad%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7020%22",
+   "document_date": "2023-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00033",
+   "document_date": "2023-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-29",
+  "sentences": [
+   "The bill would give ASIO central responsibility for issuing and managing Australia's highest-level security clearances.",
+   "ASIO would gain new powers to make security clearance decisions for all government personnel, not just its own employees, and to share information with sponsoring agencies.",
+   "The bill would create a review framework including internal and external merits review and an independent review mechanism, with exceptions to protect sensitive operations."
+  ],
+  "changes": [
+   "ASIO becomes the central authority for issuing and maintaining top-level security clearances.",
+   "ASIO can make security clearance decisions for non-ASIO personnel.",
+   "ASIO and sponsoring agencies can share information about clearance holders' suitability.",
+   "The bill sets up a merits review framework for security clearance decisions.",
+   "The bill creates an independent review mechanism for security clearance suitability assessments.",
+   "The bill disapplies Part IV of the ASIO Act for communications under the new Part IVA."
+  ],
+  "affected": "People who hold or apply for Australia's highest-level security clearances, and the Commonwealth agencies that sponsor them.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Australian Security Intelligence Organisation Amendment Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00033",
+   "assent_date": "2023-06-28"
+  }
+ ]
+}

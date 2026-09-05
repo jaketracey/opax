@@ -1,0 +1,851 @@
+{
+ "key": "au-federal-r5549",
+ "title": "Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015",
+ "short_title": "Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5549_ems_f2f9c061-45d9-4f1f-b8f9-eb140cdc08ae%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5549%22",
+   "document_date": "2015-09-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00170",
+   "document_date": "2015-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-3973",
+   "date": "2015-11-10",
+   "house": "senate",
+   "question": "Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 - in Committee - General purpose financial report",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 41,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-10/2"
+  },
+  {
+   "key": "federal-senate-3979",
+   "date": "2015-11-11",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](http://www.openaustralia.org.au/senate/?gid=2015-11-11.166.1) moved by Greens Senator [Peter Whish-Wilson](https://theyvoteforyou.org.au/people/senate/tasmania/peter_whish-wilson). The amendments will now go to the House of Represenatives for them to consider before they can become part of the bill. ### What were the amendments? The amendments give the [Australian Taxation Office](https://en.wikipedia.org/wiki/Australian_Taxation_Office) a discretion to prevent the disclosure of tax information of large Australian-owned private companies if the ATO thinks releasing that information would be prejudicial to the companies' commercial negotiations. ### What does the bill do? The [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5549) strengthens the laws against [tax avoidance](https://en.wikipedia.org/wiki/Tax_avoidance) for certain companies. For example, it introduces anti-avoidance measures to deal with [multinational companies](https://en.wikipedia.org/wiki/Multinational_corporation) with an annual global income of more than $A1 billion that use schemes to avoid having to pay tax in Australia or at least reduce that tax to a minimum. To learn more about the bill, see the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1516a/16bd045).",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 40,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-11/2"
+  },
+  {
+   "key": "federal-representatives-3980",
+   "date": "2015-11-12",
+   "house": "representatives",
+   "question": "Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 - Consideration of Senate Message - Disagree with the Senate's amendments",
+   "stage": "Consideration of Senate message",
+   "ayes": 78,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-11-12/1"
+  },
+  {
+   "key": "federal-senate-4042",
+   "date": "2015-12-03",
+   "house": "senate",
+   "question": "The majority [voted in favour](http://www.openaustralia.org.au/senate/?gid=2015-12-03.184.4) of not insisting on [amendment (3)](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr5549_sched_df449ead-d215-4095-a09e-f50b298518f1%22;rec=0), which the House of Representatives had disagreed with. ### What does this mean? While considering [the bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5549), the Senate proposed amendments, including amendment (3). However, the House of Represenatives disagreed with amendment (3) and so it was now up to the Senate to decide on whether to insist on the amendment (in which case, the bill would fail) or to accept the House's opinion. ### What was amendment (3) and why did the House disagree with it? The House of Representative's [Reasons for Disagreeing to the Senate Amendments](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr5549_sched_a37d0937-144e-4982-8aa0-aa826fafecd5%22;rec=0) explained that: > *[Amendments (1) and (3)] ... provide the [Australian Taxation Office](https://en.wikipedia.org/wiki/Australian_Taxation_Office) with a discretion to prevent the disclosure of the tax information of large Australian-owned private companies if it considers that the release of such information would be prejudicial to that entity’s commercial negotiations.* > *The intention of this Bill is similar to the intent of the House of Representatives in passing the [Tax and Superannuation Laws Amendment (Better Targeting the Income Tax Transparency Laws) Act 2015](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5518). That is, to balance the need for greater public transparency in the tax affairs of large companies while not jeopardising the privacy and competitiveness of Australian owned private companies.* >",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "earliest": 6,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-12-03/5"
+  },
+  {
+   "key": "federal-senate-4043",
+   "date": "2015-12-03",
+   "house": "senate",
+   "question": "Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 - in Committee - Tax information of companies earning over $100m",
+   "stage": "In committee",
+   "ayes": 21,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "earliest": 6,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-12-03/6"
+  },
+  {
+   "key": "federal-senate-4044",
+   "date": "2015-12-03",
+   "house": "senate",
+   "question": "Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 - in Committee - Tax information of some companies earning over $200m",
+   "stage": "In committee",
+   "ayes": 7,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "earliest": 6,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-12-03/7"
+  },
+  {
+   "key": "federal-senate-4045",
+   "date": "2015-12-03",
+   "house": "senate",
+   "question": "Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 - in Committee - Tax information of companies earning over $200m",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "earliest": 6,
+    "member": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-12-03/8"
+  },
+  {
+   "key": "federal-senate-4046",
+   "date": "2015-12-03",
+   "house": "senate",
+   "question": "Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 - in Committee - Remove 'grandfathering' provisions",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "earliest": 6,
+    "member": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-12-03/9"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-320846",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment noting the bill's unquantified revenue impact and called for the government to adopt Labor's fully-costed multinational tax package raising $7.2 billion over a decade; the bill introduces rules for significant global entities, strengthens anti-avoidance measures, and implements OECD transfer-pricing standards, but Labor argued it fails to cost revenue or address debt deduction loopholes."
+  },
+  {
+   "slug": "speech-320848",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 would introduce OECD transfer pricing documentation and country-by-country reporting, double administrative penalties for companies with over $1 billion global revenue that engage in tax avoidance, and noted the government is applying GST to offshore digital services (expected $350 million) and allocating $128 million for a task force on serious financial crime."
+  },
+  {
+   "slug": "speech-320849",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 and Dr Leigh's amendment, arguing that multinational corporations like Volcafe, BHP, Rio Tinto, Chevron, and Apple avoid billions in tax through profit shifting and tax havens, costing Australia an estimated $8.4 billion annually from ASX 200 companies alone, and that Labor's plan would raise $1.9 billion over four years and $7.2 billion over ten years by closing loopholes."
+  },
+  {
+   "slug": "speech-320850",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The member argued for the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015, citing it delivers on an election promise, doubles penalties for tax avoidance, and provides $87.6 million to the ATO over three years—raising over $400 million so far, with an estimated $1 billion total. The law targets multinationals with over $1 billion global revenue that artificially avoid Australian tax, with around 30 companies initially identified."
+  },
+  {
+   "slug": "speech-320852",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015, which targets multinational companies with global turnover over $1 billion through measures including country-by-country reporting, doubled penalties for tax avoidance, and $87.6 million in additional ATO funding expected to raise $1.1 billion."
+  },
+  {
+   "slug": "speech-320853",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker opposed Labor's proposal to require private companies with over $100 million turnover to publicly disclose tax records, arguing it would discourage business growth and put firms at a competitive disadvantage in negotiations."
+  },
+  {
+   "slug": "speech-320997",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 as a modest measure but argued it falls far short of raising the billions needed, citing rising inequality—top 1% income share doubling and top 0.1% tripling over 30 years, with real wages growing only $7,000 for the bottom tenth versus $47,000 for the top tenth from 1975 to 2014. They criticised the government for rejecting broader tax reforms, referenced Joseph Stiglitz and Thomas Piketty on inequality, and argued for higher taxes on the wealthy and free tertiary education, as in Scandinavian economies."
+  },
+  {
+   "slug": "speech-320998",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 targets large foreign multinationals with global turnover over $1 billion, introducing anti-avoidance laws from 1 January 2016, doubling penalties for tax avoidance, and implementing OECD country-by-country reporting standards."
+  },
+  {
+   "slug": "speech-321000",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015, arguing the opposition's claim of $7.1 billion in revenue was unsubstantiated and comparing it to the failed minerals resource rent tax. The bill includes multinational anti-avoidance laws, stronger penalties, and country-by-country reporting, applying to multinationals with global revenue over $1 billion."
+  },
+  {
+   "slug": "speech-321001",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported Labor's position on the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 but argued the government's effort was tokenistic, citing the reversal of tax payment disclosure laws for entities earning over $100 million. They noted that 55 Australians earning over $1 million paid no income tax in 2012-13, and that Labor's proposed $7.2 billion package to curb profit-shifting was costed by the Parliamentary Budget Office."
+  },
+  {
+   "slug": "speech-321002",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015, which implements three budget measures: a multinational anti-avoidance law, country-by-country reporting and new transfer pricing standards, and stronger penalties for tax avoidance. The bill targets multinationals with annual global revenue of $1 billion or more, with the ATO identifying about 30 companies, and is expected to raise billions in tax revenue."
+  },
+  {
+   "slug": "speech-321003",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that multinational companies must pay their fair share of tax in Australia, supporting the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 while criticising the government for rejecting Labor’s $7.2 billion package of measures and for winding back transparency rules requiring companies earning over $100 million to publish tax details."
+  },
+  {
+   "slug": "speech-321004",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 was argued for, introducing a multinational anti-avoidance law from 1 January 2016 targeting companies with over $1 billion global revenue, doubling maximum administrative penalties for tax avoidance, and implementing country-by-country reporting. The speaker also praised former Treasurer Joe Hockey for his leadership on the issue."
+  },
+  {
+   "slug": "speech-321006",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 as a necessary but complex step to target contrived tax structures, criticised Labor for only addressing tax avoidance in opposition after six years of inaction in government, and commended the former Treasurer for leading G20 cooperation on the issue."
+  },
+  {
+   "slug": "speech-321007",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015, arguing that multinational companies avoid billions in tax while using Australian infrastructure, and called for bipartisan adoption of Labor's $7.2 billion tax package to close loopholes and increase transparency."
+  },
+  {
+   "slug": "speech-321008",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 targets around 30 multinationals with revenue over $1 billion by tightening anti-avoidance rules, doubling penalties, and requiring country-by-country reporting to the ATO, with the aim of levelling the playing field for Australian businesses."
+  },
+  {
+   "slug": "speech-321012",
+   "speaker": "Matt Williams",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The government argued for the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015, targeting entities with annual global revenue of $1 billion or more, with $400 million already raised in tax liabilities and $90 million allocated to the ATO over three years, citing 33 tax crime convictions and $10 million recovered last financial year."
+  },
+  {
+   "slug": "speech-321020",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015, which introduces a new multinational anti-avoidance law from 1 January 2016, doubles penalties for tax avoidance to 120% of tax avoided, and requires country-by-country reporting for entities with annual global income of A$1 billion or more. They also criticised Labor’s Minerals Resource Rent Tax failure and accused Labor of leaving intergenerational debt."
+  },
+  {
+   "slug": "speech-321021",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 targets tax avoidance schemes like the \"double Irish-Dutch sandwich,\" thin capitalisation, and intellectual property fees, and estimated it would raise $1.1 billion by enforcing tax rules, interest payments, and fines of up to 120% on multinationals earning over $1 billion in Australian revenue."
+  },
+  {
+   "slug": "speech-321022",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 is necessary to ensure multinational corporations pay their fair share of tax in Australia, rejecting claims it reduces taxes for Australians and praising former Treasurer Joe Hockey’s G20 leadership on base erosion and profit shifting."
+  },
+  {
+   "slug": "speech-321024",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The government argued the bill targets 80 large multinationals identified by the ATO, doubles penalties for tax avoidance from 1 July 2015, and requires country-by-country reporting, while rejecting the opposition's amendment and criticising their thin capitalisation proposals as a blunt instrument that would deter investment and cost jobs."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax Laws Amendment (Combating Multinational Tax Avoidance) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00170",
+   "assent_date": "2015-12-11"
+  }
+ ]
+}

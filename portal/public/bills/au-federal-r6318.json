@@ -1,0 +1,158 @@
+{
+ "key": "au-federal-r6318",
+ "title": "Supply (Parliamentary Departments) Bill (No. 1) 2019-2020",
+ "short_title": "Supply (Parliamentary Departments) Bill (No. 1) 2019-2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-04-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2019-04-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6318%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6318%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6318%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6318%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6318%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6318%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6318%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6318%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6318%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6318%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6318%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6318%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6318_ems_8ff44326-4732-4036-8e47-ac831176a9cf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6318%22",
+   "document_date": "2019-04-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00026",
+   "document_date": "2019-04-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-04-02",
+  "sentences": [
+   "This bill would allocate money from the government's main spending account to fund the parliamentary departments.",
+   "The allocation would cover about five-twelfths of what those departments are expected to need for the full 2019-20 year, excluding new budget items.",
+   "The remaining seven-twelfths and the new budget items are dealt with in a separate bill, and this bill is part of a group of three supply bills."
+  ],
+  "changes": [
+   "The bill proposes spending from the Consolidated Revenue Fund for parliamentary departments.",
+   "The proposed amount is approximately five-twelfths of the estimated annual appropriation for those departments in 2019-20, not including budget measures.",
+   "The bill separates these appropriations from other government spending to follow constitutional rules."
+  ],
+  "affected": "The parliamentary departments and their funding for the 2019-20 financial year.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-376572",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "The Supply (Parliamentary Departments) Bill (No. 1) 2019-2020 seeks just over $101 million in interim appropriations for the Department of the Senate, Department of the House of Representatives, Department of Parliamentary Services, and Parliamentary Budget Office to fund operations until the end of November 2019. The bill must be passed to ensure continuity of parliament’s operations from 1 July 2019."
+  },
+  {
+   "slug": "speech-376573",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "The coalition proposed supply bills for 2019-20, which Labor will not block. The speaker argued the government cut $715 million from Medicare, $5 billion from education, and gave $80 billion in tax cuts to high-income earners, while debt reached $534.2 billion, and Labor's Fair Go Action Plan includes making multinationals pay fair tax and restoring penalty rates."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Supply (Parliamentary Departments) Act (No. 1) 2019-2020",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00026",
+   "assent_date": "2019-04-04"
+  }
+ ]
+}

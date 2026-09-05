@@ -1,0 +1,203 @@
+{
+ "key": "au-federal-r6205",
+ "title": "National Housing Finance and Investment Corporation Amendment Bill 2018",
+ "short_title": "National Housing Finance and Investment Corporation Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-10-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-11-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6205%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6205%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6205%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6205%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6205%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6205%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6205_ems_1af5dbbd-0e96-4e7e-ab8a-dd91f4a81420%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6205%22",
+   "document_date": "2018-10-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00139",
+   "document_date": "2018-11-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-10-18",
+  "sentences": [
+   "The bill would create a $1 billion special account to help the National Housing Finance and Investment Corporation raise money through bond sales.",
+   "It would also require the NHFIC board to include at least one director who has worked in social or affordable housing.",
+   "A review of the Act must begin as soon as possible after 30 June 2020."
+  ],
+  "changes": [
+   "Establishes a $1 billion special account for the NHFIC bond aggregation function.",
+   "Ensures the NHFIC board has an appropriate mix of qualifications, skills or experience, including at least one member with a social or affordable housing background.",
+   "Requires a review of the Act to start after 30 June 2020."
+  ],
+  "affected": "The National Housing Finance and Investment Corporation, its board members, and the housing finance sector.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:51Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-371948",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "Labor supported the National Housing Finance and Investment Corporation Amendment Bill 2018, which includes amendments requiring a director with community housing experience, a two-year review, and a $1 billion special account for the Affordable Housing Bond Aggregator. The government was criticised for not addressing the yield gap, which is needed for the bond aggregator to effectively increase affordable housing supply."
+  },
+  {
+   "slug": "speech-371951",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Housing Finance and Investment Corporation Amendment Bill 2018, noting its $1 billion facility and amendments requiring a board member with social or affordable housing experience, a two-year statutory review, and the ability to redraw repaid funds. They also argued that Labor’s negative-gearing policy would reduce new housing construction by up to 42,000 dwellings and 32,000 jobs over five years, citing historical examples from the 1980s."
+  },
+  {
+   "slug": "speech-371952",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Housing Finance and Investment Corporation Amendment Bill 2018 would increase housing supply, and opposed Labor's negative gearing policy, claiming it would reduce new housing construction by up to 42,000 dwellings, cut 32,000 jobs, and cause a $1.4 billion contraction in building activity in New South Wales. The speaker also proposed allowing first-home buyers to use superannuation savings for deposits."
+  },
+  {
+   "slug": "speech-371953",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The National Housing Finance and Investment Corporation Amendment Bill 2018 implements Senate committee recommendations to improve governance of the NHFIC and its bond aggregator, with a $1 billion facility and appropriations of $105 million, $310 million, $270 million, and $165 million over four years. Decentralisation and regional development were promoted as solutions to housing affordability, and changes to negative gearing and capital gains tax were opposed."
+  },
+  {
+   "slug": "speech-371954",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The National Housing Finance and Investment Corporation Amendment Bill 2018 was presented to the House on the day it was released by a group of senior experts."
+  },
+  {
+   "slug": "speech-371957",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Housing Finance and Investment Corporation Amendment Bill will improve affordable housing by providing infrastructure finance and cheaper bond aggregation, and criticised Labor's negative gearing proposal as harmful. They highlighted NHFIC's billion-dollar National Housing Infrastructure Facility and Affordable Housing Bond Aggregator, and praised community providers like the Burdekin Association."
+  },
+  {
+   "slug": "speech-371966",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The bill amends the National Housing Finance and Investment Corporation Act to require board members to have balanced qualifications including in social or affordable housing, move the statutory review from three to two years, and create a special account for a $1 billion line of credit, with $850 million appropriated over four years to support the Affordable Housing Bond Aggregator."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Housing Finance and Investment Corporation Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00139",
+   "assent_date": "2018-11-29"
+  }
+ ]
+}

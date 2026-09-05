@@ -1,0 +1,229 @@
+{
+ "key": "au-federal-r5889",
+ "title": "Treasury Laws Amendment (Accelerated Depreciation For Small Business Entities) Bill 2017",
+ "short_title": "Treasury Laws Amendment (Accelerated Depreciation For Small Business Entities) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5889%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5889%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5889%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5889%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5889%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5889%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5889%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5889_ems_4a315c6b-1c75-455f-b4b9-b02d3b98e4cd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5889%22",
+   "document_date": "2017-05-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00056",
+   "document_date": "2017-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-347780",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Coalition, not Labor, truly supports small business, citing 3.2 million small businesses employing 5.6 million people, and announced support for the Treasury Laws Amendment (Accelerated Depreciation For Small Business Entities) Bill 2017."
+  },
+  {
+   "slug": "speech-347783",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill extending instant asset depreciation for small businesses to July 2018, but argued the government should make the threshold permanent to avoid disrupting business investment, and also raised concerns about late payments, energy costs, the NBN, and phoenixing."
+  },
+  {
+   "slug": "speech-347913",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The member for Durack argued for extending the accelerated depreciation measure for small businesses with turnover under $10 million, allowing immediate deductions for assets under $20,000 until June 2018, and stressed that small businesses drive jobs and regional economies, criticising the opposition for hypocrisy on tax cuts."
+  },
+  {
+   "slug": "speech-347915",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "Labor will support the Treasury Laws Amendment (Accelerated Depreciation For Small Business Entities) Bill 2017, extending the instant asset write-off for small businesses to 30 June 2018, and called for the measure to be evaluated before any further extension. The member also criticised the government over penalty rate cuts, NBN failures, energy costs and late payments, and backed Labor proposals for a director identification number and anti-phoenixing reforms."
+  },
+  {
+   "slug": "speech-347916",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The bill extends the instant asset write-off for small businesses with turnover up to $10 million, allowing an immediate deduction on capital equipment up to $20,000."
+  },
+  {
+   "slug": "speech-347917",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government has been inconsistent on small business policy, while Labor has consistently supported measures like the instant asset write-off, which Labor originally increased from $1,000 to $6,500. He announced Labor’s support for extending the accelerated depreciation rules by 12 months to June 2018 and called for a full evaluation of the measure’s economic benefits before any further extension."
+  },
+  {
+   "slug": "speech-347918",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The bill extends accelerated depreciation for small businesses to 30 June 2018 and increases the instant asset write-off to $20,000, while the government has cut the corporate tax rate to 27.5% for businesses with turnover up to $10 million and raised the small business entity turnover threshold to $10 million."
+  },
+  {
+   "slug": "speech-347919",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill extending the $20,000 instant asset write-off for small businesses until 30 June 2018, noting Labor originally introduced the policy, and called for evaluation of the $1 billion cost while criticising the coalition’s record on energy prices, NBN rollout, and small business support."
+  },
+  {
+   "slug": "speech-347924",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Accelerated Depreciation For Small Business Entities) Bill 2017, which extends the instant asset write-off for businesses with turnover under $10 million, demonstrates the Turnbull government's support for small businesses. The speaker cited figures including 3.2 million small businesses employing 5.6 million Australians and contributing $380 billion annually, and criticised Labor for hypocrisy on small business tax policy."
+  },
+  {
+   "slug": "speech-347925",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The member for Ryan argued that the Treasury Laws Amendment (Accelerated Depreciation For Small Business Entities) Bill 2017 should pass, as it extends the instant asset write-off for another 12 months, allowing businesses with turnover under $10 million to immediately deduct assets costing less than $20,000 until 30 June 2018, benefiting approximately 3.2 million small businesses. The speaker also criticized the opposition for planning to reverse small business tax cuts, claiming Labor is a threat to jobs and the economy."
+  },
+  {
+   "slug": "speech-347926",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Accelerated Depreciation for Small Business Entities) Bill 2017 supports small businesses, citing the instant asset write-off program, a tax cut to 27.5% for businesses with turnover under $10 million, and measures to reduce red tape and apply GST to low-value imports."
+  },
+  {
+   "slug": "speech-347927",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker argued for extending the $20,000 instant asset write-off for 12 months to 30 June 2018 and raising the small business turnover threshold to $10 million, criticising Labor’s $2 million definition as confusing turnover with profit. He also noted the coalition’s abolition of $5.8 billion in red tape and contrasted his own small business experience with Labor’s policies."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Accelerated Depreciation For Small Business Entities) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00056",
+   "assent_date": "2017-06-22"
+  }
+ ]
+}

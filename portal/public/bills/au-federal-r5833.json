@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r5833",
+ "title": "Carbon Credits (Carbon Farming Initiative) Amendment Bill 2017",
+ "short_title": "Carbon Credits (Carbon Farming Initiative) Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment and Energy",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5833%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5833%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5833%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5833_ems_8a978928-7f88-472b-b664-c657c50de52d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5833%22",
+   "document_date": "2017-03-23",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-23",
+  "sentences": [
+   "This bill would make minor and technical changes to the Carbon Credits (Carbon Farming Initiative) Act 2011, mainly to fix problems with savanna fire management projects in Northern Australia.",
+   "It would remove unintended consent requirements, adjust how project areas can be removed, correct the definition of net total number of credits, and allow transfers between project types.",
+   "The bill addresses issues identified during consultation, such as removing consent obligations for emissions-avoidance projects that do not store carbon."
+  ],
+  "changes": [
+   "Removes consent requirements for emissions-avoidance projects like savanna fire management.",
+   "Allows legislative rules to let parts of sequestration projects be removed and credits given back for the carbon stored.",
+   "Corrects the definition of net total number to exclude credits from emissions avoidance or those already relinquished.",
+   "Clarifies that permanence obligations apply to sequestration projects that both store carbon and avoid emissions.",
+   "Facilitates transfers between emissions-avoidance and sequestration project types.",
+   "Removes doubt that ministers do not have consent rights for exclusive possession native title land."
+  ],
+  "affected": "Project proponents, particularly those running savanna fire management projects in Northern Australia, including Indigenous groups and pastoralists.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:22:41Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-344028",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The Carbon Credits (Carbon Farming Initiative) Amendment Bill 2017 was moved to build on the Emissions Reduction Fund, which has contracted 178 million tonnes of emissions reductions at an average price of $11.83 a tonne. The bill will unlock new savanna fire management projects in northern Australia, reduce regulatory burden, and clarify consent requirements for project participants."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,95 @@
+{
+ "key": "au-federal-s1432",
+ "title": "Interactive Gambling Amendment (Ban Gambling Ads) Bill 2024",
+ "short_title": "Interactive Gambling Amendment (Ban Gambling Ads) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2024-10-09",
+ "originating_house": "senate",
+ "sponsor": "HANSON-YOUNG, Sen Sarah",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10711",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-07-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-10-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1432%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1432%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1432%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1432_ems_cb6aff39-8862-4658-9bb4-7bd60bb05bf5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1432%22",
+   "document_date": "2024-10-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-10-09",
+  "sentences": [
+   "The bill would ban all online gambling advertisements on television, radio, online and in print.",
+   "The ban would be phased in over three years, with the Australian Communications and Media Authority making rules for each stage.",
+   "Phase one would ban inducements and ads on online platforms, during news and current affairs, and on commercial radio during school pickup times."
+  ],
+  "changes": [
+   "The bill inserts a new part into the Interactive Gambling Act 2001 to define and prohibit online gambling advertising.",
+   "It gives the Australian Communications and Media Authority power to make rules for the ban's staged implementation.",
+   "It allows people to complain about breaches of the advertising rules and lets the ACMA investigate those breaches."
+  ],
+  "affected": "Australian media companies, broadcasters, online platforms, gambling operators, and the public, especially children and vulnerable Australians.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:56Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195265",
+   "speaker": "Malcolm Roberts",
+   "party": "One Nation",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

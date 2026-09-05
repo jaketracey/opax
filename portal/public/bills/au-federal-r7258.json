@@ -1,0 +1,203 @@
+{
+ "key": "au-federal-r7258",
+ "title": "Oversight Legislation Amendment (Robodebt Royal Commission Response and Other Measures) Bill 2024",
+ "short_title": "Oversight Legislation Amendment (Robodebt Royal Commission Response and Other Measures) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-10-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2025-02-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7258%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7258%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7258%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7258%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7258%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7258%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7258%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7258%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7258%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7258%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7258%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7258%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7258%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7258%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7258_ems_6dcb11e0-9109-4da5-94f3-25eec0f23505%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7258_ems_a1164c16-bff2-4641-8450-d0810b51b005%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/10001850%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7258%22",
+   "document_date": "2024-10-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00007",
+   "document_date": "2025-02-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-9585",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2025-02-12.238.1) introduced by the Australian Greens, which means it failed. This amendment would have added the text below to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) Robodebt was the worst failure of public administration in Australian history, raising an estimated $1.73 billion of illegitimate debts from over 430,000 vulnerable Australians,* >> >> *(ii) there is widespread community outrage due to a lack of accountability and insufficient findings from completed investigations; and* >> >> *(iii) the Robodebt scheme flourished because of a political and media culture that stigmatises income support recipients, and failures in public sector leadership and culture in key departments; and* > > *(b) calls on the Albanese Government to:* > >> *(i) implement all 57 recommendations of the Robodebt Royal Commission in full to ensure that Robodebt can never happen again,* >> >> *(ii) immediately release the confidential additional chapter of the Robodebt Royal Commission report,* >> >> *(iii) provide the Parliament with an update regarding the status of any civil or criminal referrals made in connection with Robodebt,* >> >> *(iv) reinstate the six-year limitation on debt recovery as a matter of urgency,* >> >> *(v) abolish the punitive Work for the Dole and the Targeted Compliance Framework, that have propagated a culture of punishing income support recipients; and* >> >> *(vi) ensure that the lessons for public sector leadership, management, culture and policy are learned by incorporating study of this failed chapter across public sector leadership education and development training\".*",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/29"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1194522",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194537",
+   "speaker": "Sue Lines",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Oversight Legislation Amendment (Robodebt Royal Commission Response and Other Measures) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00007",
+   "assent_date": "2025-02-14"
+  }
+ ]
+}

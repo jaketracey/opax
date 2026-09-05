@@ -1,0 +1,190 @@
+{
+ "key": "au-federal-r5302",
+ "title": "Meteorology Amendment (Online Advertising) Bill 2014",
+ "short_title": "Meteorology Amendment (Online Advertising) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "passed",
+ "status_as_of": "2014-09-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5302%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5302%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5302%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5302%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5302%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5302%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5302%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5302%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5302%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5302%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5302%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5302%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5302%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5302%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5302_ems_9a18a5fa-8a1d-4152-b0a0-e95ae0460f66%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5302%22",
+   "document_date": "2014-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00102",
+   "document_date": "2014-09-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-25",
+  "sentences": [
+   "The bill would confirm the Bureau of Meteorology's power to accept paid advertisements on its website.",
+   "The Director of Meteorology would have to publish guidelines about which kinds of ads are allowed and could ban ads that harm the Commonwealth or the Bureau.",
+   "The bill would also validate any actions taken before it starts and make nine minor updates to wording in the Meteorology Act 1955."
+  ],
+  "changes": [
+   "Gives the Director of Meteorology explicit authority to include paid advertising on the Bureau's services.",
+   "Requires the Director to develop and publish advertising guidelines, with power to prohibit ads not in the public interest.",
+   "Adds paid advertising to the list of services for which the Bureau can charge a fee.",
+   "Validates any actions taken before the bill commences to remove doubt about their legality.",
+   "Updates nine places in the Meteorology Act 1955 to modernise language and correct syntax."
+  ],
+  "affected": "The Bureau of Meteorology and its director are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-293375",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294703",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294704",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294965",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Meteorology Amendment (Online Advertising) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00102",
+   "assent_date": "2014-09-11"
+  }
+ ]
+}

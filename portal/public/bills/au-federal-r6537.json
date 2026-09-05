@@ -1,0 +1,253 @@
+{
+ "key": "au-federal-r6537",
+ "title": "Veterans’ Affairs Legislation Amendment (Supporting the Wellbeing of Veterans and Their Families) Bill 2020",
+ "short_title": "Veterans’ Affairs Legislation Amendment (Supporting the Wellbeing of Veterans and Their Families) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans’ Affairs",
+ "status": "passed",
+ "status_as_of": "2020-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6537%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6537%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6537%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6537%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6537%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6537%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6537%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6537%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6537%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6537%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6537%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6537%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6537%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6537%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6537_ems_c91d76a0-879c-44c6-8148-b5ffc70a88d3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6537_ems_8ded3c67-4a2f-4bcc-990a-1735fb2f84be%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/7391467%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6537%22",
+   "document_date": "2020-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00108",
+   "document_date": "2020-11-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-391035",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Supporting the Wellbeing of Veterans and Their Families) Bill 2020 creates a Veteran Family Advocate role, improves transition support from ADF to civilian employment, and ensures all gold card holders receive equal energy supplement benefits."
+  },
+  {
+   "slug": "speech-393081",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-18",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Supporting the Wellbeing of Veterans and Their Families) Bill 2020 was introduced, including three measures: appointing a Veteran Family Advocate, supporting an employment program for former ADF members, and extending the quarterly energy supplement to all gold card holders. The electorate of Ryan, home to Gallipoli Barracks, has nearly 8,000 serving personnel and close to 2,500 veterans."
+  },
+  {
+   "slug": "speech-393082",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-18",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment criticising the government for refusing a royal commission into veteran suicide and delaying enabling legislation for a National Commissioner, while supporting the bill's creation of a Veteran Family Advocate, improved transition-to-employment support, and extension of the energy supplement to 91 Gold Card holders."
+  },
+  {
+   "slug": "speech-393085",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Supporting the Wellbeing of Veterans and Their Families) Bill 2020, which establishes a Veteran Family Advocate, an employment program for transitioning veterans, and a quarterly energy supplement. He also urged employers and parliamentarians to hire veterans, noting that 15,000 veterans live in his electorate, the government spent $11.5 billion on veteran services last year, and a study found serving ADF men have a 48% lower suicide risk but discharged veterans face an 18% higher risk."
+  },
+  {
+   "slug": "speech-393086",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-18",
+   "stage_hint": null,
+   "brief": "The member supported the Veterans' Affairs Legislation Amendment Bill 2020, which creates a Veteran Family Advocate to represent families on veteran commissions and extends the energy supplement to all gold card holders. She highlighted a $280,000 federal grant for the Defence Surf Therapy program at Seven Mile Beach, Gerroa, and criticised delays in the promised $5 million veteran wellbeing centre in Nowra."
+  },
+  {
+   "slug": "speech-393088",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-06-18",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Supporting the Wellbeing of Veterans and Their Families) Bill 2020 was supported, with the Hume Veterans' Information Centre in Wodonga receiving a $5 million grant for a new wellness centre, and additional measures for job transition assistance and defence spouse employment schemes were advocated for."
+  },
+  {
+   "slug": "speech-393090",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment Bill 2020, which creates a Veteran Family Advocate, improves transition to civilian employment, and equalises gold card benefits, but argued for a royal commission into veteran suicide instead of the government's proposed National Commissioner, noting 419 suicides among ADF personnel from 2001 to 2017."
+  },
+  {
+   "slug": "speech-393091",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment Bill 2020 but argued that a full royal commission into veteran suicide is still needed, criticising the government's refusal to hold one and noting a petition of 342,505 signatures. They also raised concerns about establishing the Veteran Family Advocate before the National Commissioner for Defence and Veteran Suicide Prevention and urged faster progress on veterans' wellbeing centres, particularly in Darwin."
+  },
+  {
+   "slug": "speech-393092",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-06-18",
+   "stage_hint": null,
+   "brief": "The member for Warringah supported the Veterans' Affairs Legislation Amendment (Supporting the Wellbeing of Veterans and Their Families) Bill 2020, which creates a family representative role, assists ADF members' transition to civilian life, and extends the energy supplement to gold card holders. She cited statistics on veteran suicide, imprisonment and homelessness, welcomed the National Commissioner for Defence and Veteran Suicide Prevention and the Veteran Family Advocate, and endorsed local initiatives including the Veterans Centre Sydney Northern Beaches and the proposed 10 Terminal transition hub at Middle Head."
+  },
+  {
+   "slug": "speech-393225",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Supporting the Wellbeing of Veterans and Their Families) Bill 2020, which establishes a Veteran Family Advocate, helps veterans transition to civilian employment, and ensures equal benefits for all gold card holders. The speaker noted that over 60,000 Australian Defence Force members have served overseas since 1991, with around 80,000 currently in uniform and an average career length of seven to seven and a half years."
+  },
+  {
+   "slug": "speech-398099",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "Labor supported the Veterans' Affairs Legislation Amendment Bill 2020 with amendments, but argued the government should immediately establish a royal commission into veteran suicides rather than the proposed National Commissioner, citing 33 suicide deaths in 2018 and 465 between 2001 and 2018, and named Julie-Ann Finney and Angela McKay as bereaved mothers in the electorate."
+  },
+  {
+   "slug": "speech-398100",
+   "speaker": "Luke Howarth",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The bill establishes a Veteran Family Advocate, improves transition support from ADF to civilian employment, and extends the energy supplement to all gold card holders."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Veterans’ Affairs Legislation Amendment (Supporting the Wellbeing of Veterans and Their Families) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00108",
+   "assent_date": "2020-11-26"
+  }
+ ]
+}

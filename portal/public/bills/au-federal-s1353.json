@@ -1,0 +1,118 @@
+{
+ "key": "au-federal-s1353",
+ "title": "Legalising Cannabis Bill 2023",
+ "short_title": "Legalising Cannabis Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-08-10",
+ "originating_house": "senate",
+ "sponsor": "SHOEBRIDGE, Sen David",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "11010",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-11-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1353%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1353_ems_f878e6a7-e4f2-4e80-9cf4-089069bd2ceb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1353%22",
+   "document_date": "2023-08-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-08-10",
+  "sentences": [
+   "The bill would legalise cannabis for adult recreational use in Australia.",
+   "It would create the Cannabis Australia National Agency (CANA) to license and regulate cannabis activities including growing, selling, and manufacturing.",
+   "The bill would commence three months after receiving Royal Assent and does not create criminal penalties for minors possessing cannabis products."
+  ],
+  "changes": [
+   "Legalises cannabis for adult recreational use.",
+   "Establishes the Cannabis Australia National Agency to license and regulate cannabis trade.",
+   "Creates offences for importing, exporting, growing, manufacturing, or selling cannabis without a licence.",
+   "Requires CANA to keep a Register of Cannabis Strains.",
+   "Allows home growing of up to six cannabis plants without a licence.",
+   "Exempts sales under $50 from the offence of selling without a licence."
+  ],
+  "affected": "Adults in Australia who use cannabis recreationally, businesses involved in cannabis trade, and minors (who are not subject to criminal penalties for possession).",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9447",
+   "date": "2024-11-27",
+   "house": "senate",
+   "question": "Legalising Cannabis Bill 2023 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 5,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-27/2"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

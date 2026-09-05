@@ -1,0 +1,846 @@
+{
+ "key": "au-federal-r7421",
+ "title": "Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026",
+ "short_title": "Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-01-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2026-01-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7421%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7421%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7421%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-01-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-01-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-01-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-01-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7421%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-01-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7421%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-01-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7421%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7421_ems_f62af716-b8de-49e3-adf8-5645a3554843%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7421%22",
+   "document_date": "2026-01-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00001",
+   "document_date": "2026-01-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9807",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "question": "Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 96,
+   "noes": 44,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Labor": {
+     "ayes": 88,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-01-20/1"
+  },
+  {
+   "key": "federal-representatives-9808",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "question": "Zali Steggall by leave—I move amendments (1) and (2), as circulated in my name, together: (1) Schedule 2, item 11, page 12 (line 14), omit \"only\". (2) Schedule 2, item 11, page 12 (line 22), at the end of subsection 8(4A), add: ; (d) any criminal history or proceedings relating to domestic violence or AVOs issued in local courts. In relation to the legislation which sets out firearms background checks, these amendments seek to amend subsection 8(4A), relating to firearms background checks. The current bill indicates: … a firearms background check … may only take into account one or more of the following: (a) an assessment by the Australian Security Intelligence Organisation of the individual under the Australian Security Intelligence Organisation Act 1979; (b) a criminal intelligence assessment (within the meaning of Part III of the Australian Crime Commission Act 2002) … (c) the citizenship status of the individual. The amendments circulated seek to delete the word 'only' and insert an additional provision (d) to indicate that, amidst the domestic violence crisis that we have in Australia, a firearms background check should take into account any interim or final apprehended violence order or domestic violence related events. It is not acceptable that dangerous men or women have access to firearms when we have a domestic violence crisis. I do not understand why, if we are bringing legislation forward after the tragedy of the Bondi terrorist attack, we should not also be ensuring all Australians are safe, and that should include women being safe from domestic violence. I commend these amendments to the House to ensure that people should not be able to have access to licensed firearms if they have a violent history, especially in respect of domestic violence. Tony Burke I thank the member for Warringah for bringing the issue to the attention of the House. The member for Warringah is exactly right that these issues should be taken into account in the issuing of a firea",
+   "stage": "Consideration in detail",
+   "ayes": 13,
+   "noes": 88,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 87
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 101
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-01-20/2"
+  },
+  {
+   "key": "federal-representatives-9809",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "question": "Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 96,
+   "noes": 45,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Labor": {
+     "ayes": 88,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-01-20/3"
+  },
+  {
+   "key": "federal-senate-9812",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "Sue Lines Pursuant to the order agreed to yesterday, the time allotted for debate on this bill has expired. I will now put the question before the chair, and then put the questions on the remaining stages of the bill. The question before the chair relates to the second reading amendment, on sheet 3607, moved by Senator McKenzie. The question is that the amendment be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/1"
+  },
+  {
+   "key": "federal-senate-9813",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the second reading amendment circulated by Senator Thorpe. _Senator Thorpe's circulated amendments—_ SHEET 3614 At the end of the motion, add \", but the Senate: (a) supports National Cabinet's agreement of 6 December 2023 to deliver the outstanding reform arising from the 1996 Port Arthur massacre of the establishment of a National Firearms Register; (b) notes that: (i) stolen licensed firearms are a primary driver of the illegal firearms market in Australia, with theft of legally owned guns being the single largest source of illegal firearms, averaging approximately 2000 firearms per year, or one every four hours, (ii) due to inadequate monitoring and inconsistent reporting requirements across States and Territories, significant data gaps remain regarding the sources of illegal firearms, including potential diversion from law enforcement, private security, correctional services and military armouries, (iii) including firearms held by law enforcement, private security, correctional services and the military in a national firearms monitoring framework, including full life cycle management covering procurement, expenditure, storage, transfer, loss, theft and disposal, would enable consistent data collection, improved tracing and stronger accountability, and (iv) monitoring and oversight of these firearms should occur through an appropriate mechanism; and (c) calls on the Government to: (i) subject the firearms holdings and armouries of law enforcement agencies, security providers, correctional services and the Australian Defence Force to comprehensive, nationally consistent monitoring, oversight and reporting frameworks, (ii) establish an appropriate oversight mechanism, including incorporation within the National Firearms Register, a dedicated firearms oversight register, or allocating responsibility for national firearms data integrity, analysis and reporting to an independent statutory body such as the Productivity Commission, and (ii",
+   "stage": "Limitation of debate",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/2"
+  },
+  {
+   "key": "federal-senate-9814",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2026-01-20.99.1) to keep those parts of schedule 2 unchanged. In parliamentary jargon, the voted that those parts \"stand as printed\". These amendments were put after Victorian Senator [Bridget McKenzie](https://theyvoteforyou.org.au/people/senate/victoria/bridget_mckenzie) (Nationals) proposed that those parts be opposed. These parts related to: * import requirements for assisted repeating action and straight pull repeating action firearms; * removal of open-ended permits for firearms imports; and * merits review of adverse criminal intelligence assessments about firearms licence. ### Amendment text SHEET 3595 > *(1) Schedule 2, Division 1, page 62 (line 2) to page 64 (line 22), to be opposed.* SHEET 3597 > *(2) Schedule 2, Part 6, page 78 (line 1) to page 79 (line 21), to be opposed.* SHEET 3602 > *(2) Schedule 2, item 24, page 24 (lines 21 to 32), subsections 54E(3) and (4) to be opposed.* > > *(5) Schedule 2, item 24, page 28 (lines 17 to 28), subsections 54J(4) and (5) to be opposed.*",
+   "stage": "Limitation of debate",
+   "ayes": 38,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/3"
+  },
+  {
+   "key": "federal-senate-9815",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026 - Limitation of Debate - Nationals amendments",
+   "stage": "Limitation of debate",
+   "ayes": 28,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/4"
+  },
+  {
+   "key": "federal-senate-9816",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "The majority voted against [amendment 3609](https://www.openaustralia.org.au/senate/?gid=2026-01-20.103.3) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie) (JLN), WA Senator [Fatima Payman](https://theyvoteforyou.org.au/people/senate/wa/fatima_payman) (AV), Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent) and Tasmanian Senator [Tammy Tyrrell](https://theyvoteforyou.org.au/people/senate/tasmania/tammy_tyrrell) (Independent). ### Amendment text > *(1) Clause 2, page 2 (table item 1), omit \"Sections 1 to 3\", substitute \"Sections 1 to 4\".* > > *(2) Page 2 (after line 19), after clause 3, insert:* > >> *4 Review of operation of Act* >> >> *(1) The Minister must cause an independent review to be conducted of the operation of the amendments made by this Act.* >> >> *(2) Without limiting the matters that may be considered when conducting the review, the review must consider the operation and appropriateness of the mandatory minimum sentences in table items 1AA, 1A and 1B in the table in section 16AAA of the Crimes Act 1914 for offences against the following provisions in the Criminal Code Act 1995:* >> >>> *(a) subsection 80.2BE(1) or (2) (advocating force or violence through causing damage to property);* >>> >>> *(b) subsection 80.2H(1) (public display of prohibited Nazi symbols or giving Nazi salute);* >>> >>> *(c) subsection 80.2HA(1) (public display of prohibited terrorist organisation symbols).* >> >> *Consultation requirement* >> >> *(3) The review must provide for public consultation, including providing for public submissions over a period of at least 2 calendar months.* >> >> *Expert panel conducting the review* >> >> *(4) The review must be conducted by an expert panel comprised of 3 members appointed by the Minister.* >> >> *(5) Th",
+   "stage": "Limitation of debate",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/5"
+  },
+  {
+   "key": "federal-senate-9817",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the motion that the report from the committee be adopted. This means the amendment failed. ### Amendment text > *At the end of the motion, add \"and the provisions of the bill be referred to the Legal and Constitutional Affairs Legislation Committee for inquiry and report by 2 March 2026\".*",
+   "stage": "Limitation of debate",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/6"
+  },
+  {
+   "key": "federal-senate-9818",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Bill 2026 - Limitation of Debate - Pass the bill",
+   "stage": "Limitation of debate",
+   "ayes": 38,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/7"
+  },
+  {
+   "key": "federal-senate-9983",
+   "date": "2026-03-04",
+   "house": "senate",
+   "question": "Sue Lines The question is that general business notice of motion No. 366, standing in the name of Senator McKenzie, be agreed to.",
+   "stage": "Documents",
+   "ayes": 28,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-04/17"
+  },
+  {
+   "key": "federal-senate-9984",
+   "date": "2026-03-04",
+   "house": "senate",
+   "question": "Sue Lines The question is that general business notice of motion No. 367, standing in the name of Senator McKenzie, be agreed to.",
+   "stage": "Documents",
+   "ayes": 28,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-04/18"
+  },
+  {
+   "key": "federal-senate-10094",
+   "date": "2026-03-23",
+   "house": "senate",
+   "question": "Fatima Payman I move: That there be laid on the table by the Minister representing the Minister for Home Affairs, by no later than 5 pm on Thursday, 23 April 2026, copies of all ministerial submissions, records of conversation, letters, briefing notes, meeting agendas, file notes, meeting invitations, meeting notes, meeting minutes, emails and instant/electronic messages, created between 14 December 2025 and 20 January 2026 inclusive, between the Minister for Home Affairs and/or his office and the Department of Home Affairs in relation to the development of the: (a) Combatting Antisemitism, Hate and Extremism Bill 2026; (b) _Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Act 2026_; and (c) _Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Act 2026_. Slade Brockman The question is that motion 422 be agreed to.",
+   "stage": "Documents",
+   "ayes": 33,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-23/12"
+  },
+  {
+   "key": "federal-senate-10095",
+   "date": "2026-03-23",
+   "house": "senate",
+   "question": "Fatima Payman I move: That there be laid on the table by the Minister representing the Attorney-General, by no later than 5 pm on Thursday, 23 April 2026, copies of all ministerial submissions, records of conversation, letters, briefing notes, meeting agendas, file notes, meeting invitations, meeting notes, meeting minutes, emails and instant/electronic messages, created between 14 December 2025 and 20 January 2026 inclusive, between the Attorney-General and/or her office and the Attorney-General's Department in relation to the development of the: (a) Combatting Antisemitism, Hate and Extremism Bill 2026; (b) _Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Act 2026_; and (c) _Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Act 2026_. Slade Brockman The question is that general business notice of motion No. 423 be agreed to.",
+   "stage": "Documents",
+   "ayes": 33,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-23/13"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00001",
+   "assent_date": "2026-01-21"
+  }
+ ]
+}

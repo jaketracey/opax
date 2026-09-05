@@ -1,0 +1,190 @@
+{
+ "key": "au-federal-r6427",
+ "title": "Customs Tariff Amendment (Growing Australian Export Opportunities Across the Asia-Pacific) Bill 2019",
+ "short_title": "Customs Tariff Amendment (Growing Australian Export Opportunities Across the Asia-Pacific) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2019-12-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6427%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6427%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6427%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6427%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6427%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6427%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6427%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6427%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6427%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6427%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6427%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6427%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6427%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6427_ems_f8b1e7ea-7fe3-40ad-9834-be0419c027cc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6427%22",
+   "document_date": "2019-10-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00109",
+   "document_date": "2019-12-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-382814",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The bill amends the Customs Tariff Act 1995 to implement Australia's obligations under free trade agreements with Indonesia, Peru and Hong Kong."
+  },
+  {
+   "slug": "speech-383313",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that free trade is essential for Australia's economic prosperity and announced three free trade agreements with Indonesia, Peru, and Hong Kong, which will eliminate over 99% of tariffs on Australian goods to Indonesia and Peru and codify existing trade with Hong Kong, aiming to cover 90% of Australia's trade by free trade agreements by 2022."
+  },
+  {
+   "slug": "speech-383315",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "Labor announced support for the Customs Amendment and Tariff Amendment bills after obtaining written commitments from Trade Minister Simon Birmingham on worker protections, including no new labour market testing waivers, criminal penalties for exploitation, and termination of the 1993 Indonesia bilateral investment treaty. The agreements are expected to boost Australian exports and jobs, with specific benefits for steel, grain, education and manufacturing sectors."
+  },
+  {
+   "slug": "speech-383422",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-383427",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Peru-Australia, Hong Kong, and Indonesia free trade agreements, focusing on the Indonesia-Australia Comprehensive Economic Partnership Agreement, and noted that Australia exports more to the UK than to Indonesia despite its proximity, with benefits for sectors like steel (BlueScope in Port Kembla) and education, while calling for more Indonesian language study in schools."
+  },
+  {
+   "slug": "speech-383431",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "Labor supported the Customs Amendment bills for trade agreements with Indonesia, Hong Kong and Peru after the government agreed to demands including retaining labour market testing, modernising investor-state dispute settlement (ISDS) provisions, and holding an inquiry into treaty transparency. The speaker also raised concerns about unlicensed electricians and called for stronger enforcement of workplace laws."
+  },
+  {
+   "slug": "speech-383446",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "The Customs Amendment and Customs Tariff Amendment bills implement Australia's obligations under free trade agreements with Indonesia, Peru, and Hong Kong, eliminating over 99% of tariffs on Australian goods exports to Indonesia and Peru while guaranteeing existing duty-free access to Hong Kong. The speaker urged Parliament to pass the bills without delay to benefit Australian businesses, exporters, workers, investors, and farmers."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Growing Australian Export Opportunities Across the Asia-Pacific) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00109",
+   "assent_date": "2019-12-03"
+  }
+ ]
+}

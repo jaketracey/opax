@@ -1,0 +1,255 @@
+{
+ "key": "au-federal-r7007",
+ "title": "Crimes and Other Legislation Amendment (Omnibus) Bill 2023",
+ "short_title": "Crimes and Other Legislation Amendment (Omnibus) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2023-09-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7007_ems_d563bf2d-25b7-4d18-92e2-8a70037dba56%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7007_ems_b46375ce-6724-48e0-8e15-4f4d4f379d47%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7007_ems_147d0f82-c539-47cd-aee3-430c9cf3ad67%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7007%22",
+   "document_date": "2023-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00063",
+   "document_date": "2023-09-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-8311",
+   "date": "2023-09-04",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2023-09-04.67.1) introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means they failed. ### What do these amendments do? Senator Shoebridge [explained that](https://www.openaustralia.org.au/senate/?gid=2023-09-04.67.1): > *These amendments taken together add in a number of matters that need to be considered by the Attorney-General in making a decision on transferring a prisoner to other countries. They include explicit consideration of matters including a prisoner's welfare, family and community support, medical conditions and disability, and the ability to receive appropriate care for these education, accommodation and employment services post-release.*",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-04/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-829446",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-29",
+   "stage_hint": null,
+   "brief": "The Crimes and Other Legislation Amendment (Omnibus) Bill 2023 makes minor and technical amendments to several Commonwealth acts, including correcting drafting errors and clarifying judicial, law enforcement, and oversight processes. Key changes include expanding the mandatory refusal ground for mutual assistance requests where any person may be at risk of torture, strengthening AUSTRAC’s civil penalty and automated decision-making provisions, and clarifying witness protection coverage for past program participants."
+  },
+  {
+   "slug": "speech-829773",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-09",
+   "stage_hint": null,
+   "brief": "The Northern Australia Infrastructure Facility Amendment (Miscellaneous Measures) Bill 2023, the Infrastructure Australia Amendment (Independent Review) Bill 2023, the Family Law Amendment Bill 2023, the Family Law Amendment (Information Sharing) Bill 2023, and the Crimes and Other Legislation Amendment (Omnibus) Bill 2023 were referred to the Federation Chamber for further consideration at the adjournment of the debate on the second reading of each bill."
+  },
+  {
+   "slug": "speech-829842",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-05-09",
+   "stage_hint": null,
+   "brief": "The coalition supported the Crimes and Other Legislation Amendment (Omnibus) Bill 2023 but argued it should have been referred in full to the Parliamentary Joint Committee on Intelligence and Security (PJCIS) for scrutiny, noting the government belatedly agreed to further review. The bill includes changes to the Telecommunications (Interception and Access) Act, the Anti-Money Laundering and Counter-Terrorism Financing Act, the Foreign Evidence Act, and the National Witness Protection Program, among others."
+  },
+  {
+   "slug": "speech-829978",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-10",
+   "stage_hint": null,
+   "brief": "The Crimes and Other Legislation Amendment (Omnibus) Bill 2023 was passed without amendment, updating key provisions to improve government administration, law enforcement, regulatory, oversight and judicial processes for the public, international partners, and state and territory governments."
+  },
+  {
+   "slug": "speech-830027",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-10",
+   "stage_hint": null,
+   "brief": "The Crimes and Other Legislation Amendment (Omnibus) Bill 2023 was referred to the Legal and Constitutional Affairs Legislation Committee for inquiry and report by 14 June 2023, and the motion was agreed to."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Crimes and Other Legislation Amendment (Omnibus) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00063",
+   "assent_date": "2023-09-13"
+  }
+ ]
+}

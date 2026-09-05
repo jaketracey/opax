@@ -1,0 +1,239 @@
+{
+ "key": "au-federal-r7411",
+ "title": "Corporations Amendment (Digital Assets Framework) Bill 2025",
+ "short_title": "Corporations Amendment (Digital Assets Framework) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2026-04-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7411%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7411%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7411%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7411%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7411%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7411%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7411%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7411%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7411_ems_7f59029b-56b2-41a3-8f53-d8fd37997608%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7411_ems_bd4cef03-63ea-4e96-80e6-9beed90a563a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7411%22",
+   "document_date": "2025-11-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00038",
+   "document_date": "2026-04-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-10196",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2026-04-01.56.1) introduced at the request of Queensland Senator [Matthew Canavan](https://theyvoteforyou.org.au/people/senate/queensland/matthew_canavan) (LNP), which means they were not successful. ### Amendment text SHEET 3768 > *(1) Page 2 (after line 12), after clause 3, insert:* > >> *4 Review of digital assets framework* >> >> *Requirement to conduct review* >> >>> *(1) The Minister must cause an independent review to be conducted of the operation of the amendments made by this Act.* >>> >>> *(2) Without limiting subsection (1), the review must consider the effectiveness of the digital assets framework, including as supported by any Act amended by this Act and any instruments made under those amended Acts.* >> >> *Timing of review* >> >>> *(3) The persons conducting the review must* >>> >>>> *(a) commence the review as soon as practicable after the end of 2 years starting on the day this section commences; and* >>>> >>>> *(b) complete the review before the end of 4 months after the day the review commences.* >> >> *Consultation* >> >>> *(4) The review must make provision for consultation with industry stakeholders that the persons conducting the review consider relevant.* >> >> *Minister to be given report of review* >> >>> *(5) The persons conducting the review must give the Minister a written report of the review as soon as practicable after the review is completed.* >> >> *Minister to table copy of report of review* >> >>> *(6) The Minister must cause a copy of the report of the review to be tabled in each House of the Parliament within 15 sitting days of that House after the Minister receives the report.* SHEET 3769 > *(1) Schedule 1, page 36 (after line 30), after Part 2, insert:* > >> *Part 2A — Giving reasons for refusing financial services* >> >> *Corporations Act 2001* >> >> *42A After Division 1 of Part 7.8* >> >> *Insert:* >> >>> *Division 1A — Giving reasons for r",
+   "stage": "Limitation of debate",
+   "ayes": 25,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/19"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1199365",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199370",
+   "speaker": "Simon Kennedy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-02-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199644",
+   "speaker": "Julie-Ann Campbell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199823",
+   "speaker": "Tony Sheldon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202463",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Corporations Amendment (Digital Assets Framework) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00038",
+   "assent_date": "2026-04-08"
+  }
+ ]
+}

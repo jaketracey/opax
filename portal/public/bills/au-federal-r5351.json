@@ -1,0 +1,60 @@
+{
+ "key": "au-federal-r5351",
+ "title": "Telecommunications Amendment (Giving the Community Rights on Phone Towers) Bill 2014",
+ "short_title": "Telecommunications Amendment (Giving the Community Rights on Phone Towers) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-27",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2015-05-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5351%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5351%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5351%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5351%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5351_ems_0f3a3cf3-e009-4a98-8981-3c40f2b73a30%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5351%22",
+   "document_date": "2014-10-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

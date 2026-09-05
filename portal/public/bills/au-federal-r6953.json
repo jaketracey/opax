@@ -1,0 +1,547 @@
+{
+ "key": "au-federal-r6953",
+ "title": "Therapeutic Goods Amendment (2022 Measures No. 1) Bill 2022",
+ "short_title": "Therapeutic Goods Amendment (2022 Measures No. 1) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-12-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2023-03-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6953_ems_78535267-8570-4fb8-a407-dd0cc687373c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6953_ems_56a6e843-2498-4441-9bd9-6abe262baac1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6953%22",
+   "document_date": "2022-12-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00010",
+   "document_date": "2023-03-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-12-01",
+  "sentences": [
+   "The bill makes several changes to the Therapeutic Goods Act 1989 to improve safety and oversight of medicines and medical devices.",
+   "It would require hospitals to report adverse events involving medical devices, allow imports of substitute prescription medicines during shortages, and expand information-gathering powers for the Health Department Secretary.",
+   "The government says seized goods could be retained for 120 days instead of 90, and some therapeutic goods advertising directed at health professionals would no longer need to meet existing advertising restrictions."
+  ],
+  "changes": [
+   "Introduces mandatory reporting of adverse events related to medical devices, mainly by hospitals.",
+   "Creates a new marketing approval pathway for biologicals intended only for export.",
+   "Lets the Secretary approve import or supply of overseas prescription medicines as substitutes for short medicines.",
+   "Removes merits review rights for Secretary decisions requiring information or documents.",
+   "Enables the Secretary to require anyone to provide documents relevant to possible contraventions of the Act.",
+   "Extends from 90 to 120 days the period seized goods may be retained for testing and evidence preparation."
+  ],
+  "affected": "Hospitals, sponsors of medicines and medical devices, health professionals, and government agencies are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7981",
+   "date": "2023-03-08",
+   "house": "senate",
+   "question": "Therapeutic Goods Amendment (2022 Measures No. 1) Bill 2022 - Second Reading - Affordable medicinal cannabis",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 1,
+    "dated": 34,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-08/7"
+  },
+  {
+   "key": "federal-senate-7989",
+   "date": "2023-03-09",
+   "house": "senate",
+   "question": "Therapeutic Goods Amendment (2022 Measures No. 1) Bill 2022 - Second Reading - Giving blood",
+   "stage": "Second reading",
+   "ayes": 15,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-09/1"
+  },
+  {
+   "key": "federal-senate-7990",
+   "date": "2023-03-09",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-03-08.186.1) introduced by Victorian Senator [Ralph Babet](https://theyvoteforyou.org.au/people/senate/victoria/ralph_babet) (United Australia Party) to the usual second reading motion, which is \"that the bill be read a second time\". To read a bill for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is to agree with its main idea. ### Amendment text > *At the end of the motion, add \"and the bill be referred to the Community Affairs Legislation Committee for inquiry and report by 29 June 2023\".*",
+   "stage": "Second reading",
+   "ayes": 2,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-09/2"
+  },
+  {
+   "key": "federal-senate-7991",
+   "date": "2023-03-09",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-03-09.12.1) to agree with the bill's main idea. In other words, they voted to read it for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). They can now discuss it in greater detail. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd046): > *The Bill proposes amendments to the Therapeutic Goods Act 1989 (the Act) that include:* > > * *imposing a new reporting requirement on CEOs of healthcare facilities for adverse events involving medical devices* > * *establishing a new ‘export only’ pathway for biologicals* > * *expanding the Therapeutic Goods Administration’s information gathering powers* > * *enabling the withdrawal of restricted advertising approval for therapeutic goods if concerns arise following the release of new efficacy information* > * *expanding the list of exempt persons who may receive direct therapeutic goods advertising and for whom the Act’s advertising requirements do not apply* > * *expanding existing powers to enable the importation or supply of (unapproved) substitutable medicines in the event of a medicine shortage where no appropriate alternative is available in the Australian Register of Therapeutic Goods and it is in the interests of public health.* > > *Several of these amendments build on ongoing therapeutic goods reforms and are in response to stakeholder feedback.*",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 3,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-09/3"
+  },
+  {
+   "key": "federal-senate-7992",
+   "date": "2023-03-09",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2023-03-09.17.1) introduced by West Australian Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens), which means they failed. ### What did the amendments do? Senator Steele-John [explained that](https://www.openaustralia.org.au/senate/?gid=2023-03-09.17.1): > *In moving these amendments today I want to dedicate them to the 150,000 Australian women who received surgically implanted transvaginal mesh. Most commonly, these procedures were undertaken, these devices were sought, in relation to the treatment of pelvic prolapse, stress related urinary incontinence or, additionally, complications resulting from childbirth. These were things that people sought to access, devices that they sought to have implanted in order to treat conditions that were causing them great distress and having a profound impact on their lives. These devices were promoted to women as being safe, and they were not safe.* > > *When women spoke up about the reality of what these devices were doing to them—the pain, the blood, the inability to engage in intimate relations with their partners—they were dismissed; they were ignored year after year. And women continued to suffer. This medical scandal resulted in the largest women's based health class action in Australian history—and rightly so, given that this was one of the most profound failures in medical regulation and one of the most dangerous products ever allowed into human bodies since thalidomide. Australian women led the world in holding manufacturers and regulators to account. Australian women, although they had experienced the most horrendous mistreatment at the hands of the manufacturers, at the hands of medical practitioners and at the hands of dismissive regulators, came forward to their parliament in 2018 and trusted their parliament, gave evidence to their parliament, went to their MPs and said, 'I am",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 22,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 1,
+    "dated": 32,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-09/4"
+  },
+  {
+   "key": "federal-senate-7993",
+   "date": "2023-03-09",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2023-03-09.30.1) introduced by Victorian Senator [Ralph Babet](https://theyvoteforyou.org.au/people/senate/victoria/ralph_babet) (United Australia Party), which means they failed ### What did the amendments do? Senator Babet [explained that](https://www.openaustralia.org.au/senate/?gid=2023-03-09.30.1): > *My intent in proposing these two amendments is as follows. Amendment (1) amends subsection 19A(11) of the TGA Act 1989 to provide that approvals made by the secretary are legislative instruments and will therefore be subject to disallowance under section 42 of the Legislation Act 2003. Quite simply, we're seeking to ensure proper oversight and political accountability for decisions made by the secretary as a result of proposed amendments. I believe that in the bill as it is written right now there appears to be a lack of accountability and too much power placed in one person's hand.* > > *Amendment (2) is designed to serve two functions. It will ensure that there is ministerial oversight and that, before giving notice of approval, the secretary must first give notice to the minister and seek their agreement. We have proposed that the minister be asked to provide their agreement or objection within 14 days or otherwise is considered to have been given.* ### Amendment text > *(1) Schedule 9, item 5, page 27 (lines 30 and 31), omit the item, substitute:* > >> *5 Subsection 19A(11)* >> >> *Repeal the subsection, substitute:* >> >> *(11) An approval under subsection (1), (1A), (2), (2A) or (2B) is a legislative instrument.* > > *(2) Schedule 9, page 27 (after line 31), after item 5, insert:* > >> *5A At the end of section 19A* >> >> *Add:* >> >> *(12) If the Secretary intends to grant an approval under this section, then prior to granting the approval, the Secretary must:* >> >>> *(a) give a notice (a ministerial notice) to the Minister in accordance with the requirements in subsection",
+   "stage": "In committee",
+   "ayes": 2,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 1,
+    "dated": 31,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-09/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-826997",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "Several bills were referred to the Federation Chamber for further consideration, including amendments to private health insurance, therapeutic goods, and export control legislation."
+  },
+  {
+   "slug": "speech-827000",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "The coalition supported the bill’s measures for mandatory adverse-event reporting by hospitals, a marketing pathway for export-only biologicals, and importation of substitute medicines to address shortages, but raised concerns about removing merits review rights for secretary decisions and called for action on cost-of-living pressures, citing $60 GP consults and $55 scripts."
+  },
+  {
+   "slug": "speech-827236",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-08",
+   "stage_hint": null,
+   "brief": "The Therapeutic Goods Amendment (2022 Measures No. 1) Bill introduces mandatory reporting of adverse events involving medical devices by hospitals, expands information-gathering powers for the health secretary, and creates a streamlined approval pathway for export-only biologicals, aiming to improve patient safety and address medicine shortages."
+  },
+  {
+   "slug": "speech-828155",
+   "speaker": "Anne Ruston",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Therapeutic Goods Amendment (2022 Measures No. 1) Bill 2022, which introduces mandatory adverse event reporting for hospitals and an export-only pathway for biologicals, but raised concerns about Schedule 10 removing natural justice rights for product sponsors before TGA publication of non-safety information. The speaker also criticised the government over the potential removal of the insulin product FiAsp from the PBS, affecting over 15,000 Australians."
+  },
+  {
+   "slug": "speech-828315",
+   "speaker": "Malcolm Roberts",
+   "party": "One Nation",
+   "state": "federal",
+   "date": "2023-03-08",
+   "stage_hint": null,
+   "brief": "The senator argued that the Therapeutic Goods Amendment (2022 Measures No. 1) Bill 2022 destroys fundamental human rights and legal principles, giving unelected bureaucrats unchecked power over drug approvals, and urged the Senate to vote it down. They specifically opposed provisions removing natural justice, reversing the evidential burden of proof, and creating a backdoor for permanent approval of new drugs without safety testing, and noted the Scrutiny of Bills Committee’s criticisms and 20,000 excess deaths in 2022."
+  },
+  {
+   "slug": "speech-828381",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-09",
+   "stage_hint": null,
+   "brief": "The government moved to amend the Therapeutic Goods Amendment (2022 Measures No. 1) Bill to limit the exclusion of the natural justice hearing rule, allowing its omission only when releasing information that is in the interests of public health or safety or relates to therapeutic goods safety."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Therapeutic Goods Amendment (2022 Measures No. 1) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00010",
+   "assent_date": "2023-03-21"
+  }
+ ]
+}

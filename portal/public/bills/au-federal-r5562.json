@@ -1,0 +1,238 @@
+{
+ "key": "au-federal-r5562",
+ "title": "Export Control Amendment (Quotas) Bill 2015",
+ "short_title": "Export Control Amendment (Quotas) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-11-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2015-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5562%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5562%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5562%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5562%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5562%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5562%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5562%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5562%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5562%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5562%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5562%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5562%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5562%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5562_ems_b1b90d3b-bb35-48b1-a92e-78e1902473bd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5562%22",
+   "document_date": "2015-11-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00167",
+   "document_date": "2015-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-11-12",
+  "sentences": [
+   "The bill would bring together the rules for export tariff rate quotas into a single law covering all goods.",
+   "The Secretary would gain the power to make orders and directions for quota systems, with directions able to override orders.",
+   "The bill would start on Royal Assent, but the repeal of existing quota laws would not take effect until 1 January 2017."
+  ],
+  "changes": [
+   "Consolidates four Acts governing tariff rate export quotas into one Act.",
+   "Enables the Secretary to make orders establishing and administering quota systems for goods.",
+   "Allows the Secretary to give directions that can override an order.",
+   "Introduces new powers for registers and computer systems to make decisions under the quota system.",
+   "Repeals existing quota laws under the Australian Meat and Live-stock (Quotas) Act 1990, the Australian Meat and Live-stock Industry Act 1997 and the Dairy Produce Act 1986 on 1 January 2017."
+  ],
+  "affected": "Exporters of agricultural products who participate in tariff rate quota schemes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:21Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-323100",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-12",
+   "stage_hint": null,
+   "brief": "The government moved the Export Control Amendment (Quotas) Bill to consolidate all agricultural quota export certification under a single set of powers within the Export Control Act 1982, abolishing or amending three existing acts. The bill aims to reduce red tape, save exporters millions in tariffs—such as $3 million saved under the Japan-Australia Economic Partnership Agreement from January to May 2015—and provide the secretary with powers to make orders and directions for tariff rate quota systems."
+  },
+  {
+   "slug": "speech-324325",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The Export Control Amendment (Quotas) Bill 2015 was supported as an uncontroversial consolidation of export quota powers, while arguing Australia needs $600 billion in agricultural investment by 2050, largely from foreign sources. The government and Agriculture Minister Joyce were criticised for slow progress on non-tariff barriers (citing AUSVEG data showing no effective phytosanitary protocols for vegetable exports to China), the doubling of exporter costs, and the discriminatory $15 million foreign investment screening threshold for agricultural land, as seen in the S. Kidman and Co decision."
+  },
+  {
+   "slug": "speech-324326",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The Export Control Amendment (Quotas) Bill 2015 consolidates four acts governing tariff rate quotas to reduce red tape and save exporters millions in tariffs, including $3 million saved under the Japan-Australia Economic Partnership Agreement from January to May 2015. The speaker also criticised Labor's policy to abolish the agri threshold and praised the Minister for Agriculture and Water Resources for rebuilding trade relationships after the 2011 live cattle export suspension."
+  },
+  {
+   "slug": "speech-324327",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Export Control Amendment (Quotas) Bill 2015 for simplifying quota regulation, noted a 16% export increase in the Bendigo region since 2008–09, and argued that non-tariff barriers and workforce exploitation remain unresolved issues."
+  },
+  {
+   "slug": "speech-324328",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The Export Control Amendment (Quotas) Bill 2015 consolidates four acts governing tariff rate export quotas into a single act under the Export Control Act 1982, reducing red tape and providing a more flexible legal framework for existing and future quotas, such as those from the Japan-Australia Economic Partnership Agreement which saved exporters $3 million in tariffs from January to May 2015."
+  },
+  {
+   "slug": "speech-324329",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The Export Control Amendment (Quotas) Bill 2015 consolidates four acts into one to streamline export quotas for agricultural products. The member for Murray argued the bill will reduce red tape and called for the Department of Agriculture and Water Resources to ensure cost recovery does not harm the competitiveness of Australian exporters."
+  },
+  {
+   "slug": "speech-324678",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-30",
+   "stage_hint": null,
+   "brief": "The Export Control Amendment (Quotas) Bill 2015 consolidates four separate acts into a single act for tariff rate export quotas, aiming to modernise quota management, reduce red tape, and support free trade agreements; the speaker noted that managing eight new quotas under the Japan-Australia Economic Partnership Agreement saved exporters approximately $3 million in tariffs between January and May 2015."
+  },
+  {
+   "slug": "speech-324679",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-30",
+   "stage_hint": null,
+   "brief": "The Export Control Amendment (Quotas) Bill 2015 was supported to streamline quota management under the Export Control Act 1982, creating a comprehensive legislative framework for the 33 existing quotas and new ones from trade agreements with China, Japan, South Korea, and the Trans-Pacific Partnership. It aims to minimise market distortion, reduce regulatory barriers, optimise quota value, and establish a register of quota entitlements, with existing quotas phased out by 1 January 2017, to benefit agricultural exporters, particularly in the electorate of Barker, which produces $2.6 billion in agricultural output."
+  },
+  {
+   "slug": "speech-324680",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-30",
+   "stage_hint": null,
+   "brief": "The Export Control Amendment (Quotas) Bill 2015 consolidates four acts into one to streamline quota management, with bipartisan support, and is expected to benefit cattle producers and exporters. The speaker also highlighted record cattle prices and the economic role of the Wagga Wagga Livestock Marketing Centre, which processes 4,000 cattle and 1.8 million sheep annually."
+  },
+  {
+   "slug": "speech-324681",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-30",
+   "stage_hint": null,
+   "brief": "The Export Control Amendment (Quotas) Bill 2015 consolidates four acts governing tariff export quotas into one, giving the secretary new powers to administer 33 quotas that save exporters millions annually. The bill, which has bipartisan support, complements the government's agricultural competitiveness white paper and builds on over 50 market access gains and 30 improvements achieved since the coalition's election."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Export Control Amendment (Quotas) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00167",
+   "assent_date": "2015-12-11"
+  }
+ ]
+}

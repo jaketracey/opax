@@ -1,0 +1,270 @@
+{
+ "key": "au-federal-r6577",
+ "title": "Higher Education (Up-front Payments Tuition Protection Levy) Bill 2020",
+ "short_title": "Higher Education (Up-front Payments Tuition Protection Levy) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-08-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "passed",
+ "status_as_of": "2020-11-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6577%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6577%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6577%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6577%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6577%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6577%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6577%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6577%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6577%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6577%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6577%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6577%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6577%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-11-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6577%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6577_ems_3cb56483-5a7b-4c87-b3ac-1ce225efbb71%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6577%22",
+   "document_date": "2020-08-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00102",
+   "document_date": "2020-11-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-08-26",
+  "sentences": [
+   "This bill imposes a levy on private higher education providers to fund protection for domestic students who pay tuition fees up front.",
+   "The levy has three parts: an administrative fee set by the Minister, a risk-rated premium and a special component both set by the Higher Education Tuition Protection Director, with the Treasurer's approval for the latter two.",
+   "The levy takes effect from 1 January 2021, and the collected funds go into a renamed Higher Education Tuition Protection Fund, which also holds HELP contributions."
+  ],
+  "changes": [
+   "Imposes the up-front payments tuition protection levy on private higher education providers.",
+   "Sets out the three components of the levy and who determines them each year.",
+   "Provides for annual review of the levy and consultation with the sector.",
+   "Allows the Guidelines to exempt certain classes of providers from one or more levy components."
+  ],
+  "affected": "Private higher education providers and their domestic students who pay tuition fees up front.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-393800",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The Higher Education (Up-front Payments Tuition Protection Levy) Bill 2020 imposes a three-part levy on private higher education providers with domestic students who pay upfront, covering administrative, risk-rated premium, and special tuition protection components, to protect students if a provider closes. The framework, developed by the Australian Government Actuary and consistent with the existing Tuition Protection Service, includes governance via an advisory board and aims to reward low-risk providers with lower levies."
+  },
+  {
+   "slug": "speech-396410",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Education Legislation Amendment (Up-front Payments Tuition Protection) Bill 2020 and the Higher Education (Up-front Payments Tuition Protection Levy) Bill 2020, which extend tuition protection to domestic students who pay upfront fees at private higher education providers, ensuring refunds or course replacements if a provider fails. They also corrected the record that universities were not excluded from JobKeeper, noting that 10% of higher education students (127,000 full-time-equivalent in 2019) study at non-university providers."
+  },
+  {
+   "slug": "speech-396411",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-20",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor would not oppose the bills expanding tuition protection to domestic upfront-fee-paying students, but argued the Morrison government's higher education policies—including $1 billion in annual funding cuts, 12,000 job losses, and fee increases of up to 7% on average—were damaging universities and disadvantaging students."
+  },
+  {
+   "slug": "speech-396413",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-20",
+   "stage_hint": null,
+   "brief": "The member supported the Education Legislation Amendment (Up-front Payments Tuition Protection) Bill 2020 and the Higher Education (Up-front Payments Tuition Protection Levy) Bill 2020, noting Labor had requested these changes to include domestic students in the Tuition Protection Service. She criticised the government's broader higher education policy, arguing it would increase fees for humanities, commerce and communications degrees by an average of 7 per cent, with 40 per cent of students facing fees of $14,500 per year, and that a $58,000 debt would discourage students, particularly mature-age and women returning to work."
+  },
+  {
+   "slug": "speech-396415",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Education Legislation Amendment and Higher Education (Up-front Payments Tuition Protection Levy) bills as practical tweaks, but criticised the government for cutting funding and increasing student fees, noting 12,000 university job losses and warning that the job-ready graduates bill would make degrees more expensive, especially for disadvantaged students."
+  },
+  {
+   "slug": "speech-396592",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "Labor supported the two tuition protection bills but criticised the government for delaying practical reforms while fast-tracking ideological changes. The speaker argued the government's Job-ready Graduates Package and JobKeeper exclusion of university workers, including tradies like his brother-in-law Matthew King who lost his job at ANU, have caused severe harm, and named $2.2 billion in cuts and $16 billion in projected revenue loss from international students."
+  },
+  {
+   "slug": "speech-396595",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the two tuition protection bills, welcoming their simplification of student arrangements, but strongly criticised the Morrison government's broader higher education policies, accusing it of cutting funding, raising prices, and failing to save over 12,000 university jobs during the recession."
+  },
+  {
+   "slug": "speech-396597",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the Education Legislation Amendment (Up-front Payments Tuition Protection) Bill 2020 and the Higher Education (Up-front Payments Tuition Protection Levy) Bill 2020, but criticised the government's higher education fee increases—arts course fees more than doubling, commerce fees rising by a third, and psychology degrees costing $3,000–$4,000 more—arguing these would hurt students in the Gilmore electorate, including at the Shoalhaven and Batemans Bay satellite campuses, and particularly affect Indigenous students, women retraining, and communities already hit by bushfires, floods, and COVID-19."
+  },
+  {
+   "slug": "speech-398089",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for delaying action on tuition protection legislation and condemned the Job-ready Graduates bill for increasing student fees, with humanities fees rising from $27,000 to $58,000 for a four-year degree. They also argued the government excluded universities from JobKeeper, costing La Trobe University $50 million in support."
+  },
+  {
+   "slug": "speech-398090",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the bills extending tuition protection to domestic up-front fee-paying students but criticised the government's broader higher education policies, including the Job-ready Graduates legislation and fee increases of up to 113% for humanities, arguing that the Liberals are making university unaffordable for less privileged students while neglecting TAFE funding."
+  },
+  {
+   "slug": "speech-398091",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the tuition protection bills but argued that the Liberal-National government’s cuts to education funding at federal and state levels are harming students, citing a $33 million shortfall at Southern Cross University leading to over 130 job losses, increased university fees (up to $58,000 for a four-year degree), and the planned closure of four schools in Murwillumbah, New South Wales, without community consultation."
+  },
+  {
+   "slug": "speech-398094",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The member welcomed the bills extending tuition protection to domestic upfront-fee-paying students but criticised the government's higher education funding cuts and fee changes, asserting that 40% of students would pay double their degree costs (an extra $14,500 per year) and that regional universities like Deakin would lose 300 jobs, citing students Lily Watterson and Ana Machado Colling as examples of those affected."
+  },
+  {
+   "slug": "speech-398095",
+   "speaker": "Luke Howarth",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The Education Legislation Amendment (Up-front Payments Tuition Protection) Bill 2020 and related levy bill extend government-backed tuition protection to domestic students who pay fees up-front, ensuring they receive replacement courses or refunds if their provider fails. The levy bill requires viable providers to contribute to a shared fund, reducing individual administrative burdens, with the arrangements taking effect from 2021."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Higher Education (Up-front Payments Tuition Protection Levy) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00102",
+   "assent_date": "2020-11-20"
+  }
+ ]
+}

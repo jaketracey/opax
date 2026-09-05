@@ -1,0 +1,206 @@
+{
+ "key": "au-federal-r5621",
+ "title": "Transport Security Amendment (Serious or Organised Crime) Bill 2016",
+ "short_title": "Transport Security Amendment (Serious or Organised Crime) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5621%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5621%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5621%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5621%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5621%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5621%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5621%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5621%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5621_ems_cd0a7eb4-188e-40c3-ae70-86f8f9e89adb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5621%22",
+   "document_date": "2016-02-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-11",
+  "sentences": [
+   "This bill would reduce criminal influence at airports and seaports by strengthening security card schemes.",
+   "It would create a new purpose in the aviation and maritime security Acts to prevent the use of transport or offshore facilities for serious or organised crime.",
+   "New eligibility criteria for security cards would target offences such as those under anti-criminal organisation laws, foreign incursion and recruitment offences, and illegal importation of goods."
+  ],
+  "changes": [
+   "Creates an additional purpose in the Aviation Transport Security Act 2004 and the Maritime Transport and Offshore Facilities Security Act 2003 to prevent serious or organised crime.",
+   "Establishes a regulatory framework for harmonised eligibility criteria for aviation and maritime security identification cards.",
+   "Clarifies and aligns the legislative basis for security checking of card applicants and holders.",
+   "Allows regulations to prescribe penalties for new serious or organised crime offences consistent with existing penalty provisions.",
+   "Inserts a severability provision to guide a court on Parliament's intention.",
+   "Amends the Maritime Act to clarify the legislative basis for background checks of persons accessing secure maritime zones."
+  ],
+  "affected": "All persons required by law to hold an aviation or maritime security identification card, including officials such as airport security guards, would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:31:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-327822",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-11",
+   "stage_hint": null,
+   "brief": "The Transport Security Amendment (Serious or Organised Crime) Bill 2016 strengthens eligibility criteria for Aviation and Maritime Security Identification Cards (ASIC and MSIC) to prevent people with a history of serious or organised crime from accessing secure areas at airports and seaports, aligning criteria across sectors and implementing a National Ice Taskforce recommendation."
+  },
+  {
+   "slug": "speech-330571",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Transport Security Amendment (Serious or Organised Crime) Bill 2016, which strengthens aviation and maritime security identification card schemes to prevent people with serious or organised crime histories from working at airports and seaports, implementing a 2013 election commitment and a National Ice Taskforce recommendation to disrupt drug supply, particularly ice."
+  },
+  {
+   "slug": "speech-330572",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Transport Security Amendment (Serious or Organised Crime) Bill 2016 could unfairly impact airport workers such as cleaners, café staff, and baggage handlers, and called for a Senate inquiry to ensure new eligibility criteria target serious criminals, not minor offenders or union officials. They highlighted concerns about contract changes at Melbourne Airport, where cleaner Victor lost his job after 15 years, and questioned whether the government would exclude occupation health and safety reps or union organisers from obtaining ASIC cards."
+  },
+  {
+   "slug": "speech-330573",
+   "speaker": "Michelle Landry",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The Transport Security Amendment (Serious or Organised Crime) Bill 2016 would permanently bar people with relevant criminal histories from obtaining security clearances at Australian airports and seaports, aiming to combat organised crime and ice trafficking. The speaker also announced a $1 million \"Dob in a Dealer\" campaign in Rockhampton, managed by Crime Stoppers, to encourage reporting of ice dealers."
+  },
+  {
+   "slug": "speech-330574",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The Transport Security Amendment (Serious or Organised Crime) Bill 2016 adds a secondary purpose to aviation and maritime security acts to prevent use of transport in serious and organised crime. Labor supports the bill but will refer it to a Senate inquiry over concerns that widening the legislation's purpose may confuse transport security with targeting organised crime, and argues for more funding to be directed to rehabilitation and harm minimisation programs rather than just law enforcement."
+  },
+  {
+   "slug": "speech-330575",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Transport Security Amendment (Serious or Organised Crime) Bill 2016, which strengthens security clearance criteria for ASIC and MSIC schemes to prevent people with serious or organised crime histories from working at airports and seaports. The bill implements a National Ice Taskforce recommendation, as ice seizures at the border grew nearly 60 times between 2010 and 2014, with 26,000 arrests, and organised crime costing the economy $36 billion annually."
+  },
+  {
+   "slug": "speech-330576",
+   "speaker": "Kate Ellis",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The Transport Security Amendment (Serious or Organised Crime) Bill 2016 was debated, with the speaker endorsing earlier remarks by the member for Kingsford Smith and noting the shadow minister’s long work in this area."
+  },
+  {
+   "slug": "speech-330577",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The Labor speaker supported the Transport Security Amendment (Serious or Organised Crime) Bill but argued it is undermined by the government's visa policies, which allow poorly paid foreign workers with minimal checks into Australian ports, citing 7,732 overseas vessels in six months with only about 2,500 inspected, and a jump in 400 visa grants from 6,000 in 2012–13 to 54,688 in 2014–15."
+  },
+  {
+   "slug": "speech-330578",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "Labor supported the bill's targeted measures against organised crime but raised concerns that expanding transport security legislation to include anti-organised crime purposes could confuse priorities, and criticised the government for allowing foreign-flagged vessels with foreign crews not required to hold Maritime Security Identification Cards, citing the cases of seafarers Zach Kinzett and Joanne Kerin who lost their jobs to foreign replacements."
+  },
+  {
+   "slug": "speech-330579",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Transport Security Amendment (Serious or Organised Crime) Bill 2016 is needed to prevent people with serious criminal histories from obtaining security clearances at Australian airports and seaports, implementing an election commitment and a National Ice Taskforce recommendation. The bill strengthens eligibility criteria for Aviation Security Identification Cards and Maritime Security Identification Cards, with the speaker noting that organised crime costs the Australian economy $36 billion a year and citing over five tonnes of ice seized at the border between 2010 and 2015."
+  },
+  {
+   "slug": "speech-330580",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The Transport Security Amendment (Serious or Organised Crime) Bill 2016 strengthens Aviation and Maritime Security Identification Card schemes to prevent people with relevant criminal histories from accessing secure airport and seaport areas, giving effect to a government election commitment and a National Ice Taskforce recommendation."
+  }
+ ],
+ "acts": []
+}

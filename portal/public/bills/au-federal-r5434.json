@@ -1,0 +1,215 @@
+{
+ "key": "au-federal-r5434",
+ "title": "Safety, Rehabilitation and Compensation Amendment (Improving the Comcare Scheme) Bill 2015",
+ "short_title": "Safety, Rehabilitation and Compensation Amendment (Improving the Comcare Scheme) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5434%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5434%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5434%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5434%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5434%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5434%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5434%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5434%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5434_ems_63129588-26cf-4571-b0de-c65fffcbd1e7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5434%22",
+   "document_date": "2015-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-25",
+  "sentences": [
+   "The bill would update the workers' compensation scheme for Australian Government and ACT Government employees, which has not been comprehensively changed since 1988.",
+   "It would shift the focus of rehabilitation from medical treatment to helping injured workers return to their jobs, and would tighten the link between injuries and work-related causes for compensation eligibility.",
+   "The bill would increase the threshold for claims based on perceived diseases and would exclude injuries from reasonable management actions, including restructures and operational directions."
+  ],
+  "changes": [
+   "Distinguishes work-related injuries from non-work-related ones more clearly by introducing new factors to consider.",
+   "Creates new eligibility rules for specific injuries like heart attacks and strokes.",
+   "Raises the standard for claims related to perceived diseases.",
+   "Broadens the exclusion for reasonable management actions to cover restructures and operational directions."
+  ],
+  "affected": "Australian Government and ACT Government employees, licensees, and employers covered by the Comcare scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:03Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3788",
+   "date": "2015-06-01",
+   "house": "representatives",
+   "question": "Karen McNamara The scheme creates barriers and disincentives for injured workers to recover at work—for example, by emphasising the medical, rather than the vocational nature of rehabilitation services. Furthermore, the scheme allows injured workers to make claims for conditions that are unrelated to work, and to undertake treatments that are not evidence based. The truth be known, some injured workers are not getting back to work as quickly as they should be. There is strong community expectation that those who can work, even if only part-time, should do so to their capacity. These factors are contributing to the Comcare scheme being looked upon in a negative manner by the broader community. The Safety, Rehabilitation and Compensation Amendment (Improving the Comcare Scheme) Bill 2015 is part of a package of reforms that will rehabilitate injured workers and return them to work sooner. The government is also ensuring the long-term viability of the Comcare scheme. Importantly, the proposed measures will ensure that the Comcare scheme continues to provide eligible injured workers with income payments until pension age, and lifetime medical and rehabilitation expenses. The proposed changes will mean that injured workers will be better off in term of access to early rehabilitation, access to provisional medical expense payments, and that they are able to return to work and receive quality medical treatment and attentive care. In addition, claims and disputes will be processed more efficiently and quickly, and some claimants will be eligible to receive higher payments than currently received. The bill is an important step in modernising the Comcare scheme, which has not seen comprehensive reform since it was established in 1988. The bill implements in part recommendations of the review by Mr Peter Hanks QC, and Dr Allan Hawke AC, commissioned by the former government, in 2012. It also makes other changes to the act that will improve the efficiency, cost effectiveness, a",
+   "stage": "Second reading",
+   "ayes": 73,
+   "noes": 48,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 121
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-06-01/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-311310",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Safety, Rehabilitation and Compensation Amendment (Improving the Comcare Scheme) Bill 2015, arguing it would reduce worker compensation, restrict eligibility, and introduce punitive sanctions, with the ACTU estimating low- to medium-income workers could lose between $120,000 and $325,000 over 20 years."
+  },
+  {
+   "slug": "speech-311311",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The Safety, Rehabilitation and Compensation Amendment (Improving the Comcare Scheme) Bill 2015 was supported to modernise the Comcare scheme, as return-to-work rates had fallen from 89% in 2008-09 to approximately 80% and a 2012 review found the scheme created barriers and disincentives for injured workers to return to work."
+  },
+  {
+   "slug": "speech-311452",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The Safety, Rehabilitation and Compensation Amendment (Improving the Comcare Scheme) Bill 2015 reforms the Comcare scheme to emphasise vocational rehabilitation and earlier return to work, increasing the maximum lump-sum payment from $242,000 to $350,000 and introducing provisional medical payments of up to $5,000, while strengthening the distinction between work and non-work related injuries and implementing recommendations from the 2012 review by Peter Hanks QC and Dr Allan Hawke AC."
+  },
+  {
+   "slug": "speech-311453",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The Safety, Rehabilitation and Compensation Amendment (Improving the Comcare Scheme) Bill 2015 was opposed because it would reduce compensation and protections for injured workers, including cuts to lump-sum and incapacity payments, new eligibility rules that exclude workers, and higher proof tests for designated injuries such as heart and blood conditions."
+  },
+  {
+   "slug": "speech-311454",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Safety, Rehabilitation and Compensation Amendment (Improving the Comcare Scheme) Bill 2015, arguing it cuts workers' compensation benefits and standards. Specific provisions criticised include making it harder to establish work-related spinal, cardiac and stroke injuries (Schedule 1), reducing incapacity payments for long-term injuries, and imposing more punitive sanctions than any other Australian workers' compensation scheme (Schedule 15)."
+  },
+  {
+   "slug": "speech-311455",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The speaker argued the Safety, Rehabilitation and Compensation Amendment (Improving the Comcare Scheme) Bill 2015 reduces compensation for injured workers, particularly low- to middle-income frontline workers such as cleaners, construction workers, and security officer Rosa, through a step-down approach (90% income for first 13 weeks, 80% for next 19, then 70%), potentially forcing them back to work before medically safe and costing affected workers between $120,000 and $325,000 over 20 years according to the ACTU."
+  },
+  {
+   "slug": "speech-311456",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The Safety, Rehabilitation and Compensation Amendment (Improving the Comcare Scheme) Bill 2015 increases employer responsibility for alternative work arrangements, requires injured employees to actively participate in rehabilitation, introduces provisional medical payments of up to $5,000, raises the maximum lump-sum payment from $242,000 to $350,000, and provides uncapped long-term care for catastrophically injured workers after three years."
+  },
+  {
+   "slug": "speech-311457",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

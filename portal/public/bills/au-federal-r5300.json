@@ -1,0 +1,925 @@
+{
+ "key": "au-federal-r5300",
+ "title": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2013 [No. 2]",
+ "short_title": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2013 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2014-09-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-07-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-07-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-07-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5300_ems_17c72c8d-ab53-4586-a2b3-c84e34f36c22%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5300_ems_13124aa3-ea63-4188-a751-6593dd48dd28%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5300%22",
+   "document_date": "2014-06-23",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-23",
+  "sentences": [
+   "This bill is part of a package that would repeal the Minerals Resource Rent Tax (MRRT) and related measures.",
+   "The MRRT charged iron ore and coal mining companies on resources after extraction and before significant processing, and also covered coal seam gas from coal mining to avoid double taxation under the Petroleum Resource Rent Tax.",
+   "The government says the repeal would remove a complex tax that added a layer on top of state royalties and company tax, lowering regulatory burdens and restoring confidence in the mining industry."
+  ],
+  "changes": [
+   "Repeal the Minerals Resource Rent Tax.",
+   "Remove the inclusion of coal seam gas as a taxable resource under the MRRT.",
+   "Amend the Petroleum Resource Rent Tax Assessment Act 1987 to ensure PRRT does not apply to those resources.",
+   "Repeal associated changes to income tax and state royalty arrangements."
+  ],
+  "affected": "The iron ore and coal mining industries, as well as companies subject to the MRRT.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:05:04Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3285",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2013 [No. 2] - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 81,
+   "noes": 46,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 127
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-26/2"
+  },
+  {
+   "key": "federal-representatives-3286",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2013 [No. 2] - Consideration in Detail - Agree to the bill",
+   "stage": "Consideration in detail",
+   "ayes": 81,
+   "noes": 45,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-26/3"
+  },
+  {
+   "key": "federal-senate-3524",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "Bill",
+   "ayes": 33,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 51,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/17"
+  },
+  {
+   "key": "federal-senate-3525",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "Bill",
+   "ayes": 10,
+   "noes": 55,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 11,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/18"
+  },
+  {
+   "key": "federal-senate-3526",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "Bill",
+   "ayes": 36,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 51,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/19"
+  },
+  {
+   "key": "federal-senate-3527",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "David Leyonhjelm I oppose schedules 2, 3, 4 and 5 in the following terms: (2) Schedule 2, page 21 (line 1) to page 27 (line 8), to be opposed. (3) Schedule 3, page 28 (line 1) to page 29 (line 25), to be opposed. (4) Schedule 4, page 30 (lines 1 to 27), to be opposed. (5) Schedule 5, page 31 (line 1) to page 35 (line 28), to be opposed. Each of these schedules increases income taxes on business and, in our opinion, they are the worst taxes on the government's books. Together they raise more tax revenue than the repeal of the mining tax will cost. I recognise the need to repair the budget, but the problem is excessive spending, not insufficient taxing. In particular, schedule 2 prevents companies from carrying losses back to an earlier year to obtain a tax offset. It represents a tax rise for businesses, particularly for businesses with varying profits and losses from year to year. Mr Temporary Chairman, do you intend to put each of the schedules separately, or together? The CHAIRMAN: I intended to put the question that schedules 2 to 5 stand as printed. I oppose schedule 3. Currently, small businesses can claim an immediate deduction for an asset costing less than $6,500; schedule 3 seeks to reduce this threshold to $1,000. The higher threshold should be retained as it reduces and simplifies tax for small businesses. I oppose schedule 4 as well. It removes generous tax rules for small businesses using motor vehicles, including an immediate deduction for the first $5,000 of the cost of a motor vehicle. This concession reduces the income tax burden on small business and it should be retained. I also oppose schedule 5, which removes the immediate deductibility of expenditure on geothermal energy exploration and prospecting. This immediate deductibility reduces the income tax burden on business and it should be retained. Mathias Cormann This is where I go back to the most important point I made in my summing up—that any senator voting to amend the mining tax to keep Lab",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 51,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/20"
+  },
+  {
+   "key": "federal-senate-3528",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "Gavin Marshall Senator Leyonhjelm, because that amendment was not successful your next proposed amendment is now redundant. Mathias Cormann I table a supplementary explanatory memorandum relating to the government amendment to be moved to this bill. I move government amendment (1) on sheet BJ276: (1) Schedule 6, item 1, page 36 (lines 5 to 9), omit the item, substitute: 1 Subsection 19(2) Repeal the subsection, substitute: (2) The charge percentage for a quarter in a year described in an item of the table is the number specified in column 2 of the item. On 23 June 2014, the government flagged in the House of Representatives that further changes to the superannuation guarantee schedule announced in the budget would be introduced as an amendment to the Minerals Resource Rent Tax Repeal and Other Measures Bill 2013. Today, I move this amendment, which will increase the super guarantee rate to 9.5 per cent from 1 July 2014 and then remain at 9.5 per cent until 30 June 2018. It will then increase by 0.5 per cent each year until it reaches 12 per cent in 2022-23. This amendment is required because the Senate previously opposed the government's proposal to pause the SG rate at 9.25 per cent. It is the fiscally responsible and necessary thing to do. Claire Moore The Labor opposition will be opposing this amendment—I am sure that is a surprise to the minister. This is not a technical amendment. This is actually of deep importance to every person who has superannuation in our nation. It will mean literally billions of dollars to individual superannuation recipients across our country, as the indexation of the rise is changed. This is a common element of the budget provisions that came through recently, where in a number of our standard payments the government claims that there is no decrease but that, in fact, it is just a change. This is a slower rate of increase. So we disagree with this. We have an expectation of an effective super future in our nation. Treasury analysis s",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 50,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/21"
+  },
+  {
+   "key": "federal-senate-3529",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "John Madigan I oppose schedules 6 and 7 in the following terms: (1) Schedule 6, page 36 (lines 1 to 13), to be opposed. (2) Schedule 7, page 37 (line 1) to page 39 (line 3), to be opposed. Claire Moore We commend our proposition to the chamber. This is important. We wish to stick to the original program and the original legislation in terms of the increase to the superannuation guarantee. I have already spoken about the importance of superannuation to our community and to our economy, and I commend our proposition to the chamber. Mathias Cormann I have made the point previously that this is a tax that has not raised any meaningful revenue. It has a whole lot of unfunded promises attached to it which are not affordable. Any senator who votes to amend this bill to impose measures that are not funded is essentially voting to keep the mining tax. This particular measure would add another $2.6 billion hit to the budget bottom line if it was adopted by the Senate. The government opposes this proposition. The CHAIRMAN: The question is that schedule 6 stand as printed.",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 52,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/22"
+  },
+  {
+   "key": "federal-senate-3530",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "Glenn Lazarus The Palmer United Party oppose schedule 7 in the following terms: (1) Schedule 7, page 37 (line 1) to page 39 (line 3), to be opposed. We oppose this schedule of the Minerals Resource Rent Tax Repeal and Other Measures Bill 2013 [No.2], commonly known as the mining tax repeal bill, to ensure the low-income superannuation contribution is continued. Mathias Cormann As we made very clear in the lead-up to the last election, we were committed to getting rid of the mining tax and we also said that, given this is failed tax which does not raise any revenue, we were also going to get rid of all the unfunded spending promises attached to it. This proposal before the chamber has a cost of $3.6 billion over the forward estimates, which is of course $3.6 billion the budget does not have. That is why the government is opposed to this proposition. Christine Milne The Australian Greens have an amendment which is identical to what has just been proposed, the aim of which is to retain the low-income superannuation contribution. The low-income superannuation contribution is about reducing inequality in Australia and that is something the Australian Greens are passionate about. One of the worst things happening in this country is the widening of the gap between the rich and the poor. Taking away the low-income superannuation contribution at the same time as allowing the wealthiest people in the country to maximise their wealth through superannuation is quite wrong. At the same time as the Prime Minister is supposedly standing up for women in Australia, here he is taking away the low-income superannuation contribution, which is a real attack on women—because we know that women are the ones who are likely to have lower incomes and who are more likely to be left without adequate superannuation. That is why we so strongly support this proposal. As for the government going on about removing the mining tax and therefore having to remove the unfunded other programs associated",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 51,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/23"
+  },
+  {
+   "key": "federal-senate-3531",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "Mathias Cormann I move: That this bill be now read a third time. Stephen Parry The question is that the bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 36,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 50,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/24"
+  },
+  {
+   "key": "federal-senate-3538",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "Eric Abetz I move: That the committee does not insist on its amendments to which the House of Representatives has disagreed. The issue before the committee is the repeal of the Minerals Resource Rent Tax. We went to the last election with a firm promise to repeal that tax, destructive and corrosive as it was for our minerals and resources sector. It is a tax that is pay by about 20 companies, but 125 companies have to report against the tax, despite the fact that they make no contribution. When this tax was first mooted by the previous government, it was going to raise, according to them, thousands of millions of dollars. We now know that not to be the case. In fact, we are lucky if it raises about $300 million. But against that paltry amount of money raised, the previous government hypothecated expenditures over the forward estimates of some $17,000 million. Now the Senate in its amendments has basically determined that, yes, we will get rid of the tax, which only raised a measly $300 million, but we still want all of the expenditures of some $17,000 million over the forward estimates. I say to the Senate that we cannot have it both ways, and as a government we will not have it both ways. One of our important election commitments to the Australian people was that we would seek to get the budget back into a sustainable position. To say on the one hand that we will vote down a tax, but to then say we want all of the expenditure and $16,700 million more of expenditure simply does not add up. What is more, we went to the Australia people at the last election saying, 'We want to remove the mining tax and in so doing we will also remove all the expenditures the previous government had hypothecated against that income.' So we took the public odium for saying, 'Sorry, but we do need to abolish the schoolkids bonus; sorry, we do need to abolish the income support bonus,' and so on with about six expenditure measures. So we were up-front, we told the Australian people. Never",
+   "stage": "Consideration of House message",
+   "ayes": 29,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 49,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/31"
+  },
+  {
+   "key": "federal-representatives-3390",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "question": "This division relates to the Policy _[For a minerals resource rent tax](/policies/14)_. The majority voted in favour of putting a [motion](http://www.openaustralia.org/debates/?id=2014-09-01.34.2) that the bill be laid aside. This means that the bill will no longer be considered. Liberal MP [Steven Ciobo](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?house=representatives&mpc=Moncrieff&mpn=Steven_Ciobo) put this motion because the bill \"cannot be progressed in its current form\". He explained that \"the government cannot accept the three Senate amendments to the bill to retain in full the low-income superannuation contribution, the income support bonus and the schoolkids bonus ... [because] [t]hese measures were to be funded by the proceeds of the mining tax\".(Read Mr Ciobo's full explanation of his motion [here](http://www.openaustralia.org/debate/?id=2014-09-01.34.3). ) _Background to the bill_ The [bill](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5300) was introduced to repeal the [minerals resource rent tax](http://en.wikipedia.org/wiki/Minerals_Resource_Rent_Tax) ('MRRT'), which the Coalition called the “mining tax”.(You can read more about the MRRT [here](http://www.ato.gov.au/Business/Minerals-resource-rent-tax/). ) The tax began 1 July 2012 and applies to profits earned from the extraction of mineral resources such as coal and iron ore. Its abolition was an election promise of the Coalition during the 2013 election campaign.(You can read the Coalition's policy [here](http://liberal.org.au/our-plan/5-pillar-economy). ) The bill also repeals the [schoolkids bonus](http://www.dss.gov.au/our-responsibilities/families-and-children/benefits-payments/schoolkids-bonus), the [income support bonus](http://www.humanservices.gov.au/customer/services/centrelink/income-support-bonus) and the [low income superannuation contribution](http://www.ato.gov.au/Individuals/Super/In-detail/Contributions/Low-income-",
+   "stage": "Consideration of Senate message",
+   "ayes": 79,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-01/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-293768",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293968",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295289",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

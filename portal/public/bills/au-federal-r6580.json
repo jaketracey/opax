@@ -1,0 +1,267 @@
+{
+ "key": "au-federal-r6580",
+ "title": "Radiocommunications Legislation Amendment (Reform and Modernisation) Bill 2020",
+ "short_title": "Radiocommunications Legislation Amendment (Reform and Modernisation) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-08-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications, Cyber Safety and the Arts",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6580%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6580%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6580%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6580%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6580%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6580%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6580%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6580%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6580%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6580%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6580%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6580_ems_6cec7716-2b42-4148-9112-316c241a7eac%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6580_ems_4beba661-743e-4f58-b873-e1439f074f3a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6580_ems_da66dd9f-4321-41ee-8b49-bade91aa979d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6580%22",
+   "document_date": "2020-08-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00151",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-08-27",
+  "sentences": [
+   "This bill updates Australia's radio communication laws based on a 2015 review of spectrum use.",
+   "It would give the communications regulator more freedom to manage radio frequencies while reducing the minister's daily involvement, and require annual work plans.",
+   "The maximum licence period for both apparatus and spectrum licences would increase to 20 years."
+  ],
+  "changes": [
+   "Clarify the goals of the radio communications law and the roles of the minister and the regulator.",
+   "Make it easier to assign and reassign radio frequencies.",
+   "Reduce regulatory barriers between different licence types.",
+   "Better match the law to modern spectrum needs and supply chains.",
+   "Introduce a modern compliance and enforcement system with a wider range of penalties."
+  ],
+  "affected": "The Australian Communications and Media Authority, the minister with responsibility for radio communications, and users of radio spectrum.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-6830",
+   "date": "2020-12-08",
+   "house": "senate",
+   "question": "The majority voted against [opposition amendments](https://www.openaustralia.org.au/senate/?gid=2020-12-08.225.2), which means they failed. ### Amendment text [SHEET 1153](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6580_amend_2a598bed-6817-48c6-a7bc-1f759633e290%22;rec=0) > *(1) Schedule 1, item 1, page 4 (line 14), after \"national security purposes\", insert \", national broadcasting purposes\".* > > *(2) Schedule 3, item 76, page 43 (after line 16), after subsection (2F), insert:* > >> *(2G) For the purposes of subsection (2F), national broadcasting is in the public interest.* > > *(3) Schedule 3, page 43 (before line 17), before item 77, insert:* > >> *76A After paragraph 130(3)(a)* >> >> *Insert:* >> >> *(aa) must have regard to subsection (2G); and* [SHEET 1154](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6580_amend_c875e4ff-2162-47d7-91c0-b5e406052ae2%22;rec=0) > *(1) Clause 2, page 3 (table item 13), omit the table item, substitute:* > > [ [See the table here](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6580_amend_c875e4ff-2162-47d7-91c0-b5e406052ae2%22;rec=0) ] > > *(2) Schedule 11, page 217 (after line 7), at the end of the Schedule, add:* > >> *3 Subparagraph 103(4A) (c) (i)* >> >> *Omit \"31 December 2006\", substitute \"30 June 2024\".*",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 24,
+    "dated": 25,
+    "member": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-08/21"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-393996",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The Radiocommunications Legislation Amendment (Reform and Modernisation) Bill 2020 was introduced to update Australia's spectrum management framework, extending maximum licence terms to 20 years, streamlining allocation processes, and enhancing ACMA’s compliance and enforcement powers."
+  },
+  {
+   "slug": "speech-393997",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The Radiocommunications (Receiver Licence Tax) Amendment Bill 2020 allows the Australian Communications and Media Authority to require upfront payment of tax for specified classes of receiver licences, aligning with spectrum licence practices, as part of reforms that extend maximum licence terms to 20 years."
+  },
+  {
+   "slug": "speech-393998",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The Radiocommunications (Transmitter Licence Tax) Amendment Bill 2020 gives ACMA the power to require upfront payment or annual instalments for specified transmitter licence taxes, aligning with spectrum licence rules and supporting longer licence terms of up to 20 years."
+  },
+  {
+   "slug": "speech-398649",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-11",
+   "stage_hint": null,
+   "brief": "The Labor opposition supported the Radiocommunications Legislation Amendment Bill 2020 to modernise spectrum management, but criticised the government for delivering the legislation over three years late and failing to implement all recommendations from the 2015 Spectrum Review, and for mishandling community television licensing."
+  },
+  {
+   "slug": "speech-398650",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's mismanagement of frequencies has caused stress for community media organisations like Sputnik TV and The Shtick in Melbourne, and supported the Radiocommunications Legislation Amendment (Reform and Modernisation) Bill 2020 as overdue but necessary."
+  },
+  {
+   "slug": "speech-398652",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Radiocommunications Legislation Amendment (Reform and Modernisation) Bill 2020, though broadly supported by Labor, has been delayed for over five years due to the Morrison government’s shambolic policymaking and lack of follow-through, and that it misses an opportunity to address 5G spectrum management issues raised by experts. The speech also criticised the government's handling of the Broadcasting Services Amendment bill, stating that regional media remains in crisis."
+  },
+  {
+   "slug": "speech-398653",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2020-11-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Radiocommunications Legislation Amendment (Reform and Modernisation) Bill 2020, noting Australia's spectrum is worth $177 billion. They argued the ABC and SBS should be recognised as priority non-commercial spectrum users, criticised government funding cuts (the ABC faces a 30% real-term decline since the 1980s), and called for reduced advertising on SBS, also urging the government to guarantee community television's broadcast licence rather than forcing a transition online, citing Channel 44's 27% viewership increase during COVID."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Radiocommunications Legislation Amendment (Reform and Modernisation) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00151",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

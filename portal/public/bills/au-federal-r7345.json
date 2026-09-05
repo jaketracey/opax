@@ -1,0 +1,422 @@
+{
+ "key": "au-federal-r7345",
+ "title": "National Health Amendment (Cheaper Medicines) Bill 2025",
+ "short_title": "National Health Amendment (Cheaper Medicines) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health, Disability and Ageing",
+ "status": "passed",
+ "status_as_of": "2025-09-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-08-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7345_ems_72b6f65c-63ff-4fb1-afbb-e669b2a787ad%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7345_ems_086cac15-ab27-4a1d-8045-c6c45dde19bc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7345%22",
+   "document_date": "2025-07-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00039",
+   "document_date": "2025-09-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9713",
+   "date": "2025-08-28",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7345_amend_96f6853d-1629-4dea-a198-f2680a3703ed%22;rec=0) to the usual second reading amendment, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal). Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes with concern the Government's continuing delays in implementing the recommendations of the Health Technology Assessment review; and* > > *(2) condemns the Prime Minister's failure to secure a meeting with the President of the United States to advance Australia's interests in relation to possible pharmaceutical tariffs and other issues\".*",
+   "stage": "Second reading",
+   "ayes": 43,
+   "noes": 90,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 4
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 85
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-08-28/1"
+  },
+  {
+   "key": "federal-senate-9729",
+   "date": "2025-09-01",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7345_amend_96f6853d-1629-4dea-a198-f2680a3703ed%22;rec=0) to the usual second reading motion, which is \"that the bill be read a second time\" (parliamentary jargon for agreeing with the main idea of the bill), which means it failed. ### Amendment text > *At the end of the motion, add “, but the Senate:* > > *(a) notes with concern the Government’s continuing delays in implementing the recommendations of the Health Technology Assessment review; and* > > *(b) condemns the Prime Minister’s failure to secure a meeting with the President of the United States to advance Australia’s interests in relation to possible pharmaceutical tariffs and other issues”.*",
+   "stage": "Second reading",
+   "ayes": 22,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-01/4"
+  },
+  {
+   "key": "federal-senate-9730",
+   "date": "2025-09-01",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-09-01.35.1) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means that the text below will be added to the usual motion. This does not make any legal changes but is politically influential because it represents the will of the Senate. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) in August 2025 over 300 medicines were in shortage in Australia,* >> >> *(ii) alternatives approved during shortages are often sold out very quickly, and* >> >> *(iii) lowering the cost of medicine does nothing if there is no medicine for Australians to buy; and* > > *(b) calls on the Government to ensure that the supply of medicine is able to meet Australia's needs\".*",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-01/5"
+  },
+  {
+   "key": "federal-senate-9731",
+   "date": "2025-09-01",
+   "house": "senate",
+   "question": "National Health Amendment (Cheaper Medicines) Bill 2025 - Second Reading - Dentistry",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-01/6"
+  },
+  {
+   "key": "federal-senate-9732",
+   "date": "2025-09-01",
+   "house": "senate",
+   "question": "The majority voted against a [request for amendment](https://www.openaustralia.org.au/senate/?gid=2025-09-01.82.1) moved by West Australian Senator [Fatima Payman](https://theyvoteforyou.org.au/people/senate/wa/fatima_payman) (Australia's Voice), which means it failed. Senator Payman [explained that](https://www.openaustralia.org.au/senate/?gid=2025-09-01.82.1): > *The amendment calls for the proposed general patient charge amount of $25 to be reduced to $20. The Pharmacy Guild advocated to reduce it to $19 for it to truly be effective for Australians who are struggling to put food on the table and pay for their medications. This would massively help them with affordability and the cost-of-living crisis.* ### Amendment text > *That the House of Representatives be requested to make the following amendment:* > > *(1) Schedule 1, item 1, page 3 (line 6), omit \"$25.00\", substitute \"$20.00\".* Statement pursuant to the order of the Senate of 26 June 2000 > *Amendment (1)* > >> *Amendment (1) is framed as a request because it amends the bill to further reduce the proposed general patient charge amount from $25.00 to $20.00. The amendment will increase expenditure to subsidise the cost of medicines above the general patient charge amount. The amendment would therefore increase the amount of Pharmaceutical Benefits Scheme payments made from the Medicare Guarantee Fund (Health) Special Account.* >> >> *As the effect of this amendment is to increase payments made from the Medicare Guarantee Fund (Health) Special Account, it will increase expenditure under the standing appropriation in section 80 of the Public Governance, Performance and Accountability Act 2013 or in certain circumstances the standing appropriation in section 18 of the Medicare Guarantee Act 2017.* Statement by the Clerk of the Senate pursuant to the order of the Senate of 26 June 2000 > *Amendment (1)* > >> *If the effect of the amendment is to increase expenditure under a standing appropriation, then it is in",
+   "stage": "In committee",
+   "ayes": 15,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-01/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1195687",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196395",
+   "speaker": "Emma Comer",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-08-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196398",
+   "speaker": "Zhi Soon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-08-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196558",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196658",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196831",
+   "speaker": "Anne Ruston",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197239",
+   "speaker": "David Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Health Amendment (Cheaper Medicines) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00039",
+   "assent_date": "2025-09-04"
+  }
+ ]
+}

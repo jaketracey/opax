@@ -1,0 +1,175 @@
+{
+ "key": "au-federal-alrc-2359",
+ "title": "Customs Tariff Amendment (Incorporation of Proposals) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2013-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-26",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00065",
+   "document_date": "2013-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-271384",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822843",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272305",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272306",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823294",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824737",
+   "speaker": "Gary Humphries",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": "The bill amends the Customs Tariff Act 1995 to incorporate technical changes from a March 2013 tariff proposal, including clearer definitions and corrections to items 20, 21, 27, 30, and 35 in schedule 4. The coalition supported the amendments as uncontroversial."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Incorporation of Proposals) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00065",
+   "assent_date": "2013-06-26"
+  }
+ ]
+}

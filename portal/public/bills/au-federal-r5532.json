@@ -1,0 +1,440 @@
+{
+ "key": "au-federal-r5532",
+ "title": "Migration and Maritime Powers Amendment Bill (No. 1) 2015",
+ "short_title": "Migration and Maritime Powers Amendment Bill (No. 1) 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5532%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5532%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5532%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5532%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5532%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5532%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5532%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5532%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5532%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5532%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5532%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5532%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5532%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5532_ems_3bb387b0-5bc3-449e-9b1b-a7d7ab72dfa7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5532_ems_8b0d9bf3-39d3-4e72-89cc-f9a8d57ba48a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5532%22",
+   "document_date": "2015-09-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-16",
+  "sentences": [
+   "The bill would let some non-citizens whose removal from Australia is aborted or who are refused entry at their destination lawfully return without a visa.",
+   "It would amend the Migration Act and the Maritime Powers Act to clarify powers and rules for visa applications, character decisions, and visa cessation.",
+   "The bill would also allow the Administrative Appeals Tribunal to review certain refusals of protection visas for fast track applicants."
+  ],
+  "changes": [
+   "Creates a lawful basis for an unlawful non-citizen to return to Australia without a visa when removal is aborted or the person does not enter the destination country.",
+   "Treats the person as continuously in the migration zone for sections 48 and 48A, which bar certain visa applications.",
+   "Improves consistency in character-related provisions after the 2014 Character Act amendments.",
+   "Makes visa cessation rules apply to visas that are held but not in effect, with an exception for visas that only allow stay without re-entry.",
+   "Allows the Administrative Appeals Tribunal to review some character or security-based decisions to refuse a protection visa to a fast track applicant.",
+   "Clarifies that a person who had a protection visa application refused on their behalf cannot make a further application."
+  ],
+  "affected": "Unlawful non-citizens being removed from Australia, fast track applicants for protection visas, and agencies administering migration and maritime powers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:12:57Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5045",
+   "date": "2015-11-23",
+   "house": "senate",
+   "question": "Kim Carr I would like to say a few words about the Migration and Maritime Powers Amendment Bill (No. 1) 2015. Labor supports this bill which amends two pieces of legislation passed last year that came into effect in December. The first is the Migration Amendment (Character and General Visa Cancellation ) Act 2014, which essentially strengthened the character test and gave the minister greater discretion in removing noncitizens who had committed crimes and could put the community at risk. We supported that legislation and all but one of the amendments in the present bill, which were mostly of a technical nature, relating to it. Therefore we support the bill before us now. The bill provides consistency in the treatment of deportees who, for whatever reason, have to return to Australia. At present, if a destination country refuses to accept a deportee, that person is lawfully able to return without a visa and, legally, it would be as though the deportee had never left. If a deportee's journey is disrupted for some other reason—such as an unforeseen incident in transit—that person could not return without a visa. This bill removes that anomaly and therefore all returning deportees will have the same legal standing. The bill also provides for greater consistency in the application of the character test, including requirements for information applicants must provide. Under the original legislation, information had to be supplied upfront. This bill extends that requirement to applications made on behalf of others. That is most likely to happen when the applicant is a minor. In this regard Labor is pleased that the government accepted the Senate committee's recommendation that the explanatory memorandum be amended and that the amendments clarify the operations of the legislation with respect to minors and people with cognitive impairment. The amendment will also explain retrospective provisions in the legislation. These changes remove what would otherwise have been obstacle",
+   "stage": "Second reading",
+   "ayes": 41,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 14,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-23/1"
+  },
+  {
+   "key": "federal-senate-5046",
+   "date": "2015-11-23",
+   "house": "senate",
+   "question": "Sarah Hanson-Young We have not been given a grey sheet for these amendments, so I will just have to step through piece by piece. I wish to move the first set of amendments that relate to children in detention. The amendments to schedule (1)— Concetta Fierravanti-Wells Senator Hanson-Young, are you going to deal with amendments (1), (2) and (3)? On sheet 7791, you have amendments (1), (2), (3), (4) and (5). Are you going to deal with them in that order? I understand that Senator Carr's amendment is to Greens' amendment (4). Kim Carr That is correct. Given the nature of these bills, I will follow the pattern I have in recent times—that is, I will speak to all of these amendments so that we do not have to get up and down. The position will not change. It is unlikely to persuade anyone of anything on this matter. So I think we will just state our position. Sarah Hanson-Young I would like to start with my amendments in relation to releasing children from detention. My understanding from sheet 7791 is that the first two amendments deal with 3A section 4AA and 3B subsection 5(1). Can I get clarification that we are all on the same page? Linda Reynolds Senator Hanson-Young, are you seeking leave? Sarah Hanson-Young I am seeking leave to speak to the amendments as circulated. The TEMPORARY CHAIRMAN: Senator Hanson-Young, are you seeking leave to move amendments (1), (2) and (5) together? Yes, please. Leave granted. I move Greens' amendments (1), (2) and (5) on sheet 7791: (1) Schedule 3, page 11 (before line 4), before item 3, insert: 3A Section 4AA Repeal the section, substitute: The Parliament affirms as a principle that no minor is to be deprived of his or her liberty unlawfully or arbitrarily. The arrest, detention or imprisonment of a minor must be in conformity with the law and must only be used as a measure of last resort and for the shortest appropriate period of time. (2) Schedule 3, page 11 (after line 11), after item 3, insert: 3B Subsection 5(1) (definition of _r",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 13,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-23/2"
+  },
+  {
+   "key": "federal-senate-5047",
+   "date": "2015-11-23",
+   "house": "senate",
+   "question": "Chris Ketter The question is that amendment (4) on sheet 7791, as amended, be agreed to.",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 12,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-23/3"
+  },
+  {
+   "key": "federal-senate-5048",
+   "date": "2015-11-23",
+   "house": "senate",
+   "question": "Sarah Hanson-Young I seek leave to bring forward again amendments (1), (2) and (5)—they too relate to releasing children from detention—based on the provisions that have now been voted on in this place. It makes sense to move on those substantial amendments. Kim Carr The Labor Party will be supporting all of those amendments. Are they being moved as one? Sarah Hanson-Young As one. Kim Carr As one—so the Labor Party will be voting in favour of all of those. Chris Ketter The question is that amendments (1), (2) and (5) on sheet 7791 be agreed to. Question agreed to. Sarah Hanson-Young My understanding of the sheet is that we only have amendment (3) remaining. May I just have a clarification from the Clerk? Chris Ketter Yes, that is correct, Senator Hanson-Young. Sarah Hanson-Young I move amendment (3) on sheet 7791: (3) Schedule 3, page 12 (after line 10), after item 8, insert: 8A After section 189 Insert: 189A Certain unlawful non -citizens to be detained in separate immigration detention facilities (1) This section applies if: (a) a person is detained as an unlawful non-citizen under section 189; and (b) the person was an unlawful non-citizen because: (i) the Minister refused, under subsection 501(1), to grant the person a visa because the person did not satisfy the Minister that the person passes the character test; or (ii) the Minister cancelled, under subsection 501(2), a visa that had been granted to the person because the person did not satisfy the Minister that the person passes the character test; and (c) the person is being held in an immigration detention facility. (2) The person must be held in a facility that only holds other unlawful non-citizens of a kind referred to in paragraph (1)(b). (3) In this section: _ character test_ has the meaning given by section 501. _ immigration detention facility_ means: (a) a detention centre established under this Act; or (b) a place approved by the Minister under subparagraph (b)(v) of the definition of _immigration d",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 11,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-23/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-319057",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "A bill was moved to amend the Migration Act and Maritime Powers Act to strengthen and clarify the legal framework for removing unlawful noncitizens, including allowing their return to Australia without a visa if removal is incomplete, and ensuring visa application bars continue to apply as if they never left. It also makes technical amendments to character and visa cancellation provisions."
+  },
+  {
+   "slug": "speech-322616",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration and Maritime Powers Amendment Bill (No. 1) 2015, which makes remedial amendments to two 2014 acts strengthening the character test for non-citizens and providing legal backing for turning back asylum seeker boats. Labor committed to maintaining offshore processing and boat turn-backs to prevent deaths at sea, but criticised the government’s management of Nauru and Manus Island facilities, including keeping people in tents and inadequate medical care that contributed to the death of Hamid Kehazaei, and pledged a future Labor government would resolve the fate of 2,000 people on those islands."
+  },
+  {
+   "slug": "speech-322617",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration and Maritime Powers Amendment Bill (No. 1) 2015 is necessary to close legal loopholes, strengthen border security, and clarify visa cancellation and maritime powers, including amendments to prevent non-citizens from using multiple protection visa applications as delaying tactics and to align maritime powers with the United Nations Convention on the Law of the Sea."
+  },
+  {
+   "slug": "speech-322620",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The Migration and Maritime Powers Amendment Bill (No. 1) 2015 makes technical amendments to strengthen and clarify the legal framework for removing noncitizens, visa cancellations on character grounds, and protection visa application bars, including allowing Administrative Appeals Tribunal review of certain fast-track refusals and confirming Maritime Powers Act compliance with the UN Convention on the Law of the Sea."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,48 @@
+{
+ "key": "au-federal-s1501",
+ "title": "Commonwealth Land (Affordable Housing) Bill 2026",
+ "short_title": "Commonwealth Land (Affordable Housing) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-07-02",
+ "originating_house": "senate",
+ "sponsor": "POCOCK, Sen David",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "11009",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-07-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1501%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1501_ems_68abd678-738e-46d1-9959-b9d2f155e27b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1501%22",
+   "document_date": "2026-07-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

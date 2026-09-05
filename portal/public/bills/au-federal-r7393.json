@@ -1,0 +1,176 @@
+{
+ "key": "au-federal-r7393",
+ "title": "National Environmental Protection Agency Bill 2025",
+ "short_title": "National Environmental Protection Agency Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-10-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy, the Environment and Water",
+ "status": "passed",
+ "status_as_of": "2025-12-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7393_ems_f91281d3-19aa-472a-be29-9cf5c3e6217d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7393%22",
+   "document_date": "2025-10-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00069",
+   "document_date": "2025-12-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-10-30",
+  "sentences": [
+   "The bill would create a new statutory agency called the National Environmental Protection Agency (NEPA) to handle environmental regulation under Commonwealth laws.",
+   "NEPA would issue permits and licences, carry out compliance and enforcement, and make decisions on development proposals and approval conditions.",
+   "The agency would be led by a chief executive officer appointed for a fixed term who can only be removed in specified circumstances, and the minister could issue a public Statement of Expectations that guides but cannot direct NEPA."
+  ],
+  "changes": [
+   "Establishes the National Environmental Protection Agency as a statutory Commonwealth entity with its own budget.",
+   "Gives NEPA regulatory and implementation functions including issuing permits, compliance, and delegated assessments.",
+   "Sets out the chief executive officer's appointment, fixed term, removal conditions, and required skills.",
+   "Requires the minister to table NEPA's annual reports in Parliament.",
+   "Allows the minister to issue a public Statement of Expectations that guides but does not direct the agency.",
+   "Permits an advisory group to support the chief executive officer."
+  ],
+  "affected": "The National Environmental Protection Agency, its chief executive officer, and entities regulated under Commonwealth environmental laws.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1198472",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-06",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Environmental Protection Agency Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00069",
+   "assent_date": "2025-12-01"
+  }
+ ]
+}

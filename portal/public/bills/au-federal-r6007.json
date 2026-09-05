@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6007",
+ "title": "Commonwealth Redress Scheme for Institutional Child Sexual Abuse (Consequential Amendments) Bill 2017",
+ "short_title": "Commonwealth Redress Scheme for Institutional Child Sexual Abuse (Consequential Amendments) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-10-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6007%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6007%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6007%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6007_ems_6950182f-fb44-4074-b4eb-62c5146d5934%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6007%22",
+   "document_date": "2017-10-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-26",
+  "sentences": [
+   "This bill is part of a package that would create a national compensation program for people who experienced child sexual abuse in institutional settings.",
+   "The package would set up a scheme that offers a maximum payment of $150,000, counselling, and a personal response from the responsible institution, starting on 1 July 2018 and running for 10 years.",
+   "The bill would make changes to other laws so that payments are not counted as income for social security or veterans' payments, are protected from bankruptcy, and are exempt from judicial review under the Administrative Decisions (Judicial Review) Act 1977."
+  ],
+  "changes": [
+   "The bill would amend the Social Security Act 1991 and the Veterans' Entitlements Act 1986 to ensure redress payments do not reduce income support.",
+   "The bill would amend the Bankruptcy Act 1966 to keep payments out of a bankrupt's divisible property.",
+   "The bill would exempt decisions under the scheme from judicial review under the Administrative Decisions (Judicial Review) Act 1977."
+  ],
+  "affected": "Survivors of institutional child sexual abuse who are eligible for the scheme, and the institutions that participate.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:28:07Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,132 @@
+{
+ "key": "au-federal-alrc-4154",
+ "title": "Therapeutic Goods Amendment (2013 Measures No. 1) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Ageing",
+ "status": "lapsed",
+ "status_as_of": "2013-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-19",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-271385",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822844",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276356",
+   "speaker": "Andrew Southcott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276357",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824358",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824409",
+   "speaker": "Andrew Southcott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

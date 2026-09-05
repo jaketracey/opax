@@ -1,0 +1,354 @@
+{
+ "key": "au-federal-r6880",
+ "title": "Jobs and Skills Australia Bill 2022",
+ "short_title": "Jobs and Skills Australia Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-07-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2022-11-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-09-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-09-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6880_ems_0ee3eaa2-44fe-40a1-a80f-1ec8a171e2a6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6880_ems_6453e59f-f715-43ed-a839-fcde3cee24ea%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6880_ems_cfdd3ee1-225d-4cc2-8b9c-01aaf9fcbeb9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6880%22",
+   "document_date": "2022-07-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00051",
+   "document_date": "2022-11-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2022-07-27",
+  "sentences": [
+   "This bill is part of a package that would create Jobs and Skills Australia as a new body and repeal the National Skills Commissioner Act 2020.",
+   "The new body would advise ministers on labour market and training issues, lead research and workforce forecasting, and consult with states, territories, employer groups, unions and training providers.",
+   "The government plans to introduce a later bill to set the permanent structure and governance of Jobs and Skills Australia after further consultation, including at the Jobs and Skills Summit."
+  ],
+  "changes": [
+   "Establishes Jobs and Skills Australia as a statutory body in the Department of Employment and Workplace Relations.",
+   "Repeals the National Skills Commissioner Act 2020.",
+   "Requires Jobs and Skills Australia to consult with state and territory governments, employer associations, unions, training providers and regional organisations.",
+   "Appoints an interim director to lead the body until a permanent model is legislated."
+  ],
+  "affected": "The government, the Minister for Employment and Workplace Relations, the Minister for Skills and Training, the Department of Employment and Workplace Relations, state and territory governments, employer associations, unions, training providers, regional organisations, students, learners and the broader Australian workforce.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:44:17Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-420180",
+   "speaker": "Brendan Patrick John O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-07-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-420181",
+   "speaker": "Brendan Patrick John O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-07-27",
+   "stage_hint": null,
+   "brief": "The Jobs and Skills Australia Bill 2022 establishes an independent body to advise on current and future skills and training needs, aiming to address critical labour shortages that have worsened since the pandemic, with a 67% recruitment difficulty rate for higher-skilled occupations in February 2022. The bill creates an interim director within the Department of Employment and Workplace Relations, mandates tripartite consultation, and will be followed by further legislation to set the permanent structure."
+  },
+  {
+   "slug": "speech-422201",
+   "speaker": "Sussan Penelope Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker defended the Coalition's record of over $13 billion in skills investment, establishment of the National Skills Commission, and record 220,000 apprenticeships, while warning that Labor should not cut skills funding or erode the National Skills Commission's work through the new Jobs and Skills Australia."
+  },
+  {
+   "slug": "speech-422202",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Jobs and Skills Australia Bill 2022, establishing an independent agency to provide labour market advice through tripartism, and criticised the previous government for cutting $3 billion from VET and ignoring workers. Concrete commitments include 465,000 fee-free TAFE places, new energy apprenticeships, a full employment white paper, and a TAFE Technology Fund, with reference to Angela Merkel's praise for Australia's tripartite model."
+  },
+  {
+   "slug": "speech-422203",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker supported the Jobs and Skills Australia Bill, criticised militant unionism and the CFMEU, and highlighted record regional job vacancies of 86,900 in July 2022, the need for workers for the upcoming harvest, and the former government's job creation record of 1.1 million jobs and 220,000 apprentices."
+  },
+  {
+   "slug": "speech-422204",
+   "speaker": "Louise Miller-Frost",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker supported the Jobs and Skills Australia Bill to establish a statutory body providing independent advice on skills and workforce training, citing a 17% business shortage and 67% in higher skilled occupations, and announced measures including 180,000 fee-free TAFE places, 10,000 new energy apprenticeships, and a requirement for one in ten workers on major federal projects to be apprentices, trainees or cadets."
+  },
+  {
+   "slug": "speech-422205",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Jobs and Skills Australia Bill 2022 as a mere cosmetic renaming of the National Skills Commission with no new functions, staff or costs, and criticised the government for excluding restaurants and caterers from the Jobs and Skills Summit while failing to partner with businesses on real skills challenges, particularly in South Australia's defence sector."
+  },
+  {
+   "slug": "speech-422206",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that skills shortages in Australia result from a decade of poor workforce planning under the previous government, not just the pandemic, and announced the Jobs and Skills Australia Bill 2022 would establish a new agency to address this. Concrete commitments include 180,000 fee-free TAFE places in 2023, $100 million for 10,000 new energy apprenticeships, and a target of 70% of Commonwealth VET funding for public TAFE."
+  },
+  {
+   "slug": "speech-422208",
+   "speaker": "Pike",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The opposition accepted the establishment of Jobs and Skills Australia but criticised the bill for lacking detail on structure and remit, calling it a rebranding of the National Skills Commission, and noted local training providers like TAFE at Alexandra Hills (which received a $1.2 million upgrade) and the Australian Industry Trade College at Redlands (educating about 200 students)."
+  },
+  {
+   "slug": "speech-422210",
+   "speaker": "Shayne Kenneth Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker supported the Jobs and Skills Australia Bill 2022 and the National Skills Commissioner Repeal Bill 2022, arguing they deliver Labor's election commitment to establish a tripartite body with strategic independence, and criticised the former coalition government for cutting $3 billion from skills and training, resulting in 70,000 fewer apprenticeships and traineeships by May 2022."
+  },
+  {
+   "slug": "speech-422216",
+   "speaker": "Graham Douglas Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Jobs and Skills Australia Bill 2022 will establish an interim body to address critical skills and labour shortages by providing workforce planning advice in partnership with employers, unions, and training sectors, replacing the National Skills Commission. Specific examples cited include local manufacturers QMW and Hi-Tech Tooling in Acacia Ridge struggling to find apprentices and skilled workers, with $1.9 million allocated for additional resourcing."
+  },
+  {
+   "slug": "speech-422268",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Jobs and Skills Australia Bill 2022, which establishes a statutory body to replace the National Skills Commissioner and provide independent advice on workforce skills and training needs, including research into emerging industries like clean energy. The speaker also called for increased women's workforce participation through affordable childcare and expanded parental leave, and urged the inclusion of universities in the bill's consultation requirements."
+  },
+  {
+   "slug": "speech-422269",
+   "speaker": "Maria Vamvakinou",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Jobs and Skills Australia Bill 2022 is essential to address severe skills and labour shortages, reversing a decade of inaction under the previous coalition government. Key commitments include 465,000 fee-free TAFE places, 45,000 new places, $100 million for 10,000 new energy apprenticeships, and a $1.2 billion skills plan, with a tripartite approach involving employers, unions, and education providers."
+  },
+  {
+   "slug": "speech-422270",
+   "speaker": "Zoe Daniel",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Jobs and Skills Australia Bill 2022, arguing it must prioritise empowering women through measures such as expanded childcare, gender impact statements, pay gap transparency, and revaluing feminised industries. They cited that equal female workforce participation could unlock one million skilled workers and add $25 billion to GDP, and noted Denmark's 13% wage gain from pay transparency."
+  },
+  {
+   "slug": "speech-422271",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Jobs and Skills Australia Bill 2022 is needed to address the skills shortage, which is causing inflation, hampering business growth, and limiting opportunities. The bill will establish Jobs and Skills Australia to improve labour market data, forecasting, and training coordination, with a two-stage process prioritising immediate action and further consultation."
+  },
+  {
+   "slug": "speech-422272",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker backed the establishment of Jobs and Skills Australia but announced an amendment to add a dedicated function for rural, regional and remote skills and workforce advice, noting that regional organisations were not listed as key stakeholders. She cited labour shortages, housing barriers and ageing TAFE infrastructure in her electorate of Indi as key regional challenges."
+  },
+  {
+   "slug": "speech-422273",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speech argued for the Jobs and Skills Australia Bill 2022 to address a decade-long skills crisis, citing shortages in early childhood education, aged care, manufacturing, hospitality, veterinary, and healthcare. The speaker announced that the Albanese government would establish Jobs and Skills Australia as an independent agency, provide 180,000 free TAFE places in 2023 through a $1 billion skills agreement, and ensure 70% of Commonwealth VET funding goes to public TAFE."
+  },
+  {
+   "slug": "speech-422274",
+   "speaker": "Aaron Violi",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The member for Casey argued the Jobs and Skills Australia Bill 2022 merely rebrands the existing National Skills Commission with no new funding, citing the coalition's record of 220,000 apprentices and $13 billion in skills investment, and criticised the government's 180,000 fee-free TAFE places as mostly pre-existing, while advocating for working visa extensions and a designated area migration agreement to address local shortages."
+  },
+  {
+   "slug": "speech-422275",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The Jobs and Skills Australia Bill 2022 was supported, with $1.9 million in additional funding announced for clean energy workforce analysis, along with 180,000 fee-free TAFE places next year and a commitment that 70% of Commonwealth vocational education funding will go to the public TAFE sector."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Jobs and Skills Australia Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00051",
+   "assent_date": "2022-11-09"
+  }
+ ]
+}

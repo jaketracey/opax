@@ -1,0 +1,232 @@
+{
+ "key": "au-federal-r6992",
+ "title": "Northern Australia Infrastructure Facility Amendment (Miscellaneous Measures) Bill 2023",
+ "short_title": "Northern Australia Infrastructure Facility Amendment (Miscellaneous Measures) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2023-07-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-07-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6992_ems_195449fc-c1c8-4a57-9571-3118ffe95fb8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6992%22",
+   "document_date": "2023-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00050",
+   "document_date": "2023-07-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-22",
+  "sentences": [
+   "The bill would expand the Northern Australia Infrastructure Facility's ability to lend money for building economic projects.",
+   "It would raise the facility's funding cap from $5 billion to $7 billion and add Christmas Island and the Cocos (Keeling) Islands to the region it covers.",
+   "The bill would also make clear that helping Indigenous people is part of the facility's purpose."
+  ],
+  "changes": [
+   "Increases the NAIF's appropriation from $5 billion to $7 billion.",
+   "Adds Christmas Island and the Cocos (Keeling) Islands to the definition of 'Northern Australia'.",
+   "Clarifies that the Act's objectives include providing financial assistance for Indigenous benefit."
+  ],
+  "affected": "States, territories, other entities, and Indigenous persons in Northern Australia and the Indian Ocean Territories.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8207",
+   "date": "2023-06-22",
+   "house": "senate",
+   "question": "Northern Australia Infrastructure Facility Amendment (Miscellaneous Measures) Bill 2023 - Second Reading - Prohibited financial assistance",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-22/18"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-829773",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-09",
+   "stage_hint": null,
+   "brief": "The Northern Australia Infrastructure Facility Amendment (Miscellaneous Measures) Bill 2023, the Infrastructure Australia Amendment (Independent Review) Bill 2023, the Family Law Amendment Bill 2023, the Family Law Amendment (Information Sharing) Bill 2023, and the Crimes and Other Legislation Amendment (Omnibus) Bill 2023 were referred to the Federation Chamber for further consideration at the adjournment of the debate on the second reading of each bill."
+  },
+  {
+   "slug": "speech-829778",
+   "speaker": "David Littleproud",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2023-05-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Northern Australia Infrastructure Facility Amendment Bill, which expands the NAIF’s jurisdiction to Christmas Island and the Cocos (Keeling) Islands and increases its funding from $5 billion to $7 billion. The speaker also noted the coalition’s record of $3.4 billion in NAIF investments and criticised the government for cutting other regional infrastructure funding."
+  },
+  {
+   "slug": "speech-829895",
+   "speaker": "Raff Ciccone",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-09",
+   "stage_hint": null,
+   "brief": "Additional information received by the Rural and Regional Affairs and Transport Legislation Committee on its inquiry into the Northern Australia Infrastructure Facility Amendment (Miscellaneous Measures) Bill 2023 was presented on behalf of Chair Senator Sterle."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Northern Australia Infrastructure Facility Amendment (Miscellaneous Measures) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00050",
+   "assent_date": "2023-07-03"
+  }
+ ]
+}

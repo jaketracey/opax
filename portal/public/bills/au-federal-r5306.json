@@ -1,0 +1,231 @@
+{
+ "key": "au-federal-r5306",
+ "title": "International Tax Agreements Amendment Bill 2014",
+ "short_title": "International Tax Agreements Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-07-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2014-09-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-09-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5306_ems_206dd960-516a-41eb-b25a-86310041b77b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5306%22",
+   "document_date": "2014-07-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00105",
+   "document_date": "2014-09-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-07-17",
+  "sentences": [
+   "The bill would update Australia's tax treaty with Switzerland to prevent double taxation and allow information exchange on request.",
+   "It would amend the International Tax Agreements Act 1953 to give the new Swiss Convention the force of law in Australia.",
+   "The existing agreement with Switzerland entered into force on 13 February 1981."
+  ],
+  "changes": [
+   "The bill would give effect to revised obligations under the Swiss Convention.",
+   "The bill would add the Swiss Convention to the list of agreements in the International Tax Agreements Act 1953.",
+   "The bill would modernise bilateral tax arrangements to eliminate double taxation.",
+   "The bill would enable tax authorities to exchange taxpayer information on request to prevent fiscal evasion."
+  ],
+  "affected": "Taxpayers and tax authorities in Australia and Switzerland are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-295636",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-08-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296456",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296458",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296459",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296460",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296461",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296462",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296463",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "International Tax Agreements Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00105",
+   "assent_date": "2014-09-24"
+  }
+ ]
+}

@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-r6373",
+ "title": "Treasury Laws Amendment (Timor Sea Maritime Boundaries Treaty) Bill 2019",
+ "short_title": "Treasury Laws Amendment (Timor Sea Maritime Boundaries Treaty) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-08-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6373%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6373%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6373%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6373%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6373%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6373%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6373%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6373%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6373%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6373%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6373%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6373%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6373_ems_f2e26a5a-634d-4fff-8bd0-42390aa80bd0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6373%22",
+   "document_date": "2019-07-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00059",
+   "document_date": "2019-08-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-378491",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-25",
+   "stage_hint": null,
+   "brief": "Labor supported three bills implementing the Timor Sea Maritime Boundaries Treaty, which resolves a 40‑year maritime dispute and establishes new petroleum revenue arrangements—royalties from the Timor Sea funded over 95% of Timor‑Leste’s budget in 2016."
+  },
+  {
+   "slug": "speech-378492",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the three Timor Sea Maritime Boundaries Treaty bills, stressing the need for passage before East Timor's 30 August independence celebrations and acknowledging Labor's role in shifting Australia toward a rules-based settlement of the long-standing maritime boundary dispute."
+  },
+  {
+   "slug": "speech-378645",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-25",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Timor Sea Maritime Boundaries Treaty) Bill 2019 fulfils Australia’s tax obligations under the treaty by applying transitional arrangements for petroleum activities as set out in annex D."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Timor Sea Maritime Boundaries Treaty) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00059",
+   "assent_date": "2019-08-07"
+  }
+ ]
+}

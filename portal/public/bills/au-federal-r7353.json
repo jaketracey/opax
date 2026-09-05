@@ -1,0 +1,229 @@
+{
+ "key": "au-federal-r7353",
+ "title": "Appropriation Bill (No. 2) 2025-2026",
+ "short_title": "Appropriation Bill (No. 2) 2025-2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2025-10-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7353_ems_0503c53b-2d83-4b8f-b582-1814fbb470fc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7353%22",
+   "document_date": "2025-07-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00048",
+   "document_date": "2025-10-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-30",
+  "sentences": [
+   "The bill would authorise spending from the Consolidated Revenue Fund for government services that are not part of its ordinary annual operations.",
+   "It would provide the final seven-twelfths of estimated annual appropriations for the 2025-26 financial year, covering government expenditure from December 2025 to June 2026.",
+   "The bill includes direct funding for two new federal bodies: the Defence and Veterans’ Services Commission and the Australian Naval Nuclear Power Safety Regulator."
+  ],
+  "changes": [
+   "Authorises spending for non-ordinary annual government services.",
+   "Provides the remaining seven-twelfths of annual appropriations for 2025-26.",
+   "Funds two new non-corporate Commonwealth entities.",
+   "Reflects government decisions, election commitments, and savings measures.",
+   "Updates appropriation numbers from the lapsed bills to reflect current estimates."
+  ],
+  "affected": "The federal government and its agencies, including two new entities: the Defence and Veterans’ Services Commission and the Australian Naval Nuclear Power Safety Regulator.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195689",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196769",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197225",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197274",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197400",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-10-07",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 2) 2025-2026",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00048",
+   "assent_date": "2025-10-29"
+  }
+ ]
+}

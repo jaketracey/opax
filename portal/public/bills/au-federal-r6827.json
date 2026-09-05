@@ -1,0 +1,84 @@
+{
+ "key": "au-federal-r6827",
+ "title": "Higher Education Support Amendment (2021 Measures No. 1) Bill 2021",
+ "short_title": "Higher Education Support Amendment (2021 Measures No. 1) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-12-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6827%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6827%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6827%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6827_ems_ee8a40b6-a2ed-4dc2-b0d2-08d24e7e7b08%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6827%22",
+   "document_date": "2021-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-12-02",
+  "sentences": [
+   "This bill would update higher education laws for 2021.",
+   "It would add Avondale University to a list of Table B providers and change the definition of 'grandfathered student' to include honours students who started their bachelor degree before 1 January 2021.",
+   "The bill would give the Minister power to make transitional rules for 12 months to handle refunds and re-credits for students affected retrospectively."
+  ],
+  "changes": [
+   "Avondale University becomes a Table B provider.",
+   "The definition of 'grandfathered student' is expanded to cover honours students who began a bachelor course before 1 January 2021.",
+   "The Minister gets authority to make legislative instruments for transitional matters, limited to 12 months after commencement.",
+   "Grants are made available for research translation and commercialisation by higher education providers."
+  ],
+  "affected": "Students, higher education providers, Avondale University, and the Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-417088",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-12-02",
+   "stage_hint": null,
+   "brief": "The bill lists Avondale University as a table B provider, clarifies that honours students who commenced an ongoing course before 1 January 2021 are grandfathered from higher student contribution amounts, and allows the minister to make grants for research commercialisation. Avondale exceeded national averages in QILT student experience and graduate surveys across multiple measures."
+  }
+ ],
+ "acts": []
+}

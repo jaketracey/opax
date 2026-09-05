@@ -1,0 +1,252 @@
+{
+ "key": "au-federal-r6748",
+ "title": "Foreign Intelligence Legislation Amendment Bill 2021",
+ "short_title": "Foreign Intelligence Legislation Amendment Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2021-09-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6748%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6748%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6748%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6748%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6748%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6748%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6748%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6748%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6748%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6748%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6748%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6748%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6748%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6748_ems_e3588868-8942-44a7-9b86-a500591069f4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6748_ems_c00ccd37-bae0-4dd0-b886-096571adf0b8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6748_ems_3ebda678-78b4-4431-8e5a-0cba4254b1cd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6748%22",
+   "document_date": "2021-08-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00095",
+   "document_date": "2021-09-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2021-08-25",
+  "sentences": [
+   "The bill would close gaps in Australia's foreign intelligence warrant framework so agencies can better collect intelligence on foreign threats.",
+   "It would allow the Director-General of Security to seek warrants for intercepting communications to obtain foreign intelligence, even when the geographic location of the sender and recipient cannot be determined beforehand.",
+   "The Parliamentary Joint Committee on Intelligence and Security would review the amendments five years after the bill starts."
+  ],
+  "changes": [
+   "Amends the Telecommunications (Interception and Access) Act 1979 and the Australian Security Intelligence Organisation Act 1979.",
+   "Removes the strict ban on intercepting domestic communications that both start and end within Australia.",
+   "Allows the Attorney-General to issue warrants for collecting foreign intelligence on Australians in Australia who act for a foreign power."
+  ],
+  "affected": "Intelligence agencies, the Director-General of Security, the Attorney-General, the Parliamentary Joint Committee on Intelligence and Security, and Australians acting for foreign powers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7422",
+   "date": "2021-08-26",
+   "house": "senate",
+   "question": "Foreign Intelligence Legislation Amendment Bill 2021 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 24,
+   "noes": 2,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 12,
+    "earliest": 11,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-26/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-411827",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The government argued the Foreign Intelligence Legislation Amendment Bill 2021 is needed to close two gaps: allowing ASIO to collect foreign communications without knowing the geographic location, and enabling continued intelligence collection on Australians acting for foreign powers when they return to Australia. Robust safeguards, including mandatory destruction of incidentally collected domestic communications and oversight by the Inspector-General of Intelligence and Security, were outlined."
+  },
+  {
+   "slug": "speech-411990",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "Presented the Parliamentary Joint Committee on Intelligence and Security's advisory report on the Foreign Intelligence Legislation Amendment Bill 2021."
+  },
+  {
+   "slug": "speech-411991",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The Parliamentary Joint Committee on Intelligence and Security presented its advisory report on the Foreign Intelligence Legislation Amendment Bill 2021, recommending amendments that include notifying the committee if a mandatory written procedure is issued or varied and a review at least five years after royal assent; subject to those amendments, the committee recommended the bill's passage to allow warrants for intercepting foreign communications while prohibiting domestic interception."
+  },
+  {
+   "slug": "speech-412025",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The Foreign Intelligence Legislation Amendment Bill 2021 amends the Telecommunications (Interception and Access) Act 1979 and the ASIO Act 1979 to address gaps in the foreign intelligence warrant framework caused by technological change, ensuring alignment with Five Eyes partners while maintaining safeguards including a prohibition on collecting domestic communications. The bill enables warrants for foreign intelligence collection on Australians acting for foreign powers and introduces mandatory screening and destruction procedures for inadvertently intercepted domestic communications."
+  },
+  {
+   "slug": "speech-412026",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The Foreign Intelligence Legislation Amendment Bill 2021 updates foreign communications warrants to reflect technological changes and allows foreign intelligence warrants for Australians acting on behalf of a foreign power, with oversight by the Inspector-General of Intelligence and Security. The government accepted all recommendations from the Parliamentary Joint Committee on Intelligence and Security's report tabled on 25 August 2021."
+  },
+  {
+   "slug": "speech-412030",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "Crossbench members received no briefing, explanatory memorandum, or opportunity to consider the Foreign Intelligence Legislation Amendment Bill 2021 before it passed the House."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Foreign Intelligence Legislation Amendment Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00095",
+   "assent_date": "2021-09-02"
+  }
+ ]
+}

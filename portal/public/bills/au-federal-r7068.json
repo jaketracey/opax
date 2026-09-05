@@ -1,0 +1,203 @@
+{
+ "key": "au-federal-r7068",
+ "title": "Counter-Terrorism and Other Legislation Amendment Bill 2023",
+ "short_title": "Counter-Terrorism and Other Legislation Amendment Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-08-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2023-11-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7068%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7068%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7068%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7068%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7068%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7068%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7068%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7068%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7068%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7068%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7068%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7068%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7068%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7068_ems_bc99d0d5-409b-45fa-a42e-bdecf403cb20%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7068_ems_b1ba8a9b-1937-474b-9164-ac0a7ceaed0a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7068_ems_1bfbccad-f622-4594-8cb8-f0aee05fd868%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7068%22",
+   "document_date": "2023-08-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00096",
+   "document_date": "2023-11-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-08-10",
+  "sentences": [
+   "The bill would extend several counter-terrorism powers and add safeguards to police and court procedures.",
+   "It would require the minister to consider rights impacts before declaring a prescribed security zone and the AFP Commissioner to notify oversight bodies within 72 hours.",
+   "The bill would extend police stop-and-search powers in Division 3A of the Crimes Act and control order and preventative detention order regimes in the Criminal Code until 7 December 2026."
+  ],
+  "changes": [
+   "Extends the operation of Division 3A of the Crimes Act for three years to 7 December 2026.",
+   "Requires the minister to consider reasonableness, proportionality, duration, and alternative powers before declaring a prescribed security zone.",
+   "Requires the AFP Commissioner to notify the Commonwealth Ombudsman, INSLM, and PJCIS within 72 hours of a prescribed security zone declaration.",
+   "Requires a police officer exercising stop-and-search powers under section 3UD to inform the person of their right to complain to the Commonwealth Ombudsman or relevant oversight body.",
+   "Extends control order and preventative detention order regimes in the Criminal Code for three years to 7 December 2026.",
+   "Limits issuing authorities for preventative detention orders to superior court judges only."
+  ],
+  "affected": "Police officers, the AFP Commissioner, the Minister, issuing courts, and persons subject to stop-and-search, control orders, or preventative detention orders.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8457",
+   "date": "2023-11-14",
+   "house": "senate",
+   "question": "Counter-Terrorism and Other Legislation Amendment Bill 2023 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-14/1"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Counter-Terrorism and Other Legislation Amendment Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00096",
+   "assent_date": "2023-11-24"
+  }
+ ]
+}

@@ -1,0 +1,402 @@
+{
+ "key": "au-federal-r5706",
+ "title": "Competition and Consumer Amendment (Country of Origin) Bill 2016",
+ "short_title": "Competition and Consumer Amendment (Country of Origin) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Innovation and Science",
+ "status": "passed",
+ "status_as_of": "2017-02-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5706%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5706%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5706%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5706%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5706%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5706%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5706%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5706%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5706%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5706%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5706%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5706%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5706%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5706%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5706_ems_d5df8fc0-98b1-41ce-ad56-1899406d5ffd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5706%22",
+   "document_date": "2016-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00005",
+   "document_date": "2017-02-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-09-01",
+  "sentences": [
+   "The bill would change how businesses can label products as 'Made in Australia' under consumer law.",
+   "It would replace the current 'substantial transformation' test with clearer rules, removing the requirement that 50 per cent of production costs be incurred in Australia.",
+   "The change is estimated to save businesses $48.5 million per year, offsetting the $48.2 million annual cost of a new food labelling standard that began on 1 July 2016."
+  ],
+  "changes": [
+   "Simplifies the test for claiming a product is 'made in' Australia.",
+   "Removes the '50 per cent production cost' test.",
+   "Provides a new legal defence for using a label specified in an information standard."
+  ],
+  "affected": "Businesses that make country of origin claims, particularly food businesses, and consumers who read such labels.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:46:37Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4435",
+   "date": "2016-11-28",
+   "house": "representatives",
+   "question": "Matt Thistlethwaite I am speaking on the Competition and Consumer Amendment (Country of Origin) Bill 2016 in support of the amendment moved by the member for Perth. Australian people deserve to know where their food comes from. They deserve clear and concise food labels to ensure that they can make informed decisions regarding the food that they and their families are consuming. The purpose of this bill is to amend the Australian Consumer Law to simplify the test that is used to justify a claim that certain foods were made in Australia in a specified manner. The bill achieves this by amending one of the safe harbour provisions in the Australian Consumer Law. The Trade Practices Act was the first Commonwealth statute to contain consumer protection provisions. In its earliest form, the consumer protection provisions contained in the TPA were: a general prohibition against misleading or deceptive conduct in trade and commerce, a broad prohibition against making a false representation about the country of origin of goods, and a prohibition against engaging in conduct which was liable to mislead the public as to the nature, including any country of origin, the manufacturing process, the characteristics, the suitability for their purpose or the quantity of any goods. Australia's country-of-origin laws have continued to develop in line with domestic judicial determinations and consistent with Australia's emerging international obligations as a member of the World Trade Organization. The Trade Practices Amendment (Country of Origin Representations) Act 1998 inserted what were colloquially known as 'safe harbour' provisions into the trade practices laws, establishing the regime for determining when goods would and would not be regarded as made in, produced in or substantially grown in Australia. The TPA was renamed the Competition and Consumer Act with effect from 1 January 2011, codifying the safe harbour provisions as defences. Under the current law as it sits before the i",
+   "stage": "Second reading",
+   "ayes": 71,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-11-28/4"
+  },
+  {
+   "key": "federal-senate-4528",
+   "date": "2017-02-08",
+   "house": "senate",
+   "question": "Nick Xenophon I have a number of questions in respect of the Competition and Consumer Amendment (Country of Origin) Bill and in relation to the second reading amendment which was just defeated. I outlined the basis of that amendment in my second reading contribution—in other words, that there be an administrative arrangement to determine whether labelling laws were being complied with. In particular, this matter was raised in the context of the inquiry into this bill. It seems to me that there ought to be an analysis and report on the benefit of an administrative mechanism which would give manufacturers the ability to apply for a ruling on country-of-origin labelling claims. In my additional comments in the Senate committee's report into this bill, I made a recommendation that legislation ought to be introduced to this effect. What I respectfully put to the minister is that there is a real issue as to how the supply of inputs is determined to be Australian or not. In particular, Australian Made Campaign Limited, whilst it supported the removal of the 50 per cent cost test, noted: … some concerns that it may result in adverse consequences for some Australian suppliers of inputs. This will occur where a manufacturer opts to source cheaper inputs offshore, knowing that it will not affect their capacity to make a Made in Australia claim. An example of this is a manufacturer of soft gel capsules who currently purchases gelatin from an Australian manufacturer because it assists them to meet the 50% threshold. The local packaging industry may also be impacted adversely by this change. AMCL raised concerns that there was currently no mechanism by which manufacturers could obtain a definitive answer regarding country-of-origin claims, and this could result in companies being hesitant to make a claim for fear that competitors would challenge its validity. That is contained in the committee report. So that is a particular issue that I would be grateful if the minister could ad",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 11,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-08/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-332937",
+   "speaker": "Craig Laundy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-01",
+   "stage_hint": null,
+   "brief": "The Competition and Consumer Amendment (Country of Origin) Bill 2016 was introduced to simplify and clarify safe harbour provisions in Australian consumer law, as part of a government reform package agreed by states and territories in March 2016, with the Country of Origin Food Labelling Information Standard 2016 having commenced in July 2016."
+  },
+  {
+   "slug": "speech-338517",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Competition and Consumer Amendment (Country of Origin) Bill 2016, arguing it would simplify labelling to help consumers identify where groceries come from, and noted that the previous system allowed products like fruit juice made with foreign fruit or bacon from foreign pork to be labelled \"Made in Australia\" due to cost-of-production loopholes."
+  },
+  {
+   "slug": "speech-338518",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor had taken consumer rights more seriously than the current government, and supported the Competition and Consumer Amendment (Country of Origin) Bill 2016, which introduces a kangaroo-in-a-triangle logo and bar chart for Australian food, clarifies 'substantial transformation', and removes the 50% production cost test for food products."
+  },
+  {
+   "slug": "speech-338776",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment to the Competition and Consumer Amendment (Country of Origin) Bill 2016 to require country-of-origin labelling for seafood sold in restaurants, cafes and fish-and-chip shops, noting that 75% of Australian seafood is imported and that a successful scheme in the Northern Territory shows consumers will pay more for local fish. The speaker also paid tribute to Indigenous Australians' advocacy in the NO MORE Campaign."
+  },
+  {
+   "slug": "speech-338777",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Competition and Consumer Amendment (Country of Origin) Bill 2016, which alters the definition of 'substantial transformation' and removes the 50 per cent production cost test to improve country-of-origin labelling. He also argued that Labor’s 50 per cent renewable energy target would cost each household $8,000 and undermine Australia’s competitive advantage."
+  },
+  {
+   "slug": "speech-338878",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The Competition and Consumer Amendment (Country of Origin) Bill 2016 was argued to be important for constituents, citing Simon Korlaki’s confusion over walnut packaging labeled \"local and imported ingredients\" and calling for clearer food origin labeling."
+  },
+  {
+   "slug": "speech-338880",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Competition and Consumer Amendment (Country of Origin) Bill 2016 will give consumers clearer food labelling, including a bar chart and kangaroo logo, and remove the 50 per cent production cost test, saving businesses $49 million per year. They highlighted that 74% of consumers value country-of-origin information, and cited examples of Australian exports like macadamias and rock lobster benefiting from free trade agreements with China, Japan, and South Korea."
+  },
+  {
+   "slug": "speech-338881",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the government’s 2016 country-of-origin labelling changes and supported the bill, arguing for better oversight and compliance. He highlighted that 70% of fish consumed in Australia is imported and consumers often unknowingly eat imported fish in restaurants, backing Labor’s amendment to require labelling of all seafood including in restaurants and cafes."
+  },
+  {
+   "slug": "speech-338882",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government amendments to the Country of Origin Bill clarify \"significant transformation\" and remove the 50 per cent production cost threshold, building on the committee's report that led to a new labelling system separating where food is grown from where it is manufactured. He opposed the opposition's seafood amendment as premature, arguing it required further investigation."
+  },
+  {
+   "slug": "speech-338883",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Competition and Consumer Amendment (Country of Origin) Bill 2016 and Labor’s seafood labelling amendment, arguing that clearer country-of-origin labels on food are needed to inform consumers, support Australian farmers, and address misleading claims like \"made from local and imported ingredients.\" They noted a two-year transition for new labelling showing the percentage of Australian-grown content, but criticised the lack of mandatory identification of specific foreign origins for non-Australian products."
+  },
+  {
+   "slug": "speech-338884",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Competition and Consumer Amendment (Country of Origin) Bill 2016 simplifies country-of-origin labelling for consumers and businesses, removes the production cost test to save businesses $49 million per year ($550 million over 20 years), and requires the kangaroo-in-a-triangle symbol on foods grown, produced or made in Australia."
+  },
+  {
+   "slug": "speech-338894",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The speaker supported an amendment to the Competition and Consumer Amendment (Country of Origin) Bill 2016, arguing it simplifies country‑of‑origin labelling for food by clarifying “substantial transformation” and removing the 50% production cost test, to give Australians clearer information on the percentage of Australian ingredients."
+  },
+  {
+   "slug": "speech-338895",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The Coalition’s new country-of-origin labelling scheme will require food labels to show where food was produced, grown, made or packaged, with a kangaroo symbol and bar graph indicating the proportion of Australian ingredients. The bill removes the 50 per cent production-cost test, saving businesses $48.5 million annually, and clarifies that minor processing like packaging does not count as \"substantial transformation\" for \"Made in Australia\" claims."
+  },
+  {
+   "slug": "speech-338896",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Competition and Consumer Amendment (Country of Origin) Bill 2016, arguing it simplifies labelling with a kangaroo triangle, bar chart and text showing Australian ingredient percentages, removes the 50% production cost test, and clarifies that packaging is not an ingredient—citing Arnott's Biscuits in Hindmarsh as an example of a local manufacturer affected."
+  },
+  {
+   "slug": "speech-338897",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Competition and Consumer Amendment (Country of Origin) Bill 2016 delivers clearer, simpler food labelling, removing the '50 per cent production cost' test to save businesses nearly $50 million per year, and includes a $15.2 million consumer information campaign and additional ACCC enforcement funding."
+  },
+  {
+   "slug": "speech-338901",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Competition and Consumer Amendment (Country of Origin) Bill 2016, supporting clearer labelling so consumers can make informed choices about Australian produce. He noted a survey of his electorate showed widespread support for the reforms."
+  },
+  {
+   "slug": "speech-338904",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The Competition and Consumer Amendment (Country of Origin) Bill 2016 was presented as a bipartisan reform to provide clearer country-of-origin labelling for consumers, with a commitment to establish a working group to consider origin labelling for seafood in the food services sector."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Competition and Consumer Amendment (Country of Origin) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00005",
+   "assent_date": "2017-02-22"
+  }
+ ]
+}

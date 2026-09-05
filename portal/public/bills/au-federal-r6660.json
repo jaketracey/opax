@@ -1,0 +1,54 @@
+{
+ "key": "au-federal-r6660",
+ "title": "Migration Amendment (Common Sense for All Visas) Bill 2021",
+ "short_title": "Migration Amendment (Common Sense for All Visas) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-15",
+ "originating_house": "representatives",
+ "sponsor": "HILL, Julian, MP",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10885",
+ "portfolio": "(s) HILL, Julian, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-08-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6660%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6660%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6660%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6660_ems_48ce4480-d5dd-495a-b37e-6ec43f7c392a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6660%22",
+   "document_date": "2021-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

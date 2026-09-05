@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6805",
+ "title": "Financial Services Compensation Scheme of Last Resort Levy (Collection) Bill 2021",
+ "short_title": "Financial Services Compensation Scheme of Last Resort Levy (Collection) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6805%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6805%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6805%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6801_ems_4928feaf-f9f0-4a07-947d-6f8c08acb830%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6805%22",
+   "document_date": "2021-10-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-414770",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-28",
+   "stage_hint": null,
+   "brief": "The Financial Services Compensation Scheme of Last Resort Levy (Collection) Bill 2021 establishes a levy framework to fund the Compensation Scheme of Last Resort, comprising an annual levy collected from January 2023 and a one-off levy in 2022-23. It gives ASIC responsibility for issuing levy notices, collecting payments, seeking information, and imposing penalties for late payment or incorrect information."
+  }
+ ],
+ "acts": []
+}

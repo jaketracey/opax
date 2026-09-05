@@ -1,0 +1,187 @@
+{
+ "key": "au-federal-r6727",
+ "title": "Customs Tariff Amendment (Incorporation of Proposals) Bill 2021",
+ "short_title": "Customs Tariff Amendment (Incorporation of Proposals) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-06-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2021-09-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6727%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6727%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6727%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6727%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6727%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6727%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6727%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6727%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6727%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6727%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-08-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6727%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6727%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6727%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6727%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6727_ems_b2ca46cb-f5b7-46c4-ac3d-2b480e551916%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6727%22",
+   "document_date": "2021-06-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00107",
+   "document_date": "2021-09-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-408448",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The bill extends duty-free imports for COVID-19 medical and hygiene products to June 2021, provides duty-free imports for the F-35 Joint Strike Fighter Program, and extends duty-free imports for motor vehicles and components for testing and development by former Automotive Transformation Scheme participants until June 2025."
+  },
+  {
+   "slug": "speech-410948",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to extend free customs duty on COVID-19 medical and hygiene products (reducing receipts by $3.8 million), goods for the F-35 Joint Strike Fighter Program ($6.7 million reduction), and motor vehicle R&D components for former Automotive Transformation Scheme providers ($1.7 million reduction), but moved an amendment criticising the government for lacking a long-term plan for strategic industries and for failing to secure a diverse vaccine supply."
+  },
+  {
+   "slug": "speech-410953",
+   "speaker": "Terry Young",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-09",
+   "stage_hint": null,
+   "brief": "The speaker argued for amendments to the Customs Tariff Act to extend duty-free imports for COVID-19 medical and hygiene products until 30 June 2021 (reducing receipts by $3.8 million), provide duty-free goods for the F-35A Joint Strike Fighter program (reducing receipts by $6.7 million), and grant duty-free concessions for certain motor vehicles and components used in Australian automotive R&D (reducing receipts by $1.7 million)."
+  },
+  {
+   "slug": "speech-410954",
+   "speaker": "Vince Connelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-09",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment (Incorporation of Proposals) Bill 2021 extends tariff exemptions for PPE imports ($3.8 million), F-35 Joint Strike Fighter components ($6.7 million), and low-emission vehicle R&D ($1.7 million), while noting 13.6 million COVID-19 vaccine doses administered and 22% of Australians fully vaccinated."
+  },
+  {
+   "slug": "speech-410955",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the government's Customs Tariff Amendment (Incorporation of Proposals) Bill 2021 but opposed an unspecified amendment, arguing for tariff-free status on medical goods to address COVID-19, a tariff exemption to maintain Australia's role in the Joint Strike Fighter supply chain (which has generated $2 billion in net benefit), and a continuation of tariff-free imports for automotive component suppliers."
+  },
+  {
+   "slug": "speech-410978",
+   "speaker": "Keith Pitt",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-10",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment (Incorporation of Proposals) Bill 2021 amends the Customs Tariff Act 1995 to extend free duty on medical and hygiene products (e.g., face masks, disinfectants) to 30 June 2021, provide concessional treatment for goods used in the F-35 Joint Strike Fighter Program, and grant concessional treatment for goods used in automotive research and development for vehicles designed or engineered in Australia."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Incorporation of Proposals) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00107",
+   "assent_date": "2021-09-13"
+  }
+ ]
+}

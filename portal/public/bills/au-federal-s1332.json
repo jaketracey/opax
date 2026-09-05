@@ -1,0 +1,197 @@
+{
+ "key": "au-federal-s1332",
+ "title": "Electoral Legislation Amendment (COVID Enfranchisement) Bill 2022",
+ "short_title": "Electoral Legislation Amendment (COVID Enfranchisement) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-09",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2022-02-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1332%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1332%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1332%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1332%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1332%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1332%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1332%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1332%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1332%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1332%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1332%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1332_ems_8964542b-a4de-45b9-a624-f2a8ba052530%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1332%22",
+   "document_date": "2022-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00005",
+   "document_date": "2022-02-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-09",
+  "sentences": [
+   "This bill would let voters who are forced to isolate or quarantine due to COVID-19 vote in a federal election if they cannot get to a polling place in the last 72 hours before voting ends.",
+   "It would allow regulations to expand the existing secure telephone voting system, currently used by blind voters and Antarctic voters, to people covered by a public health order who cannot attend a polling place.",
+   "The new telephone voting option would only be available from 6.01pm on the Wednesday three days before polling day until polls close, and the measures would automatically end on 31 December 2022."
+  ],
+  "changes": [
+   "Amends the Electoral Act to create contingency arrangements for voters in mandatory COVID-19 isolation or quarantine.",
+   "Allows the Electoral Commissioner to make regulations expanding secure telephone voting to COVID-affected voters.",
+   "Requires the Electoral Commissioner to inform the Prime Minister and the Opposition Leader in writing before making such regulations."
+  ],
+  "affected": "Voters in Australia who are subject to a public health order requiring self-isolation or quarantine due to COVID-19 and cannot attend a polling place in the final 72 hours before polling day.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:05Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-418730",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-15",
+   "stage_hint": null,
+   "brief": "This bill amends the Electoral Act 1918 to allow secure telephone voting for people in mandatory COVID-19 isolation or quarantine during the final 72 hours before polling, with the option active until 31 December 2022."
+  },
+  {
+   "slug": "speech-418798",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "Three electoral bills were presented: one requiring electoral material authorisation using common names; one enabling phone voting for Australians isolating due to COVID-19 at the 2022 federal election (sunsetting end of 2022); and one strengthening laws against foreign interference. The speaker supported these bills, citing ASIO’s 9 February threat assessment of a foreign-linked attempt to fund candidates, and urged Australians to ignore foreign governments’ preferences and decide elections themselves."
+  },
+  {
+   "slug": "speech-418799",
+   "speaker": "Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-418801",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker supported three electoral bills: simplifying authorisation requirements for political materials, expanding telephone voting for voters affected by COVID-19, and closing a loophole to prohibit foreign entities from influencing Australian elections through issue-based campaigns."
+  },
+  {
+   "slug": "speech-418815",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker supported three electoral amendment bills, including closing a loophole to ban foreign entities from incurring electoral expenditure over $1,000 or authorising electoral material, and increasing the penalty for misleading vote-casting material from six months to three years to allow AFP investigations. They also noted Labor’s prior leadership on banning foreign donations in 2018."
+  },
+  {
+   "slug": "speech-418818",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia's electoral system is rigged against minor parties, criticised the AEC's COVID-19 vaccine mandates for election workers as \"superstition, ignorance and stupidity\", and announced a third reading amendment to protect parliamentary speech from censorship by foreign tech giants like Facebook, Google and YouTube."
+  },
+  {
+   "slug": "speech-418819",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The government announced three electoral bills: the Foreign Influences and Offences Bill bans foreign campaigners from authorising electoral material and prohibits foreign entities from fundraising or spending $1,000 or more on electoral expenditure per year, while increasing the maximum penalty for misleading voters; the Authorisations Bill clarifies voter information and adds flexibility for party names; and the COVID Enfranchisement Bill extends secure telephone voting to those in COVID-19 isolation during the final 72 hours before the 2022 federal election."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Electoral Legislation Amendment (COVID Enfranchisement) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00005",
+   "assent_date": "2022-02-17"
+  }
+ ]
+}

@@ -1,0 +1,677 @@
+{
+ "key": "au-federal-r7176",
+ "title": "Treasury Laws Amendment (Financial Market Infrastructure and Other Measures) Bill 2024",
+ "short_title": "Treasury Laws Amendment (Financial Market Infrastructure and Other Measures) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-03-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2024-09-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-06-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-06-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7176_ems_dd1e1136-f342-4dbf-8eae-9db60d977f84%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7176_ems_bf07f244-db14-4366-aa7e-fdc3d67257a5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7176_ems_ae8c2ce2-c6dc-4ac6-969b-eed1236c3769%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7176%22",
+   "document_date": "2024-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00087",
+   "document_date": "2024-09-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2024-03-27",
+  "sentences": [
+   "The bill would keep the rule that regulations must approve any person's stake in ASX above a certain level.",
+   "New regulations approving such stakes would only start after the disallowance period ends.",
+   "The amendments also fix outdated references to ASX and correct a problem with when a civil penalty rule begins."
+  ],
+  "changes": [
+   "Retains the requirement for regulations to approve a person's voting power in ASX in specific situations.",
+   "Delays the effect of approving regulations until after the disallowance period.",
+   "Updates old references to ASX and fixes a technical start-date issue for a civil penalty provision."
+  ],
+  "affected": "The amendments affect ASX, persons whose voting power in ASX may be approved by regulations, and entities subject to civil penalty provisions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:46Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8957",
+   "date": "2024-06-06",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Financial Market Infrastructure and Other Measures) Bill 2024 - Second Reading - Decline second reading",
+   "stage": "Second reading",
+   "ayes": 52,
+   "noes": 84,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 73
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-06-06/2"
+  },
+  {
+   "key": "federal-representatives-8958",
+   "date": "2024-06-06",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Financial Market Infrastructure and Other Measures) Bill 2024 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 84,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-06-06/3"
+  },
+  {
+   "key": "federal-senate-9376",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Financial Market Infrastructure and Other Measures) Bill 2024 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/29"
+  },
+  {
+   "key": "federal-senate-9377",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted in favour of [Government amendment (4)](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7176_amend_760f8470-61d6-4369-a7cd-d4b1ddbd1dac%22;rec=0), which means it will now be incorporated into the bill. The amendment is related to scenario analysis. ### Amendment text > *(4) Schedule 4, item 26, page 259 (after line 21), after subsection 296D(2), insert:* > >> *(2A) Subsection (2B) applies if sustainability standards made for the purposes of subsection (1) require the disclosure of:* >> >>> *(a) a scenario analysis (within the meaning given by sustainability standards made for the purposes of this paragraph); or* >>> >>> *(b) information derived from a scenario analysis; or* >>> >>> *(c) information about a scenario analysis.* >> >> *(2B) For the purposes of subsection (1), a disclosure of a scenario analysis, information derived from a scenario analysis or information about a scenario analysis is taken not to satisfy that requirement unless the scenario analysis is carried out using at least both of the following scenarios:* >> >>> *(a) the increase in the global average temperature well exceeds the increase mentioned in subparagraph 3(a)(i) of the Climate Change Act 2022;* >>> >>> *(b) the increase in the global average temperature is limited to the increase mentioned in subparagraph 3(a)(ii) of that Act.*",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 8,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/30"
+  },
+  {
+   "key": "federal-senate-9378",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2024-08-22.168.1) *that part 4 and item 127 of schedule 2 stand as printed.* In other words, they voted to oppose those parts, which was proposed by the Government. The parts related to the ASX Limited and CS facility licensees. ### What are the opposed parts? **Schedule 2, Part 4** > Part 4 — Ministerial power to approve increases in voting power in ASX Limited > > *Corporations Act 2001* > > *36 Subsection 850B(1)* > >> *Omit “(1)”.* > > *37 Paragraphs 850B(1)(b) and (c)* > >> *Repeal the paragraphs, substitute:* >> >>> *(b) if an approval of a higher percentage is in force under Subdivision B in relation to the body and in relation to the person—that higher percentage.* > > *38 Subsection 850B(2)* > >> *Repeal the subsection.* > > *39 Subsection 851A(1)* > >> *Omit “(other than the Australian Stock Exchange Limited)”.* **Schedule 2, item 127** > *127 Subsection 821A(2)* > >> *Omit “ paragraph (1)(aa), (a), (c), (d), (e), (f), (g) or (h)”, substitute “a paragraph of subsection (1) other than paragraph (b)”.*",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 8,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/31"
+  },
+  {
+   "key": "federal-senate-9379",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted against the [opposition amendments](https://www.openaustralia.org.au/senate/?gid=2024-08-22.170.1), which means they were not successful and will not be included in the bill. The amendments related to scope 3 greenhouse gas emissions and removing group 3 entities. ### Amendment text **SHEET 2692** > *(1) Schedule 4, item 25, page 253 (line 30) to page 254 (line 15), omit paragraphs 292A(3)(a) to (c), substitute:* > >> *(a) the consolidated revenue for the financial year of the entity and the entities it controls (if any) is $200 million or more;* >> >> *(b) the value of the consolidated gross assets at the end of the financial year of the entity and the entities it controls (if any) is $500 million or more;* >> >> *(c) the entity and the entities it controls (if any) have 250 or more employees at the end of the financial year.* > > *(2) Schedule 4, item 145, page 280 (lines 16 to 23), omit the definitions of first transitional period and second transitional period in section 1707.* > > *(3) Schedule 4, item 145, page 281 (after line 5), after the definition of start date in section 1707, insert:* > >> *transitional period: if the start date occurs on 1 January 2025 or 1 July 2025, the transitional period is the period that:* >> >>> *(a) starts on the start date; and* >>> >>> *(b) ends on 30 June 2026.* >>> >>> *Otherwise, there is no transitional period.* > > *(4) Schedule 4, item 145, page 281 (line 25), omit \"first\".* > > *(5) Schedule 4, item 145, page 281 (line 29) to page 282 (line 1), omit paragraphs 1707B(1)(b) and (c), substitute:* > >> *(b) the financial year commences on or after 1 July 2026.* > > *(6) Schedule 4, item 145, page 282 (line 3), omit \"first\".* **SHEET 2693** > *(1) Schedule 4, item 3, page 247 (lines 17 and 18), omit the definition of financed emissions in section 9.* > > *(2) Schedule 4, item 3, page 247 (lines 23 and 24), omit the definition of scope 3 greenhouse gas emissions in section 9.* > > *(3) Schedule 4, item 26,",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 8,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/32"
+  },
+  {
+   "key": "federal-senate-9380",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted against [Australian Greens amendments](https://www.openaustralia.org.au/senate/?gid=2024-08-22.172.1), which means they were not successful and will not be included as part of the bill. The amendments were in respect to the period of limited immunity and misleading or deceptive conduct in respect to limited immunity for new sustainability reporting. ### Amendment text > *(1) Schedule 4, item 145, page 283 (line 21), after \"person\", insert \"for loss or damage suffered as a result of conduct that is misleading or deceptive, or likely to mislead or deceive,\".* > > *(2) Schedule 4, item 145, page 284 (line 5), omit \"3 years\", substitute \"12 months\".*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/33"
+  },
+  {
+   "key": "federal-senate-9381",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-08-22.174.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means it failed. ### Amendment text > *(1) Schedule 4, item 145, page 284 (line 17), omit \"subparagraph);\", substitute \"subparagraph).\".* > > *(2) Schedule 4, item 145, page 284 (lines 18 to 20), omit subparagraph 1707D(3)(b)(iii).* ### What is subparagraph 1707D(3)(b)(iii)? > *(3) A statement is a protected statement if it is:* > >> *(b) about any of the following:* >> >>> *(iii) a transition plan (within the meaning given by sustainability standards made for the purposes of this subparagraph).*",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/34"
+  },
+  {
+   "key": "federal-senate-9382",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Financial Market Infrastructure and Other Measures) Bill 2024 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 8,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/35"
+  },
+  {
+   "key": "federal-representatives-9090",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2024-09-09.32.1) \"That the amendments be agreed to.\" In other words, they voted to agree with the Senate amendments. This means that the bill has now been passed in its final form in both houses of parliament and so can now become law. ### Amendment text > *(1) Schedule 2, page 109 (after line 11), after item 1, insert:* > >> *1A Subsection 821A(2)* >> >> *Omit \"paragraph (1)(aa), (a), (c), (d), (e), (f), (g) or (h)\", substitute \"a paragraph of subsection (1) other than paragraph (b)\".* > > *(2) Schedule 2, Part 4, page 122 (lines 1 to 14), omit the Part.* > > *(3) Schedule 2, item 127, page 194 (lines 24 to 26), omit the item.* > > *(4) Schedule 4, item 26, page 259 (after line 21), after subsection 296D(2), insert:* > >> *(2A) Subsection (2B) applies if sustainability standards made for the purposes of subsection (1) require the disclosure of:* >> >>> *(a) a scenario analysis (within the meaning given by sustainability standards made for the purposes of this paragraph); or* >>> >>> *(b) information derived from a scenario analysis; or* >>> >>> *(c) information about a scenario analysis.* >> >> *(2B) For the purposes of subsection (1), a disclosure of a scenario analysis, information derived from a scenario analysis or information about a scenario analysis is taken not to satisfy that requirement unless the scenario analysis is carried out using at least both of the following scenarios:* >> >>> *(a) the increase in the global average temperature well exceeds the increase mentioned in subparagraph 3(a)(i) of the Climate Change Act 2022;* >>> >>> *(b) the increase in the global average temperature is limited to the increase mentioned in subparagraph 3(a)(ii) of that Act.* > > *(5) Schedule 5, page 288 (after line 18), after item 6, insert:* > >> *6A Paragraphs 850B(1)(b) and (c)* >> >>> *Omit \"Australian Stock Exchange Limited\" (wherever occurring), substitute \"ASX Limited\".* >> >",
+   "stage": "Consideration of Senate message",
+   "ayes": 90,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 75,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 142,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-09-09/2"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Financial Market Infrastructure and Other Measures) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00087",
+   "assent_date": "2024-09-17"
+  }
+ ]
+}

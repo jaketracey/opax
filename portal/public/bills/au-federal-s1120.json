@@ -1,0 +1,331 @@
+{
+ "key": "au-federal-s1120",
+ "title": "Treasury Laws Amendment (Enhancing Whistleblower Protections) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Enhancing Whistleblower Protections) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-07",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-03-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-03-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1120_ems_c9a4777d-035d-4143-b785-b007c64c0ab6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1120_ems_d7d3e9f0-9881-44b7-a02f-ef2170fc8a0a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1120_ems_029c9d43-74c1-4fa3-b382-ecc004a14280%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1120%22",
+   "document_date": "2017-12-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00010",
+   "document_date": "2019-03-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2017-12-07",
+  "sentences": [
+   "This bill would strengthen protections for people who report tax avoidance and corporate misconduct.",
+   "It would change the Taxation Administration Act 1953 and the Corporations Act to expand who can be protected, allow anonymous reports, and shield whistleblowers' identities.",
+   "The bill would also improve access to compensation for those who suffer retaliation after making a disclosure."
+  ],
+  "changes": [
+   "Broaden the range of individuals eligible for protection.",
+   "Allow anonymous disclosures.",
+   "Protect the identity of tax and corporate whistleblowers.",
+   "Expand who can receive a whistleblower disclosure.",
+   "Improve access to compensation or other remedies for victimisation."
+  ],
+  "affected": "Individuals who disclose information to the Australian Taxation Office on tax avoidance and other tax issues, and corporate whistleblowers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375120",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-14",
+   "stage_hint": null,
+   "brief": "The Labor MP supported the Treasury Laws Amendment (Enhancing Whistleblower Protections) Bill 2018 as a step forward but argued it does not go far enough, and announced that a future Labor government would establish a whistleblower rewards scheme, a whistleblower protection authority, a consolidated whistleblowing act, and a special prosecutor for corporate crime."
+  },
+  {
+   "slug": "speech-375375",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Enhancing Whistleblower Protections) Bill 2018, arguing it delivers on the government’s 2016 budget commitment to protect whistleblowers on tax misconduct and strengthens Australia’s tax system. The speaker also argued that Australia’s 30% corporate tax rate is uncompetitive compared to Hong Kong (15%), Singapore (17%), the UK (below 20%) and the US, and that past rate cuts under Paul Keating, Peter Costello and John Howard increased tax revenue as a share of GDP."
+  },
+  {
+   "slug": "speech-375380",
+   "speaker": "S Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-375383",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Enhancing Whistleblower Protections) Bill 2018 is essential for removing systemic corruption from institutions and ensuring public trust in a free society. They emphasised that whistleblower protections allow individuals to expose aberrant behaviour that might otherwise go unnoticed, preventing the perception that the system is rigged."
+  },
+  {
+   "slug": "speech-375385",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "Support for the Treasury Laws Amendment (Enhancing Whistleblower Protections) Bill 2018 was expressed alongside a push for a stronger, more comprehensive private-sector scheme. Whistleblowers Jeff Morris and Ben Koh were praised, and the government was criticised for voting 26 times against a banking royal commission and for a tardy, partial response to its recommendations."
+  },
+  {
+   "slug": "speech-375512",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "A Shorten Labor government will establish a whistleblower reward scheme, a whistleblower protection authority, a single Australian whistleblowing act, and fund a special prosecutor for corporate crime. Labor also pledged a banking royal commission implementation taskforce and an extra $25 million over two years for the Commonwealth Director of Public Prosecutions to tackle corporate crime."
+  },
+  {
+   "slug": "speech-375513",
+   "speaker": "John Alexander",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Enhancing Whistleblower Protections) Bill 2018 is essential to strengthen protections for corporate and tax whistleblowers, citing the Hayne royal commission's revelations of banking misconduct and the government's 2016‑17 budget commitment to protect those disclosing tax misconduct to the ATO, with former minister Kelly O'Dwyer and Senator Rex Patrick noted as key supporters."
+  },
+  {
+   "slug": "speech-375514",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill improves whistleblower compensation but is insufficient, and announced Labor’s commitments to a whistleblower reward scheme, a whistleblower protection authority, and a $25 million corporate crime task force, while criticising the government for voting 26 times against a banking royal commission."
+  },
+  {
+   "slug": "speech-375516",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Enhancing Whistleblower Protections) Bill 2018 is a partial and inadequate response to the 2017 parliamentary committee recommendations, with the government having been forced to act after delaying a banking royal commission for over 600 days. Labor supports the bill but will implement a whistleblower reward scheme, a single Australian whistleblowing act, and a whistleblower protection authority to better protect and encourage disclosures of corporate misconduct."
+  },
+  {
+   "slug": "speech-375518",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the Treasury Laws Amendment (Enhancing Whistleblower Protections) Bill 2017, arguing it strengthens protections for corporate and tax whistleblowers by consolidating frameworks and removing the good faith test. The bill addresses 32 of 35 recommendations from a 2017 parliamentary report, but omits a single private sector act, reward scheme, and independent authority."
+  },
+  {
+   "slug": "speech-375519",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The Labor opposition supported the Treasury Laws Amendment (Enhancing Whistleblower Protections) Bill 2018 but argued it was insufficient, proposing a whistleblower reward scheme, a whistleblower protection authority, a single whistleblower act, and a special prosecutor for corporate crime."
+  },
+  {
+   "slug": "speech-375520",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The member argued the bill is a limited step forward and announced Labor's plan to create an Australian whistleblower act, a whistleblower protection authority with $3.2 million in funding, and a reward scheme for whistleblowers."
+  },
+  {
+   "slug": "speech-375663",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The speaker argued for stronger whistleblower protections and announced Labor's plan to establish a whistleblower rewards scheme, a protection authority with $3.2 million in funding and five full-time positions within the Commonwealth Ombudsman, a single whistleblowing act, and a special prosecutor for corporate crime."
+  },
+  {
+   "slug": "speech-375664",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The speaker argued the whistleblower protections bill is welcome but insufficient, announcing Labor's commitment to a $3.2 million whistleblower protection authority with five full-time positions and a rewards scheme for whistleblowers, and criticised the government for opposing a banking royal commission 26 times and providing a $17 billion bank handout."
+  },
+  {
+   "slug": "speech-375666",
+   "speaker": "Ted O'Brien",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The speaker argued the Treasury Laws Amendment (Enhancing Whistleblower Protections) Bill 2018 is needed to empower and protect whistleblowers, ensuring transparency and accountability in corporate and tax misconduct. The bill delivers on the 2016-17 budget commitment to protect tax whistleblowers, improves compensation access, aligns protections with other Commonwealth whistleblower legislation, and mandates a statutory review after five years."
+  },
+  {
+   "slug": "speech-375667",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "Labor will create a single Australian Whistleblowing Act, a whistleblower protection authority, and a rewards scheme funded by penalties, along with a special prosecutor for corporate crime. The speaker also criticised the government for voting 26 times against the banking royal commission, which was triggered by a whistleblower."
+  },
+  {
+   "slug": "speech-375668",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Enhancing Whistleblower Protections) Bill 2018 was presented, amending the Corporations Act 2001 and Taxation Administration Act 1953 to enhance corporate and tax whistleblower protections. It expands eligible disclosures, adds a whistleblower policy mandate for large companies, consolidates protections from multiple acts, and introduces tax whistleblower protections, citing corporate crime costs of over $8.5 billion annually and support from the AFP, ATO, and ASIC."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Enhancing Whistleblower Protections) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00010",
+   "assent_date": "2019-03-12"
+  }
+ ]
+}

@@ -1,0 +1,224 @@
+{
+ "key": "au-federal-r5624",
+ "title": "National Disability Insurance Scheme Amendment Bill 2016",
+ "short_title": "National Disability Insurance Scheme Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-03-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2016-05-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5624%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5624%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5624%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5624%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5624%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5624%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5624%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5624%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5624%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5624%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5624%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5624%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5624%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-05-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5624%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5624_ems_01f13b7e-b942-4b6c-805e-ecf070c1c80a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5624%22",
+   "document_date": "2016-03-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00051",
+   "document_date": "2016-05-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-16",
+  "sentences": [
+   "The bill would enlarge the board of the agency that runs the National Disability Insurance Scheme.",
+   "It would increase the number of board members, including the chair, and set a quorum as a majority of members.",
+   "The change is meant to give the board the diversity and strength it needs to manage a rapid rise in participants during the transition to the full scheme from 1 July 2016 to 30 June 2019."
+  ],
+  "changes": [
+   "Increase the number of board members, including the chair.",
+   "Change the quorum for board meetings to a majority of members.",
+   "Enable the board to handle a rapid increase in NDIS participants during the transition to the full scheme."
+  ],
+  "affected": "The National Disability Insurance Scheme Launch Transition Agency and its board.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-331690",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The mover proposed resuming proceedings on five lapsed bills: the Tax Laws Amendment (Tax Incentives for Innovation) Bill 2016, Financial System Legislation Amendment (Resilience and Collateral Protection) Bill 2016, National Disability Insurance Scheme Amendment Bill 2016, National Disability Insurance Scheme Savings Fund Special Account Bill 2016, and Omnibus Repeal Day (Autumn 2015) Bill 2015."
+  },
+  {
+   "slug": "speech-331706",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Disability Insurance Scheme Amendment Bill 2016, which increases the NDIA board from nine to 12 members, and argued the NDIS is fully funded through Labor's 2013 budget measures, while accusing the Turnbull government of attempting to undermine the scheme through cuts, a federal takeover, and attacks on board members including inaugural chair Bruce Bonyhady."
+  },
+  {
+   "slug": "speech-331707",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the NDIS trial in the Barkly region of the Northern Territory is yielding positive results, citing 61 participants with approved plans, 24 registered providers, and $3,061,377 in committed support as of June 2015. The speech also announced that the National Disability Insurance Scheme Amendment Bill 2016 would allow up to 11 board members for the NDIA and clarify quorum requirements for board meetings."
+  },
+  {
+   "slug": "speech-331708",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The speech supported the NDIS Amendment Bill 2016 but criticised the Western Australian government for choosing the WA model without an independent evaluation, calling on Minister Porter to bring WA into line. It also argued for a no-fault vaccine injury compensation scheme, citing the Hammond family and proposing a levy on pharmaceutical companies similar to the US model in place since 1987."
+  },
+  {
+   "slug": "speech-331710",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The member for Corangamite supported the NDIS Amendment Bill, noting it will adjust board numbers and quorum requirements. She highlighted the Barwon trial's 5,000 participants, the NDIA headquarters in Geelong with over 270 employees, and the full rollout to 105,000 Victorians including Golden Plains from July 2017."
+  },
+  {
+   "slug": "speech-331714",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Disability Insurance Scheme Amendment Bill 2016, which increases the board from eight to 11 members, and argued that the NDIS must be funded sustainably through a balanced budget and support for wealth creators rather than borrowed money."
+  },
+  {
+   "slug": "speech-331716",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the NDIS was not properly funded when Labor left office in 2013, requiring the coalition to find an additional $5 billion, and announced the National Disability Insurance Scheme Amendment Bill 2016, which increases the maximum number of board members from nine to 12 to strengthen governance."
+  },
+  {
+   "slug": "speech-331717",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The speaker argued for increasing the NDIA board's maximum size to 11 members (plus chair) and making minor quorum changes, noting that bilateral agreements for the NDIS rollout now cover 85% of the expected 460,000 eligible participants, with the scheme being delivered on time and on budget."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Disability Insurance Scheme Amendment Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00051",
+   "assent_date": "2016-05-05"
+  }
+ ]
+}

@@ -1,0 +1,1670 @@
+{
+ "key": "au-federal-r7072",
+ "title": "Fair Work Legislation Amendment (Closing Loopholes) Bill 2023",
+ "short_title": "Fair Work Legislation Amendment (Closing Loopholes) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-09-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2023-12-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-12-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7072_ems_01d7cd27-1ed6-45d7-a976-800c6da47c6a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7072_ems_cacd81e1-0506-4fc9-b9b1-c6a64c6b1d6f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7072_ems_63e58127-2cdd-4b6c-8248-fdd8a3389e30%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7072_ems_921f2a06-19f3-4e52-8a48-9f0f13d23c6d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7072_ems_85602582-6e43-4b28-ad47-e0cb077e891b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7072%22",
+   "document_date": "2023-09-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00120",
+   "document_date": "2023-12-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2023-09-04",
+  "sentences": [
+   "The bill would change the Fair Work Act 2009 and other laws to close loopholes in workplace relations.",
+   "It would give the Fair Work Commission new powers to set minimum standards for gig economy workers and road transport drivers, and to handle disputes over independent contractor contracts.",
+   "First responders with PTSD under the Safety, Rehabilitation and Compensation Act 1988 would be presumed eligible for workers' compensation without needing to show their job caused the condition."
+  ],
+  "changes": [
+   "Replaces the definition of casual employee and creates a pathway to permanent employment.",
+   "Introduces a criminal offence for intentional wage theft.",
+   "Creates a new protected attribute for family and domestic violence discrimination.",
+   "Allows the Fair Work Commission to issue exemption certificates for union entry with less notice.",
+   "Increases maximum penalties for underpayments and adjusts the serious contravention threshold.",
+   "Introduces an industrial manslaughter offence in the Work Health and Safety Act 2011."
+  ],
+  "affected": "Employees, employers, casual workers, gig economy workers, road transport drivers, independent contractors, first responders, and workplace delegates.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8310",
+   "date": "2023-09-04",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2023-09-04.104.1) introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal), which means it was unsuccessful. It would have amended a [motion](https://www.openaustralia.org.au/debate/?id=2023-09-04.103.113) \"*that the resumption of the debate be made an order of the day for the next sitting.*\" ### Amendment text > *That all words from \"the next sitting\" be omitted and substituted with \"16 October 2023.\"*",
+   "stage": "Second reading",
+   "ayes": 63,
+   "noes": 80,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 32,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-09-04/1"
+  },
+  {
+   "key": "federal-representatives-8318",
+   "date": "2023-09-05",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debate/?id=2023-09-05.3.3): > *That the [Fair Work Legislation Amendment (Closing Loopholes) Bill 2023](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7072) be referred to the Standing Committee on Employment, Education and Training for consideration and an advisory report by 1 February 2024.* This means the vote failed. It was introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal)",
+   "stage": "Motion",
+   "ayes": 64,
+   "noes": 80,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 33,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-09-05/1"
+  },
+  {
+   "key": "federal-senate-8339",
+   "date": "2023-09-07",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2023-09-07.21.1) to refer the bill below to the relevant committee. It was introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor). ### Motion text > *At the end of the motion, add: \"and, in respect of the [Fair Work Legislation Amendment (Closing Loopholes) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7072), the Education and Employment Legislation Committee report on 23 November 2023\".*",
+   "stage": "Committee motion",
+   "ayes": 32,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-07/2"
+  },
+  {
+   "key": "federal-senate-8340",
+   "date": "2023-09-07",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-09-07.20.1) to a West Australian Senator [Michaelia Cash](https://www.openaustralia.org.au/senate/?gid=2023-09-07.20.1) (Liberal), which means the text below will be added to the [original motion](https://www.openaustralia.org.au/senate/?id=2023-09-07.19.2) and the bill referred to will go to the relevant committee. ### Amendment text > *At the end of the motion, add:* > > *\"and, in respect of the provisions of the [Fair Work Legislation Amendment (Closing Loopholes) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7072), the [Education and Employment Legislation Committee report](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Education_and_Employment/ClosingLoopholes) by 1 February 2024\".*",
+   "stage": "Committee motion",
+   "ayes": 33,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-07/3"
+  },
+  {
+   "key": "federal-senate-8251",
+   "date": "2023-11-09",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2023-11-09.38.1) introduced by Tasmanian Senator [Wendy Askew](https://theyvoteforyou.org.au/people/senate/tasmania/wendy_askew) (Liberal), which means it was successful and the [inquiry will be set up](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Education_and_Employment/ClosingLoopholes). ### Motion text > *That the Senate—* > > *(a) notes that the Albanese Labor Government's Fair Work Legislation Amendment (Closing Loopholes) Bill 2023 is complex and requires intense scrutiny;* > > *(b) requires the Education and Employment Legislation Committee to hold a public hearing on Monday, 22 January 2024 from 9.30 am to 5 pm for the purposes of its inquiry into the bill:* > >> *(i) to hear from representatives of the Department of Employment and Workplace Relations for no less than four hours, from 9.30 am,* >> >> *(ii) to hear from any additional witnesses, as resolved by the Education and Employment Legislation Committee, and* >> >> *(iii) the Education and Employment Legislation Committee can resolve to conclude the hearing earlier only after paragraph (b)(i) is satisfied; and* > > *(c) requires that the Education and Employment Legislation Committee must not report earlier than its current reporting date of 1 February 2024.*",
+   "stage": "Committee motion",
+   "ayes": 31,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-09/2"
+  },
+  {
+   "key": "federal-representatives-8474",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2023-11-16.3.2) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means that original second reading motion will remain as it is. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"the House declines to give this bill a second reading until a Senate inquiry into the bill has reported, and notes that:* > > *(1) the Government's industrial relations changes will make life tougher for Australian businesses by increasing costs, complexity and red tape and as businesses say will likely lead to job losses;* > > *(2) the Minister has admitted in his own public comments that this bill will add complexity to an already complex workplace relations system, and increase prices for consumers for everyday services they have come to rely on;* > > *(3) this bill does nothing to address Australia's weakening economy and falling productivity;* > > *(4) the bill does not assist Australian businesses to hire more people, and just ticks off even more items on the unions wish list including new right of entry laws and new union delegate rights;* > > *(5) despite the Minister promising 'carve-out' for small business, all the Government has done is add more complexity and made it harder for small and medium businesses to navigate the industrial relations system;* > > *(6) the Government has failed to outline how this legislation will enhance productivity, lift wages, or generate more jobs; and* > > *(7) at a time of a cost-of-living crisis, high inflation, businesses struggling with staff shortages and rapidly increasing power costs, the Government is making a bad situation worse\".*",
+   "stage": "Second reading",
+   "ayes": 61,
+   "noes": 82,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 4
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 32,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-16/1"
+  },
+  {
+   "key": "federal-representatives-8475",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "question": "Fair Work Legislation Amendment (Closing Loopholes) Bill 2023 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-16/2"
+  },
+  {
+   "key": "federal-representatives-8532",
+   "date": "2023-11-28",
+   "house": "representatives",
+   "question": "The majority voted in favour of [government amendments](https://www.openaustralia.org.au/debates/?id=2023-11-28.16.1), which were introduced as: > *government amendments (1) to (3) on [sheet PC100](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7072_amend_c40732a0-6174-4d8f-ba3e-a37b614ba96a%22;rec=0), (1) to (19) on [sheet TD101](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7072_amend_38657e93-8cac-473d-a0a4-3f10c025628f%22;rec=0), (1) and (2) on [sheet TM103](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7072_amend_bf646c5f-135f-4335-9f52-bed4dfd04460%22;rec=0), (1) to (35) on [sheet RL102](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7072_amend_de9778a1-a217-47ff-9532-12c2b1a31921%22;rec=0), (1) and (2) on [sheet ZE250](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7072_amend_e48617e8-f362-43cf-9096-f195f023aefe%22;rec=0), (1) and (2) on [sheet ZE251](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7072_amend_f19016c3-a736-44ff-a95c-da160dd9b1fd%22;rec=0), (1) to (17) on [sheet ZE255](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7072_amend_ed8f6d8e-a25d-4442-aff1-9e057470edd7%22;rec=0), (1) on [sheet ZB263](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7072_amend_a0ee6317-3198-405e-bedb-17bf181e626b%22",
+   "stage": "Consideration in detail",
+   "ayes": 79,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 7
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 138,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-28/5"
+  },
+  {
+   "key": "federal-representatives-10301",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "question": "Ian Goodenough The question is that the bill be agreed to. Dai Le I move amendments (1) to (6) standing in my name: (1) Schedule 1, item 248, page 126 (lines 3 to 5), omit \"A _digital labour platform_ means an online enabled application, website or system operated to arrange, allocate or facilitate the provision of labour services\", substitute \"A _digital labour platform_ means an online enabled application, website or system to the extent that it is operated to arrange, allocate or facilitate the provision of government funded labour services\". (2) Schedule 1, item 248, page 126 (line 18), after \"system\", insert \", to the extent that it relates to the provision of government funded labour services, \". (3) Schedule 1, item 248, page 126 (after line 28), at the end of section 15L, add: (5) In this section: _government funded labour services_ means labour services funded directly or indirectly by the Commonwealth or by a State or Territory (whether under a law, agreement or in some other way). (4) Schedule 1, item 248, page 126 (after line 33), at the end of section 15M, add: Note: A platform is only a digital labour platform to the extent that it is operated to arrange, allocate or facilitate the provision of government funded labour services (see subsections 15L(1) and (2)). (5) Schedule 1, item 248, page 127 (lines 10 and 11), omit paragraph 15N(1)(b), substitute: (b) work that: (i) is funded directly or indirectly by the Commonwealth or by a State or Territory (whether under a law, agreement or in some other way); and (ii) is prescribed by the regulations for the purposes of this subsection. (6) Schedule 1, item 248, page 127 (after line 11), at the end of subsection 15N(1), add: Note: For subparagraph (a)(i), a platform is only a digital labour platform to the extent that it is operated to arrange, allocate or facilitate the provision of government funded labour services (see subsections 15L(1) and (2)). I have already said that I think this bill is taking a radi",
+   "stage": "Consideration in detail",
+   "ayes": 9,
+   "noes": 57,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 66
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-29/1"
+  },
+  {
+   "key": "federal-representatives-10302",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "question": "Milton Dick The question is that the amendments moved by the member for Goldstein be agreed to. Tony Burke I should also add with respect to the part of the amendment that deals with the gig economy that the additional layer not referred to in the earlier contribution is that people also have to be working on a digital platform. One of the things that we are conscious of here is that we are dealing with a new jurisdiction. We are going beyond the employment relationship in a way that industrial law in Australia hasn't previously. We are wanting to make sure that we give enough flexibility to the commission in dealing with this that we don't simply create a new set of loopholes that a rogue platform provider can find their way around and effectively evade the minimum standards that apply to every other platform. So, while I hear the issue that's been raised on the way it's been structured, we've certainly had good consultation with the gig platforms and we believe that we have found the right balance. That's why it has been left in that form. Kylea Tink I rise in support of the member of Goldstein's amendments. Again, I want to acknowledge the minister in giving his time and further guidance to us as to how these decisions were reached in terms of what form this legislation has taken. I would like to acknowledge again the personal conversations he and I had on this very matter in terms of what was a reasonable period of time for people to be employed in a business under a labour hire agreement before they should be looked at on a broader term. The only comment I would make, Minister, is that this is containing this to such a short period of time. Three months is not even the retail peak season over Christmas these days. Many Australians would know that we can expect to see Easter eggs on the shelves prior to Christmas because our retail pathways are getting longer and longer. In this context, while I understand and thank the minister for sharing his and his team's th",
+   "stage": "Consideration in detail",
+   "ayes": 9,
+   "noes": 60,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 69
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-29/2"
+  },
+  {
+   "key": "federal-representatives-10303",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "question": "Kate Chaney I move amendments (1) to (6), as circulated in my name, together: (1) Clause 2, page 2 (table items 8 and 9), omit the table items. (2) Clause 2, page 3 (table item 12), omit the table item. (3) Schedule 1, Part 7, page 63 (line 1) to page 69 (line 14), omit the Part. (4) Schedule 1, Part 10, page 74 (line 1) to page 76 (line 17), omit the Part. (5) Schedule 1, Division 7, page 221 (line 12) to page 222 (line 18), omit the Division. (6) Schedule 1, Division 9, page 222 (line 25) to page 223 (line 2), omit the Division. These amendments propose to remove some parts of the government's bill that extend the reach of union delegates in workplaces. In schedule 1 part 7 the government's bill introduces a series of new rights for union delegates employed in workplaces. This includes any employee acting as a shop steward having uncapped time off for union training; making employers engage with delegates on any matter they wish to raise, even where the matters are fanciful or unrepresentative of the priorities of a majority of employees on site; allowing unions to demand their delegates be given subsidised access to company intranet, office facilities, transport and meeting rooms; and inserting union delegate terms into all modern awards and agreements. My amendments remove these additional union powers. The case has not been made for these changes. They have not been backed by any identified problem to be solved or by specific difficulties experienced by delegates which could not be addressed by working with employers or using the enterprise bargaining system. Schedule 1 part 10 of the government's bill expands the circumstances in which unions can come onto worksites without prior notice. Usually union officials are required to give 24 hours notice of entry to a worksite. There's already an exemption to this if the Fair Work Commission is reasonably satisfied that giving a workplace advance notice of entry might result in the destruction, concealment or alterat",
+   "stage": "Consideration in detail",
+   "ayes": 9,
+   "noes": 59,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 68
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-29/3"
+  },
+  {
+   "key": "federal-representatives-10304",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "question": "Allegra Spender I move amendments (4) to (34) and (36) to (41), as circulated in my name, together: (4) Schedule 1, item 5, page 8 (line 10), at the end of section 66AAA, add: ; and (d) ensures that there cannot be changes to, or conversion of, a person's casual employment status against the person's wishes. (5) Schedule 1, item 220, page 98 (after line 28), at the end of subsection 327A(3), add: Note 3: Paragraph (b) of this subsection means that to commit the offence the employee needs to intend for the conduct to result in a failure to pay the required amount in _full_ on or before the day it is due. (6) Schedule 1, item 231, page 103 (lines 3 to 8), omit subsection 717A(1), substitute: (1) While a cooperation agreement is in force between the Fair Work Ombudsman and a person: (a) the person is not liable to be prosecuted in a court for a possible offence against subsection 327A(1) involving conduct engaged in by the person that is covered by the agreement; and (b) the Fair Work Ombudsman must not refer the conduct to the Director of Public Prosecutions or the Australian Federal Police for action in relation to a possible offence. Note: See subsection 717B(1) for the definition of _cooperation agreement_. (7) Schedule 1, Part 15, page 113 (lines 1 to 31), omit the Part. (8) Schedule 1, item 248, page 123 (line 26), before \"A person\", insert \"(1)\". (9) Schedule 1, item 248, page 123 (after line 29), at the end of section 15G, add: Note: The person is not an employee (see paragraph 15P(1)(d) or 15Q(1)(c)). (2) Nothing done by a regulated business under Chapter 3A in relation to the person makes the person an employee. (10) Schedule 1, item 248, page 126 (line 3), omit \"(1)\". (11) Schedule 1, item 248, page 126 (lines 17 to 28), omit subsections 15L(2) to (4). (12) Schedule 1, item 248, page 127 (lines 1 to 16), omit section 15N, substitute: 15N Meaning of _digital platform work_ _Digital platform work_ means work performed by an independent contractor, where: (a) t",
+   "stage": "Consideration in detail",
+   "ayes": 6,
+   "noes": 55,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 61
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-29/4"
+  },
+  {
+   "key": "federal-representatives-10305",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "question": "Zali Steggall I move amendments (1) to (11), as circulated in my name, together: (1) Clause 2, page 4 (table item 21), omit the table item. (2) Schedule 1, item 1, page 5 (line 4) to page 7 (line 26), omit the item. (3) Schedule 1, item 6, page 8 (lines 17 to 20), omit paragraph 66AAB(a). (4) Schedule 1, item 6, page 9 (line 1), omit \"6 months\", substitute \"12 months\". (5) Schedule 1, item 6, page 9 (line 3), omit \"6 months\", substitute \"12 months\". (6) Schedule 1, item 6, page 9 (lines 23 to 25), omit the note. (7) Schedule 1, item 6, page 10 (lines 30 to 33), omit paragraph 66AAC(4)(a). (8) Schedule 1, item 6, page 11 (line 7), at the end of subsection 66AAC(4) (before the note), add: ; (d) it is probable that the employee's position will cease to exist in the period of 12 months after the day the notification is given; (e) it is probable that there will be a significant change in the employee's hours, or patterns, of work in the period of 12 months after the day the notification is given. (9) Schedule 1, item 18, page 18 (lines 6 to 11), omit paragraph 125A(2)(aa). (10) Schedule 1, item 308, page 216 (lines 9 to 17), omit paragraph 92(2)(a), substitute: (a) to resolve an uncertainty or difficulty relating to the interaction between the instrument and the provisions of Division 4A of Part 2-2 of the amended Act; or (11) Schedule 1, item 308, page 216 (line 27) to page 217 (line 20), omit subclauses 93(1) to (4). These amendments are important, because, after extensive consultation with businesses in Warringah and broader organisations such as COSBOA and the Business Council, briefings with the unions and liaising with small businesses and local chambers of commerce, I know there is an incredibly high level of concern at the overreach of this legislation. No-one has disputed, throughout the course of this debate around all the amendments, that some of the intent is genuine. But, in relation to much of these amendments, I feel that it's a sledgehammer being taken to",
+   "stage": "Consideration in detail",
+   "ayes": 6,
+   "noes": 55,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 60,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-29/5"
+  },
+  {
+   "key": "federal-representatives-10307",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "question": "Milton Dick The question is that the bill be agreed to. Allegra Spender I move amendments (1) and (3), as circulated in my name, together: (1) Clause 2, page 2 (table item 1), omit \"to 3\", substitute \"to 4\". (3) Page 4 (after line 11), after clause 3, insert: 4 Review of operation of amendments (1) The Minister must cause a review to be conducted of the operation of the amendments made by this Act. (2) Without limiting the matters that may be considered when conducting the review, the review must: (a) consider whether the operation of the amendments made by this Act is appropriate and effective; and (b) identify any unintended consequences of the amendments made by this Act; and (c) consider whether amendments of the _Fair Work Act 2009_, or any other legislation, are necessary to: (i) improve the operation of the amendments made by this Act; or (ii) rectify any unintended consequences identified under paragraph (b). (3) The review must start no later than 2 years after this section commences. (4) The persons who conduct the review must give the Minister a written report of the review within 6 months of the commencement of the review. (5) The Minister must cause a copy of the report of the review to be tabled in each House of the Parliament within 15 sitting days of that House after the Minister receives the report. I move these amendments because I think it is appropriate that we have a review of this bill. It's a complex bill, and I think that we should review it after a number of years to make sure that we understand the impact of the bill and we can fairly reflect on whether we need further amendments after that period of time. Tony Burke The government will be supporting these amendments. There is always a question as to what the appropriate time for a review is. Some of what this bill deals with is a new jurisdiction, and the Fair Work Commission dealing with areas it hasn't dealt with before. Anything shorter than two years probably wouldn't work, because of",
+   "stage": "Consideration in detail",
+   "ayes": 81,
+   "noes": 41,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 121,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-29/7"
+  },
+  {
+   "key": "federal-representatives-10308",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "question": "Milton Dick The question is that the bill, as amended, be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 78,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 140,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-29/8"
+  },
+  {
+   "key": "federal-representatives-10309",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "question": "Tony Burke by leave—I move: That this bill be now read a third time. Milton Dick The question is that the bill be read a third time.",
+   "stage": "Third reading",
+   "ayes": 78,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 140,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-29/9"
+  },
+  {
+   "key": "federal-representatives-8620",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "question": "Fair Work Legislation Amendment (Closing Loopholes) Bill 2023 - Consideration of Senate Message - Put the question",
+   "stage": "Consideration of Senate message",
+   "ayes": 73,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 127,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-12-07/4"
+  },
+  {
+   "key": "federal-representatives-8621",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2023-12-07.141.1) introduced by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent), which means they failed. ### What do these amendments do? Ms Spender [explained that](https://www.openaustralia.org.au/debate/?id=2023-12-07.141.1): > *The specific amendments I am making are pretty simple. The Senate amendments have the effect of shifting most parts of the Fair Work bill into a separate bill which will be considered next year. In addition to the parts being shifted out, I would like to add division 1 of part 7. This division deals with workplace delegates, providing them with additional protections and rights, and imposes a requirement on businesses to provide delegates with paid time off for training. The bill provides a carve-out for small businesses—defined as those with fewer than 15 employees—but otherwise provides no guardrails on the number of delegates or how much paid time off they can receive.* ### Amendment text > *(1) Senate amendment (1), subparagraph (b)(vi), omit the subparagraph, substitute:* > >> *(vi) Part 7 (workplace delegates' rights);* > > *(2) Senate amendment (3) (proposed new table item 8 in subclause 2(1) of the Bill), omit the table item.* > > *(3) Senate amendment (9) (proposed new Division 4 of Part 15 of the Fair Work Act 2009), omit the Division.*",
+   "stage": "Consideration of Senate message",
+   "ayes": 9,
+   "noes": 91,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 100
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-12-07/5"
+  },
+  {
+   "key": "federal-representatives-8622",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2023-12-07.139.1) introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal), which means they failed. ### Amendment text > *(1) Senate amendment (1), subparagraph (b)(vi), omit the subparagraph, substitute:* > >> *(va) Part 6 (closing the labour hire loophole);* >> >> *(vi) Part 7 (workplace delegates' rights);* > > *(2) Senate amendment (1), subparagraph (b)(xi), after the subparagraph, insert:* > >> *(xia) Part 14A (amendments relating to mediation and conciliation conference orders made under section 448A of the Fair Work Act 2009);* > > *(3) Senate amendment (3) (proposed new table items 7, 8 and 20A in subclause 2(1) of the Bill), omit the table items.* > > *(4) Senate amendment (9) (proposed new Divisions 3, 4 and 6 of Part 15 of the Fair Work Act 2009), omit the Divisions.*",
+   "stage": "Consideration of Senate message",
+   "ayes": 49,
+   "noes": 72,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 120
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-12-07/6"
+  },
+  {
+   "key": "federal-representatives-8623",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2023-12-07.138.1) introduced by Watson MP [Tony Burke](https://theyvoteforyou.org.au/people/representatives/watson/tony_burke) (Labor), which means it passed. ### Motion text > *That the House:* > > *(1) acknowledges the position previously taken by the House that the division of a bill in the House in which it did not originate is undesirable;* > > *(2) without departing from this position, distinguishes this occasion on the basis that it involves the division of a Government bill in the Senate, at the initiation of the Government, setting it apart from previous occurrences;* > > *(3) therefore concurs with this action taken by the Senate on this occasion; and* > > *(4) agrees to the amendments made by the Senate.*",
+   "stage": "Consideration of Senate message",
+   "ayes": 74,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 125,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-12-07/7"
+  },
+  {
+   "key": "federal-senate-8627",
+   "date": "2023-12-07",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-12-07.8.1): > *That a motion relating to the [Fair Work Legislation Amendment (Closing Loopholes) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7072) may be moved immediately and determined without amendment or debate.* This motion was introduced by South Australian Senator [Penny Wong](https://theyvoteforyou.org.au/people/senate/sa/penny_wong) (Labor).",
+   "stage": "Business motion",
+   "ayes": 33,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-07/4"
+  },
+  {
+   "key": "federal-senate-8628",
+   "date": "2023-12-07",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-12-07.12.1) introduced by South Australian Senator [Penny Wong](https://theyvoteforyou.org.au/people/senate/sa/penny_wong) (Labor), which means it was successful. ### Motion text See the motion text on [OpenAustralia.org.au](https://www.openaustralia.org.au/senate/?gid=2023-12-07.12.1).",
+   "stage": "Business motion",
+   "ayes": 33,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-07/5"
+  },
+  {
+   "key": "federal-senate-8630",
+   "date": "2023-12-07",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2023-12-07.27.2): > *That so much of standing order 142 be suspended as would prevent further consideration of the bill without limitation of time.* Standing orders are the usual procedural rules of parliament. The motion was introduced by South Australian Senator [Simon Birmingham](https://theyvoteforyou.org.au/people/senate/sa/simon_birmingham) (Liberal) and referred to the [Fair Work Legislation Amendment (Closing Loopholes) Bill 2023](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7072).",
+   "stage": "Business motion",
+   "ayes": 25,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-07/7"
+  },
+  {
+   "key": "federal-senate-8631",
+   "date": "2023-12-07",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-12-07.21.1) to the usual second reading motion, which is \"*that the bill be read a second time*\" (to read a bill for a second time is parliamentary jargon for agreeing with its main idea). This amendment was introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal) at the request of West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal). ### Amendment text > *At the end of the motion, add \", and:* > > *(a) the Senate notes that:* > >> *(i) this is a devastating day for Australian businesses, with members of the crossbench siding with the Albanese Labor Government to pass through highly contentious labour market regulation before it receives proper parliamentary scrutiny through the Senate inquiry process,* >> >> *(ii) the Government's new labour hire laws will substantially increase the burden and costs imposed on businesses using legitimate labour hire arrangements to meet demand surges or remedy staff shortages, and that these costs will be ultimately passed on to consumers in a cost of living crisis,* >> >> *(iii) the Government's new labour hire laws are incompatible with a modern labour market that must be flexible, dynamic, and rewarding for workers, and* >> >> *(iv) the Coalition support amendments which address small business redundancy exemptions, industrial manslaughter, protections against discrimination, wage theft, the Asbestos Safety and Eradication Agency and first responders PTSD changes; and* > > *(b) Part 6 of Schedule 1 (which abolishes modern and flexible workplace arrangements) and Part 7 of Schedule 1 (which gives unions unprecedented access to Australian workplaces) be referred to the Education and Employment Legislation Committee for inquiry and report by 1 February 2024\".*",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-07/8"
+  },
+  {
+   "key": "federal-senate-8632",
+   "date": "2023-12-07",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-12-07.34.1) to the usual second reading motion, which is \"*that the bill be read a second time*\" (to read a bill for a second time is parliamentary jargon for agreeing with its main idea). This amendment was introduced by Victorian Senator [David Van](https://theyvoteforyou.org.au/people/senate/victoria/david_van) (Independent). ### Amendment text > *At the end of the motion, add \", but the Senate notes that:* > > *(a) in the Government's 2023 policy paper it stated that the intent of 'Same Job, Same Pay' was 'the Government's Same Job, Same Pay measure seeks to address the limited circumstances in which host employers use labour hire to deliberately undercut the bargained wages and conditions set out in enterprise agreements made with their employees', and the bill does not do this and never has;* > > *(b) the bill does not define 'labour hire', unlike existing legislation governing labour hire, such as the 4 state and territory licensing regimes;* > > *(c) without a definition, labour hire businesses (who provide workers) are treated no differently to service contractors (who deliver a specified service), this is contrary to the Government's policy intent, and instead of 'limited circumstances' it casts the net over almost any form of contractor arrangement, and this is not about 'closing a loophole';* > > *(d) the definition of 'labour hire' in the Victorian Labour Hire Licensing Act 2018 should be reproduced in section 306E of the bill, to provide a 'regulated labour hire arrangement order' can only apply to 'labour hire', consistent with the Government's policy;* > > *(e) all business groups agree that service contractors are not 'labour hire' and should be excluded from 'Same Job, Same Pay'; and* > > *(f) 'labour hire' must be defined and the legislation should expressly state that service contractors are excluded from the definition and it is not sufficient to rely onl",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-07/9"
+  },
+  {
+   "key": "federal-senate-8633",
+   "date": "2023-12-07",
+   "house": "senate",
+   "question": "Fair Work Legislation Amendment (Closing Loopholes) Bill 2023 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-07/10"
+  },
+  {
+   "key": "federal-senate-8634",
+   "date": "2023-12-07",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-12-07.40.5) to keep parts 6, 7 and 14A and divisions 3, 4 and 6 in item 308 of [schedule 1](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr7072_third-senate%2F0001;query=Id%3A%22legislation%2Fbills%2Fr7072_third-senate%2F0000%22;rec=0) unchanged, which means they'll remain as they are in the bill. This vote took place after West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal) [proposed that they be omitted](https://www.openaustralia.org.au/senate/?gid=2023-12-07.40.1). ### What do these parts do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd17): > *Part 6 of Schedule 1 to the Bill deals with pay disparity between the employees of a host business and labour hire workers supplied by another business but who are performing the same or similar work for the host business.* And [Part 7 provides](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd17): > *a framework for workplace delegates’ rights and include protections for workplace delegates when seeking to exercise those rights (for example, by exercising right of entry).* Part 14A contains amendments relating to mediation and conciliation conference orders made under section 448A of the Fair Work Act 2009. And divisions 3, 4 and 6 in item 308 are application and transitional provisions.",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-07/11"
+  },
+  {
+   "key": "federal-senate-8635",
+   "date": "2023-12-07",
+   "house": "senate",
+   "question": "Fair Work Legislation Amendment (Closing Loopholes) Bill 2023 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-07/12"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Fair Work Legislation Amendment (Closing Loopholes) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00120",
+   "assent_date": "2023-12-14"
+  }
+ ]
+}

@@ -1,0 +1,269 @@
+{
+ "key": "au-federal-r7359",
+ "title": "Defence Amendment (Defence Honours and Awards Appeals Tribunal) Bill 2025",
+ "short_title": "Defence Amendment (Defence Honours and Awards Appeals Tribunal) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-08-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "lapsed",
+ "status_as_of": "2025-11-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-08-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7359%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7359%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7359%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7359%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7359%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7359%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7359%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7359%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7359%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7359_ems_4a52f8fd-bf06-4af7-b9fa-1de5ca94dd55%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/10469652%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7359%22",
+   "document_date": "2025-08-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9747",
+   "date": "2025-09-03",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2025-09-03.22.1) to agree with the main idea of the bill. In parliamentary jargon, they voted to read it for a second time. This means they can now consider it in greater detail. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd014), which is a document prepared by the parliamentary library: * *The Defence Honours and Awards Appeals Tribunal has operated as an independent statutory body since 2011 (from 2008 to 2011 its predecessor operated as an administrative body).* * *The Defence Amendment (Defence Honours and Awards Appeals Tribunal) Bill 2025 (the Bill) seeks to amend the Defence Act 1903 to modify review arrangements by the Defence Honours and Awards Appeals Tribunal for defence awards, defence honours and foreign awards.* * *The proposed amendments seek to tighten eligibility criteria for applicants and impose time limits for review of decisions by the Tribunal.* * *The Senate Foreign Affairs, Defence and Trade (SFADT) Committee conducted an inquiry into the Defence honours and awards system in 2024, where the Department of Defence and the Tribunal were at odds about proposals for legislative change.* * *At the time of writing, the Bill has not been referred to or reported on by any parliamentary committees.*",
+   "stage": "Second reading",
+   "ayes": 90,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 89,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-09-03/1"
+  },
+  {
+   "key": "federal-representatives-9748",
+   "date": "2025-09-03",
+   "house": "representatives",
+   "question": "Defence Amendment (Defence Honours and Awards Appeals Tribunal) Bill 2025 - Consideration in Detail - Put the question",
+   "stage": "Consideration in detail",
+   "ayes": 90,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 88,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-09-03/2"
+  },
+  {
+   "key": "federal-representatives-9749",
+   "date": "2025-09-03",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2025-09-03.108.2) moved by Gippsland MP [Darren Chester](https://theyvoteforyou.org.au/people/representatives/gippsland/darren_chester) (Nationals), which means they failed. Mr Chester [explained that](https://www.openaustralia.org.au/debate/?id=2025-09-03.108.2): > *Under this legislation, the government is proposing that we will only remember [Australian Defence Force personnel and our veterans], we will only recognise their incredible service, if the action occurred in the past 20 years. That is exactly what this legislation proposes in terms of major medallic recognition of acts of bravery and gallantry that have quite rightly been reviewed by the Defence Honours and Awards Appeals Tribunal over the last 14 years and have resulted in some of the most celebrated Australians receiving due recognition decades—decades—after their brave action. But what this government is trying to do is cut this off at 20 years, saying, 'If your action didn't occur as Australian Defence Force personnel in the Navy, the Army or the Air Force in a more convenient timeframe for us—say, the last 20 years—I'm sorry, but you can't review any decision made by the Department of Defence in relation to honours of such great national significance.'* ### Amendment text > *(1) Schedule 1, item 7, page 4 (line 16), omit \"subsections (2) to (9)\", substitute \"subsections (6) and (9)\".* > > *(2) Schedule 1, item 8, page 4 (line 19) to page 5 (line 27), omit subsections 110V(2) to (5).* > > *(3) Schedule 1, item 8, page 6 (line 5) to page 6 (line 24), omit subsections 110V(7) and (8).* > > *(4) Schedule 1, page 6 (after line 32), after item 8, insert:* > >> *8A After section 110V* >> >> *Insert:* >> >>> *110VAAA Notification of review rights* >>> >>> *If a reviewable decision is made, the decision maker must, in writing, notify any person who is affected by the decision of the effect of sections 110VA and 110VAA.* > >",
+   "stage": "Consideration in detail",
+   "ayes": 50,
+   "noes": 87,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 86
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-09-03/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1196556",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197054",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2025-09-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197319",
+   "speaker": "Lisa Darmanin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198722",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

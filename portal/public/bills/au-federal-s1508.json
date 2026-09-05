@@ -1,0 +1,77 @@
+{
+ "key": "au-federal-s1508",
+ "title": "Crimes Amendment (Prohibiting the Strip Searching of Children) Bill 2026",
+ "short_title": "Crimes Amendment (Prohibiting the Strip Searching of Children) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-18",
+ "originating_house": "senate",
+ "sponsor": "THORPE, Sen Lidia",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10961",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1508%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1508%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1508_ems_3a50ea98-69fc-4e81-9d63-77adcd0be547%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1508%22",
+   "document_date": "2026-08-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-08-18",
+  "sentences": [
+   "The bill would make it illegal to strip search anyone under 18 in any part of Australia.",
+   "It would amend the Crimes Act 1914 to raise the minimum age for strip searches from 10 to 18 and add a new section banning the practice entirely, overriding any inconsistent state or territory laws.",
+   "The bill would start the day after it receives royal assent and applies only to conduct occurring on or after that date."
+  ],
+  "changes": [
+   "Raises the minimum age for strip searches under the Crimes Act 1914 from 10 to 18.",
+   "Adds a new section that prohibits strip searches on all people under 18, covering both partial and full searches.",
+   "Makes the ban apply regardless of any other law, ending inconsistent state or territory laws."
+  ],
+  "affected": "Children under 18 and law enforcement or officials who conduct strip searches.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-04T23:59:30Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1205610",
+   "speaker": "Lidia Thorpe",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2026-08-18",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

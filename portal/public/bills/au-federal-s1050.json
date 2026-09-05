@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-s1050",
+ "title": "Commonwealth Electoral Amendment (Donation Reform and Transparency) Bill 2016",
+ "short_title": "Commonwealth Electoral Amendment (Donation Reform and Transparency) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-28",
+ "originating_house": "senate",
+ "sponsor": "FARRELL, Sen Don",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10708",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1050%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1050%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1050%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1050_ems_78de690d-bba0-484d-817f-2cb6b9999889%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1050%22",
+   "document_date": "2016-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-28",
+  "sentences": [
+   "The bill would lower the threshold for disclosing political donations from over $10,000 to $1,000 and ban foreign and anonymous gifts.",
+   "It would treat related political parties as one entity for disclosure purposes and limit public election funding to the lesser of declared expenditure or the amount based on 4% of first preference votes.",
+   "New offences and penalties would be introduced, and the changes would start on the first 1 July after Royal Assent."
+  ],
+  "changes": [
+   "Reduces the disclosure threshold from over $10,000 (indexed) to $1,000 (non-indexed).",
+   "Makes it unlawful for political parties, candidates and Senate group members to receive gifts of foreign property.",
+   "Prohibits all anonymous gifts to registered political parties, candidates and Senate group members.",
+   "Limits public election funding to the lesser of declared expenditure or the sum based on 4% of first preference votes.",
+   "Provides for recovery of unlawful or undisclosed gifts.",
+   "Introduces new offences and increases penalties for existing offences."
+  ],
+  "affected": "Political parties, candidates, Senate groups, associated entities, people incurring political expenditure, and the Australian Electoral Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

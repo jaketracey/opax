@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-s1123",
+ "title": "Australian Citizenship Legislation Amendment (Strengthening the Commitments for Australian Citizenship and Other Measures) Bill 2018",
+ "short_title": "Australian Citizenship Legislation Amendment (Strengthening the Commitments for Australian Citizenship and Other Measures) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-07",
+ "originating_house": "senate",
+ "sponsor": "HANSON, Sen Pauline",
+ "sponsor_party": "Pauline Hanson&#39;s One Nation",
+ "sponsor_person_id": "10280",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1123%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1123%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1123%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1123_ems_6c933692-aec2-4925-a2c3-93c5d8675065%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1123%22",
+   "document_date": "2018-02-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-07",
+  "sentences": [
+   "This bill would make it harder to become an Australian citizen by adding new conditions.",
+   "Applicants would need to have been permanent residents for eight years, show competent English, and sign an Australian Values Statement.",
+   "The bill also introduces a two-year ban on reapplying after a refusal on grounds other than the residence requirement."
+  ],
+  "changes": [
+   "Raises the general residence requirement to eight years of permanent residency before applying for citizenship by conferral.",
+   "Requires most applicants to prove competent English language proficiency.",
+   "Mandates signing an Australian Values Statement for a valid application.",
+   "Renames the 'pledge of commitment' to the 'pledge of allegiance' and alters its wording.",
+   "Introduces a two-year bar on reapplying after a refusal on non-residence grounds.",
+   "Extends the good character requirement to all citizenship applicants, including those under 18."
+  ],
+  "affected": "People applying for Australian citizenship by conferral, descent, adoption, resumption, and other pathways, as well as existing citizens and the Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

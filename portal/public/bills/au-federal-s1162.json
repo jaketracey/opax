@@ -1,0 +1,246 @@
+{
+ "key": "au-federal-s1162",
+ "title": "Sex Discrimination Amendment (Removing Discrimination Against Students) Bill 2018",
+ "short_title": "Sex Discrimination Amendment (Removing Discrimination Against Students) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-11-29",
+ "originating_house": "senate",
+ "sponsor": "WONG, Sen Penny",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10678",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1162%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1162%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1162%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1162%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1162%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1162_ems_e7bebed7-4deb-4dfd-b4f8-5136ea91c5fc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1162_ems_11154ff9-2882-4fce-91f7-117deb8e5bc2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1162_ems_6dc08b31-e101-4bd8-a55f-97c17a8b151d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1162_ems_0323a748-cb22-445c-a2e3-45e833e00a27%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1162_ems_ecfdc4d0-5757-4863-b280-ded9bcef18fe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1162_ems_36ce2052-4397-4870-bb95-28b480922f91%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1162%22",
+   "document_date": "2018-11-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-11-29",
+  "sentences": [
+   "This bill would stop religious schools from excluding students because of their sexuality, gender identity or variation in sex characteristics.",
+   "It would remove exemptions in the Sex Discrimination Act 1984 that currently let those schools turn away pupils on those grounds.",
+   "The bill does not change indirect discrimination rules, so faith-based schools could still set reasonable conditions based on their religion's teachings."
+  ],
+  "changes": [
+   "Removes exemptions for religious schools that allow discrimination against students based on sexual orientation, gender identity or intersex status.",
+   "Leaves indirect discrimination provisions unchanged.",
+   "Does not address discrimination against staff at religious schools."
+  ],
+  "affected": "Students attending religious schools, and religious schools themselves.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5575",
+   "date": "2018-12-03",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-12-03.21.1): > *That the limitation of debate on the [Sex Discrimination Amendment (Removing Discrimination Against Students) Bill 2018](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1162), agreed to on 29 November 2018, no longer operate.*",
+   "stage": "Business motion",
+   "ayes": 35,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 23,
+    "dated": 35,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-03/4"
+  },
+  {
+   "key": "federal-senate-5618",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted in favour of [changing the wording of a motion](https://www.openaustralia.org.au/senate/?gid=2018-12-06.39.3) so that the [Sex Discrimination Amendment (Removing Discrimination Against Students) Bill 2018](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1162) will be referred to the [Legal and Constitutional Affairs References Committee](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Legal_and_Constitutional_Affairs). In the original wording of the motion, that bill was to be referred to the [Education and Employment Legislation Committee](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Education_and_Employment).",
+   "stage": "Committee motion",
+   "ayes": 31,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 31,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

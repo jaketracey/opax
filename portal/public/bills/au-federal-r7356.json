@@ -1,0 +1,68 @@
+{
+ "key": "au-federal-r7356",
+ "title": "Climate Change (National Framework for Adaptation) Bill 2025",
+ "short_title": "Climate Change (National Framework for Adaptation) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-08-25",
+ "originating_house": "representatives",
+ "sponsor": "STEGGALL, Zali, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10941",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-08-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7356%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7356%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7356_ems_3734f3a1-c774-4748-b8c8-0313c77fd458%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7356%22",
+   "document_date": "2025-08-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-08-25",
+  "sentences": [
+   "This bill would create a legal framework for the federal government to regularly assess climate risks and make long-term plans to adapt to them.",
+   "The Climate Change Authority would conduct a risk assessment every five years, and the minister would then set a national adaptation plan with strategies, funding and monitoring.",
+   "The framework requires all new bills in Parliament to include a statement on whether they are compatible with climate adaptation, and the federal budget must incorporate the cost of climate risk."
+  ],
+  "changes": [
+   "Requires the minister to determine a National Adaptation Plan after each risk assessment.",
+   "Obliges the Authority to report annually to the minister on the plan's progress.",
+   "Mandates public release of climate change reports, including declassified versions of top-secret documents.",
+   "Introduces statements of compatibility for all new bills to assess climate adaptation consistency."
+  ],
+  "affected": "Australian communities, homes, businesses, infrastructure and the Australian economy.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

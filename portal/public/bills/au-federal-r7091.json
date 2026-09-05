@@ -1,0 +1,266 @@
+{
+ "key": "au-federal-r7091",
+ "title": "Primary Industries (Excise) Levies Bill 2023",
+ "short_title": "Primary Industries (Excise) Levies Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-10-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Fisheries and Forestry",
+ "status": "passed",
+ "status_as_of": "2024-07-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-11-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-07-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7091_ems_a00db507-a15e-4b91-8eda-5d4de5c71e03%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7091%22",
+   "document_date": "2023-10-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00056",
+   "document_date": "2024-07-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-10-18",
+  "sentences": [
+   "This bill is part of a package that would rewrite the rules for how agricultural levies, customs charges and services levies are set and collected.",
+   "The package would replace five existing Acts and let the government set levy rates and conditions through regulations rather than primary legislation.",
+   "The explanatory memorandum says the current system has more than 50 pieces of legislation covering over 110 levies across more than 75 commodities and 18 levy recipient bodies."
+  ],
+  "changes": [
+   "Replace five existing levy and charge imposition Acts with three new bills.",
+   "Allow excise levies and customs charges on primary industry produce to be re-established in regulations.",
+   "Enable levies on goods used in animal, plant, fungus or algae maintenance or treatment, including the horse disease response levy.",
+   "Allow excise levies on goods used in nursery product production or preparation.",
+   "Enable regulations to impose levies on services that help produce primary industry products, such as commercial bee pollination.",
+   "Provide a consistent framework across the three bills for definitions, exemptions, rates and other common matters."
+  ],
+  "affected": "Farmers, producers, processors, exporters and agricultural, fisheries and forestry industries that pay or are affected by agricultural levies and charges.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8464",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7091_amend_b21883e7-835d-4942-b4b6-e5ff5dd1010d%22;rec=0) introduced by Maranoa MP [David Littleproud](https://theyvoteforyou.org.au/people/representatives/maranoa/david_littleproud) (Liberal), which means it failed. ### What do the amendments do? Mr Littleproud [explained that](https://www.openaustralia.org.au/debate/?id=2023-11-15.151.2): > *This set of amendments will add to the [Primary Industries (Excise) Levies Bill 2023](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7091) by clarifying, affirming and solidifying the essential roles that Animal Health Australia—the AHA—and Plant Health Australia—the PHA—have within our levy framework. The AHA represents 14 livestock industries while the PHA represents 39 plant industry members. They need to remain important players in this space. These two levy organisations are levy recipient bodies, and they are responsible for facilitating industry-government partnerships for pest and disease preparedness, prevention, emergency response and management. However, under the provisions of the government's bill, references to the AHA levy and the PHA levy have been renamed as the 'biosecurity activity levy'. These amendments, circulated by the federal coalition, will ensure that Animal Health Australia and Plant Health Australia are formally recognised in relation to this biosecurity activity levy.* ### Amendment text > *(1) Clause 4, page 3 (after line 12), after the definition of animal, insert:* > >> *Animal Health Australia has the same meaning as in the Primary Industries Levies and Charges Disbursement Act 2023.* > > *(2) Clause 4, page 3 (after line 20), after the definition of aquaculture, insert:* > >> *emergency animal biosecurity response deed has the same meaning as in the Primary Industri",
+   "stage": "Report from Federation Chamber",
+   "ayes": 59,
+   "noes": 80,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-15/3"
+  },
+  {
+   "key": "federal-senate-10438",
+   "date": "2024-07-01",
+   "house": "senate",
+   "question": "Murray Watt I table addenda to the explanatory memoranda relating to the Primary Industries Levies and Charges Collection Bill 2023 and the Primary Industries Levies and Charges Disbursement Bill 2023. The addenda respond to matters raised by the Scrutiny of Bills Committee. Question agreed to. Bills read a second time. Sue Lines The question is that the amendments on sheets 2420, 2421 and 2422, circulated by the opposition, be agreed to. _Opposition's circulated amendments—_ SHEET 2420 Primary Industries (Customs) Charges Bill 2023 (1) Clause 4, page 3 (after line 12), after the definition of _animal_, insert: _Animal Health Australia_ has the same meaning as in the _Primary Industries Levies and Charges Disbursement Act 2024_. (2) Clause 4, page 3 (after line 22), after the definition of _charge_, insert: _emergency animal biosecurity response deed_ has the same meaning as in the _Primary Industries Levies and Charges Disbursement Act 2024_. _emergency plant biosecurity response deed_ has the same meaning as in the _Primary Industries Levies and Charges Disbursement Act 2024_. (3) Clause 4, page 4 (after line 11), after the definition of _plant_, insert: _Plant Health Australia_ has the same meaning as in the _Primary Industries Levies and Charges Disbursement Act 2024_. (4) Clause 7, page 6 (lines 19 to 22), omit paragraphs (3)(c) and (d), substitute: (c) expenditure on activities, including biosecurity activities, that: (i) are undertaken by, or at the direction of, Animal Health Australia or Plant Health Australia; and (ii) relate to the promotion or maintenance of the health of plants, animals, fungi or algae; (d) expenditure on matters relating to a biosecurity response under: (i) an emergency animal biosecurity response deed; or (ii) an emergency plant biosecurity response deed; (5) Clause 10, page 8 (lines 17 to 20), omit paragraphs (2)(a) and (b), substitute: (a) expenditure on activities, including biosecurity activities, that: (i) are undertaken by, or a",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 10,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-01/20"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Primary Industries (Excise) Levies Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00056",
+   "assent_date": "2024-07-09"
+  }
+ ]
+}

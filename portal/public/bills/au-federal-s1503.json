@@ -1,0 +1,58 @@
+{
+ "key": "au-federal-s1503",
+ "title": "Protecting Australians from Foreign Terrorist Fighters Bill 2026",
+ "short_title": "Protecting Australians from Foreign Terrorist Fighters Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-12",
+ "originating_house": "senate",
+ "sponsor": "HANSON, Sen Pauline",
+ "sponsor_party": "Pauline Hanson&#39;s One Nation",
+ "sponsor_person_id": "10280",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1503%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1503%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1503_ems_e5f95ad4-354e-49b1-b986-ab161bd85432%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1503%22",
+   "document_date": "2026-08-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1205157",
+   "speaker": "Pauline Hanson",
+   "party": "One Nation",
+   "state": "federal",
+   "date": "2026-08-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

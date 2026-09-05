@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6288",
+ "title": "Customs Amendment (Immediate Destruction of Illicit Tobacco) Bill 2019",
+ "short_title": "Customs Amendment (Immediate Destruction of Illicit Tobacco) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6288%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6288%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6288%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6288_ems_fa41a773-a079-41ca-96a9-5066436fa43a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6288%22",
+   "document_date": "2019-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-14",
+  "sentences": [
+   "This bill would allow customs officials to destroy seized illicit tobacco products immediately instead of storing them for 30 days.",
+   "The Comptroller-General of Customs would be given the power to decide how to handle tobacco products seized as prohibited imports from 1 July 2019, including immediate destruction.",
+   "The bill is part of the government's 2018-19 Budget measure to tighten tobacco border controls, and similar destruction powers already exist for other prohibited imports like psychoactive substances."
+  ],
+  "changes": [
+   "Empowers the Comptroller-General of Customs to cause seized tobacco products to be dealt with as they see fit, including immediate destruction.",
+   "Removes the current requirement to store seized prohibited imports for a minimum of 30 days before disposal.",
+   "Aligns tobacco products with existing controls for other prohibited imports such as psychoactive substances."
+  ],
+  "affected": "Australian Border Force officials and tobacco importers are affected by the bill.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:20:21Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

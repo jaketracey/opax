@@ -1,0 +1,602 @@
+{
+ "key": "au-federal-r6656",
+ "title": "National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020",
+ "short_title": "National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6656%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6656%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6656%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6656%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6656%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6656%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6656%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6656%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6656%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6656%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6656%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6656%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6656_ems_18ac500b-30e6-4744-91ae-49af99d536e0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6656%22",
+   "document_date": "2020-12-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-09",
+  "sentences": [
+   "The bill would limit responsible lending checks to payday loans and rent-to-buy goods from March 2021.",
+   "Credit advisers would have to put their customers' interests first when recommending loans or leases.",
+   "The minister could set new system-level rules for how non-bank lenders run their credit operations."
+  ],
+  "changes": [
+   "Responsible lending obligations are narrowed to small amount credit contracts and consumer leases.",
+   "Best interest duties are extended from mortgage brokers to all credit assistance providers.",
+   "A new framework lets the minister make credit standards for non-ADI lenders via legislative instrument."
+  ],
+  "affected": "Credit assistance providers, non-bank lenders, and consumers taking small loans or consumer leases.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-6871",
+   "date": "2020-12-10",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-12-10.32.1) introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor), which means the text below will be added to the end of the original motion. ### Amendment text > *At the end of the motion, add:* > > *\"but, in respect of the provisions of the [National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6656), the [Economics Legislation Committee](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Economics) report by 12 March 2021.\"*",
+   "stage": "Committee motion",
+   "ayes": 31,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 23,
+    "dated": 25,
+    "member": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-10/4"
+  },
+  {
+   "key": "federal-representatives-7017",
+   "date": "2021-03-15",
+   "house": "representatives",
+   "question": "The majority voted in favour of leaving the usual second reading motion unchanged. That is, they voted \"*that the words proposed to be omitted stand part of the question.*\" The usual second reading motion is \"that the bill be read a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/),\" which is parliamentary jargon for agreeing with the main idea of the bill. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd052), the bill would introduce: > * *amendments to the responsible lending obligations so that they apply only to small amount credit contracts (SACCs), SACC-equivalent loans by authorised deposit-taking institutions (ADIs) and consumer leases and* > * *enhancements to the consumer protection framework in relation to small amount credit contracts and consumer leases.*",
+   "stage": "Second reading",
+   "ayes": 62,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 121
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-03-15/5"
+  },
+  {
+   "key": "federal-representatives-7018",
+   "date": "2021-03-15",
+   "house": "representatives",
+   "question": "National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020 - Third Reading - Speed things along",
+   "stage": "Third reading",
+   "ayes": 63,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-03-15/6"
+  },
+  {
+   "key": "federal-representatives-7019",
+   "date": "2021-03-15",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2021-03-15.118.1) to pass the bill, which is known as giving the bill a [third reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means the bill will now be sent to the Senate for their consideration. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd052), the bill would introduce: > * *amendments to the responsible lending obligations so that they apply only to small amount credit contracts (SACCs), SACC-equivalent loans by authorised deposit-taking institutions (ADIs) and consumer leases and* > * *enhancements to the consumer protection framework in relation to small amount credit contracts and consumer leases.*",
+   "stage": "Third reading",
+   "ayes": 63,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-03-15/7"
+  },
+  {
+   "key": "federal-senate-7319",
+   "date": "2021-06-23",
+   "house": "senate",
+   "question": "The same number of senators voted for and against the motion: > *That if by 12 August 2021 the government business order of the day relating to the consideration of the [National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6656) has not been finally considered, the order of the day be discharged from the Notice Paper.* This means that this motion was unsuccessful.",
+   "stage": "Business motion",
+   "ayes": 27,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 25,
+    "member": 7,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-23/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-403470",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill breaches the government's promise to implement the Hayne royal commission's recommendations, specifically removing responsible lending laws that protect consumers, and called on Nationals MPs Craig Kelly, George Christensen, and Barnaby Joyce to vote against it. The speech highlighted the case of farmer John 'Wacka' Williams and 5,000 other victims of a dodgy loan scheme from the Commonwealth Bank."
+  },
+  {
+   "slug": "speech-403528",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Gillard government's responsible lending laws have become overly burdensome, throttling credit flow and harming businesses, especially post-COVID. The bill removes inflexible obligations for larger lenders, streamlines approvals, and introduces new protections for vulnerable consumers, including caps on payday loan repayments for Centrelink recipients and bans on unsolicited invitations and door-to-door selling of consumer leases."
+  },
+  {
+   "slug": "speech-403529",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill, arguing it would unwind responsible lending obligations contrary to the Hayne royal commission’s first recommendation, and cited record-high housing loan commitments and 97% financial counsellor support for keeping the laws."
+  },
+  {
+   "slug": "speech-403530",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia's restrictive lending laws harm low-income earners, small businesses, and first home buyers while benefiting the wealthy, and announced support for the National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020 to ease credit access, advocating a \"Home first, super second\" priority."
+  },
+  {
+   "slug": "speech-403534",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed the government's bill scrapping responsible lending obligations under the National Consumer Credit Protection Act, arguing it contradicts Hayne royal commission recommendation 1.1 and ignores Treasury advice that the obligations do not harm credit supply."
+  },
+  {
+   "slug": "speech-403535",
+   "speaker": "Garth Hamilton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020 was argued in support, simplifying credit frameworks and adopting borrower responsibility principles to facilitate economic recovery and job creation, with stronger protections for vulnerable consumers. The speech cited 800,000 jobs created in seven months, a 66.2% participation rate, and 65,600 taxpayers benefiting from tax relief in Groom."
+  },
+  {
+   "slug": "speech-403536",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020 is a dangerous ideological step backwards that weakens consumer protections, contradicts the Hayne royal commission’s first recommendation, and puts vulnerable Australians at risk, while credit growth remains strong and experts—including Treasury, the big four banks, and consumer advocates—oppose the changes."
+  },
+  {
+   "slug": "speech-403537",
+   "speaker": "Terry Young",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020 will remove unnecessary barriers to credit for most products while retaining and strengthening responsible lending obligations for high-cost credit, such as small amount credit contracts and consumer leases. They cited the creation of 29,000 new jobs and a 6.4% unemployment rate as signs of economic recovery, and stated the reforms will reduce red tape, improve competition, and introduce new protections including a cap on lessor costs and protected earnings amounts."
+  },
+  {
+   "slug": "speech-403538",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed the National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020, arguing it scraps responsible lending laws that protect consumers from predatory lending, benefits only big banks, and contradicts the banking royal commission's recommendation to retain those laws, citing 97% of financial counsellors opposing repeal and data showing no credit squeeze."
+  },
+  {
+   "slug": "speech-403540",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill, arguing it removes responsible lending obligations for banks and fails to implement the government's own 2016 review recommendation of a 10% income cap on payday loan repayments, instead setting it at 20%, while ignoring the first recommendation of the Hayne royal commission. The speaker stated the bill has no support from banks, community legal centres, mortgage brokers, or academics and will harm vulnerable Australians by enabling unaffordable credit."
+  },
+  {
+   "slug": "speech-403648",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020 weakens consumer protections by removing responsible lending obligations, directly contradicting the Hayne royal commission’s Recommendation 1.1 and Treasury’s own submission. The speaker noted that household debt is at 186.8% of disposable income, warned of potential financial instability or a debt crisis, and called the bill a betrayal of royal commission witnesses and vulnerable Australians."
+  },
+  {
+   "slug": "speech-403728",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "The bill's removal of responsible lending obligations would harm vulnerable Australians, as evidenced by case studies from the Shoalhaven Women's Health Centre and Lifeline South Coast showing irresponsible lending leading to debt, mental health crises and suicide risk. The speaker also criticised the bill for doubling payday lending caps, exempting business loans from protections and ignoring the banking royal commission's recommendations."
+  },
+  {
+   "slug": "speech-403729",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020, arguing it balances credit availability with consumer protections by capping costs on small amount credit contracts and consumer leases, prohibiting unsolicited invitations and door-to-door selling, and introducing anti-avoidance provisions."
+  },
+  {
+   "slug": "speech-403730",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020 would be damaging by removing responsible lending protections, shifting responsibility from lenders to borrowers, and increasing the risk of a debt crisis. They noted that over 33,000 Australians and 125 community groups opposed the bill, referenced the Hayne royal commission’s warning against such changes, and cited concerns from experts like Eliza Wu about fueling a housing boom and debt crisis."
+  },
+  {
+   "slug": "speech-403731",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-403732",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's bill undermines the banking royal commission's key recommendation 1.1 on responsible lending, removing consumer protections that prevent borrowers from losing their homes, and that this will worsen economic hardship as JobKeeper ends on 28 March, with Treasury estimating 100,000 to 250,000 job losses. The speaker also noted that the bill includes weak payday lending caps, which Labor supports despite shortcomings."
+  },
+  {
+   "slug": "speech-403733",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "The speaker opposed the National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020, arguing it removes responsible lending obligations, contradicts the banking royal commission’s first recommendation, and will harm consumers by increasing unaffordable debt. Labor will refer the bill to a Senate inquiry and opposes it as is."
+  },
+  {
+   "slug": "speech-403734",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "The bill removes responsible lending obligations for most consumer credit contracts, a measure introduced by Labor in 2009 to protect consumers by requiring credit providers to assess suitability."
+  },
+  {
+   "slug": "speech-403821",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's bill to remove responsible lending obligations for most consumer credit products contradicts the banking royal commission's recommendation 1.1, would create confusion with three separate regulatory sets and two regulators, and would harm consumers—particularly victims of family violence—by removing requirements for lenders to make reasonable inquiries about borrowers' needs. The speaker also criticised the government's tourism support package as insufficient, noting it offers 800,000 half-price airfares to limited destinations (four in Queensland, one each in Victoria and New South Wales) while a million Australians face losing JobKeeper payments."
+  },
+  {
+   "slug": "speech-403825",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "The MP opposed the National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020, arguing it would remove responsible lending obligations for mortgages and personal loans over $2,000, putting consumers at risk. They cited constituent concerns, $34 billion in monthly credit subject to the obligations, and a lack of evidence that the obligations hinder economic recovery."
+  },
+  {
+   "slug": "speech-403827",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "The bill amends responsible lending obligations to apply only to small amount credit contracts and consumer leases, aligning with APRA standards, and introduces new consumer protections including caps on lease payments, equal repayments, and strengthened penalties, while extending best-interest obligations to other credit assistance providers."
+  },
+  {
+   "slug": "speech-403828",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "The bill would remove responsible lending obligations, contradicting the banking royal commission's first recommendation and exposing vulnerable Australians to predatory behaviour; Treasury evidence showed the safeguards did not restrict credit availability. The speaker cited clients Sally and Ahmed, who benefited from these laws, and opposed the bill."
+  },
+  {
+   "slug": "speech-403829",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill removes responsible lending obligations and will allow predatory lending and price gouging, harming vulnerable Australians, citing over 23,000 signatures against it and the case of a refugee named Bien who defaulted on a car loan due to unfair terms."
+  },
+  {
+   "slug": "speech-403833",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "The speaker argued against the National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020, stating it removes responsible lending obligations, shifts responsibility from lenders to borrowers, and contradicts Recommendation 1.1 of the Hayne royal commission. The speaker cited a Financial Counselling Australia survey where 97% of financial counsellors opposed the repeal, and shared a constituent's story of a borrower named Albert who attempted suicide due to unaffordable debt, warning the bill would increase financial distress and mental health risks."
+  }
+ ],
+ "acts": []
+}

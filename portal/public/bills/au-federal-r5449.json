@@ -1,0 +1,214 @@
+{
+ "key": "au-federal-r5449",
+ "title": "Appropriation Bill (No. 2) 2015-2016",
+ "short_title": "Appropriation Bill (No. 2) 2015-2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2015-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5449_ems_ad634afb-2a0f-4e05-8bdd-1ca24527d609%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/3887912%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5449%22",
+   "document_date": "2015-05-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00077",
+   "document_date": "2015-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-309576",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-05-12",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 2) 2015-2016 seeks approval for over $15 billion in spending, including $7.4 billion for the National Broadband Network, $3 billion for infrastructure (including a $2 billion loan for WestConnex stage 2 and $250 million for ACT asbestos remediation), and $2.9 billion for defence capital funding. The bill also sets debit limits for nation-building funds, with no new projects to commence as the funds are being wound up."
+  },
+  {
+   "slug": "speech-310281",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-25",
+   "stage_hint": null,
+   "brief": "The speaker referred five appropriation bills to the Federation Chamber for further consideration at the adjournment of the House."
+  },
+  {
+   "slug": "speech-310783",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2015-2016 budget is fundamentally unfair, citing NATSEM modelling that nine out of ten lowest-income families lose while nine out of ten wealthiest families benefit, and criticised cuts to family tax benefits, paid parental leave, and the impact on South Australian jobs at Holden and in shipbuilding."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 2) 2015-2016",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00077",
+   "assent_date": "2015-06-26"
+  }
+ ]
+}

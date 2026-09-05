@@ -1,0 +1,267 @@
+{
+ "key": "au-federal-r5145",
+ "title": "Primary Industries (Customs) Charges Amendment Bill 2013",
+ "short_title": "Primary Industries (Customs) Charges Amendment Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2013-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-12-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5145_ems_f578a004-ab74-4389-8294-a09211b96b48%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5145%22",
+   "document_date": "2013-11-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00144",
+   "document_date": "2013-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-20",
+  "sentences": [
+   "The bill would remove the maximum rates set in the Primary Industries (Customs) Charges Act 1999 for research and development and marketing charges.",
+   "It would allow the government to set new charge rates through regulations alone, without needing to amend the Act, and would require the Minister to consult industry bodies before setting rates.",
+   "The bill would also prevent regulations from setting a charge rate above what the relevant industry body recommends, which the government says safeguards against excessive increases."
+  ],
+  "changes": [
+   "Removes product-specific maximum rates for research and development and marketing charges from the Act.",
+   "Allows charge rates to be changed by amending regulations only, not the Act.",
+   "Strengthens consultation requirements so the Minister must consider industry body recommendations.",
+   "Restricts regulations from setting a rate higher than the industry body's recommended rate."
+  ],
+  "affected": "Primary producers and industry bodies that pay or propose research and development and marketing charges, and the 15 rural research and development corporations.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:06:24Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-279027",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825716",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280215",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280473",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280475",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280476",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280477",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280478",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280479",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826185",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280720",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-12-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280721",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-05",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Primary Industries (Customs) Charges Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00144",
+   "assent_date": "2013-12-13"
+  }
+ ]
+}

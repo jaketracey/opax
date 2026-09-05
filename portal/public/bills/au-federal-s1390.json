@@ -1,0 +1,82 @@
+{
+ "key": "au-federal-s1390",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Domestic Reserve) Bill 2023",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Domestic Reserve) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-09-05",
+ "originating_house": "senate",
+ "sponsor": "HANSON, Sen Pauline",
+ "sponsor_party": "Pauline Hanson&#39;s One Nation",
+ "sponsor_person_id": "10280",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1390%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1390%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1390%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1390%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1390_ems_b8d7c566-25cc-499b-8ca8-316ad4554354%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1390%22",
+   "document_date": "2023-09-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-09-05",
+  "sentences": [
+   "The bill would require gas and petroleum companies in Commonwealth waters to set aside some of their exports for Australian use.",
+   "Companies would have 12 months to sign a domestic reserve agreement with the Commonwealth, reserving 15% of the petroleum they exported the previous year.",
+   "The Commonwealth could pass its rights to that reserved petroleum to a state or territory, and each agreement would last at least 10 years."
+  ],
+  "changes": [
+   "Imposes a new obligation on gas and petroleum companies to enter into a domestic reserve agreement.",
+   "Requires companies to reserve 15% of their exported petroleum for the Commonwealth.",
+   "Allows the Commonwealth to transfer its rights to a state or territory.",
+   "Sets a minimum 10-year term for each domestic reserve agreement.",
+   "Requires licensees to enter a new agreement if the production licence is still in force after the first contract ends.",
+   "Applies the amendments to licences granted before, on or after commencement."
+  ],
+  "affected": "Gas and petroleum companies operating in Commonwealth waters and the Commonwealth, states and territories.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

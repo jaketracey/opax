@@ -1,0 +1,85 @@
+{
+ "key": "au-federal-s1277",
+ "title": "Migration Amendment (New Maritime Crew Visas) Bill 2020",
+ "short_title": "Migration Amendment (New Maritime Crew Visas) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-11-11",
+ "originating_house": "senate",
+ "sponsor": "KENEALLY, Sen Kristina",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10906",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1277%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1277%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1277%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1277%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1277%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1277_ems_5f960ce4-acfb-46b0-abfa-d728cf9a695c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1277%22",
+   "document_date": "2020-11-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 8,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-11-11",
+  "sentences": [
+   "The bill would replace the current visa for maritime crew with two new types of visa.",
+   "It would create one visa for seafarers transiting through Australia on an international journey and another that lets them work on ships with a temporary licence for coastal trips.",
+   "The changes would start the day after the bill becomes law."
+  ],
+  "changes": [
+   "Replaces the existing Maritime Crew Visa with two new visa categories.",
+   "Introduces a transit visa for seafarers on international voyages.",
+   "Introduces a work visa for seafarers on ships with a temporary coastal trading licence."
+  ],
+  "affected": "Foreign maritime crew on Flag of Convenience vessels.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:50:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,341 @@
+{
+ "key": "au-federal-s1107",
+ "title": "Communications Legislation Amendment (Regional and Small Publishers Innovation Fund) Bill 2017",
+ "short_title": "Communications Legislation Amendment (Regional and Small Publishers Innovation Fund) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-06",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2018-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1107_ems_091a9fdb-8b4b-4e67-b739-550c02440459%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1107%22",
+   "document_date": "2017-12-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00043",
+   "document_date": "2018-06-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-12-06",
+  "sentences": [
+   "This bill creates a grant scheme for regional and small publishers, run by the Australian Communications and Media Authority.",
+   "The Australian Communications and Media Authority could give money to newspaper, magazine, or periodical publishers, or to content service providers, but only after signing an agreement with the recipient and only for the financial year starting 1 July 2018 and the two following years, with a total cap of $50,100,000.",
+   "The bill also allows a minister to set up an advisory committee to guide the Australian Communications and Media Authority, and requires the authority to report on grants in its annual report."
+  ],
+  "changes": [
+   "Establishes the Regional and Small Publishers Innovation Fund.",
+   "Allows the Australian Communications and Media Authority to make grants to eligible publishers or content service providers.",
+   "Limits grants to the financial year starting 1 July 2018 and the next two financial years, with a total maximum of $50,100,000.",
+   "Requires the Australian Communications and Media Authority to enter into an agreement with each grant recipient before making the grant.",
+   "Allows the minister to establish an advisory committee to advise the Australian Communications and Media Authority on grants.",
+   "Requires the Australian Communications and Media Authority to include grant details and any advisory committee advice in its annual report."
+  ],
+  "affected": "Regional and small publishers, including newspaper, magazine, and periodical publishers, and content service providers, as well as consumers of news and journalism.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:27:30Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5204",
+   "date": "2018-05-09",
+   "house": "senate",
+   "question": "Communications Legislation Amendment (Regional and Small Publishers Innovation Fund) Bill 2017 - Second Reading - Media diversity",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 38,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-05-09/8"
+  },
+  {
+   "key": "federal-senate-5205",
+   "date": "2018-05-10",
+   "house": "senate",
+   "question": "The majority voted against [amendments (1), (2) and (3)](https://www.openaustralia.org.au/senate/?gid=2018-05-10.59.1) moved by Greens Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young), which means they failed. Senator Hanson-Young explained that: > *Basically, what these amendments do is correct the problem that we have had with this piece of legislation from the beginning: that there is an ideological blindness that's been drawn into this bill. We want to make sure that if you're an Australian publisher, if you're an Australian news outlet, if you employ Australian journalists, if you're reporting Australian news and you're doing it for an Australian audience and you're within that small sphere as outlined by the criteria, you have access to this fund. It shouldn't matter whether you are friends with the government ideologically or not.* ### What does this bill do? The [purpose of the bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd085) is: > *to establish a legislative framework for a grant funding scheme, the Regional and Small Publishers Innovation Fund, to be administered by the Australian Communications and Media Authority (ACMA).* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd085).",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 19,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-05-10/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-363644",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The bill establishes the Regional and Small Publishers Innovation Fund, providing $16.7 million per year in grants from 2018-19 to 2020-21 to help regional and small publishers transition to digital media, with the Australian Communications and Media Authority (ACMA) administering the fund and a committee including the Australian Press Council, Walkley Foundation and Country Press Australia providing advice."
+  },
+  {
+   "slug": "speech-363645",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The Labor speaker argued that the Regional and Small Publishers Innovation Fund is a short-term bandaid solution resulting from a compromised backroom deal that sacrificed media diversity, and criticized the government for cutting ABC funding and failing to address journalism job losses, but stated Labor would not oppose the bill."
+  },
+  {
+   "slug": "speech-363700",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "Labor supports the Regional and Small Publishers Innovation Fund Bill but criticises it as part of a \"dirty deal\" with the Nick Xenophon Team that enabled media deregulation, and notes the government cut $84 million from the ABC while claiming to support regional journalism."
+  },
+  {
+   "slug": "speech-363701",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor would not oppose the bill but argued the $50 million Regional and Small Publishers Innovation Fund was a shoddy backroom deal that does little to replace the repealed two-out-of-three media control rule, and criticised the government for excluding outlets like The Guardian Australia while cutting $84 million from the ABC and giving $30 million to Fox Sports."
+  },
+  {
+   "slug": "speech-363702",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The Regional and Small Publishers Innovation Fund Bill 2017 establishes a $50 million grants program over three years to help regional and small publishers develop sustainable business models and support civic journalism. The government argued the fund is needed as traditional revenue models decline, and noted industry support for the measure."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Communications Legislation Amendment (Regional and Small Publishers Innovation Fund) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00043",
+   "assent_date": "2018-06-19"
+  }
+ ]
+}

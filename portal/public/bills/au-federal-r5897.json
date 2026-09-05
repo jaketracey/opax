@@ -1,0 +1,347 @@
+{
+ "key": "au-federal-r5897",
+ "title": "Treasury Laws Amendment (Major Bank Levy) Bill 2017",
+ "short_title": "Treasury Laws Amendment (Major Bank Levy) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-06-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5897%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5897%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5897%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5897%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5897%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5897%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5897%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5897%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5897%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5897%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5897%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5897%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5897%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5897%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5897_ems_8da73818-16ca-4454-8aa1-bec74c942bb6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5897%22",
+   "document_date": "2017-05-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00064",
+   "document_date": "2017-06-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4712",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "question": "Rebekha Sharkie The Nick Xenophon Team is a strong supporter of the Major Bank Levy Bill 2017, and we support this additional contribution from Australia's most profitable sector, the banking sector, towards budget repair. However, beyond the general argument of repairing the budget, there are several good arguments that make the major bank levy good policy. Although many Australians have cause to dislike the banks, there are fundamentally good policy reasons for the bank levy as well. The first policy argument relates to the guarantee scheme for large deposits and wholesale funding. In 2008, the then Labor federal government introduced a guarantee scheme for large deposits and wholesale funding and provided a $180 billion debt facility for Australian banks. In short, this was a too-big-to-fail arrangement. Together, these measures have put our banks at a significant competitive advantage and boosted their earnings, substantially, to the cost of the taxpayer. Although this scheme only lasted two years, global ratings agencies now consider Australian banks to be government backed. As a result, Australian banks now enjoy stronger credit ratings than they would have otherwise obtained, which delivers them a further competitive advantage because they can borrow offshore at a discount. One of the purposes of a similar bank levy introduced in 2011 in the United Kingdom was for the banks to make a full and fair contribution in respect of the potential risk they pose to the wider economy. This only reinforces the argument that major Australian banks should make a fair contribution—an insurance premium, if you will—towards the potential cost of this implicit too-big-to-fail guarantee from the federal government. The second argument relates to the undertaxing of financial services by GST, because they are, for very practical reasons, input taxed rather than output taxed. According to the 2016 Tax Expenditures Statement from the Treasury, the forgone revenue was estimated to b",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-19/1"
+  },
+  {
+   "key": "federal-representatives-4713",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "question": "No motion text available",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-19/2"
+  },
+  {
+   "key": "federal-representatives-4714",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "question": "Scott Morrison I move: That this bill be now read a third time. Chris Bowen It is appropriate that we have a third reading debate on this matter because more evidence has come to light in the Senate inquiry—which occurred last week on Friday—since the House last met. There are two matters, in particular, that go to the revenue—the costing involved in this and passing it through to consumers. The House is familiar with the issue around the costings and the fact that, a short time after the budget was brought down, the government has a rather large black hole on its hands. The Treasurer has tried all sorts of excuses to deal with this, including moving the goal post between fiscal and underlying cash, but, of course, one of them has been that Macquarie is yet to report. It is true that Macquarie Bank is yet to report to the Australian Stock Exchange. They can report at any time of their choosing, but they did give evidence before the Senate inquiry on Friday and indicated a post-tax liability. That post-tax liability leaves a very significant shortfall for the government. In fact, if you take the big four banks plus Macquarie Bank on a post-tax contribution, you get to just over one billion dollars—$1.015 billion—which falls significantly short of what the Treasurer told us in his budget speech. If you take that over the forward estimates, you get to a $2 billion black hole in the Treasurer's budget. This comes to the matter of competence. This is the point we make. We sometimes get pleas for more bipartisanship, but, when the Labor Party offers the government bipartisanship, time and time again we see the implementation being bungled. Although I will confine my remarks to this particular bill, the same applies to a matter that was just dealt with in the other House in relation to the GST and low-value threshold, which we will deal with later. The fact of the matter is it is now incontrovertibly the case that the Treasurer has a black hole on his hands. It would just",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-19/3"
+  },
+  {
+   "key": "federal-senate-4731",
+   "date": "2017-06-19",
+   "house": "senate",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/senate/?id=2017-06-19.180.1) introduced by Nick Xenophon Team Senator [Nick Xenophon](https://theyvoteforyou.org.au/people/senate/sa/nick_xenophon) (SA), which means it failed. Senator Xenophon explained that the motion would have ensured: > *\"that the provisions of the [Major Bank Levy Bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5896) would also apply to foreign banks that have significant assets of over $100 billion in terms of their global assets. What this would mean is that banks such as HSBC, ING and BNP Paribas would be liable for this levy in terms of their Australian liabilities.\"* Read the arguments against the motion on [OpenAustralia.org.au](http://www.openaustralia.org.au/senate/?id=2017-06-19.180.1) and learn more about the bill in the [explanatory memorandum](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr5896_ems_f8a34a79-dc0f-4294-aa94-c912ebb30f71%22;rec=0). ### Motion text > *(1) Clause 4, page 3 (lines 7 to 9), omit subclause (2), substitute:* >> *(2) The total liabilities amount for a quarter in relation to an ADI is:* >>> *(a) if the ADI is a foreign ADI (within the meaning of the Banking Act 1959)—the amount equal to the total liabilities of the ADI and its related bodies corporate (within the meaning of the Corporations Act 2001) for the quarter (excluding any liabilities to each other); or* >>> *(b) in any other case—the amount equal to the total liabilities of the ADI for the quarter;* >> *as reported under an applicable reporting standard.* > *(2) Clause 5, page 3 (lines 20 and 21), omit paragraph (2) (a), substitute:* >> *(a) the amount equal to the total liabilities of the ADI for the quarter, as reported under an applicable reporting standard; and* > *(3) Clause 6, page 4 (line 18), omit \"paragraph 5(2) (b)\", substitute \"",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 13,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-06-19/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-347538",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Major Bank Levy) Bill 2017 was moved for second reading, introducing a major bank levy with amendments to index the $100 billion threshold to GDP growth, allow APRA to collect data and share it with the ATO, apply standard collection provisions, and include an anti-avoidance measure."
+  },
+  {
+   "slug": "speech-349065",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-06-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Major Bank Levy Bill 2017, arguing banks should contribute to repaying national debt after the government guaranteed them during the global financial crisis, and urged the big four banks to maintain branches in regional Australia, noting $5.3 billion in economic activity in his electorate."
+  },
+  {
+   "slug": "speech-349070",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-15",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Major Bank Levy) Bill 2017 introduces a six‑basis‑point levy on banks with liabilities of at least $100 billion—applying to the big four banks and Macquarie Bank—raising around $1.5 billion per year ($6.2 billion over the forward estimates), with the ACCC to conduct an inquiry into residential mortgage pricing to prevent the levy being used as an excuse for interest rate increases."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Major Bank Levy) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00064",
+   "assent_date": "2017-06-23"
+  }
+ ]
+}

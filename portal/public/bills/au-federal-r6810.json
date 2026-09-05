@@ -1,0 +1,197 @@
+{
+ "key": "au-federal-r6810",
+ "title": "Electoral Legislation Amendment (Assurance of Senate Counting) Bill 2021",
+ "short_title": "Electoral Legislation Amendment (Assurance of Senate Counting) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Special Minister of State",
+ "status": "passed",
+ "status_as_of": "2021-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6810%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6810%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6810%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6810%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6810%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6810%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6810%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6810%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6810%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6810%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6810%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6810%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6810_ems_018bad0d-c08a-4874-9cbd-8fe85fbab60b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6810%22",
+   "document_date": "2021-10-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00135",
+   "document_date": "2021-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-28",
+  "sentences": [
+   "This bill would change the Electoral Act to make Senate vote counting more transparent and secure.",
+   "It would require the Electoral Commissioner to arrange independent security and software assessments of the computer systems used to scan, store and count Senate votes before each election.",
+   "From 1 January 2023, the software used to distribute preferences and elect candidates would be checked to ensure it follows the rules in section 273A of the Electoral Act."
+  ],
+  "changes": [
+   "Require the Electoral Commissioner to arrange an independent risk assessment of the security of computer systems used for Senate vote scrutiny before each election.",
+   "Require the Electoral Commissioner to arrange an independent assessment of the software used for Senate vote scrutiny from 1 January 2023.",
+   "Require the Electoral Commissioner to verify the assured version of counting software no more than 7 days before an election and report any variations within 7 days of the writ's return.",
+   "Require the Electoral Commissioner to check a statistically significant sample of ballot papers during scrutiny to ensure electronic data matches physical ballots.",
+   "Clarify that the tie-breaking mechanism for Senate candidates aligns with House of Representatives processes, resolved by lot if needed.",
+   "Allow a scrutineer to request access to original ballot papers to resolve formality or preference questions, subject to controls against unreasonable requests."
+  ],
+  "affected": "The Electoral Commissioner and scrutineers are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:09Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-414792",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-28",
+   "stage_hint": null,
+   "brief": "The Electoral Legislation Amendment (Assurance of Senate Counting) Bill 2021 was introduced to amend the Commonwealth Electoral Act 1918, requiring pre-election security risk assessments by an Australian Signals Directorate-accredited provider, statistical sampling of ballot papers, scrutineer rights to recall physical ballot papers, tie-breaking by lot, and independent software accuracy assessments, with publication of results and data."
+  },
+  {
+   "slug": "speech-416832",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The Electoral Legislation Amendment (Assurance of Senate Counting) Bill 2021 was supported, requiring ASD-accredited security audits of Senate counting software, statistical ballot sampling of at least 5,000 papers, and resolving Senate ties by lot. An amendment was moved calling for lower donation disclosure thresholds ($1,000 instead of $14,500), real-time donation disclosure, increased AEC funding amid record enrolment of 17 million and low Indigenous enrolment (69.6% in the NT), and a National Anti-Corruption Commission, while citing a $75,000 donation from Clive Palmer to the National Party."
+  },
+  {
+   "slug": "speech-416834",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Electoral Legislation Amendment (Assurance of Senate Counting) Bill 2021, arguing it legislates existing AEC practices and mandates Australian Signals Directorate advice to protect against cyber interference. They opposed an amendment on real-time donation disclosure, saying it would lower standards and allow people to game the system by making multiple small donations."
+  },
+  {
+   "slug": "speech-416835",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "Labor supported the Electoral Legislation Amendment (Assurance of Senate Counting) Bill 2021, which requires an independent cybersecurity audit of the AEC’s Senate counting software, while arguing the bill addresses disinformation imported from US politics—specifically conspiracy theories promoted by Senator Malcolm Roberts—and affirming that Australia’s electoral system is already secure and transparent, with no electronic voting in federal elections."
+  },
+  {
+   "slug": "speech-416837",
+   "speaker": "Andrew Keith Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Electoral Legislation Amendment (Assurance of Senate Counting) Bill 2021, which requires an independent security risk assessment of the AEC’s computer systems, and opposed voter identification laws, citing Queensland’s 2015 election and human rights concerns. They also called for a national integrity commission, real-time political donation disclosure with a $1,000 threshold, and making Indigenous voter turnout a Closing the Gap target."
+  },
+  {
+   "slug": "speech-416839",
+   "speaker": "Michelle Landry",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The Electoral Legislation Amendment (Assurance of Senate Counting) Bill 2021 was commended to the House, implementing a JSCEM recommendation by requiring security and independent accuracy assessments of Senate vote-counting systems, allowing scrutineers to recall physical ballot papers, clarifying tie processes, removing bulk exclusion, and requiring publication of detailed vote data."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Electoral Legislation Amendment (Assurance of Senate Counting) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00135",
+   "assent_date": "2021-12-13"
+  }
+ ]
+}

@@ -1,0 +1,324 @@
+{
+ "key": "au-federal-r6494",
+ "title": "Statute Update (Regulations References) Bill 2020",
+ "short_title": "Statute Update (Regulations References) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2020-03-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6494%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6494%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6494%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6494%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6494%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6494%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6494%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6494%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6494%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6494%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6494%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6494%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6494%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6494%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6494_ems_9579e340-84d8-4de4-a415-16ca06d63ff5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6494%22",
+   "document_date": "2020-02-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00018",
+   "document_date": "2020-03-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-12",
+  "sentences": [
+   "The bill would update references to regulations in Commonwealth laws that are outdated or likely to become outdated because regulations have been remade or renamed.",
+   "Instead of naming specific regulations, Acts would refer to them using general phrases like 'prescribed regulations' that stay correct even if the regulations are repealed, sunsetted or renamed.",
+   "The bill also makes minor consequential changes such as adding notes, altering headings, renumbering provisions and repealing redundant ones."
+  ],
+  "changes": [
+   "Replaces specific regulation references with general phrases to keep links correct after remaking or renaming.",
+   "Makes minor consequential amendments to support the updated provisions.",
+   "Enhances usability, interpretation and consistency across Commonwealth statute law."
+  ],
+  "affected": "The Commonwealth statute book and those who use or administer Commonwealth laws.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6254",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debates/?id=2020-02-26.126.2) introduced by Isaacs MP [Mark Dreyfus](https://theyvoteforyou.org.au/people/representatives/isaacs/mark_dreyfus) (Labor), which means it failed. The motion would have amended the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is that the bill be read for a second time (parliamentary jargon for agreeing with the main idea of the bill). ### Motion text > *That all words after 'That' be omitted with a view to substituting the following words:* > > *'whilst not declining to give the bill a second reading, the House:* > > *(1) notes the Government’s increasing use of regulations to implement its policies, which has the effect of bypassing the parliamentary scrutiny that is fundamental to the legislative process;* > > *(2) expresses concern that seeking to govern by regulation undermines the long-standing conventions of transparency and accountability which are an integral part of our democracy; and* > > *(3) calls on the Government to return to the principles of transparency and accountability that have until recent years defined Australia as a democratic nation governed under the rule of law'. *",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 40
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-26/12"
+  },
+  {
+   "key": "federal-representatives-6255",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "question": "Statute Update (Regulations References) Bill 2020 - Third Reading - Speed things along",
+   "stage": "Third reading",
+   "ayes": 74,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 40,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-26/13"
+  },
+  {
+   "key": "federal-representatives-6256",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "question": "Statute Update (Regulations References) Bill 2020 - Third Reading - Let a vote happen",
+   "stage": "Third reading",
+   "ayes": 74,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 40,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-26/14"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-387875",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The Statute Update (Regulations References) Bill 2020 makes minor technical changes to update out-of-date references to regulations in 10 principal acts, replacing specific references with general ones to improve usability and consistency."
+  },
+  {
+   "slug": "speech-389159",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-26",
+   "stage_hint": null,
+   "brief": "The speaker moved to amend the Statute Update (Regulations References) Bill 2020, arguing the government increasingly uses regulations to bypass parliamentary scrutiny and calling for a return to transparency and accountability, citing a past attempt to pass a major criminal law change as a minor technical matter and referencing the sports rorts affair."
+  },
+  {
+   "slug": "speech-389167",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-26",
+   "stage_hint": null,
+   "brief": "Labor supported the Statute Update (Regulations References) Bill 2020 but argued it reduces transparency by removing specific regulation references from significant acts including the Age Discrimination Act, Airports Act, and Carbon Credits (Carbon Farming Initiative) Act 2011, and criticised the government for failing to reduce the size of the statute book."
+  },
+  {
+   "slug": "speech-389168",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-26",
+   "stage_hint": null,
+   "brief": "The Statute Update (Regulations References) Bill 2020 updates references to delegated legislation in Commonwealth statutes to ensure regulations remain enforceable. The speaker supported the bill but criticised the government for lacking a broader policy plan, citing the Age Discrimination Act, aged care funding, and home-care place backlogs."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Statute Update (Regulations References) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00018",
+   "assent_date": "2020-03-06"
+  }
+ ]
+}

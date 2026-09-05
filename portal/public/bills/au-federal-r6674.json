@@ -1,0 +1,848 @@
+{
+ "key": "au-federal-r6674",
+ "title": "Treasury Laws Amendment (2021 Measures No. 1) Bill 2021",
+ "short_title": "Treasury Laws Amendment (2021 Measures No. 1) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2021-08-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6674_ems_02c3df55-3dc7-4844-b587-76805cccea87%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6674_ems_0e97afc9-cac5-47ad-8c52-5b239a04ae45%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6674_ems_ff471bf2-1171-4374-abdc-2a01178ceaf1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6674%22",
+   "document_date": "2021-02-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00082",
+   "document_date": "2021-08-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2021-02-17",
+  "sentences": [
+   "The bill would extend temporary relief for companies and registered schemes until 31 March 2022.",
+   "It would end the obligation for these entities to tell members they can ask for paper documents.",
+   "ASIC could issue short-term exemptions from meeting and document rules when events like the pandemic make compliance unreasonable."
+  ],
+  "changes": [
+   "Extends relief from 15 September 2021 to 31 March 2022.",
+   "Removes the requirement to notify members of their right to choose hard-copy documents.",
+   "Gives ASIC new powers to grant temporary relief from meeting or document requirements during exceptional circumstances."
+  ],
+  "affected": "Companies, registered schemes and their members are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-6980",
+   "date": "2021-02-18",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2021-02-18.60.2) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it failed. Senator McKim [explained that](https://www.openaustralia.org.au/senate/?gid=2021-02-18.62.1): > *This amendment would change the reporting date from 12 March to 7 May. The Australian Greens, to be frank, would prefer an even longer inquiry time and believe that this bill warrants an extremely thorough examination by the committee, but we are putting forward 7 May as a sensible compromise here.* ### Amendment text > *At the end of the proposed amendment, omit \"12 March 2021\", substitute \"7 May 2021\".* ### Original motion text > *At the end of the motion, add \"and, in respect of the Treasury Laws Amendment (2021 Measures No. 1) Bill 2021, the provisions of the bill be referred to the Economics Legislation Committee for inquiry and report by 12 March 2021\".*",
+   "stage": "Committee motion",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 24,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-18/2"
+  },
+  {
+   "key": "federal-representatives-7041",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-03-17.127.6) that: > *the words proposed to be omitted stand part of the question.* In other words, they voted to keep the original question unchanged. The original question was that: > *That this bill be now read a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/).* To give a bill a second reading is to agree with its main idea. After a second reading, they can then discuss the bill in greater detail. This vote occurred after the following amendment was proposed: > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes that the Government's measures in Schedule 2 of the bill would strip shareholders of their rights to be adequately informed, damage Australia's corporate governance regime, and allow company directors to get away with failing to disclose important information; and* > > *(2) further notes these measures could damage Australian investment and hurt Australian investors and retirees\"*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-03-17/4"
+  },
+  {
+   "key": "federal-representatives-7042",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (2021 Measures No. 1) Bill 2021 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-03-17/5"
+  },
+  {
+   "key": "federal-representatives-7043",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (2021 Measures No. 1) Bill 2021 - Consideration in Detail - Continuous disclosure obligations",
+   "stage": "Consideration in detail",
+   "ayes": 65,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 120
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-03-17/6"
+  },
+  {
+   "key": "federal-senate-7380",
+   "date": "2021-08-09",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2021-08-09.29.1) introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor), which means it failed. The amendment would have added the text below to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion *that the bill be read a second time* (parliamentary jargon for agreeing with the main idea of the bill). ### Motion text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that the Government's measures in Schedule 2 of the bill would strip shareholders of their rights to be adequately informed, damage Australia's corporate governance regime, and allow company directors to get away with failing to disclose important information; and* > > *(b) further notes these measures could damage Australian investment and hurt Australian investors and retirees\".*",
+   "stage": "Second reading",
+   "ayes": 15,
+   "noes": 18,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 18,
+    "earliest": 10,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-09/7"
+  },
+  {
+   "key": "federal-senate-7381",
+   "date": "2021-08-09",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (2021 Measures No. 1) Bill 2021 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 14,
+    "earliest": 14,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-09/8"
+  },
+  {
+   "key": "federal-senate-7382",
+   "date": "2021-08-09",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-08-09.178.2) introduced by Victorian Senator [Jane Hume](https://theyvoteforyou.org.au/people/senate/victoria/jane_hume) (Liberal), which means it was successful. ### Amendment text > *(1) Schedule 2, item 55, page 37 (after line 16), at the end of Part 10.56, add:* > > *1683B Review of operation of laws* > >> *(1) The Minister must cause a review of the operation of the amendments made by Parts 1 and 2 of Schedule 2 to the amending Act to be conducted by an independent expert within 6 months after the second anniversary of the commencement of this section.* >> >> *(2) The person who conducts the review must give the Minister a written report of the review.* >> >> *(3) The Minister must cause a copy of the report to be tabled in each House of the Parliament within 15 sitting days of that House after the report is given to the Minister.* >> >> *Recommendations* >> >> *(4) The report may set out recommendations to the Commonwealth Government.* >> >> *(5) If the report sets out one or more recommendations to the Commonwealth Government, the report must set out the reasons for those recommendations.* >> >> *Government response to recommendations* >> >> *(6) If the report sets out one or more recommendations to the Commonwealth Government, as soon as practicable, and in any event within 3 months, after the report is first tabled in a House of the Parliament, the Minister must cause:* >> >>> *(a) a statement setting out the Commonwealth Government's response to each of the recommendations to be prepared; and* >>> >>> *(b) the statement to be published on the Department's website.* > > *1683C Amendments made by Schedule 2 to the amending Act cease to have effect if review of operation of laws is not conducted* > >> *(1) This section applies if the Minister:* >> >>> *(a) fails to cause a review to be conducted in accordance with subsection 1683B(1) within the period required by",
+   "stage": "In committee",
+   "ayes": 19,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 17,
+    "member": 5,
+    "earliest": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-09/9"
+  },
+  {
+   "key": "federal-senate-7383",
+   "date": "2021-08-09",
+   "house": "senate",
+   "question": "The majority voted in favour of an amended amendment. In other words, they were voting for a [Government amendment](https://www.openaustralia.org.au/senate/?gid=2021-08-09.178.2) (namely, amendment (1) on sheet RS134), which amended an original [Labor amendment](https://www.openaustralia.org.au/senate/?gid=2021-08-09.184.1) (namely, amendment (2) on sheet 1354). ### Text of original (Labor) amendment > *(1) ...* > > *(2) Schedule 2, page 25 (line 1) to page 38 (line 8), to be opposed.* ### Text of (Government) amendment to the original (Labor) amendment > *(1) Schedule 2, item 55, page 37 (after line 16), at the end of Part 10.56, add:* > > *1683B Review of operation of laws* > >> *(1) The Minister must cause a review of the operation of the amendments made by Parts 1 and 2 of Schedule 2 to the amending Act to be conducted by an independent expert within 6 months after the second anniversary of the commencement of this section.* >> >> *(2) The person who conducts the review must give the Minister a written report of the review.* >> >> *(3) The Minister must cause a copy of the report to be tabled in each House of the Parliament within 15 sitting days of that House after the report is given to the Minister.* >> >> *Recommendations* >> >> *(4) The report may set out recommendations to the Commonwealth Government.* >> >> *(5) If the report sets out one or more recommendations to the Commonwealth Government, the report must set out the reasons for those recommendations.* >> >> *Government response to recommendations* >> >> *(6) If the report sets out one or more recommendations to the Commonwealth Government, as soon as practicable, and in any event within 3 months, after the report is first tabled in a House of the Parliament, the Minister must cause:* >> >>> *(a) a statement setting out the Commonwealth Government's response to each of the recommendations to be prepared; and* >>> >>> *(b) the statement to be published on the Department's website.* > > *1683C Amendment",
+   "stage": "In committee",
+   "ayes": 19,
+   "noes": 17,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 18,
+    "member": 5,
+    "earliest": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-09/10"
+  },
+  {
+   "key": "federal-senate-7384",
+   "date": "2021-08-09",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (2021 Measures No. 1) Bill 2021 - in Committee - Get rid of exemption to scrutiny",
+   "stage": "In committee",
+   "ayes": 17,
+   "noes": 17,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 18,
+    "member": 6,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-09/11"
+  },
+  {
+   "key": "federal-senate-7385",
+   "date": "2021-08-09",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (2021 Measures No. 1) Bill 2021 - in Committee - Agree with bill as amended",
+   "stage": "In committee",
+   "ayes": 19,
+   "noes": 17,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 19,
+    "member": 6,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-09/12"
+  },
+  {
+   "key": "federal-senate-7386",
+   "date": "2021-08-09",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (2021 Measures No. 1) Bill 2021 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 19,
+   "noes": 17,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 19,
+    "member": 6,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-09/13"
+  },
+  {
+   "key": "federal-representatives-7390",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (2021 Measures No. 1) Bill 2021 - Consideration of Senate Message - Agree and so pass bill",
+   "stage": "Consideration of Senate message",
+   "ayes": 43,
+   "noes": 35,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-08-10/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-403852",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "Labor supported extending virtual AGMs until 16 September 2021 but opposed Schedule 2, arguing it would permanently weaken continuous disclosure and misleading-conduct laws by making directors liable only for knowing, reckless or negligent failures, citing a King & Wood Mallesons survey in which only 21.5% of executives favoured making the changes permanent and opposition from the Australian Shareholders Association. The member moved a second reading amendment noting the measures would strip shareholders' rights, damage corporate governance, and hurt Australian investment and retirees, and foreshadowed an amendment to separate the two schedules."
+  },
+  {
+   "slug": "speech-403856",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (2021 Measures No. 1) Bill 2021 undermines shareholder democracy and accountability by making permanent a weakened continuous disclosure regime, which only holds directors liable for non-disclosure if they acted with knowledge, recklessness or negligence. They supported Schedule 1’s temporary extension of virtual AGMs due to COVID-19, but opposed Schedule 2, citing opposition from the Australian Shareholders' Association and the Australian Council of Superannuation Investors."
+  },
+  {
+   "slug": "speech-403860",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2021 Measures No. 1) Bill 2021 extends temporary relief for companies to hold virtual meetings and execute documents until 15 September 2021, and permanently introduces a fault element of knowledge, recklessness or negligence for continuous disclosure civil penalty proceedings to reduce opportunistic class actions."
+  },
+  {
+   "slug": "speech-404233",
+   "speaker": "Phillip Thompson",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2021 Measures No. 1) Bill 2021 extends temporary relief allowing companies to use technology for meetings, document execution, and distribution until 15 September 2021, with permanent reforms for electronic signing and materials, plus a pilot for hybrid annual general meetings."
+  },
+  {
+   "slug": "speech-404234",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "Labor opposed schedule 2 of the bill, which would permanently weaken continuous disclosure obligations by requiring shareholders to prove directors had knowledge or were reckless before suing, and cited only 10 shareholder class actions in 2019 to counter the government's claim of opportunistic litigation."
+  },
+  {
+   "slug": "speech-404358",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The Labor speaker argued that the Morrison government's Treasury Laws Amendment Bill would undermine shareholders' rights by weakening continuous disclosure laws, citing a King & Wood Mallesons survey where only 11.3% of company directors used the temporary changes and nearly 80% opposed making them permanent, while also accusing the government of punishing transparency, referencing the sports rorts affair and Auditor-General budget cuts."
+  },
+  {
+   "slug": "speech-404361",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The Greens oppose schedule 2 of the Treasury Laws Amendment (2021 Measures No. 1) Bill 2021, arguing it would reverse the burden of proof in continuous disclosure laws, enable insider trading, and benefit large corporations and billionaires at the expense of ordinary shareholders and investors. The speaker also criticised the government for cutting JobSeeker and JobKeeper supports while weakening corporate transparency."
+  },
+  {
+   "slug": "speech-404362",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Treasury Laws Amendment Bill permanently weakens Australia's continuous disclosure regime, making it easier for company directors to withhold price-sensitive information from shareholders. The speaker called for the bill to be split, allowing temporary virtual AGM provisions (Schedule 1) to pass while subjecting the permanent disclosure changes (Schedule 2) to proper Senate inquiry, citing opposition from the Australian Shareholders Association and a survey where over 80% of executives opposed making the temporary changes permanent."
+  },
+  {
+   "slug": "speech-404363",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The bill’s second schedule, which would permanently weaken continuous disclosure and misleading conduct provisions, was opposed, while the temporary extension of virtual AGMs was supported. The government was accused of hypocrisy for cutting JobKeeper while retaining business relief, and opposition from ASIC, the Australian Shareholders Association, and 80% of surveyed executives was noted."
+  },
+  {
+   "slug": "speech-404364",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued against the Treasury Laws Amendment Bill, warning it enables a \"creep\" of reduced accountability and transparency in government, citing stonewalling on freedom-of-information requests and ministers avoiding direct answers by taking questions on notice."
+  },
+  {
+   "slug": "speech-404367",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The Government extended temporary COVID-19 relief allowing virtual company meetings and electronic document execution, with permanent reforms and a hybrid AGM pilot to follow. It also amended continuous disclosure laws so that companies and officers face civil penalties only when acting with knowledge, recklessness or negligence."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2021 Measures No. 1) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00082",
+   "assent_date": "2021-08-13"
+  }
+ ]
+}

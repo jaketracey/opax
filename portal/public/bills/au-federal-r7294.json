@@ -1,0 +1,144 @@
+{
+ "key": "au-federal-r7294",
+ "title": "Surveillance Legislation (Confirmation of Application) Bill 2024",
+ "short_title": "Surveillance Legislation (Confirmation of Application) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2024-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7294%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7294%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7294%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7294%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7294%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7294%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7294%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7294%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7294%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7294%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7294%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7294%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7294%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7294%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7294_ems_6a0cc7be-6a80-4ccf-9e9a-1e298f6d417c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7294_ems_f25e7d76-b990-4f10-87e2-600b54a11636%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7294_ems_66c490ba-47f6-4054-b638-16bf9de3c363%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7294%22",
+   "document_date": "2024-11-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00130",
+   "document_date": "2024-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Surveillance Legislation (Confirmation of Application) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00130",
+   "assent_date": "2024-12-10"
+  }
+ ]
+}

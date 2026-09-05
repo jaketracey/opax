@@ -1,0 +1,231 @@
+{
+ "key": "au-federal-r6934",
+ "title": "Appropriation Bill (No. 1) 2022-2023",
+ "short_title": "Appropriation Bill (No. 1) 2022-2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-10-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2022-11-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6934_ems_dfa11d69-cc81-4429-9538-9e17b97a873e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6934%22",
+   "document_date": "2022-10-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00067",
+   "document_date": "2022-11-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-10-25",
+  "sentences": [
+   "This bill would authorise spending from the Consolidated Revenue Fund for the government's ongoing operations.",
+   "It would provide money for the ordinary annual services of the government, as required by sections 53 and 54 of the Constitution.",
+   "The bill covers the remaining seven-twelfths of the 2022-23 financial year's estimated annual appropriations, excluding new Budget measures."
+  ],
+  "changes": [
+   "Appropriates funds from the Consolidated Revenue Fund for ordinary annual services.",
+   "Allocates spending across government portfolios according to the Administrative Arrangements Order that started on 1 July 2022.",
+   "Provides the remaining seven-twelfths of estimated annual appropriations for the 2022-23 financial year."
+  ],
+  "affected": "Government departments and agencies receiving ordinary annual services funding.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:41Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7878",
+   "date": "2022-11-28",
+   "house": "senate",
+   "question": "Appropriation Bill (No. 1) 2022-2023 and two others - in Committee - Middle Arm Sustainable Development Precinct",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 12,
+    "earliest": 21,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-28/1"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 1) 2022-2023",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00067",
+   "assent_date": "2022-11-30"
+  }
+ ]
+}

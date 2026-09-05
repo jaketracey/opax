@@ -1,0 +1,172 @@
+{
+ "key": "au-federal-r5432",
+ "title": "Law Enforcement Legislation Amendment (Powers) Bill 2015",
+ "short_title": "Law Enforcement Legislation Amendment (Powers) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Justice",
+ "status": "passed",
+ "status_as_of": "2015-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5432%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5432%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5432%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5432%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5432%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5432%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5432_ems_4fe595a9-8f23-4fbe-adbb-140956dbb2fa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/3908399%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5432%22",
+   "document_date": "2015-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00109",
+   "document_date": "2015-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-311079",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-28",
+   "stage_hint": null,
+   "brief": "The opposition supported the Law Enforcement Legislation Amendment (Powers) Bill 2015, which clarifies compulsory examination powers of the Australian Crime Commission and the Australian Commission for Law Enforcement Integrity following recent court decisions including *X7 v Australian Crime Commission* and the *Lee* cases, while including safeguards to protect fair trial rights."
+  },
+  {
+   "slug": "speech-311080",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Law Enforcement Legislation Amendment (Powers) Bill 2015, arguing it restores and strengthens the questioning powers of the Australian Crime Commission and Integrity Commissioner—including the ability to question charged individuals—and implements recommendations on unexplained wealth, with safeguards to preserve fair trial rights."
+  },
+  {
+   "slug": "speech-311081",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-28",
+   "stage_hint": null,
+   "brief": "The Law Enforcement Legislation Amendment (Powers) Bill 2015 clarifies the coercive examination powers of the Australian Crime Commission and the Integrity Commissioner, restoring what the speaker argued was the original parliamentary intent after court rulings such as *Seller and McCarthy* and *X7 v Australian Crime Commission* had limited those powers. The speaker noted bipartisan support and cited the ACC’s recent results: over $23 million in cash seized, $150 million in assets, $386 million in drugs, and 263 coercive examinations."
+  },
+  {
+   "slug": "speech-311082",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-28",
+   "stage_hint": null,
+   "brief": "The Law Enforcement Legislation Amendment (Powers) Bill 2015 restores the Australian Crime Commission and Integrity Commissioner’s ability to conduct post-charge examinations and hearings, addressing court rulings such as X7 that had limited their investigative powers. The bill also allows post-confiscation examinations, sets safeguards to protect fair trial rights, and permits limited use of derivative material in prosecutions."
+  },
+  {
+   "slug": "speech-311083",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-28",
+   "stage_hint": null,
+   "brief": "The speaker argued the Law Enforcement Legislation Amendment (Powers) Bill 2015 is necessary to strengthen the powers of the Australian Crime Commission and Integrity Commissioner against serious crime, foreign fighters and corruption, clarifying that the bill does not expand those powers but puts them on a clearer legislative footing with improved safeguards for fair trials."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Law Enforcement Legislation Amendment (Powers) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00109",
+   "assent_date": "2015-06-30"
+  }
+ ]
+}

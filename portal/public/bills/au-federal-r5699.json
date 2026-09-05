@@ -1,0 +1,195 @@
+{
+ "key": "au-federal-r5699",
+ "title": "National Cancer Screening Register (Consequential and Transitional Provisions) Bill 2016",
+ "short_title": "National Cancer Screening Register (Consequential and Transitional Provisions) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-08-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2016-10-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-10-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5699_ems_07edb373-0daf-4619-9d5a-d50e74d10290%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5699%22",
+   "document_date": "2016-08-31",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00066",
+   "document_date": "2016-10-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-08-31",
+  "sentences": [
+   "This bill makes changes to other laws so a new national cancer screening database can operate.",
+   "It would allow the transfer of bowel and cervical screening data from state and territory registers to the new national register.",
+   "The changes would start on the same day as the main register bill, but only if that bill becomes law."
+  ],
+  "changes": [
+   "Amends the Australian Immunisation Register Act 2015 to allow disclosure of information to the new register.",
+   "Amends the Health Insurance Act 1973 to allow disclosure of Medicare data to the new register.",
+   "Exempts information in the new register from disclosure under the Freedom of Information Act 1982.",
+   "Authorises states and territories to transfer cervical screening data to the new register."
+  ],
+  "affected": "State and territory cervical screening registers, the Australian Immunisation Register, Medicare, and participants in the National Cervical Screening Program and National Bowel Cancer Screening Program.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:31Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-332755",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-08-31",
+   "stage_hint": null,
+   "brief": "The bill provides consequential and transitional provisions to support the National Cancer Screening Register, authorising data collection and migration for cervical and bowel cancer screening, amending the FOI Act to unconditionally exempt protected personal information, and allowing a 12-month grace period for mandatory reporting until 1 May 2018."
+  },
+  {
+   "slug": "speech-333559",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-13",
+   "stage_hint": null,
+   "brief": "Labor supported the policy intent of the bills to establish a National Cancer Screening Register but condemned the government for awarding a $220 million contract to Telstra four days before the 2016 election, before parliamentary approval. Labor proposed amendments to ensure the register is operated only by a government or not-for-profit entity, citing concerns over privacy, inadequate penalties, and Telstra's track record."
+  },
+  {
+   "slug": "speech-334618",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Cancer Screening Register is important for improving cancer screening and prevention, but criticised the government's implementation as incompetent, including outsourcing to Telstra before legislation passed, privacy loopholes, and insufficient penalties. They proposed three amendments: limiting the operator to a not-for-profit or government agency, mandatory data breach notifications, and increased penalties for unauthorised disclosure."
+  },
+  {
+   "slug": "speech-334780",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-11",
+   "stage_hint": null,
+   "brief": "The speaker opposed the National Cancer Screening Register Bill 2016, arguing the contract awarded to Telstra Health—a private, for-profit company with limited health experience—lacked transparency and should instead be run by a government or not-for-profit entity."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Cancer Screening Register (Consequential and Transitional Provisions) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00066",
+   "assent_date": "2016-10-20"
+  }
+ ]
+}

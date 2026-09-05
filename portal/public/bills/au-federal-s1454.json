@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1454",
+ "title": "We All Come Together For Country Bill 2025",
+ "short_title": "We All Come Together For Country Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-03-26",
+ "originating_house": "senate",
+ "sponsor": "COX, Sen Dorinda",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10964",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1454%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1454%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1454%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1454_ems_a43c8406-84f5-4e03-9d94-d14a1c571d2d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1454%22",
+   "document_date": "2025-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-03-26",
+  "sentences": [
+   "The bill would make it illegal to release emissions that damage culturally significant First Nations rock art and other national monuments.",
+   "It would create a new category of controlled action under the Environment Protection and Biodiversity Conservation Act 1999 for emissions that harm monument surfaces.",
+   "The explanatory memorandum says the bill addresses a gap in current law, which does not treat such emissions as a matter of national environmental significance."
+  ],
+  "changes": [
+   "Creates a new class of controlled action under the EPBC Act for emissions that damage monument surfaces.",
+   "Applies penalties under the EPBC Act to entities that continue polluting after emissions are shown to degrade rock art or other monuments.",
+   "Recognises culturally, historically, scientifically and archaeologically significant rock art as a type of national monument."
+  ],
+  "affected": "First Nations communities, owners of rock art and national heritage monuments, and industrial entities that release airborne emissions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:03:16Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

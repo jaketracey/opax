@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-s1328",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Fight for Australia’s Coastline) Bill 2021",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Fight for Australia’s Coastline) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-11-29",
+ "originating_house": "senate",
+ "sponsor": "WHISH-WILSON, Sen Peter",
+ "sponsor_party": "independent candidate for the federal seat of Bass, Tas",
+ "sponsor_person_id": "10780",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1328%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1328%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1328%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1328_ems_9a1f481c-c004-45d0-a45c-c8c61a6a8601%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1328%22",
+   "document_date": "2021-11-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-11-29",
+  "sentences": [
+   "This bill would end petroleum exploration and extraction in three offshore regions along Australia's coast.",
+   "It would stop the Joint Authority and the Titles Administrator from considering or granting any new titles or applications in those regions.",
+   "The two existing permits would expire two months after the bill becomes law, and a pending application would be barred from consideration."
+  ],
+  "changes": [
+   "Cancels the PEP11 and King Island exploration permits.",
+   "Prohibits any consideration of the Otway Basin application.",
+   "Bans the Joint Authority from inviting or granting new petroleum titles in these areas.",
+   "Bans the Titles Administrator from granting certain petroleum-related leases and licenses."
+  ],
+  "affected": "Oil and gas companies holding permits, applicants for new titles, and the government bodies that manage offshore petroleum titles.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:03Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

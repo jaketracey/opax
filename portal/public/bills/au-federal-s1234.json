@@ -1,0 +1,88 @@
+{
+ "key": "au-federal-s1234",
+ "title": "National Consumer Credit Protection Amendment (Small Amount Credit Contract and Consumer Lease Reforms) Bill 2019 (No. 2)",
+ "short_title": "National Consumer Credit Protection Amendment (Small Amount Credit Contract and Consumer Lease Reforms) Bill 2019 (No. 2)",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-02",
+ "originating_house": "senate",
+ "sponsor": "GRIFF, Sen Stirling",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10851",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1234%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1234%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1234%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1234%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1234%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1234_ems_5b7ea0db-8571-45b1-8c46-ab6e37943f00%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1234%22",
+   "document_date": "2019-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-02",
+  "sentences": [
+   "The bill would overhaul rules for payday loans and rent-to-buy schemes.",
+   "It would introduce a cap on total payments under consumer leases, require equal repayments for small loans, and ban door-to-door sales of leases at homes.",
+   "The government says the bill implements most recommendations from a 2016 review and would allow regulations to cut the protected earnings limit for Centrelink recipients from 20% of gross income to 10% of net income."
+  ],
+  "changes": [
+   "Introduce a cap on total payments under a consumer lease.",
+   "Require equal repayments and equal payment intervals for small amount credit contracts.",
+   "Remove the ability to charge monthly fees on the residual term of a loan when a consumer repays early.",
+   "Prevent lessors and credit assistance providers from selling consumer leases door-to-door at homes.",
+   "Introduce broad anti-avoidance protections for small amount credit contracts and consumer leases.",
+   "Strengthen penalties to increase compliance incentives."
+  ],
+  "affected": "Consumers taking out small amount credit contracts or consumer leases, and providers of those products.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:11Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,110 @@
+{
+ "key": "au-federal-s1406",
+ "title": "Human Rights (Parliamentary Scrutiny) Amendment (Consideration of UNDRIP) Bill 2023",
+ "short_title": "Human Rights (Parliamentary Scrutiny) Amendment (Consideration of UNDRIP) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2023-11-29",
+ "originating_house": "senate",
+ "sponsor": "THORPE, Sen Lidia",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10961",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-09-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1406%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1406%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1406_ems_0e5785ce-48d8-4342-b1ed-8723898a8b03%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1406%22",
+   "document_date": "2023-11-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-9606",
+   "date": "2025-02-13",
+   "house": "senate",
+   "question": "Human Rights (Parliamentary Scrutiny) Amendment (Consideration of UNDRIP) Bill 2023 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 15,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 4,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-13/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

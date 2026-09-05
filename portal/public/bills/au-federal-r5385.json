@@ -1,0 +1,206 @@
+{
+ "key": "au-federal-r5385",
+ "title": "Fair Work Amendment (Bargaining Processes) Bill 2014",
+ "short_title": "Fair Work Amendment (Bargaining Processes) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-11-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5385%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5385%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5385%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5385%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5385%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5385%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5385%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5385%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5385%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5385%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5385_ems_c917a01b-dc69-42c8-b4c2-09c0c525d19b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5385%22",
+   "document_date": "2014-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-11-27",
+  "sentences": [
+   "This bill would change workplace bargaining rules to encourage talks about making businesses more efficient.",
+   "It would require the Fair Work Commission to check that productivity improvements were discussed before approving most enterprise agreements, and to consider several factors when deciding whether to allow a strike ballot.",
+   "The Commission would also have to refuse a strike ballot if the applicant's demands are clearly excessive or would seriously hurt workplace productivity."
+  ],
+  "changes": [
+   "Adds a new condition for approving enterprise agreements that are not greenfields agreements.",
+   "Requires the Fair Work Commission to consider a list of factors when assessing if an applicant is genuinely trying to reach an agreement.",
+   "Prevents the Fair Work Commission from ordering a protected action ballot if the applicant's claims are manifestly excessive or would significantly harm productivity."
+  ],
+  "affected": "Employers, employees and unions involved in enterprise bargaining under the Fair Work Act.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:00:07Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-303954",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303969",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303970",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303981",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303987",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304206",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304300",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304305",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304306",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304307",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,189 @@
+{
+ "key": "au-federal-r6336",
+ "title": "Passenger Movement Charge Amendment (Timor Sea Maritime Boundaries Treaty) Bill 2019",
+ "short_title": "Passenger Movement Charge Amendment (Timor Sea Maritime Boundaries Treaty) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2019-08-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6336%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6336%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6336%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6336%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6336%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6336%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6337_ems_b7d726a8-b6eb-406b-b9cf-d187bce40e85%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6337_ems_ac9cc8e9-e9d8-4315-a3dc-810c70b33ff1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6336_ems_2219bbad-f389-40f5-9775-b34fc7a661c8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6336%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00058",
+   "document_date": "2019-08-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "This bill is part of a package that amends Commonwealth laws to partly implement the 2018 maritime boundaries treaty between Australia and Timor-Leste.",
+   "The bill amends the Passenger Movement Charge Act 1978 and the Seas and Submerged Lands Act 1973 to establish the Greater Sunrise special regime area and a two-tiered governance structure for joint petroleum development.",
+   "The special regime will remain in force until the Greater Sunrise fields reach commercial depletion, and a second tranche of legislation is needed later in 2019 for remaining treaty provisions."
+  ],
+  "changes": [
+   "Amends the Passenger Movement Charge Act 1978.",
+   "Establishes and defines the Greater Sunrise special regime area in Australian law.",
+   "Gives domestic effect to treaty provisions on joint governance, environmental protection, vessels and criminal law.",
+   "Sets up a Designated Authority, Governance Board and Dispute Resolution Committee to manage petroleum activities."
+  ],
+  "affected": "The Australian and Timor-Leste governments, petroleum operators in the Greater Sunrise fields, and passengers subject to the passenger movement charge.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:40:27Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-377414",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-04",
+   "stage_hint": null,
+   "brief": "The speaker moved the second reading of the Passenger Movement Charge Amendment (Timor Sea Maritime Boundaries Treaty) Bill 2019, which amends the Passenger Movement Charge Act 1978 to impose the charge on journeys to installations in the special regime area, partially implementing the 2018 Australia–Timor-Leste maritime boundaries treaty."
+  },
+  {
+   "slug": "speech-378491",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-25",
+   "stage_hint": null,
+   "brief": "Labor supported three bills implementing the Timor Sea Maritime Boundaries Treaty, which resolves a 40‑year maritime dispute and establishes new petroleum revenue arrangements—royalties from the Timor Sea funded over 95% of Timor‑Leste’s budget in 2016."
+  },
+  {
+   "slug": "speech-378492",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the three Timor Sea Maritime Boundaries Treaty bills, stressing the need for passage before East Timor's 30 August independence celebrations and acknowledging Labor's role in shifting Australia toward a rules-based settlement of the long-standing maritime boundary dispute."
+  },
+  {
+   "slug": "speech-378644",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-25",
+   "stage_hint": null,
+   "brief": "The Passenger Movement Charge Amendment (Timor Sea Maritime Boundaries Treaty) Bill 2019 complements measures to implement the treaty, marking another step in Australia's relationship with Timor-Leste."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Passenger Movement Charge Amendment (Timor Sea Maritime Boundaries Treaty) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00058",
+   "assent_date": "2019-08-07"
+  }
+ ]
+}

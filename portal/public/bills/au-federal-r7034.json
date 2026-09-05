@@ -1,0 +1,416 @@
+{
+ "key": "au-federal-r7034",
+ "title": "Inspector-General of Live Animal Exports Amendment (Animal Welfare) Bill 2023",
+ "short_title": "Inspector-General of Live Animal Exports Amendment (Animal Welfare) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-05-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Fisheries and Forestry",
+ "status": "passed",
+ "status_as_of": "2023-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7034_ems_37710e97-15f4-49ed-bab9-448b4f40760b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7034_ems_05512bc2-79e9-4106-bda7-b3f9c18a7d7e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7034%22",
+   "document_date": "2023-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00108",
+   "document_date": "2023-12-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-05-24",
+  "sentences": [
+   "The bill would expand the office that oversees live animal exports to give it a stronger animal welfare role.",
+   "It would rename the office to include animal welfare in its title and add new powers to review administrative systems and reporting.",
+   "The new office would be independent and could not be directed by anyone except as the Act allows, and would follow a written ministerial direction for a specific review."
+  ],
+  "changes": [
+   "Expands the office's focus to animal welfare and renames it.",
+   "Adds objects to monitor and report on animal welfare and export laws.",
+   "Allows the office to review Commonwealth administrative systems and reporting.",
+   "Makes the office independent with complete discretion in its work.",
+   "Requires the office to conduct a review if the Minister directs it in writing.",
+   "Allows the office to conduct a review if requested by certain other ministers or the Agriculture Department Secretary."
+  ],
+  "affected": "The office of the Inspector-General, the Minister, the Department of Agriculture, Forestry and Fisheries, and livestock export stakeholders.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:22:01Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8136",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "question": "Inspector-General of Live Animal Exports Amendment (Animal Welfare) Bill 2023 - Report from Federation Chamber - Live export bans",
+   "stage": "Report from Federation Chamber",
+   "ayes": 31,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 44
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-31/9"
+  },
+  {
+   "key": "federal-representatives-8137",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2023-05-31.136.1) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a second time. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd087): * *The Bill renames the Inspector-General of Live Animal Exports Act 2019 as the Inspector-General of Animal Welfare and Live Exports Act 2019. The title of the Inspector-General is similarly renamed.* * *The Inspector-General’s functions are expanded to include the conduct of reviews of, amongst other things, the performance of functions, or exercise of powers by livestock export officials under live animal export legislation and standards. The objects of the Inspector-General of Animal Welfare and Live Exports Act are amended to reflect the new functions.* * *The Bill expressly states that the Inspector-General is independent and has complete discretion in the performance of their functions and the exercise of their powers.* * *In acknowledgement of the expanded functions, the Bill provides for officers and employees of the Commonwealth public service to assist the Inspector-General and for consultants to be engaged.* * *The Bill requires the Inspector-General to prepare and publish an annual work plan for each financial year.* * *Animal protection organisations have raised concerns in relation to the scope of the Inspector-General’s functions and have called for the expansion of the role to include oversight of animal welfare standards in all Commonwealth-regulated fields. Industry bodies support the Bill’s restriction of oversight to animal welfare in the context of live export.*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 87,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-31/10"
+  },
+  {
+   "key": "federal-senate-8511",
+   "date": "2023-11-17",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7034_amend_55a3b7ae-88b8-4b8e-a9ce-64f35c01827c%22;rec=0) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the original motion will remain unchanged. The amendment was introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens). ### Motion text > *At the end of the motion, add “, but the Senate:* > > *(a) notes that this bill:* > >> *(i) barely expands the functions and remit of the existing Inspector-General of Live Animal Exports, and* >> >> *(ii) is a wasted opportunity to provide transformative improvements in animal welfare; and* > > *(b) calls on the Government to:* > >> *(i) recognise that animals are sentient beings that deserve our care and respect,* >> >> *(ii) recognise that animals have intrinsic value, separate from the needs of humans,* >> >> *(iii) in this term of Parliament, introduce legislation to specify the end date for the phase-out of live sheep exports within the shortest possible timeframe, and* >> >> *(iv) establish an Independent Office for Animal Welfare which provides oversight of animal welfare standards to the full extent of the Commonwealth’s power”.*",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-17/14"
+  },
+  {
+   "key": "federal-senate-8512",
+   "date": "2023-11-17",
+   "house": "senate",
+   "question": "Inspector-General of Live Animal Exports Amendment (Animal Welfare) Bill 2023 - Second Reading - Do not prohibit live sheep export",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 7,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-17/15"
+  },
+  {
+   "key": "federal-senate-8513",
+   "date": "2023-11-17",
+   "house": "senate",
+   "question": "The majority voted against [Greens Party amendments](https://www.openaustralia.org.au/senate/?gid=2023-11-17.183.1), which means they failed. ### Amendment text *SHEET 1974* > *(1) Schedule 1, item 3, page 4 (line 3), omit \"exports.\", substitute \"exports;\".* > > *(2) Schedule 1, item 3, page 4 (after line 3), at the end of subsection 3(1), add:* > >> *(e) to recognise the sentience and intrinsic value of animals and the duty of care people have to ensure the physical and mental welfare of animals in their charge;* > > *(3) Schedule 1, item 4, page 5 (after line 18), after the definition of ASEL, insert:* > >> *Additional Department Review functions has the meaning given by subsection 10AA(2).* >> >> *Additional Reporting functions has the meaning given by subsection 10AA(1).* >> >> *Live Animal Export Review functions has the meaning given by subsection 10(1).* >> >> *Oversight and Recognition functions has the meaning given by subsection 10AA(3).* >> >> *registered establishment has the same meaning as in the Export Control Act 2020.* >> >> *sentience, of an animal, means the animal's capacity to feel or experience negative and positive physical, mental and emotional states.* > > *(4) Schedule 1, item 6, page 6 (lines 5 to 14), omit the paragraph beginning \"The functions of the Inspector-General are\" in section 8, substitute:* > >> *The Inspector-General has the following functions:* >> >>> *(a) to undertake Live Animal Export Review functions;* >>> >>> *(b) to undertake Additional Reporting functions;* >>> >>> *(c) to undertake Additional Department Review functions;* >>> >>> *(d) to undertake Oversight and Recognition functions.* > > *(5) Schedule 1, item 10, page 7 (line 14), before \"Functions\", insert \"Live Animal ExportReview\".* > > *(6) Schedule 1, item 11, page 7 (line 17), omit \"Functions\", substitute \"Live Animal ExportReview functions\".* > > *(7) Schedule 1, item 11, page 7 (line 18), omit \"functions\", substitute \"functions (the Live Animal Export Review",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-17/16"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Inspector-General of Live Animal Exports Amendment (Animal Welfare) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00108",
+   "assent_date": "2023-12-04"
+  }
+ ]
+}

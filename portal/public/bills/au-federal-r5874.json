@@ -1,0 +1,139 @@
+{
+ "key": "au-federal-r5874",
+ "title": "Social Services Legislation Amendment (Queensland Commission Income Management Regime) Bill 2017",
+ "short_title": "Social Services Legislation Amendment (Queensland Commission Income Management Regime) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2017-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5874%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5874%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5874%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5874%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5874%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5874%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5874%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5874%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5874%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5874%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5874%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5874%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5874_ems_01825f72-86eb-49d3-9507-cb8258f09b5a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5874%22",
+   "document_date": "2017-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00074",
+   "document_date": "2017-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-349777",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "Labor will support the Social Services Legislation Amendment (Queensland Commission Income Management Regime) Bill 2017, which extends income management in Aurukun, Coen, Hope Vale, Mossman Gorge and Doomadgee for two years, citing local community support for the measure. The speech also criticised the rushed legislative process and called for an updated independent evaluation of the Cape York welfare reform."
+  },
+  {
+   "slug": "speech-349780",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "The bill extends the income management element of Cape York Welfare Reform for two years until 30 June 2019, covering the communities of Aurukun, Coen, Hope Vale, Mossman Gorge and Doomadgee, where 196 people are currently on income management. The extension aligns with the broader income management program's end date and was agreed with the Queensland government and the Cape York Partnership."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (Queensland Commission Income Management Regime) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00074",
+   "assent_date": "2017-06-26"
+  }
+ ]
+}

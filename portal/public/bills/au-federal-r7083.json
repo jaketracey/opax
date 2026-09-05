@@ -1,0 +1,402 @@
+{
+ "key": "au-federal-r7083",
+ "title": "Public Health (Tobacco and Other Products) Bill 2023",
+ "short_title": "Public Health (Tobacco and Other Products) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-09-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2023-12-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-12-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7083_ems_8ea2fde0-e13c-491b-a933-def6a1fe3472%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7083_ems_f9423fca-4348-44d8-8050-7100a652de83%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7083%22",
+   "document_date": "2023-09-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00118",
+   "document_date": "2023-12-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-09-13",
+  "sentences": [
+   "This bill is part of a package that would consolidate eight tobacco-related Acts into one regime and strengthen regulation of tobacco products and e-cigarette advertising.",
+   "The package would prohibit flavours and additives in tobacco products, ban product design features that create novelty value, require health promotion inserts in packaging, and allow health warnings to be updated via regulations.",
+   "The bill does not address e-cigarette product availability and supply, which the government says it will handle separately through the therapeutic goods framework and border measures."
+  ],
+  "changes": [
+   "Consolidates Commonwealth tobacco regulation into one legislative package.",
+   "Prohibits advertising and promotion of e-cigarettes.",
+   "Bans flavours, additives, and product design features that create novelty value in tobacco products.",
+   "Requires health promotion inserts in tobacco product packaging.",
+   "Allows health warnings to be updated and improved via regulations."
+  ],
+  "affected": "People who smoke or use tobacco products, e-cigarette users, tobacco and e-cigarette manufacturers and retailers, and the Department of Health and Aged Care.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8408",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2023-10-18.212.2) introduced by Warringah MP [Zali Steggall](https://theyvoteforyou.org.au/people/representatives/warringah/zali_steggall) (Independent), which means they failed. ### What do the amendments do? > *These amendments are important to ensure that all the loopholes in relation to this bill are closed. The bill as currently drafted provides for exceptions when it comes to advertising in relation to those points of sale and in relation to advertising on airlines. It's not clear why the government intends to keep these loopholes open at this time. The government has indicated that it wishes to be hard on vaping. We know that the statistics are damning, that vaping is a serious risk to our young people and is leading to increasing rates of smoking amongst young people, which is incredibly concerning.* > > *These amendments, while not dramatic, are nevertheless important in closing those loopholes. Amendment (4) is in relation to clause 67, which is quite extraordinary, I suggest to the House—that the government, whilst claiming to be going strong on vaping, is nonetheless allowing for an exception in this legislation such that sponsorship and political gifts from vape companies should remain allowable. ... The other amendments go essentially to areas of permitted publication where there are loopholes that have been left in the legislation.* ### Amendment text > *(1) Clauses 57 and 58, page 53 (line 3) to page 56 (line 17), omit the clauses.* > > *(2) Clause 60, page 57 (lines 1 to 16), omit the clause.* > > *(3) Clause 63, page 58 (lines 3 to 11), omit the clause.* > > *(4) Clause 67, page 63 (lines 2 to 30), omit the clause.*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 12,
+   "noes": 94,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "dated": 105,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-10-19/3"
+  },
+  {
+   "key": "federal-senate-8562",
+   "date": "2023-12-04",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-11-27.169.2) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means that amendment failed. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that the bill fails to combat the trade of illicit tobacco; and* > > *(b) calls on the Government to commit to combating this trade as a priority\".*",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 7,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-04/1"
+  },
+  {
+   "key": "federal-senate-8563",
+   "date": "2023-12-04",
+   "house": "senate",
+   "question": "Public Health (Tobacco and Other Products) Bill 2023 and another - Second Reading - Political donations",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 7,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-04/2"
+  },
+  {
+   "key": "federal-senate-8596",
+   "date": "2023-12-05",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2023-12-04.278.1) moved by Queensland Senator [Matthew Canavan](https://theyvoteforyou.org.au/people/senate/queensland/matthew_canavan) (LNP), which means they failed. ### What do the amendments do? Senator Canavan [explained that](https://www.openaustralia.org.au/senate/?gid=2023-12-04.278.1): > *Firstly, it removes liquid nicotine from schedule 4 of the Poisons Standard. I note that, at the moment, schedule 4 means that to obtain liquid nicotine you need to do so with a prescription in this country...* > > *The second part of my amendments gives the minister power to regulate all of those aspects of the vaping market and to do so in a way similar to how smoking is regulated in this country...* > > *Finally, the third part of my amendments would establish an industry fund. Those who are selling e-cigarettes would have to fund a disposable vapes collection scheme.*",
+   "stage": "In committee",
+   "ayes": 3,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-05/25"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Public Health (Tobacco and Other Products) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00118",
+   "assent_date": "2023-12-14"
+  }
+ ]
+}

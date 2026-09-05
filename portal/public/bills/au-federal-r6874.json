@@ -1,0 +1,771 @@
+{
+ "key": "au-federal-r6874",
+ "title": "Aged Care Amendment (Implementing Care Reform) Bill 2022",
+ "short_title": "Aged Care Amendment (Implementing Care Reform) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-07-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2022-11-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-09-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6874_ems_4bab6124-1060-4786-849e-41d705e51605%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6874_ems_293eddf4-115f-4388-9924-08f9dc6dd74e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6874_ems_c92d349e-8a7c-457e-ac69-922c20636b9a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6874%22",
+   "document_date": "2022-07-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00047",
+   "document_date": "2022-11-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2022-07-27",
+  "sentences": [
+   "This bill would change aged care rules to improve care quality and financial oversight.",
+   "It would require residential aged care providers to have a registered nurse on site at each facility seven days a week.",
+   "The government could cap what home care providers charge, and the health department secretary would publish service information."
+  ],
+  "changes": [
+   "Creates a duty for approved residential care providers to ensure a registered nurse is present at each facility every day.",
+   "Gives the government power to limit charges home care providers can impose on care recipients.",
+   "Bans home care providers from charging exit fees.",
+   "Requires the health department secretary to publish details about aged care services and providers."
+  ],
+  "affected": "Approved providers of residential and home care, care recipients, and the Department of Health and Aged Care.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:30:59Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7733",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2022-09-07.23.1) to [another amendment](https://theyvoteforyou.org.au/divisions/representatives/2022-09-08/2) moved by Deputy Leader of the Opposition and Farrer MP [Sussan Ley](https://theyvoteforyou.org.au/people/representatives/farrer/sussan_ley) (Liberal). Because this motion passed, the amendment to the amendment failed and the original motion will remain unchanged. This amendment to the amendment was introduced by Mayo MP [Rebekha Sharkie](https://theyvoteforyou.org.au/people/representatives/mayo/rebekha_sharkie) (Centre Alliance), who [explained that](https://www.openaustralia.org.au/debate/?id=2022-09-07.23.1) her amendment: > *calls on the government to take into account ... that smaller and regional residential aged-care providers which are experiencing critical workforce shortages have flexibility.* ### Amendment to the amendment text > *That all words after \"whilst\" be omitted with a view to substituting the following words:* > > *\"the House:* > > *(1) has concerns that the bulk of the substantive measures comprising the bill are to be detailed in subordinate rather than in primary legislation; and* > > *(2) calls on the Government to* > >> *(a) provide an opportunity to review the Quality of Care Principles, User Rights Principles and Information Principles proposed to be made under the Aged Care Act 1997;* >> >> *(b) include in the Quality of Care Principles under Schedule 2 criteria for the exercise of exemption powers which provide for smaller and regional providers taking into account critical workforce shortages among other considerations; and* >> >> *(c) specify in Information Principles under Schedule 3 financial and non-financial information of value to older Australians, their families and the community that must be published by the Secretary, including:* >> >>> *(i) expenditure on care, nursing, food, maintenance, cleaning and administ",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-09-08/1"
+  },
+  {
+   "key": "federal-representatives-7734",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2022-09-07.21.3) to the usual second reading motion, \"*that the bills be read a second time.*\" To read a bill a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is to agree with its main idea. Because this vote to disagree was successful, the original motion will remain unchanged. This amendment as introduced by Deputy Leader of the Opposition and Farrer MP [Sussan Ley](https://theyvoteforyou.org.au/people/representatives/farrer/sussan_ley) (Liberal). ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes that, of the aged care providers who do not currently have a registered nurse on site, and on duty, at all times, 53% are based in regional and remote areas and 86% are small providers; and* > > *(2) calls on the Government to ensure that:* > >> *(a) when amending the Quality of Care Principles to make provision for an exemption to the new responsibility relating to registered nurses, the disproportionate impact on providers in regional and remote areas, especially small providers, is taken into account; and* >> >> *(b) further consideration of the bill is deferred until two sitting days after a draft of legislative instruments relating to the following matters are made available:* >>> >>> *(i) exemption from the responsibility related to registered nurses as proposed in section 54-1A of the bill; and* >>> >>> *(ii) information about aged care services that must be publicly available as proposed in section 86-10 of the bill\".*",
+   "stage": "Second reading",
+   "ayes": 74,
+   "noes": 62,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-09-08/2"
+  },
+  {
+   "key": "federal-representatives-7735",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2022-09-08.31.4) to *disagree* with an [amendment](https://www.openaustralia.org.au/debates/?id=2022-09-08.30.1) introduced by Mayo MP [Rebekha Sharkie](https://theyvoteforyou.org.au/people/representatives/mayo/rebekha_sharkie) (Centre Alliance), which means the amendment was unsuccessful. ### What is the amendment? Ms Sharkie [explained that](https://www.openaustralia.org.au/debates/?id=2022-09-08.30.1) the amendment: > *aims to supplement measures provided in schedule 2 of the bill. It does not limit matters which may be provided for in the User Rights Principles under the Aged Care Act. It does, however, specify that those principles should include a reasonable schedule of charges associated with the provision to care recipients of administration and management of care, services, and equipment.* The [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd004) explained that Schedule 2: > *will introduce a power enabling the Government to limit (cap) the fees that approved providers can apply to home care package recipients and remove the ability of approved providers to charge the care recipient an exit amount.* ### Amendment text > *(1) Schedule 2, item 1, page 5 (line 11), omit \"recipient;\", substitute:* > >> *recipient, including a schedule of reasonable charges associated with the provision of the following to the care recipient:* >> >> *(i) administration and management of care;* >> >> *(ii) services;* >> >> *(iii) equipment;*",
+   "stage": "Consideration in detail",
+   "ayes": 76,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 87
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-09-08/3"
+  },
+  {
+   "key": "federal-senate-7806",
+   "date": "2022-10-27",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?id=2022-10-27.4.2) to the usual second reading motion, which is *that the bill be read a second time*. To [read a bill for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is to agree with its main idea. The amendment was introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal). Note that second reading motions like this one do not make any actual legal changes but are rather more symbolic. That is, they represent the will of the Senate majority. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that, of the aged care providers who do not currently have a registered nurse on site, and on duty, at all times, 53% are based in regional and remote areas and 86% are small providers; and* > > *(b) calls on the Government to ensure that, when amending the Quality of Care Principles to make provision for an exemption to the new responsibility relating to registered nurses, the disproportionate impact on providers in regional and remote areas, especially small providers, is taken into account\".*",
+   "stage": "Second reading",
+   "ayes": 43,
+   "noes": 20,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "earliest": 34,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-10-27/1"
+  },
+  {
+   "key": "federal-senate-7807",
+   "date": "2022-10-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-10-27.10.1) to the usual second reading motion, which is *that the bill be read a second time.* To [read a bill for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is to agree with its main idea. The amendment was introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens). Note that second reading motions like this one do not make any actual legal changes but are rather more symbolic. That is, their purpose is to represent the will of the Senate majority. ### Motion text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) the [Royal Commission into Aged Care Quality and Safety](https://en.wikipedia.org/wiki/Royal_Commission_into_Aged_Care_Quality_and_Safety) called for the use of restrictive practices in aged care to be based on an independent expert assessment and be subject to ongoing reporting and monitoring, and* >> >> *(ii) a lack of legislative provisions to ensure aged care residents can access adequate and appropriate allied health services may reduce the level of care they receive, with clear implications for their health and wellbeing; and* > > *(b) urges the Government to ensure that its response to the Royal Commission includes urgent action to reduce the use of restrictive practices and to ensure that allied health care is appropriately funded\".*",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 20,
+    "earliest": 32,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-10-27/2"
+  },
+  {
+   "key": "federal-senate-7808",
+   "date": "2022-10-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-10-27.12.1) to the usual second reading motion, which is *that the bill be read a second time.* To [read a bill for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is to agree with its main idea. The amendment was introduced by West Australian Senator [Slade Brockman](https://theyvoteforyou.org.au/people/senate/wa/slade_brockman) (Liberal). Note that second reading motions like this one do not make any actual legal changes but are rather more symbolic. That is, their purpose is to represent the will of the Senate majority. ### Motion text > *At the end of the motion, add \"and further consideration of the bill be made an order of the day for 2 sitting days after a draft of legislative instruments relating to both of the following matters are laid on the table:* > >> *(a) exemptions from the responsibility relating to registered nurses (proposed section 54-1A); and* >> >> *(b) information about aged care services that must be made publicly available (proposed section 86-10)\".*",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "earliest": 34,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-10-27/3"
+  },
+  {
+   "key": "federal-senate-7809",
+   "date": "2022-10-27",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2022-10-27.79.1) introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which means they failed. ### Amendment text > *(1) Schedule 1, item 2, page 4 (after line 5), at the end of paragraph 54-1A(4)(a), add:* > >> *(iii) in considering whether the provider has taken reasonable steps, the Secretary must consider whether the provider will undertake reasonable measures to provide the highest level of clinical care with the available workforce, which may include measures for the support of clinical care by enrolled nurses and through telehealth consultations with registered nurses (within the meaning of the Health Insurance Act 1973); and* > > *(2) Schedule 1, item 2, page 4 (after line 23), at the end of section 54-1A, add:* > >> *(6) In this section:* >> >> *en rolled nurse means a person who is registered under the National Law (within the meaning of the Health Insurance Act 1973) in the nursing profession as an enrolled nurse.* >> >> *telehealth consultation means a consultation conducted (other than in person) by videoconference, telephone or other technology.*",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "earliest": 34,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-10-27/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-420186",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-07-27",
+   "stage_hint": null,
+   "brief": "The Aged Care Amendment (Implementing Care Reform) Bill 2022 caps home care administration and management fees, requires a registered nurse onsite 24/7 in residential aged care from July 2023, and mandates minimum care minutes (200 minutes per day by October 2023, rising to 215 by October 2024). The government will also advocate for a pay rise for aged care workers in the Fair Work Commission."
+  },
+  {
+   "slug": "speech-422278",
+   "speaker": "Sussan Penelope Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The opposition moved an amendment to defer further consideration of the Aged Care Amendment (Implementing Care Reform) Bill 2022 until the government tables draft legislative instruments on exemptions to the 24/7 registered nurse requirement and on public information about aged care services, noting that 53% of providers without a registered nurse on site are in regional and remote areas and 86% are small providers."
+  },
+  {
+   "slug": "speech-422280",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The Aged Care Amendment (Implementing Care Reform) Bill 2022 requires registered nurses on site 24/7 in residential facilities from 1 July 2023, mandates minimum care minutes (200 minutes per day by October 2023 increasing to 215 by October 2024, including 40 minutes with a registered nurse), caps home-care administration and management charges, and improves pricing transparency, implementing election commitments and responding to the Royal Commission into Aged Care Quality and Safety."
+  },
+  {
+   "slug": "speech-422281",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Amendment (Implementing Care Reform) Bill 2022 but criticised its overreliance on subordinate legislation, moving amendments to require parliamentary review of the subordinate principles, include exemption criteria for smaller and regional providers facing workforce shortages, and mandate publication of financial details including executive salaries and third-party payments."
+  },
+  {
+   "slug": "speech-422286",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Aged Care Amendment (Implementing Care Reform) Bill 2022, which from 1 July 2023 will require a registered nurse on site 24/7 in residential facilities, cap home-care administration and management fees, remove exit charges, and mandate public reporting of provider expenditure, responding to the royal commission's finding that 30% of aged care residents experienced substandard care."
+  },
+  {
+   "slug": "speech-422291",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care Amendment (Implementing Care Reform) Bill 2022 is a significant step to implement royal commission recommendations, including requiring 24/7 registered nurses in residential aged-care homes and improving transparency to prevent fee rorting. They cited the Emmy Monash Aged Care facility as an example of best practice and criticised the previous government for neglecting the sector."
+  },
+  {
+   "slug": "speech-422409",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Amendment (Implementing Care Reform) Bill 2022, which mandates 24/7 registered nurses in residential aged care, public reporting of provider spending, and caps on home-care package fees, while raising concerns about workforce shortages in regional areas, calling for parliamentary scrutiny of exemptions, and urging faster home-care package delivery and greater use of nurse practitioners."
+  },
+  {
+   "slug": "speech-422411",
+   "speaker": "Kate Chaney",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the bill as a step forward but noted it implements only a few of the 148 royal commission recommendations, raised concerns about staffing shortages and unclear exemption processes for 24/7 nursing, and highlighted unresolved issues including national consent standards for chemical restraints, cultural safety for Aboriginal and Torres Strait Islander people, and public reporting of assaults in aged care."
+  },
+  {
+   "slug": "speech-422412",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Albanese Labor government is fulfilling its election mandate by passing the Aged Care Amendment (Implementing Care Reform) Bill 2022, which mandates a 24/7 registered nurse in residential aged-care facilities, caps home-care administration fees, and increases transparency on provider spending, in response to the royal commission's findings."
+  },
+  {
+   "slug": "speech-422414",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care Amendment (Implementing Care Reform) Bill 2022 delivers on election commitments and royal commission recommendations, including a requirement for a registered nurse on site 24/7 from 1 July 2023, a cap on home-care administration and management fees, removal of exit amounts, a star rating system for residential care, and a new code of conduct for providers. The government also supports a wage increase for aged-care workers through a submission to the Fair Work Commission."
+  },
+  {
+   "slug": "speech-422417",
+   "speaker": "Louise Miller-Frost",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued the Aged Care Amendment (Implementing Care Reform) Bill 2022 implements three key election commitments: mandating a registered nurse on site 24/7 in residential aged care from 1 July 2023, capping home-care administration fees, and increasing provider spending transparency on care, food, and profits."
+  },
+  {
+   "slug": "speech-422418",
+   "speaker": "Sam Birrell",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The member for Nicholls supported the amendment to the Aged Care Amendment (Implementing Care Reform) Bill 2022, arguing it lacks detail and an exemption framework for small regional providers like Barwo Homestead in Nathalia, which faces staffing and financial challenges under new care-minute and 24/7 registered nurse requirements, and urged the government to provide flexibility to avoid closures."
+  },
+  {
+   "slug": "speech-422419",
+   "speaker": "Shayne Kenneth Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The Aged Care Amendment (Implementing Care Reform) Bill 2022 mandates registered nurses on site from 1 July 2023 and caps administration charges for home-care packages, addressing failures of the previous coalition government that cut $1.2 billion in funding and abolished workforce development programs."
+  },
+  {
+   "slug": "speech-422420",
+   "speaker": "Sophie Scamps",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The Aged Care Amendment (Implementing Care Reform) Bill 2022 was supported, mandating a registered nurse on site 24/7 at every facility, capping home-care fees, and increasing transparency, while noting a shortage of 14,000 nurses and the need for wage increases."
+  },
+  {
+   "slug": "speech-422421",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care Amendment (Implementing Care Reform) Bill 2022 is urgently needed to restore dignity and quality to aged care, implementing three election commitments including a requirement for registered nurses to be on site 24/7 from July next year, and criticized the former government for neglect highlighted by the royal commission report."
+  },
+  {
+   "slug": "speech-422427",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The bill caps home-care provider administration fees, requires 24/7 registered nurses in residential aged care, and increases transparency on spending; the speaker noted that some providers charged up to 46 per cent of packages in administration fees."
+  },
+  {
+   "slug": "speech-422428",
+   "speaker": "Mark Maclean Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to the Aged Care Amendment Bill from the member for Farrer, arguing that while 24/7 nursing care is a worthy goal, mandating it could force smaller regional aged-care facilities to close due to workforce shortages, particularly in areas like the Parkes electorate where providers rely on overseas workers and local training programs."
+  },
+  {
+   "slug": "speech-422429",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The Aged Care Amendment (Implementing Care Reform) Bill 2022 was supported for urgent implementation, mandating a 24/7 registered nurse on site in all residential aged care homes, capping home-care administration charges, and removing exit fees. The bill also requires public reporting of provider expenditure, affecting the 210,000+ Australians receiving home-care packages, and builds on the previously passed Aged Care and Other Legislation Amendment (Royal Commission Response) Bill 2022."
+  },
+  {
+   "slug": "speech-422518",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The Albanese government's Aged Care Amendment (Implementing Care Reform) Bill 2022 requires residential aged care providers to have a registered nurse on duty 24/7 from 1 July 2023, caps home-care package administration fees, removes exit amounts, and mandates public reporting of provider expenditure including staffing, food, and profits."
+  },
+  {
+   "slug": "speech-422519",
+   "speaker": "Rowan Eric Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Amendment (Implementing Care Reform) Bill 2022, arguing for a \"soft touch\" in enforcing standards in rural and regional facilities to avoid bed closures. They highlighted staffing shortages and the specific case of Whyalla, where Helping Hand received $3 million in government assistance to take over a closed facility, and noted a $10 million election commitment for capital works, urging continued investment to secure long-term operations and eliminate shared bathrooms."
+  },
+  {
+   "slug": "speech-422520",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The MP argued in favour of the Aged Care Amendment (Implementing Care Reform) Bill 2022, highlighting key reforms including a 24/7 registered nurse requirement, capping home-care administration charges, removing exit fees, and improving spending transparency. The speech cited constituent experiences such as Bernadette and Leonie (medication errors and poor food), nurse Kylie (burnout), and World War II veteran Robert (complexity with home-care packages)."
+  },
+  {
+   "slug": "speech-422522",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The speech welcomed the Aged Care Amendment (Implementing Care Reform) Bill 2022 and urged the government to accelerate implementing all 140 recommendations of the royal commission into aged care. It supported mandatory 24/7 registered nurses in facilities but raised concerns about exemption criteria, delegated legislation, the $460 million cost over forward estimates, and a shortfall of 850 nurses to meet the bill's requirements."
+  },
+  {
+   "slug": "speech-422523",
+   "speaker": "Dai Le",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The speaker seconded an amendment to the Aged Care Amendment Bill, arguing the government's plan to require 24/7 registered nurses in aged care by July 2023 lacks support for nurses and fails to address workforce shortages, citing a need for 1,440 nurses rather than the government's estimate of 900. They highlighted constituent cases like Anthony Best and Mr Thang, called for better recognition of overseas qualifications for migrant and refugee nurses, and urged more home-care options for culturally and linguistically diverse communities."
+  },
+  {
+   "slug": "speech-422524",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The Albanese government introduced the Aged Care Amendment (Implementing Care Reform) Bill 2022, requiring 24/7 registered nurses in residential aged care from 1 July 2023 and capping administration charges for home-care packages from 1 January 2023, with exemptions for rural and remote providers."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care Amendment (Implementing Care Reform) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00047",
+   "assent_date": "2022-11-09"
+  }
+ ]
+}

@@ -1,0 +1,67 @@
+{
+ "key": "au-federal-r7488",
+ "title": "Human Rights Bill 2026",
+ "short_title": "Human Rights Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-05-25",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-05-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7488%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7488_ems_3e13181f-044b-4980-a4ab-3be1ed9c73a8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7488%22",
+   "document_date": "2026-05-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-05-25",
+  "sentences": [
+   "The bill would create a national Human Rights Act to protect human rights.",
+   "Laws made by any Australian government would be invalid if they conflict with this Act, and courts would interpret other laws to match it.",
+   "The Australian Human Rights Commission could investigate actions that may breach the Act and handle complaints about such breaches."
+  ],
+  "changes": [
+   "Makes inconsistent Commonwealth, State and Territory laws invalid.",
+   "Requires all Commonwealth, State and Territory laws to be interpreted consistently with the Act.",
+   "Lets the Australian Human Rights Commission investigate and receive complaints about rights infringements."
+  ],
+  "affected": "Commonwealth, State and Territory governments, the Australian Human Rights Commission, and people whose rights may be affected by government acts or practices.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

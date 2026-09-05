@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-r6379",
+ "title": "Constitution Alteration (Freedom of Expression and Freedom of the Press) 2019 [No. 2]",
+ "short_title": "Constitution Alteration (Freedom of Expression and Freedom of the Press) 2019 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-29",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": "(s) SHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2020-02-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6379%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6379%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6379_ems_d9583e69-03be-457b-878c-041134e159df%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6379%22",
+   "document_date": "2019-07-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-29",
+  "sentences": [
+   "This bill would add explicit protection for free expression and press freedom to Australia's Constitution.",
+   "It would insert a new chapter and section into the Constitution Act, forbidding the Commonwealth, states, and territories from limiting these freedoms unless the limit meets a test of being proportionate in a democratic society.",
+   "The sponsor says the protection would match the United States' First Amendment and would, for the first time, formally recognise Australia as an open, free, and democratic society."
+  ],
+  "changes": [
+   "The bill would enshrine freedom of expression, including press and media freedom, in the Constitution.",
+   "It would allow such freedoms to be limited only when the limitation is proportionate and justified in a democratic society.",
+   "It would set a benchmark for judging existing laws of the Commonwealth, states, and territories.",
+   "It would give constitutional recognition to the open, free, and democratic nature of Australian society."
+  ],
+  "affected": "The Commonwealth, state and territory legislatures, the High Court, and the media and public are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

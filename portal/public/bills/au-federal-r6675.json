@@ -1,0 +1,92 @@
+{
+ "key": "au-federal-r6675",
+ "title": "Ending Indefinite and Arbitrary Immigration Detention Bill 2021",
+ "short_title": "Ending Indefinite and Arbitrary Immigration Detention Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-22",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-10-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6675%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6675%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6675%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6675_ems_d06f0700-59d7-4869-aa3c-9583911d8460%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6675%22",
+   "document_date": "2021-02-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-22",
+  "sentences": [
+   "This bill would make immigration detention for non-citizens and refugees a last resort, requiring it to be lawful, necessary, proportionate and for the shortest possible time.",
+   "It would ban mandatory detention, require independent monitoring of detention facilities, and subject all decisions to independent oversight and prompt review.",
+   "The bill would implement several international human rights treaties into domestic law, including the Refugee Convention and the International Covenant on Civil and Political Rights."
+  ],
+  "changes": [
+   "Alternatives to detention would almost always be used instead of detention.",
+   "Mandatory detention would be made illegal.",
+   "Reasons, time frames, communication and services in detention would be clearly outlined and independently monitored."
+  ],
+  "affected": "Non-citizens and refugees in immigration detention.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-402788",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-02-22",
+   "stage_hint": null,
+   "brief": "The Ending Indefinite and Arbitrary Immigration Detention Bill 2021 would abolish mandatory detention, end offshore detention, and require community alternatives with full access to housing, financial support, work, education, and healthcare, subject to independent oversight. The bill was introduced with figures showing 1,513 people in detention, annual costs of $346,000 per detainee versus $10,221 for community living, and a $1 billion offshore detention budget, citing the Biloela Tamil family's 1,000-day detention costing $6 million as an example."
+  },
+  {
+   "slug": "speech-402789",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-02-22",
+   "stage_hint": null,
+   "brief": "The speaker seconded the Ending Indefinite and Arbitrary Immigration Detention Bill 2021, arguing that indefinite detention is illegal under international law and calling for its end. They noted that 65 medevac refugees had been released but 120 remain in Australian hotel detention, around 230 are still detained on Nauru and in PNG, and cited the Biloela family as an example, supporting the Game Over campaign led by Craig Foster."
+  }
+ ],
+ "acts": []
+}

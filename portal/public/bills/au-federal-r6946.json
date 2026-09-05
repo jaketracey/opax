@@ -1,0 +1,398 @@
+{
+ "key": "au-federal-r6946",
+ "title": "Treasury Laws Amendment (2022 Measures No. 4) Bill 2022",
+ "short_title": "Treasury Laws Amendment (2022 Measures No. 4) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-11-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2023-06-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6946_ems_9775e31b-b8eb-4f34-99ac-1d138122a205%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6946_ems_ca61d707-0f25-4f7c-9458-6ac7b4742c76%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6946%22",
+   "document_date": "2022-11-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00029",
+   "document_date": "2023-06-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-23",
+  "sentences": [
+   "The bill would create a refundable tax offset for spending on developing digital games.",
+   "The offset would apply to qualifying Australian development expenditure from 1 July 2022.",
+   "The measure is expected to cost $34.9 million over the 4 years from 2021-22."
+  ],
+  "changes": [
+   "Introduces a refundable tax offset for eligible digital game development expenditure.",
+   "Applies the offset to expenditure from 1 July 2022.",
+   "Commences on the first of several quarterly dates after Royal Assent."
+  ],
+  "affected": "Companies that develop digital games in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8181",
+   "date": "2023-06-20",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-06-20.171.3) that schedule 2 remain as it is. This vote was put after NSW Senator [Andrew Bragg](https://theyvoteforyou.org.au/people/senate/nsw/andrew_bragg) (Liberal) proposed that that schedule be removed. When proposing the amendment to oppose the schedule, he [explained that](https://www.openaustralia.org.au/senate/?gid=2023-06-20.159.1): > *As I foreshadowed in my contribution to the second reading debate, this amendment excises the section which deals with the taxation treatment of digital currencies. It does that on the basis that there is a separate process underway through the Board of Taxation and this would introduce unnecessary regulatory risk in a very sensitive area. It will also do it on the basis that it won't be removing any consumer protections or, indeed, driving any new innovation.*",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 6,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-20/7"
+  },
+  {
+   "key": "federal-senate-8182",
+   "date": "2023-06-20",
+   "house": "senate",
+   "question": "The majority voted against [amendments (1) to (5)](https://www.openaustralia.org.au/senate/?gid=2023-06-20.173.1), introduced by NSW Senator [Andrew Bragg](https://theyvoteforyou.org.au/people/senate/nsw/andrew_bragg) (Liberal), which means they were not successful. The amendments would have removed the requirement that training must be delivered by a registered provider to be eligible for the bonus deduction (up to a maximum of $20,000). ### Amendment text > *(1) Schedule 4, item 1, page 39 (after line 21), after subsection 328-445(3), insert:* > >> *Limit on deductions relating to training provided by non-registered training providers* >> >> *(3A) Despite subsections (1) to (3), the total of your deductions under this section for an income year in relation to expenditure that is not covered by subsection (3B) cannot exceed $20,000.* >> >> *(3B) This subsection covers expenditure you incur for any of the training mentioned in section 328-450 provided by a particular provider if, at the time you incur the expenditure:* >> >>> *(a) the provider is a registered body of any of the following kinds:* >>> >>>> *(i) a registered higher education provider (within the meaning of the Tertiary Education Quality and Standards Agency Act 2011);* >>>> >>>> *(ii) a NVR registered training organisation (within the meaning of the National Vocational Education and Training Regulator Act 2011);* >>>> >>>> *(iii) a registered education and training organisation (within the meaning of the Education and Training Reform Act 2006 (Vic.));* >>>> >>>> *(iv) a registered training provider (within the meaning of the Vocational Education and Training Act 1996 (WA)); and* >>> >>> *(b) if the provider is a registered body of a kind mentioned in paragraph (a)(ii), (iii) or (iv)—the training is within the provider's scope of registration for that kind of registered body.* > > *(2) Schedule 4, item 1, page 40 (line 10), omit \"(1)\".* > > *(3) Schedule 4, item 1, page 40 (lines 15 to 22), omit paragra",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 6,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-20/8"
+  },
+  {
+   "key": "federal-senate-8184",
+   "date": "2023-06-21",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-06-20.177.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means it was not successful. ### What was the purpose of this amendment? Senator Pocock [explained that](https://www.openaustralia.org.au/senate/?gid=2023-06-20.177.1): > *[The Skills and Training Boost and the Technology Investment Boost] are great measures for small businesses to help them digitise to drive genuine productivity among small businesses, but they have two weeks to make use of this funding. We're told that it will be backdated to March and small businesses can keep their receipts and claim it, but every small business we in my office have talked to has had no idea about this scheme. It seems that it won't have much effect, and, potentially, the only people to benefit from this will be the government's bottom line, given that there was money budgeted for it.* > > *This amendment seeks to ensure that small businesses do have a year to digitise and claim some of that back on tax. This is incredibly important for our small businesses who are seeking to become more efficient, to increase productivity, and indeed we hear a lot about productivity from both sides of politics at the moment.*",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 8,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-21/1"
+  },
+  {
+   "key": "federal-senate-8185",
+   "date": "2023-06-21",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping schedule 8 unchanged. In parliamentary jargon, they voted that \"schedule 8 stand as printed\". This division was held in respond to Queensland Senator [James McGrath](https://theyvoteforyou.org.au/people/senate/queensland/james_mcgrath) (LNP) proposing that it should be opposed. Senator McGrath [explained that](https://www.openaustralia.org.au/senate/?gid=2023-06-20.192.1): > *This schedule modifies the Clean Energy Finance Corporation Act to enable the CEFC to receive additional funds to implement Rewiring the Nation, establish the Powering Australia Technology Fund and streamline the ability of the government to provide the CEFC with additional funds in the future. The explanatory memorandum clarifies that this is an $11 billion allocation of funding with an additional $1 billion going to the Department of Climate Change, Energy, the Environment and Water to fund projects that would not meet the CEFC criteria. A remaining $8 billion will be credited to CEFC at a later date to meet the $20 billion election commitment. However, Labor has not identified what these projects would be.* > > *Critically, the schedule also amends several operational provisions of the CEFC Act. The legislation removes requirements for the government to legislate additional funding for the CEFC, allowing them to create additional accounts within the CEFC simply by general appropriations. The coalition has concerns about this schedule. There are billions in spending for transmission projects that have not been recommended by the energy operator and a hidden $1 billion fund for the Department of Climate Change, Energy, the Environment and Water to circumvent the independent CEFC process. However, following the Economics Legislation Committee's review of this legislation and recommendations on this schedule, the opposition is seeking to remove this schedule to ensure that the parliament continues to have oversight of the funding mechanisms for the Clean E",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 8,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-21/2"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2022 Measures No. 4) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00029",
+   "assent_date": "2023-06-23"
+  }
+ ]
+}

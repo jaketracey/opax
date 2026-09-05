@@ -1,0 +1,226 @@
+{
+ "key": "au-federal-s1242",
+ "title": "Public Governance, Performance and Accountability Amendment (Waiver of Debt and Act of Grace Payments) Bill 2019",
+ "short_title": "Public Governance, Performance and Accountability Amendment (Waiver of Debt and Act of Grace Payments) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-02",
+ "originating_house": "senate",
+ "sponsor": "GALLAGHER, Sen Katy",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10838",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1242%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1242%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1242%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1242%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1242_ems_bf89e6d8-4425-4b84-a37c-8e67056d0777%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1242%22",
+   "document_date": "2019-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7372",
+   "date": "2021-08-09",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debates/?id=2021-08-09.102.2) introduced by Rankin MP [Jim Chalmers](https://theyvoteforyou.org.au/people/representatives/rankin/jim_chalmers) (Labor), which means the amendment failed. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"the [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) be considered immediately\".* To read a bill for a second time is to agree with the bill's main idea. ### Original motion text > *That the second reading be made an order of the day for the next sitting.*",
+   "stage": "Second reading",
+   "ayes": 43,
+   "noes": 37,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 34
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 79
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-08-09/1"
+  },
+  {
+   "key": "federal-senate-7374",
+   "date": "2021-08-09",
+   "house": "senate",
+   "question": "Public Governance, Performance and Accountability Amendment (Waiver of Debt and Act of Grace Payments) Bill 2019 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 17,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 18,
+    "member": 6,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-09/1"
+  },
+  {
+   "key": "federal-senate-7375",
+   "date": "2021-08-09",
+   "house": "senate",
+   "question": "Public Governance, Performance and Accountability Amendment (Waiver of Debt and Act of Grace Payments) Bill 2019 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 17,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 18,
+    "member": 6,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-09/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-410939",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government systematically rorts taxpayer funds through programs like the Urban Congestion Fund ($4.7 billion) and car park rorts, and called for the Public Governance, Performance and Accountability Amendment (Waiver of Debt and Act of Grace Payments) Bill 2019 to require ministers to report within 30 days any decisions benefiting their own electorates or against departmental advice, with the Minister for Finance tabling reports within five sitting days."
+  }
+ ],
+ "acts": []
+}

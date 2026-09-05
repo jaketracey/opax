@@ -1,0 +1,374 @@
+{
+ "key": "au-federal-r7299",
+ "title": "Treasury Laws Amendment (Tax Incentives and Integrity) Bill 2025",
+ "short_title": "Treasury Laws Amendment (Tax Incentives and Integrity) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2025-03-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7299_ems_f004b6fb-348b-4a62-ab16-ae85c4b67d11%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7299_ems_798144a4-d055-4229-8651-fa61f32016e5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7299_ems_ec2fd4ee-9274-4c27-9e8e-c9c134246585%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7299%22",
+   "document_date": "2024-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00029",
+   "document_date": "2025-03-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9309",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/28685/&sid=0000) introduced by Petrie MP [Luke Howarth](https://theyvoteforyou.org.au/people/representatives/petrie/luke_howarth) (Liberal), which means it failed. ### Motion text > *That the amendment moved by the honourable member for Petrie be agreed to:* > > *That all words after \"That\" be omitted with a view to substituting the following words:* > >> *\"the House notes that:* >> >>> *(1) the former Government consistently delivered lower taxes for small business and families;* >>> >>> *(2) the Coalition's plan for the instant asset write-off will deliver a bigger tax cut for small businesses and boost investment in productive assets;* >>> >>> *(3) there have been more than 27,000 business insolvencies under this Government; and* >>> >>> *(4) Australians cannot afford another three years of this Government\".*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 51,
+   "noes": 81,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-10/1"
+  },
+  {
+   "key": "federal-representatives-9310",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "question": "The majority voted against [opposition amendments](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/28685/&sid=0000) introduced by Petrie MP [Luke Howarth](https://theyvoteforyou.org.au/people/representatives/petrie/luke_howarth) (Liberal), which means they failed. The amendments would have changed the text on an original [government amendment (2)](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7299_amend_b6f7fa49-4961-4772-960d-9cd367fcd846%22;rec=0). ### Amendment text > *(1) Amendment (2), omit \"$20,000 instant\", substitute \"Instant\".* > > *(2) Amendment (2), items 1 to 4, omit the items, substitute:* > >> *1 Section 328-180 (heading)* >> >>> *Omit \"to 30 June 2024\".* >> >> *2 Subsection 328-180(1) (definition of increased access year )* >> >>> *Repeal the definition, substitute:* >>> >>> *increased access year: an income year is an increased access year if any day in the year occurs on or after 12 May 2015.* >> >> *3 Paragraph 328-180(4)(d)* >> >>> *Omit \"$20,000\", substitute \"$30,000\".* >> >> *4 Paragraph 328-180(4)(d)* >> >>> *Omit \"and on or before 30 June 2024\" (wherever occurring).* >> >> *5 Paragraph 328-180(5)(e)* >> >>> *Repeal the paragraph, substitute:* >>> >>>> *(e) were a reference to $30,000, if the amount is so included at any time on or after 1 July 2023.* >> >> *6 Paragraph 328-180(6)(e)* >> >>> *Repeal the paragraph, substitute:* >>> >>>> *(e) were a reference to $30,000, in relation to a deduction for an income year than ends on or after 1 July 2023.* ### Original amendment (2) text > *(2) Page 6 (after line 25), at the end of the Bill, add:* > > *Schedule 4 — $20,000 instant asset write-off for small business entities* > > *Income Tax (Transitional Provisions) Act 1997* > > *1 Section 328-180 (heading)* > >> *Omit “ 30 June 2024 ”, substitute “ 30 June 2025 ”.* > > *2 Subsection 328-180(1) (paragraph (b) of",
+   "stage": "Consideration in detail",
+   "ayes": 60,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 75
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-10/2"
+  },
+  {
+   "key": "federal-representatives-9312",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7299_amend_416824c0-963c-4c1c-816a-cc6ddf56c8bf%22;rec=0) introduced by Warringah MP [Zali Steggall](https://theyvoteforyou.org.au/people/representatives/warringah/zali_steggall) (Independent). These would have amended the text of the original [government amendment (2)](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7299_amend_b6f7fa49-4961-4772-960d-9cd367fcd846%22;rec=0). ### Amendment text > *(1) Amendment (2), omit “$20,000”, substitute “$50,000”.* > > *(2) Amendment (2), items 1 to 2, omit the items, substitute:* > >> *1 Section 328-180 (heading)* >> >>> *Omit “ to 30 June 2024 ”.* >> >> *2 Subsection 328-180(1) (definition of increased access year )* >> >>> *Repeal the definition, substitute:* >>> >>>> *increased access year : an income year is an increased access year if any day in the year occurs on or after 12 May 2015.* > > *(3) Amendment (2), after item 2, insert:* > >> *2A Paragraph 328-180(4)(d)* >> >>> *Omit “$20,000”, substitute “$50,000”.* > > *(4) Amendment (2), omit item 3, substitute:* > >> *3 Paragraph 328-180(4)(d)* >> >>> *Omit “and on or before 30 June 2024” (wherever occurring).* > > *(5) Amendment (2), after item 3, insert:* > >> *3A Paragraphs 328-180(5)(e) and (6)(e)* >> >>> *Omit “$20,000”, substitute “$50,000”.* > > *(6) Amendment (2), omit item 4, substitute:* > >> *4 Paragraph 328-180(5)(e)* >> >>> *Omit all the words after “if the amount”, substitute “is so included at any time on or after 1 July 2023.”.* > > *5 Paragraph 328-180(6)(e)* > >> *Omit all the words after “for an income year”, substitute “that ends on or after 1 July 2023.”.* ### Original amendment (2) text > *(2) Page 6 (after line 25), at the end of the Bill, add:* > > *Schedule 4 — $20,000 instan",
+   "stage": "Consideration in detail",
+   "ayes": 15,
+   "noes": 53,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 67,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-10/4"
+  },
+  {
+   "key": "federal-representatives-9313",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/28685/&sid=0000) introduced by Petrie MP [Luke Howarth](https://theyvoteforyou.org.au/people/representatives/petrie/luke_howarth) (Liberal), which means it failed. The amendment would have removed [Schedule 2](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr7299_first-reps%2F0002;query=Id%3A%22legislation%2Fbills%2Fr7299_first-reps%2F0000%22;rec=0) from the bill. ### Amendment text > *(1) Clause 2, page 2 (table item 2), omit \"Schedules 1 and 2\", substitute \"Schedule 1\".* > > *(3) Schedule 2, page 5 (lines 1 to 15), omit the Schedule.*",
+   "stage": "Consideration in detail",
+   "ayes": 60,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 73
+    },
+    "Liberal": {
+     "ayes": 29,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-10/5"
+  },
+  {
+   "key": "federal-representatives-9316",
+   "date": "2025-02-12",
+   "house": "representatives",
+   "question": "The majority voted against a motion introduced by Deakin MP [Michael Sukkar](https://theyvoteforyou.org.au/people/representatives/deakin/michael_sukkar) (Liberal), which means it failed. ### Motion text > *That so much of the standing and sessional orders be suspended as would prevent the following from occurring:* > > *(1) government business order of the day No. 5 relating to the [Treasury Laws Amendment (Tax Incentives and Integrity) Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr7299%22) being called on immediately; and* > > *(2) all questions required to complete passage of the bill being put without delay.* Standing and sessional orders are the usual procedural rules of parliament.",
+   "stage": "Business motion",
+   "ayes": 59,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 32,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-12/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1194971",
+   "speaker": "David Pocock",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-03-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Tax Incentives and Integrity) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00029",
+   "assent_date": "2025-03-27"
+  }
+ ]
+}

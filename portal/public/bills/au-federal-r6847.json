@@ -1,0 +1,401 @@
+{
+ "key": "au-federal-r6847",
+ "title": "Treasury Laws Amendment (Cyclone and Flood Damage Reinsurance Pool) Bill 2022",
+ "short_title": "Treasury Laws Amendment (Cyclone and Flood Damage Reinsurance Pool) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2022-03-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6847%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6847%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6847%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6847%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6847%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6847%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6847%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6847%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6847%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6847%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6847%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6847%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6847%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6847%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6847_ems_1380f44a-8137-4c8d-b2ce-f5f946320ee5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6847%22",
+   "document_date": "2022-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00013",
+   "document_date": "2022-03-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-09",
+  "sentences": [
+   "The bill would create a government-backed insurance arrangement for cyclone and flood damage.",
+   "The Australian Reinsurance Pool Corporation would run the arrangement, which starts on 1 July 2022.",
+   "The aim is to make insurance more available and affordable for people and small firms in areas at risk of cyclones."
+  ],
+  "changes": [
+   "The bill amends the Act to set up the reinsurance pool.",
+   "The pool would begin operating on 1 July 2022.",
+   "The bill implements a measure from the 2021-22 Mid-Year Economic and Fiscal Outlook."
+  ],
+  "affected": "Households and small businesses located in cyclone-prone parts of Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7675",
+   "date": "2022-03-30",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual second reading motion, which is \"*that the bill be read a second time*.\" Reading a bill for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is parliamentary jargon for agreeing with the main idea of the bill. Because this amendment failed, the usual second reading motion will remain unchanged. ### Amendment text > *At the end of the motion, add \", but the Senate is of the opinion that the funds required to establish and maintain the reinsurance pool should be derived from taxation on entities extracting and combusting fossil fuels\".*",
+   "stage": "Second reading",
+   "ayes": 8,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 12,
+    "earliest": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/3"
+  },
+  {
+   "key": "federal-senate-7676",
+   "date": "2022-03-30",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Cyclone and Flood Damage Reinsurance Pool) Bill 2022 - Second Reading - Show modelling",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 19,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/4"
+  },
+  {
+   "key": "federal-senate-7677",
+   "date": "2022-03-30",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2022-03-30.35.2) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means they failed. ### What do these amendments do? Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens) [explained that](https://www.openaustralia.org.au/senate/?gid=2022-03-30.35.2): > *If passed, these amendments also mean it would be less administratively burdensome, because the amended bill wouldn't require insurers to distinguish between the risk of non-cyclone-related floods and the risk of cyclone related floods, and it wouldn't require them to seek private market insurance for non-cyclone-related floods. In other words, all reinsurance for all flood damage would be covered under this scheme.*",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 14,
+    "earliest": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/5"
+  },
+  {
+   "key": "federal-senate-7678",
+   "date": "2022-03-30",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-03-30.42.1) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it failed. ### Amendment text > *(1) Schedule 1, item 26, page 20 (lines 15 to 20), omit section 41, substitute:* > > *41 Review of Act* > > *(1) The Minister must prepare a report that reviews the need:* > >> *(a) to extend the cyclone reinsurance scheme to cover loss or damage caused by any and all natural disasters, including bushfires, storms and hail; and* >> >> *(b) for this Act to continue in operation.* > > *(2) The report must be prepared:* > >> *(a) as soon as practicable after 1 July 2025; and* >> >> *(b) at least once every 5 years after that day.*",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 5
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "dated": 14,
+    "earliest": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-419200",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-17",
+   "stage_hint": null,
+   "brief": "Labor supported the Treasury Laws Amendment (Cyclone and Flood Damage Reinsurance Pool) Bill 2022, which creates a compulsory reinsurance pool for cyclone risk administered by the Australian Reinsurance Pool Corporation from 1 July 2022. The speaker noted that average home insurance premiums in northern Australia rose 178% in real terms between 2007 and 2019, that the government had not released modelling for claimed savings of up to 46% for home and contents and 58% for strata, and that the Emergency Response Fund had not completed any disaster mitigation projects while accruing $836 million in interest."
+  },
+  {
+   "slug": "speech-419202",
+   "speaker": "Warren Entsch",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-02-17",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Cyclone and Flood Damage Reinsurance Pool) Bill 2022 addresses an 11-year-old problem of skyrocketing insurance premiums in northern Australia, with examples including a hotel’s premium rising from $10,000 to $200,000 and strata unit costs increasing from $800 to $38,000; the bill also extends cover to Cocos and Christmas Islands for the first time."
+  },
+  {
+   "slug": "speech-419203",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment for a reinsurance pool but argued it should be extended beyond northern Australia to areas like the Hawkesbury and Blue Mountains, where insurance premiums have jumped from $3,000 to $30,000 per year. They also called for government-led discussions with insurers to recognise resilience investments and for better information to help homeowners retrofit for disasters."
+  },
+  {
+   "slug": "speech-419350",
+   "speaker": "Phillip Thompson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-17",
+   "stage_hint": null,
+   "brief": "The speech supported the Treasury Laws Amendment (Cyclone and Flood Damage Reinsurance Pool) Bill 2022 as vital for northern Australia, citing Townsville premium increases such as a 51% rise for Douglas homeowners and a 35% rise for no-claim residents. It announced the $10 billion reinsurance pool would deliver savings of up to 46% for homeowners, 58% for strata properties and 34% for small businesses, while criticising New South Wales Labor members for politicising the issue rather than engaging on the insurance market failure."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Cyclone and Flood Damage Reinsurance Pool) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00013",
+   "assent_date": "2022-03-31"
+  }
+ ]
+}

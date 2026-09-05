@@ -1,0 +1,341 @@
+{
+ "key": "au-federal-r7239",
+ "title": "Communications Legislation Amendment (Combatting Misinformation and Disinformation) Bill 2024",
+ "short_title": "Communications Legislation Amendment (Combatting Misinformation and Disinformation) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-09-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications and the Arts",
+ "status": "lapsed",
+ "status_as_of": "2024-11-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7239%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7239%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7239%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7239%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7239%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7239%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7239%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7239%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7239%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7239%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7239%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7239_ems_13b01a0b-4684-4e0e-b336-0028d4c0e3cd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7239_ems_1f053271-fcb8-4f7e-8f96-16217ef1bcaf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7239_ems_66335a38-df6e-4b06-a8a3-e20d4d8670af%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7239_ems_280931c2-ccd2-4f7d-933a-28ddc261abee%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7239_ems_48847e7c-171f-4171-b70f-872de4c4639c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7239%22",
+   "document_date": "2024-09-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-09-12",
+  "sentences": [
+   "The bill would give the Australian Communications and Media Authority (ACMA) new powers to combat misinformation and disinformation on digital communications platforms.",
+   "The ACMA could register mandatory industry codes of practice or, if industry fails to develop adequate codes, impose its own standards through legislative instruments.",
+   "The ACMA could not approve codes or standards that require removal of private message content or encryption, and removal of other content or blocking of users would be allowed only in cases of inauthentic behaviour."
+  ],
+  "changes": [
+   "The ACMA would be empowered to request industry to develop codes of practice to prevent or respond to misinformation and disinformation.",
+   "The ACMA could register industry standards if no adequate code is developed.",
+   "The ACMA would maintain a public register of codes and standards.",
+   "The minister could specify new kinds of digital communications platforms subject to the powers.",
+   "Codes and standards could not cover private messages or encryption.",
+   "Content removal or user blocking could only be required for inauthentic behaviour."
+  ],
+  "affected": "Digital communications platform providers, including content aggregation services, internet search engines, connective media services, and media sharing services, and their end-users.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9212",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2024-11-07.14.17) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the original motion will remain unchanged. The amendment was introduced by Melbourne MP [Adam Bandt](https://theyvoteforyou.org.au/people/representatives/melbourne/adam_bandt) (Greens). ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the Bill a second reading, the House:* > > *(1) notes this bill is still before Senate inquiry;* > > *(2) notes the proposed legislation does not address the powerful, unchecked role that the Murdoch media empire plays in spreading mis- and disinformation in our democracy; and* > > *(3) calls on the government to tackle mis- and disinformation spread by the Murdoch media\".*",
+   "stage": "Second reading",
+   "ayes": 5,
+   "noes": 60,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 8
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 64,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-07/1"
+  },
+  {
+   "key": "federal-representatives-9213",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2024-11-07.7.1) to read the bill for a second time. In other words, they voted to agree with the main idea of the bill. This means they can now discuss it in more detail. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2425/25bd014): * *The Communications Legislation Amendment (Combatting Misinformation and Disinformation) Bill 2024 aims to reduce the spread of seriously harmful misinformation and disinformation on digital communications platforms.* * *However, it is unclear if the Bill will operate in a manner compatible with Australia’s international human rights obligations related to freedom of expression. The definitions of misinformation and disinformation create some uncertainty as to the breadth of content captured.* * *The Bill introduces transparency requirements for certain digital communications platforms related to misinformation and disinformation. This includes obligations to publish information on risk management actions, media literacy plans, and complaints processes.* * *The Bill provides the Australian Communications and Media Authority (ACMA) with new powers to create digital platform rules requiring digital communication platforms to report and keep records on certain matters related to misinformation and disinformation.* * *The Bill provides ACMA with a graduated set of powers in relation to the development and registration of industry misinformation codes and misinformation standards. Registered codes and standards are enforceable.* * *The Bill has been referred to the Senate Environment and Communications Legislation Committee for inquiry, with a reporting date of 25 November 2024.* * *Both the Senate Scrutiny of Bills Committee and the Parliamentary Joint Committee on Human Rights have raised concerns with the Bill.*",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 4
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-07/2"
+  },
+  {
+   "key": "federal-representatives-9214",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of [government amendments (1) to (23)](https://www.openaustralia.org.au/debates/?id=2024-11-07.20.1), which means they will now be included in the bill. ### What do these amendments do? According to the [supplementary explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7239_ems_66335a38-df6e-4b06-a8a3-e20d4d8670af%22;rec=0): > *These amendments provide some additional measures for Part 2 of Schedule 9 to the Broadcasting Services Act 1992 (BSA), to be inserted by item 2 of Schedule 1 to the Communications Legislation Amendment (Combatting Misinformation and Disinformation) Bill 2024 (the Bill):* > >> *a. The definition of professional news content is to apply also to news content produced by a person who is subject to the rules of the Community Radio Broadcasting Codes of Practice.* >> >> *b. Digital communications platform providers will be required to publish information regarding their policy or policy approach for supporting access by researchers to data relating to misinformation and disinformation on the platform.* >> >> *c. The ACMA will have power to make digital platform rules to establish one or more data access schemes , under which independent researchers who have been approved to conduct a particular research project relating to misinformation or disinformation on digital communications platforms, be given access to data held by digital communications platform providers for the purposes of that project . These provisions will be proposed new Subdivision BA in Division 2 of Part 2 of Schedule 9.* >> >> *d. As soon as possible after the first anniversary of the commencement of Schedule 9, there must be a review of the operation of new Subdivision BA.* >> >> *e. The triennial statutory review currently provided for at clause 70 must be an independent review.*",
+   "stage": "Consideration in detail",
+   "ayes": 86,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 138,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-07/3"
+  },
+  {
+   "key": "federal-representatives-9215",
+   "date": "2024-11-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2024-11-07.24.1) *\"that the bill, as amended, be agreed to.*\" In other words, they voted to agree with the amended bill and will now decide on whether to pass it in the House of Representatives (also known as giving it a third reading). ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2425/25bd014): * *The Communications Legislation Amendment (Combatting Misinformation and Disinformation) Bill 2024 aims to reduce the spread of seriously harmful misinformation and disinformation on digital communications platforms.* * *However, it is unclear if the Bill will operate in a manner compatible with Australia’s international human rights obligations related to freedom of expression. The definitions of misinformation and disinformation create some uncertainty as to the breadth of content captured.* * *The Bill introduces transparency requirements for certain digital communications platforms related to misinformation and disinformation. This includes obligations to publish information on risk management actions, media literacy plans, and complaints processes.* * *The Bill provides the Australian Communications and Media Authority (ACMA) with new powers to create digital platform rules requiring digital communication platforms to report and keep records on certain matters related to misinformation and disinformation.* * *The Bill provides ACMA with a graduated set of powers in relation to the development and registration of industry misinformation codes and misinformation standards. Registered codes and standards are enforceable.* * *The Bill has been referred to the Senate Environment and Communications Legislation Committee for inquiry, with a reporting date of 25 November 2024.* * *Both the Senate Scrutiny of Bills Committee and the Parliamentary Joint Committee on Human Rights have raised concerns with the B",
+   "stage": "Consideration in detail",
+   "ayes": 79,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-07/4"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

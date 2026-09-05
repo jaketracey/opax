@@ -1,0 +1,766 @@
+{
+ "key": "au-federal-r5256",
+ "title": "Asset Recycling Fund (Consequential Amendments) Bill 2014",
+ "short_title": "Asset Recycling Fund (Consequential Amendments) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-05-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-07-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5256_ems_02b2137e-f02b-452d-b23a-9a6455f34979%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/3228273%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5256%22",
+   "document_date": "2014-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3226",
+   "date": "2014-06-19",
+   "house": "representatives",
+   "question": "This division relates to the Policies _[For privatising government assets](/policies/21)_ and _[For increasing funding to road infrastructure](/policies/38)_. The majority voted against a [motion](http://www.openaustralia.org/debate/?id=2014-06-19.27.18) \"_that the [amendments](http://www.openaustralia.org/debate/?id=2014-06-19.22.2) be agreed to_\", which means that they were rejected. The amendments were introduced by Labor MP [Anthony Albanese](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Anthony_Albanese&mpc=Grayndler&house=representatives). Mr Albanese explained that the amendments \"improve governance around the way in which grants are made from this so-called Asset Recycling Fund\"(Read Mr Albanese's full explanation and the related debate [here](http://www.openaustralia.org/debates/?id=2014-06-19.22.1). ) ('ARF'). The ARF is \"a dedicated investment vehicle, with a focus on providing financial assistance and incentives to the states and territories, to create new productive infrastructure\".(Read more about the Asset Recycling Fund and the background to the bill in its [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1314a/14bd090). ) _Background to the bills_ The [Asset Recycling Fund Bill 2014](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr5255%22) and the related [Asset Recycling Fund (Consequential Amendments) Bill 2014](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr5256%22) were introduced to create the Asset Recycling Fund ('ARF'). The ARF is the fund from which grants to states and territories will be sourced under the Asset Recycling Initiative ('ARI'), which was developed to assist states to privatise assets and to speed up the construction of transport infrastructure in capital cities.(Read the Deputy Prime Minister [Warren Truss](http://publicwhip-rails.openaustraliafoundation.org.au/mp",
+   "stage": "Consideration in detail",
+   "ayes": 55,
+   "noes": 83,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 51,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-19/1"
+  },
+  {
+   "key": "federal-representatives-3523",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "question": "Bronwyn Bishop I understand it is the wish of the House to consider the amendments together. Steven Ciobo I move: That the amendments be disagreed to. Anthony Albanese We support the Senate amendments and oppose the motion of the government. The fact is that the government has a choice, which is to understand that in the Australian system we have two houses of parliament. These Senate amendments have been carried, because they are sensible amendments and they should be supported. Bronwyn Bishop The question is that the amendments be disagreed to.",
+   "stage": "Consideration of Senate message",
+   "ayes": 80,
+   "noes": 45,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 125
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-07-17/5"
+  },
+  {
+   "key": "federal-senate-3366",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/senate/?gid=2014-07-17.80.3) \"_that [amendments](http://www.openaustralia.org/senate/?gid=2014-07-17.76.1) (1) to (5) and (14) to (16) be agreed to_\",(Read the amendments [here](http://www.openaustralia.org/senate/?gid=2014-07-17.76.1). ) which means that they were successful. The amendments were introduced by Labor Senator [Kim Carr](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Kim_Carr&mpc=Senate&house=senate). Senator Carr explained that the purpose of the amendments is to \"save the [Education Investment Fund](https://www.education.gov.au/education-investment-fund)\" ('EIF'),(Read Senator Carr's full explanation of the amendment and the related debate [here](http://www.openaustralia.org/senate/?id=2014-07-17.70.1), after 1.35 pm. ) which the bill in its current form will abolish after its funds are redirected to the newly created Asset Recycling Fund. The EIF was established by the [Nation-building Funds Act 2008](http://www.finance.gov.au/investment-funds/nation-building-funds/act/) to replace the Higher Education Endowment Fund (HEEF). It provides funding to projects that \"create or develop significant infrastructure in higher education, research and vocational education and training institutions\".(Read more about the EIF [here](https://www.education.gov.au/education-investment-fund). ) _Background to the bills_ The [Asset Recycling Fund Bill 2014](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr5255%22) and the related [Asset Recycling Fund (Consequential Amendments) Bill 2014](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr5256%22) were introduced to create the Asset Recycling Fund ('ARF'). The ARF is the fund from which grants to states and territories will be sourced under the Asset Recycling Initiative ('ARI'), which was developed to assist states to privat",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 50,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/12"
+  },
+  {
+   "key": "federal-senate-3367",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "The majority voted against an amendment \"_that [subclause 13(2)](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr5255_first-reps%2F0002;query=Id%3A%22legislation%2Fbills%2Fr5255_first-reps%2F0001%22;rec=0#55ff3017c0ca4cdc94bb1be3fdef0536) and [subclauses 34(4) to (6)](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr5255_first-reps%2F0003;query=Id%3A%22legislation%2Fbills%2Fr5255_first-reps%2F0001%22;rec=0#226af90b17bc4090be40f9a7b181f776) stand as printed_\", which means that the majority disagreed with these subclauses and did not want them to remain as they were. This motion was put following an [amendment](http://www.openaustralia.org/senate/?gid=2014-07-17.76.1) put forward by Labor Senator [Kim Carr](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Kim_Carr&mpc=Senate&house=senate) to oppose those subclauses. Senator Carr explained that the purpose of the amendments is to \"save the [Education Investment Fund](https://www.education.gov.au/education-investment-fund)\" ('EIF'),(Read Senator Carr's full explanation of the amendment and the related debate [here](http://www.openaustralia.org/senate/?id=2014-07-17.70.1), after 1.35 pm. ) which the bill in its current form will abolish after its funds are redirected to the newly created Asset Recycling Fund. The EIF was established by the [Nation-building Funds Act 2008](http://www.finance.gov.au/investment-funds/nation-building-funds/act/) to replace the Higher Education Endowment Fund (HEEF). It provides funding to projects that \"create or develop significant infrastructure in higher education, research and vocational education and training institutions\".(Read more about the EIF [here](https://www.education.gov.au/education-investment-fund). ) _Background to the bills_ The [Asset Recycling Fund Bill 2014](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 10,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/13"
+  },
+  {
+   "key": "federal-senate-3368",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "This division relates to the Policies _[For privatising government assets](/policies/21)_ and _[For increasing funding to road infrastructure](/policies/38)_. The majority voted in favour of a [motion](http://www.openaustralia.org/senate/?gid=2014-07-17.173.5) \"_that opposition [amendments (7), (10), (11) and (13)](http://www.openaustralia.org/senate/?gid=2014-07-17.172.1) be agreed to_\", which means that they were successful. The amendments were introduced by Labor Senator [Doug Cameron](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Doug_Cameron&mpc=Senate&house=senate). Senator Cameron explained that the amendments \"_require the infrastructure minister to make public the supporting information behind the project that is approved for a grant or payment_\" under the Asset Recycling Initiative.(Read Senator Cameron's full explanation of these amendments [here](http://www.openaustralia.org/senate/?gid=2014-07-17.172.1). ) _Background to the bills_ The [Asset Recycling Fund Bill 2014](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr5255%22) and the related [Asset Recycling Fund (Consequential Amendments) Bill 2014](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr5256%22) were introduced to create the Asset Recycling Fund ('ARF'). The ARF is the fund from which grants to states and territories will be sourced under the Asset Recycling Initiative ('ARI'), which was developed to assist states to privatise assets and to speed up the construction of transport infrastructure in capital cities.(Read the Deputy Prime Minister [Warren Truss](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Warren_Truss&mpc=Wide%20Bay&house=representatives)'s comments on the initiative on ABC's PM program [here](http://www.abc.net.au/pm/content/2014/s4000807.htm). ) Under the ARI, states and territories will be encouraged to sell assets, including tran",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 10,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/14"
+  },
+  {
+   "key": "federal-senate-3369",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "This division relates to the Policies _[For privatising government assets](/policies/21)_ and _[For increasing funding to road infrastructure](/policies/38)_. The majority voted in favour of an [amendment](http://www.openaustralia.org/senate/?gid=2014-07-17.176.1) introduced by Labor Senator [Doug Cameron](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Doug_Cameron&mpc=Senate&house=senate). This means that it was successful. Senator Cameron explained that the amendment is to \"consolidate infrastructure approvals with the Minister for Infrastructure\".(Read Senator Cameron's full explanation of the amendment [here](http://www.openaustralia.org/senate/?gid=2014-07-17.176.1). ) In other words, it is for that Minister to make infrastructure approvals. Senator Cameron described this amendment as \"simply common sense\". _Background to the bills_ The [Asset Recycling Fund Bill 2014](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr5255%22) and the related [Asset Recycling Fund (Consequential Amendments) Bill 2014](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr5256%22) were introduced to create the Asset Recycling Fund ('ARF'). The ARF is the fund from which grants to states and territories will be sourced under the Asset Recycling Initiative ('ARI'), which was developed to assist states to privatise assets and to speed up the construction of transport infrastructure in capital cities.(Read the Deputy Prime Minister [Warren Truss](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Warren_Truss&mpc=Wide%20Bay&house=representatives)'s comments on the initiative on ABC's PM program [here](http://www.abc.net.au/pm/content/2014/s4000807.htm). ) Under the ARI, states and territories will be encouraged to sell assets, including transport infrastructure, and use the proceeds to fund new public infrastructure. By way of encouragement, the Com",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 10,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/15"
+  },
+  {
+   "key": "federal-senate-3370",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "Asset Recycling Fund Bill 2014 and Asset Recycling Fund (Consequential Amendments) Bill 2014 — In Committee — Toll roads",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 43,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 10,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/16"
+  },
+  {
+   "key": "federal-senate-3537",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "Eric Abetz I move: That the committee does not insist on its amendments to which the House of Representatives has disagreed. These two bills are an essential part of the government's plank of building the infrastructure of the 21st century. This is a plank which will allow us to develop literally tens of thousands of jobs over the next few years. This is the payment by the Commonwealth, in rough terms, of about $5,000 million, from which we ought to be able to leverage, courtesy of the states, about $33,000 million to develop the infrastructure to get the productivity enhancement projects that this country so desperately needs. Can I remind honourable senators that this bill in fact also allows the states to lease their assets, as opposed to a direct sale. We believe that it is important to have a fund such as this that can operate without the sorts of impediments that were imposed by the Senate's amendments. We believe that genuine productivity-enhancing investments are what this country needs, as opposed to the sorts of pink batts and school halls that we had in the past. In summing up, can I also indicate to the Senate that we would invite, especially senators opposite, to heed the words of their shadow spokesman Mr Marles, on 18 June 2014, when asked about this particular legislation: How could Labor stand in the way of billions, tens of billions, being spent on productive infrastructure? Mr Marles's answer was: … if the amendments don't get up, we've said we're not going to stand in the way of this bill. We would invite Labor to consider those wise words of Mr Marles. I am aware of the time constraints on the Senate. I will therefore leave my remarks at that, other than to say this is a vital part of the government's plan to get the country's economy back on track. I would urge honourable senators to reconsider their position in relation to the amendments which the Househas not agreed to. Doug Cameron Labor will be insisting on all of our amendments. This goes",
+   "stage": "Consideration of House message",
+   "ayes": 29,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 47,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/30"
+  },
+  {
+   "key": "federal-representatives-3374",
+   "date": "2014-08-26",
+   "house": "representatives",
+   "question": "Asset Recycling Fund (Consequential Amendments) Bill 2014 — Consideration of Senate Message — Put the question",
+   "stage": "Consideration of Senate message",
+   "ayes": 81,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-08-26/2"
+  },
+  {
+   "key": "federal-representatives-3375",
+   "date": "2014-08-26",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/debates/?id=2014-08-26.6.1) introduced by Parliamentary Secretary [Alan Tudge](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Alan_Tudge&mpc=Aston&house=representatives). The motion was: \"That consideration of the message be made an order of the day for a later hour this day.\" The \"message\" referred to in the motion was the message from the Senate, in which the Senate insisted on the amendments it made previously. The House must decide whether to agree to these amendments and therefore pass the bill or reject the amendments, which means the bill will fail.(Read more about the stages that a bill must go through to become law [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) _Background to the bills_ The [Asset Recycling Fund Bill 2014](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr5255%22) and the related [Asset Recycling Fund (Consequential Amendments) Bill 2014](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr5256%22) were introduced to create the Asset Recycling Fund ('ARF'). The ARF is the fund from which grants to states and territories will be sourced under the Asset Recycling Initiative ('ARI'), which was developed to assist states to privatise assets and to speed up the construction of transport infrastructure in capital cities.(Read the Deputy Prime Minister [Warren Truss](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Warren_Truss&mpc=Wide%20Bay&house=representatives)'s comments on the initiative on ABC's PM program [here](http://www.abc.net.au/pm/content/2014/s4000807.htm). ) Under the ARI, states and territories will be encouraged to sell assets, including transport infrastructure, and use the proceeds to fund new public infrastructure. By way of encouragement, the Commonwealth will provide a financial contribution",
+   "stage": "Consideration of Senate message",
+   "ayes": 84,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-08-26/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-289533",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291947",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291952",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-292117",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-292127",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-292130",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-292342",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-292385",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-19",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

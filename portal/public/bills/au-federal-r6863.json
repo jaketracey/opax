@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6863",
+ "title": "Appropriation Bill (No. 2) 2022-2023",
+ "short_title": "Appropriation Bill (No. 2) 2022-2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-03-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6863%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6863%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6863%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6863_ems_e7ce37d9-01db-45a2-854c-84e07fde1d9f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6863%22",
+   "document_date": "2022-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-419518",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-03-29",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 2) 2022‑2023 proposes $13.3 billion in spending, including $7.7 billion for Defence, $3.9 billion for infrastructure, and $495 million for Airservices Australia, with a $3 billion Advance to the Finance Minister for COVID‑19 measures and $600 million for other urgent expenditure."
+  }
+ ],
+ "acts": []
+}

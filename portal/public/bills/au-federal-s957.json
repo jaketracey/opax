@@ -1,0 +1,98 @@
+{
+ "key": "au-federal-s957",
+ "title": "Environment Protection and Biodiversity Conservation Amendment Bill 2014",
+ "short_title": "Environment Protection and Biodiversity Conservation Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-19",
+ "originating_house": "senate",
+ "sponsor": "LUDWIG, Sen Joe",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10397",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s957%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s957%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s957_ems_2e831c22-718b-4be2-9e4a-b23a24fe9d3c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s957%22",
+   "document_date": "2014-03-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-19",
+  "sentences": [
+   "The bill would let the environment minister ban a fishing activity while an expert panel studies its environmental effects.",
+   "It restores powers that let the minister, together with the fisheries minister, temporarily or permanently declare a fishing activity as needing assessment and prohibition.",
+   "A final declaration can last no longer than 24 months, and the minister must consider written submissions from affected fishing concession holders before making one."
+  ],
+  "changes": [
+   "Repeals a sunset provision in the EPBC Act.",
+   "Allows the minister to set up an independent expert panel to assess a declared commercial fishing activity.",
+   "Creates civil penalties and offences for carrying out a declared commercial fishing activity.",
+   "Requires the expert panel's report to be published and tabled in Parliament."
+  ],
+  "affected": "Commercial fishers and fishing concession holders who may be affected by a declaration.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:44Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

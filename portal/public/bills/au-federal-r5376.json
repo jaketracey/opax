@@ -1,0 +1,182 @@
+{
+ "key": "au-federal-r5376",
+ "title": "Quarantine Charges (Imposition—General) Amendment Bill 2014",
+ "short_title": "Quarantine Charges (Imposition—General) Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-11-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2015-05-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-05-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5376_ems_8f8a11f7-1941-400d-aecf-02079ceef734%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5376_ems_a9cd6bd7-d8e8-4f1e-8462-fdcbf45efbb3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5376%22",
+   "document_date": "2014-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00049",
+   "document_date": "2015-05-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-11-27",
+  "sentences": [
+   "This bill is part of a package of three bills that would allow the Commonwealth to recover costs for indirect biosecurity services under the Biosecurity Bill.",
+   "It would amend the Quarantine Charges (Imposition–General) Act 2014 to enable charges to be imposed for activities such as scientific analysis, intelligence and surveillance that benefit users of the biosecurity system.",
+   "The amount of charges and who pays them would be set in delegated legislation, allowing the Minister for Agriculture to adjust them to avoid over or under recovery."
+  ],
+  "changes": [
+   "Amends the Quarantine Charges (Imposition–General) Act 2014.",
+   "Authorises the imposition of charges for indirect biosecurity services.",
+   "Allows the Minister for Agriculture to set charge amounts through delegated legislation."
+  ],
+  "affected": "Users of the biosecurity system, including businesses that benefit from indirect biosecurity services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:00:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-302670",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-304432",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-09",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Quarantine Charges (Imposition—General) Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00049",
+   "assent_date": "2015-05-26"
+  }
+ ]
+}

@@ -1,0 +1,427 @@
+{
+ "key": "au-federal-r6594",
+ "title": "Defence Legislation Amendment (Enhancement of Defence Force Response to Emergencies) Bill 2020",
+ "short_title": "Defence Legislation Amendment (Enhancement of Defence Force Response to Emergencies) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-09-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6594%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6594%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6594%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6594%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6594%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-10-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6594%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6594%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6594%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6594%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6594%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6594%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6594%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6594%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6594_ems_9fe3f627-9bf3-4423-8248-98e7ef57e242%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6594_ems_c44bf0ad-137c-45bd-ac4a-28cf729903b0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6594%22",
+   "document_date": "2020-09-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00146",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-09-03",
+  "sentences": [
+   "This bill would make it easier for the Australian Defence Force to help during natural disasters and other emergencies.",
+   "It would speed up the process to call out ADF members, give them and others similar legal protections to state emergency workers, and adjust superannuation rules for Reserve members who serve continuously after a call out.",
+   "The bill does not specify a start date or list which Acts are amended."
+  ],
+  "changes": [
+   "Streamline the process for calling out ADF members under the Defence Act.",
+   "Provide ADF members, other Defence personnel and foreign forces with immunities similar to state and territory emergency services personnel.",
+   "Amend ADF superannuation legislation to cover Reserve members who provide continuous full-time service after a call out."
+  ],
+  "affected": "The Australian Defence Force, its members, other Defence personnel, members of foreign forces, and Reserve members would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-6824",
+   "date": "2020-12-08",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-12-08.200.1) introduced by WA Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens), which means it failed. ### Amendment text > *(1) Schedule 1, item 2, page 3 (line 12), omit \"notifiable instrument\", substitute \"legislative instrument\".* ### What did the amendments do? [According to Senator Steele-John](https://www.openaustralia.org.au/senate/?gid=2020-12-08.200.1): > *We agree with concerns raised by the Standing Committee on the Scrutiny of Bills and the submission made by Mr Andrew Ray and Ms Charlotte Michalowski that the deployment of armed forces should be a matter of last resort and that the decisions to call them out should be subject to stringent parliamentary oversight—not a radical contention, you would have thought. This amendment seeks to ensure a layer of parliamentary scrutiny by making call-out orders subject to disallowance. While we understand that there are concerns around the timeliness and complexity of the call-out process, we do not accept that efficiency concerns cannot be addressed in other ways. We believe that efficiency concerns can be addressed in other ways, and it is not a reason to move past legitimate scrutiny by elected representatives.*",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 19,
+    "dated": 15,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-08/15"
+  },
+  {
+   "key": "federal-senate-6825",
+   "date": "2020-12-08",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2020-12-08.203.1) introduced by WA Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens), which means they failed. ### What did the amendments do? Senator Steele-John [explained that](https://www.openaustralia.org.au/senate/?gid=2020-12-08.203.1): > *These amendments deal with one of the most serious aspects of the bill. It is our view and, indeed, that of many submitters that a lack of a definition of what could constitute an 'other emergency' leaves the door wide open for the scope of circumstances for using the powers in this bill basically to be whatever the minister would like to define.* ### Amendments text > *(1) Schedule 2, item 4, page 8 (line 14), before \"emergency\", insert \"prescribed\".* > > *(2) Schedule 2, item 4, page 8 (line 19), before \"emergency\", insert \"prescribed\".* > > *(3) Schedule 2, item 4, page 8 (line 21), before \"emergency\", insert \"prescribed\".* > > *(4) Schedule 2, item 4, page 8 (after line 34), after subsection 123AA(3), insert:* > >> *(3A) The regulations may prescribe:* >> >>> *(a) a particular emergency event as a prescribed emergency for the purposes of this section; or* >>> >>> *(b) a kind of emergency as a prescribed emergency for the purposes of this section.* >> >> *(3B) However, regulations made for the purposes of subsection (3A):* >> >>> *(a) may only prescribe as an emergency or kind of emergency, an event or occurrence that does not require a protected person to use force or other coercive powers against a person; and* >>> >>> *(b) must not prescribe protest, dissent, assembly or industrial action as an emergency or kind of emergency.*",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 14,
+    "member": 7,
+    "earliest": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-08/16"
+  },
+  {
+   "key": "federal-senate-6826",
+   "date": "2020-12-08",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2020-12-08.206.1) introduced by WA Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens), which means they failed. ### What did the amendments do? [According to Senator Steele-John](https://www.openaustralia.org.au/senate/?gid=2020-12-08.206.1): > *These three amendments seek to do three crucial things: first, to ensure that there is appropriate consultation with the states and territories in relation to the call-out of reserve forces; second, to remove the immunities granted to foreign defence forces and foreign police forces in relation to civil and criminal liability; and, finally, to prescribe in the legislation that force and coercive power may not be used against civilians in the context of this legislation.*",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "member": 8,
+    "earliest": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-08/17"
+  },
+  {
+   "key": "federal-senate-6827",
+   "date": "2020-12-08",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2020-12-08.212.4) to keep schedules 1 and 2 stand unchanged. In parliamentary jargon, they voted \"*that schedules 1 and 2 stand as printed.*\" This vote happened after WA Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens) introduced a [motion](https://www.openaustralia.org.au/senate/?gid=2020-12-08.211.1) that the schedules be opposed. ### What does schedule 1 do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd015#_Toc52880407): > *The purpose of the amendments in Schedule 1 is to streamline and enhance the provisions enabling Reserve Call Out, including where the Reserve Call Out is in response to a natural disaster or other emergency. The amendments are intended to:* > >> *a. Enhance flexibility in how called out ADF Reserve members serve by:* >> >>> *i. removing references to continuous full-time service (CFTS)* >>> >>> *ii. enabling the Chief of the Defence Fore (CDF) to determine how and when they are required to serve.* >> >> *b. Simplify the process for advising the Governor-General before making a Reserve Call Out order.* >> >> *c. Provide for Reserve Call Out orders to be made by notifiable instrument.* >> >> *d. Extend Parts 8, 9 and 10 of the Defence Reserve Service (Protection) Act 2001 to any service rendered by Reserves under a Reserve Call Out order and not just CFTS.* >> >> *e. Modernise the language in Part III of the Act.* >> >> *f. Amend the CDF's delegation power in relation to Reserve Call Out to reflect the other changes to the Act.* ### What does schedule 2 do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd015#_Toc52880414): > *Defence Assistance to the Civil Community (DACC) is not currently authorised by statute, it is a non-statutory exercise of executive power. Schedule 2 pr",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "member": 7,
+    "earliest": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-08/18"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-395003",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-09-03",
+   "stage_hint": null,
+   "brief": "The Defence Legislation Amendment (Enhancement of Defence Force Response to Emergencies) Bill 2020 streamlines the call-out of reserves, grants immunities to defence personnel performing emergency duties in good faith, and ensures superannuation parity for reservists serving under call-out orders compared to volunteers."
+  },
+  {
+   "slug": "speech-395280",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-06",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence Legislation Amendment (Enhancement of Defence Force Response to Emergencies) Bill 2020, which streamlines call-out of reserves, grants greater flexibility to the Chief of the Defence Force, aligns ADF immunities with state emergency agencies, and secures superannuation rights for reservists. The opposition will seek a Senate inquiry before finalising its position, and the speaker criticised the government for ignoring warnings and failing to fund bushfire preparedness ahead of the 2019-20 black summer fires."
+  },
+  {
+   "slug": "speech-395281",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-10-06",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence Legislation Amendment (Enhancement of Defence Force Response to Emergencies) Bill 2020, which simplifies ADF Reserve call-outs, grants the Chief of the Defence Force flexibility in assigning service, provides civil and criminal immunity for ADF personnel in emergencies, and ensures backdated superannuation entitlements for reservists from November 2019. The speech also detailed ADF contributions to Operation Bushfire Assist (6,500 personnel, 2,500 reservists) and Operation COVID-19 Assist (2,657 personnel deployed as of late 2020)."
+  },
+  {
+   "slug": "speech-395282",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-06",
+   "stage_hint": null,
+   "brief": "Labor supports the Defence Legislation Amendment (Enhancement of Defence Force Response to Emergencies) Bill 2020 but will refer it to a Senate inquiry, citing concerns about immunity provisions and removal of the Executive Council from call-out advice. The bill streamlines reserve call-outs, increases service flexibility, provides civil and criminal immunity for Defence personnel, and backdates superannuation entitlements to November 2019 for reservists deployed during the bushfires, when around 3,000 reservists served in Operation Bushfire Assist."
+  },
+  {
+   "slug": "speech-395283",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Defence Legislation Amendment Bill 2020 contains technical improvements for ADF emergency call-outs and immunity, but insisted on a Senate inquiry to safeguard civil liberties and the separation of military and civilian powers. They criticised the government’s poor planning during the 2019–20 bushfires and condemned the use of ADF personnel in what they called Liberal Party political advertising."
+  },
+  {
+   "slug": "speech-395408",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-06",
+   "stage_hint": null,
+   "brief": "The member for Gilmore supported the Defence Legislation Amendment (Enhancement of Defence Force Response to Emergencies) Bill 2020, which simplifies call-out procedures for reservists, increases Chief of the Defence Force flexibility, provides immunity for ADF personnel, and retrospectively addresses superannuation for reservists from November 2019. She highlighted the role of HMAS Albatross, 808 Squadron, and reservists in bushfire response, including 3,000 reservists called out under Operation Bushfire Assist."
+  },
+  {
+   "slug": "speech-395409",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-10-06",
+   "stage_hint": null,
+   "brief": "The speaker argued the Defence Legislation Amendment Bill 2020 should be referred to a committee to better define \"other emergencies\" and prevent misuse against protests, and urged the government to address climate change and invest in disaster response agencies, noting over 6,500 defence personnel (including nearly 3,000 reservists) were deployed in the summer bushfires."
+  },
+  {
+   "slug": "speech-395410",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-06",
+   "stage_hint": null,
+   "brief": "Labor will support the Defence Legislation Amendment (Enhancement of Defence Force Response to Emergencies) Bill 2020 but calls for further Senate scrutiny, arguing the bill simplifies reservist call-out processes, provides immunity from liability, and ensures superannuation for reservists, while criticising the Prime Minister for being slow to act during the 2019–20 bushfires."
+  },
+  {
+   "slug": "speech-395412",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-06",
+   "stage_hint": null,
+   "brief": "Labor supported the Defence Legislation Amendment (Enhancement of Defence Force Response to Emergencies) Bill 2020, noting it would refer the bill to a Senate inquiry to ensure ADF members receive the same legal protections as foreign and civilian emergency personnel. The speaker thanked international assistance, including over 100 US firefighters, 125 New Zealand personnel, 43 Indonesian engineers, and contributions from PNG ($60,000) and Vanuatu ($250,000)."
+  },
+  {
+   "slug": "speech-395413",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-10-06",
+   "stage_hint": null,
+   "brief": "The bill streamlines the call-out of reserves for natural disaster response, provides immunities for defence personnel acting in good faith, and ensures reservists under call-out receive commensurate superannuation. The speaker noted that at the peak of bushfire support, 6,500 ADF personnel assisted, with over 8,000 involved overall, including 3,000 reservists."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Defence Legislation Amendment (Enhancement of Defence Force Response to Emergencies) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00146",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

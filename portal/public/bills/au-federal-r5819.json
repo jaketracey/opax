@@ -1,0 +1,490 @@
+{
+ "key": "au-federal-r5819",
+ "title": "Treasury Laws Amendment (GST Low Value Goods) Bill 2017",
+ "short_title": "Treasury Laws Amendment (GST Low Value Goods) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5819_ems_4304999d-0509-477f-a6ee-665cfd7e5f7c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5819%22",
+   "document_date": "2017-02-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00077",
+   "document_date": "2017-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4706",
+   "date": "2017-06-14",
+   "house": "representatives",
+   "question": "Chris Bowen To continue from last night, I was pointing out to the House that both sides of parliament support, in principle, having a threshold of zero apply to the GST for imports, but that the government has botched the implementation of this measure, which needs to be fixed. I will go into a little more detail about the problems with the government's proposed measure. First, and perhaps most important, is compliance and the government's proposed and projected compliance rates. I mentioned last night that we had referred this bill to a Senate inquiry to allow aeration of the concerns we had and to allow questioning of both the Treasury and interested stakeholders, and I thanked, again last night, Senator Chris Ketter in particular for his excellent work in the committee, because it did confirm a lot of our concerns. Most particularly we asked the Treasury what the compliance rate would be—that is, what percentage of people obliged to pay the tax would actually pay it. The Treasury advised that it expected a compliance rate of between 25 and 30 per cent. That might sound reasonable to start with, 25 to 30 per cent. You might say, 'Well, this will take some time to get going.' But that was the expected compliance rate in the third year, not the first year. The Treasury told the Senate committee that the maximum compliance rate we could expect after three years would be around 30 per cent. We also learned that by 2022-23 the compliance level would hit maturity—peak compliance under the government's model—and that it would be a whopping 54 per cent. So at maturity just over half of those obliged to pay GST on their imports would be complying. That is the best the government can do. This is a very important matter not only for revenue for the states but, even more importantly, for competitive neutrality for small business. Small business are relying on this measure to give them a level playing field. Small business have been told it will give them a level playing fiel",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-14/2"
+  },
+  {
+   "key": "federal-senate-4725",
+   "date": "2017-06-19",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Gst Low Value Goods) Bill 2017 - Second Reading - Delay the bill",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 14,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-06-19/1"
+  },
+  {
+   "key": "federal-senate-4726",
+   "date": "2017-06-19",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (GST Low Value Goods) Bill 2017 - in Committee - No GST on sanitary items",
+   "stage": "In committee",
+   "ayes": 15,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 26,
+    "member": 16,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-06-19/2"
+  },
+  {
+   "key": "federal-senate-4727",
+   "date": "2017-06-19",
+   "house": "senate",
+   "question": "Mathias Cormann I move: That this bill be now read a third time. Sue Lines The question is that the bill now be read a third time.",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 10,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 27,
+    "member": 14,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-06-19/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-348647",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The speaker argued strongly in favour of the Treasury Laws Amendment (GST Low Value Goods) Bill 2017, which scraps the GST low-value threshold to close a growing tax loophole and create a level playing field for Australian retailers. The speaker noted the reform was long overdue, had bipartisan support, and would remove a competitive disadvantage of up to 20% faced by local businesses compared to offshore competitors."
+  },
+  {
+   "slug": "speech-348648",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "Labor argued for a 12-month delay and an independent Productivity Commission review of the government's vendor registration model for collecting GST on low-value imports, citing Treasury's estimate that the model would achieve only 54% compliance at maturity and concerns from platforms like eBay, Amazon, and Alibaba about its workability. The speaker noted the traditional retail sector faces pressure from online competition and high household debt, and that the government's proposed 1 July 2017 start date was too short."
+  },
+  {
+   "slug": "speech-348649",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The coalition government supports the Treasury Laws Amendment (GST Low Value Goods) Bill 2017, which extends the goods and services tax to low‑value imports under $1,000 to level the playing field for Australia’s two million small businesses. The bill is backed by the Council of Australian Governments and the Australian Retailers Association, and aims to address the outdated GST threshold that distorts the market."
+  },
+  {
+   "slug": "speech-348650",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "Labor offered in-principle support for the Treasury Laws Amendment (GST Low Value Goods) Bill 2017, which extends GST to overseas goods valued at $1,000 or less, but called for a short inquiry to address concerns about implementation, enforcement, oversight and the short timeframe before the 1 July 2017 start date."
+  },
+  {
+   "slug": "speech-348651",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the GST Low Value Goods Bill is necessary to create a level playing field for Australian retailers by requiring foreign sellers to charge the same 10% GST, and praised Minister McCormack's work. They also contrasted Labor's opposition to lower company taxes and coal power, claiming those policies put Australian businesses at a competitive disadvantage."
+  },
+  {
+   "slug": "speech-348659",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The government is arguing that the Treasury Laws Amendment (GST Low Value Goods) Bill will create a level playing field by requiring overseas retailers like Amazon to collect GST, removing their 10% price advantage over Australian small businesses. The speaker also highlighted the government's actions to ensure large corporations, multinationals and the big four banks pay their fair share of tax and wages, citing specific bills and the bank levy."
+  },
+  {
+   "slug": "speech-348660",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The speaker argued for a 12-month delay to the GST on low-value goods, moving the start date from 1 July 2017 to 1 July 2018, and called for a Productivity Commission review and compliance report. They also criticised the government's economic management, citing gross debt rising to $725 billion and net debt reaching 20% of GDP, while opposing corporate tax cuts and the removal of the deficit levy as unfair."
+  },
+  {
+   "slug": "speech-348663",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to remove the GST exemption on low-value imports under $1,000 for vendors with Australian turnover over $750,000, but called for a review of the implementation timeline and potential unintended consequences, and criticised the government's National Broadband Network rollout."
+  },
+  {
+   "slug": "speech-348664",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (GST Low Value Goods) Bill 2017 in principle to level the playing field for Australian retailers, but criticised the vendor registration model for projected compliance rates of only 25-30% by 2019 and a maximum of 54%, and called for a 12-month delay to 1 July 2018 and an independent Productivity Commission review."
+  },
+  {
+   "slug": "speech-348665",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (GST Low Value Goods) Bill, due to commence on 1 July 2017, was being rushed with inadequate consultation and would achieve only a 25–30 per cent compliance rate by its third year, while disadvantaging Australian online businesses and potentially driving them offshore."
+  },
+  {
+   "slug": "speech-348666",
+   "speaker": "Bob Katter",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (GST Low Value Goods) Bill 2017 would not force businesses offshore, but that thousands of Australian jobs have already been lost to overseas competition, citing a 30–40% cost disadvantage and Gerry Harvey’s warning of store closures. He also criticised the Labor Party for abandoning protectionist policies that once safeguarded Australian workers."
+  },
+  {
+   "slug": "speech-349910",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-21",
+   "stage_hint": null,
+   "brief": "The Labor Party argued that the government delayed the GST Low Value Goods Bill, originally announced in 2015 for a July 2017 start, and that Labor's amendments—delaying implementation to July 2018 and requiring a Productivity Commission inquiry into the model—are necessary because the current model would collect only just over 50% of potential revenue, disadvantaging small businesses."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (GST Low Value Goods) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00077",
+   "assent_date": "2017-06-26"
+  }
+ ]
+}

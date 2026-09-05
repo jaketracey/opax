@@ -1,0 +1,250 @@
+{
+ "key": "au-federal-r6663",
+ "title": "Social Services and Other Legislation Amendment (Student Assistance and Other Measures) Bill 2021",
+ "short_title": "Social Services and Other Legislation Amendment (Student Assistance and Other Measures) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2021-05-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6663%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6663%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6663%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6663%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6663%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6663%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6663%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6663%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6663%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-05-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6663%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6663_ems_43be7895-caa3-4212-bb36-0aa29ef1217d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6663_ems_0f74f239-3b81-4e28-a06d-2e0eac0dccd5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6663%22",
+   "document_date": "2021-02-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00042",
+   "document_date": "2021-05-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7099",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the usual second reading motion unchanged. The usual second reading motion is “*that the bill be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*”, which is parliamentary jargon for agreeing with the main idea of the bill. This vote happened after Barton MP [Linda Burney](https://theyvoteforyou.org.au/people/representatives/barton/linda_burney) (Labor) proposed an amendment. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes the Government has made it more expensive for Australian students to undertake tertiary study, and has pushed students into taking on more debt; and* > > *(2) calls on the Government to ensure rural and remote students have access to quality continuing education\".*",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 43,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-05-12/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-405761",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The member moved a second reading amendment supporting the Social Services and Other Legislation Amendment (Student Assistance and Other Measures) Bill 2021 but calling on the government to ensure rural and remote students have access to quality continuing education, while criticising the government for raising tertiary fees and student debt, including through the Job-ready Graduates bill. The member backed the bill’s administrative changes to Abstudy and the Assistance for Isolated Children Scheme, but argued the government missed an opportunity to create an online application for the AIC scheme and to address disadvantage faced by Indigenous and remote students."
+  },
+  {
+   "slug": "speech-405762",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services and Other Legislation Amendment (Student Assistance and Other Measures) Bill 2021, arguing it streamlines access to student assistance schemes like Abstudy and the Assistance for Isolated Children Scheme, reducing red tape and helping families in remote and isolated communities."
+  },
+  {
+   "slug": "speech-405763",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill aligning tax file number requirements for Abstudy and the Assistance for Isolated Children Scheme, but criticised the Morrison government for cutting 10% from higher education funding, raising university fees, and causing 17,000 university job losses, while noting 27,000 students used Abstudy and 13,000 used the AIC scheme in 2020."
+  },
+  {
+   "slug": "speech-405765",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "Labor supported the Social Services and Other Legislation Amendment (Student Assistance and Other Measures) Bill 2021, but criticised the Morrison government for denying JobKeeper to universities—resulting in over 17,000 job losses—and for failing to support higher education in the budget, which it argued harms productivity and living standards."
+  },
+  {
+   "slug": "speech-405767",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the budget fails to address poor educational outcomes for First Nations children in remote areas, with no investment in local schools or social determinants like housing and health. They criticised the government's higher education policies, including the loss of 17,000 university jobs from denying JobKeeper, and supported local decision-making for First Nations communities over boarding schools."
+  },
+  {
+   "slug": "speech-405906",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The bill tidies up tax file number requirements for isolated children and Abstudy recipients, with the block assistance for isolated children indexed at $11,011 per annum, comprising an $8,557 unconditional grant and a $2,454 income-tested payment. The speaker also noted the removal of the family farm from the assets test for independent youth allowance and the establishment of three university hubs in the electorate of Grey."
+  },
+  {
+   "slug": "speech-405907",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's university fee changes have made tertiary study more expensive, increased student debt, and worsened gender inequality, citing a mother's concern about her daughter facing higher debt and lower pay than her son. They also criticised the government for lacking a vision for higher education, noting over 17,000 university job losses since the pandemic and warning that pushing universities toward privatisation undermines critical thinking and Australia's future."
+  },
+  {
+   "slug": "speech-405909",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "Labor supported the bill, which removes the requirement for primary school children to provide tax file numbers for Abstudy and the Assistance for Isolated Children Scheme, aligning rules with social security laws. The speaker criticised the Morrison government for cutting university funding by 9.3% in the 2021 budget, increasing student fees, and failing to support universities during COVID-19, citing 17,000 job losses and underrepresentation of Indigenous students."
+  },
+  {
+   "slug": "speech-405910",
+   "speaker": "Anne Stanley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government’s failures—both past and during the pandemic—have devastated higher education, citing over 17,000 university job losses and fee increases that will leave students with debts of up to $60,000 for a basic degree. The speaker also criticised the bill for disproportionately harming Indigenous and regional students, noting that 52% of Indigenous students are enrolled in humanities disciplines affected by the fee hikes."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services and Other Legislation Amendment (Student Assistance and Other Measures) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00042",
+   "assent_date": "2021-05-27"
+  }
+ ]
+}

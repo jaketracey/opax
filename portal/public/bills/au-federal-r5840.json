@@ -1,0 +1,220 @@
+{
+ "key": "au-federal-r5840",
+ "title": "Primary Industries Research and Development Amendment Bill 2017",
+ "short_title": "Primary Industries Research and Development Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2018-08-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5840%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5840%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5840%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5840%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5840%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5840%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5840%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5840%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5840%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5840%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5840%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5840%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5840%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5840%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5840_ems_d5e1ad97-ad60-4c46-a4c6-a13556a3a8ac%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/5428530%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5840%22",
+   "document_date": "2017-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00079",
+   "document_date": "2018-08-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-360885",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-01",
+   "stage_hint": null,
+   "brief": "The opposition supported the Primary Industries Research and Development Amendment Bill 2017, which allows statutory research and development corporations to conduct marketing activities funded by voluntary contributions, but criticised the former agriculture minister for failing to prioritise the bill, resulting in the Seafood CRC being unable to roll over marketing funds to the Fisheries RDC before its closure on 30 June 2017."
+  },
+  {
+   "slug": "speech-361445",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-27",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor's support for the Primary Industries Research and Development Amendment Bill 2017, moving a second reading amendment criticising the Turnbull Government for failing to develop evidence-based agriculture policies. He welcomed the National Farmers Federation's \"Talking 2030\" report, argued the government's agriculture white paper had failed, and urged bipartisan cooperation to address challenges like biosecurity outbreaks, climate change, and market access."
+  },
+  {
+   "slug": "speech-361448",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-27",
+   "stage_hint": null,
+   "brief": "The speaker argued the government failed to allocate taxpayers’ money efficiently, citing the former minister’s mishandling of the $180 million Australian Wild Abalone campaign and biosecurity failures that caused a fruit fly emergency threatening Tasmania’s $200 million horticulture industry; he called for the new agriculture minister to prioritise biosecurity and to revisit the Plant Health Australia deed for farmer compensation."
+  },
+  {
+   "slug": "speech-361449",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-27",
+   "stage_hint": null,
+   "brief": "The Primary Industries Research and Development Amendment Bill will allow statutory research organisations to invest in marketing using separate income streams without imposing new levies on producers. The speaker noted that Australian agricultural production has risen dramatically—coarse grain production up 350%, cereal exports up 400%—while employment has fallen 20%, and argued that innovation and the farmer-scientist partnership are key to sustaining this success."
+  },
+  {
+   "slug": "speech-361450",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Primary Industries Research and Development Amendment Bill 2017, which allows four statutory R&D corporations to conduct marketing activities funded by voluntary contributions without requiring a levy. They criticised the former agriculture minister for neglecting R&D, cutting $6.5 million annually (totalling $52 million over eight years), and prioritising their own electorate, while urging the new minister to focus on evidence-based climate change policy, biosecurity funding, and reforms to support Tasmanian agriculture."
+  },
+  {
+   "slug": "speech-361454",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-27",
+   "stage_hint": null,
+   "brief": "The Primary Industries Research and Development Amendment Bill 2017 was supported, allowing fisheries, cotton, grains and rural industry R&D corporations to raise voluntary marketing contributions via gifts, grants or bequests. The Turnbull government was criticised for lacking evidence-based policies, including the relocation of the APVMA and the lifting of the green prawn import ban despite white spot disease outbreaks."
+  },
+  {
+   "slug": "speech-362178",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Primary Industries Research and Development Amendment Bill 2017 for expanding marketing activities at the expense of research, criticised the government for lacking a national strategic plan for agricultural R&D, and called for a conference to develop a long-term strategy."
+  },
+  {
+   "slug": "speech-362179",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "Supported the Primary Industries Research and Development Amendment Bill 2017, arguing primary industries are vital to national and regional economies and that Australian farmers are the world's best."
+  },
+  {
+   "slug": "speech-362181",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The Primary Industries Research and Development Amendment Bill 2017 will allow four statutory rural research and development corporations—for fisheries, cotton, grains, and rural industries—to conduct marketing using voluntary contributions, removing the need for an expensive statutory levy."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Primary Industries Research and Development Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00079",
+   "assent_date": "2018-08-24"
+  }
+ ]
+}

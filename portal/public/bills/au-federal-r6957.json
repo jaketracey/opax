@@ -1,0 +1,1272 @@
+{
+ "key": "au-federal-r6957",
+ "title": "Safeguard Mechanism (Crediting) Amendment Bill 2023",
+ "short_title": "Safeguard Mechanism (Crediting) Amendment Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-11-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy, the Environment and Water",
+ "status": "passed",
+ "status_as_of": "2023-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6957_ems_bef2a383-93a0-4d6b-85a0-6c2b0850008e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6957_ems_fb2b27bb-096e-4970-ad60-5cd3e696d1a1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6957_ems_435f34d8-a0b8-4668-958f-4df146ac81fa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6957_ems_7161b7cf-a6bb-4cbf-8fb4-c06acf729878%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6957%22",
+   "document_date": "2022-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00014",
+   "document_date": "2023-04-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2022-11-30",
+  "sentences": [
+   "The bill would create a system for facilities covered by the Safeguard Mechanism to earn tradable credits for staying below their emissions baselines.",
+   "It amends the National Greenhouse and Energy Reporting Act 2007 and the Australian National Registry of Emissions Units Act 2011 to set up how Safeguard Mechanism Credits are issued, bought, and recorded.",
+   "The government says the changes are part of a plan to meet Australia's legislated emissions targets, including net zero by 2050 and a 43% cut by 2030."
+  ],
+  "changes": [
+   "Enable facilities below their baselines to generate tradable Safeguard Mechanism Credits.",
+   "Phase out eligible offsets projects at Safeguard-covered facilities.",
+   "Amend the Carbon Credits (Carbon Farming Initiative) Act 2011 to start implementing the government's response to an independent review of Australian Carbon Credit Units."
+  ],
+  "affected": "Facilities covered by the Safeguard Mechanism, and businesses that operate them.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:22Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8006",
+   "date": "2023-03-21",
+   "house": "senate",
+   "question": "The majority voted against clause (c) of a [motion](https://www.openaustralia.org.au/senate/?id=2023-03-21.116.1): > *That—* > > *(a) the Senate notes:* > >> *(i) the failure of the Minister representing the Minister for Climate Change and Energy to comply with order for the production of documents no. 162, relating to Australian Carbon Credit Units (ACCUs), and* >> >> *(ii) the Minister failed to comply with the order despite the Senate rejecting the Minister's claim of public interest immunity in relation to the documents that he provided to the Environment and Communications Legislation Committee on 1 March 2023;* > > *(b) the Senate again rejects the Minister's claim of public interest immunity, provided to the Senate on 9 March 2023;* > > *(c) further consideration of the [Safeguard Mechanism (Crediting) Amendment Bill 2022](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr6957%22) be postponed and made an order of the day for the next day of sitting after the documents and modelling relied on for the forecast usage of ACCUs over the decade to 2030 are laid on the table; and* > > *(d) the Senate further notes that the Government has indicated that it will use regulations to implement elements of its safeguard mechanism reforms, which will come before the Senate for scrutiny through the disallowance process.* Read more about these types of motions on the [parliamentary website](https://www.aph.gov.au/About_Parliament/Senate/Powers_practice_n_procedures/Brief_Guides_to_Senate_Procedure/No_12).",
+   "stage": "Documents",
+   "ayes": 31,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 58,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-21/6"
+  },
+  {
+   "key": "federal-representatives-8009",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "question": "Safeguard Mechanism (Crediting) Amendment Bill 2022 - Second Reading - Stop Bruce MP from speaking",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-22/3"
+  },
+  {
+   "key": "federal-representatives-8010",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "question": "Safeguard Mechanism (Crediting) Amendment Bill 2022 - Second Reading - Stop Newcastle MP from speaking",
+   "stage": "Second reading",
+   "ayes": 86,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-22/4"
+  },
+  {
+   "key": "federal-representatives-8011",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "question": "Safeguard Mechanism (Crediting) Amendment Bill 2022 - Second Reading - Let Newcastle MP speak more",
+   "stage": "Second reading",
+   "ayes": 86,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-22/5"
+  },
+  {
+   "key": "federal-representatives-8012",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "question": "Safeguard Mechanism (Crediting) Amendment Bill 2022 - Second Reading - Don't stop Hawke MP from speaking",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-22/6"
+  },
+  {
+   "key": "federal-representatives-8013",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "question": "Safeguard Mechanism (Crediting) Amendment Bill 2022 - Second Reading - Let Mr Rae speak more",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-22/7"
+  },
+  {
+   "key": "federal-representatives-8026",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "question": "Safeguard Mechanism (Crediting) Amendment Bill 2022 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 89,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-27/1"
+  },
+  {
+   "key": "federal-representatives-8027",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "question": "The majority voted in favour of [government amendments](https://www.openaustralia.org.au/debate/?id=2023-03-27.31.2) introduced by the Minister for Climate Change and Energy and McMahon MP [Chris Bowen](https://theyvoteforyou.org.au/people/representatives/mcmahon/chris_bowen) (Labor), which means they will now be included as part of the bill. ### What were the amendments? The amendments were introduced along with a [supplementary explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6957_ems_fb2b27bb-096e-4970-ad60-5cd3e696d1a1%22;rec=0). Mr Bowen also [provided a brief explanation](https://www.openaustralia.org.au/debate/?id=2023-03-27.31.2) in his speech: > *Today I'm introducing government amendments to the Safeguard Mechanism (Crediting) Amendment Bill 2022 which will enact some of the recommendations of the [ACCU review](https://www.dcceew.gov.au/climate-change/emissions-reduction/independent-review-accus). These are legislative changes to the Carbon Credits (Carbon Farming Initiative) Act 2011 that will increase transparency and robustness of the scheme while we continue to consult on the implementation of other recommendations. These recommendations will: require publication of carbon estimation area information and other information prescribed by the rules, recommendation 4.1; require the minister to be satisfied that a methodology determination or a varied methodology determination complies with the offsets integrity standards before the minister can make or vary the determination, recommendation 5.22; and change the Emissions Reduction Assurance Committee, ERAC, chair's position from part time to full time, recommendation 2.1—consistent with the recommendations of the review. I will appoint a full-time chair and a First Nations member of ERAC through an open and transparent process. The government will also establish an independent secretariat, re",
+   "stage": "Consideration in detail",
+   "ayes": 89,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-27/2"
+  },
+  {
+   "key": "federal-representatives-8028",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "question": "Safeguard Mechanism (Crediting) Amendment Bill 2022 - Consideration in Detail -  Agree with the bill as amended",
+   "stage": "Consideration in detail",
+   "ayes": 87,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-27/3"
+  },
+  {
+   "key": "federal-senate-8065",
+   "date": "2023-03-29",
+   "house": "senate",
+   "question": "The majority voted in favour of an amendment to the usual second reading motion, which is \"*That this bill be now read a second time.*\" To [read a bill for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is to agree with its main idea. This amendment does not make any changes to the bill itself but still has political significance because it represents the will of the Senate. It was introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent). ### Amendment text > *At the end of the motion, add “, but the Senate calls on the Government to:* > > *(a) in line with its commitment to implementing recommendation 9.8 of the final report of the [Pepper Scientific Inquiry into Hydraulic Fracturing in the Northern Territory](https://territorygas.nt.gov.au/sustainability-and-responsibility/the-scientific-inquiry-into-hydraulic-fracturing), ensure the gas industry in the Northern Territory’s Beetaloo Basin is required to offset all Scope 2 and 3 emissions by referring this matter to the Energy and Climate Change Ministerial Council, and work with the Northern Territory Government to achieve this;* > > *(b) support First Nations communities in carbon sequestration projects on Country, including but not limited to savanna burning, and on Sea Country, including but not limited to kelp farming; and* > > *(c) support First Nations-led verification assessment of environmental, social and cultural values of carbon farming and sequestration projects and invest in training for these purposes in First Nations communities, including but not limited to communities in regional and remote areas and on missions and reserves”.*",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 5,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-29/3"
+  },
+  {
+   "key": "federal-senate-8066",
+   "date": "2023-03-29",
+   "house": "senate",
+   "question": "Safeguard Mechanism (Crediting) Amendment Bill 2023 - Second Reading - Agree with bill's main idea (with comment)",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 5,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-29/4"
+  },
+  {
+   "key": "federal-representatives-8074",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "question": "Safeguard Mechanism (Crediting) Amendment Bill 2023 - Consideration of Senate Message - Agree with Senate amendments and so pass bill",
+   "stage": "Consideration of Senate message",
+   "ayes": 89,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 75,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-30/2"
+  },
+  {
+   "key": "federal-senate-8081",
+   "date": "2023-03-30",
+   "house": "senate",
+   "question": "The majority voted in favour of [government amendments](https://www.openaustralia.org.au/senate/?gid=2023-03-29.27.1) introduced by NSW Senator [Jenny McAllister](https://theyvoteforyou.org.au/people/senate/nsw/jenny_mcallister) (Labor), which means they will now be included as part of the bill. ### What do the amendments do? An [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6957_ems_7161b7cf-a6bb-4cbf-8fb4-c06acf729878%22;rec=0) was provided by the government, which explains the amendments in detail. Senator McAllister also [gave a summary](https://www.openaustralia.org.au/senate/?gid=2023-03-29.27.1) of them in her speech: > *Today the government is moving amendments to amend the objects of the National Greenhouse and Energy Reporting Act to specify that net carbon emissions from safeguard facilities decline consistent with Australia's greenhouse gas emissions reduction targets and that covered emissions decline over time; that each facility has a material incentive to reduce emissions; and that the competitiveness of trade exposed industries is appropriately supported as Australia and its regions seize the opportunities to move to a global net zero economy.* > > *These amendments also require public advice from the Climate Change Authority on how emissions are tracking against the carbon budget. Importantly, they add a requirement to make changes to subordinate legislation if the budget is not on track or to take other steps to address that problem. To inform this advice, the environment minister would be required to provide information about emissions from proposed actions that are likely to result in a new facility being covered by the safeguard mechanism or a safeguard facility increasing its emissions after approving the action under the Environment Protection and Biodiversity Conservation Act. This advice would be provided to the Climate Cha",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 6,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-30/7"
+  },
+  {
+   "key": "federal-senate-8082",
+   "date": "2023-03-30",
+   "house": "senate",
+   "question": "Safeguard Mechanism (Crediting) Amendment Bill 2023 - in Committee - Onshore shale gas projects",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 3,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-30/8"
+  },
+  {
+   "key": "federal-senate-8083",
+   "date": "2023-03-30",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2023-03-30.119.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they failed. ### What do the amendments do? The amendments related to the surrender of units, judicial review, a maximum offset percentage and the price of offsets. In his speech, Senator Pocock [explained that](https://www.openaustralia.org.au/senate/?gid=2023-03-29.337.1): > *Amendments (1) and (2) on sheet 1903 revised circulated in my name improve the way that offsets are used under the reform. Offsets are a very necessary part of this but should be reserved for hard-to-abate industries. They should only be used as a last resort, and this amendment will make sure that is the case.* > > *Amendment (3) on sheet 1903 removes the price cap on ACCUs and limits the risk to taxpayers should the cap be breached. If we're going to have a market mechanism, I don't see a reason to put a ceiling on the price. If you're going to use the market to try and fix this, then it really doesn't make sense to cap it and, in doing so, potentially expose the Commonwealth and taxpayers to a liability should the Commonwealth run out of ACCUs.* > > *The amendments on sheet 1915 discount the value of offsets if more than 50 per cent of compliance with baseline is achieved through offsetting. This will drive onsite abatement and bring forward investment in decarbonisation. If we're not going to have a hard cap on ACCUs there is provision in the regulation-making powers for the minister to discount ACCUs, referred to as the four-fifths rule, and I really believe this would be a valuable tool in imposing a carbon mitigation hierarchy which is well-established and acknowledged around the world. It makes sense for Australia to have one of them embedded in this legislation.* > > *The amendments on sheet 1907 extend standing to allow third parties to challenge issues",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-30/9"
+  },
+  {
+   "key": "federal-senate-8084",
+   "date": "2023-03-30",
+   "house": "senate",
+   "question": "Safeguard Mechanism (Crediting) Amendment Bill 2023 - in Committee - Fossil fuel programs",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 7,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-30/10"
+  },
+  {
+   "key": "federal-senate-8085",
+   "date": "2023-03-30",
+   "house": "senate",
+   "question": "Safeguard Mechanism (Crediting) Amendment Bill 2023 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 6,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-30/11"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-828224",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-08",
+   "stage_hint": null,
+   "brief": "The coalition opposed the Safeguard Mechanism (Crediting) Amendment Bill 2022, arguing it imposes a hidden carbon tax of $75 per tonne that will raise costs for consumers and force businesses to close, while Labor and Greens speakers supported the bill as necessary to meet Australia's 43% emissions reduction target by 2030 and net zero by 2050."
+  },
+  {
+   "slug": "speech-828382",
+   "speaker": "Louise Miller-Frost",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-09",
+   "stage_hint": null,
+   "brief": "The speech argued that the Safeguard Mechanism (Crediting) Amendment Bill 2022 is essential for meeting Australia’s climate targets of 43% emissions reduction by 2030 and net zero by 2050, citing support from business and industry groups such as ACCI, BP, the Clean Energy Council, and Rio Tinto. It also criticised the Coalition for opposing the policy, which builds on their own previous safeguard mechanism, and for failing to take climate action seriously."
+  },
+  {
+   "slug": "speech-828499",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2023-03-20",
+   "stage_hint": null,
+   "brief": "The Safeguard Mechanism (Crediting) Amendment Bill would cause de-industrialisation and loss of productive agricultural land, as industrial giants buy land for carbon credits, and the required 4.9% annual emissions reduction would make many industries unviable, leading to higher costs and offshoring of manufacturing."
+  },
+  {
+   "slug": "speech-828708",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-21",
+   "stage_hint": null,
+   "brief": "The speaker announced a procedural resolution to extend debate on the Safeguard Mechanism (Crediting) Amendment Bill 2022 tonight from 8 to 10 pm after the normal adjournment debate, avoiding cuts to speaking times or late sittings, with no vote tonight and a review tomorrow."
+  },
+  {
+   "slug": "speech-828709",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-21",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Safeguard Mechanism (Crediting) Amendment Bill 2022, claiming it would ensure net aggregate safeguard baselines decline and create tradable credits to incentivise emissions reductions. Specific figures mentioned include a 43 per cent emissions reduction target by 2030 on 2005 levels and $1.9 billion in the Powering the Regions Fund to assist safeguard facilities."
+  },
+  {
+   "slug": "speech-828772",
+   "speaker": "Jonathon Duniam",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-21",
+   "stage_hint": null,
+   "brief": "Senator Duniam moved a motion noting the minister’s failure to comply with an order for documents on Australian Carbon Credit Units (ACCUs), rejecting the minister’s claim of public interest immunity, and postponing the Safeguard Mechanism (Crediting) Amendment Bill 2022 until the documents and modelling are tabled. He stated the documents are sensitive and cabinet-in-confidence and cannot be released."
+  },
+  {
+   "slug": "speech-828807",
+   "speaker": "Gavin Pearce",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-22",
+   "stage_hint": null,
+   "brief": "The Safeguard Mechanism (Crediting) Amendment Bill 2022 was opposed on the grounds that it would disadvantage domestic cement and lime manufacturers by imposing costs not applied to imports, risking closure of local plants and increased reliance on higher-emission overseas production, while the industry has already reduced emissions by 25% since 1990 and is committed to further decarbonisation once viable technologies become available."
+  },
+  {
+   "slug": "speech-828809",
+   "speaker": "Bridget Archer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-22",
+   "stage_hint": null,
+   "brief": "The speaker argued they could not support the Safeguard Mechanism (Crediting) Amendment Bill 2022 in its current form due to unresolved concerns, including the unlimited use of offsets and reliance on Australian carbon credit units, but would not vote against it. They noted the bill would affect 215 large emitters, including Rio Tinto's Bell Bay smelter in their electorate, and called for greater collaboration and amendments in the Senate."
+  },
+  {
+   "slug": "speech-828860",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-22",
+   "stage_hint": null,
+   "brief": "The debate on the Safeguard Mechanism (Crediting) Amendment Bill 2022 centred on whether it delivers genuine emissions cuts or functions as a new tax. Supporters argued it would save 205 million tonnes of emissions by 2030 and help achieve a 43% cut, while coalition opponents labelled it a carbon tax of $75–$100 a tonne that would hurt households and industry; the Greens criticised it for allowing new coal and gas projects and rising pollution through offsets."
+  },
+  {
+   "slug": "speech-829323",
+   "speaker": "Sophie Scamps",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2023-03-28",
+   "stage_hint": null,
+   "brief": "The community Independent movement has reinvigorated democracy, with Wakehurst set to have Independent representation across all three levels of government for the first time and Pittwater too close to call, as once-safe seats shift because voters want representatives who listen and work across party lines. Community Independent MPs have helped pass the National Anti-Corruption Commission Bill 2022, the Climate Change Bill 2022 target, and the Safeguard Mechanism (Crediting) Amendment Bill 2023."
+  },
+  {
+   "slug": "speech-829338",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-28",
+   "stage_hint": null,
+   "brief": "The Safeguard Mechanism (Crediting) Amendment Bill 2023 passed the House and was expected to pass the Senate, with the minister arguing the reforms strengthen the economy by linking decarbonisation to economic success. The reforms were welcomed by the Business Council (as 'tough but achievable'), Climate Council, Australian Conservation Foundation, Australian Industry Group, and Investor Group on Climate Change, while the opposition was criticised for disagreeing with business."
+  },
+  {
+   "slug": "speech-829371",
+   "speaker": "Jerome Laxale",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-28",
+   "stage_hint": null,
+   "brief": "The Safeguard Mechanism (Crediting) Amendment Bill 2022 passed the House, delivering 205 million tonnes of emissions reductions by 2030 and requiring Australia's highest emitters to meet a proportional share of the 43 per cent national target. The speaker urged the Senate to pass the bill before 1 July 2023 to avoid missing the 2030 target."
+  },
+  {
+   "slug": "speech-829380",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-28",
+   "stage_hint": null,
+   "brief": "The MP argued that the Safeguard Mechanism (Crediting) Amendment Bill 2022, backed by Labor and the Greens, will block 116 coal, oil and gas projects—including Woodside’s Scarborough and Shell’s Crux fields—risking jobs for 60,000 FIFO workers in Western Australia and causing deindustrialisation, while household electricity prices are set to rise 56% over two years."
+  },
+  {
+   "slug": "speech-829587",
+   "speaker": "Jonathon Duniam",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-29",
+   "stage_hint": null,
+   "brief": "Senator Duniam moved to suspend standing orders to allow scrutiny of government amendments to the Safeguard Mechanism Bill, arguing the amendments were a secret deal with the Greens that would raise power prices, offshore emissions, and cost jobs, and that the government had broken its repeated promise to cut power bills by $275."
+  },
+  {
+   "slug": "speech-829599",
+   "speaker": "Matt O'Sullivan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-29",
+   "stage_hint": null,
+   "brief": "The minister argued that the Safeguard Mechanism reforms will reduce net and gross emissions from covered facilities, with a hard cap of 1,233 million tonnes to 2030 and a single-year target of 100 megatons. The bill includes a $75 per tonne cost containment measure, a $275 per tonne penalty, and adjusted baseline decline rates of 1–2% for trade-exposed industries, while 371 human-induced regeneration projects will be subject to independent audits under the Chubb review."
+  },
+  {
+   "slug": "speech-829658",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-30",
+   "stage_hint": null,
+   "brief": "The speaker moved to suspend standing orders to immediately report and consider a Senate message on the Safeguard Mechanism (Crediting) Amendment Bill 2023; the motion was agreed to."
+  },
+  {
+   "slug": "speech-829659",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-30",
+   "stage_hint": null,
+   "brief": "The speaker moved to agree to amendments to the Safeguard Mechanism (Crediting) Amendment Bill 2023, arguing they reflect the government's election mandate and will limit coal and gas pollution for the first time in law. Opposition speakers claimed the bill amounts to a carbon tax that will raise prices, reduce investment, and harm manufacturing, while the Greens said the amendments impose a hard cap on pollution that will block about half of 116 proposed new coal and gas projects."
+  },
+  {
+   "slug": "speech-829691",
+   "speaker": "Andrew McLachlan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-30",
+   "stage_hint": null,
+   "brief": "Senator Duniam argued the safeguard mechanism bill would increase costs, destroy jobs, and offshore emissions, criticising the Labor-Greens deal and lack of consultation on specific facilities like V/Line and rail freight. Senator McAllister defended the bill as necessary for climate action, citing extensive industry consultation and support from groups like the Minerals Council and BP, but declined to guarantee no job losses or provide facility-level cost modelling."
+  },
+  {
+   "slug": "speech-829712",
+   "speaker": "David Van",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-30",
+   "stage_hint": null,
+   "brief": "The Coalition senator argued the Safeguard Mechanism bill and the Labor-Greens deal would increase costs for households and businesses, citing potential rate rises for Perth's Red Hill Waste Management Facility, higher fuel prices from Ampol's Lytton refinery, and increased V/Line train fares, while criticising the government for not consulting the 215 covered facilities on specific impacts or ruling out job losses."
+  },
+  {
+   "slug": "speech-829730",
+   "speaker": "Fatima Payman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-30",
+   "stage_hint": null,
+   "brief": "The Safeguard Mechanism (Crediting) Amendment Bill 2023 passed the Senate, with Minister Wong arguing the reforms provide overdue policy certainty for climate action and the economy, while criticising the Coalition for lacking a plan to deliver net zero by 2050."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Safeguard Mechanism (Crediting) Amendment Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00014",
+   "assent_date": "2023-04-11"
+  }
+ ]
+}

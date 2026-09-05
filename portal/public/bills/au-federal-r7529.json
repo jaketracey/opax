@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7529",
+ "title": "Wage Justice for Early Childhood Education and Care Workers (Special Account) (Extending Support and Strengthening Safety) Bill 2026",
+ "short_title": "Wage Justice for Early Childhood Education and Care Workers (Special Account) (Extending Support and Strengthening Safety) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "before_parliament",
+ "status_as_of": "2026-08-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7529%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7529%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7529%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7529_ems_eb5712c9-a251-4652-9cf8-8a054114cd84%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7529%22",
+   "document_date": "2026-08-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-08-12",
+  "sentences": [
+   "This bill would keep funding grants that support pay for early childhood education and care workers.",
+   "It would amend the Wage Justice for Early Childhood Education and Care Workers (Special Account) Act to extend the special account's operation and the wage increase program.",
+   "The extension would run to 30 June 2028 and also aims to improve safety and quality in the sector."
+  ],
+  "changes": [
+   "The bill would extend the special account's funding for worker pay until 30 June 2028.",
+   "It would extend the Act's sunset provision because payments are made in arrears.",
+   "It would ensure the next phase of the wage program supports safe and quality early childhood education and care."
+  ],
+  "affected": "Early childhood education and care workers and families using child care services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:02:27Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

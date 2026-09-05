@@ -1,0 +1,60 @@
+{
+ "key": "au-federal-s1414",
+ "title": "Electoral Legislation Amendment (Fair and Transparent Elections) Bill 2024 (No. 2)",
+ "short_title": "Electoral Legislation Amendment (Fair and Transparent Elections) Bill 2024 (No. 2)",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-03-25",
+ "originating_house": "senate",
+ "sponsor": "POCOCK, Sen David",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "11009",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1414%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1414%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1414%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1414%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1414_ems_292135e0-ef62-4833-9009-6fdb8aab3729%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1414%22",
+   "document_date": "2024-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

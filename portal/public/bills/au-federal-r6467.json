@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-r6467",
+ "title": "Corporations (Fees) Amendment (Registries Modernisation) Bill 2019",
+ "short_title": "Corporations (Fees) Amendment (Registries Modernisation) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6467%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6467%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6467%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6467%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6467%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6467%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6469_ems_e063b7ca-d61d-4993-a078-292990b204fc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6467%22",
+   "document_date": "2019-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00067",
+   "document_date": "2020-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-04",
+  "sentences": [
+   "This bill is part of a package that modernises Commonwealth business registers and introduces a director identification number (DIN) requirement.",
+   "The package would let the Minister appoint an existing Commonwealth body as registrar, with powers and functions set out in existing laws, and would make the registrar's decisions reviewable by the Administrative Appeals Tribunal.",
+   "Directors of bodies registered under the Corporations Act or CATSI Act would need to apply for a DIN before appointment, with a 28-day grace period during the first 12 months of the requirement."
+  ],
+  "changes": [
+   "The package would modernise Commonwealth business registers.",
+   "It would introduce a director identification number requirement.",
+   "It would allow the Minister to appoint a registrar.",
+   "It would create an offence for officials to disclose registrar-held information without authorisation.",
+   "It would make registrar decisions reviewable by the Administrative Appeals Tribunal.",
+   "It would impose penalties for directors who fail to apply for a DIN."
+  ],
+  "affected": "Directors of bodies corporate registered under the Corporations Act or CATSI Act, and officials handling registrar-held information.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Corporations (Fees) Amendment (Registries Modernisation) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00067",
+   "assent_date": "2020-06-22"
+  }
+ ]
+}

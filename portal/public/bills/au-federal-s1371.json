@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1371",
+ "title": "Fair Work Amendment (Right to Disconnect) Bill 2023 [No. 2]",
+ "short_title": "Fair Work Amendment (Right to Disconnect) Bill 2023 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-27",
+ "originating_house": "senate",
+ "sponsor": "POCOCK, Sen Barbara",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "11008",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1371%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1371%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1371_ems_c97ce000-a5e3-4c8b-8872-40bfc753fde2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1371%22",
+   "document_date": "2023-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-27",
+  "sentences": [
+   "The bill would give employees a legal right to ignore work calls, emails and other messages outside their scheduled hours.",
+   "It would add this right to the National Employment Standards, which set minimum conditions for all employees covered by the Fair Work Act.",
+   "An employer could still contact an employee outside hours in an emergency or genuine welfare matter, or if the employee receives an availability allowance for that period."
+  ],
+  "changes": [
+   "Adds the right to disconnect outside working hours to the National Employment Standards.",
+   "Prohibits employers from contacting employees outside work hours except in emergencies, genuine welfare matters, or when the employee receives an availability allowance.",
+   "Frees employees from any obligation to monitor, read or respond to employer communications outside their work hours unless they receive an availability allowance."
+  ],
+  "affected": "Employees covered by the Fair Work Act 2009 and their employers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:57Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

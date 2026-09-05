@@ -1,0 +1,171 @@
+{
+ "key": "au-federal-r7084",
+ "title": "Public Health (Tobacco and Other Products) (Consequential Amendments and Transitional Provisions) Bill 2023",
+ "short_title": "Public Health (Tobacco and Other Products) (Consequential Amendments and Transitional Provisions) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-09-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2023-12-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-12-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7083_ems_8ea2fde0-e13c-491b-a933-def6a1fe3472%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7084%22",
+   "document_date": "2023-09-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00119",
+   "document_date": "2023-12-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-09-13",
+  "sentences": [
+   "This bill is part of a package that would consolidate eight existing tobacco-related Acts into one legislative framework and strengthen Australia's regulation of tobacco products.",
+   "The package would prohibit flavours and additives in tobacco products, ban product design features that create novelty value, require health promotion inserts in packaging, and allow health warnings to be updated via regulations.",
+   "The explanatory memorandum does not specify which Acts are amended or when the changes would start."
+  ],
+  "changes": [
+   "Consolidates eight tobacco-related Acts into one legislative package.",
+   "Prohibits flavours and additives in tobacco products.",
+   "Bans product design features that create novelty value.",
+   "Requires health promotion inserts in tobacco product packaging.",
+   "Allows health warnings to be updated and improved via regulations."
+  ],
+  "affected": "Tobacco product manufacturers, importers, and retailers, as well as people who smoke or use e-cigarettes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Public Health (Tobacco and Other Products) (Consequential Amendments and Transitional Provisions) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00119",
+   "assent_date": "2023-12-14"
+  }
+ ]
+}

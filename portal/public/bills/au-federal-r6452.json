@@ -1,0 +1,227 @@
+{
+ "key": "au-federal-r6452",
+ "title": "Telecommunications (Regional Broadband Scheme) Charge Bill 2019",
+ "short_title": "Telecommunications (Regional Broadband Scheme) Charge Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-11-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications, Cyber Safety and the Arts",
+ "status": "passed",
+ "status_as_of": "2020-05-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-05-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6452_ems_b0149742-0bf3-4d5b-a00c-4f6f6931e284%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6452_ems_521bdaae-383f-4a65-ac48-765c5a7fb2e3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6452%22",
+   "document_date": "2019-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00048",
+   "document_date": "2020-05-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-11-28",
+  "sentences": [
+   "This bill would create a long-term funding system for regional broadband networks by imposing a charge on certain carriers.",
+   "The charge would be $7.10 per month for each eligible fixed-line premises, with carriers including NBN Co required to pay.",
+   "The bill includes a five-year concession for small carriers, exempting the first 55,000 recently connected greenfield premises or the first 25,000 residential and small business premises."
+  ],
+  "changes": [
+   "Establishes the Regional Broadband Scheme as a funding arrangement for fixed wireless and satellite infrastructure.",
+   "Requires carriers to contribute $7.10 per month per chargeable premises to fund the scheme.",
+   "Creates a charge concession period for small carriers to ease the transition to paying the charge.",
+   "Allows the Minister for Communications to adjust the charge components via disallowable legislative instrument, subject to a cap.",
+   "Requires the ACCC to review the charge components at least every five years.",
+   "Funds administrative costs for the ACCC and ACMA, and payments to NBN Co for fixed wireless and satellite services."
+  ],
+  "affected": "Carriers, including NBN Co, that provide broadband services over fixed-line networks, and small carriers with recently connected greenfield or residential and small business premises.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-385309",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "The bill was reintroduced to improve superfast broadband provision, with measures including relaxed carrier separation rules allowing non‑NBN Co carriers to operate wholesale and retail, new statutory obligations on NBN Co to connect premises at minimum 25/5 Mbps speeds and cover 92% of premises, and a Regional Broadband Scheme funded by a $7.10 monthly charge per premises on high‑speed fixed‑line carriers. The bills also incorporate opposition amendments and require a review within four years."
+  },
+  {
+   "slug": "speech-385310",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "The bill establishes a monthly charge of $7.09 (base component) with a $7.10 combined cap (both indexed) on carriers per active fixed-line superfast broadband connection from 1 July 2020, to fund NBN Co's fixed-wireless and satellite network losses and replace its internal cross-subsidy, with the administrative cost component funding the Australian Communications and Media Authority (ACMA) and the Australian Competition and Consumer Commission (ACCC). The scheme ensures all NBN-comparable fixed-line networks contribute transparently to regional broadband, supporting up to one million premises mostly in remote areas, after minor changes were made in line with opposition proposals."
+  },
+  {
+   "slug": "speech-388154",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "Labor supported the bill but criticised the government for reducing regional NBN investment by $200 million between 2018 and 2022, concealed in the 2020 Corporate Plan, while introducing a broadband tax; it called for restored regional funding and independent, transparent modelling of the levy."
+  },
+  {
+   "slug": "speech-388155",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "Labor supported the Telecommunications Legislation Amendment (Competition and Consumer) Bill 2019 to establish a statutory infrastructure provider regime ensuring universal high-speed broadband access, but criticised the Coalition's multitechnology mix NBN approach for costing $200 million more per year to maintain and reducing revenue by $300 million, while Australia's internet speed ranking fell from 50th to 68th globally. The Telecommunications (Regional Broadband Scheme) Charge Bill 2019 imposes a new $7.10 per month broadband tax on households and businesses connected to non-NBN networks, which Labor will allow to pass but will address concerns in the Senate."
+  },
+  {
+   "slug": "speech-388158",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government's NBN rollout has been a dismal failure, with costs blowing out to $51 billion and the project running four years behind schedule, while also criticising the government's handling of the NDIS. They listed 12 specific consumer issues with NBN services, including poor technical support, high prices, and inadequate service reliability, and noted Australia ranked fourth slowest in the OECD for broadband speeds."
+  },
+  {
+   "slug": "speech-388159",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "The government's telecommunications reform package includes revised carrier separation rules, statutory infrastructure provider obligations for NBN Co, and a Regional Broadband Scheme funded by a $7.10 per-month-per-premises charge on fixed-line carriers to support regional satellite and fixed-wireless services. The reforms set minimum peak speeds of 25 Mbps download and 5 Mbps upload, with the NBN projected to boost GDP by $10.4 billion annually."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Telecommunications (Regional Broadband Scheme) Charge Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00048",
+   "assent_date": "2020-05-25"
+  }
+ ]
+}

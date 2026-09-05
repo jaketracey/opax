@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1316",
+ "title": "Aged Care Amendment (Registered Nurses Ensuring Quality Care) Bill 2021",
+ "short_title": "Aged Care Amendment (Registered Nurses Ensuring Quality Care) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-09-01",
+ "originating_house": "senate",
+ "sponsor": "PATRICK, Sen Rex",
+ "sponsor_party": "Rex Patrick Team",
+ "sponsor_person_id": "10903",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1316%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1316%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1316%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1316_ems_bcd5e761-d936-459c-a17b-ba10f024e366%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1316%22",
+   "document_date": "2021-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-09-01",
+  "sentences": [
+   "The bill would require every licensed nursing home in Australia to have a registered nurse working at all times.",
+   "It amends the Aged Care Act 1997 to add a new responsibility for approved providers to ensure a registered nurse is always on duty in facilities offering residential or flexible care.",
+   "The change would take effect the day after the bill receives royal assent."
+  ],
+  "changes": [
+   "Requires all approved aged care facilities to have a registered nurse on duty at all times.",
+   "Adds a new paragraph to the Aged Care Act defining this as a provider responsibility.",
+   "Defines 'registered nurse' by reference to state or territory registration laws."
+  ],
+  "affected": "Approved aged care facilities, their residents, and registered nurses.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

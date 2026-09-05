@@ -1,0 +1,246 @@
+{
+ "key": "au-federal-r6258",
+ "title": "Governor-General Amendment (Salary) Bill 2019",
+ "short_title": "Governor-General Amendment (Salary) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister",
+ "status": "passed",
+ "status_as_of": "2019-04-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6258%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6258%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6258%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6258%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6258%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6258%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6258%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6258%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6258%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6258%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6258%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6258_ems_f1a26fc1-e31f-4dfb-b584-a6fd9d55c3c9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6258%22",
+   "document_date": "2019-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00031",
+   "document_date": "2019-04-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-5721",
+   "date": "2019-04-03",
+   "house": "senate",
+   "question": "Governor-General Amendment (Salary) Bill 2019 - Second Reading - Serious misconduct",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 14
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "member": 12,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-04-03/9"
+  },
+  {
+   "key": "federal-senate-5722",
+   "date": "2019-04-03",
+   "house": "senate",
+   "question": "Governor-General Amendment (Salary) Bill 2019 - Second Reading - No allowances where serious misconduct",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 14
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "member": 12,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-04-03/10"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-375919",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Governor-General Amendment (Salary) Bill 2019, which raises the salary for the next Governor-General, David Hurley, from $425,000 to $495,000."
+  },
+  {
+   "slug": "speech-375924",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The Governor-General Amendment (Salary) Bill 2019 sets the annual salary for incoming Governor-General David Hurley in line with the Chief Justice of the High Court, with the salary fixed for his five-year term. The speaker praised Hurley's military and gubernatorial record and thanked outgoing Governor-General Sir Peter Cosgrove for his service."
+  },
+  {
+   "slug": "speech-375925",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Governor-General Amendment (Salary) Bill 2019 to set the salary of incoming Governor-General David Hurley, but argued that the debate highlights the anachronism of constitutional monarchy and called for Australia to have its own head of state."
+  },
+  {
+   "slug": "speech-375926",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The Governor-General Amendment (Salary) Bill 2019 was supported on the Whitlam-era principle that the office should not depend on the holder's private wealth. Australia's constitutional monarchy was condemned as an outdated, elitist institution that excludes First Australians and non-British migrants and discriminates by gender and religion, citing George Nadel and Daniel Deniehy's 'bunyip aristocracy' gibe in arguing for an Australian head of state."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Governor-General Amendment (Salary) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00031",
+   "assent_date": "2019-04-05"
+  }
+ ]
+}

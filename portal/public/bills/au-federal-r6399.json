@@ -1,0 +1,588 @@
+{
+ "key": "au-federal-r6399",
+ "title": "Social Security (Administration) Amendment (Income Management to Cashless Debit Card Transition) Bill 2019",
+ "short_title": "Social Security (Administration) Amendment (Income Management to Cashless Debit Card Transition) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6399%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6399%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6399%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6399%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6399%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6399%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6399%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6399%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6399%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6399%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6399_ems_0db91448-bcc6-4d81-b59b-003d85d2997a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6399_ems_3b6b7ab4-76f5-41cc-bd30-e8d6a228e796%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6399_ems_790e8446-8335-4dd3-8a16-b706e4066210%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6399_ems_b6ef7c66-9a7c-4ae8-b002-15139f353629%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6399%22",
+   "document_date": "2019-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2019-09-11",
+  "sentences": [
+   "The bill would extend income management programs and transition participants in certain regions onto a cashless debit card trial.",
+   "It would set end dates for the card trials, remove participant caps, and add the Northern Territory and Cape York as trial areas.",
+   "The changes would also let people in the Bundaberg and Hervey Bay region join the trial voluntarily and improve how the evaluation works."
+  ],
+  "changes": [
+   "Extends the end date of the income management program to 30 June 2021 and sets the Cape York cashless debit card trial end date as 31 December 2021.",
+   "Removes the upper limit on how many people can be in the cashless debit card trial.",
+   "Allows residents of the Bundaberg and Hervey Bay trial site to choose to participate in the cashless debit card trial.",
+   "Names the Northern Territory and Cape York as cashless debit card trial areas and moves income management participants there onto the card trial in 2020.",
+   "Permits the Secretary to tell a community body when someone leaves the cashless debit card trial.",
+   "Makes the evaluation process easier to run."
+  ],
+  "affected": "People receiving income management payments in the Northern Territory, Cape York, and the Bundaberg and Hervey Bay region, as well as the Secretary and community bodies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6006",
+   "date": "2019-11-26",
+   "house": "representatives",
+   "question": "Social Security (Administration) Amendment (Income Management to Cashless Debit Card Transition) Bill 2019 - Second Reading - Stop Mr Falinski from speaking",
+   "stage": "Second reading",
+   "ayes": 63,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 62,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-26/12"
+  },
+  {
+   "key": "federal-representatives-6007",
+   "date": "2019-11-26",
+   "house": "representatives",
+   "question": "The majority voted against a motion to adjourn debate on this bill, which means the debate will continue.",
+   "stage": "Second reading",
+   "ayes": 60,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "LNP": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Labor": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-26/13"
+  },
+  {
+   "key": "federal-representatives-6038",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "question": "Social Security (Administration) Amendment (Income Management to Cashless Debit Card Transition) Bill 2019 - Second Reading - Disagree with the bill",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-27/1"
+  },
+  {
+   "key": "federal-representatives-6039",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "question": "Social Security (Administration) Amendment (Income Management to Cashless Debit Card Transition) Bill 2019 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 74,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Liberal": {
+     "ayes": 44,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-27/2"
+  },
+  {
+   "key": "federal-representatives-6052",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "question": "The majority voted in favour of [government amendments](https://www.openaustralia.org.au/debates/?id=2019-11-27.147.2), which means they will be included in the bill. For an explanation of what the amendments do, see the [Supplementary explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6399_ems_3b6b7ab4-76f5-41cc-bd30-e8d6a228e796%22;rec=0). ### Amendment text > *(1) Schedule 1, page 4 (after line 23), after item 3, insert:* > > *3A After subsection 123UO(3)* > > *Insert:* > > *(3A) If:* > >> *(a) a voluntary income management agreement in relation to a person is in force; and* >> >> *(b) the person's usual place of residence is within the Northern Territory;* > > *the Secretary may, by written notice given to the person, terminate the agreement. The termination takes effect on a day specified in the notice (which must not be earlier than the day on which the notice is given).* > > *(2) Schedule 1, item 27, page 10 (after line 8), after paragraph 124PGE(1) (b), insert:* > >> *(ba) the person has not reached pension age; and* > > *(3) Schedule 1, item 27, page 10 (after line 25), after paragraph 124PGE(2) (b), insert:* > >> *(ba) the person has not reached pension age; and* > > *(4) Schedule 1, item 27, page 11 (after line 17), after paragraph 124PGE(3) (b), insert:* > >> *(ba) the person has not reached pension age; and* > > *(5) Schedule 1, item 39, page 14 (line 30), omit \"100%\", substitute \"80%\".* > > *(6) Schedule 1, item 39, page 15 (line 2), omit \"(including 0%)\".* > > *(7) Schedule 1, item 39, page 15 (line 7), omit \"100%\", substitute \"80%\".* > > *(8) Schedule 1, item 39, page 15 (line 10), omit \"and including 0%\".* > > *(9) Schedule 1, item 44, page 19 (after line 2), after paragraph 127(4) (aa), insert:* > >> *(aaa) a decision to give a notice under subsection 123UO(3A); or* > > *(10) Schedule 1, item 45, page 19 (after line 10), after paragraph",
+   "stage": "Consideration in detail",
+   "ayes": 72,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 62
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-27/15"
+  },
+  {
+   "key": "federal-representatives-6053",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "question": "Social Security (Administration) Amendment (Income Management to Cashless Debit Card Transition) Bill 2019 - Consideration in Detail - Agree with bill as amended",
+   "stage": "Consideration in detail",
+   "ayes": 73,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-27/16"
+  },
+  {
+   "key": "federal-representatives-6054",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "question": "Social Security (Administration) Amendment (Income Management to Cashless Debit Card Transition) Bill 2019 - Third Reading - Speed things along",
+   "stage": "Third reading",
+   "ayes": 73,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-27/17"
+  },
+  {
+   "key": "federal-representatives-6055",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "question": "Social Security (Administration) Amendment (Income Management to Cashless Debit Card Transition) Bill 2019 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 73,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-27/18"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-380405",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The Social Security (Administration) Amendment (Income Management to Cashless Debit Card Transition) Bill 2019 transitions approximately 23,000 welfare recipients in the Northern Territory and Cape York from the BasicsCard to the cashless debit card, with the transition occurring community-by-community over nine months from 1 April 2020 and backed by almost $18 million in support. The bill also extends the cashless debit card across all four current trial sites until 30 June 2021, arguing the card provides greater consumer choice, reduces social harm, and has shown positive results such as decreases in drug and alcohol issues and crime."
+  },
+  {
+   "slug": "speech-384724",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Security (Administration) Amendment (Income Management to Cashless Debit Card Transition) Bill 2019, arguing it is discriminatory, lacks evidence of effectiveness, and would not create jobs, while announcing Labor would seek to amend the bill in the Senate to make the cashless debit card voluntary in the Northern Territory unless a community requests it or individual circumstances apply."
+  },
+  {
+   "slug": "speech-384729",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-26",
+   "stage_hint": null,
+   "brief": "The government is continuing the rollout of the cashless debit card, citing reduced violence, drug and alcohol issues, and improved child health and financial management, and supports the Social Security (Administration) Amendment (Income Management to Cashless Debit Card Transition) Bill 2019 as part of the solution."
+  },
+  {
+   "slug": "speech-384902",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Security (Administration) Amendment (Income Management to Cashless Debit Card Transition) Bill 2019, arguing it is discriminatory, lacks evidence, and would disproportionately affect First Nations Australians (80% of those on income management in the Northern Territory). The speaker called for the cashless debit card to be voluntary, supported by community consultation and wraparound services, and cited research showing a 100-gram drop in birth weights among affected populations."
+  },
+  {
+   "slug": "speech-384904",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Security (Administration) Amendment (Income Management to Cashless Debit Card Transition) Bill 2019, arguing it is discriminatory and disproportionately impacts Indigenous Australians. They noted over 80% of the 23,000 people on income management in the Northern Territory are Indigenous, cited no evidence the cashless debit card works, and highlighted that communities like Milingimbi were not consulted."
+  },
+  {
+   "slug": "speech-384906",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-26",
+   "stage_hint": null,
+   "brief": "The opposition opposed the bill to transition income management to a cashless debit card, arguing it is a failed, short-term solution that is discriminatory against Indigenous Australians and lacks evidence of effectiveness. They highlighted that 80% of Northern Territory recipients are Indigenous, cited research showing no improvement in child health outcomes, and called for voluntary, community-consulted programs with wraparound support instead."
+  },
+  {
+   "slug": "speech-384969",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-11-27",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Security (Administration) Amendment (Income Management to Cashless Debit Card Transition) Bill 2019, arguing the cashless debit card expansion unfairly punishes community members who do not drink, smoke, gamble or use drugs."
+  },
+  {
+   "slug": "speech-384972",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-11-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that cashless debit card trial results are mixed and lack conclusive academic evidence, and called for delaying the bill until the University of Adelaide report is released and genuine consultation is conducted with affected remote Aboriginal communities, particularly in the Northern Territory."
+  },
+  {
+   "slug": "speech-384973",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-11-27",
+   "stage_hint": null,
+   "brief": "The government argued the bill extends the cashless debit card trial to 30 June 2021, transitions income management participants in the Northern Territory and Cape York to the card, and limits the ministerial power to vary the restriction rate to a maximum of 80%, while removing compulsory participation for age pensioners except in Cape York."
+  },
+  {
+   "slug": "speech-385150",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-27",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Security (Administration) Amendment (Income Management to Cashless Debit Card Transition) Bill 2019 and its amendments, arguing the government imposed the policy without consulting Aboriginal people in the Northern Territory. They stated the BasicsCard was already harmful, cited effective alcohol measures like floor pricing and police enforcement as alternatives, and called the blanket approach disrespectful and undemocratic."
+  }
+ ],
+ "acts": []
+}

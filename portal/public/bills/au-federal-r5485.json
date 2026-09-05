@@ -1,0 +1,569 @@
+{
+ "key": "au-federal-r5485",
+ "title": "Social Services Legislation Amendment (Fair and Sustainable Pensions) Bill 2015",
+ "short_title": "Social Services Legislation Amendment (Fair and Sustainable Pensions) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2015-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5485_ems_bb9b669a-2094-4c95-8c94-d6af6616632a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5485_ems_cf7124ef-260d-4e11-8a07-d71dee7d9967%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5485_ems_dc9e5c2d-14bb-4ac2-8a2d-9b8d2dad45f9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5485%22",
+   "document_date": "2015-06-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00110",
+   "document_date": "2015-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3809",
+   "date": "2015-06-18",
+   "house": "representatives",
+   "question": "Karen McNamara Australia is a generous and compassionate nation. Our society has been built upon a commitment to help those less fortunate and to look after our mates. Throughout the years Australia has had a strong social safety net for those in need. It is crucial that we ensure the sustainability of this safety net and guarantee that it will be there for generations to come. Over the past 12 months the federal government has spent approximately $150 billion on social services and welfare. This spending provides Australians with pensions, aged care, benefits to families and individuals, and the National Disability Insurance Scheme. Of this, the age pension is our largest welfare payment, totalling an estimated $44 billion in 2015-16. This represents close to 35 per cent of the Commonwealth budget. In the coming decade the costs of delivering these services will increase as our population grows and ages. The _Intergenerational_ _r__eport_ stated that the number of Australians aged 65 and over is projected to more than double by 2055. Future projections anticipate that by 2055 there will be approximately 40,000 people aged 100 and over. Payments made through age and service pensions are projected to increase each year, and in real monetary terms spending per person is projected to increase from almost $2,000 in 2014-15 to around $3,200 in 2054-55. Currently, this spending accounts for 2.9 per cent of our gross domestic product; without changes to how we deliver the age pension this amount will increase to 3.6 per cent of GDP by 2054-55. This is an unsustainable path for Australia. It is essential that we address the sustainability of Australia's pension system to ensure that we are able to provide for senior Australians in future years. The age pension provides support for 2.4 million Australians and contributes to a broad retirement income system, which also includes superannuation and voluntary savings. This government will ensure that, as our population ages, our",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-06-18/1"
+  },
+  {
+   "key": "federal-representatives-3810",
+   "date": "2015-06-18",
+   "house": "representatives",
+   "question": "The majority agreed with the bill's main idea. In parliamentary jargon, they voted in favour of reading the bill for a [second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). This means that they can now discuss the bill in more detail. ### What is the bill's main idea? The bill (as amended) makes changes to the assets test for all means tested income support payments, including allowances and pensions. Firstly, it increases the threshold above which your assests are tested (known as \"free areas\") for the purposes of support payments. In other words, people on allowances or full pensions can have more assets than they currently can before those assets are included in their means testing - but not that much more. See the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1415a/15bd129) for the asset test limits. People on allowances whose assets are above the free areas will no longer be eligible for that allowance while pensioners whose assets are above the free areas will have their pensions reduced at an increased rate. If someone is no longer eligible for a payment as a result of the changes, the bill makes them eligible for a concession card (either a Health Care Card or a Commonwealth Seniors Health Card). Read more in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1415a/15bd129).",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-06-18/2"
+  },
+  {
+   "key": "federal-representatives-3820",
+   "date": "2015-06-22",
+   "house": "representatives",
+   "question": "Scott Morrison I ask leave of the House that that motion be withdrawn. Leave granted. I ask leave of the House to move government amendments (1) to (6) as circulated together. Leave granted. Jenny Macklin Today, members opposite—all of them, Liberal members, National Party members—are once again going to vote for a cut to the pension. They have already done it once. Everybody around Australia remembers the first time when members of the Liberal and National parties voted to cut the indexation of the pension, and today they are going to do it again. Three hundred thousand pensioners around Australia are about to have their pension cut because of this Liberal and National Party government—300,000 pensioners who were told before the last election by Mr Abbott that there would be no changes to pensions. How many times did he say it? Over and over again, Mr Abbott told pensioners that there would be no changes. He lied to them once in last year's budget and then tried, day after day after day over the last year, to defend this cut to indexation. Now, in this year's budget, he is lying to them again— Don Randall The member for Jagajaga must be careful in using that term in this chamber. Jenny Macklin by introducing another cut to the pension, this time by changing the way the assets test works. Each and every pensioner in Australia—and there are 3½ million pensioners—is going to remember, particularly as they go to the election, that this Prime Minister did not tell the truth. They will never forget it, and I can assure and each and every member opposite that we will make sure of it. What pensioners will be saying to themselves and to their neighbours is: 'What will they do to us next? What will these Liberal and National Party members do to us next?' How could they possibly trust a Prime Minister who told them before the last election that there would be no changes to the pension—and yet here we are debating yet another change to the pension? We know that the Prime Minis",
+   "stage": "Consideration in detail",
+   "ayes": 82,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-06-22/1"
+  },
+  {
+   "key": "federal-senate-3827",
+   "date": "2015-06-22",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 21,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "earliest": 4,
+    "member": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-22/5"
+  },
+  {
+   "key": "federal-senate-3828",
+   "date": "2015-06-22",
+   "house": "senate",
+   "question": "Mitch Fifield I move: That the bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 42,
+   "noes": 21,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "earliest": 4,
+    "member": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-22/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-313424",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-17",
+   "stage_hint": null,
+   "brief": "Labor opposed the Social Services Legislation Amendment (Fair and Sustainable Pensions) Bill 2015, arguing it would cut pensions and break a promise, with 330,000 pensioners losing an average of $3,300 per year and 90,000 losing their pension entirely."
+  },
+  {
+   "slug": "speech-313427",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-17",
+   "stage_hint": null,
+   "brief": "The government's proposed changes to the Social Services Legislation Amendment (Fair and Sustainable Pensions) Bill 2015 will increase asset test thresholds, with single homeowners' threshold rising from $202,000 to $250,000 and couples' from $286,500 to $375,000, meaning 90% of pensioners will be better off or unchanged and 170,000 part-pensioners will move to full pension. The speaker criticised the opposition for lacking solutions and for opposing the bill, which also includes measures on defined benefit income, overseas pension payments, and automatic issuance of Commonwealth seniors health cards to those losing pension eligibility."
+  },
+  {
+   "slug": "speech-313428",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that Prime Minister Tony Abbott repeatedly promised no pension cuts before the 2013 election but now supports legislation cutting pensions for 330,000 low-income households and removing 90,000 entirely, calling the government untrustworthy and its deal with the Greens a broken promise."
+  },
+  {
+   "slug": "speech-313434",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-17",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Fair and Sustainable Pensions) Bill 2015, arguing it would cut $2.43 billion from pensioners, with 330,000 worse off and 90,000 losing the part pension entirely. They detailed specific asset thresholds and income losses, accused the government of breaking pre-election promises, and criticised the Greens for supporting the bill."
+  },
+  {
+   "slug": "speech-313640",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-18",
+   "stage_hint": null,
+   "brief": "The speaker argued against the Social Services Legislation Amendment (Fair and Sustainable Pensions) Bill 2015, stating it would cut $2.4 billion from pensioners, with 91,000 losing their pension entirely and half of new retirees affected within 10 years. They proposed instead reducing superannuation tax concessions for high-income earners to save $14.3 billion over a decade, and said Labor would not support most measures but would back $1.5 billion in other savings."
+  },
+  {
+   "slug": "speech-313641",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Fair and Sustainable Pensions) Bill 2015 would refocus welfare toward those most in need by raising the assets test threshold for full pension eligibility and lowering the cut-out point, affecting 170,000 pensioners with an average $30 per fortnight increase. The bill was presented as necessary to address budget unsustainability blamed on the former Labor government, with the speaker stating the family home and superannuation would remain untouched under the coalition."
+  },
+  {
+   "slug": "speech-313642",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Fair and Sustainable Pensions) Bill 2015 is unfair, breaks a promise not to change pensions, and would cut incomes for low- and middle-income pensioners—single pensioners by up to $8,000 a year and couples by up to $14,000—by counting assets such as household contents, vehicles, and savings. They also defended Labor's past pension increases and criticized the government for targeting pensioners while avoiding revenue measures."
+  },
+  {
+   "slug": "speech-313643",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Fair and Sustainable Pensions) Bill 2015 will make 90% of Australia’s 3.7 million pensioners better off or unchanged, with 170,000 lower-asset constituents in the Lyne electorate gaining $30 a fortnight. Specific thresholds were cited: for full pension eligibility, the assets-free area rises to $250,000 for single homeowners and $375,000 for couple homeowners, while non-homeowners can have up to $699,000 in assets (couples) or $537,000 (singles) to be better off."
+  },
+  {
+   "slug": "speech-313646",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-18",
+   "stage_hint": null,
+   "brief": "The speech opposed the government's pension bill, arguing it would cut pensions for 300,000 pensioners and remove them entirely for 90,000, with single pensioners holding $500,000 in assets losing about $8,000 and couples $14,000. It also criticised the coalition for freezing the superannuation guarantee at 9.5% until 2021 and allowing wealthy individuals—around 400 with over $10 million in super—to exploit tax concessions."
+  },
+  {
+   "slug": "speech-313647",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-18",
+   "stage_hint": null,
+   "brief": "The Abbott government's Social Services Legislation Amendment (Fair and Sustainable Pensions) Bill 2015 attacks part-pensioners, breaking a pre-election promise of no pension cuts, and will leave over 300,000 pensioners worse off by doubling the asset test taper rate and abolishing the seniors supplement, pensioner education supplement, and education entry payment."
+  },
+  {
+   "slug": "speech-313649",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-18",
+   "stage_hint": null,
+   "brief": "The speaker defended Labor's pension record, citing the Harmer review that delivered a $30 weekly increase for single pensioners, new indexation based on pensioner spending, and a rise in the indexation benchmark from 25% to 27% of male average weekly earnings, which reduced pensioner poverty from 27% to 12%. They criticised the Liberal Party for breaking a pre-election promise not to cut pensions, noting the 2014 budget proposed $23 billion in cuts amounting to $80 per week."
+  },
+  {
+   "slug": "speech-313653",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-18",
+   "stage_hint": null,
+   "brief": "Labor will support the 10 per cent cap on defined benefit income and the abolition of the seniors supplement, but oppose the abolition of the pensioner education supplement and education entry payment, reduced pension portability, and the asset-test taper changes, which the party says would leave nearly 330,000 part-pensioners $3,000–$5,000 a year worse off."
+  },
+  {
+   "slug": "speech-313654",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-18",
+   "stage_hint": null,
+   "brief": "The bill breaks promises of no pension changes and no deals with the Greens, and will leave 327,300 current pensioners worse off, with 236,000 losing $130 per fortnight and 91,000 losing their pension entirely."
+  },
+  {
+   "slug": "speech-313661",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-18",
+   "stage_hint": null,
+   "brief": "Labor opposed the bill, arguing it would cut pensions for 327,000 current part-pensioners, with singles losing up to $8,000 and couples up to $14,000, and 91,000 losing the pension entirely. They also criticised the government for promising no pension changes before the election and then pursuing cuts."
+  },
+  {
+   "slug": "speech-313662",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-18",
+   "stage_hint": null,
+   "brief": "The speaker accused the Prime Minister of breaking a pre-election promise not to cut pensions, citing a previously proposed change to indexation that would have reduced pensioner incomes by up to $80 per week over 10 years. He argued the government’s actions demonstrate dishonesty and represent a \"vicious attack\" on Australian pensioners, contrasting Labor’s historical support for pensioners with the current government’s proposals."
+  },
+  {
+   "slug": "speech-313741",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-18",
+   "stage_hint": null,
+   "brief": "The speaker argued for passing the Social Services Legislation Amendment (Fair and Sustainable Pensions) Bill 2015, which denies part pensions to those with over $1 million in assets (excluding the family home) and increases full pensions by $30 per fortnight, and criticised Labor for opposing the reform while praising the Greens for their support."
+  },
+  {
+   "slug": "speech-314056",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The bill would cut the part pension for 330,000 part pensioners and affect another 700,000 workers nearing retirement, with examples given of a widowed teacher, a former dairy farmer, and a retired ambulance worker whose modest incomes would be reduced."
+  },
+  {
+   "slug": "speech-314057",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Fair and Sustainable Pensions) Bill 2015, supporting Labor instead of the Coalition and Greens, citing a broken election promise, lack of grandfather provisions, and poor design that could strip pensioners of up to $8,000 annually and disincentivise saving."
+  },
+  {
+   "slug": "speech-314058",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government broke its pre-election promise not to change pensions, citing the Social Services Legislation Amendment (Fair and Sustainable Pensions) Bill 2015. The speaker opposed the bill, citing analysis showing 80% of cuts affect low-income Australians, particularly single women, and gave the example of a constituent named Patricia who would lose $4,000 per year."
+  },
+  {
+   "slug": "speech-314059",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker urged the government to provide consistency and stop changing pension rules, citing constituents’ difficulty in managing long-term affairs. They also requested advance notice of legislative changes to allow crossbenchers time to consult their communities before voting."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (Fair and Sustainable Pensions) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00110",
+   "assent_date": "2015-06-30"
+  }
+ ]
+}

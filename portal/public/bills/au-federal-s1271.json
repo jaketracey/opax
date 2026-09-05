@@ -1,0 +1,209 @@
+{
+ "key": "au-federal-s1271",
+ "title": "Franchising Laws Amendment (Fairness in Franchising) Bill 2020",
+ "short_title": "Franchising Laws Amendment (Fairness in Franchising) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-09-02",
+ "originating_house": "senate",
+ "sponsor": "O'NEILL, Sen Deborah",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10747",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1271%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1271%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1271%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1271%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1271%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1271%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1271%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1271_ems_c4540dce-fbaa-4ddf-bab0-c4e414a9d802%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1271%22",
+   "document_date": "2020-09-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-09-02",
+  "sentences": [
+   "This bill changes the franchising rules to reduce the advantage larger parties have over smaller ones.",
+   "It does this by letting the Australian Small Business and Family Enterprise Ombudsman step in when mediation fails or both sides agree, using arbitrators to settle disputes and also allowing many parties to be handled together.",
+   "The bill also raises the fines for breaking the Franchising Code of Conduct, and it starts on the day the law receives royal assent."
+  ],
+  "changes": [
+   "Gives the Ombudsman authority to arrange arbitration after failed mediation or if both sides agree.",
+   "Creates a mediation and franchising adviser role within the Ombudsman's office to choose arbitrators.",
+   "Allows multiple parties in a dispute to be resolved together through mediation or arbitration.",
+   "Increases the penalty amounts for breaching the Franchising Code of Conduct."
+  ],
+  "affected": "Franchisors, franchisees, and the Australian Small Business and Family Enterprise Ombudsman are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-6988",
+   "date": "2021-02-22",
+   "house": "senate",
+   "question": "Franchising Laws Amendment (Fairness in Franchising) Bill 2020 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 27,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-22/1"
+  },
+  {
+   "key": "federal-senate-6989",
+   "date": "2021-02-22",
+   "house": "senate",
+   "question": "Franchising Laws Amendment (Fairness in Franchising) Bill 2020 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 27,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-22/2"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

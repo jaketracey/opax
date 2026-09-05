@@ -1,0 +1,137 @@
+{
+ "key": "au-federal-s1362",
+ "title": "Migration Amendment (Evacuation to Safety) Bill 2023",
+ "short_title": "Migration Amendment (Evacuation to Safety) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-02-07",
+ "originating_house": "senate",
+ "sponsor": "MCKIM, Sen Nick",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10841",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-03-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1362%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1362%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1362%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1362%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1362_ems_50b5b581-42c2-473f-a14b-a6eb006655e1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1362%22",
+   "document_date": "2023-02-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-02-07",
+  "sentences": [
+   "This bill would require the Australian government to invite everyone held under offshore processing in Papua New Guinea or Nauru who has not been given a negative security assessment by ASIO to come to Australia.",
+   "People who accept the invitation would be placed in community detention and stay in Australia until a durable solution is found in a country that is party to the 1951 Refugee Convention or its 1967 Protocol.",
+   "The government would have to make these offers within one month after the bill starts, and anyone who receives an offer may turn it down."
+  ],
+  "changes": [
+   "Compels the government to offer transfer to Australia to eligible offshore processing detainees.",
+   "Requires offers to be made within one month of the bill's commencement.",
+   "Places all accepting persons into community detention."
+  ],
+  "affected": "People subject to offshore processing in Papua New Guinea or Nauru who do not have an adverse ASIO security assessment.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:15Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7975",
+   "date": "2023-03-08",
+   "house": "senate",
+   "question": "Migration Amendment (Evacuation to Safety) Bill 2023 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 1,
+    "dated": 31,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-08/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-827123",
+   "speaker": "Nick McKim",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Evacuation to Safety) Bill 2023 was introduced to amend the Migration Act 1958, and the bill passed its first reading in the House."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,166 @@
+{
+ "key": "au-federal-r6183",
+ "title": "Aviation Transport Security Amendment Bill 2018",
+ "short_title": "Aviation Transport Security Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2018-11-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6183%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6183%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6183%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6183%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6183%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6183%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6183%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6183%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6183%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6183%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6183%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6183%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6183_ems_0a4cc4eb-2b93-4be3-b081-92900efebbc4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6183%22",
+   "document_date": "2018-09-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00136",
+   "document_date": "2018-11-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-369862",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The Aviation Transport Security Amendment Bill 2018 was introduced to update Australia's aviation security framework in response to evolving threats, including the disrupted 2017 Sydney attack. It allows the Secretary of Home Affairs to issue model transport security programs to lower-risk operators, such as smaller regional airports, reducing administrative burdens while maintaining security."
+  },
+  {
+   "slug": "speech-371786",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The bill creates model transport security plans for small, low-risk airports to reduce red tape and costs while maintaining security, with support from the opposition, aviation sector, and a Senate committee."
+  },
+  {
+   "slug": "speech-371787",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aviation Transport Security Amendment Bill 2018 balances security with the viability of regional airports by allowing the Home Affairs secretary to issue model transport security programs, reducing red tape for lower-risk operators like the Busselton-Margaret River Regional Airport."
+  },
+  {
+   "slug": "speech-371788",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aviation Transport Security Amendment Bill 2018 could impose severe cost increases on regional airports like Port Lincoln and Whyalla, potentially threatening air services, and welcomed the bill's flexibility for regulators to tailor security measures to individual airports."
+  },
+  {
+   "slug": "speech-371789",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The Aviation Transport Security Amendment Bill 2018 was introduced to allow the Secretary of Home Affairs to provide a model transport security program to lower-risk operators, reducing administrative burdens on smaller regional airports while maintaining security in response to the evolving threat highlighted by the disrupted July 2017 attack in Sydney targeting an A380 flight to the Middle East."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aviation Transport Security Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00136",
+   "assent_date": "2018-11-29"
+  }
+ ]
+}

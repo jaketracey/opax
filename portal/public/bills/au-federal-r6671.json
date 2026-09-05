@@ -1,0 +1,274 @@
+{
+ "key": "au-federal-r6671",
+ "title": "Biosecurity Amendment (Strengthening Penalties) Bill 2021",
+ "short_title": "Biosecurity Amendment (Strengthening Penalties) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Water and the Environment",
+ "status": "passed",
+ "status_as_of": "2021-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6671%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6671%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6671%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6671%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6671%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6671%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6671%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6671%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6671%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6671%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6671%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6671%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6671%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6671_ems_388eaed7-d6c8-4f7f-83f0-e83b44998aac%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6671%22",
+   "document_date": "2021-02-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00058",
+   "document_date": "2021-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-18",
+  "sentences": [
+   "The bill would increase civil and criminal penalties for breaking key biosecurity rules on goods brought into Australia and on activities under approved arrangements.",
+   "It would raise maximum civil penalties from 120 to 300 penalty units for contraventions related to goods under biosecurity control, and increase criminal pecuniary penalties from 300 to 1,000 penalty units for certain offences.",
+   "For bringing or importing prohibited or suspended goods, the bill would raise the maximum criminal pecuniary penalty from 2,000 to 5,000 penalty units for a fault-based offence."
+  ],
+  "changes": [
+   "Increase civil penalty amounts from 120 to 300 penalty units for contraventions of sections 124 to 130 and 139 to 141.",
+   "Increase criminal pecuniary penalties from 300 to 1,000 penalty units for fault-based offences under sections 140 and 141.",
+   "Increase criminal pecuniary penalties for bringing or importing prohibited or suspended goods: from 600 to 2,000 penalty units for the most serious offence, and from 2,000 to 5,000 penalty units for another offence."
+  ],
+  "affected": "Biosecurity industry participants with approved arrangements and others who bring or import goods into Australian territory.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7314",
+   "date": "2021-06-23",
+   "house": "senate",
+   "question": "Biosecurity Amendment (Strengthening Penalties) Bill 2021 - in Committee",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 18,
+    "dated": 18,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-23/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-402560",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": "The Biosecurity Amendment (Strengthening Penalties) Bill 2021 increases civil and criminal penalties under the Biosecurity Act, with maximum fines up to $1.1 million, targeting commercial importers and biosecurity industry participants. The bill aims to protect Australia's $61 billion agriculture industry and over $1 trillion in environmental assets from threats such as African swine fever, khapra beetle, and brown marmorated stink bug."
+  },
+  {
+   "slug": "speech-408482",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Biosecurity Amendment (Strengthening Penalties) Bill 2021 is an ad hoc measure relying on court penalties rather than a genuine biosecurity upgrade, and criticised the Morrison government for completing only 7 of 42 recommendations from the 2017 Craik review, leaving the system underfunded and putting $60 billion in agricultural production at risk."
+  },
+  {
+   "slug": "speech-408634",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Morrison government's Biosecurity Amendment (Strengthening Penalties) Bill 2021, arguing that increased penalties—such as raising maximum civil penalties from $26,640 to $66,600 and up to $1.1 million for commercial breaches—are needed to protect Australia's agriculture, economy, and biosecurity from pests like khapra beetle and African swine fever."
+  },
+  {
+   "slug": "speech-408635",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Biosecurity Amendment (Strengthening Penalties) Bill 2021, noting that Mayo has 2,168 agricultural businesses, and highlighted South Australia’s phylloxera-free status, wine exports worth $2 billion, Kangaroo Island’s Ligurian bee sanctuary, and the need for an irradiation facility to protect against fruit fly outbreaks, citing 2021 seizures of 1,839 kg of produce and 944 fines from 10,600 vehicle inspections."
+  },
+  {
+   "slug": "speech-408636",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The Biosecurity Amendment (Strengthening Penalties) Bill 2021 was urgently needed to increase penalties for biosecurity violations, citing threats such as khapra beetle, African swine fever, and citrus canker. The speaker also highlighted increased biosecurity funding from $258 million to $888 million, the UK free trade agreement, and a new seasonal agricultural worker visa for ASEAN countries."
+  },
+  {
+   "slug": "speech-408637",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Biosecurity Amendment (Strengthening Penalties) Bill 2021 but argued the government had failed on biosecurity, citing an Australian National Audit Office report that found the Department of Agriculture, Water and the Environment's compliance framework largely inappropriate, and criticised the government's lack of a national response to the mouse plague."
+  },
+  {
+   "slug": "speech-408640",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Biosecurity Amendment (Strengthening Penalties) Bill 2021 is critical to protecting industries like wine, chestnuts, and piggeries in the Indi electorate, citing phylloxera, chestnut blight, and African swine fever as key threats. They welcomed the UK free trade agreement but called for stronger government action on climate change-related biosecurity risks."
+  },
+  {
+   "slug": "speech-408641",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The Biosecurity Amendment (Strengthening Penalties) Bill 2021 increases maximum civil and criminal penalties for noncompliance with the Biosecurity Act 2015, to deter violations and protect Australia’s $71.2 billion agriculture, fisheries and forestry industries, including fruit growers in areas like Dwellingup and the Perth Hills."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Biosecurity Amendment (Strengthening Penalties) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00058",
+   "assent_date": "2021-06-29"
+  }
+ ]
+}

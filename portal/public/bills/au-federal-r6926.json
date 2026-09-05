@@ -1,0 +1,187 @@
+{
+ "key": "au-federal-r6926",
+ "title": "Customs Amendment (India-Australia Economic Cooperation and Trade Agreement Implementation) Bill 2022",
+ "short_title": "Customs Amendment (India-Australia Economic Cooperation and Trade Agreement Implementation) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-10-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2022-11-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6926%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6926%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6926%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6926%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6926%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6926%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6926%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6926%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6926%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6926%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6926%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6926%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6926_ems_e6d1b693-3f7e-4772-8a8f-0e564de40067%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6926%22",
+   "document_date": "2022-10-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00057",
+   "document_date": "2022-11-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-10-27",
+  "sentences": [
+   "This bill would change the Customs Act 1901 to allow goods from India to enter Australia at lower customs duty rates under a trade deal signed on 2 April 2022.",
+   "It would set new rules for deciding which goods count as Indian, require record-keeping rules for Australian exporters to India, and let officials ask for and share information with Indian customs to check goods' origin.",
+   "The changes would start on the later of the day the bill becomes law and the day the trade agreement takes effect for Australia."
+  ],
+  "changes": [
+   "Introduces new rules to determine if imported goods are Indian originating goods.",
+   "Allows regulations for record-keeping by Australian exporters and producers shipping to India.",
+   "Lets authorised officers request and share information with Indian customs to verify origin claims."
+  ],
+  "affected": "Australian businesses importing from India and Australian exporters to India are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:20Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7839",
+   "date": "2022-11-22",
+   "house": "senate",
+   "question": "The majority voted against a [second reading amendment](https://www.openaustralia.org.au/senate/?gid=2022-11-22.5.1) introduced Western Australian Senators [Dorinda Cox](https://theyvoteforyou.org.au/people/senate/wa/dorinda_cox) and [Jordan Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens), which means it failed. The amendment would have added the text below to the usual second reading motion \"*that the bills be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\" - parliamentary jargon for agreeing with the main idea of a bill. ### Amendment text > *At the end of the motion, add \", but, in respect of the India-Australia Economic Cooperation and Trade Agreement Implementation Bills, the Senate notes that:* > > >*(a) the United Nations Human Rights Council's Universal Periodic Review process made recommendations on 10 November 2022 relating to human rights abuses in India including in relation to ending attacks against minority communities and vulnerable groups, tackling gender-based violence, upholding civil society freedoms, protecting human rights defenders and independent media, and ending torture in custody; and* >> >> *(b) in negotiating trade relationships, Australia must ensure that human rights are upheld by negotiating parties\".*",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 14,
+    "earliest": 24,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-22/1"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Customs Amendment (India-Australia Economic Cooperation and Trade Agreement Implementation) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00057",
+   "assent_date": "2022-11-23"
+  }
+ ]
+}

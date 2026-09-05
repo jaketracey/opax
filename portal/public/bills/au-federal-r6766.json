@@ -1,0 +1,352 @@
+{
+ "key": "au-federal-r6766",
+ "title": "Aboriginal Land Rights (Northern Territory) Amendment (Economic Empowerment) Bill 2021",
+ "short_title": "Aboriginal Land Rights (Northern Territory) Amendment (Economic Empowerment) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Indigenous Australians",
+ "status": "passed",
+ "status_as_of": "2021-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6766%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6766%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6766%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6766%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6766%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6766%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6766%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6766%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6766%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6766%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6766%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6766%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6766%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6766%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6766_ems_1f45b9b4-9704-4582-81b4-9488bdd2e412%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6766_ems_2f06b76e-95f5-47be-82f1-7a0f2dee8cf0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/8258225%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6766%22",
+   "document_date": "2021-08-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00132",
+   "document_date": "2021-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7538",
+   "date": "2021-11-30",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2021-11-30.146.1) to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is \"*that the bill be read for a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. This means the amendment failed. ### Amendment text > *At the end of the motion, add \", but the Senate notes that:* > > *(a) this bill proposes the most substantial changes to the Aboriginal Land Rights (Northern Territory) Act since it commenced in 1976;* > > *(b) an overwhelming majority of submitters to the Finance and Public Administration Legislation Committee's inquiry into this bill recommended that it not be passed, mainly due to insufficient and inadequate consultation about the changes contained in it;* > > *(c) submitters to the inquiry noted that consultation during the bill's development was only conducted with Land Councils and no free, prior and informed consent was obtained from Traditional Owner communities and non-land holding First Nations people in the Northern Territory; and* > > *(d) the Government has failed to conduct extensive, open, transparent, direct and independently facilitated consultation with all affected First Nations communities across the Northern Territory on this bill\".* ### What is this bill about? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd028), the bill's purpose \"*is to amend the Aboriginal Land Rights (Northern Territory) Act 1976 (the Act) in four areas, covered by four Schedules:* * *Schedule 1 will establish the Northern Territory Aboriginal Investment Corporation (NTAIC) as a new Aboriginal-controlled corporate Commonwealth entity to strategically invest in Aboriginal businesses and commercial projects and make other payments to or for the benefit of Aboriginal peoples in",
+   "stage": "Second reading",
+   "ayes": 7,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 12,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-11-30/5"
+  },
+  {
+   "key": "federal-senate-7539",
+   "date": "2021-11-30",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-11-30.152.1) \"*that schedule 2 stand as printed*,\" which means that the schedule will remain unchanged. This vote occurred after Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Greens) proposed an amendment to oppose that schedule. ### What is Schedule 2? According to the [bill digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd028): > *Schedule 2 implements several amendments recommended by the Aboriginal Land Commissioner’s 2013 Review of Part IV of the Aboriginal Land Rights (Northern Territory) Act 1976 concerning mining activity under the Act [i.e. the Aboriginal Land Rights (Northern Territory) Act 1976]. These amendments update the Act to reflect Northern Territory legislation and developments in mining (for example, concerning geothermal energy), clarify and change aspects of the approval process (including meeting requirements with Traditional Owners), clarify the process for dealing with relatively low impact mining for ‘extractive minerals’ (clay, gravel, sand, et cetera), and change parts of the ministerial approval process by removing delegation of some Commonwealth ministerial approvals from the Northern Territory mining minister and removing the requirement for Commonwealth ministerial approval for some mining projects.* ### What is this bill about? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd028), the bill's purpose \"*is to amend the Aboriginal Land Rights (Northern Territory) Act 1976 (the Act) in four areas, covered by four Schedules:* * *Schedule 1 will establish the Northern Territory Aboriginal Investment Corporation (NTAIC) as a new Aboriginal-controlled corporate Commonwealth entity to strategically invest in Aboriginal businesses and commercial projects and make other payments to or for the benefit",
+   "stage": "In committee",
+   "ayes": 22,
+   "noes": 7,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 11,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-11-30/6"
+  },
+  {
+   "key": "federal-senate-7540",
+   "date": "2021-11-30",
+   "house": "senate",
+   "question": "The majority voted in favour of amendments (1) and (2) on [sheet 1514](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6766_amend_72d28e9f-d2cf-4a5d-b773-d021d176dbec%22), which were moved by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Greens). These amendments will now form part of [the bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6766) and be sent back to the House of Representatives for their consideration. The amendments introduce a requirement for the Minister to request (and provide to parliament) progress reports on the Northern Territory Aboriginal Investment Corporation's strategic investment plan. ### Amendment text > *(1) Schedule 1, item 19, page 46 (line 4), omit “may”, substitute “must”.* > > *(2) Schedule 1, item 19, page 46 (after line 5), after subitem (4), insert:* > >> *(4A) The Minister must table a copy of any progress report given to the Minister in each House of the Parliament within 15 sitting days of that House after the Minister receives the report.* ### What is this bill about? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd028), the bill's purpose \"*is to amend the Aboriginal Land Rights (Northern Territory) Act 1976 (the Act) in four areas, covered by four Schedules:* * *Schedule 1 will establish the Northern Territory Aboriginal Investment Corporation (NTAIC) as a new Aboriginal-controlled corporate Commonwealth entity to strategically invest in Aboriginal businesses and commercial projects and make other payments to or for the benefit of Aboriginal peoples in the NT* * *Schedule 2 will amend the exploration and mining provisions of the Act in order to clarify and streamline a number of approval processes* * *Schedule 3 will amend and clarify land administration provisions, including on township leases, acces",
+   "stage": "In committee",
+   "ayes": 22,
+   "noes": 21,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 15,
+    "earliest": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-11-30/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-411830",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The Aboriginal Land Rights (Northern Territory) Amendment (Economic Empowerment) Bill 2021 was introduced to establish the Northern Territory Aboriginal Investment Corporation, a new Aboriginal-controlled entity funded with an initial $500 million from the Aboriginals Benefit Account, along with reforms to mining processes and community-controlled township leasing to shift decision-making power to Aboriginal Territorians."
+  },
+  {
+   "slug": "speech-413047",
+   "speaker": "Gladys Liu",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aboriginal Land Rights (Northern Territory) Amendment (Economic Empowerment) Bill 2021 will empower Aboriginal people by establishing the Northern Territory Aboriginal Investment Corporation with a $500 million endowment and $60 million per year for three years, funded from the $1.3 billion Aboriginals Benefit Account, to invest in businesses and community projects, while streamlining mining provisions and strengthening Aboriginal control over land administration."
+  },
+  {
+   "slug": "speech-413048",
+   "speaker": "Warren Edward Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The bill establishes the Northern Territory Aboriginal Investment Corporation, an Aboriginal-controlled entity that will take over distribution of the $1.3 billion Aboriginals Benefit Account, with $680 million allocated over three years, ending past ministerial discretion over the funds. It also amends mining negotiation processes, repeals section 74AA from the Howard government's intervention, and removes unused delegation powers, with the speaker arguing these changes enhance the rights and interests of Aboriginal people in the Northern Territory."
+  },
+  {
+   "slug": "speech-413050",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aboriginal Land Rights (Northern Territory) Amendment (Economic Empowerment) Bill 2021 is an important but imperfect step toward Indigenous economic empowerment, and raised concerns about ministerial discretion over the remaining $620 million in the Aboriginals Benefit Account, the need for a broader investment strategy, and the lack of a legislated advisory mechanism to ensure fair and transparent grant-making."
+  },
+  {
+   "slug": "speech-413051",
+   "speaker": "Rowan Eric Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The Aboriginal Land Rights (Northern Territory) Amendment (Economic Empowerment) Bill 2021 creates a new Aboriginal-controlled body to manage Aboriginal Benefit Account funds, raises the investment threshold requiring ministerial approval from $1 million to $5 million, and allows township land leasing. Funding should be prioritised for housing in Indigenous communities, and Aboriginal corporations should be held to the same accounting standards as other Australian entities."
+  },
+  {
+   "slug": "speech-413172",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aboriginal Land Rights (Northern Territory) Amendment (Economic Empowerment) Bill 2021 after three years of consultation and backing from key land councils, but argued that non-Indigenous views are irrelevant and that 233 years of paternalism by \"old white men\" is responsible for chronic Indigenous disadvantage, citing statistics on life expectancy, health, education, employment, income, child out-of-home care, and incarceration rates. The speaker called for full implementation of the Uluru Statement from the Heart, including a constitutionally enshrined voice to parliament and a Makarrata commission, and urged the government to set clear markers for reform."
+  },
+  {
+   "slug": "speech-413173",
+   "speaker": "Adam Paul Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aboriginal Land Rights (Northern Territory) Amendment (Economic Empowerment) Bill 2021 should undergo a parliamentary committee process to ensure genuine self-determination and consultation with First Nations communities, and noted concerns about the government's record on treaty and truth. The bill includes establishing the Northern Territory Aboriginal Investment Corporation and streamlining exploration and mining provisions."
+  },
+  {
+   "slug": "speech-413178",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The bill establishes the Northern Territory Aboriginal Investment Corporation, an Aboriginal-controlled body to invest funds for economic and social opportunities, streamlines exploration and mining processes while protecting traditional owner rights, and strengthens Aboriginal control over decision-making and township leasing."
+  },
+  {
+   "slug": "speech-416830",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "Labor supported the Aboriginal Land Rights (Northern Territory) Amendment (Economic Empowerment) Bill 2021 as amended, citing its bipartisan origins and the involvement of the four Northern Territory land councils. The supported amendments require the minister to request progress reports on the Northern Territory Aboriginal Investment Corporation's strategic investment plan, open to parliamentary scrutiny."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aboriginal Land Rights (Northern Territory) Amendment (Economic Empowerment) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00132",
+   "assent_date": "2021-12-13"
+  }
+ ]
+}

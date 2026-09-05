@@ -1,0 +1,400 @@
+{
+ "key": "au-federal-r6818",
+ "title": "Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021",
+ "short_title": "Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-11-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Special Minister of State",
+ "status": "passed",
+ "status_as_of": "2021-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6818%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6818%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6818%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6818%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6818%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6818%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6818%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6818%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6818%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6818%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6818%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6818%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6818%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6818%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6818_ems_63810612-3204-44a5-8341-77431c57ac90%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6818%22",
+   "document_date": "2021-11-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00134",
+   "document_date": "2021-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-11-25",
+  "sentences": [
+   "This bill would apply the same donation rules to all federal politicians, whether they are currently in office or running for election.",
+   "Sitting parliamentarians would have to report gifts they receive directly for federal election purposes each year to the Australian Electoral Commission.",
+   "The period during which someone is treated as a candidate for disclosure and foreign donation rules would be lengthened by six months."
+  ],
+  "changes": [
+   "Extends the foreign donations ban to cover the entire term of a sitting member, not just after they announce a re-election bid.",
+   "Requires parliamentarians who receive gifts directly for federal election purposes to lodge an annual return with the AEC.",
+   "Increases the candidate disclosure period by six months for returns and foreign donation restrictions."
+  ],
+  "affected": "Sitting members of the House of Representatives and the Senate, and candidates for federal election.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7542",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debates/?id=2021-12-01.22.1) introduced by Indi MP [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines) (Independent), which means they failed. The amendment concerned receipt of donations and the disclosure of receipt of donations. ### What does the bill do? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6818), the bill was introduced to: * *extend the application of the foreign donations framework to current sitting members of the House of Representatives and Senators;* * *require members of the House of Representatives and Senators who receive gifts for the purpose of incurring electoral expenditure or creating or communicating electoral matter to lodge an annual return with the Australian Electoral Commission; and* * *extend the period for which a person is taken to be a candidate by an additional six months for the purpose of the disclosure period for candidate and Senate group returns and for restrictions on receiving foreign donations.*",
+   "stage": "Consideration in detail",
+   "ayes": 56,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 60
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-12-01/1"
+  },
+  {
+   "key": "federal-representatives-7543",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2021-12-01.24.1) introduced by Indi MP [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines) (Independent), which means they failed. The amendment concerned local expenses. ### What does the bill do? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6818), the bill was introduced to: * *extend the application of the foreign donations framework to current sitting members of the House of Representatives and Senators;* * *require members of the House of Representatives and Senators who receive gifts for the purpose of incurring electoral expenditure or creating or communicating electoral matter to lodge an annual return with the Australian Electoral Commission; and* * *extend the period for which a person is taken to be a candidate by an additional six months for the purpose of the disclosure period for candidate and Senate group returns and for restrictions on receiving foreign donations.*",
+   "stage": "Consideration in detail",
+   "ayes": 55,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 60
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-12-01/2"
+  },
+  {
+   "key": "federal-senate-7568",
+   "date": "2021-12-02",
+   "house": "senate",
+   "question": "Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021 - in Committee - Lower disclosure threshold to $1K",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 13,
+    "earliest": 14,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-02/1"
+  },
+  {
+   "key": "federal-senate-7574",
+   "date": "2021-12-02",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6818_amend_50f9068a-4bff-4487-90ee-43fd337456e6%22;rec=0) introduced by South Australian Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Independent) and Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie) (Jacqui Lambie Network), which means they failed. Senator Patrick [explained that](https://www.openaustralia.org.au/senate/?id=2021-12-02.120.1): > *the amendments before the chamber are to have disclosure around when people pay above a reasonable price for having a meal with a politician, be they a prime minister, a minister or an influential shadow minister. I have no issue with people going to dinner with parliamentarians. They shouldn't have to pay to do so. I think it's reasonable to recover the fee that is involved in serving a meal, but once the cost of the event gets above 15 per cent above the cost of the meal there needs to be some disclosure so that we don't have people dishing out large amounts of money just to be in the presence of someone. I think that's very wrong and un-Australian.* ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6818), the bill was introduced in order to: * *extend the application of the foreign donations framework to current sitting members of the House of Representatives and Senators;* * *require members of the House of Representatives and Senators who receive gifts for the purpose of incurring electoral expenditure or creating or communicating electoral matter to lodge an annual return with the Australian Electoral Commission; and* * *extend the period for which a person is taken to be a candidate by an additional six months for the purpose of the disclosure",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 22,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "earliest": 14,
+    "dated": 10,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-02/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-415923",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-25",
+   "stage_hint": null,
+   "brief": "The Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021 requires all parliamentarians, including independents, to lodge annual returns on political donations and prohibits them from receiving gifts of $1,000 or more from foreign donors. It also extends disclosure obligations for candidates and Senate groups to six months before announcing candidacy."
+  },
+  {
+   "slug": "speech-416816",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "Labor supported the Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021, which extends the ban on foreign donations to sitting parliamentarians and requires them to submit annual returns of donations over the disclosure threshold of $14,500. The speaker also moved an amendment calling for the disclosure threshold to be lowered to $1,000, real-time disclosure, and a national anti-corruption commission."
+  },
+  {
+   "slug": "speech-416818",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021 but opposed the amendment, arguing that independent MPs should be subject to the same donation disclosure requirements as political parties, including the $14,500 threshold and the ban on foreign donations."
+  },
+  {
+   "slug": "speech-416819",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021 is hypocritical, imposing extra disclosure on independents while major parties hide donations through party returns and blind trusts, and noted the loophole was identified by the independent member for Indi. They called for genuine reform including lowering the donation threshold from $14,500 to $1,000, real-time reporting, truth in political advertising, and a federal integrity commission, citing that 55% of ALP and 65% of coalition donations were undisclosed."
+  },
+  {
+   "slug": "speech-416820",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The speaker contributed to the debate on the Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021, thanking Deputy Speaker Freelander. No specific policy positions, figures, or names were stated."
+  },
+  {
+   "slug": "speech-416823",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the bill's transparency measures but criticised the government for failing to consult the crossbench and for ignoring loopholes exploited by major parties, and announced amendments to lower the donation disclosure threshold from $14,500 to $1,000 and require parties to report candidate-specific funding when a candidate submits a nil return."
+  },
+  {
+   "slug": "speech-416824",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021 will extend foreign donation restrictions to parliamentarians for their full term, require annual returns to the AEC for direct donations, and extend the candidate disclosure period by six months to improve electoral transparency and integrity."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Electoral Legislation Amendment (Annual Disclosure Equality) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00134",
+   "assent_date": "2021-12-13"
+  }
+ ]
+}

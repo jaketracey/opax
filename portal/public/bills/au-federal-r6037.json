@@ -1,0 +1,426 @@
+{
+ "key": "au-federal-r6037",
+ "title": "Appropriation Bill (No. 3) 2017-2018",
+ "short_title": "Appropriation Bill (No. 3) 2017-2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2018-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6037_ems_1a3ea81b-ea01-490e-82c4-f1c38e67f3d1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6037%22",
+   "document_date": "2018-02-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00018",
+   "document_date": "2018-03-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-08",
+  "sentences": [
+   "This bill would provide extra funding for the government's everyday activities.",
+   "It would take money from the Consolidated Revenue Fund on top of what the main annual funding law already allows.",
+   "The explanatory memorandum says this bill must be separate from non-ordinary funding under sections 53 and 54 of the Australian Constitution, and it should be read with the portfolio statements."
+  ],
+  "changes": [
+   "The bill proposes additional appropriations for ordinary annual services.",
+   "It adds to amounts already provided in Appropriation Act (No. 1) 2017‑2018.",
+   "It is introduced together with a companion bill for non-ordinary funding."
+  ],
+  "affected": "The government and its portfolio agencies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5153",
+   "date": "2018-03-19",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2018-03-19.165.1) introduced by NSW Senator [David Leyonhjelm](https://theyvoteforyou.org.au/people/senate/nsw/david_leyonhjelm) (Liberal Democratic Party), which means they failed. ### What do the amendments do? Senator Leyonhjelm [explained that](https://www.openaustralia.org.au/senate/?gid=2018-03-19.165.1) the amendments: > *are intended to make these appropriation bills consistent with the Constitution. Under the Constitution, the government should put new initiatives into one bill, not into a bill which cannot be amended by the Senate. These appropriation bills cannot be amended by the Senate. They should not contain new initiatives, but they do. Those initiatives should be taken out and put into a bill which can be amended by the Senate. That's simply the purpose of it. The government is not acting in accordance with the Constitution and it should be.* However, [the Government disagreed](https://www.openaustralia.org.au/senate/?gid=2018-03-19.166.1) with Senator Leyonhjelm's characterisation.",
+   "stage": "In committee",
+   "ayes": 7,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 13
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 26,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-19/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-358606",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-08",
+   "stage_hint": null,
+   "brief": "The government introduced Appropriation Bill (No. 3) 2017-2018 and Appropriation Bill (No. 4) 2017-2018, seeking approval for $1.4 billion in expenditure, including $576 million for the Department of Home Affairs (regional processing and visa applications), $95 million for Education and Training (including $69 million for a supercomputer at the Australian National University), and $70 million for the Attorney-General's Department (including $38 million for the Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry)."
+  },
+  {
+   "slug": "speech-358607",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-08",
+   "stage_hint": null,
+   "brief": "The bill seeks approval for $133 million in additional appropriations, including $27 million for education reforms and school funding transitions, $16 million for the Welfare Payment Infrastructure Transformation program, and $12 million to establish the Office of National Intelligence, while also repealing 15 old appropriation acts."
+  },
+  {
+   "slug": "speech-359342",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's economic management has produced record gross debt exceeding $500 billion, deficits eight times higher than originally forecast, and faster debt accumulation than under Labor, despite favourable global conditions, while prioritising $65 billion in company tax cuts for multinationals over fair treatment of middle‑income Australians."
+  },
+  {
+   "slug": "speech-359350",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's MYEFO harms regional communities by freezing university places, cutting school funding (e.g., $1.2 million from senior secondary, $800,000 from Weeroona College), raising the Medicare levy on low- and middle-income earners, and prioritising $65 billion in tax cuts for multinationals over support for pensioners, jobseekers, and public services."
+  },
+  {
+   "slug": "speech-359412",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-14",
+   "stage_hint": null,
+   "brief": "The government is running up record debt while offering a $65 billion tax handout to big business that will barely boost growth, and it has failed to act on promised protections against payday lenders that exploit vulnerable Australians."
+  },
+  {
+   "slug": "speech-359413",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-14",
+   "stage_hint": null,
+   "brief": "The Turnbull government outlined unprecedented infrastructure investment in the Appropriation Bill debate, citing $75 billion in funding and financing over ten years—including $10 billion for the National Rail Program, $9.4 billion for Inland Rail and $5.3 billion for Western Sydney Airport—and average annual Commonwealth spending of $8 billion versus $6 billion under Labor. It cited projected economic benefits of 36,000 extra jobs and up to 0.7 percentage point of GDP growth in 2018, and countered the member for Grayndler's claims of lower spending, listing major projects such as WestConnex, Sydney Metro, and the Pacific and Bruce Highways."
+  },
+  {
+   "slug": "speech-359414",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-359416",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-14",
+   "stage_hint": null,
+   "brief": "The Labor member supported the appropriation bills but condemned the government's fiscal policy, citing $2.2 billion in university cuts (10,000 unfunded places), $17 billion in school cuts, $3 billion from TAFE, a 27% rise in private health insurance premiums, $2.2 billion in Medicare freeze cuts, and a $65 billion tax cut for business. They also noted 32,000 bankruptcies in 2017, a falling average bankruptcy age (from 48 to 40), 103 insolvencies in Baldivis, and rising unemployment in Brand (from 6.7% to 9.8%), and criticised the government for failing to act on payday lending reforms."
+  },
+  {
+   "slug": "speech-359420",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the $1.5 billion appropriation supports a government focused on tax cuts for multinationals and banks, while middle Australia faces penalty rate cuts, rising energy costs, and drought hardship in Paterson, with inadequate support for farmers."
+  },
+  {
+   "slug": "speech-359582",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-14",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for adding $252 billion to debt since September 2013 and for prioritising $65 billion in tax cuts for multinationals and banks over funding health, education and public services. He also noted the government has failed to implement the Community Support Program and temporary sponsored parent visa announced nine months ago, and called for an 80–20 federal–state funding split on the $345 million Cunningham Highway upgrade between Yamanto and Ebenezer Creek."
+  },
+  {
+   "slug": "speech-359584",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-14",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 3) 2017-18 and Appropriation Bill (No. 4) 2017-18 were opposed for prioritising big business tax cuts over infrastructure, particularly in south-west Sydney. The neglect of Macarthur was highlighted through a projected population doubling to 600,000, inadequate road upgrades to Narellan Road and the Northern Road, and a failure to commit to a rail line for Western Sydney Airport from day one connecting Campbelltown-Macarthur to Penrith-Nepean."
+  },
+  {
+   "slug": "speech-359588",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-14",
+   "stage_hint": null,
+   "brief": "Labor supported the Appropriation Bill (No. 3) 2017-18 but argued the government is incompetent, criticising Prime Minister Malcolm Turnbull for failing to meet economic, social and environmental promises and citing a $23.6 billion deficit, nearly $600 billion gross debt, stagnant wages, and a 27% rise in private health insurance costs over five years."
+  },
+  {
+   "slug": "speech-359589",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-14",
+   "stage_hint": null,
+   "brief": "The speaker criticised the coalition government for cutting $1 billion in local government assistance and underfunding the Black Spot road safety program, noting 74 road deaths in their region, and opposed $65 billion in corporate tax cuts while advocating for needs-based school funding, higher education investment, and secure jobs."
+  },
+  {
+   "slug": "speech-359690",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The member for Darwin and Palmerston highlighted population challenges from the INPEX gas project transition, military unit relocations causing a 1,500-person drop and $2 billion revenue loss, and a one-third decline in professional women, and announced the Tourism IdeasFest on 3 March at Darwin International Airport to attract visitors and residents."
+  },
+  {
+   "slug": "speech-359695",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The speaker opposed the government's $65 billion tax cut for big business and banks, arguing the funds should instead support health and education, citing a $2.2 billion Medicare cut, over $1 billion in Tasmanian hospital cuts, a 65% reduction in infrastructure funding, and 1,900 lost apprenticeships in Tasmania."
+  },
+  {
+   "slug": "speech-359697",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The cashless debit card trial was defended as necessary to restrict purchases of drugs, takeaway alcohol and gambling, with $1 million in extra drug and alcohol support committed; economic projects announced include a Pacific Tug ship lift at Bundaberg port creating over 100 jobs, a potential container port, a level 5 training hospital MOU, and a fishing hall of fame and HMAS Tobruk museum."
+  },
+  {
+   "slug": "speech-359701",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Labor Party’s economic management caused a $100 million daily deficit under the Rudd-Gillard-Rudd government, while the Coalition is reducing the deficit to $23 billion in 2016-17 and targeting a $10 billion surplus by 2021. He also criticised Labor for betraying Murray-Darling Basin irrigators by voting with the Greens to disallow the Northern Basin Review, which would have returned 70 gigalitres of water to productive agriculture."
+  },
+  {
+   "slug": "speech-359921",
+   "speaker": "Anthony Byrne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-26",
+   "stage_hint": null,
+   "brief": "The MP raised concerns about the ongoing persecution of the Oromo people in Ethiopia, including the release of political prisoners after a boycott, and criticised Facebook for blocking activist Jawar Mohammed's account. He also urged the Cambodian government to end its crackdown on the opposition, specifically the Cambodian National Rescue Party, ahead of Hun Sen's visit to Australia."
+  },
+  {
+   "slug": "speech-359923",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's budget and appropriation bills fail to address stagnant wages, rising living costs, and pressures on households, citing a survey of 834 constituents where 67% reported no income growth or decreases, and majorities cited rising costs for electricity (70%), groceries (56%), insurance (56%), and private health insurance (55%). The speaker criticised the government for not intervening to protect penalty rates and for pursuing the removal of the energy supplement for pensioners, asserting the bills prioritise tax cuts for high-income earners over struggling households."
+  },
+  {
+   "slug": "speech-360028",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-26",
+   "stage_hint": null,
+   "brief": "The government's budget priorities favour tax cuts for millionaires and large businesses, ignoring the cost-of-living pressures on households, particularly from rising health costs and private health insurance premiums. A local survey found 55% of respondents cited private health insurance as a budget pressure."
+  },
+  {
+   "slug": "speech-360032",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-26",
+   "stage_hint": null,
+   "brief": "The member for Swan argued for the passage of the appropriation bills, highlighting federal coalition funding for infrastructure projects in his electorate including the Forrestfield Airport Link ($490 million), the Roe Highway and Kalamunda Road intersection upgrade ($68.8 million), the Manning Road on-ramp, and the Swan Canning River Recovery program ($2 million), while criticising the state Labor government for stopping projects such as Roe 8 and the Perth Freight Link."
+  },
+  {
+   "slug": "speech-360033",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-26",
+   "stage_hint": null,
+   "brief": "Appropriation Bills No. 3 and No. 4 seek approximately $1.5 billion in additional expenditure from the Consolidated Revenue Fund for the 2017–18 financial year, funding measures from the Mid-Year Economic and Fiscal Outlook."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 3) 2017-2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00018",
+   "assent_date": "2018-03-28"
+  }
+ ]
+}

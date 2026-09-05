@@ -1,0 +1,271 @@
+{
+ "key": "au-federal-r5389",
+ "title": "Tax and Superannuation Laws Amendment (2014 Measures No. 7) Bill 2014",
+ "short_title": "Tax and Superannuation Laws Amendment (2014 Measures No. 7) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-12-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-03-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5389%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5389%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5389%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5389%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5389%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5389%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5389%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5389%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5389%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5389%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5389%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5389%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5389%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5389%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5389_ems_d210bbd3-3675-4739-9a38-ae70a899077c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5389%22",
+   "document_date": "2014-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00021",
+   "document_date": "2015-03-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-12-04",
+  "sentences": [
+   "This bill is part of a package that changes how excess non-concessional superannuation contributions are taxed.",
+   "Individuals who withdraw excess contributions and associated earnings, or who have no remaining superannuation balance, would not face the top marginal tax rate on those amounts.",
+   "Earnings released with the excess contributions would be added to the individual's income and taxed at their marginal rate, with a 15% non-refundable tax offset available."
+  ],
+  "changes": [
+   "Removes the excess non-concessional contributions tax on amounts withdrawn from superannuation.",
+   "Taxes released earnings at the individual's marginal rate instead of the top rate.",
+   "Provides a 15% non-refundable tax offset on those earnings."
+  ],
+  "affected": "Individuals who exceed their non-concessional contributions cap and withdraw the excess or have no remaining superannuation balance.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:59:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3706",
+   "date": "2015-03-03",
+   "house": "senate",
+   "question": "Christine Milne The Greens oppose schedules 1 and 6 in the following terms: (3) Schedule 1, page 5 (line 1) to page 24 (line 8), to be opposed. (4) Schedule 6, page 55 (line 1) to page 89 (line 4), to be opposed. I do not wish to speak to these amendments any further than I have in my speech on the second reading. It is very clear why we do not want to see $100 million of taxpayers' money given as an exploration incentive to the mining industry, nor do we want to assume that people who choose to exceed their non-concessional superannuation contribution have done so inadvertently. Helen Polley Labor does not support the Greens amendment to remove schedule 1 from the bill. Schedule 1 amends the Income Tax Assessment Act 1997 and the Taxation Administration Act 1953 to reduce the tax penalty of individuals with excess non-concessional superannuation contributions. The current excess non-concessional contributions tax imposes a severe punishment for what is often an inadvertent breach of the non-concessional cap. The proposed changes will allow individuals to withdraw any excess contributions and have this amount treated as income for tax purposes. The measure is largely supported by the superannuation stakeholders. The previous Labor government enacted a similar measure on a temporary basis in 2012 and 2013 to allow excess non-concessional contributions to be withdrawn. In addition, the Inspector-General of Taxation recommended that the government change the treatment of excess non-concessional contributions following a review in 2014. Schedule 6 and the Excess Exploration Credit Tax Bill 2014 introduce an exploration development incentive by amending the Income Tax Assessment Act 1997 and other tax legislation to provide a tax incentive to encourage investment in small mineral exploration companies undertaking greenfields mineral exploration in Australia. Junior mineral companies undertake a disproportionately large amount of mineral exploration in Australia. However,",
+   "stage": "In committee",
+   "ayes": 38,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "earliest": 4,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-03/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-303946",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306001",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306002",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306006",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306007",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306011",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306016",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax and Superannuation Laws Amendment (2014 Measures No. 7) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00021",
+   "assent_date": "2015-03-19"
+  }
+ ]
+}

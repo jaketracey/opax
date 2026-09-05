@@ -1,0 +1,178 @@
+{
+ "key": "au-federal-r6274",
+ "title": "Appropriation Bill (No. 4) 2018-2019",
+ "short_title": "Appropriation Bill (No. 4) 2018-2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2019-04-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6274%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6274%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6274%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6274%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6274%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6274%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6274%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6274%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6274%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6274%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6274%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6274%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6274%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6274_ems_4592a647-f0b5-4151-8530-fb070dbdbcfb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/6579517%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6274%22",
+   "document_date": "2019-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00022",
+   "document_date": "2019-04-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375096",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-14",
+   "stage_hint": null,
+   "brief": "The government introduced additional estimates appropriation bills totalling over $2.5 billion, including $626 million for Health (aged care royal commission and drought assistance), nearly $600 million for Home Affairs (national security, refugee aid, disaster preparedness), $100.5 million for Infrastructure, $89.8 million for Agriculture (both drought assistance), $60 million for the Attorney-General’s Department (aged care royal commission), $60 million for the Australian Sports Commission (community sport and Tokyo Olympics), and $14 million for the National Gallery."
+  },
+  {
+   "slug": "speech-375097",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-14",
+   "stage_hint": null,
+   "brief": "The speaker moved the second reading of Appropriation Bill (No. 4) 2018‑2019, seeking approval for $752.9 million in additional appropriations. Key allocations include $82 million for security upgrades to Australia's overseas diplomatic network, $40.6 million for the Welfare Payment Infrastructure Transformation program, and $28 million for next generation visa processing systems."
+  },
+  {
+   "slug": "speech-375670",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "Labor will not block the appropriation bills but argues the government has mismanaged finances, citing net debt more than doubled to $360 billion, gross debt at $543.3 billion, and an $11 billion increase under Prime Minister Morrison."
+  },
+  {
+   "slug": "speech-376484",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-376568",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "The appropriation bills provide funding for the Royal Commission into Aged Care Quality and Safety, drought assistance for farmers and farm communities, and security infrastructure enhancements for Australia's overseas diplomatic network."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 4) 2018-2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00022",
+   "assent_date": "2019-04-04"
+  }
+ ]
+}

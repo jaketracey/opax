@@ -1,0 +1,140 @@
+{
+ "key": "au-federal-s1345",
+ "title": "Health Legislation Amendment (Medicare Compliance and Other Measures) Bill 2022",
+ "short_title": "Health Legislation Amendment (Medicare Compliance and Other Measures) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-08-03",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2022-12-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1345%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1345%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1345%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1345%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1345%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1345%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1345_ems_f8d58206-ee13-4c8b-ad07-59c292bae5ca%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1345%22",
+   "document_date": "2022-08-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00077",
+   "document_date": "2022-12-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-08-03",
+  "sentences": [
+   "The bill would amend several health laws to protect Medicare from inappropriate practice and incorrect payments.",
+   "It would expand the Professional Services Review's options for agreements and introduce new sanctions for failing to produce documents or attend hearings.",
+   "The bill would also align debt recovery rules across the MBS, PBS and Child Dental Benefits Schedule and clarify that the Commonwealth may recover debts paid due to false or misleading information."
+  ],
+  "changes": [
+   "Expands the Professional Services Review's ability to make agreements with persons under review, including bodies corporate.",
+   "Introduces sanctions for failing to produce documents to the Director or a Committee, or failing to appear at a hearing.",
+   "Updates debt recovery provisions to align across the Health Insurance Act, National Health Act and Dental Benefits Act.",
+   "Clarifies that the Commonwealth may recover amounts paid due to false or misleading information."
+  ],
+  "affected": "Health practitioners and bodies corporate under review by the Professional Services Review, and persons with debts owed to the Commonwealth under Medicare programs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:44:17Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Health Legislation Amendment (Medicare Compliance and Other Measures) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00077",
+   "assent_date": "2022-12-05"
+  }
+ ]
+}

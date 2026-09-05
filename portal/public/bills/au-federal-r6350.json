@@ -1,0 +1,466 @@
+{
+ "key": "au-federal-r6350",
+ "title": "Crimes Legislation Amendment (Police Powers at Airports) Bill 2019",
+ "short_title": "Crimes Legislation Amendment (Police Powers at Airports) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2019-10-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6350_ems_68d2a8c5-b29b-4be9-8f85-8a7a90cd580b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6350%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00089",
+   "document_date": "2019-10-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "The bill would give police and protective service officers new powers at major airports to check identities and order people to leave or not take flights for up to 24 hours.",
+   "Constables and protective service officers could issue identity check, move-on, and ancillary directions only when they have reasonable grounds related to suspected offences, public order, or safety.",
+   "The bill would also let the relevant Minister designate which airports are covered and create offences for failing to comply with a direction."
+  ],
+  "changes": [
+   "Enables constables and protective service officers to direct a person to produce identity evidence.",
+   "Allows constables and protective service officers to direct a person to leave an airport or not take a flight for up to 24 hours.",
+   "Creates offences for failing to comply with a direction or with the duties of an officer issuing a direction."
+  ],
+  "affected": "People at Australia's major airports, constables, and protective service officers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:52Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5917",
+   "date": "2019-10-14",
+   "house": "senate",
+   "question": "The majority voted in favour of agreeing with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a [second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that they can now discuss it in more detail. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd009): > *The Crimes Legislation Amendment (Police Powers at Airports) Bill 2019 (the 2019 Bill) will amend the Crimes Act 1914 to:* > > * *expand existing police powers to require identity information from a person at a major airport* > * *introduce new move-on powers for police under which they may give a written direction to a person at a major airport that the person not take a flight, or leave the airport as soon as possible* > * *introduce new powers for police to give a direction to a person at a major airport that the person stop or do anything else considered necessary to facilitate the exercise of the identity information request or move-on powers and* > * *allow the Minister to determine by legislative instrument that certain airports are major airports for the purposes of the exercise of powers outlined above.* > > *While the existing identity-checking power may only be exercised by a constable, the expanded and new powers in the Bill will be available to constables and Australian Federal Police (AFP) protective service officers (PSOs). Contravening a direction will be an offence.*",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 17,
+    "dated": 19,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-10-14/4"
+  },
+  {
+   "key": "federal-senate-5918",
+   "date": "2019-10-14",
+   "house": "senate",
+   "question": "Crimes Legislation Amendment (Police Powers at Airports) Bill 2019 - in Committee - Add a sunset provision",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 28,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-10-14/5"
+  },
+  {
+   "key": "federal-representatives-5895",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "question": "The majority voted in favour of a motion \"*that Senate amendment (1) be disagreed to*\", which means the amendment will not be agreed to. ### Text of Senate amendment (1) > *(1) Schedule 1, item 1, page 3 (before line 8), before section 3UL, insert:* > > *3ULA Expiration of this Division* > > *This Division is repealed at the start of the day after the end of the period of 4 years beginning on the day the Crimes Legislation Amendment (Police Powers at Airports) Act 2019 commenced.*",
+   "stage": "Consideration of Senate message",
+   "ayes": 72,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Liberal": {
+     "ayes": 43,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-10-15/2"
+  },
+  {
+   "key": "federal-senate-5929",
+   "date": "2019-10-15",
+   "house": "senate",
+   "question": "The majority voted in favour of the following [motion](https://www.openaustralia.org.au/senate/?id=2019-10-15.148.2): > *That the message be considered in Committee of the Whole immediately.*",
+   "stage": "Consideration of House message",
+   "ayes": 48,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "earliest": 24,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-10-15/11"
+  },
+  {
+   "key": "federal-senate-5930",
+   "date": "2019-10-15",
+   "house": "senate",
+   "question": "Crimes Legislation Amendment (Police Powers at Airports) Bill 2019 - in Committee - Do not insist on amendments",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 26,
+    "earliest": 24,
+    "member": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-10-15/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-377403",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-07-04",
+   "stage_hint": null,
+   "brief": "The speaker moved the second reading of the Crimes Legislation Amendment (Police Powers at Airports) Bill, which expands police powers to conduct identity checks and issue move-on directions at major airports based on reasonable suspicion of serious offences or to safeguard public order, creates new offences with fines up to $4,200, and incorporates recommendations from parliamentary committees."
+  },
+  {
+   "slug": "speech-380831",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Crimes Legislation Amendment (Police Powers at Airports) Bill 2019, noting that the revised version implements six of eight bipartisan recommendations from the Parliamentary Joint Committee on Intelligence and Security, including requiring the Australian Federal Police to record and publicly report annually on the use of the new powers, and clarifying that the powers cannot be used to disrupt peaceful assembly or protest."
+  },
+  {
+   "slug": "speech-380832",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The government argued the Crimes Legislation Amendment (Police Powers at Airports) Bill 2019 gives police broader powers to conduct identity checks and issue move-on directions for up to 24 hours at major airports to counter terrorism and organised crime, citing attacks in Brussels (2016), Istanbul (2016), Paris Orly (2017) and a foiled Sydney-to-Abu Dhabi plot (2017). The bill includes safeguards preventing use against peaceful protests and ensuring judicial review rights."
+  },
+  {
+   "slug": "speech-382732",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-15",
+   "stage_hint": null,
+   "brief": "The speaker supported a Senate amendment to insert a four-year sunset clause and a statutory review into the Crimes Legislation Amendment (Police Powers at Airports) Bill 2019, requiring the Parliamentary Joint Committee on Intelligence and Security to review the provisions in three years. The amendment, moved by Senator Patrick, would force Parliament to decide whether to re-endorse, amend, or let the new coercive powers expire."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Crimes Legislation Amendment (Police Powers at Airports) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00089",
+   "assent_date": "2019-10-28"
+  }
+ ]
+}

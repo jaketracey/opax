@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1438",
+ "title": "Defence Trade Controls Amendment (Genocide, War Crimes and Crimes Against Humanity) Bill 2024",
+ "short_title": "Defence Trade Controls Amendment (Genocide, War Crimes and Crimes Against Humanity) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-28",
+ "originating_house": "senate",
+ "sponsor": "THORPE, Sen Lidia",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10961",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1438%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1438%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1438%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1438_ems_f0fd9594-0d75-4e1e-8112-03649ef66d1b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1438%22",
+   "document_date": "2024-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-28",
+  "sentences": [
+   "This bill would stop Australian-made defence goods, technologies and services from being exported if they could be used in genocide or similar serious international crimes.",
+   "It would ban exports to a foreign country when the International Court of Justice has ruled that country poses a real and imminent risk of harming a people's right to be protected from genocide.",
+   "The bill would also apply when Australia knows or should know of a serious risk of genocide, including after a provisional measures order from the International Court of Justice."
+  ],
+  "changes": [
+   "Prohibits exporting Australian defence goods, technologies or services that risk being used in genocide, crimes against humanity or war crimes.",
+   "Bans exports to a foreign country that the International Court of Justice has found poses a real and imminent threat of irreparable harm to a people's right to be protected from genocide.",
+   "Requires Australia to act with due diligence to ensure its defence exports do not contribute to genocide after they leave the country."
+  ],
+  "affected": "Exporters of Australian-made defence goods, technologies and services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

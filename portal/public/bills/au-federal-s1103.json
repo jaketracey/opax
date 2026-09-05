@@ -1,0 +1,202 @@
+{
+ "key": "au-federal-s1103",
+ "title": "Broadcasting Legislation Amendment (Digital Radio) Bill 2017",
+ "short_title": "Broadcasting Legislation Amendment (Digital Radio) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-06",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2018-03-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1103_ems_2f09d741-098d-4a3c-995d-b460d9f515f2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1103%22",
+   "document_date": "2017-12-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00011",
+   "document_date": "2018-03-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-359338",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-13",
+   "stage_hint": null,
+   "brief": "The Broadcasting Legislation Amendment (Digital Radio) Bill 2017 was introduced to streamline digital radio planning, licensing and allocation processes, shorten legislated time frames and clarify excess capacity entitlement calculations, aiming to expedite rollout in regional Australia. Digital radio is currently available in Adelaide, Brisbane, Melbourne, Perth and Sydney, with planning underway for Canberra, Darwin and Hobart."
+  },
+  {
+   "slug": "speech-359339",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Broadcasting Legislation Amendment (Digital Radio) Bill 2017 contains modest but sensible reforms to simplify digital radio planning and licensing for regional Australia, while cautioning that the bill alone will not significantly drive digital radio rollout in those areas, as that depends primarily on commercial decisions by broadcasters."
+  },
+  {
+   "slug": "speech-359340",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-359851",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The Broadcasting Legislation Amendment (Digital Radio) Bill 2017 was supported for continuing digital radio services, including restoring $5.6 million in federal funding for community digital radio that had been cut, and a $120,000 state grant for RTRFM in Mount Lawley. The bill simplifies planning and licensing for digital radio rollout in regional Australia."
+  },
+  {
+   "slug": "speech-359852",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The member argued that radio remains vital for regional, multicultural and emergency communication, and urged the government not to set a timetable for switching off analog radio, especially in areas like Bendigo and central Victoria with poor mobile and internet coverage. The speech highlighted local stations such as Triple M, ABC Central Victoria, KLFM and Phoenix FM, and stressed the need to support both analog and digital services until all Australians have reliable streaming access."
+  },
+  {
+   "slug": "speech-359853",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The Nick Xenophon Team supported the Broadcasting Legislation Amendment (Digital Radio) Bill 2017 to streamline digital radio licensing in regional Australia, but criticised the slow rollout and warned that commercial decisions could leave regional areas without digital radio. The speaker also called for more resources for ACMA to address the backlog of community radio licensing, noting that 65 stations still await permanent licences and that promised reviews, such as for Murray Bridge, have been delayed."
+  },
+  {
+   "slug": "speech-359854",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The Broadcasting Legislation Amendment (Digital Radio) Bill 2017 amends the Broadcasting Services Act and Radiocommunications Act to simplify and make more flexible the planning and licensing of digital radio in regional Australia, following consultation with the Digital Radio Planning Committee for Regional Australia, which includes ACMA, Commercial Radio Australia, the ABC, SBS, and the Community Broadcasting Association of Australia."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Broadcasting Legislation Amendment (Digital Radio) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00011",
+   "assent_date": "2018-03-05"
+  }
+ ]
+}

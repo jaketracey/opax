@@ -1,0 +1,329 @@
+{
+ "key": "au-federal-r6657",
+ "title": "Security Legislation Amendment (Critical Infrastructure) Bill 2021",
+ "short_title": "Security Legislation Amendment (Critical Infrastructure) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2021-12-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6657%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6657%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6657%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6657%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6657%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6657%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6657%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6657%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6657%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6657%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6657%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6657%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6657%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6657_ems_928e0092-fabb-4c31-a67b-b47ac1123e17%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6657_ems_64734173-3c45-40ad-a829-b5cb4a91b88d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6657_ems_c345cb8e-87b2-461a-87f9-53d9aad3afc6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6657_ems_273d9d56-5b9a-43c4-b93d-b5b4122f6dfb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6657%22",
+   "document_date": "2020-12-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00124",
+   "document_date": "2021-12-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 9,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2020-12-10",
+  "sentences": [
+   "The bill would create new rules for owners and operators of critical infrastructure to report cyber incidents and allow the government to help them during serious attacks.",
+   "It would expand the existing Security of Critical Infrastructure Act to cover more sectors, including communications, financial services, and health care.",
+   "Mandatory reporting of serious cyber incidents to the Australian Signals Directorate would only apply once a rule is made for a particular asset or class of assets."
+  ],
+  "changes": [
+   "Introduces mandatory cyber incident reporting for critical infrastructure assets.",
+   "Establishes a government assistance regime to respond to significant cyber attacks.",
+   "Expands regulatory coverage to additional sectors such as food and grocery, space technology, and defence industry."
+  ],
+  "affected": "Owners and operators of critical infrastructure assets across all sectors, regardless of ownership arrangements.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:55:41Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7508",
+   "date": "2021-11-22",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). It would have added the words below to the usual second reading motion, which is \"that [the bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6657) be read for a second time\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Greens). ### Error in Hansard There appears to be a mix up in the Hansard record between this division and [the division](https://theyvoteforyou.org.au/divisions/senate/2021-11-22/5) on the [Counter-Terrorism Legislation Amendment (High Risk Terrorist Offenders) Bill 2021](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6593). This amendment was about ESOs, which are part of that other bill. ### Amendment text > *At the end of the motion, add \", but the Senate notes that:* > > *(a) this bill proposes to introduce an extended supervision order regime that would allow a Supreme Court of a state or territory to make orders in relation to a person who has completed a sentence of imprisonment;* > > *(b) the Criminal Code Act 1995 already contains provisions that permit a court to make a similar order in relation to the same category of offender;* > > *(c) the new extended supervision order regime proposed by this bill does not repeal the existing similar provisions;* > > *(d) the extended supervision order regime in this bill departs in very significant ways from the model proposed by the third Independent National Security Legislation Monitor; and* > > *(e) over 70 counter-terrorism laws have passed this Parliament in the last two decades, many of which have not been supported by human rights organisat",
+   "stage": "Second reading",
+   "ayes": 7,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 15,
+    "dated": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-11-22/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-400881",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-10",
+   "stage_hint": null,
+   "brief": "The Morrison government introduced the Security Legislation Amendment (Critical Infrastructure) Bill 2020 to expand critical infrastructure protections to sectors including communications, transport, data, food, defence, higher education, and health, requiring risk management programs and mandatory cybersecurity incident reporting to the Australian Signals Directorate, with last-resort government intervention powers for serious cyber incidents subject to ministerial and prime ministerial approval."
+  },
+  {
+   "slug": "speech-413546",
+   "speaker": "Brendan Patrick John O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "Labor supported the Security Legislation Amendment (Critical Infrastructure) Bill 2020, which introduces enhanced cybersecurity obligations, incident reporting and last-resort government assistance powers for critical infrastructure, citing a cyberattack every eight minutes in Australia and a 15 per cent increase in ransomware attacks. The opposition criticised the government for abolishing the cybersecurity minister and falling behind, while calling for a national ransomware strategy with bipartisan oversight."
+  },
+  {
+   "slug": "speech-413547",
+   "speaker": "Vince Connelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Security Legislation Amendment (Critical Infrastructure) Bill 2020 is necessary to protect Australia's critical infrastructure from increasing cyberattacks and grey zone activities, citing specific attacks on hospitals, a food wholesaler, and a water provider. The bill mandates risk-management programs, cybersecurity incident reporting to the Australian Signals Directorate, and includes last-resort government intervention powers."
+  },
+  {
+   "slug": "speech-413548",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The Security Legislation Amendment (Critical Infrastructure) Bill 2020 expands the definition of critical infrastructure from 4 to 11 sectors and introduces new reporting obligations and government intervention powers for cyber incidents. Labor supports the bill but criticises the Morrison government’s rushed and poorly consulted process, noting the bill was split in two after a nine-month parliamentary inquiry."
+  },
+  {
+   "slug": "speech-413549",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The member supported the Security Legislation Amendment (Critical Infrastructure) Bill 2020, arguing that mandatory reporting of cyberattacks and government partnership with the private sector are essential to protect Australia’s critical infrastructure, including emerging electricity systems like virtual power plants and the SA–NSW interconnector."
+  },
+  {
+   "slug": "speech-413550",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The Security Legislation Amendment (Critical Infrastructure) Bill 2020 was supported, citing cyberattacks occurring every eight minutes and the need to empower the Australian Signals Directorate (ASD) with last-resort intervention powers. Oversight by the Parliamentary Joint Committee on Intelligence and Security (PJCIS) was noted for notifications and a full review, alongside calls for deeper government-industry consultation as raised by the member for Gellibrand."
+  },
+  {
+   "slug": "speech-413551",
+   "speaker": "Pat Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Security Legislation Amendment (Critical Infrastructure) Bill 2020 is needed to protect Australia’s critical services from escalating cyber threats, citing a 13% increase in cybercrime reports to 67,500 in the 2021 financial year. The bill expands the definition of critical infrastructure to 11 sectors, requires entities to report cybersecurity incidents within 12 or 72 hours, and grants government assistance powers as a last resort with ministerial and prime ministerial approval."
+  },
+  {
+   "slug": "speech-413552",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued for splitting the Security Legislation Amendment (Critical Infrastructure) Bill 2020, supporting the half that expands critical infrastructure definitions from four to 11 sectors (communications, financial services, data storage, defence industry, higher education, energy, food, health, space technology, transport, water) and introduces mandatory cyber incident reporting. They criticised the government's own repeated failures to meet cybersecurity standards, citing Auditor-General findings that none of seven selected entities had fully implemented the mandatory top four mitigation strategies."
+  },
+  {
+   "slug": "speech-413553",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Security Legislation Amendment (Critical Infrastructure) Bill 2020, which expands critical infrastructure coverage from four to 11 sectors, introduces government assistance for serious cyber incidents, and mandates incident reporting to the Australian Signals Directorate; the bill follows 14 bipartisan recommendations from the Parliamentary Joint Committee on Intelligence and Security, including splitting the bill to address concerns about definitions, regulatory burden, and oversight."
+  },
+  {
+   "slug": "speech-413554",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The Security Legislation Amendment (Critical Infrastructure) Bill 2020 has merit but is flawed: it gives the minister excessive power without judicial review, is underfunded with only $42 million allocated, and was rushed despite the Australian Signals Directorate saying use would be \"very rare\". Broader national security measures are needed, including hardening physical infrastructure against natural disasters and stricter foreign investment scrutiny with lower thresholds and no exemptions for favoured trading partners."
+  },
+  {
+   "slug": "speech-413556",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the amended Security Legislation Amendment (Critical Infrastructure) Bill 2020, highlighting that the original bill was criticised for its broad, uncertain powers and lack of consultation with workers and unions, leading to the Parliamentary Joint Committee on Intelligence and Security's recommendation to split the bill and revise contentious measures."
+  },
+  {
+   "slug": "speech-413557",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The Morrison government introduced the Security Legislation Amendment (Critical Infrastructure) Bill 2020 to enhance critical infrastructure security, citing recent cyber incidents including compromises of the parliamentary network, university networks, and key corporate entities. The bill aims to build situational awareness and assist industry in preventing, defending against, and recovering from serious cybersecurity incidents."
+  },
+  {
+   "slug": "speech-413560",
+   "speaker": "Brendan Patrick John O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the government's procedural motion to split the Security Legislation Amendment (Critical Infrastructure) Bill 2020 into two parts, arguing this would expedite action on cyberattack responses that the government had delayed. The opposition had long urged faster action, and the split was recommended by the joint standing committee."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Security Legislation Amendment (Critical Infrastructure) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00124",
+   "assent_date": "2021-12-02"
+  }
+ ]
+}

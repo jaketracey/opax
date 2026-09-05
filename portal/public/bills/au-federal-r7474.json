@@ -1,0 +1,143 @@
+{
+ "key": "au-federal-r7474",
+ "title": "Appropriation (Fuel Security Response) Bill (No. 1) 2025-2026",
+ "short_title": "Appropriation (Fuel Security Response) Bill (No. 1) 2025-2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2026-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7474%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7474%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7474%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7474%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7474%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7474%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7474%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7474%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7474%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7474%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7474%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7474_ems_8e41c2d2-58eb-418f-9627-3f31ad0a2cc7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7474%22",
+   "document_date": "2026-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00023",
+   "document_date": "2026-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-30",
+  "sentences": [
+   "This bill would let the government spend money from the Consolidated Revenue Fund on fuel security measures for the rest of the 2025-2026 financial year.",
+   "It creates an Advance to the Finance Minister provision for ordinary annual services, as required by the Constitution.",
+   "The funding covers the period up to 30 June 2026, when the 2026-27 budget acts are expected to take effect."
+  ],
+  "changes": [
+   "Proposes appropriations from the Consolidated Revenue Fund for fuel security response measures.",
+   "Provides an Advance to the Finance Minister for ordinary annual services.",
+   "Funds fuel security measures for the final three months of the current financial year."
+  ],
+  "affected": "The government and sectors of the Australian economy affected by elevated fuel prices and supply constraints.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1202028",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation (Fuel Security Response) Act (No. 1) 2025-2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00023",
+   "assent_date": "2026-04-01"
+  }
+ ]
+}

@@ -1,0 +1,173 @@
+{
+ "key": "au-federal-r7322",
+ "title": "Parliamentary Business Resources Legislation Amendment (Machinery of Government Change) Bill 2025",
+ "short_title": "Parliamentary Business Resources Legislation Amendment (Machinery of Government Change) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-03-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Special Minister of State",
+ "status": "passed",
+ "status_as_of": "2025-03-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7322%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7322%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7322%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7322%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7322%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7322%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7322%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7322%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7322%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7322%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7322_ems_5c654912-9446-4f58-a80d-de24d3580aff%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7322%22",
+   "document_date": "2025-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00024",
+   "document_date": "2025-03-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-03-25",
+  "sentences": [
+   "This bill would delay a machinery of government change that transfers administration of certain parliamentary resources from the Department of Finance to the Independent Parliamentary Expenses Authority.",
+   "It would amend the commencement provision of the Parliamentary Business Resources Legislation Amendment (Review Implementation and Other Measures) Act 2024 to move the start date from 1 July 2025 to 1 July 2026.",
+   "The delay is intended to reduce disruption after the 2025 federal election and give IPEA time to settle its administration before the next statutory review of the Parliamentary Business Resources Act 2017 in late 2027."
+  ],
+  "changes": [
+   "Delays the transfer of administration of certain resources under the Parliamentary Business Resources Act 2017 from the Department of Finance to the Independent Parliamentary Expenses Authority.",
+   "Delays the extension of IPEA's ruling function, protection from liability for incorrect personal advice, and exemption under the Freedom of Information Act 1982 for personal advice provided by IPEA.",
+   "Amends the commencement date for Schedule 1 of the PBR Amendment Act from 1 July 2025 to 1 July 2026."
+  ],
+  "affected": "The Department of Finance, the Independent Parliamentary Expenses Authority, and parliamentarians and their staff who would receive advice and support after the 2025 federal election.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1194705",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194713",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194764",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194811",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194932",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-03-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Parliamentary Business Resources Legislation Amendment (Machinery of Government Change) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00024",
+   "assent_date": "2025-03-27"
+  }
+ ]
+}

@@ -1,0 +1,181 @@
+{
+ "key": "au-federal-r5990",
+ "title": "Treasury Laws Amendment (Banking Measures No. 1) Bill 2017",
+ "short_title": "Treasury Laws Amendment (Banking Measures No. 1) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-10-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-03-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5990_ems_dd1cdd7a-a52c-4974-a8e4-be97a298df5d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5990%22",
+   "document_date": "2017-10-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00009",
+   "document_date": "2018-03-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-355370",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-19",
+   "stage_hint": null,
+   "brief": "The government introduced the Treasury Laws Amendment (Banking Measures No. 1) Bill 2017, granting APRA a reserve power to regulate non-ADI lenders if financial stability risks emerge, lifting the $50 million capital prohibition on the use of the term \"bank\" for all ADI-licensed businesses, inserting an objects clause into the Banking Act for geographic and sectoral considerations, and implementing credit card reforms including mandatory affordability assessments based on full credit limit repayment, a ban on unsolicited limit increases, an end to backdated interest, and requirements for online cancellation and limit reduction options."
+  },
+  {
+   "slug": "speech-358562",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Banking Measures No. 1) Bill 2017, which gives APRA new reserve powers over non-ADI lenders, allows all ADIs to use the term \"bank\", inserts an objects provision into the Banking Act, and reforms credit card rules including responsible lending assessments, a ban on unsolicited credit limit increases, simplified interest calculations, and online options for canceling or lowering credit limits."
+  },
+  {
+   "slug": "speech-358563",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Banking Measures No. 1) Bill 2017, which gives APRA reserve powers to regulate non-ADI lenders for financial stability, allows smaller ADIs to use \"bank\" in their name, and introduces credit card reforms including banning unsolicited limit increases and simplifying cancellations. The speaker also argued that negative gearing and the 50% capital gains tax discount encourage household debt and benefit the wealthiest, noting 80% of the discount goes to the top 10% of income earners."
+  },
+  {
+   "slug": "speech-358564",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill's consumer protections for credit card holders are overdue, noting a three-year delay from a 2015 Senate inquiry to draft legislation in August 2017, with most protections not taking effect until 2019. They also criticised the government's slow progress on small amount credit contract reforms, citing that over 650,000 people received unaffordable payday loans in 2015-16 and that draft legislation for those reforms was not produced until October 2017 after a year of inaction."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Banking Measures No. 1) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00009",
+   "assent_date": "2018-03-05"
+  }
+ ]
+}

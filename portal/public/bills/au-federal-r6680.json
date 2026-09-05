@@ -1,0 +1,1009 @@
+{
+ "key": "au-federal-r6680",
+ "title": "Online Safety Bill 2021",
+ "short_title": "Online Safety Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications, Urban Infrastructure, Cities and the Arts",
+ "status": "passed",
+ "status_as_of": "2021-07-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6680%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6680%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6680%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6680%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6680%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6680%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6680%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6680%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6680%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6680%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6680%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6680%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6680%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6680%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6680_ems_3499aa77-c5e0-451e-9b1f-01339b8ad871%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6680_ems_f7624783-0b1b-4476-af1d-b6358c8fa48c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6680_ems_2c8e0baf-72c1-477c-8be5-ba3389d3d59f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6680%22",
+   "document_date": "2021-02-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00076",
+   "document_date": "2021-07-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-24",
+  "sentences": [
+   "The bill would create a new regulatory system for online safety in Australia.",
+   "It would replace the current online content scheme, expand the cyber-bullying scheme beyond social media, and give the eSafety Commissioner new powers.",
+   "The eSafety Commissioner could require internet service providers to block access to some violent material for limited periods during crises."
+  ],
+  "changes": [
+   "retain and replicate existing provisions from the Enhancing Online Safety Act 2015.",
+   "articulate core online safety expectations.",
+   "create a removal notice scheme for cyber-abuse against adults.",
+   "reduce the response time for service providers to removal notices from 48 to 24 hours."
+  ],
+  "affected": "Australians using the internet, including children and adults affected by cyber-bullying, cyber-abuse, and non-consensual sharing of intimate images, as well as service providers like social media, app distribution, and internet search companies, and internet service providers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:09Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7286",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "Online Safety Bill 2021 - Second Reading - Release the report",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "earliest": 22,
+    "dated": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/18"
+  },
+  {
+   "key": "federal-senate-7287",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-06-22.264.1) introduced by the Australian Labor Party, which means it failed. The amendment would have added the text below to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add: \", but the Senate:* > > *(a) notes that:* > >> *(i) this Government cites the introduction of the Online Safety Bill 2021 as evidence of its commitment to women's safety,* >> >> *(ii) the Member for Bowman, Mr [Andrew Laming](https://theyvoteforyou.org.au/people/representatives/bowman/andrew_laming) MP, is accused of trolling his own constituents online, and stated on 27 March 2021 that he would step down from all parliamentary roles, effective immediately, and* >> >> *(iii) when asked whether the type of material the Member for Bowman posted is what the adult cyber abuse scheme is designed to cover, Department of Infrastructure, Transport, Regional Development and Communications officials stated at Senate Estimates on 26 May 2021 that \"absolutely the intention behind this new bill, when it's passed, is to provide an avenue for people experiencing that kind of activity—to have a pathway to make complaints and have someone able to take some action\"; and* > > *(b) calls on the Prime Minister to lead by example when it comes to keeping women safe online and ensure that the Member for Bowman is discharged from the Standing Committee on Employment, Education and Training immediately\".*",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "earliest": 22,
+    "dated": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/19"
+  },
+  {
+   "key": "federal-senate-7288",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-06-22.266.1) introduced by the Australian Greens, which means it failed.",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "earliest": 19,
+    "dated": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/20"
+  },
+  {
+   "key": "federal-senate-7289",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-22.271.3) relating to the annual reports required by the bill. They were introduced by the Australian Labor Party, which means they will now form part of the bill. ### Amendment text > *(1) Amendment (4), before paragraph 138(2)(a), insert:* > >> *(aa) the number of objection notices given to the Commissioner under section 33 during that year;* > > *(2) Amendment (4), after paragraph 138(2)(l), insert:* > >> *(la) the number of requests made by the Commissioner under section 95 during that year;* > > *(3) Amendment (4), at the end of subclause 183(2), add:* > >> *; (zf) the number of applications that were received by the Commissioner under the internal review scheme (see section 220A) during that year;* >> >> *(zg) the number of informal notices given, and informal requests made, by the Commissioner to a person in relation to cyber bullying material targeted at an Australian child during that year;* >> >> *(zh) the number of informal notices given, and informal requests made, by the Commissioner to a person in relation to non consensual sharing of intimate images during that year;* >> >> *(zi) the number of informal notices given, and informal requests made, by the Commissioner to a person in relation to cyber abuse material targeted at an Australian adult during that year;* >> >> *(zj) the number of informal notices given, and informal requests made, by the Commissioner to a person in relation to material that depicts abhorrent violent conduct during that year;* >> >> *(zk) the number of informal notices given, and informal requests made, by the Commissioner to a person in relation to class 1 material during that year;* >> >> *(zl) the number of informal notices given, and informal requests made, by the Commissioner to a person in relation to class 2 material during that year;* >> >> *(zm) the number and percentage of complaints made to the Commissioner during that ye",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 24,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/21"
+  },
+  {
+   "key": "federal-senate-7290",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-22.273.1) introduced by the Opposition, which means they will now be included in the bill when it returns to the House of Representatives, for their consideration. ### Amendment text > *(1) Page 169 (before line 1), before clause 221, insert:* > > *220B Review by the ACMA* > >> *(1) If a person may apply for a review of a decision under section 220, the person may also apply to the ACMA for a review of such a decision.* > > *Review of decisions by the ACMA* > >> *(2) The ACMA may review such a decision if the ACMA thinks that it is desirable to do so.* > > *Action by the ACMA in relation to review* > >> *(3) If, having reviewed a decision, the ACMA is satisfied that it should take action under this section to encourage the Commissioner to affirm, vary or revoke the decision concerned, the ACMA may, by notice in writing given to the Commissioner, recommend that the Commissioner take action in relation to the review and decision as is specified in the notice.* >> >> *(4) The recommended action may include affirming, varying or revoking the decision concerned, or otherwise consulting in relation to such action.* > > *ACMA may report to Minister on results of recommendation* > >> *(5) If:* >> >>> *(a) the ACMA has made a recommendation to the Commissioner under subsection (3); and* >>> >>> *(b) the Commissioner does not, within 30 days after the recommendation was given, take action that the ACMA considers to be appropriate; the ACMA may give the Minister a written report on the matter.* >> >> *(6) The Minister must table a copy of the report in each House of the Parliament within 7 sitting days of that House after the day on which the Minister received the report.*",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 23,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/22"
+  },
+  {
+   "key": "federal-senate-7291",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-22.275.1) introduced by the Australian Labor Party, which means they will now be included in the bill when it returns to the House of Representatives, for their consideration. ### Amendment text > *(1) Page 148 (after line 9), after clause 183, insert:* > >> *183A Advisory committees* >> >> *(1) The Commissioner may, by writing, establish advisory committees to assist the Commissioner in performing any of the Commissioner's functions.* >> >> *(2) An advisory committee consists of such persons as the Commissioner from time to time appoints to the committee.* >> >> *(3) The Commissioner may revoke a person's appointment to an advisory committee.* >> >> *(4) The Commissioner may give an advisory committee written directions as to:* >> >>> *(a) the way in which the committee is to carry out its functions; and* >>> >>> *(b) the procedures to be followed in relation to meetings.* >> >> *(5) An appointment to an advisory committee is not a public office within the meaning of the Renumeration Tribunal Act 1973.* > > *(2) Clause 184, page 148 (line 18), at the end of subclause (2), add:* > >> *; (c) the making available of the Consumer Consultative Forum established by the ACMA to assist the Commissioner to perform the Commissioner's functions in relation to matters affecting Australians.* > > *(3) Clause 223, page 170 (after line 16), after paragraph (1)(a), insert:* > >> *(aa) a member of an advisory committee established under section 183A;*",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 24,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/23"
+  },
+  {
+   "key": "federal-senate-7292",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-22.277.1) introduced by the Australian Labor Party, which means they failed. ### Amendment text > *(1) Page 97 (after line 11), at the end of Division 1, add:* > >> *108A Restricted access system—consultation* >> >> *(1) Before making a legislative instrument under section 108, the Commissioner must:* >> >>> *(a) make a copy of the draft instrument available on a website; and* >>> >>> *(b) publish a notice on a website:* >>> >>>> *(i) stating that the Commissioner has prepared a draft of the instrument; and* >>>> >>>> *(ii) inviting written submissions from the public within a specified period; and* >>> >>> *(c) circulate to relevant stakeholders an invitation to give written submissions about the draft instrument to the Commissioner within that period.* >> >> *(2) The period specified in the notice must run for at least 30 days after the publication of the notice.* >> >> *(3) A relevant stakeholder for the purpose of paragraph (1) (c) includes but is not limited to a person who made submissions in relation to the draft Online Safety Bill 2021, if:* >> >>> *(a) the person's submissions were published on the Department's website; and* >>> >>> *(b) the Commissioner is reasonably able to contact the person.* >>> >>> *Note: Submissions in relation to the draft Online Safety Bill 2021 could, in 2021, be viewed on the Department's website (http://www.communications.gov.au).* >> >> *(4) If a person gives submissions in accordance with a notice or invitation under subsection (1), the Commissioner must have due regard to those submissions in making the instrument.*",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 23,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/24"
+  },
+  {
+   "key": "federal-senate-7293",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-22.277.1) introduced by the Australian Labor Party, which means they failed. ### Amendment text > *(1) Page 180 (after line 5), after clause 239A, insert:* > > *239B Review of operation of Part 7 of this Act — adult cyber abuse* > > *(1) Within 1 year after the commencement of this section, the Minister must cause to be conducted an independent review of the operation of Part 7 of this Act.* > > *(2) The Minister must cause to be prepared a written report of the review.* > > *(3) The Minister must cause copies of the report to be tabled in each House of the Parliament within 15 sitting days of that House after the day on which the report is given to the Minister.*",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 24,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/25"
+  },
+  {
+   "key": "federal-senate-7294",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-22.280.1) introduced by the Australian Labor Party, which means they will now form part of the bill. After passing the Senate, the bill will need to return to the House of Representatives for our MPs to consider. ### Amendments text > *(1) Page 121 (after line 9), after clause 141, insert:* > >> *141A Publication of notice where no body or association represents a section of the online industry* >> >> *(1) If the Commissioner is satisfied that a particular section of the online industry is not represented by a body or association, the Commissioner may publish a notice in the Gazette:* >> >>> *(a) stating that, if such a body or association were to come into existence within a specified period, the Commissioner would be likely to give a notice to that body or association under subsection 141(1); and* >>> >>> *(b) setting out the matter or matters relating to online activities that would be likely to be specified in the subsection 141(1) notice.* >> >> *(2) The period specified in a notice under subsection (1) must run for at least 60 days.* > > *(2) Clause 145, page 122 (line 12), at the end of subclause (1), add:* > >> *if:* >> >> *(a) the Commissioner has made a request under section 141 in relation to the development of an industry code and one or more of the following conditions is satisfied:* >> >>> *(i) the request is not complied with;* >>> >>> *(ii) if a draft code is developed by the body or association—the draft does not contain appropriate community safeguards to deal with one or more matters specified in the request;* >>> >>> *(iii) if indicative targets for achieving progress in the development of the code were specified in the notice of request—any of those indicative targets were not met;* >>> >>> *(iv) the request is complied with, but the Commissioner subsequently refuses to register the code; or* >> >> *(b) the Commissioner has published a notice under",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 22,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/26"
+  },
+  {
+   "key": "federal-senate-7295",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-22.282.1) introduced by the Australian Labor Party, which means they failed. ### Amendment text > *(1) Clause 148, page 123 (line 18), at the end of subclause (1), add:* > >> *and; (c) consult the Information Commissioner and Privacy Commissioner; and* >> >> *(d) consult the Human Rights Commissioner; and* >> >> *(e) consult at least one body or association that represents the interests of consumers; and* >> >> *(f) if the Commissioner is satisfied that a body or association represents a section of the online industry to which the industry standard or variation would apply—consult the body or association.*",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 19,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/27"
+  },
+  {
+   "key": "federal-senate-7296",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-22.284.1) introduced by the Australian Labor Party, which means they would now form part of the bill. The bill, as amended, now needs to return to the House of Representatives, where our MPs will decide whether they agree to them. ### Amendment text > *(1) Clause 5, page 13 (lines 15 to 17), omit the definition of serious harm to a person's mental health, substitute:* > > *serious harm to a person's mental health includes:* > >> *(a) serious psychological harm; and* >> >> *(b) serious distress;* > > *but does not include mere ordinary emotional reactions such as those of only distress, grief, fear or anger.* ### What was the original definition? The amendment replaces the following definition: > *serious harm to a person’s mental health includes:* > >> *(a) serious psychological harm; and* >> >> *(b) serious distress.* That is, the original definition did not include the statement \"*but does not include mere ordinary emotional reactions such as those of only distress, grief, fear or anger.*\"",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 22,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/28"
+  },
+  {
+   "key": "federal-senate-7297",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-22.287.3) introduced by the Australian Greens, which means they failed. ### Amendment text > *(1) Clause 239A, page 179 (line 26) to page 180 (line 5), omit the clause, substitute:* > >> *239A Review of the operation of this Act* >> >> *(1) The Minister must cause an independent review to be conducted of the operation of this Act.* >> >> *(2) The review must start as soon as practicable after the end of 2 years after this Act commences.* >> >> *(3) The persons who conduct the review must give the Minister a written report of the review within 6 months of the commencement of the review.* >> >> *(4) The Minister must cause copies of the report to be tabled in each House of the Parliament within 15 sitting days of that House after the day on which the Minister receives the report.*",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "earliest": 20,
+    "dated": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/29"
+  },
+  {
+   "key": "federal-senate-7298",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-22.289.1) introduced by the Australian Greens, which means they failed. ### Amendment text > *(1) Clause 105, page 91 (after line 23), at the end of the clause, add:* > > *(2) Clause 106, page 93 (after line 17), after subclause (1), insert:* > >> *(1A) For the purposes of this Act, class 1 material does not include any of the following:* >> >>> *(a) advertising;* >>> >>> *(b) online dating material;* >>> >>> *(c) health promotion material;* >>> >>> *(d) sex education and harm reduction materials for young people;* >>> >>> *(e) sexual minority material;* >>> >>> *(f) works of art.* > > *(3) Clause 107, page 96 (after line 14), after subclause (1), insert:* > >> *(1A) For the purposes of this Act, class 2 material does not include any of the following:* >> >>> *(a) advertising;* >>> >>> *(b) online dating material;* >>> >>> *(c) health promotion material;* >>> >>> *(d) sex education and harm reduction materials for young people;* >>> >>> *(e) sexual minority material;* >>> >>> *(f) works of art.* > > *(4) Clause 108, page 97 (after line 6), after paragraph (4) (b), insert:* > >> *(ba) the extent to which the system may interfere with the privacy of end-users; and* >> >> *(bb) the extent of any personal information (within the meaning of the Privacy Act 1988) which the system may require end-users to provide; and* >> >> *(bc) the strength of any data protection mechanisms in place to protect personal information required to be provided; and* > > *(5) Page 97 (after line 11), at the end of Division 1, add:* > >> *108A Restricted access system—consultation* >> >> *(1) Before making a legislative instrument under section 108, the Commissioner must:* >> >>> *(a) make a copy of the draft instrument available on a website; and* >>> >>> *(b) publish a notice on a website:* >>> >>>> *(i) stating that the Commissioner has prepared a draft of the instrument; and* >>>> >>>> *(ii) invitin",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "earliest": 20,
+    "dated": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/30"
+  },
+  {
+   "key": "federal-senate-7299",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-22.291.1) introduced by the Australian Greens, which means they failed. ### Amendment text > *SHEET 1275* > > *(1) Clause 46, page 46 (after line 32), after paragraph (1) (f), insert:* > >> *(fa) the expectation that, when meeting the expectations set out in paragraphs (a) to (f), the provider of the service will take reasonable steps to:* >> >>> *(i) ensure that material is not removed unnecessarily; and* >>> >>> *(ii) ensure that access to material is not restricted unnecessarily; and* >>> >>> *(iii) minimise the impact of meeting basic online safety expectations on freedom of expression, including expression in the form of advertising and educational materials and as part of the conduct of lawful business;* > > *SHEET 1299* > > *(1) Clause 140, page 119 (after line 30), at the end of subparagraph (1) (e) (ii), add:* > >> *(iii) the body or association consulted with at least one body or association that represents the interests of consumers about the development of the code; and*",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 24,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/31"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-403293",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The bill, together with the Online Safety Bill 2021, repeals the Enhancing Online Safety Act 2015 and transitions online content regulation to a new Online Safety Act. It increases the maximum penalty for using a carriage service to menace, harass or cause offence from three to five years’ imprisonment, and adjusts penalties for repeated dissemination of private sexual material."
+  },
+  {
+   "slug": "speech-403996",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": "The Labor speaker supported the Online Safety Bill's objectives but criticised the government’s two-and-a-half-year delay and mismanaged consultation, noting that only 7 technical amendments resulted from 376 submissions and citing unresolved concerns over the adult cyberabuse scheme's clarity, freedom of speech, and the omission of hate speech targeting groups. They moved an amendment recording these failures."
+  },
+  {
+   "slug": "speech-404000",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Online Safety Bill 2021's intent but raised concerns about rushed consultation (only 376 submissions), inadequate checks and balances on the eSafety Commissioner, and the adult cyberabuse scheme potentially being used to silence those calling out racism rather than removing racist content."
+  },
+  {
+   "slug": "speech-404002",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued the Online Safety Bill 2021 is a necessary but \"half cooked\" piece of legislation, criticising the government for rushing it after two years of inaction since the 2018 Briggs review, and raised concerns about the eSafety Commissioner's unchecked powers, potential mission creep, and risks to free speech and journalism."
+  },
+  {
+   "slug": "speech-404003",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Online Safety Bill 2021, citing statistics that 80% of four-year-olds use the internet, 30% have their own device, and only 52% of parents discuss online safety, and called for technology companies to be held accountable as publishers with the same rules online as in the real world."
+  },
+  {
+   "slug": "speech-404128",
+   "speaker": "George Christensen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Online Safety Bill will empower the eSafety Commissioner to remove harmful online content, citing statistics that 69% of boys and 23% of girls view X-rated material by age 13, 88% of explicit content contains violence against women, and 42% of teenagers are bullied on Instagram; they also called on the minister to mandate that companies like Google, Apple and Microsoft provide the same parental control features they offer to businesses."
+  },
+  {
+   "slug": "speech-404132",
+   "speaker": "Nicolle Flint",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": "The Online Safety Bill 2021 is essential to protect Australians from online bullying, harassment, and sexist abuse, and the speaker cited her own experience of being stalked and harassed online by a man charged by South Australia Police, as well as the abusive tweets of former journalist Mike Carlton targeting herself and other conservative women like Rita Panahi, Daisy Cousens, Judith Sloan, and Sharri Markson."
+  },
+  {
+   "slug": "speech-404133",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Online Safety Bill 2021 is necessary to ensure conduct unacceptable offline is not allowed online, particularly to protect children from cyberbullying, revenge porn, and harassment, and to hold platforms accountable. He cited the Christchurch terrorist attacks as a reason for stopping abhorrent violent content online."
+  },
+  {
+   "slug": "speech-404134",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": "The speaker thanked contributors and acknowledged the member for Boothby’s courage in sharing her experiences. The Online Safety Bill 2021 requires industry to prevent online harms and introduces new protections for Australians."
+  },
+  {
+   "slug": "speech-404310",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The government has committed over $100 million to the eSafety Commissioner and introduced the Online Safety Bill to expand her powers, including a new scheme targeting serious cyberabuse against adults, prioritising safety over big tech profits."
+  },
+  {
+   "slug": "speech-404355",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The committee's third scrutiny report of 2021 examined 11 new bills and 52 legislative instruments, seeking further information on the Online Safety Bill 2021 and suggesting amendments to the Migration and Citizenship Legislation Amendment (Strengthening Information Provisions) Bill 2020 and the Surveillance Legislation Amendment (Identify and Disrupt) Bill 2020 to improve human rights compatibility."
+  },
+  {
+   "slug": "speech-409027",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-17",
+   "stage_hint": null,
+   "brief": "The Online Safety Bill was questioned for failing to address racist hate speech and incitement to violence targeting groups, citing the Online Hate Prevention Institute’s finding of a significant coverage gap and its call for an urgent takedown power covering incitement to hate. The question followed earlier queries prompted by the Christchurch terrorist atrocity and warnings on right-wing extremism."
+  },
+  {
+   "slug": "speech-409479",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-22",
+   "stage_hint": null,
+   "brief": "A question was directed to the Minister for Communications, Urban Infrastructure, Cities and the Arts asking for an update on how the Morrison government's Online Safety Bill will deliver on its plan to keep Australians safe online."
+  },
+  {
+   "slug": "speech-409480",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-22",
+   "stage_hint": null,
+   "brief": "The speaker defended the Liberal-National government's record on online safety, noting the creation of the world's first children's e-safety commissioner in 2015, the handling of over 61,000 complaints, and $125 million in new funding. They announced a new Online Safety Bill to unmask anonymous abusers, increase criminal penalties to five years' imprisonment, and require removal of harmful images within 24 hours."
+  },
+  {
+   "slug": "speech-409777",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's Online Safety Bill is contradicted by its 41 refusals to force the member for Bowman to stand down as committee chair over his multiyear online harassment campaign, and by gagging 16 Labor women—including the members for Newcastle, Cowan, Jagajaga, Corangamite, Lalor, Cooper, Sydney, Franklin, Parramatta, Dunkley, Eden-Monaro, Macquarie, Griffith, Werriwa, Brand, and Canberra—who sought to hold him accountable."
+  },
+  {
+   "slug": "speech-409778",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "Labor supported the Online Safety Bill 2021 as amended but criticised delays since the 2018 Briggs review, lack of process on online hate speech targeting groups, and the government withholding a report on age verification; the minister was asked for the third consecutive year what steps had been taken to address racist hate speech online."
+  },
+  {
+   "slug": "speech-409779",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's failure to hold the member for Bowman accountable for his admitted online activities undermines the Online Safety Bill 2021 and the broader fight against domestic violence, where one woman is killed every week."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Online Safety Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00076",
+   "assent_date": "2021-07-23"
+  }
+ ]
+}

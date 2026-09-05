@@ -1,0 +1,298 @@
+{
+ "key": "au-federal-r5851",
+ "title": "Competition and Consumer Amendment (Competition Policy Review) Bill 2017",
+ "short_title": "Competition and Consumer Amendment (Competition Policy Review) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-10-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5851_ems_0b6ffc49-7398-409a-8e46-4873853a475f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5851_ems_f5f49f1d-0278-4434-84f4-047b3ebcae68%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5851%22",
+   "document_date": "2017-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00114",
+   "document_date": "2017-10-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-4933",
+   "date": "2017-10-16",
+   "house": "senate",
+   "question": "Competition and Consumer Amendment (Competition Policy Review) Bill 2017 - in Committee - Secondary boycotts",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 34,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-10-16/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-352584",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Competition and Consumer Amendment (Competition Policy Review) Bill 2017, arguing it is vital for small businesses based on their own experience as a dairy farmer facing unfair practices like buyer collusion at cattle sales and ACCC refusal of a collective bargaining application for 300 dairy farmers in 2005. They named three farmers—Graham Manning, Tony Ferraro, and Dale Hanks—who lost contracts in 2017, and praised the government for establishing the Office of the Australian Small Business and Family Enterprise Ombudsman and intervening in the Road Safety Remuneration Tribunal issue."
+  },
+  {
+   "slug": "speech-352585",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "Labor supported most of the Competition and Consumer Amendment (Competition Policy Review) Bill 2017 but opposed schedule 6, which would increase maximum penalties for secondary boycott breaches from $750,000 to $10 million or more, arguing the increase was unreasonable and inconsistent with International Labour Organization conventions."
+  },
+  {
+   "slug": "speech-352586",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill replaces the \"purpose of damaging a competitor\" test with an \"effect of substantially lessening competition\" test, which will likely reduce the number of cases small businesses can bring under section 46. He also welcomed changes to resale price maintenance laws that allow businesses to obtain an authorisation from the ACCC, calling this pro-competitive and pro-small business policy."
+  },
+  {
+   "slug": "speech-352733",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill further erodes Australians' right to strike by increasing penalties for secondary boycotts from $750,000 to $10 million, continuing a conservative trend of undermining strike rights since WorkChoices and the Fraser government's introduction of section 45D. They contended that this attack on collective bargaining and conciliation contributes to declining worker power and real wage cuts."
+  },
+  {
+   "slug": "speech-352735",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that Schedule 8 of the bill provides a quicker, less expensive notification process for resale price maintenance, which is procompetitive, and that Schedule 6 increases penalties for secondary boycotts to protect productivity and small business. The speaker also noted that further work is needed to prevent anticompetitive price discrimination, citing the US Robinson-Patman Act."
+  },
+  {
+   "slug": "speech-352736",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The speaker opposed schedule 6 of the bill, which increases maximum penalties for secondary boycotts from $750,000 to up to $10 million or more, arguing it is an 800-fold increase over Fair Work Act penalties, attacks workers' right to strike, and is inconsistent with international law. They supported the remaining 11 schedules, citing Labor's history of competition reform, and noted union membership is at a 110-year low of 15%, with the IMF attributing 19% of the decline in workers' income to falling union membership."
+  },
+  {
+   "slug": "speech-352741",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "Supported the Competition and Consumer Amendment (Competition Policy Review) Bill 2017 and the shadow Assistant Treasurer's amendment, agreeing that the government targets workers and organised labour, while noting the Harper review was handed down 2½ years ago in March 2015."
+  },
+  {
+   "slug": "speech-352744",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The bill implements Harper review and Productivity Commission recommendations to simplify competition law and align secondary boycott penalties with other breaches. The speaker criticised Labor for opposing schedule 6, which would remove special treatment for unions."
+  },
+  {
+   "slug": "speech-355135",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The government moved to agree to an amendment to the Competition and Consumer Amendment (Competition Policy Review) Bill, implementing Harper Review recommendations to align secondary boycott penalties with other competition law breaches, and criticised Labor for amending the bill to protect unions from tougher penalties."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Competition and Consumer Amendment (Competition Policy Review) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00114",
+   "assent_date": "2017-10-27"
+  }
+ ]
+}

@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-s1485",
+ "title": "Commonwealth Electoral Amendment (Banning Dirty Donations) Bill 2026",
+ "short_title": "Commonwealth Electoral Amendment (Banning Dirty Donations) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-02-04",
+ "originating_house": "senate",
+ "sponsor": "HODGINS-MAY, Sen Steph",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "11020",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-05-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1485%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1485_ems_fd3b6cc3-d715-4279-84a7-3c7a1eb8ef1f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1485%22",
+   "document_date": "2026-02-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-02-04",
+  "sentences": [
+   "The bill would ban political donations from specific industries and lower the cap on other donations.",
+   "It would make it illegal for prohibited donors, including property developers, tobacco companies, banks, and others, to give donations, with penalties of up to two years in prison or fines.",
+   "The annual gift cap would be reduced to $1,000, and the definition of 'gift' would include subscription and membership fees for federal purposes."
+  ],
+  "changes": [
+   "Prohibits donations from industries such as property development, tobacco, banking, liquor and gambling, pharmaceuticals, mining, and defence.",
+   "Imposes a cumulative donation limit of $3,000 per election term from any source.",
+   "Extends the definition of 'gift' to cover subscription and membership fees used for federal purposes.",
+   "Reduces the annual gift cap to $1,000 and sets by-election and Senate-only caps at $3,000.",
+   "Creates offences for making or accepting unlawful donations, with penalties of up to two years imprisonment or fines.",
+   "Allows the Commonwealth to recover unlawful donations as debts."
+  ],
+  "affected": "Political parties, candidates, associated entities, significant third parties, and donors from the banned industries.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1202884",
+   "speaker": "Steph Hodgins-May",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2026-05-14",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

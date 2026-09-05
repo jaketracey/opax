@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-s1439",
+ "title": "Genocide Risk Reporting Bill 2024",
+ "short_title": "Genocide Risk Reporting Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-28",
+ "originating_house": "senate",
+ "sponsor": "THORPE, Sen Lidia",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10961",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1439%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1439%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1439%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1439_ems_66237a0d-e4c3-4573-9fa4-939bc15e6e02%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1439%22",
+   "document_date": "2024-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-28",
+  "sentences": [
+   "This bill would stop Australian government money from going into businesses linked to genocide or that hide or ignore genocide risks.",
+   "It sets up yearly public reports from certain companies and groups on how they deal with genocide risks in their supply chains, and creates an Anti-Genocide Commissioner to help businesses and government follow the law.",
+   "The commissioner would lack the power to investigate or force disclosure, and the bill introduces criminal and civil penalties based on recommendations from a review of the Modern Slavery Act 2018, plus judicial review for some ministerial and commissioner decisions."
+  ],
+  "changes": [
+   "Creates a reporting duty for certain businesses and entities in Australia to publish annual statements on their genocide risk actions.",
+   "Establishes the Anti-Genocide Commissioner to support compliance, improve supply chain transparency, and help combat genocide domestically and abroad.",
+   "Introduces criminal penalties for reporting entities that fail to comply.",
+   "Adds civil penalties aligned with the Public Interest Disclosure Act 2013 to boost accountability.",
+   "Provides for court review of certain decisions by the minister and the Anti-Genocide Commissioner."
+  ],
+  "affected": "Australian businesses and entities with operations or supply chains that might involve genocide risks, especially large companies with complex global supply chains, and also government entities that invest in or procure from such businesses.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,259 @@
+{
+ "key": "au-federal-r6879",
+ "title": "Treasury Laws Amendment (2022 Measures No. 1) Bill 2022",
+ "short_title": "Treasury Laws Amendment (2022 Measures No. 1) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-07-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2022-08-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-08-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-08-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6879_ems_c9e11cf0-b0f0-488e-bf4f-14382712d07c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6879%22",
+   "document_date": "2022-07-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00035",
+   "document_date": "2022-08-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7707",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (2022 Measures No. 1) Bill 2022 - Consideration of Senate Message - Agree with amendments and so pass bill",
+   "stage": "Consideration of Senate message",
+   "ayes": 86,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 75,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-04/14"
+  },
+  {
+   "key": "federal-senate-7719",
+   "date": "2022-08-04",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (2022 Measures No. 1) Bill 2022 - in Committee - Transparency",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "earliest": 34,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-08-04/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-420197",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-07-27",
+   "stage_hint": null,
+   "brief": "The bill exempts Tropical Cyclone Seroja recovery grants of up to $25,000 from income tax, closes the Superannuation Complaints Tribunal with transfers to ASIC and AFCA, grants FIFA and its subsidiary tax exemptions for the 2022 World Cup, and defers the modernising business registers program transfer to 1 July 2026 due to a cost blowout from $500 million to $1.5 billion."
+  },
+  {
+   "slug": "speech-420932",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-08-02",
+   "stage_hint": null,
+   "brief": "The opposition supported the bill as it continues the former coalition government's economic measures, but criticised the government for delaying the Modernising Business Registers program until 2026 and for lacking an overall economic plan."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2022 Measures No. 1) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00035",
+   "assent_date": "2022-08-09"
+  }
+ ]
+}

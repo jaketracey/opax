@@ -1,0 +1,273 @@
+{
+ "key": "au-federal-r7417",
+ "title": "Veterans’ Affairs Legislation Amendment (Miscellaneous Measures No. 2) Bill 2026",
+ "short_title": "Veterans’ Affairs Legislation Amendment (Miscellaneous Measures No. 2) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans’ Affairs",
+ "status": "passed",
+ "status_as_of": "2026-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7417_ems_8998c4b0-d67b-4b0f-8efd-4e1ab3f18a1b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7417_ems_2b00cf65-1cf0-433d-89e2-73da7f0f4f83%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7417_ems_fe8764ee-d9f3-42fc-80a5-a120b915b2e7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7417%22",
+   "document_date": "2025-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00031",
+   "document_date": "2026-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2025-11-27",
+  "sentences": [
+   "This bill would fix minor errors and clarify the original policy intent of veterans' compensation and rehabilitation reforms before they take effect on 1 July 2026.",
+   "It would amend the Military Rehabilitation and Compensation Act, the Veterans' Entitlements Act and the Defence-related Claims Act through ten changes, including allowing the Veterans' Review Board to notify the Chief of Defence Force when a serving member seeks review.",
+   "The government says the bill has no financial impact and was developed from consultation between 2022 and 2024."
+  ],
+  "changes": [
+   "Allow the Veterans' Review Board to tell the Chief of Defence Force when a serving member applies for review, so the CDF can become a party and be told the outcome.",
+   "Remove the requirement that applications for travel expenses related to the Board be communicated to the Board.",
+   "Clarify that dependants who already received compensation before 1 July 2026 do not need to retest eligibility after that date.",
+   "Confirm that the high rate of funeral compensation under the MRCA is available even if the low-rate criteria are also met.",
+   "Clarify that liability can be accepted for unintended outcomes of treatment given by the Australian Defence Force during service, and for treatment provided by the Department of Veterans' Affairs for an earlier service injury or disease.",
+   "Confirm that Victoria Cross Allowance and Decoration Allowance are excluded income for means testing and rate calculations."
+  ],
+  "affected": "Veterans, their dependants, serving members, the Veterans' Review Board, the Chief of Defence Force, and the Repatriation Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9853",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2026-02-04.149.2) to the usual second reading text, which is \"*that the bill be read a second time*\" (parliamentary jargon for a agreeing with the main idea of the bill). ### Amendment text > *That the amendment moved by the honourable member for Hume be agreed to:* > > *That all words after \"That\" be omitted with a view to substituting the following words:* > >> *\"whilst not declining to give the bill a second reading, the House calls on the Government to remove any references to a notification of the Chief of the Defence Force, considering the impact this would have on a member's right to privacy and access to care\".*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 46,
+   "noes": 86,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 86
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-02-04/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1199166",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199365",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199369",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-02-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199467",
+   "speaker": "Claire Clutterham",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199613",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199643",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-02-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Veterans’ Affairs Legislation Amendment (Miscellaneous Measures No. 2) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00031",
+   "assent_date": "2026-04-01"
+  }
+ ]
+}

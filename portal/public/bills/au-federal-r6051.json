@@ -1,0 +1,971 @@
+{
+ "key": "au-federal-r6051",
+ "title": "Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018",
+ "short_title": "Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2018-08-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-08-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6051_ems_5396a562-8e4f-4064-93a0-251ef57bb2ae%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6051_ems_35482097-00fe-4530-acf1-c23498b2cda2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6051_ems_e2a0d356-4008-42db-ad00-f178082b56b0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6051_ems_6973fdeb-2dc9-4150-8b41-772b4f45ad1e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6051_ems_bb6b314c-c34c-4b4c-b72f-22c2180f1dd8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6051%22",
+   "document_date": "2018-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00076",
+   "document_date": "2018-08-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2018-02-14",
+  "sentences": [
+   "This bill would change how student loan debts are repaid and indexed to make the Higher Education Loan Program more sustainable.",
+   "It would set new repayment thresholds and rates for HELP loans from 1 July 2018, with a minimum threshold of $45,000 and a one per cent repayment rate, rising to a top threshold of $131,989 at ten per cent.",
+   "From 1 July 2019, HELP repayment thresholds would be indexed using the Consumer Price Index instead of Average Weekly Earnings, and from 2019–20, SFSS repayment thresholds would align with HELP thresholds."
+  ],
+  "changes": [
+   "Sets new HELP repayment thresholds and rates from 1 July 2018.",
+   "Aligns indexation of HELP repayment thresholds to the Consumer Price Index from 1 July 2019.",
+   "Brings SFSS repayment thresholds in line with HELP thresholds from 2019–20.",
+   "Retains the current three-tier SFSS repayment threshold for 2018–19.",
+   "Sets FEE-HELP loan limits for 2019.",
+   "Introduces combined HELP loan limits from 1 January 2020 and allows renewable HELP balances from 2020."
+  ],
+  "affected": "People with Higher Education Loan Program debts and Student Financial Supplement Scheme debts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5178",
+   "date": "2018-03-27",
+   "house": "representatives",
+   "question": "Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-03-27/1"
+  },
+  {
+   "key": "federal-representatives-5179",
+   "date": "2018-03-27",
+   "house": "representatives",
+   "question": "Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018 - Consideration in Detail - Agree with bill as amended",
+   "stage": "Consideration in detail",
+   "ayes": 76,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-03-27/2"
+  },
+  {
+   "key": "federal-senate-5292",
+   "date": "2018-06-26",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2018-06-26.4.2) to adjourn the debate, which means the consideration of the bill will continue. The motion was introduced by Labor Senator [Murray Watt](https://theyvoteforyou.org.au/people/senate/queensland/murray_watt) (Qld).",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 34,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-26/1"
+  },
+  {
+   "key": "federal-senate-5327",
+   "date": "2018-08-13",
+   "house": "senate",
+   "question": "Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 38,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 38,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-13/1"
+  },
+  {
+   "key": "federal-senate-5328",
+   "date": "2018-08-13",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-08-13.38.3) to keep [schedule 1](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6051_aspassed%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6051_aspassed%2F0000%22;rec=0) unchanged. In parliamentary jargon, they voted \"*that schedule 1 stand as printed.*\" ### What is schedule 1? Schedule 1 lowers repayment thresholds, which are the income levels that people with Higher Education Loan Program (HELP) debts have to reach before compulsory repayments begin.",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 34,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-13/2"
+  },
+  {
+   "key": "federal-senate-5329",
+   "date": "2018-08-13",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2018-08-13.161.2) introduced by Victorian Senator [Derryn Hinch](https://theyvoteforyou.org.au/people/senate/victoria/derryn_hinch) (Derryn Hinch's Justice Party), which means it failed. The amendment would have raised the repaying point, meaning that people with Higher Education Loan Program (HELP) debts would have to earn a higher amount before compulsory repayments begin. ### Motion text > *(1) Schedule 1, item 1, page 3 (line 6), omit \"$44,999\", substitute \"$50,000\".*",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 43,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 26,
+    "earliest": 9,
+    "member": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-13/3"
+  },
+  {
+   "key": "federal-senate-5330",
+   "date": "2018-08-13",
+   "house": "senate",
+   "question": "Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018 - in Committee - Agree with amended bill",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 19,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-13/4"
+  },
+  {
+   "key": "federal-senate-5331",
+   "date": "2018-08-13",
+   "house": "senate",
+   "question": "Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 36,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 19,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-13/5"
+  },
+  {
+   "key": "federal-representatives-5332",
+   "date": "2018-08-14",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2018-08-14.94.2): > *That the [amendments](https://theyvoteforyou.org.au/divisions/representatives/2018-08-14/2) be considered immediately.*",
+   "stage": "Consideration of Senate message",
+   "ayes": 76,
+   "noes": 65,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 62
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-08-14/1"
+  },
+  {
+   "key": "federal-representatives-5333",
+   "date": "2018-08-14",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2018-08-14.94.2) to agree with the Senate [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr6051_sched_cf0fe1cc-71b9-4ac3-99d5-c2e884faafe7%22;rec=0). According to Griffith MP [Terri Butler](https://theyvoteforyou.org.au/people/representatives/griffith/terri_butler) (Labor), the [amendments have two tranches](https://www.openaustralia.org.au/debate/?id=2018-08-14.99.1): > *the first tranche by the government is to change some of the timing in relation to the implementation of these measures, and the second tranche that had come from the crossbench relates to loans fees in respect of the HECS arrangements and the FEE-HELP arrangements for certain table 2 institutions.* For more, see the [discussion during the debate](https://www.openaustralia.org.au/debates/?id=2018-08-14.94.2).",
+   "stage": "Consideration of Senate message",
+   "ayes": 76,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-08-14/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-359402",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-14",
+   "stage_hint": null,
+   "brief": "The bill introduces new HELP repayment thresholds starting at $45,000 with a 1% rate, indexes thresholds to CPI, sets a combined lifetime loan limit of $150,000 for medicine/dentistry/veterinary students and $104,440 for others, and prioritises HELP debt repayment over other student loans. The government argued these measures are needed to address HELP lending growth from $3 billion in 2009 to $7 billion in 2016 and outstanding debt of $55.4 billion as of June 2017."
+  },
+  {
+   "slug": "speech-361011",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill, arguing it would cut $2.2 billion from higher education, lower the HELP repayment threshold to $45,000, and disproportionately affect women and low-income students, and announced Labor's plan for a once-in-a-generation inquiry into Australia's post-secondary education system."
+  },
+  {
+   "slug": "speech-361013",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-26",
+   "stage_hint": null,
+   "brief": "The speaker spoke in support of the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, agreeing with the member for Griffith that both higher education and vocational education and training are important pathways for students after secondary school."
+  },
+  {
+   "slug": "speech-361137",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-26",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, which sets a new minimum HELP repayment threshold of $45,000, indexes thresholds to CPI, and introduces borrowing caps of $150,000 for medicine/dentistry/veterinary students and $104,440 for others, citing $55 billion in outstanding loans and the need for fiscal sustainability."
+  },
+  {
+   "slug": "speech-361138",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, arguing it would unfairly lower the HELP repayment threshold to $45,000 and harm students, particularly women and low-income earners, while the government gives $65 billion in tax cuts to large companies and high-income individuals. The speaker noted that universities and students have already contributed over $3.9 billion to budget repair since 2011."
+  },
+  {
+   "slug": "speech-361139",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-26",
+   "stage_hint": null,
+   "brief": "Labor opposed the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, arguing it unfairly burdens students by lowering the repayment threshold to $45,000, indexing to CPI, and capping loans at $104,000 (or $150,000 for some). The speaker cited $2.2 billion in university cuts, $92 million in lost funding for Griffith University, and up to 10,000 students potentially missing out on places."
+  },
+  {
+   "slug": "speech-361141",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, arguing it would harm students by lowering the minimum repayment threshold to $45,000 and introducing a combined loan limit, saving the government $345.8 million over four years. They cited 140,000 lost apprenticeships since the Liberals took office and advocated for Labor’s historical reforms, including HECS and demand-driven funding, which increased university participation by 190,000 students."
+  },
+  {
+   "slug": "speech-361142",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-26",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, which lowers the minimum HELP repayment threshold to $45,000, introduces CPI indexation, and caps combined student loans at $150,000 for medical students and $104,440 for others. They noted that as of June 2017 only $35.9 billion of $55.4 billion in debt would likely be repaid, and supported bipartisan work on recovering debts from estates to ensure fairness for taxpayers and future generations."
+  },
+  {
+   "slug": "speech-361144",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, arguing it would unfairly penalise women, disadvantaged students and regional communities by lowering the HELP repayment threshold to $45,000 and introducing a $104,440 lifetime loan cap, while criticising the Turnbull government for cutting university funding."
+  },
+  {
+   "slug": "speech-361146",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-26",
+   "stage_hint": null,
+   "brief": "Labor opposed the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, arguing it would cut $2.2 billion from universities and lower the HELP repayment threshold to $42,000, disproportionately affecting low-income, disadvantaged, and regional students. The speaker cited statistics showing increased participation from underrepresented groups under the current system and accused the government of prioritising $65 billion in tax cuts for high-income earners over education investment."
+  },
+  {
+   "slug": "speech-361149",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-03-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018 would harm rural and regional Australia, citing Hume Region statistics showing only 17.35% of 25–34 year olds held a bachelor degree compared to the Victorian average of 30.4%. They called for a national regional higher education strategy, noting support from the Group of Eight and Regional Universities Network, and proposed a $9.7 million change to the HELP repayment-free period for rural regions."
+  },
+  {
+   "slug": "speech-361151",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, arguing it attacks students by lowering the HELP repayment threshold to $45,000, which would disproportionately affect low-income earners, women, and vocational students, and criticised the government for $2.2 billion in higher education cuts while announcing Labor's national inquiry into post-secondary education."
+  },
+  {
+   "slug": "speech-361152",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, arguing it would impose excessive financial strain on graduates and deter disadvantaged students from university. They cited a graduate budget showing only $250 left weekly after essentials under a lowered repayment threshold, and warned the bill would reduce socioeconomic diversity in professions."
+  },
+  {
+   "slug": "speech-361288",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-27",
+   "stage_hint": null,
+   "brief": "The Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018 was opposed for lowering the student loan repayment threshold to $42,000, part of broader education cuts totalling $17 billion from schools, nearly $3 billion from vocational education, and $2.2 billion from universities to fund a $65 billion corporate tax cut, with $93 million in cuts to Western Sydney University from 2018 to 2021."
+  },
+  {
+   "slug": "speech-361290",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-27",
+   "stage_hint": null,
+   "brief": "Labor opposed the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, arguing it unfairly lowers the HELP repayment threshold to $45,000 and worsens inequality for young people. The speaker also proposed exploring bipartisan review of collecting unpaid HELP debts from deceased estates, citing Grattan Institute estimates of $2.8 billion over three years."
+  },
+  {
+   "slug": "speech-361291",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-27",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, arguing it cuts $2.2 billion from university funding while the government pursues $65 billion in tax cuts for the wealthy, and that it will reduce participation and increase barriers for low-income students. Specific concerns included delayed student start-up loans, worsening mental health among students, and an estimated 10,000 students missing out on university places due to the funding freeze."
+  },
+  {
+   "slug": "speech-361294",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-27",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, which would lower the HELP repayment threshold from $54,869 to $45,000 from 1 July 2019, saving the government $245 million and $32.3 million more from the Student Financial Supplement Scheme. The speaker argued the cuts would harm low-income students, citing increases in disadvantaged enrolments from 2008 to 2016—disabled students from 24,311 to 50,206, Indigenous from 7,038 to 13,320, low SES from 90,467 to 140,462, and regional/remote from 110,124 to 163,292—and noted $2.2 billion in total education cuts, including $160 million for South Australian universities, while the government prioritises $65 billion in corporate tax cuts."
+  },
+  {
+   "slug": "speech-361295",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-27",
+   "stage_hint": null,
+   "brief": "The bill introduces new repayment thresholds, indexation changes, and a combined loan limit for HELP to ensure the sustainability of Australia’s student loan system. The speaker corrected an error in the second reading speech—VET student loan caps apply per course, not per year—and revised the financial impact from a $22.9 million cost to a $3.2 million saving in fiscal balance over the forward estimates, with a $9.9 million cost in underlying cash."
+  },
+  {
+   "slug": "speech-366969",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-14",
+   "stage_hint": null,
+   "brief": "Labor opposed the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, arguing it reduces the HECS repayment threshold and continues a pattern of university funding cuts, including a $2.2 billion cut announced in the 2017 MYEFO."
+  },
+  {
+   "slug": "speech-366976",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-14",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, arguing it would worsen university affordability and disproportionately affect women, who hold 60% of HELP debts and make up two-thirds of those impacted. They cited a $2.2 billion cut to universities before Christmas and a report showing $12 billion spent on Group of Eight universities returned $66 billion in economic growth."
+  },
+  {
+   "slug": "speech-366981",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-14",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Legislation Amendment (Student Loan Sustainability) Bill 2018, arguing it attacks universities, young people, and regional communities like Northern Tasmania, where lower educational attainment harms local economies. They contrasted the government's $80 billion in tax cuts for big banks with the denial of funding to education, calling for more investment in higher education, not less."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Higher Education Support Legislation Amendment (Student Loan Sustainability) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00076",
+   "assent_date": "2018-08-24"
+  }
+ ]
+}

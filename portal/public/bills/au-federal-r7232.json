@@ -1,0 +1,172 @@
+{
+ "key": "au-federal-r7232",
+ "title": "Better and Fairer Schools (Information Management) Bill 2024",
+ "short_title": "Better and Fairer Schools (Information Management) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-08-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2024-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-08-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-08-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-08-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7232_ems_c944d897-74ed-4215-98b0-f94e641e87e3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7232_ems_34019d1d-c9e3-41de-9da2-2441f2ef7034%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7232%22",
+   "document_date": "2024-08-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00111",
+   "document_date": "2024-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-08-15",
+  "sentences": [
+   "This bill would let the student identifier system used in vocational and higher education be expanded to school students.",
+   "It would give the Student Identifiers Registrar new powers and duties to assign, collect, use and share school identifiers.",
+   "The bill makes school identifiers protected information and sets strict rules for handling them, with breaches treated as privacy interferences under the Privacy Act."
+  ],
+  "changes": [
+   "Expand the Student Identifiers Act 2014 to cover the schools sector.",
+   "Create schools identifiers for school students.",
+   "Classify schools identifiers and related information as protected information with strict restrictions.",
+   "Allow only limited circumstances for collection, use and disclosure of this information.",
+   "Require entities handling schools identifiers to protect them from misuse or unauthorised access.",
+   "Oblige APP entities with annual turnover over $3 million to follow the Privacy Act for this information."
+  ],
+  "affected": "School students, the Student Identifiers Registrar, education authorities and entities that handle school identifier information.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Better and Fairer Schools (Information Management) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00111",
+   "assent_date": "2024-12-10"
+  }
+ ]
+}

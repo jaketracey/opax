@@ -1,0 +1,188 @@
+{
+ "key": "au-federal-r6648",
+ "title": "National Emergency Declaration (Consequential Amendments) Bill 2020",
+ "short_title": "National Emergency Declaration (Consequential Amendments) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2020-12-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6648%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6648%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6648%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6648%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6648%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6648%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6648%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6648%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6648%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6648%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6648_ems_2792b085-0a3f-4f00-94fe-b6b318243f9e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6648%22",
+   "document_date": "2020-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00129",
+   "document_date": "2020-12-15",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-6875",
+   "date": "2020-12-10",
+   "house": "senate",
+   "question": "The majority voted against adding [additional words](https://www.openaustralia.org.au/senate/?id=2020-12-10.58.1) (see below) to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"*that the bill be read a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. This means the words won't be added. ### Amendment text > *At the end of the motion, add: \", but the Senate:* > > *(a) notes:* > >> *(i) the Prime Minister's failure to prepare adequately for the last bushfire season,* >> >> *(ii) the Prime Minister's catastrophic failure of leadership during the last bushfire season, which Australians have come to know as the Black Summer, and* >> >> *(iii) the bill largely re-states existing emergency powers of the Commonwealth Government; and* > > *(b) calls on the Prime Minister and the Government to:* > >> *(i) learn from their catastrophic failure to prepare for, or respond to, the Black Summer,* >> >> *(ii) urgently prepare for this disaster season, including by releasing funding for mitigation works from their $4 billion Emergency Response Fund, and* >> >> *(iii) accept, and implement, the Royal Commission into National Natural Disaster Arrangements' recommendation to develop a sovereign aerial firefighting fleet\".*",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 22,
+    "dated": 26,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-10/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-399715",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The National Emergency Declaration (Consequential Amendments) Bill 2020 amends Commonwealth legislation to streamline emergency powers, enabling ministers and officials to act quickly during a declared national emergency. It implements recommendation 5.1 of the Royal Commission into National Natural Disaster Arrangements by removing redundant emergency tests and creating simplified alternative tests for exercising powers."
+  },
+  {
+   "slug": "speech-400758",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the National Emergency Declaration Bill 2020 and its consequential amendments, which implement recommendation 5.1 of the Royal Commission into National Natural Disaster Arrangements. The bills allow the federal government to declare a national emergency for nationally significant harm from any hazard, with safeguards including a three-month limit, state/territory request requirement, ministerial reporting to parliament, and a five-year review."
+  },
+  {
+   "slug": "speech-400759",
+   "speaker": "Trevor Evans",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The National Emergency Declaration Bill 2020 and its companion bill create a legislative framework for the Governor-General to declare a national emergency on the Prime Minister's advice, implementing recommendation 5.1 of the Royal Commission into National Natural Disaster Arrangements. The bill gives the Prime Minister power to request a declaration unilaterally if a state is incapacitated, allows suspension of procedural requirements for emergency support, and introduces mandatory reviews within five years and after each declaration."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Emergency Declaration (Consequential Amendments) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00129",
+   "assent_date": "2020-12-15"
+  }
+ ]
+}

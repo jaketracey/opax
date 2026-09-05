@@ -1,0 +1,390 @@
+{
+ "key": "au-federal-r5548",
+ "title": "Superannuation Legislation Amendment (Trustee Governance) Bill 2015",
+ "short_title": "Superannuation Legislation Amendment (Trustee Governance) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5548%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5548%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5548%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5548%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5548%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5548%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5548%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5548%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5548%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5548%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5548%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5548_ems_8f0b4389-f147-4866-a1ef-c76c35c28287%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5548_ems_2c60b3cf-06c6-4270-b626-a022357972c7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5548%22",
+   "document_date": "2015-09-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-16",
+  "sentences": [
+   "The bill would require superannuation fund boards to include at least one-third independent directors and an independent chair.",
+   "It would amend the Superannuation Industry (Supervision) Act 1993 to impose these new governance requirements on registrable superannuation entity licensees.",
+   "The change would apply to all RSE licensees, with no specified start date or exemption in the source."
+  ],
+  "changes": [
+   "Requires at least one-third of directors on superannuation fund boards to be independent.",
+   "Requires the board chair to be independent.",
+   "Amends the Superannuation Industry (Supervision) Act 1993."
+  ],
+  "affected": "Trustees of registrable superannuation entities, commonly called RSE licensees, would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:52:29Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3984",
+   "date": "2015-10-20",
+   "house": "representatives",
+   "question": "Lisa Chesters As I was saying before debate was adjourned earlier, the Superannuation Legislation Amendment (Trustee Governance) Bill has nothing to do with growing superannuation funds. It has nothing to do with ensuring that hard-working Australians will have increased superannuation. The bill is about red tape. It is about taking a wrecking ball to an industry that is already working well. Industry super funds in this country already outperform retail funds, and they have done so since their creation. I note, however, that it did not stop the government in question time trying to go after the current leader of the Labor Party. It did not stop them trying to allude to something that happened when Bill Shorten, the current Leader of the Opposition, was involved in industry super. Let us set the record straight about what did happen with the Leader of the Opposition was a director of AustralianSuper, before entering parliament. This is relevant, because, two million Australians, like me, have AustralianSuper funds. AustralianSuper featured in the 10 top-performing funds every year for a decade, including when Bill Shorten was a director. Overall, AustralianSuper fund is ranked 5th of the 10 top-performing funds for the last 10 years. This is what is relevant to this debate. Industry super funds are already doing a great job ensuring that the working people of Australia have decent retirement incomes. Yet what the government is proposing is to take a wrecking ball to a model that is working—to take away the 50-50 per cent representation and impose this new model of one-third independent directors. That is so loosely defined and gives absolute power to a body to decide what independent is. AustralianSuper, however, is not the only industry super fund that is performing well. They are in good company. Of the 10 top-performing growth funds for the last 10 years, we also have CareSuper, AustralianSuper, which I have already mentioned, Cbus, QSuper, UniSuper and Hostplus.",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-10-20/1"
+  },
+  {
+   "key": "federal-senate-3994",
+   "date": "2015-11-25",
+   "house": "senate",
+   "question": "Sam Dastyari Finally it is here. There has been a lot of talk, a lot of waiting and a lot of anticipation about when we were finally going to see the Superannuation Legislation Amendment (Trustee Governance) Bill 2015 and have the opportunity to debate it. I thank the government for bringing this forward on the agenda today so that we will have the opportunity to put forward our views on it. Let me say from the outset that this is a bad bill that is attempting to fix a problem that does not exist. This is a bad bill that does not warrant the support of this chamber, that does not achieve what it purports to achieve, and it fundamentally risks damaging one of the most successful types of governance models. Let us be clear what this is about. This is an ideological agenda against industry super, an agenda this government has always had. This is laying the groundwork for what the government has always wanted to do—that is, take away default super. This is about damaging and destroying one of the most successful models we have. Also, at the end of the day, when it comes down to it the trustee model of governance works. It works because the proof is in the pudding. The proof is in the actual returns that are given to consumers. It is a model that works and it does not need to be tampered with. This legislation does not do the right thing. I am concerned that this bill will impose a significant ideological shift from a model of trustee governance to a model of shareholder governance, and there is no clear or compelling evidence that the changes are warranted. There is widespread concern that the definition of independence contained within this bill is ambiguous. The most concerning aspect of this bill is that it blindly conflates and confuses trustee governance with shareholder governance, rather than contrasting the two. Under the trustee government model the board of directors have a fiduciary duty to their trustee members, the customers who are buying into the fund. Un",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 44,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-25/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-321031",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Superannuation Legislation Amendment (Trustee Governance) Bill 2015, arguing it would modernise governance by requiring all superannuation funds to have one-third independent directors and an independent chair, with APRA enforcement, referencing the Cooper review and 2014 Financial System Inquiry. They cited $2 trillion in superannuation assets projected to grow to $9 trillion by 2040, and noted support from CHOICE, Suncorp, and the Association of Superannuation Funds."
+  },
+  {
+   "slug": "speech-321032",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The Superannuation Legislation Amendment (Trustee Governance) Bill 2015 and coalition policies will reduce retirement savings, as the government halted the planned increase in compulsory superannuation from 9% to 12% and scrapped the low-income superannuation contribution, affecting 3.5 million low-paid workers including 2 million women. The bill mandates one-third independent directors and an independent chair on superannuation fund boards, targeting industry funds which are the best performing with the lowest fees, despite Labor's 2013 governance reforms still being implemented."
+  },
+  {
+   "slug": "speech-321033",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued the Superannuation Legislation Amendment (Trustee Governance) Bill 2015 would improve governance in the $2 trillion superannuation industry by requiring trustee boards to have at least one-third independent directors and an independent chair, aligning with best practice. The bill was supported by organisations including Choice, National Seniors Australia, and industry funds such as UniSuper and VicSuper."
+  },
+  {
+   "slug": "speech-321034",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Superannuation Legislation Amendment (Trustee Governance) Bill 2015, which mandates that superannuation fund boards comprise at least one-third independent directors, applies to all fund types except self-managed funds, and gives APRA power to determine independence, with a three-year transition period. The speech cited the superannuation pool growing from $2 trillion to $9 trillion and noted support from the Association of Superannuation Funds of Australia and the Council of Small Business Australia."
+  },
+  {
+   "slug": "speech-321035",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-19",
+   "stage_hint": null,
+   "brief": "The bill was opposed as an unnecessary, ideologically driven attack on the representative model of industry super funds, which have delivered higher returns (10.2% vs 9.6%) and are already well-regulated by APRA, with the changes costing $8.5 million in start-up costs, $12.3 million in ongoing costs annually, and up to $168 million in director churn."
+  },
+  {
+   "slug": "speech-321181",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Superannuation Legislation Amendment (Trustee Governance) Bill 2015 should require at least one-third of superannuation fund trustees to be independent and the chair to be independent, citing support from the Financial Systems Inquiry, Paul Howes, and National Seniors. They stated this would ensure trustees have relevant expertise rather than representing only employee or employer interests."
+  },
+  {
+   "slug": "speech-321182",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Superannuation Legislation Amendment (Trustee Governance) Bill 2015, arguing it ideologically dismantles industry super fund governance by eliminating employee and union representation on boards. Concrete positions included the bill's requirement for one-third independent directors and an independent chair, which the speaker claimed would weaken accountability, increase costs by $8.5 million in start-up and $12.3 million annually, and benefit retail funds, citing that industry funds outperformed retail funds by $16,000 on average over 10 years."
+  },
+  {
+   "slug": "speech-321183",
+   "speaker": "Mal Brough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The Superannuation Legislation Amendment (Trustee Governance) Bill 2015 was argued to be necessary for ensuring independent, qualified trustees on superannuation fund boards to protect the $2 trillion in retirement savings, with some industry funds already voluntarily adopting such independence."
+  },
+  {
+   "slug": "speech-321184",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Superannuation Legislation Amendment (Trustee Governance) Bill 2015 is not based on evidence but on an ideological drive to remove union officials from superannuation boards, asserting that industry super funds outperform retail funds. They opposed the mandated increase in independent directors, citing no proof it would improve returns or governance, and criticised the government for ignoring issues like related-party transactions in banking."
+  },
+  {
+   "slug": "speech-321185",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Superannuation Legislation Amendment (Trustee Governance) Bill 2015, arguing it imposes unnecessary red tape and costs on industry super funds, which have outperformed retail funds—19 of the top 50 performing super funds over 10 years are industry funds. He claimed the bill is an ideological attack on unions, not based on evidence of governance problems, and contrasted it with Labor's proposal to tax superannuation earnings above $75,000 for balances over $1.5 million."
+  },
+  {
+   "slug": "speech-321186",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speech opposed the Superannuation Legislation Amendment (Trustee Governance) Bill 2015, arguing it would increase administrative costs and reduce member returns, and called for governance settings based on evidence rather than ideology."
+  },
+  {
+   "slug": "speech-321188",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Superannuation Legislation Amendment (Trustee Governance) Bill 2015, arguing it is an ideological attack on union representation and would impose unnecessary red tape on industry super funds. They cited that industry super funds outperform retail funds—with retail members receiving around $16,000 less over 10 years—and that the changes would add $8.5 million in start-up costs and $12.3 million annually."
+  },
+  {
+   "slug": "speech-321328",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The Superannuation Legislation Amendment (Trustee Governance) Bill was opposed for imposing $8.5 million in start-up costs and $12.3 million in ongoing red tape on industry super funds, which already outperform retail funds—citing AustralianSuper, CareSuper, Cbus, QSuper, UniSuper and Hostplus as top performers."
+  },
+  {
+   "slug": "speech-321329",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Superannuation Legislation Amendment (Trustee Governance) Bill 2015, arguing it is an ideological attack on industry super funds and that retail funds charge higher fees and underperform. They also criticised coalition superannuation tax policies for benefiting the wealthiest Australians while cutting concessions for low-income workers, and defended Labor's proposal to tax superannuation income over $75,000 at 15% for those over 60."
+  },
+  {
+   "slug": "speech-321330",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Superannuation Legislation Amendment (Trustee Governance) Bill 2015, arguing it is unnecessary, ideological, and attacks the successful industry super fund model. They cited that 10 of the top 11 balanced funds and 6 of the top 7 diversified funds in Money magazine are industry funds, with average performance of 10.2% compared to 9.6% for retail funds."
+  },
+  {
+   "slug": "speech-321332",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Superannuation Legislation Amendment (Trustee Governance) Bill 2015, arguing it was unnecessary and ideologically motivated to diminish the role of unions and employer bodies in not-for-profit super funds, which have historically delivered better outcomes, lower fees, and fewer scandals than for-profit funds."
+  },
+  {
+   "slug": "speech-321333",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The Superannuation Legislation Amendment (Trustee Governance) Bill 2015 requires superannuation fund boards to have at least one-third independent directors and an independent chair, aligning governance with ASX-listed companies, with a three-year transition period for existing trustees. It also restructures the Commonwealth Superannuation Corporation board to have a majority of independent directors and reduces its size from 11 to nine."
+  }
+ ],
+ "acts": []
+}

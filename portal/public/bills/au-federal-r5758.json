@@ -1,0 +1,567 @@
+{
+ "key": "au-federal-r5758",
+ "title": "Export Finance and Insurance Corporation Amendment (Support for Commonwealth Entities) Bill 2017",
+ "short_title": "Export Finance and Insurance Corporation Amendment (Support for Commonwealth Entities) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs and Trade",
+ "status": "passed",
+ "status_as_of": "2017-09-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5758_ems_36ac80a5-b40d-4632-b8b4-7993a692f3a5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5758_ems_c85f5b7d-e2b9-411a-b424-9ae31aca92cc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5758_ems_1abe9f81-d310-4b88-be80-781eb7ca5c91%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5758%22",
+   "document_date": "2016-11-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00100",
+   "document_date": "2017-09-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2016-11-09",
+  "sentences": [
+   "This bill broadens the Export Finance and Insurance Corporation's role so it can sell its financial know-how to other government bodies and firms for a fee, pending the trade minister's sign-off.",
+   "It also widens the range of Australian small and medium enterprises that can get Efic backing by adding new categories of eligible export deals and requiring a written promise that overseas investment support will add jobs at home.",
+   "The bill is estimated to cut up to $12,000 per application for SME exporters because Efic could offer a direct loan instead of only a guarantee."
+  ],
+  "changes": [
+   "Efic would be allowed to help run and manage Commonwealth financing programs, even when exports are not involved, but it would not lend or guarantee funds for those programs.",
+   "The definition of an eligible export transaction would grow to include tourism operators, online sellers, exporters of intellectual property and related rights, and firms investing directly overseas.",
+   "Businesses seeking support for overseas direct investment would have to certify in writing that they reasonably believe the support will lead to a net rise in Australian employment.",
+   "Efic would be required to charge a fee for its assistance, set so it does not amount to a tax."
+  ],
+  "affected": "Commonwealth departments and agencies, Australian small and medium-sized enterprises, and businesses that invest overseas or export services such as tourism, online sales, or intellectual property.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4840",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "question": "Export Finance and Insurance Corporation Amendment (Support for Commonwealth Entities) Bill 2016 - Third Reading - Suspend the usual procedural rules",
+   "stage": "Third reading",
+   "ayes": 73,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Liberal": {
+     "ayes": 54,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-22/3"
+  },
+  {
+   "key": "federal-senate-4881",
+   "date": "2017-09-06",
+   "house": "senate",
+   "question": "The majority voted in favour of agreeing with the bill's main idea. In parliamentary jargon, they voted to read the bill for a second time. This means that they can now consider it in greater detail. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd089) (a document that is prepared by the parliamentary library): > *The purpose of the Export Finance and Insurance Corporation Amendment (Support for Commonwealth Entities) Bill 2016 (Cth) (the Bill) is to amend the Export Finance and Insurance Corporation Act 1991 (Cth) (the Act). The Bill has two main purposes:* > > * *to permit the Export Finance and Insurance Corporation (EFIC) to assist government bodies by providing services in relation to financial arrangements and agreements* > > * *to amend the definition of ‘eligible export transactions’.*",
+   "stage": "Second reading",
+   "ayes": 45,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 16,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-06/1"
+  },
+  {
+   "key": "federal-senate-4882",
+   "date": "2017-09-06",
+   "house": "senate",
+   "question": "Export Finance and Insurance Corporation Amendment (Support for Commonwealth Entities) Bill 2017 - in Committee - Fossil fuels",
+   "stage": "In committee",
+   "ayes": 7,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 22,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-06/2"
+  },
+  {
+   "key": "federal-senate-4883",
+   "date": "2017-09-06",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2017-09-06.47.1) introduced by South Australian Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young) (Greens), which means it failed. ### What did this amendment do? Senator Hanson-Young [explained that](https://www.openaustralia.org.au/senate/?gid=2017-09-06.47.1): > *I just want to reiterate that this bill is asking the parliament to endorse expanding the powers, responsibilities and role of Efic [i.e., the Export Finance and Insurance Corporation]; meanwhile, we know that there are big questions over Efic's ability to be straight and up-front with the parliament and the Australian people about the projects that it has already been funding and supporting ...* > > *This amendment injects necessary transparency into this process. If we're going to have an expanded role then the public, the parliament and the taxpayers need to know what Efic is doing, what types of projects it is funding and how it is operating.* ### Amendment text > *(1) Schedule 1, page 5 (after line 19), at the end of the Schedule, add:* > >> *Freedom of Information Act 1982* >> >> *8 Division 1 of Part II of Schedule 2* >> >> *Omit \"Export Finance and Insurance Corporation, in relation to documents concerning anything done by it under Part 4 or 5 of the Export Finance and Insurance Corporation Act 1991\".*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 22,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-06/3"
+  },
+  {
+   "key": "federal-senate-4884",
+   "date": "2017-09-06",
+   "house": "senate",
+   "question": "The majority voted in favour of passing the bill. In parliamentary jargon, they voted to read it for a third time. This means it has passed in the Senate and will now be sent back to the House of Representatives, where our MPs will consider whether they agree with the Senate amendments. If so, the bill will become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd089), the purpose of the bill was: > * *to permit the Export Finance and Insurance Corporation (EFIC) to assist government bodies by providing services in relation to financial arrangements and agreements* > > * *to amend the definition of ‘eligible export transactions’.*",
+   "stage": "Third reading",
+   "ayes": 33,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 23,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-06/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-350239",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "The opposition supported the bill to expand Efic's functions but proposed three amendments: an Australian jobs test for overseas loans, a ban on using loans to offshore Australian work, and a requirement that loans not damage Australian businesses or jobs. They cited concerns from the Australia Institute and ACTU about potential offshoring and referenced a possible loan to Resource Generation Ltd for a South African coalmine."
+  },
+  {
+   "slug": "speech-350240",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "The Export Finance and Insurance Corporation Amendment (Support for Commonwealth Entities) Bill 2016 was supported, allowing Efic to lend directly to small businesses and insure against non-payment risks, drawing on the speaker’s experience as an export manager. The bill was argued to create a level playing field for Australian exporters against foreign competitors, with corporate tax rates cited as a disadvantage."
+  },
+  {
+   "slug": "speech-350244",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the member for Charlton showed no understanding of the Export Finance and Insurance Corporation’s practices or its importance to the economy during debate on the Export Finance and Insurance Corporation Amendment (Support for Commonwealth Entities) Bill 2016."
+  },
+  {
+   "slug": "speech-350246",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the first amendment to the Export Finance and Insurance Corporation Amendment Bill, which allows Efic to provide expertise to other agencies, but raised concerns about the second amendment, which could allow loans for overseas expansion that may offshore Australian jobs. The opposition proposes three amendments, including an Australian jobs test requiring net job growth rather than just no net job losses."
+  },
+  {
+   "slug": "speech-350252",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Export Finance and Insurance Corporation Amendment Bill 2016, arguing it broadens Efic’s role beyond manufacturing to services and small businesses, while accusing the opposition of virtue signalling and class snobbery."
+  },
+  {
+   "slug": "speech-350399",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "The speaker announced support for the Export Finance and Insurance Corporation Amendment Bill 2016 but will move three Senate amendments: an Australian jobs test to ensure loans do not lead to net job losses in Australia; a prohibition on financing offshoring that would close Australian operations; and a requirement that Efic assess any negative commercial impact on Australian businesses before approving loans, citing concerns about a potential loan for a South African coalmine."
+  },
+  {
+   "slug": "speech-350400",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "Labor opposed broadening Efic's definition of eligible export transactions to include overseas-based projects, arguing it could lead to offshoring and Australian job losses. Labor will move Senate amendments requiring Efic to ensure any loan or guarantee for overseas investment leads to jobs growth in Australia, does not replace Australian functions, and has no negative commercial impact on Australian businesses."
+  },
+  {
+   "slug": "speech-350402",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Export Finance and Insurance Corporation Amendment Bill 2016 risks using taxpayer funds to finance offshoring of Australian jobs and proposed three amendments: an Australian jobs test, a ban on loans that facilitate offshoring, and a prohibition on financing coal mines abroad that harm Australian industry. They noted the government cut jobs forecasts by 92,000 and growth forecasts, and criticised the Northern Australia Infrastructure Facility for only spending money on its board and consultants."
+  },
+  {
+   "slug": "speech-350403",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "Labor supports the Export Finance and Insurance Corporation Amendment Bill but will move amendments to require a high standard of net job growth and prevent offshoring, citing 300 job losses from Blundstone and 280 from Caterpillar."
+  },
+  {
+   "slug": "speech-350404",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "The Export Finance and Insurance Corporation Amendment (Support for Commonwealth Entities) Bill 2016 will allow Efic to lend directly to a wider range of Australian SMEs, including tourism operators, online businesses, and exporters of intellectual property, and require certification that overseas direct investment results in net Australian job increases. The government's amendments retain references to Australian manufacturing and address Labor's concerns, while Efic provided over 110 SME exporters with over $155 million in funding in the last financial year."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Export Finance and Insurance Corporation Amendment (Support for Commonwealth Entities) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00100",
+   "assent_date": "2017-09-14"
+  }
+ ]
+}

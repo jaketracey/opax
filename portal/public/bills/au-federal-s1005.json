@@ -1,0 +1,100 @@
+{
+ "key": "au-federal-s1005",
+ "title": "Freedom of Information Amendment (Requests and Reasons) Bill 2015",
+ "short_title": "Freedom of Information Amendment (Requests and Reasons) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-13",
+ "originating_house": "senate",
+ "sponsor": "LUDWIG, Sen Joe",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10397",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1005%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1005%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1005%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1005%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1005%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1005%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1005%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1005_ems_7ddbd29a-ccae-4b8c-b588-1b6f7479c404%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1005%22",
+   "document_date": "2015-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-13",
+  "sentences": [
+   "The bill would change the Freedom of Information Act 1982 to force agencies and ministers to release the text of FOI requests and the reasoning behind their decisions.",
+   "Agencies and ministers would have to post the exact wording of each request and a statement explaining why documents were given or withheld.",
+   "The changes would take effect three months after the bill becomes law, with the short title and schedules starting on royal assent."
+  ],
+  "changes": [
+   "Agencies and ministers must publish the full text of FOI requests.",
+   "Agencies and ministers must publish a statement of reasons for allowing or refusing document release.",
+   "The public could see what requests have been made and why documents were or were not released.",
+   "Applicants could build on previous requests for similar documents.",
+   "The requirement would reduce duplicate requests.",
+   "Publishing reasons would allow scrutiny of departmental decisions and could lead to review by others besides the initial applicant."
+  ],
+  "affected": "Government agencies and ministers, and the public who make or view freedom of information requests.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:20:42Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

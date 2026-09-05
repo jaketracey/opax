@@ -1,0 +1,612 @@
+{
+ "key": "au-federal-r7192",
+ "title": "Nature Positive (Environment Protection Australia) Bill 2024",
+ "short_title": "Nature Positive (Environment Protection Australia) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-05-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy, the Environment and Water",
+ "status": "lapsed",
+ "status_as_of": "2025-02-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-07-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7192_ems_e4b207df-45e3-4e1a-af13-e7adb5746fc6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7192%22",
+   "document_date": "2024-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-05-29",
+  "sentences": [
+   "This bill would create a new federal agency called Environment Protection Australia to enforce national environmental laws.",
+   "The agency would be led by a Chief Executive Officer with powers to issue permits, conduct audits, and impose penalties for non-compliance.",
+   "The first independent review of the agency must be completed within 5 years of the bill starting."
+  ],
+  "changes": [
+   "Establishes Environment Protection Australia as a statutory Commonwealth entity.",
+   "Gives the CEO new powers including issuing Environment Protection Orders and increased penalties.",
+   "Requires the CEO to publish electronic registers of decisions online.",
+   "Requires the Minister to arrange independent reviews every 5 years.",
+   "Allows the CEO to appoint an advisory group with relevant expertise.",
+   "Sets up a Statement of Expectations and Statement of Intent process between the Minister and CEO."
+  ],
+  "affected": "Businesses, the public, and entities regulated under Commonwealth environmental laws.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9022",
+   "date": "2024-07-03",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7192_amend_95b0d38f-7035-4d64-8f90-33dcc733b6a8%22;rec=0) introduced by Ryan MP [Elizabeth Watson-Brown](https://theyvoteforyou.org.au/people/representatives/ryan/elizabeth_watson-brown) (Greens) to an [original amendment](https://theyvoteforyou.org.au/divisions/representatives/2024-07-03/3) introduced by Fairfax MP [Ted O'Brien](https://theyvoteforyou.org.au/people/representatives/fairfax/ted_o'brien) (Liberal), which means it failed. ### Amendment text > *That all words after “House” be omitted with a view to substituting the following words:* > > *(1) notes that the Government has broken its commitment to create laws that protect nature;* > > *(2) notes that these three bills will not protect wildlife, will not stop native forest logging and will not stop the continued expansion of coal and gas;* > > *(3) calls on the Government to amend this legislation to:* > >> *(a) end native forest logging and the destruction of critical habitat;* >> >> *(b) assess projects properly for their climate impacts to stop the expansion of further fossil fuels; and* >> >> *(c) commit to a timeframe for an exposure draft of standalone cultural heritage legislation”.* ### Original amendment > *That all words after “That” be omitted with a view to substituting the following words:* > > *“the House:* > > *(1) expresses its commitment to making changes to national environmental laws that are genuinely beneficial for both the environment and business;* > > *(2) notes that these three bills do not meaningfully improve Australia’s environmental laws, and that they have particular shortcomings in each of the following forms :* > >> *(a) the expansion of the EPA’s proposed remit well beyond the compliance and data functions promised by the ALP in 2022;* >> >> *(b) the excessive size, and lack of proportionalit",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 93,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 101,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-07-03/2"
+  },
+  {
+   "key": "federal-representatives-9023",
+   "date": "2024-07-03",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7192_amend_a9275339-2466-4644-8e75-4801a79e5f2b%22;rec=0) introduced by Fairfax MP [Ted O’Brien](https://theyvoteforyou.org.au/people/representatives/fairfax/ted_o'brien) (Liberal) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the amendment failed. ### Amendment text > *That all words after “That” be omitted with a view to substituting the following words:* > > *“the House:* > > *(1) expresses its commitment to making changes to national environmental laws that are genuinely beneficial for both the environment and business;* > > *(2) notes that these three bills do not meaningfully improve Australia’s environmental laws, and that they have particular shortcomings in each of the following forms :* > >> *(a) the expansion of the EPA’s proposed remit well beyond the compliance and data functions promised by the ALP in 2022;* >> >> *(b) the excessive size, and lack of proportionality, of the new penalties;* >> >> *(c) the requirement for more regular, earlier reviews of the operation of the EPA than is mandated in this bill;* >> >> *(d) the need for clearer limits on the range of circumstances in which environment protection orders can be applied;* >> >> *(e) the lack of accompanying information about the full regulatory and financial impacts of the bill, including on cost recovery; and* > > *(3) calls on the Government to finally honour their long-flagged promise to introduce a full package of new National Environmental Standards and an overhauled EPBC Act”.*",
+   "stage": "Second reading",
+   "ayes": 55,
+   "noes": 87,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 75
+    },
+    "Liberal": {
+     "ayes": 32,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-07-03/3"
+  },
+  {
+   "key": "federal-representatives-9024",
+   "date": "2024-07-03",
+   "house": "representatives",
+   "question": "Nature Positive (Environment Protection Australia) Bill 2024 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 82,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 75,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 141,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-07-03/4"
+  },
+  {
+   "key": "federal-representatives-9462",
+   "date": "2024-07-04",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2024-07-03.42.2) introduced by North Sydney MP [Kylea Tink](https://theyvoteforyou.org.au/people/representatives/north_sydney/kylea_tink) (Independent), which means they did not succeed. ### What do these amendments do? Ms Tink [explained that](https://www.openaustralia.org.au/debate/?id=2024-07-03.42.2) the amendments related to community consultation.",
+   "stage": "Consideration in detail",
+   "ayes": 13,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 38
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-07-04/4"
+  },
+  {
+   "key": "federal-representatives-9463",
+   "date": "2024-07-04",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2024-07-04.26.1) introduced by Mackellar MP [Sophie Scamps](https://theyvoteforyou.org.au/people/representatives/mackellar/sophie_scamps) (Independent), which means they were not successful. ### What did these amendments do? Dr Scamps explained that: > *My amendments to the legislation are simple and are in line with what the environmental community and integrity organisations have been calling for. Simply put, my amendments create an independent board to sit above the EPA, like so many other organisations have. This board would oversee the functions of the EPA and, importantly, select the CEO. The board's functions would include appointing the CEO, determining policies and long-term strategic plans for the CEO, advising the CEO and assessing and reporting on the CEO's performance. The board would have up to seven members, each with substantial experience and knowledge and significant standing in an area relevant to the EPA's functions. At least one board member must be an Indigenous person.*",
+   "stage": "Consideration in detail",
+   "ayes": 13,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-07-04/5"
+  },
+  {
+   "key": "federal-representatives-9464",
+   "date": "2024-07-04",
+   "house": "representatives",
+   "question": "The majority voted against [amendments (1) to (4)](https://www.openaustralia.org.au/debate/?id=2024-07-04.32.1) moved by Goldstein MP Zoe Daniel (Independent), which means they did not succeed. ### What did these amendments do? The amendments would have established a joint committee on the environment. Ms Daniel [explained that](https://www.openaustralia.org.au/debate/?id=2024-07-04.32.1): > *This amendment goes to the oversight and the independence of the EPA. In my view, the government has decided to establish an agency which will operate like any Commonwealth agency rather than an independent authority, and this includes the ability for any future minister to shape its overarching policy direction via a statement of expectations. The project decision-making process, which is currently delegated and processed by the department of the environment, one which the minister can interfere with at any time, will simply be shifted to a new agency—no board, no expert-led appointment process and minimal operational independence. Again, the government has been made aware of this by experts, interest groups, me and others on the crossbench.* > > *To be very clear, I very much respect this minister. I'm not convinced, though, that any future minister will be equally competent. Therefore, the amendment I'm proposing would create a joint parliamentary committee on the environment which, critically, would oversee the ministerially appointed CEO. I believe this is an important step for accountability, but, alas, the government appears wary of the potential consequences of this extra democratic oversight when it comes to environmental protection. I would argue that a committee is a reasonable compromise given that the government will not implement a board to oversee what is not in reality an independent post.*",
+   "stage": "Consideration in detail",
+   "ayes": 12,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 34
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-07-04/6"
+  },
+  {
+   "key": "federal-representatives-9465",
+   "date": "2024-07-04",
+   "house": "representatives",
+   "question": "The majority voted against [amendments (1) to (15)](https://www.openaustralia.org.au/debate/?id=2024-07-04.35.1) introduced by Clark MP Andrew Wilkie (Clark), which means they failed. Mr Wilkie [explained that](https://www.openaustralia.org.au/debate/?id=2024-07-04.35.1): > *my changes ensure the EPA will be headed by an appropriately qualified CEO who is independently appointed for a fixed term and supported and overseen by a newly established joint committee on the environment and energy. To avoid even a perception of bias, senior staff will be prevented from having any potential conflicts of interest, including employment as a politician or a lobbyist in the five years preceding appointment to the EPA. Surely, at a time when we're seeing the imminent collapse of precious ecosystems, when Australia is a hotspot for extinction and deforestation and when we're already facing unprecedented threats from climate change, a strong independent regulator is more important than ever.*",
+   "stage": "Consideration in detail",
+   "ayes": 10,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-07-04/7"
+  },
+  {
+   "key": "federal-senate-9511",
+   "date": "2025-02-04",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2025-02-04.130.2) introduced by Tasmanian Senator [Jonathon Duniam](https://theyvoteforyou.org.au/people/senate/tasmania/jonathon_duniam) (Liberal), which means it failed. ### Motion text > *That, in the opinion of the Senate, the following is a matter of urgency:* > > *The need for the Nature Positive bills to be withdrawn from the Notice Paper, and for the Prime Minister to guarantee that this legislation will never be returned to the Parliament.* The Nature Positive bills are the: * [Nature Positive (Environment Protection Australia) Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7192) * [Nature Positive (Environment Information Australia) Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7193) * [Nature Positive (Environment Law Amendments and Transitional Provisions) Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7195)",
+   "stage": "Urgency motion",
+   "ayes": 27,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 5,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-04/4"
+  },
+  {
+   "key": "federal-senate-9301",
+   "date": "2025-02-05",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-02-05.135.4) introduced under the name of Tasmanian Senator [Jonathon Duniam](https://theyvoteforyou.org.au/people/senate/tasmania/jonathon_duniam) (Liberal), which means it failed. ### Amendment text > *At the end of paragraph (c), add \", and the Senate calls on the Labor Party to guarantee that this legislation never be returned to the Parliament\".* ### What is paragraph (c)? > *(c) That the government business order of the day relating to the Nature Positive (Environment Protection Australia) Bill 2024 and related bills be discharged from the Notice Paper.*",
+   "stage": "Business motion",
+   "ayes": 27,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 4,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-05/5"
+  },
+  {
+   "key": "federal-senate-9304",
+   "date": "2025-02-05",
+   "house": "senate",
+   "question": "The majority voted in favour of paragraph (c) from the [original motion](https://www.openaustralia.org.au/senate/?id=2025-02-05.134.2) introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor) at the request of Queensland Senator [Anthony Chisholm](https://theyvoteforyou.org.au/people/senate/queensland/anthony_chisholm) (Labor). ### Original motion text > *(c) That the government business order of the day relating to the [Nature Positive (Environment Protection Australia) Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr7192%22) and related bills be discharged from the Notice Paper.*",
+   "stage": "Business motion",
+   "ayes": 23,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-05/8"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

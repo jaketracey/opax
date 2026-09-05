@@ -1,0 +1,297 @@
+{
+ "key": "au-federal-r6369",
+ "title": "Treasury Laws Amendment (2019 Tax Integrity and Other Measures No. 1) Bill 2019",
+ "short_title": "Treasury Laws Amendment (2019 Tax Integrity and Other Measures No. 1) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-10-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6369_ems_1b26c75b-2a79-4a14-b95c-78d88f25273b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6369_ems_d429f021-4226-49e6-865c-8baef16e48fa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6369%22",
+   "document_date": "2019-07-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00095",
+   "document_date": "2019-10-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-24",
+  "sentences": [
+   "The bill would allow taxation officers to disclose overdue tax debt information to credit reporting bureaus without committing an offence.",
+   "Officers must notify the taxpayer at least 21 days before the first disclosure and consult the Inspector-General of Taxation, and the Treasurer will set out which taxpayers' debts may be disclosed in a legislative instrument.",
+   "After the initial disclosure, further updates can be made without all procedural conditions, and the Commissioner may also disclose why a taxpayer no longer meets the criteria."
+  ],
+  "changes": [
+   "Creates an exception to the offence of disclosing protected taxpayer information for reporting tax debts to credit reporting bureaus.",
+   "Requires procedural safeguards including 21 days' notice and consultation with the Inspector-General of Taxation before initial disclosure.",
+   "Allows ongoing disclosures of updated debt balances without full procedural conditions after the first report."
+  ],
+  "affected": "Taxation officers, the Commissioner of Taxation, credit reporting bureaus, and taxpayers with overdue tax debts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5819",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2019-07-31.135.1) to the usual [second reading](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) motion, which is *that the bill be read for a second time*. Reading a bill for a second time is parliamentary jargon for agreeing with the main idea of the bill. This amendment was introduced by Whitlam MP [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor). ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House calls on the Government to do more to combat superannuation theft and ensure that workers receive their rightful superannuation entitlements in full\".*",
+   "stage": "Second reading",
+   "ayes": 65,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-07-31/3"
+  },
+  {
+   "key": "federal-senate-5932",
+   "date": "2019-10-16",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2019-10-16.35.1) introduced by South Australian [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Centre Alliance), which means they passed. In explaining the Labor Party's support for the two amendments, numbered (5) and (7), NSW Senator [Jenny McAllister](https://theyvoteforyou.org.au/people/senate/nsw/jenny_mcallister) (Labor) [explained that](https://www.openaustralia.org.au/senate/?gid=2019-10-16.36.1): > *As I indicated, Labor will support these amendments. In relation to amendment (5), we support the provision of additional information to taxpayers as outlined in that amendment. In relation to amendment (7), we do support consultation with the Inspector-General of Taxation on all legislative instruments under this bill. We understand that this is something that occurs already, but we think it is important that it is placed in the primary legislation.* ### Amendments text > *(5) Schedule 5, item 2, page 16 (after line 16), after paragraph 355-72(3)(b) in Schedule 1, insert:* > >> *(ba) explain:* >> >>> *(i) why the primary entity is included in a class of entities declared under subsection (5); and* >>> >>> *(ii) the steps (if any) the primary entity may take to no longer be included in that class before the disclosure occurs; and* > > *(7) Schedule 5, item 2, page 17 (after line 16), after subsection 355-72(5) in Schedule 1, insert:* > >> *(5A) Before making an instrument under subsection (5), the Minister must:* >> >>> *(a) consult the Inspector-General of Taxation; and* >>> >>> *(b) consider any submissions made by the Inspector-General of Taxation because of that consultation.*",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 27,
+    "earliest": 23,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-10-16/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-379428",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker announced they would move a second reading amendment calling for more action on superannuation theft and refer the bill to a Senate committee, while noting the bill ends negative gearing on vacant land, allows the ATO to disclose business tax debts to credit agencies, and prevents employers from using salary sacrifice to reduce superannuation guarantee contributions."
+  },
+  {
+   "slug": "speech-379430",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (2019 Tax Integrity and Other Measures No. 1) Bill 2019, which includes measures to deny deductions for concessional loan repayments on privatised entities, restrict small-business capital gains tax concessions for partnerships, deny deductions for vacant land holding costs, extend anti-avoidance rules to family trusts, allow the ATO to disclose tax debts over $100,000 to credit bureaus, implement an e-invoicing framework, and close a loophole on salary sacrifice super contributions. The speaker rejected the shadow minister's amendment and dismissed comparisons to Labor's proposed housing taxes as factually wrong."
+  },
+  {
+   "slug": "speech-383779",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-22",
+   "stage_hint": null,
+   "brief": "The amended Treasury Laws Amendment Bill was supported for protecting farm owners and investors from unintended taxes, giving small businesses more time before debt reporting, and closing a superannuation theft loophole. The speech also criticised the Assistant Treasurer’s earlier assurances, citing concerns about unsafe residential towers like Opal and Mascot Towers and drought-affected farmland."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2019 Tax Integrity and Other Measures No. 1) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00095",
+   "assent_date": "2019-10-28"
+  }
+ ]
+}

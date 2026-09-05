@@ -1,0 +1,306 @@
+{
+ "key": "au-federal-r5441",
+ "title": "Communications Legislation Amendment (SBS Advertising Flexibility and Other Measures) Bill 2015",
+ "short_title": "Communications Legislation Amendment (SBS Advertising Flexibility and Other Measures) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications",
+ "status": "lapsed",
+ "status_as_of": "2015-06-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5441%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5441%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5441%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5441%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5441%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5441%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5441%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5441%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5441%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5441%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5441_ems_a4222917-fcf9-4565-8927-e51d90f6bf0d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5441%22",
+   "document_date": "2015-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-25",
+  "sentences": [
+   "The bill would give SBS more freedom to schedule advertisements and to earn money from product placement in its own programs.",
+   "It would replace the current limit of five minutes of ads per hour with a maximum of ten minutes per hour, while keeping the overall daily cap of 120 minutes.",
+   "The bill also makes minor technical corrections to the ABC and SBS Acts and removes outdated provisions from communications laws."
+  ],
+  "changes": [
+   "Removes the restriction of five minutes of advertising per hour and sets a new limit of ten minutes per hour.",
+   "Authorises SBS to earn revenue through product placement in commissioned programming.",
+   "Requires the SBS Board to develop and publish guidelines on product placement and to report on its use in the annual report.",
+   "Inserts definitions into the SBS Act to align it with the Broadcasting Services Act 1992 and the ABC Act.",
+   "Removes redundant definitions about election periods from the ABC and SBS Acts.",
+   "Repeals spent provisions from Communications portfolio legislation."
+  ],
+  "affected": "The Special Broadcasting Service (SBS) and, to a lesser extent, the Australian Broadcasting Corporation (ABC).",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:57:31Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3785",
+   "date": "2015-05-26",
+   "house": "representatives",
+   "question": "Communications Legislation Amendment (Sbs Advertising Flexibility and Other Measures) Bill 2015 - Second Reading - Agree to bill's main idea",
+   "stage": "Second reading",
+   "ayes": 80,
+   "noes": 46,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-05-26/2"
+  },
+  {
+   "key": "federal-senate-3844",
+   "date": "2015-06-24",
+   "house": "senate",
+   "question": "Communications Legislation Amendment (Sbs Advertising Flexibility and Other Measures) Bill 2015 - Second Reading - Agree to bill's main idea",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 10,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-24/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-308922",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The bill allows SBS to increase advertising to up to 10 minutes per hour within a 120-minute daily cap, and permits product placement, to generate an estimated $28.5 million in extra revenue over four years from 2015‑16; it also makes minor technical amendments to the ABC and SBS Acts and repeals redundant communications portfolio legislation. The government argued the changes will reduce SBS’s dependence on government funding and that commercial broadcasters’ opposition is misplaced given SBS’s negligible share of the advertising market."
+  },
+  {
+   "slug": "speech-310713",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to allow SBS up to 10 minutes of advertising per hour during high-rating programs within a 120-minute daily cap, and to permit product placement, estimating an additional $28.5 million in revenue over four years from 2015–16, along with minor technical amendments and removal of redundant provisions."
+  },
+  {
+   "slug": "speech-310714",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill, arguing it doubles SBS advertising from five to ten minutes per hour and is based on a broken promise by Prime Minister Abbott, who had pledged no cuts to SBS before the 2013 election. The speech cited $53.7 million in cuts over five years, including $25.2 million in direct cuts and $28.5 million tied to the advertising changes."
+  },
+  {
+   "slug": "speech-310715",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The bill allows SBS to schedule up to 10 minutes of advertising per hour during peak times and clarifies its ability to earn revenue through product placement, without increasing the daily cap of 120 minutes. This is expected to generate an additional $28.5 million over four years, offsetting a $50 million funding cut, and is supported by the Federation of Ethnic Community Councils of Australia."
+  },
+  {
+   "slug": "speech-310716",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Communications Legislation Amendment (SBS Advertising Flexibility and Other Measures) Bill 2015, arguing it would increase prime-time advertising from five to ten minutes per hour, allow product placement, and force SBS to become a fourth commercial broadcaster due to $53.7 million in cuts over five years and 215 job losses."
+  },
+  {
+   "slug": "speech-310717",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Communications Legislation Amendment (SBS Advertising Flexibility and Other Measures) Bill 2015 is necessary for budget repair, blaming the previous Labor government for leaving a debt trajectory of $667 billion and mismanaging the NBN, which cost taxpayers $73 billion. He also criticised the opposition's STEM degree policy, stating its cost was miscalculated from $300 million to $2.25 billion."
+  },
+  {
+   "slug": "speech-310718",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill breaks an election promise of no cuts to SBS, forcing it to run more ads to offset budget cuts, and condemned SBS's \"Struggle Street\" program for unethical consent practices and stigmatising residents of Western Sydney, particularly in the Chifley electorate."
+  },
+  {
+   "slug": "speech-310719",
+   "speaker": "Michael Danby",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the proposed changes to the SBS Advertising Flexibility Bill contradict the original multicultural ethos of SBS and warned that turning SBS into another commercial network would harm Australian broadcasting and pluralism."
+  },
+  {
+   "slug": "speech-310720",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Communications Legislation Amendment (SBS Advertising Flexibility and Other Measures) Bill 2015, arguing it doubles prime-time advertising on SBS from five to ten minutes per hour to cover a $53.7 million funding cut, breaking the Prime Minister’s pre-election promise not to cut SBS funding. The speaker noted opposition from Free TV Australia, Foxtel, and Save Our SBS, and cited the Prime Minister’s 2011 statement that he would have crossed the floor to oppose advertising on SBS."
+  },
+  {
+   "slug": "speech-310722",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The government’s SBS Advertising Flexibility Bill keeps the daily advertising cap at 120 minutes but allows up to 10 minutes per hour, aiming to generate $28.5 million in extra revenue over four years and offset $53.7 million in budget savings. The minister argued the change will not materially affect commercial broadcasters, whose 2013-14 advertising revenue was $3.9 billion, and warned that without passage SBS would face programming cuts."
+  }
+ ],
+ "acts": []
+}

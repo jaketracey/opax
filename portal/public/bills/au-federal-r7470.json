@@ -1,0 +1,168 @@
+{
+ "key": "au-federal-r7470",
+ "title": "Aviation Consumer Protection Levy Bill 2026",
+ "short_title": "Aviation Consumer Protection Levy Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-04-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+ "status": "before_parliament",
+ "status_as_of": "2026-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7470%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7470%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7470%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7470%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7470%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-06-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7470%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7470%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7470%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7470_ems_322222c9-bdaf-46fb-bd24-26a35914d19c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7470%22",
+   "document_date": "2026-04-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-04-01",
+  "sentences": [
+   "This bill would let the minister set levies on the aviation industry to recover the costs of running the new Aviation Consumer Protection Authority.",
+   "The levy amounts would be set by regulation and based on the estimated costs of the authority's regulatory functions, including enforcing a consumer charter and overseeing a dispute resolution scheme.",
+   "The levy and collection bills would start at the same time as the main Aviation Consumer Protection Bill and a related transitional bill."
+  ],
+  "changes": [
+   "Imposes and collects levies to recover administration costs of the Aviation Consumer Protection Authority.",
+   "Allows the minister to set levy amounts by regulation.",
+   "Aligns the start of the levy and collection bills with the main consumer protection bill and a transitional bill."
+  ],
+  "affected": "The aviation industry, including airlines and airports, would pay the levies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10623",
+   "date": "2026-06-29",
+   "house": "representatives",
+   "question": "Lisa Chesters The original question was that this bill be now read a second time. To this the honourable member for Riverina moved as an amendment that all words after 'That' be omitted with a view to substituting other words. The honourable member for Kooyong has moved as an amendment to the amendment that all words after 'notes that' be omitted with a view to substituting other words. The honourable member for Ryan has now moved a further amendment. The question now is that the amendment moved by the honourable member for Ryan be agreed to. Rowan Holzberger I rise to support the Aviation Consumer Protection Bill 2026 and the other bills. I definitely want to start by saying that the Minister for Infrastructure, Transport, Regional Development and Local Government has really done a quite a remarkable job over the last few years dealing with what is one of the biggest challenges in the Australian economy, which is our aviation industry. Of course, aviation sits well and truly as one of those essential services where we see a lot of the challenges exist, because they have been unintended consequences of what I like to talk about in this place every opportunity I get. Privatisation, economic rationalism and unfettered free trade have seen an essential service like our aviation industry really face challenges over and above what you would otherwise expect. I think that at the heart of this there is actually an argument for long-term Labor governments, because Labor governments are the ones that are prepared to make the reforms. While it was the Hawke-Keating government that privatised Qantas, there was also an approach by Keating in 1995 where he talked about ameliorating some of the unintended consequences of that agenda. As part of preparation for today's speech, I was going through some things that Keating had said about it. When he was talking about it at the time, it was a policy called Working Nation, which was really about rebalancing the role of government at t",
+   "stage": "Second reading",
+   "ayes": 47,
+   "noes": 86,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 85
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-29/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1202358",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204142",
+   "speaker": "Claire Clutterham",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-29",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

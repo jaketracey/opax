@@ -1,0 +1,576 @@
+{
+ "key": "au-federal-r6989",
+ "title": "Social Security (Administration) Amendment (Income Management Reform) Bill 2023",
+ "short_title": "Social Security (Administration) Amendment (Income Management Reform) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2023-07-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-07-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6989_ems_bc834cad-e67f-400e-811d-531c3e2cb847%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6989%22",
+   "document_date": "2023-03-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00047",
+   "document_date": "2023-07-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-09",
+  "sentences": [
+   "The bill would continue the government's reform of income management for welfare recipients by moving people to an improved system.",
+   "It would extend the enhanced income management regime to include all measures from the existing Part 3B regime, give people a choice to switch, and direct new entrants to the enhanced system.",
+   "The changes would start on a single date set by proclamation or six months after Royal Assent, whichever comes first."
+  ],
+  "changes": [
+   "Extends the enhanced income management regime to include all measures from the Part 3B regime.",
+   "Gives people subject to the Part 3B regime the choice to move to enhanced income management from the commencement date.",
+   "Directs all new entrants to the enhanced income management regime."
+  ],
+  "affected": "Welfare recipients eligible for income management, particularly those in the Part 3B regime and new entrants.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:06:37Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8034",
+   "date": "2023-03-28",
+   "house": "representatives",
+   "question": "Social Security (Administration) Amendment (Income Management Reform) Bill 2023 - Second Reading - Against compulsory income management",
+   "stage": "Second reading",
+   "ayes": 95,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 101
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-28/1"
+  },
+  {
+   "key": "federal-representatives-8035",
+   "date": "2023-03-28",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2023-03-27.43.2) introduced by Deakin MP [Michael Sukkar](https://theyvoteforyou.org.au/people/representatives/deakin/michael_sukkar) (Liberal), which means it failed. ### Rebellion Bass MP [Bridget Archer](https://theyvoteforyou.org.au/people/representatives/bass/bridget_archer) (Liberal) [crossed the floor](https://theyvoteforyou.org.au/help/faq#rebel) to vote \"Yes\" while the rest of the Liberal Party voted \"No.\" ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), the House:* > > *(1) notes:* > >> *(a) the Coalition introduced the Cashless Debit Card to protect vulnerable communities reducing the amount of welfare payments available to spend on alcohol, gambling and illegal drugs;* >> >> *(b) since the Cashless Debit Card program commenced more than $988 million has been spent using cashless debit card accounts; participants making more than 20 million approved transactions with over $273 million spent where the primary business is food;* >> >> *(c) the harm and hardship the Government's abolition of the Cashless Debit Card has caused some of Australia's most vulnerable communities;* >> >> *(d) the Government's hypocrisy by reintroducing the Cashless Debit Card and rebranding it the SmartCard with the new card supported by the same provider Indue;* >> >> *(e) the Government has committed over $217 million of taxpayers' funds to this expensive rebranding exercise;* >> >> *(f) the Government has failed to provide details of the total cost to taxpayers of the new SmartCard; and* >> >> *(g) the Government's rushed and total mismanaged transition to the SmartCard; and* > > *(2) calls on the Government to without delay",
+   "stage": "Second reading",
+   "ayes": 87,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-28/2"
+  },
+  {
+   "key": "federal-representatives-8036",
+   "date": "2023-03-28",
+   "house": "representatives",
+   "question": "Social Security (Administration) Amendment (Income Management Reform) Bill 2023 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 96,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 101
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-28/3"
+  },
+  {
+   "key": "federal-representatives-8037",
+   "date": "2023-03-28",
+   "house": "representatives",
+   "question": "Social Security (Administration) Amendment (Income Management Reform) Bill 2023 - Consideration in Detail - No compulsory income management",
+   "stage": "Consideration in detail",
+   "ayes": 85,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 90
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-28/4"
+  },
+  {
+   "key": "federal-senate-8197",
+   "date": "2023-06-22",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-06-22.12.2) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill. South Australian Senator Anne Ruston (Liberal) had proposed to add the words below to that usual motion. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes:* > >> *(i) the Coalition introduced the Cashless Debit Card to protect vulnerable communities reducing the amount of welfare payments available to spend on alcohol, gambling and illegal drugs,* >> >> *(ii) since the Cashless Debit Card program commenced more than $988 million has been spent using cashless debit card accounts; participants making more than 20 million approved transactions with over $273 million spent where the primary business is food,* >> >> *(iii) the harm and hardship the Government's abolition of the Cashless Debit Card has caused some of Australia's most vulnerable communities,* >> >> *(iv) the Government's hypocrisy by reintroducing the Cashless Debit Card and rebranding it the SmartCard with the new card supported by the same provider Indue,* >> >> *(v) the Government has committed over $217 million of taxpayers' funds to this expensive rebranding exercise,* >> >> *(vi) the Government has failed to provide details of the total cost to taxpayers of the new SmartCard, and* >> >> *(vii) the Government has rushed and total mismanaged transition to the SmartCard; and* > > *(b) calls on the Government to, without delay, reverse its decision to abolish the Cashless Debit Card program and stop the alcohol-fuelled violence, drug abuse and childhood neglect in our most vulnerable communities\".*",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-22/8"
+  },
+  {
+   "key": "federal-senate-8198",
+   "date": "2023-06-22",
+   "house": "senate",
+   "question": "Social Security (Administration) Amendment (Income Management Reform) Bill 2023 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-22/9"
+  },
+  {
+   "key": "federal-senate-8199",
+   "date": "2023-06-22",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-06-22.62.2) introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which means it failed. ### What does this amendment do? Senator Ruston [explained that](https://www.openaustralia.org.au/senate/?id=2023-06-22.62.1): > *The reason the coalition is moving this substantive amendment is so that for a period of three years from royal assent the government must publish details of key metrics of social harm within all the former cashless debit card sites, including, but not limited to, rates of violent crime, presentations to emergency departments and ambulance call-outs reported with incidents of domestic violence. In the absence of having these sorts of measures, how on earth can the government measure the success or otherwise of their decisions? We think that, as soon as practicable after the end of each reporting period, the minister must prepare a report on the social effects of the cessation of the cashless welfare arrangements in each of the program areas.* ### Amendment text > *(1) Page 66 (after line 14), at the end of the Bill, add:* > >> *Schedule 3 — Obligations of Minister: reporting* >> >> *Social Security (Administration) Act 1999* >> >> *1 At the end of Part 7* >> >> *Insert:* >> >> *243B Tabling of report relating to effect of cessation of cashless welfare arrangements* >> >>> *(1) As soon as practicable after the end of each reporting period, the Minister must prepare a report on the social effect of the cessation of cashless welfare arrangements in each of the program areas.* >>> >>> *(2) Without limiting subsection (1), the report must outline, in respect of each of the program areas, rates of, and trends in:* >>> >>>> *(a) violent crimes reported to police;* >>>> >>>> *(b) presentations to hospital emergency departments, as follows:* >>>> >>>>> *(i) overall presentations;* >>>>> >>>>> *(ii) dr",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-22/10"
+  },
+  {
+   "key": "federal-senate-8200",
+   "date": "2023-06-22",
+   "house": "senate",
+   "question": "Social Security (Administration) Amendment (Income Management Reform) Bill 2023 - in Committee - Sunset clause",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-22/11"
+  },
+  {
+   "key": "federal-senate-8201",
+   "date": "2023-06-22",
+   "house": "senate",
+   "question": "Social Security (Administration) Amendment (Income Management Reform) Bill 2023 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 27,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 3,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-22/12"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Social Security (Administration) Amendment (Income Management Reform) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00047",
+   "assent_date": "2023-07-03"
+  }
+ ]
+}

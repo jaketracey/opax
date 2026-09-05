@@ -1,0 +1,324 @@
+{
+ "key": "au-federal-r6940",
+ "title": "Privacy Legislation Amendment (Enforcement and Other Measures) Bill 2022",
+ "short_title": "Privacy Legislation Amendment (Enforcement and Other Measures) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-10-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2022-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6940_ems_715c9651-94ce-4b91-9912-a4023d8c7f61%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6940_ems_ec367c09-f2c4-4f0c-8b94-ddb88b0794b4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6940%22",
+   "document_date": "2022-10-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00083",
+   "document_date": "2022-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-10-26",
+  "sentences": [
+   "This bill would raise fines for privacy breaches and give the privacy watchdog stronger enforcement tools.",
+   "It would increase the maximum penalty for serious privacy violations to $50 million for companies and allow the commissioner to issue infringement notices without going to court.",
+   "The bill would also let the commissioner share information with other regulators and delegate some powers to staff."
+  ],
+  "changes": [
+   "Increase penalties under the Privacy Act for serious or repeated interferences with privacy.",
+   "Expand the types of declarations the commissioner can make after an investigation.",
+   "Broaden extraterritorial jurisdiction to cover foreign organisations doing business in Australia.",
+   "Give the commissioner new assessment and infringement notice powers.",
+   "Strengthen the Notifiable Data Breaches scheme to require comprehensive breach details.",
+   "Allow the commissioner and ACMA to share information more broadly with other enforcement bodies."
+  ],
+  "affected": "Individuals, companies, foreign organisations operating in Australia, the Australian Information Commissioner, the Office of the Australian Information Commissioner, and the Australian Communications and Media Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:44:16Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7879",
+   "date": "2022-11-28",
+   "house": "senate",
+   "question": "The majority voted against a [second reading amendment](https://www.openaustralia.org.au/senate/?gid=2022-11-28.18.1) introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means it failed. ### What are second reading amendments? Second reading amendments like these don't make legal changes themselves, but instead represent the will of the Senate. They add words to the usual second reading motion, which is \"*that the bill be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\", which is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *At the end of the motion, add \", and the Senate calls on the Government to introduce a bill into the Parliament to insert a statutory civil cause of action for serious invasion of privacy in the Privacy Act 1988, modelled on the Australian Law Reform Commission's 2014 report entitled Serious Invasions of Privacy in the Digital Era\".*",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "earliest": 22,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-28/2"
+  },
+  {
+   "key": "federal-senate-7880",
+   "date": "2022-11-28",
+   "house": "senate",
+   "question": "The majority voted in favour of a [second reading amendment](https://www.openaustralia.org.au/senate/?gid=2022-11-28.23.1) introduced by Victorian Senator [James Paterson](https://theyvoteforyou.org.au/people/senate/victoria/james_paterson) (Liberal), which means it passed. ### What are second reading amendments? Second reading amendments like these don't make legal changes themselves, but instead represent the will of the Senate. They add words to the usual second reading motion, which is \"*that the bill be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\", which is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *At the end of the motion, add \", but the Senate calls on the Government:* > > *(a) to clarify key definitions in the bill, in particular the meaning of 'serious' and 'repeated' in relation to breaches under the Act;* > > *(b) to develop a tiered penalty regime that could take into account less severe breaches, and that seeks to differentiate between companies that have acted with malice and those that have taken all reasonable steps but have fallen victim to a cyber attack;* > > *(c) to direct the Office of the Australian Information Commissioner to issue guidance material that addresses the application of penalties, and clarifies best practice for compliance with the regime; and* > > *(d) to consider the adequacy of current resourcing and staffing levels for the Office of the Australian Information Commissioner and the Australian Cyber Security Centre for each to perform their functions, and to address all of the concerns raised by the former government in the Privacy Legislation Amendment (Enhancing Online Privacy and Other Measures) Bill 2021\".*",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 20,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "earliest": 31,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-28/3"
+  },
+  {
+   "key": "federal-senate-7881",
+   "date": "2022-11-28",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2022-11-28.29.1) introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means it failed. ### What does this amendment do? Senator Shoebridge [explained that](https://www.openaustralia.org.au/senate/?gid=2022-11-28.29.1): > *This amendment seeks to put in a new section 13GA into the Privacy Act, which would provide that an entity contravenes this subsection if the entity doesn't act and or engages in a practice that is in interference with the privacy of one or more individuals, and it seeks to retain the existing civil penalty of 2,000 penalty units for that breach. It also has a consequential amendment that provides that there's no retrospectivity in relation to that proposed provision.* > > *The proposed new section 13GA would remove the necessity for 'repeated or serious' from the offence provision and provide for what pretty much every stakeholder said we need, whether it was Electronic Frontiers, Digital Rights Watch or even the business reps who came before the inquiry that we had: put in place a tiered approach. If the Greens amendment was successful, it would allow the regulator to have at least some nuance in how the regulator goes about enforcing privacy. But if they see a breach of the privacy laws—and it may well be a quite disturbing breach; it doesn't have to be serious or repeated, but it could be—then instead of having to go and press the nuclear launch button of the $50 million penalty they'd be able to seek a penalty that has a maximum value of some 2,000 penalty units for a corporation which would not see small or medium businesses or charities potentially going to the wall when the regulator takes action.* > > *Without this, we're going to see no realistic way of enforcing the privacy laws against small and medium business or against the charitable and not-for-profit sector. If the only tool",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 17,
+    "earliest": 20,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-28/4"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Privacy Legislation Amendment (Enforcement and Other Measures) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00083",
+   "assent_date": "2022-12-12"
+  }
+ ]
+}

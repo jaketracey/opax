@@ -1,0 +1,275 @@
+{
+ "key": "au-federal-r5122",
+ "title": "Telecommunications Legislation Amendment (Consumer Protection) Bill 2013",
+ "short_title": "Telecommunications Legislation Amendment (Consumer Protection) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications",
+ "status": "passed",
+ "status_as_of": "2014-02-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5122%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5122%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5122%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5122%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5122%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5122%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5122%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5122%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5122%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5122%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5122%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5122%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-02-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5122%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5122_ems_37e6d14c-2200-4c39-ae89-d445707859fd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5122%22",
+   "document_date": "2013-11-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00003",
+   "document_date": "2014-02-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-14",
+  "sentences": [
+   "This bill would change telecommunications laws to reduce industry red tape, strengthen consumer protections, and improve the co-regulatory framework.",
+   "It would require the Telecommunications Industry Ombudsman scheme to meet standards set by the Minister after consulting the TIO and the Australian Communications and Media Authority, and mandate periodic independent public reviews of the scheme.",
+   "The bill would also allow industry codes to be varied instead of wholly replaced, require code developers to publish draft codes and public submissions online, and clarify the meaning of 'cause' in the Do Not Call Register Act for telemarketing calls made by third parties."
+  ],
+  "changes": [
+   "Require the TIO scheme to comply with Minister-determined standards.",
+   "Require periodic public reviews of the TIO scheme by an independent body.",
+   "Allow industry codes to be varied rather than wholly replaced.",
+   "Extend the reimbursement scheme for developing consumer-related codes to cover variations.",
+   "Require code developers to publish draft codes and public submissions on their websites.",
+   "Clarify the meaning of 'cause' in the Do Not Call Register Act for telemarketing calls made by third parties."
+  ],
+  "affected": "The telecommunications industry, the Telecommunications Industry Ombudsman, the Australian Communications and Media Authority, and the Department of Communications.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:03Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-278433",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825504",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281136",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281137",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281138",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281139",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281140",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826494",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282064",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282065",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282066",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282067",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282068",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282069",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Telecommunications Legislation Amendment (Consumer Protection) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00003",
+   "assent_date": "2014-02-28"
+  }
+ ]
+}

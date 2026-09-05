@@ -1,0 +1,168 @@
+{
+ "key": "au-federal-r5334",
+ "title": "Australian Transaction Reports and Analysis Centre Supervisory Cost Recovery Levy Amendment Bill 2014",
+ "short_title": "Australian Transaction Reports and Analysis Centre Supervisory Cost Recovery Levy Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-09-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Justice",
+ "status": "passed",
+ "status_as_of": "2014-10-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5334%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5334%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5334%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5334%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5334%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-10-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5334%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5334%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5334%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5334%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5334%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-10-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5334%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5334%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5334_ems_54ca0099-2ed4-4a8f-8c2e-6f4831d8f7b8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5334%22",
+   "document_date": "2014-09-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00111",
+   "document_date": "2014-10-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-09-24",
+  "sentences": [
+   "This bill is part of a package that replaces the current Supervisory Cost Recovery Levy with a new industry contribution to fund both the regulatory and financial intelligence functions of AUSTRAC.",
+   "The Minister for Justice would set the amount payable by each reporting entity through a legislative instrument, with the total contribution capped at twice the total annual appropriation for AUSTRAC.",
+   "Approximately 900 larger reporting entities would pay the new contribution, while about 3,000 smaller ones would no longer be required to pay the levy."
+  ],
+  "changes": [
+   "Replace the existing Supervisory Cost Recovery Levy with a new industry contribution.",
+   "Fund both AUSTRAC's regulatory and financial intelligence unit functions through the new contribution.",
+   "Cap the total industry contribution at twice the annual appropriation for AUSTRAC.",
+   "Exempt smaller reporting entities from paying the contribution."
+  ],
+  "affected": "Reporting entities regulated by AUSTRAC, particularly larger ones, and AUSTRAC itself.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-297863",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298615",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299010",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-02",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Transaction Reports and Analysis Centre Supervisory Cost Recovery Levy Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00111",
+   "assent_date": "2014-10-21"
+  }
+ ]
+}

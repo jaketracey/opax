@@ -1,0 +1,133 @@
+{
+ "key": "au-federal-r7032",
+ "title": "Excise Tariff Amendment (Product Stewardship for Oil) Bill 2023",
+ "short_title": "Excise Tariff Amendment (Product Stewardship for Oil) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-05-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy, the Environment and Water",
+ "status": "passed",
+ "status_as_of": "2023-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7032%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7032%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7032%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7032%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7032%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7032%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7032%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7032%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7032%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7032%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7032%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7032_ems_7367453c-a768-4571-8e66-ef9b7dd6829b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7032%22",
+   "document_date": "2023-05-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00037",
+   "document_date": "2023-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-05-25",
+  "sentences": [
+   "This bill would raise the excise duty on certain petroleum-based oils to help make the Product Stewardship for Oil Scheme self-funding.",
+   "It would increase the duty rate to 14.2 cents per litre for goods in sub-items 15.1 and 15.2 and to 14.2 cents per kilogram for goods in sub-items 15.3 and 15.4 of the Excise Tariff Act.",
+   "The scheme has run a deficit averaging $34.5 million per year for more than four years, and the government expects the change to return $139 million to consolidated revenue over the forward estimates."
+  ],
+  "changes": [
+   "Increase the excise duty rate on goods in item 15 to 14.2 cents per litre and 14.2 cents per kilogram.",
+   "Address the deficit in the Product Stewardship for Oil Scheme.",
+   "Return the scheme to fiscal neutrality."
+  ],
+  "affected": "Oil recyclers, oil refiners, oil importers, and oil users.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:10:34Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Excise Tariff Amendment (Product Stewardship for Oil) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00037",
+   "assent_date": "2023-06-28"
+  }
+ ]
+}

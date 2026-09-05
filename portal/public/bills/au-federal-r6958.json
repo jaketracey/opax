@@ -1,0 +1,465 @@
+{
+ "key": "au-federal-r6958",
+ "title": "Public Interest Disclosure Amendment (Review) Bill 2022",
+ "short_title": "Public Interest Disclosure Amendment (Review) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-11-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2023-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6958_ems_80892312-ad05-42e8-9d6e-2d269e3f727f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6958_ems_c061f70c-52a3-456a-a1a3-f8df68ddf385%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6958_ems_7762351e-b3c0-4744-a0d3-99e1f8ddebc5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6958%22",
+   "document_date": "2022-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00023",
+   "document_date": "2023-06-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-8087",
+   "date": "2023-05-10",
+   "house": "senate",
+   "question": "Public Interest Disclosure Amendment (Review) Bill 2022 - Second Reading - Whistleblowers",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-05-10/1"
+  },
+  {
+   "key": "federal-senate-8088",
+   "date": "2023-05-10",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-05-10.42.4) introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which would have amended [government amendment (2)](https://www.openaustralia.org.au/senate/?id=2023-05-10.18.1) with the words below. Senator Shoebridge explained that: > *This amendment seeks to implement recommendation 5 of the Moss review. It does a pretty simple thing. It inserts the word 'solely' into the government amendments to reflect the submissions we received in the inquiry that clarified the language to ensure that only matters that were solely in relation to personal work related conduct should be excluded from the operation of the PID [Public Interest Disclosure] scheme.* ### Amendment text > *AMENDMENT TO GOVERNMENT AMENDMENTS [SHEET ZB203]* > > *(1) Amendment (2), note to subsection 43(4A), after \"because that conduct is\", insert \"solely\".* ### Government amendment (2) text > *(2) Schedule 1, item 11, page 8 (after line 4), after subsection 43(4), insert:* > >> *(4A) To avoid doubt, if a disclosure includes information that tends to show (or that may tend to show) disclosable conduct, there might be a reasonable basis on which the disclosure could be considered to be an internal disclosure even if:* >> >>> *(a) the disclosure includes other information; and* >>> >>> *(b) the other information tends to show (or may tend to show) personal work-related conduct.* >> >> *Note: A disclosure may include information relating to a number of instances of conduct, some of which may be considered disclosable conduct, and some of which may not (for example, because that conduct is personal work-related conduct). Paragraph (4)(a) does not apply if one or more of those instances provide a reasonable basis on which the disclosure could be an internal disclosure under section 26.*",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-05-10/2"
+  },
+  {
+   "key": "federal-senate-8149",
+   "date": "2023-06-15",
+   "house": "senate",
+   "question": "Public Interest Disclosure Amendment (Review) Bill 2022 - in Committee - Meaning of public interest disclosure",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 21,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-15/2"
+  },
+  {
+   "key": "federal-senate-8150",
+   "date": "2023-06-15",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-06-15.27.1) to keep item 9 in schedule 2 as it is. In parliamentary jargon, they voted that item 9 \"stand as printed\". This means it will remain unchanged. This was to make a minor amendment to [section 26](http://www5.austlii.edu.au/au/legis/cth/consol_act/pida2013295/s26.html) of the Public Interest Disclosure Act 2013. This vote took place after the Greens [proposed to oppose this item](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6958_amend_e407f877-23a2-4879-bd5b-de2160704555%22;rec=0). ### What is item 9? > *9 Paragraph 26(1)(c)* > > *Omit “met:”, substitute “met.”.*",
+   "stage": "In committee",
+   "ayes": 22,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-15/3"
+  },
+  {
+   "key": "federal-senate-8151",
+   "date": "2023-06-15",
+   "house": "senate",
+   "question": "The majority voted against [amendments (2), (3), (6) to (10) and (12) to (14)](https://www.openaustralia.org.au/senate/?gid=2023-06-15.29.1) introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means they did not succeed. ### What does this amendment do? Senator Shoebridge [explained that](https://www.openaustralia.org.au/senate/?gid=2023-06-15.29.1): > *One of the core recommendations of the Moss review was to expand the category of people to whom whistleblowers can go to seek professional assistance, to expand it unambiguously to the legal profession and appropriate legal advice and also to empower whistleblowers to make their disclosures appropriately and with the appropriate advice to comply with the PID Act [Public Interest Disclosure Act] and any other requirements. These amendments seek to expand the category of persons to whom whistleblowers can go to for professional assistance from not just lawyers, and in some cases government approved lawyers, to Australian legal practitioners or their relevant union representative.* > > *As we know, many public servants who are members of the CPSU or another union go to their union to seek advice on how they can step through a really hard workplace issue. You can't think of a harder workplace issue in many instances than trying to work out how to do a PID Act disclosure properly. The Greens firmly believe that appropriately skilled union officials should be available to whistleblowers to help them step through the complexity of making a PID Act disclosure.* ### Amendment text > *(2) Schedule 1, page 30 (before line 21), before item 51, insert:* > >> *50B Subsection 26(1) (table item 4, column 1)* >> >>> *Omit “Legal practitioner”, substitute “Professional assistance”.* >> >> *50C Subsection 26(1) (cell at table item 4, column 2)* >> >>> *Repeal the cell, substitute:* >>> >>> *(a) An Australian legal practitioner; or* >>> >>> *(b) a union represent",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-15/4"
+  },
+  {
+   "key": "federal-senate-8152",
+   "date": "2023-06-15",
+   "house": "senate",
+   "question": "Public Interest Disclosure Amendment (Review) Bill 2022 - in Committee - Parliamentary staff",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-15/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-827611",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-14",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Consumer Data Right) Bill 2022 and the Public Interest Disclosure Amendment (Review) Bill 2022 were referred to the Federation Chamber for further consideration at the adjournment of the second reading debate on each bill, unless otherwise ordered."
+  },
+  {
+   "slug": "speech-827613",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-02-14",
+   "stage_hint": null,
+   "brief": "The Coalition supported the Public Interest Disclosure Amendment (Review) Bill 2022, which implements 21 of 33 recommendations from the 2016 Moss review and others, aiming to improve whistleblower protections by removing personal work-related conduct from the scheme unless tied to systemic wrongdoing or reprisal, and by increasing flexibility, clearer timeframes, and extended reprisal protections."
+  },
+  {
+   "slug": "speech-827768",
+   "speaker": "Gordon Reid",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Public Interest Disclosure Amendment (Review) Bill 2022 implements key recommendations from the 2016 Moss review to strengthen whistleblower protections and support the National Anti-Corruption Commission, with a second stage of reforms, including a possible whistleblower protection authority, to follow."
+  },
+  {
+   "slug": "speech-828014",
+   "speaker": "Don Farrell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-06",
+   "stage_hint": null,
+   "brief": "The Albanese Government introduced the Public Interest Disclosure Amendment (Review) Bill to implement recommendations from the 2016 Moss Review, strengthening whistleblower protections by expanding reprisal protections, broadening the definition of detriment, and focusing the Act on significant integrity wrongdoing rather than personal work-related conduct. The Bill also clarifies coverage by excluding parliamentary staff, enhances oversight by the Commonwealth Ombudsman and IGIS, and includes provisions for interaction with the National Anti-Corruption Commission, with further reforms planned for a second stage."
+  },
+  {
+   "slug": "speech-829982",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-05-10",
+   "stage_hint": null,
+   "brief": "The Coalition supported the Public Interest Disclosure Amendment (Review) Bill 2022, which implements 21 of the 33 Moss review recommendations and other parliamentary inquiry recommendations, and argued it improves whistleblower protections by removing personal work‑related conduct from the scheme unless it relates to systemic wrongdoing or reprisal."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Public Interest Disclosure Amendment (Review) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00023",
+   "assent_date": "2023-06-19"
+  }
+ ]
+}

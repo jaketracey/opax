@@ -1,0 +1,85 @@
+{
+ "key": "au-federal-s1143",
+ "title": "Australian Multicultural Bill 2018",
+ "short_title": "Australian Multicultural Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2018-08-23",
+ "originating_house": "senate",
+ "sponsor": "DI NATALE, Sen Richard",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10755",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1143%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1143%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1143%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1143%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1143%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1143_ems_e61c8a43-68bc-4cde-b0f8-b817f5fa0b45%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1143%22",
+   "document_date": "2018-08-23",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-08-23",
+  "sentences": [
+   "The bill would write the principles of multiculturalism and diversity into federal law.",
+   "It would create an Australian Multicultural Commission to advise the minister and coordinate government responses to community issues.",
+   "Commonwealth entities would have to report annually on actions taken to promote multicultural policy, including use of interpreting services and representation of people from diverse backgrounds."
+  ],
+  "changes": [
+   "Enshrines the principles of multiculturalism in legislation.",
+   "Establishes the Australian Multicultural Commission.",
+   "Imposes annual reporting requirements on Commonwealth entities regarding multicultural policy."
+  ],
+  "affected": "Commonwealth entities and companies, and people from diverse backgrounds (defined as those born overseas or with one or both parents born overseas).",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

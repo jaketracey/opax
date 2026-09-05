@@ -1,0 +1,788 @@
+{
+ "key": "au-federal-r5821",
+ "title": "Native Title Amendment (Indigenous Land Use Agreements) Bill 2017",
+ "short_title": "Native Title Amendment (Indigenous Land Use Agreements) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2017-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5821_ems_25735e08-4d63-430f-a2f9-0285925a4599%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5821_ems_eb6737b9-fae6-4ad0-989c-4a2f33aeb34b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5821_ems_3fe57120-21d8-41cb-9fbe-f5a6317fb508%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5821_ems_d1b27e9c-cba7-4e64-887c-3a6ffd18765f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5821%22",
+   "document_date": "2017-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00053",
+   "document_date": "2017-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-15",
+  "sentences": [
+   "This bill changes the Native Title Act 1993 to settle legal doubts about certain Indigenous land use agreements raised by a recent court ruling.",
+   "It would validate agreements already registered or lodged by a specific date that lack all required signatures, and set new rules for who must sign future agreements unless the traditional owners decide otherwise.",
+   "The changes apply to agreements registered or lodged for registration on or before 2 February 2017."
+  ],
+  "changes": [
+   "It validates existing area agreements that were registered before the court decision but did not have all signatures.",
+   "It allows registration of agreements that were lodged before the court decision but lack all signatures.",
+   "It clarifies who must be a party to future area agreements unless the claim group chooses otherwise."
+  ],
+  "affected": "Native title holders, parties to area Indigenous Land Use Agreements, and the native title sector.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:39:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4563",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "question": "Motions — Native Title Amendment (Indigenous Land Use Agreements) Bill 2017 - That the member be no longer heard",
+   "stage": "Motion",
+   "ayes": 73,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Liberal": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-02-16/1"
+  },
+  {
+   "key": "federal-representatives-4564",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "question": "Motions — Native Title Amendment (Indigenous Land Use Agreements) Bill 2017 - That the member be no longer heard",
+   "stage": "Motion",
+   "ayes": 73,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-02-16/2"
+  },
+  {
+   "key": "federal-representatives-4565",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "question": "Motions — Native Title Amendment (Indigenous Land Use Agreements) Bill 2017 - That the motion be put",
+   "stage": "Motion",
+   "ayes": 74,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-02-16/3"
+  },
+  {
+   "key": "federal-representatives-4566",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "question": "Motions - Native Title Amendment (Indigenous Land Use Agreements) Bill 2017 - Suspend rules to let vote happen",
+   "stage": "Motion",
+   "ayes": 69,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-02-16/4"
+  },
+  {
+   "key": "federal-representatives-4567",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "question": "Native Title Amendment (Indigenous Land Use Agreements) Bill 2017 - Third Reading - Speed things along",
+   "stage": "Third reading",
+   "ayes": 75,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-02-16/5"
+  },
+  {
+   "key": "federal-representatives-4568",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "question": "Native Title Amendment (Indigenous Land Use Agreements) Bill 2017 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 77,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-02-16/6"
+  },
+  {
+   "key": "federal-senate-4703",
+   "date": "2017-06-13",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](http://www.openaustralia.org.au/senate/?gid=2017-05-11.167.1) introduced by Labor Party Senator [Malarndirri McCarthy](https://theyvoteforyou.org.au/people/senate/nt/malarndirri_mccarthy) (NT), which means the amendment was successful. ### What was the amendment? The amendment didn't change the bill at all, it just added words to the motion of [whether to agree with the bill's main idea](https://theyvoteforyou.org.au/divisions/senate/2017-06-13/6). In parliamentary jargon, it added the words below to the motion that the bill be [read for a second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### Wording of the amendment > *At the end of the motion [to read the bill for a second time], add:* > *but the Senate expresses its disappointment with the regrettable way in which the Government has managed the process for consultation on the changes contained in the Bill, which has been a source of unnecessary angst, confusion and delay.\"* ### What is this bill all about? The bill is [a response](http://www.indigenous.gov.au/news-and-media/announcements/nttt-government-introduces-legislation-address-mcglade-decision) to [McGlade v Native Title Registrar & Ors [2017] FCAFC 10](http://www.austlii.edu.au/cgi-bin/sinodisp/au/cases/cth/FCAFC/2017/10.html?query=), which considers whether an Indigenous Land Use Agreement (**ILUA**) can be registered with the Native Title Registrar even if not all named parties have signed. An Indigenous Land Use Agreement is a voluntary agreement that native title groups can negotiate with other parties in relation to the use of land and waters. In that case, the Federal Court ruled that all parties must sign, which meant the Noongar Native Title agreement could not be registered (read more in [ABC News](http://www.abc.net.au/news/2017-02-02/billon-dollar-noongar-native-title-deal-rejected-by-court/8235138)). This happened on 2 February, and the Government immediately moved to pro",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 41,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-06-13/5"
+  },
+  {
+   "key": "federal-senate-4704",
+   "date": "2017-06-13",
+   "house": "senate",
+   "question": "Native Title Amendment (Indigenous Land Use Agreements) Bill 2017 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 53,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 38,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-06-13/6"
+  },
+  {
+   "key": "federal-senate-4829",
+   "date": "2017-06-14",
+   "house": "senate",
+   "question": "George Brandis I table three supplementary explanatory memoranda relating to the government amendments to be moved to this bill and seek leave to move government amendments (1), (2) and (4) on sheet ZA429 together. Leave granted. The government opposes schedule 1 in the following terms: (1) Schedule 1, item 4, page 3 (lines 23 and 24), to be opposed. (2) Schedule 1, item 6, page 4 (lines 7 and 8), to be opposed. (4) Schedule 1, item 11, page 6 (line 28) to page 7 (line 11), to be opposed. I thank the members of the Legal and Constitutional Affairs Legislation Committee and, in particular, the chairman of the committee, the distinguished father of the Senate, Senator Macdonald, for their work in reviewing the bill. The committee's majority report contained two recommendations, the key recommendation being that the bill be passed. This reflects the significant uncertainty that the native title sector was faced with following the decision in McGlade, something I mentioned in closing the second reading debate last night. The government was urged by Indigenous and non-Indigenous stakeholders alike to address the ambiguous situation faced by the parties to an estimated 126 ILUAs following that decision. The committee's other recommendation is for the removal of two separate measures from the bill at this time, with the recommendation that they be considered in a later bill, involving government proposals arising from the 2015 Australian Law Reform Commission report _Connection to country: review of the Native Title Act_. The committee recommended that the proposed amendments to sections 251A and 251B of the act be removed. Those amendments, items 4 and 6 of schedule 1, would have permitted claim groups to authorise an ILUA and to make applications for compensation or the determination of native title by a traditional process or a method agreed upon by the group. These changes implemented recommendations 10-1 and 10-2 of the ALRC report. The Senate committee has taken the",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 29,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-06-14/1"
+  },
+  {
+   "key": "federal-senate-4830",
+   "date": "2017-06-14",
+   "house": "senate",
+   "question": "George Brandis I move: That this bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 46,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 35,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-06-14/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-341487",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The bill restores the pre-McGlade legal position so that Indigenous land use agreements are valid if authorised by the broader native title claim group, even if not all registered native title claimants sign, and applies retrospectively to protect existing and pending agreements."
+  },
+  {
+   "slug": "speech-341784",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-16",
+   "stage_hint": null,
+   "brief": "The opposition criticized the government for rushing debate on the Native Title Amendment (Indigenous Land Use Agreements) Bill 2017 only 24 hours after its introduction, arguing it stemmed from Attorney-General George Brandis's incompetence in failing to act on warnings about the full Federal Court's McGlade decision (2 February 2017) which could invalidate around 150 existing Indigenous land use agreements. The opposition accepted the need for the bill but condemned the lack of consultation with Aboriginal and Torres Strait Islander communities and stakeholders, and noted the government's failure to respond to the 2015 Australian Law Reform Commission report on native title."
+  },
+  {
+   "slug": "speech-341787",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-16",
+   "stage_hint": null,
+   "brief": "The Native Title Amendment (Indigenous Land Use Agreements) Bill 2017 responds to the Federal Court's McGlade decision by removing the requirement for all registered native title claimants to sign an Indigenous Land Use Agreement, restoring the previous status quo; the government intends to pass the bill through the House and consult for four weeks before Senate consideration, noting 123 existing agreements are affected, 109 in Queensland."
+  },
+  {
+   "slug": "speech-341788",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-16",
+   "stage_hint": null,
+   "brief": "The Labor Party argued the Native Title Amendment Bill 2017 was rushed without consultation, criticising the Attorney-General for disrespecting Indigenous communities and failing to prepare for a Federal Court ruling that invalidated 123 Indigenous Land Use Agreements. Labor stated it would protect native title but would not support legislation introduced with only a day's notice."
+  },
+  {
+   "slug": "speech-341789",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Native Title Amendment (Indigenous Land Use Agreements) Bill 2017 is necessary to remedy uncertainty caused by the February 2017 McGlade v Native Title Registrar Federal Court decision, which invalidated area ILUAs not signed by all registered native title claimants. The bill would secure existing agreements, enable registration of lodged agreements, and clarify future party requirements, with the speaker urging all parties to support the amendments to provide certainty for Indigenous communities and economic opportunities."
+  },
+  {
+   "slug": "speech-341791",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-16",
+   "stage_hint": null,
+   "brief": "The Native Title Amendment (Indigenous Land Use Agreements) Bill 2017 was rushed into the House despite the Attorney-General, Senator Brandis, having been warned months earlier—including via a leaked August letter from Indigenous groups—that urgent technical amendments were needed to prevent a Federal Court decision invalidating land-use agreements across Australia."
+  },
+  {
+   "slug": "speech-341797",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2017-02-16",
+   "stage_hint": null,
+   "brief": "Labor agreed to a gag on the Native Title Amendment (Indigenous Land Use Agreements) Bill, pushing it through without proper scrutiny despite a list of speakers opposing the fast-tracked passage."
+  },
+  {
+   "slug": "speech-341803",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-16",
+   "stage_hint": null,
+   "brief": "The Native Title Amendment (Indigenous Land Use Agreements) Bill is urgent and merely restores the status quo understood before the Federal Court’s 2 February decision, with no significant stakeholder opposition."
+  },
+  {
+   "slug": "speech-341828",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-16",
+   "stage_hint": null,
+   "brief": "The government was condemned for rushing the Native Title Amendment (Indigenous Land Use Agreements) Bill 2017 through Parliament with only a five-minute second reading speech and no consultation, contradicting the Prime Minister’s stated commitment to partnership with Aboriginal and Torres Strait Islander peoples."
+  },
+  {
+   "slug": "speech-348820",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The Native Title Amendment (Indigenous Land Use Agreements) Bill 2017 passed the Senate with two sets of government amendments: one removing measures not required to address the McGlade decision, and another protecting Indigenous land use agreements in Cape York at the request of the Cape York Land Council. The bill aims to provide certainty for existing and future ILUAs and maintain them as a key mechanism for Indigenous Australians to enjoy social and economic benefits from native title rights."
+  },
+  {
+   "slug": "speech-348821",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "Labor supported the amended bill after securing changes through a Senate committee, including preventing the government from taking unfettered control over Indigenous land use agreements and ensuring consultation with communities like the Cape York Land Council. The opposition criticised the government for originally attempting to rush the bill without proper consultation, citing the need to validate 126 land use agreements affected by the February 2 McGlade Federal Court decision."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Native Title Amendment (Indigenous Land Use Agreements) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00053",
+   "assent_date": "2017-06-22"
+  }
+ ]
+}

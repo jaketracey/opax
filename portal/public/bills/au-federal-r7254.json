@@ -1,0 +1,112 @@
+{
+ "key": "au-federal-r7254",
+ "title": "Help to Buy Bill 2023 [No. 2]",
+ "short_title": "Help to Buy Bill 2023 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-10-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7254%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7254%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7254_ems_cec1bc90-33c5-4d8f-94b8-5f974e6f191d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7254%22",
+   "document_date": "2024-10-08",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-10-08",
+  "sentences": [
+   "This bill is part of a package that would create Help to Buy, a shared equity program to help low- to middle-income earners buy homes with a Commonwealth equity contribution.",
+   "Housing Australia would administer and monitor the shared equity arrangements in states that have referred power or adopted the legislation, and in the territories.",
+   "The bill would commence the day after it receives Royal Assent, and the supporting Consequential Provisions Bill would commence at the same time but only if this bill commences."
+  ],
+  "changes": [
+   "Establishes the Help to Buy shared equity program.",
+   "Provides for Housing Australia to administer and monitor the program.",
+   "Sets the commencement date as the day after Royal Assent."
+  ],
+  "affected": "Low- to middle-income earners, Housing Australia, and states and territories that participate in the program.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9161",
+   "date": "2024-10-08",
+   "house": "representatives",
+   "question": "Help to Buy Bill 2023 [No. 2] - First Reading - Suspend the usual rules",
+   "stage": "First Reading",
+   "ayes": 84,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 135,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-10-08/3"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

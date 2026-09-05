@@ -1,0 +1,176 @@
+{
+ "key": "au-federal-r5529",
+ "title": "Customs Depot Licensing Charges Amendment Bill 2015",
+ "short_title": "Customs Depot Licensing Charges Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2015-11-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5529%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5529%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5529%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5529%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5529%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5529%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5529%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5529%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5529%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5529%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5529%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5529%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5529_ems_47e7e74f-ae39-47fc-bf48-b13f5bb29122%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5529%22",
+   "document_date": "2015-09-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00140",
+   "document_date": "2015-11-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-16",
+  "sentences": [
+   "This bill would introduce new charges for applying for or varying a warehouse licence and for applying for a customs broker licence.",
+   "It would also move existing warehouse and broker licence charges from the Customs Act 1901 and the Customs Regulation 2015 into the Customs Depot Licensing Charges Act 1997.",
+   "The government estimates the bill, together with a related bill, would raise $1.1 million over the forward estimates from 2015-16."
+  ],
+  "changes": [
+   "Imposes new charges on applications for warehouse licences, customs broker licences, and variations to warehouse licences.",
+   "Consolidates existing warehouse and broker licence charges into one Act.",
+   "Increases broker charges to recover two-thirds of the expenditure base."
+  ],
+  "affected": "Warehouse and customs broker licence applicants, and the Department of Immigration and Border Protection.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:20:29Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-319061",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The Customs Amendment (Fees and Charges) Bill 2015 restructures customs broker, depot and warehouse licensing charges, introduces new application and variation fees, and increases the warehoused goods declaration processing fee to achieve full or partial cost recovery, forecast to recover $4.0 million in 2014‑15."
+  },
+  {
+   "slug": "speech-319062",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The Customs Depot Licensing Charges Amendment Bill 2015 was moved for a second reading, implementing 2015-16 budget measures from the joint review of border fees. It introduces new application charges for warehouse and customs broker licences, consolidates licensing charges into one act, and adjusts existing charges to align with cost recovery guidelines."
+  },
+  {
+   "slug": "speech-319063",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The Import Processing Charges Amendment Bill 2015 was introduced to implement 2014-15 budget measures from a border fees review, broadening the cost base for import and warehouse declaration charges to include immigration and border protection reform costs, simplifying charges by removing sea, air, and postal price differentials, and introducing a higher standard charge for documentary declarations. The changes, effective 1 January 2016, are projected to raise approximately $106.4 million over the forward estimates."
+  },
+  {
+   "slug": "speech-320239",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-14",
+   "stage_hint": null,
+   "brief": "The speaker supported three customs bills commencing 1 January 2016, which aim to generate $107.6 million over the forward estimates by increasing fees and charges to recover full costs for border operations, including new warehouse licensing fees up to $4,500 and higher import declaration charges."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Depot Licensing Charges Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00140",
+   "assent_date": "2015-11-12"
+  }
+ ]
+}

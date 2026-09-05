@@ -1,0 +1,548 @@
+{
+ "key": "au-federal-s1423",
+ "title": "Fair Work (Registered Organisations) Amendment (Administration) Bill 2024",
+ "short_title": "Fair Work (Registered Organisations) Amendment (Administration) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-08-12",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2024-08-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1423_ems_a53174ae-afc2-4762-b75f-9e37b8c07c38%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1423_ems_2b7c752a-8eac-4ca8-ad31-26122acf8c4a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1423_ems_4865cf72-1b94-4fdc-9ceb-98c1774221a5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1423_ems_25fae77c-29fa-4b14-804d-5f09506c58fe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1423%22",
+   "document_date": "2024-08-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00074",
+   "document_date": "2024-08-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2024-08-12",
+  "sentences": [
+   "The bill would put one division of a major union into external management for up to 5 years.",
+   "The Minister could set up an administration scheme by legislative instrument, and the General Manager of the Fair Work Commission would appoint an administrator, whose costs the union must pay.",
+   "The bill includes retrospective civil penalties from 1 July 2024, while criminal sanctions would only apply from the date the bill starts."
+  ],
+  "changes": [
+   "Places the Construction and General Division of the CFMEU under administration for up to 5 years.",
+   "Gives the Minister power to determine an administration scheme by legislative instrument.",
+   "Makes the General Manager of the Fair Work Commission responsible for appointing an administrator and overseeing the scheme.",
+   "Requires the CFMEU to pay all administration costs.",
+   "Prevents removed persons from acting as bargaining representatives or holding office in an organisation, subject to certification.",
+   "Provides whistleblower protections for complainants through an internal complaints mechanism."
+  ],
+  "affected": "The Construction and General Division of the Construction, Forestry and Maritime Employees Union, its officers, employees, agents and members, as well as the CFMEU as a whole.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9069",
+   "date": "2024-08-19",
+   "house": "senate",
+   "question": "Fair Work (Registered Organisations) Amendment (Administration) Bill 2024 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 39,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-19/16"
+  },
+  {
+   "key": "federal-senate-9070",
+   "date": "2024-08-19",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansards/28058/&sid=0000) introduced by the opposition, which means they will now be included as part of the bill. ### Amendment text See sheets [2797](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_d3c22412-a9d8-478e-9224-7ca95d7e0fdc%22;rec=0), [2798 revised 3](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_1d3b712c-84d7-4ea1-b835-f45f94ff2d6d%22;rec=0), [2799](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_df7e6cc9-8f0c-43c6-ab5b-0ca92c8bd366%22;rec=0), [2824](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_49803bfe-824c-4a53-8ea7-bbaad4b04437%22;rec=0), [2825](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_1afe6f97-f67b-4638-ae8c-c85d03c87e63%22;rec=0), [2826](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_60e02031-4ef3-4bd7-83c3-a31c3dd5bbc8%22;rec=0), [2827](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_81fbf044-651d-43f9-8056-62de0e0aa080%22;rec=0) and [2828](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_df5e41a5-2845-4c9b-98a8-a17a13c35df9%22;rec=0) for the text of the various amendments.",
+   "stage": "In committee",
+   "ayes": 46,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 9,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-19/17"
+  },
+  {
+   "key": "federal-senate-9071",
+   "date": "2024-08-19",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansards/28058/&sid=0000) to keep item 9 of schedule 1 as it is. In parliamentary jargon, they voted that it \"stand as printed\". This motion was put after the Greens introduced the following amendment: > *(1) Schedule 1, item 9, page 15 (lines 4 to 9), to be opposed.* ### What is item 9 of schedule 1? > *9 Retrospective application of civil penalty provision* > > *The following provisions of the Fair Work (Registered Organisations) Act 2009 apply in relation to conduct engaged in on or after 17 July 2024:* > >> *(a) section 323P, other than subsection 323P(5);* >> >> *(b) section 323Q.*",
+   "stage": "In committee",
+   "ayes": 45,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 9,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-19/18"
+  },
+  {
+   "key": "federal-senate-9072",
+   "date": "2024-08-19",
+   "house": "senate",
+   "question": "The majority voted against [Greens amendments](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansards/28058/&sid=0000) on sheets [2789](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_dfdc4cc7-5066-4328-8394-01c8e50ccb46%22;rec=0), [2810](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_d06bcf8a-b9a2-4e97-b330-8fdd84a2a083%22;rec=0), [2813](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_6280c4d4-091e-4cc2-b513-26227d39d201%22;rec=0), [2816](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_2c8a3b01-233f-4d76-a9d5-cc69b16bbae5%22;rec=0), [2818](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_636b517c-8a03-4625-bdde-4c800581141b%22;rec=0), [2819](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_b25e81b3-cd5f-4ee7-95ad-4da55ab7d465%22;rec=0), [2820](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_113f9e08-daed-4c15-bcf9-fda96beba46a%22;rec=0) and [2821](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1423_amend_7d30ef8d-0650-46f5-a178-c33c9a16d9c8%22;rec=0), which means they failed. ### Amendment text **SHEET 2789** > *(1) Schedule 1, item 5, page 6 (after line 11), after subsection 323B(3), insert:* > >> *(3A) If t",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 9,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-19/19"
+  },
+  {
+   "key": "federal-senate-9073",
+   "date": "2024-08-19",
+   "house": "senate",
+   "question": "Fair Work (Registered Organisations) Amendment (Administration) Bill 2024 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 47,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 9,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-19/20"
+  },
+  {
+   "key": "federal-representatives-9075",
+   "date": "2024-08-20",
+   "house": "representatives",
+   "question": "Fair Work (Registered Organisations) Amendment (Administration) Bill 2024 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 71,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 76,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 145,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-08-20/2"
+  },
+  {
+   "key": "federal-representatives-9076",
+   "date": "2024-08-20",
+   "house": "representatives",
+   "question": "Fair Work (Registered Organisations) Amendment (Administration) Bill 2024 - Consideration in Detail - Speed things along",
+   "stage": "Consideration in detail",
+   "ayes": 75,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 75,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 141,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-08-20/3"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Fair Work (Registered Organisations) Amendment (Administration) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00074",
+   "assent_date": "2024-08-22"
+  }
+ ]
+}

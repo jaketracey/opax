@@ -1,0 +1,168 @@
+{
+ "key": "au-federal-r5348",
+ "title": "Albury-Wodonga Development Corporation (Abolition) Bill 2014",
+ "short_title": "Albury-Wodonga Development Corporation (Abolition) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2014-11-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5348%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5348%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5348%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5348%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5348%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5348%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5348%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5348%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5348%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5348%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5348%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5348%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5348_ems_bb1a51e1-fcad-4324-9161-85a8009276cd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5348%22",
+   "document_date": "2014-10-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00117",
+   "document_date": "2014-11-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-10-01",
+  "sentences": [
+   "The bill would abolish the Albury-Wodonga Development Corporation (AWDC).",
+   "It would repeal the Albury-Wodonga Development Act 1973 and transfer the AWDC's remaining property management functions, assets and liabilities to the Commonwealth.",
+   "The transfer would be completed by 1 July 2015."
+  ],
+  "changes": [
+   "Abolishes the Albury-Wodonga Development Corporation.",
+   "Repeals the Albury-Wodonga Development Act 1973.",
+   "Transfers the AWDC's remaining assets and liabilities to the Commonwealth.",
+   "Transfers the AWDC's remaining property management functions to the Commonwealth."
+  ],
+  "affected": "The Albury-Wodonga Development Corporation and the Commonwealth.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:53:46Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-298666",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299994",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299995",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Albury-Wodonga Development Corporation (Abolition) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00117",
+   "assent_date": "2014-11-11"
+  }
+ ]
+}

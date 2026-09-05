@@ -1,0 +1,260 @@
+{
+ "key": "au-federal-r6536",
+ "title": "Aboriginal Land Rights (Northern Territory) Amendment (Jabiru) Bill 2020",
+ "short_title": "Aboriginal Land Rights (Northern Territory) Amendment (Jabiru) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Indigenous Australians",
+ "status": "passed",
+ "status_as_of": "2020-09-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6536%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6536%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6536%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6536%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6536%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6536%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6536%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6536%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6536%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6536%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6536%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6536%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6536_ems_aee2e2b9-203e-46ce-a59d-d3f2e374d6de%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6536%22",
+   "document_date": "2020-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00087",
+   "document_date": "2020-09-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-13",
+  "sentences": [
+   "This bill would allow the Jabiru township land to be transferred to the Mirarr traditional owners.",
+   "It would amend the Aboriginal Land Rights (Northern Territory) Act 1976 to make the Jabiru township lease match other township leases, including by allowing a shorter term and letting the lease be held by the Executive Director of Township Leasing or a community entity.",
+   "The bill would also update a reference in the Environment Protection and Biodiversity Conservation Act 1999 so that people can use and develop land subleased from the approved entity holding the new Jabiru lease."
+  ],
+  "changes": [
+   "Allow the Jabiru township lease term to be between 40 and 99 years.",
+   "Remove the rule that the first township lease can only be granted to the Commonwealth.",
+   "Clarify that the Jabiru township lease would not automatically extend existing subleases beyond the head lease term.",
+   "Remove outdated Jabiru-specific leasing provisions from the Land Rights Act.",
+   "Update a cross-reference in the Environment Protection and Biodiversity Conservation Act 1999."
+  ],
+  "affected": "The Mirarr traditional owners, the Executive Director of Township Leasing, community entities, and people with subleases in Jabiru.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:41:36Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6513",
+   "date": "2020-08-31",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) unchanged. In parliamentary jargon they voted for a [motion](https://www.openaustralia.org.au/debate/?id=2020-08-31.130.10) that \"that the words proposed to be omitted stand part of the question.\" This vote was put after the Opposition proposed to amend the usual second reading motion. ### Usual second reading motion text > *That this bill be now read a second time.* Reading a bill for a second time is parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) recognises the importance of Aboriginal land rights for the self-determination First Nations people;* > > *(2) agrees that, as set out in the Explanatory Memorandum to the bill, the right to self-determination entails the entitlement of peoples to have control over their destiny and to be treated respectfully;* > > *(3) notes that the recently introduced restrictions on the use of the Aboriginal flag are unacceptable, heartbreaking and disrespectful to First Nations people; and* > > *(4) calls on the Government to act on matters of importance to First Nations people, including:* > >> *(a) do everything in its power to free the flag so that it can be used by all Australians, while also respecting and protecting the rights of Harold Thomas; and* >> >> *(b) adequately invest in housing and essential services—including access to clean water—for First Nations people living on Native Title land\".*",
+   "stage": "Second reading",
+   "ayes": 41,
+   "noes": 34,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 6,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 74
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-08-31/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-391034",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Aboriginal Land Rights (Northern Territory) Amendment (Jabiru) Bill 2020 supports the Mirarr traditional owners in transitioning Jabiru from a mining town to a tourism hub via a new township lease, as part of a $216 million government commitment. The bill allows the lease to be held for 40–99 years by either a community entity or the Commonwealth, with technical amendments to align it with other Northern Territory township leases."
+  },
+  {
+   "slug": "speech-394271",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The Labor speaker supported the Aboriginal Land Rights (Northern Territory) Amendment (Jabiru) Bill 2020, which facilitates the grant of a township lease and transfer of ownership of Jabiru to the Mirarr traditional owners. The speaker also criticised the government's record on Indigenous affairs, including failures on native title, justice funding, and the Uluru Statement from the Heart."
+  },
+  {
+   "slug": "speech-394358",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aboriginal Land Rights (Northern Territory) Amendment (Jabiru) Bill 2020, which transfers Jabiru township to the Mirarr people after the Ranger uranium mine closure, and backed an amendment calling on the government to free the Aboriginal flag from private ownership by WAM Clothing, noting over 150,000 petition signatures."
+  },
+  {
+   "slug": "speech-394359",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The Aboriginal Land Rights (Northern Territory) Amendment (Jabiru) Bill 2020 transfers ownership of Jabiru township to the Mirarr people, supported by a $216 million federal investment over 10 years for Kakadu National Park. The bill was contrasted with the destruction at Juukan Gorge, and proper rehabilitation of the Ranger mine site was urged."
+  },
+  {
+   "slug": "speech-394360",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The MP supported the Aboriginal Land Rights (Northern Territory) Amendment (Jabiru) Bill 2020, which returns ownership of Jabiru township to the Mirarr people, and backed a Labor amendment urging the government to \"free the Aboriginal flag\" from exclusive licensing held by WAM Clothing, citing a petition of over 140,000 signatures and the flag's 50th anniversary in 2021."
+  },
+  {
+   "slug": "speech-394361",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aboriginal Land Rights (Northern Territory) Amendment (Jabiru) Bill 2020, which returns ownership of the Jabiru township to the Mirarr people, and called for the federal government to guarantee two seats for the Northern Territory and to resolve the Aboriginal flag copyright issue so it passes into the common domain."
+  },
+  {
+   "slug": "speech-394365",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to address the copyright of the Aboriginal flag, arguing that non-Indigenous business WAM Clothing should not hold a monopoly on its use, and noted that 140,000 signatures had been gathered for the “Free The Flag” campaign."
+  },
+  {
+   "slug": "speech-394366",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aboriginal Land Rights (Northern Territory) Amendment (Jabiru) Bill 2020, which removes requirements for the initial township lease grant and 99-year term, returning Jabiru to Aboriginal control. The speaker also advocated for a second reading amendment to work with rights holders to allow free use of the Aboriginal flag design, respecting Harold Thomas's copyright, ahead of the flag's 50th anniversary."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aboriginal Land Rights (Northern Territory) Amendment (Jabiru) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00087",
+   "assent_date": "2020-09-17"
+  }
+ ]
+}

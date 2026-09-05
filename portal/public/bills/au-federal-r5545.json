@@ -1,0 +1,197 @@
+{
+ "key": "au-federal-r5545",
+ "title": "Education Services for Overseas Students (Registration Charges) Amendment (Streamlining Regulation) Bill 2015",
+ "short_title": "Education Services for Overseas Students (Registration Charges) Amendment (Streamlining Regulation) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2015-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5545%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5545%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5545%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5545%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5545%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5545%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5545%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5545%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5545%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5545%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5545%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5545%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5545%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5545%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5545_ems_e2d8de2d-1522-4a0e-a357-62ace501c847%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5545%22",
+   "document_date": "2015-09-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00172",
+   "document_date": "2015-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-17",
+  "sentences": [
+   "This bill makes minor adjustments to the Education Services for Overseas Students (Registration Charges) Act 1997 to align with changes in the main Act.",
+   "It would ensure providers registered for less than two years pay all entry charges but are not billed twice when they renew.",
+   "The changes follow the removal of the minimum two-year registration period for providers under the Education Services for Overseas Students Act 2000."
+  ],
+  "changes": [
+   "The bill removes the link between registration charges and a minimum two-year registration period.",
+   "It ensures providers with shorter registration periods pay entry charges only once.",
+   "It aligns the charges Act with changes to the main ESOS Act."
+  ],
+  "affected": "Education providers registered under the Education Services for Overseas Students Act 2000.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:52:29Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-319355",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-17",
+   "stage_hint": null,
+   "brief": "The bill amends the Education Services for Overseas Students (Registration Charges) Act 1997 to remove the minimum registration period for institutions and clarify that entry to market charges are paid only once per actual year of registration."
+  },
+  {
+   "slug": "speech-320582",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "Labor offered reserved support for the Education Services for Overseas Students Amendment (Streamlining Regulation) Bill 2015 and related bill, but expressed concern that the package would water down protections for international students, including the Tuition Protection Service. The speaker noted international education contributes $15 billion annually to Australia’s economy, and contrasted the Howard government’s record (54 provider collapses affecting 13,000 students from 2008-2011) with Labor’s reforms (12 closures affecting 1,332 students from July 2012 to December 2014)."
+  },
+  {
+   "slug": "speech-320584",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Education Services for Overseas Students (Streamlining Regulation) Bill and related bills but expressed reservations, warning that deregulation risks weakening student protections. They cited 54 college collapses between 2008 and 2011 affecting 13,000 students, with only 312 refunds, and noted that the Abbott-Turnbull government cut $31 million from TEQSA."
+  },
+  {
+   "slug": "speech-320587",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "Labor supported parts of the Education Services for Overseas Students Amendment (Streamlining Regulation) Bill 2015 but recommended other parts go to a Senate inquiry, arguing that safeguards must not be weakened to prevent exploitation of international students—citing 54 college collapses between 2008 and 2011 affecting 13,000 students, wage theft as low as $4 an hour at Australian Post and 7-Eleven, and systemic abuses in the cleaning industry."
+  },
+  {
+   "slug": "speech-320748",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "The bills amend the ESOS Act to cut red tape, saving education institutions an estimated $75.9 million a year, while maintaining student protections; they remove the requirement for private providers to hold prepaid tuition in designated accounts, reduce reporting on student defaults, and align registration periods across regulatory frameworks."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Education Services for Overseas Students (Registration Charges) Amendment (Streamlining Regulation) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00172",
+   "assent_date": "2015-12-11"
+  }
+ ]
+}

@@ -1,0 +1,671 @@
+{
+ "key": "au-federal-r5700",
+ "title": "National Cancer Screening Register Bill 2016",
+ "short_title": "National Cancer Screening Register Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-08-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2016-10-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-10-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-10-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5700_ems_535e4e3c-aae2-4eff-89aa-86d4f7a550cf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5700_ems_fe7207d8-adc3-4714-a357-7e52d77cb246%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5700_ems_c6eab2ea-6567-49b4-b24d-44123fa4c408%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5700%22",
+   "document_date": "2016-08-31",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00065",
+   "document_date": "2016-10-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2016-08-31",
+  "sentences": [
+   "This bill sets up a legal framework for a national cancer screening register.",
+   "The register would collect, store, and report data for bowel and cervical screening programs, and send invitations and test kits.",
+   "The government allocated funding for the register in the 2015-16 Budget, and the business case was approved in the 2016-17 Budget."
+  ],
+  "changes": [
+   "Creates a legislative framework for the National Cancer Screening Register.",
+   "Authorises collection, use and disclosure of information for the register.",
+   "Requires certain persons to notify of unauthorised handling of personal information in the register."
+  ],
+  "affected": "The Australian Government, the Department of Human Services, State and Territory governments, and participants in bowel and cervical screening programs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:31Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4303",
+   "date": "2016-09-13",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org.au/senate/?id=2016-09-13.104.2) - > *That the provisions of the [National Cancer Screening Register Bill 2016](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5700) and the [National Cancer Screening Register (Consequential and Transitional Provisions) Bill 2016](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5699) be referred to the [Community Affairs Legislation Committee](http://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Community_Affairs) for inquiry and report by 11 October 2016.* ### What does this mean? In other words, the majority wanted the Community Affairs Legislation Committee to look more closely at what the two national cancer bills proposed to do and seek submissions from the public about them. The motion was introduced by Queensland Labor Senator [Murray Watt](https://theyvoteforyou.org.au/people/senate/queensland/murray_watt) also on behalf of Victorian Greens Senator [Richard Di Natale](https://theyvoteforyou.org.au/people/senate/victoria/richard_di_natale). Earlier, ACT Labor Senator [had explained](https://theyvoteforyou.org.au/divisions/senate/2016-09-13/2) why the Labor Party wanted the bills to be referred to the Committee. Read more about the bills and what they do in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd014).",
+   "stage": "Refer to Committee",
+   "ayes": 36,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 39,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-09-13/4"
+  },
+  {
+   "key": "federal-representatives-4330",
+   "date": "2016-10-11",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/debates/?id=2016-10-11.97.1) that \"condemns the Government for outsourcing Australians' most sensitive health information\", so it was unsuccessful. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > *\"whilst not declining to give the bill a [second reading](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html), the House condemns the Government for outsourcing Australians' most sensitive health information - including Medicare data - to Telstra, and before passing the necessary legislation.\"* ### What are the bills? The two bills under discussion are the: * [National Cancer Screening Register Bill 2016](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5700) * [National Cancer Screening Register (Consequential and Transitional Provisions) Bill 2016](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5699) Read more about them in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd014).",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 140,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-11/1"
+  },
+  {
+   "key": "federal-representatives-4331",
+   "date": "2016-10-11",
+   "house": "representatives",
+   "question": "National Cancer Screening Register Bill 2016 and another - Consideration in Detail - Privatisation",
+   "stage": "Consideration in detail",
+   "ayes": 68,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-11/2"
+  },
+  {
+   "key": "federal-representatives-4332",
+   "date": "2016-10-11",
+   "house": "representatives",
+   "question": "National Cancer Screening Register Bill 2016 and another - Consideration in Detail - Penalties for data breach",
+   "stage": "Consideration in detail",
+   "ayes": 69,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-11/3"
+  },
+  {
+   "key": "federal-senate-4345",
+   "date": "2016-10-13",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org.au/senate/?gid=2016-10-12.41.6) condemning \"*the Government for outsourcing Australians' most sensitive health information to Telstra before the Parliament even saw the necessary legislation*\". It was introduced by Labor Senator [Murray Watt](https://theyvoteforyou.org.au/people/senate/queensland/murray_watt). This motion doesn't have legal affect, but represents the opinion of the Senate. ### Find out more about the bill The two bills under discussion are the: * [National Cancer Screening Register Bill 2016](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5700) * [National Cancer Screening Register (Consequential and Transitional Provisions) Bill 2016](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5699) Together, they create a National Cancer Screening Register. Read more about them in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd014). ### Motion text > *At the end of the motion, add:* > *\", but the Senate condemns the Government for outsourcing Australians' most sensitive health information to Telstra before the Parliament even saw the necessary legislation.\".*",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 39,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-10-13/2"
+  },
+  {
+   "key": "federal-senate-4346",
+   "date": "2016-10-13",
+   "house": "senate",
+   "question": "The majority voted against [amendments](http://www.openaustralia.org.au/senate/?gid=2016-10-13.64.2) introduced by Labor Senator [Helen Polley](https://theyvoteforyou.org.au/people/senate/tasmania/helen_polley) (Tas), which means they were rejected. ### What were the amendments? Senator Polley [explained that her amendments](http://www.openaustralia.org.au/senate/?gid=2016-10-13.64.2) would have: > *These amendments would restrict the operation of a register to a government agency or to a not-for-profit organisation. Our amendments would allow the register to be operated by one of the organisations that actually have experience and expertise in this area, like the Commonwealth Department of Human Services or the Victorian psychology service.* ### Find out more about the bill The two bills under discussion are the: * [National Cancer Screening Register Bill 2016](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5700) * [National Cancer Screening Register (Consequential and Transitional Provisions) Bill 2016](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5699) Together, they create a National Cancer Screening Register. Read more about them in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd014). ### Motion text > *(1) Clause 26, page 26 (line 16), omit \"The Minister \", substitute \"(1) The Minister \".* > *(2) Clause 26, page 26 (lines 16 and 17), omit \"a person \", substitute \"a permitted entity \".* > *(3) Clause 26, page 26 (after line 20), at the end of the clause, add:* >> *(3) In this section: permitted entity means:* >>> *(a) a Department of the Commonwealth, a State or a Territory; or* >>> *(b) a body (whether incorporated or unincorporated) established for a public purpose by a law of the Commonwealth, a State or a Territory; or* >>> *(c) a person in the service or employment of a Department mentioned in paragraph (a) or a",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 40,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-10-13/3"
+  },
+  {
+   "key": "federal-senate-4347",
+   "date": "2016-10-13",
+   "house": "senate",
+   "question": "National Cancer Screening Register Bill 2016 and another - in Committee - Protection of private data",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 40,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-10-13/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-332753",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-08-31",
+   "stage_hint": null,
+   "brief": "The speaker presented the National Cancer Screening Register Bill 2016 and its explanatory memorandum."
+  },
+  {
+   "slug": "speech-332754",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-08-31",
+   "stage_hint": null,
+   "brief": "The National Cancer Screening Register Bill 2016 establishes a legislative framework for a national register to support the expanded National Bowel Cancer Screening Program (biennial screening for ages 50–74 by 2020) and the renewed National Cervical Screening Program (HPV test every five years from May 2017), aiming to improve early detection and reduce cancer deaths."
+  },
+  {
+   "slug": "speech-332755",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-08-31",
+   "stage_hint": null,
+   "brief": "The bill provides consequential and transitional provisions to support the National Cancer Screening Register, authorising data collection and migration for cervical and bowel cancer screening, amending the FOI Act to unconditionally exempt protected personal information, and allowing a 12-month grace period for mandatory reporting until 1 May 2018."
+  },
+  {
+   "slug": "speech-333559",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-13",
+   "stage_hint": null,
+   "brief": "Labor supported the policy intent of the bills to establish a National Cancer Screening Register but condemned the government for awarding a $220 million contract to Telstra four days before the 2016 election, before parliamentary approval. Labor proposed amendments to ensure the register is operated only by a government or not-for-profit entity, citing concerns over privacy, inadequate penalties, and Telstra's track record."
+  },
+  {
+   "slug": "speech-334618",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Cancer Screening Register is important for improving cancer screening and prevention, but criticised the government's implementation as incompetent, including outsourcing to Telstra before legislation passed, privacy loopholes, and insufficient penalties. They proposed three amendments: limiting the operator to a not-for-profit or government agency, mandatory data breach notifications, and increased penalties for unauthorised disclosure."
+  },
+  {
+   "slug": "speech-334619",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-11",
+   "stage_hint": null,
+   "brief": "The speaker argued the government mishandled the National Cancer Screening Register Bill 2016 by signing a $220 million contract with Telstra before parliamentary approval, and announced Labor will move amendments on data holder requirements, mandatory breach disclosure, and increased penalties—raising the maximum fine from $21,600 to $108,000 for individuals and $540,000 for corporations."
+  },
+  {
+   "slug": "speech-334621",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-11",
+   "stage_hint": null,
+   "brief": "The National Cancer Screening Register Bill 2016 was debated, with the speaker noting that over 130,000 Australians will be diagnosed with cancer this year and nearly 47,000 will die from it; they emphasised the importance of screening, citing BreastScreen Queensland's work and that the mortality rate for breast cancer dropped from 17 to 11 per 100,000 between 1968 and 2013."
+  },
+  {
+   "slug": "speech-334624",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-11",
+   "stage_hint": null,
+   "brief": "The Labor MP criticised the government for signing a $220 million contract with Telstra to outsource the National Cancer Screening Register before the legislation was debated in parliament, arguing this jeopardised privacy protections for highly sensitive health data like cancer diagnoses and HPV status. She also condemned the government's failure to introduce mandatory data breach notification laws, warning the register's outsourcing to a private firm threatened universal healthcare and could deter people from getting screened."
+  },
+  {
+   "slug": "speech-334780",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-11",
+   "stage_hint": null,
+   "brief": "The speaker opposed the National Cancer Screening Register Bill 2016, arguing the contract awarded to Telstra Health—a private, for-profit company with limited health experience—lacked transparency and should instead be run by a government or not-for-profit entity."
+  },
+  {
+   "slug": "speech-334781",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Cancer Screening Register Bill and Labor's amendments to limit operation to a not-for-profit or government agency, arguing that the register would prevent an estimated 140 cervical cancers and 300–500 bowel cancer deaths per year, but criticised the government for awarding the contract to Telstra before the legislation passed and for outsourcing sensitive health data to a multinational for-profit corporation."
+  },
+  {
+   "slug": "speech-334782",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-10-11",
+   "stage_hint": null,
+   "brief": "The National Cancer Screening Register Bill 2016 establishes a legislative framework for a national register to support the National Cervical Screening Program from 1 May 2016 and expand the National Bowel Cancer Screening Program, with capacity for future expansion to other cancer screening programs."
+  },
+  {
+   "slug": "speech-334785",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-11",
+   "stage_hint": null,
+   "brief": "The opposition moved amendments to restrict the National Cancer Screening Register to permitted entities such as government departments, public bodies and charitable organisations, arguing that a for-profit company should not hold sensitive health data under a $200 million contract signed before the election."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Cancer Screening Register Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00065",
+   "assent_date": "2016-10-20"
+  }
+ ]
+}

@@ -1,0 +1,400 @@
+{
+ "key": "au-federal-r5326",
+ "title": "Infrastructure Australia Amendment (Cost Benefit Analysis and Other Measures) Bill 2014",
+ "short_title": "Infrastructure Australia Amendment (Cost Benefit Analysis and Other Measures) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-09-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5326%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5326%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5326%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5326%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5326%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5326_ems_ec8f0bca-8133-493e-b0ce-6858507d6105%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5326%22",
+   "document_date": "2014-09-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-09-04",
+  "sentences": [
+   "This bill would clarify the role and administrative rules of Infrastructure Australia after a related Act starts.",
+   "It would require Infrastructure Australia to evaluate infrastructure proposals that involve at least $100 million in Commonwealth funding.",
+   "The $100 million threshold is set in 2014 dollars and would be indexed at least every five years."
+  ],
+  "changes": [
+   "Clarifies the legislative and administrative arrangements for Infrastructure Australia.",
+   "Moves cost benefit analysis provisions to the correct part of the Infrastructure Australia Act 2008.",
+   "Adds a function requiring Infrastructure Australia to evaluate proposals with Commonwealth funding of at least $100 million."
+  ],
+  "affected": "Infrastructure Australia and entities proposing infrastructure projects that seek Commonwealth funding.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:24Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3436",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "question": "Anthony Albanese by leave—I move opposition amendments (2), (3), (6) and (7) together: (2) Schedule 1, item 2, page 3 (lines 11 to 13), omit \"for investment in, or enhancements to, nationally significant infrastructure that involve Commonwealth funding\", substitute \"that involve capital expenditure\". (3) Schedule 1, page 3 (after line 13), after item 2, insert: 2A At the end of section 5A Add: (5) The summary of a proposal evaluated during a quarter must also include: (a) either: (i) if the proposal involves capital expenditure of $100 million or more—a cost benefit analysis of the proposal prepared under section 5AA; or (ii) for any other proposal—a cost benefit analysis of the proposal if one has been prepared under that section; and (b) a summary of Infrastructure Australia's evaluation of the proposal. (6) Schedule 1, item 7, page 4 (after line 21), after subsection 39E(1), insert: (1A) The amount referred to in subparagraph 5A(5)(a)(i) is to be indexed at the same time, and by the same amount, as the amount referred to in subsection 5A(2). (7) Schedule 1, item 7, page 4 (line 22), omit \"is\", substitute \"and subparagraph 5A(5)(a)(i) are\". These amendments relate to Infrastructure Australia's evaluation of proposals. Amendment (2) relates to requiring a cost-benefit analysis of projects over $100 million. The government's wording gets the process back to front, and Labor's amendments will address that. Our amendments are consistent with the legislation adopted by the former Labor government relating to the Building Australia Fund and what Labor have moved for in recent months. It gives the $100 million commitment actual meaning. The effect of this specific amendment is twofold. Firstly, it gets the sequencing right around project proposals by correctly defining the trigger for a cost-benefit appraisal by Infrastructure Australia. It does not make sense to trigger in-depth evaluations of projects seeking funding by selecting those that have already been funded, ra",
+   "stage": "Committee motion",
+   "ayes": 51,
+   "noes": 81,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 49,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-24/1"
+  },
+  {
+   "key": "federal-representatives-3437",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "question": "Anthony Albanese by leave—I move opposition amendments (4) and (5): (4) Schedule 1, item 3, page 3 (line 21), omit \"may\", substitute \"must\". (5) Schedule 1, item 3, page 3 (line 26), omit \"6\", substitute \"12\". Item 4 requires Infrastructure Australia to approve a standard method for requiring assessments of proposals. This allows for costs and benefits of competing or alternative projects to be compared. This maintains the status quo in the existing act. The government's amendment makes standardisation optional for Infrastructure Australia. Labor's amendment will make a standard method a requirement, as is currently the case, and as is critical if we are examining where taxpayer dollars should go to which project where there are multiple bids for infrastructure projects. Given that there are many more bids for projects than will ever be funded, this is an important amendment. Amendment (5) is a minor amendment providing for better spacing of the first review of Infrastructure Australia's standard assessment method. This amendment requires the first review to occur by next September rather than March. I commend the amendments to the House. Warren Truss I commented earlier that the government had not had a chance to review the amendments. A superficial examination of this couple of amendments suggests that there may well be room for us to accept them, but I would want to study that beforehand. So, we will be opposing them, but there is a degree of superficial goodwill towards those two amendments. Adam Bandt For the reasons outlined in a previous speech, we will be supporting these amendments. If the coalition were fair dinkum about cost-benefit analyses they would have provisions in their laws saying, 'When we are going to have significant expenditure on public transport we will publish the cost-benefit analysis'. It is as simple as that. Ross Vasta The question is that the amendments be agreed to. Anthony Albanese I will indicate, for the benefit of the House, that",
+   "stage": "Committee motion",
+   "ayes": 51,
+   "noes": 80,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 49,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-24/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-297645",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297646",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297807",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297808",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297809",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297810",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297811",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297813",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297815",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297816",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297818",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297819",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297820",
+   "speaker": "Ken O'Dowd",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297821",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297822",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297823",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297824",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297825",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297826",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297827",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297828",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297869",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297875",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

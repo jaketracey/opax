@@ -1,0 +1,864 @@
+{
+ "key": "au-federal-r7231",
+ "title": "Universities Accord (Student Support and Other Measures) Bill 2024",
+ "short_title": "Universities Accord (Student Support and Other Measures) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-08-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2024-12-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7231_ems_6f290daa-9d12-4604-a99f-50ae24aa5567%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7231_ems_43391f18-4ffb-441f-bf82-1b86f8596b30%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7231%22",
+   "document_date": "2024-08-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00108",
+   "document_date": "2024-12-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2024-08-15",
+  "sentences": [
+   "This bill would implement several higher education reforms from the Australian Universities Accord.",
+   "It would cap HELP loan indexation at the lower of the Consumer Price Index or the Wage Price Index, backdated to June 2023, and require universities to pass 40 per cent of student services fees to student-led organisations.",
+   "It would also create a weekly Commonwealth Prac Payment for about 68,000 teaching, nursing and social work students each year and rename enabling courses 'FEE-FREE Uni Ready Courses'."
+  ],
+  "changes": [
+   "Cap HELP indexation to the lower of CPI or WPI with effect from 1 June 2023.",
+   "Require higher education providers to allocate 40 per cent of SSAF revenue to student-led organisations.",
+   "Establish a grant for a weekly Commonwealth Prac Payment to eligible students in placements.",
+   "Rename enabling courses for Commonwealth supported students as 'FEE-FREE Uni Ready Courses' and create a new CGS funding cluster for them."
+  ],
+  "affected": "More than 3 million Australians with HELP debts, around 68,000 teaching, nursing and social work students a year, students from under-represented backgrounds, and higher education providers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9171",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "question": "Universities Accord (Student Support and Other Measures) Bill 2024 - Second Reading - Student debt",
+   "stage": "Second reading",
+   "ayes": 5,
+   "noes": 56,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 60,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-10-09/7"
+  },
+  {
+   "key": "federal-representatives-9172",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7231_amend_0d4429b9-bf71-46b5-b72f-98264127c315%22;rec=0) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the usual motion will remain unchanged. The amendment was introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal). ### Amendment text > *That all words after “That” be omitted with a view to substituting the following words:* > >> *“whilst not declining to give the bill a second reading, the House notes that:* >> >> *(1) the Government’s economic mismanagement and high inflation has resulted in escalating student debt for some 3 million Australians with a HELP (Higher Education Loan Program) loan;* >> >> *(2) the proposal to change HELP indexation to the lower of the wage price index or the consumer price index would still result in student debts increasing by 11.1 per cent since June 2022, with no date by which student debt credits will be applied or refunds paid;* >> >> *(3) whether it is student debt, housing or paying bills, Australians continue to suffer acute cost-of living pain under this Government;* >> >> *(4) the Government has failed to detail eligibility criteria for the Commonwealth Prac Payments or how students will receive those payments, noting that students studying in other areas of workforce shortage such as occupational therapy, psychology and veterinary studies have been excluded from the scheme;* >> >> *(5) the Government’s decision to mandate 40 per cent of the Student Services and Amenities Fee revenue be directed to student led organisations, including student unions, associations and guilds, lacks any transparency measures to ensure money is spent on services which su",
+   "stage": "Second reading",
+   "ayes": 48,
+   "noes": 87,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 73
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-10-09/8"
+  },
+  {
+   "key": "federal-representatives-9188",
+   "date": "2024-10-10",
+   "house": "representatives",
+   "question": "Universities Accord (Student Support and Other Measures) Bill 2024 - Consideration in Detail - Maximum student contribution amounts for places and HELP indexation",
+   "stage": "Consideration in detail",
+   "ayes": 12,
+   "noes": 68,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 79,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-10-10/1"
+  },
+  {
+   "key": "federal-senate-9242",
+   "date": "2024-11-25",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7231) introduced by Victorian Senator [Sarah Henderson](https://theyvoteforyou.org.au/people/senate/victoria/sarah_henderson) (Liberal), which means it failed. The amendment would have added the text below to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text >*At the end of the motion, add “, but the Senate notes that:* > > *(a) the Albanese Government’s economic mismanagement and high inflation has resulted in escalating student debt for some 3 million Australians with a HELP (Higher Education Loan Program) loan,* > > *(b) the proposal to change HELP indexation to the lower of the wage price index or the consumer price index would still result in student debts increasing by 11.1 per cent since June 2022, with no date by which student debt credits will be applied or refunds paid,* > > *(c) whether it is student debt, housing or paying bills, Australians continue to suffer acute cost-of-living pain under this government,* > > *(d) the Government has failed to detail eligibility criteria for the Commonwealth Prac Payments or how students will receive those payments, noting that students studying in other areas of workforce shortage such as occupational therapy, psychology and veterinary studies have been excluded from the scheme; and* > > *(e) the Government’s decision to mandate 40% of the Student Services and Amenities Fee revenue be directed to student led organisations, including student unions, associations and guilds, lacks any transparency measures to ensure money is spent on services which support student welfare”.*",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-25/1"
+  },
+  {
+   "key": "federal-senate-9243",
+   "date": "2024-11-25",
+   "house": "senate",
+   "question": "Universities Accord (Student Support and Other Measures) Bill 2024 - Second Reading - Make university and TAFE free",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-25/2"
+  },
+  {
+   "key": "federal-senate-9244",
+   "date": "2024-11-25",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7231) introduced by Queensland Senator [Anthony Chisholm](https://theyvoteforyou.org.au/people/senate/queensland/anthony_chisholm) (Labor), which means it failed. The amendment would have added the text below to the usual second reading motion, which is \"that the bill be read a second time\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add “and, following passage of the bill, the following matter be referred to the Education and Employment Legislation Committee for inquiry and report by 25 March 2025:* > >> *The implications of any amendments circulated by the Australian Greens related to the reduction of HELP loans and changes to income thresholds for HELP repayments”.*",
+   "stage": "Second reading",
+   "ayes": 23,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-25/3"
+  },
+  {
+   "key": "federal-senate-9257",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "Universities Accord (Student Support and Other Measures) Bill 2024 - in Committee - Ending HELP indexation",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/5"
+  },
+  {
+   "key": "federal-senate-9264",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2024-11-26.207.2) \"*that schedule 2 stand as printed*\". In other words, they voted to keep it unchanged. This motion took place after Victorian Senator [Sarah Henderson](https://theyvoteforyou.org.au/people/senate/victoria/sarah_henderson) (Liberal) moved that the schedule be deleted. ### What does Schedule 2? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2425/25bd008): > *Schedule 2 will require higher education providers to allocate a minimum of 40 per cent of their Student Services and Amenities Fee revenue to student-led organisations. The Bill proposes to define a student led organisation, based upon enrolled students constituting a majority of the governing body of the organisation, enrolled students electing the majority of such members, and satisfying requirements in the Higher Education Support (Student Services, Amenities, Representation and Advocacy) Guidelines 2022.*",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 7,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/12"
+  },
+  {
+   "key": "federal-senate-9265",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "Universities Accord (Student Support and Other Measures) Bill 2024 - in Committee - Reduction of AASL, HELP, SSL, FS and VETSL debts",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/13"
+  },
+  {
+   "key": "federal-senate-9266",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "Universities Accord (Student Support and Other Measures) Bill 2024 - in Committee - National minimum wage for mandatory practical placements",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/14"
+  },
+  {
+   "key": "federal-senate-9267",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-11-26.213.1) introduced by Victorian Senator [Sarah Henderson](https://theyvoteforyou.org.au/people/senate/victoria/sarah_henderson) (Liberal), which means they failed. Senator Henderson [explained that](https://www.openaustralia.org.au/senate/?gid=2024-11-26.213.1): > *we are proposing, with this amendment, an important safeguard to prohibit the use of student support and amenities fee funds, SSAF funds, for student elections, student protests or protest related activities, because what we want to ensure is that these very valuable resources directly benefit student welfare and essential services.* ### Amendment text > *(1) Schedule 2, page 29 (before line 4), before item 1, insert:* > >> *1A At the end of subsection 19-38(1)* >> >>> *Add:* >>> >>>> *; or (c) the election of a person as a member of the governing body (however described) of a student led organisation; or* >>>> >>>> *(d) a protest activity or an action that relates to a protest activity.* >> >> *1B At the end of subsection 19-38(2)* >> >>> *Add:* >>> >>>> *; or (c) the election of a person as a member of the governing body (however described) of a student led organisation; or* >>>> >>>> *(d) a protest activity or an action that relates to a protest activity.*",
+   "stage": "In committee",
+   "ayes": 24,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 5,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/15"
+  },
+  {
+   "key": "federal-senate-9268",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "Universities Accord (Student Support and Other Measures) Bill 2024 - in Committee - Date of indexation and Society & Culture",
+   "stage": "In committee",
+   "ayes": 15,
+   "noes": 19,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 27,
+    "member": 3,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/16"
+  },
+  {
+   "key": "federal-senate-9269",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-11-26.226.1) introduced by Victorian Senator [Sarah Henderson](https://theyvoteforyou.org.au/people/senate/victoria/sarah_henderson) (Liberal), which means it failed. Senator Henderson [explained that](https://www.openaustralia.org.au/senate/?gid=2024-11-26.226.1): > *This concerns the Commonwealth prac payment. It's an amendment which requires the government to table the eligibility and means test requirements for the Commonwealth prac payment before any new grant payment can commence. This amendment is very important because in the bill there is literally no detail about how this payment is going to be delivered. For many stakeholders and higher education providers from whom we heard during the bill inquiry, there is a lot of concern about the nature of this payment because it's not being administered through Centrelink. It's actually being administered via some grant bucket. While we support the prac payment for teaching, nursing, midwifery and social work students, which will apply from 1 July 2025, we are very concerned, and we share the concerns of higher education providers about the way in which this has been proposed and will be administered.* ### Amendment text > *(1) Clause 2, page 2 (table item 9), omit the table item, substitute:* > >> *9. Schedule 4* >> >> *The later of:* >> >> *(a) the day this Act receives the Royal Assent; and* >> >> *(b) the day after draft amendments to the Higher Education Support (Other Grants) Guidelines 2022 specifying extra conditions of eligibility to receive a grant to assist higher education providers to provide payments to students who are undertaking mandatory practicums as part of their course of study are presented to the Senate.* >> >> *However, the provisions do not commence at all if the event mentioned in paragraph (b) does not occur.*",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/17"
+  },
+  {
+   "key": "federal-senate-9270",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-11-26.261.1) introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens) to an [original motion](https://www.openaustralia.org.au/senate/?gid=2024-11-26.260.1) introduced by Queensland Senator [Anthony Chisholm](https://theyvoteforyou.org.au/people/senate/queensland/anthony_chisholm) (Labor), which means it failed. ### Original motion text > *That the report of the committee be adopted.* ### Amendment text > *At the end of the motion, add \"and the Senate calls on the Government to immediately legislate its pledges to raise the minimum repayment threshold for all student debt and introduce a marginal repayment system\".*",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/18"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Universities Accord (Student Support and Other Measures) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00108",
+   "assent_date": "2024-12-05"
+  }
+ ]
+}

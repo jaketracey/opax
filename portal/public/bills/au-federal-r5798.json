@@ -1,0 +1,553 @@
+{
+ "key": "au-federal-r5798",
+ "title": "Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017",
+ "short_title": "Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2017-03-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5798%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5798%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5798%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5798%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5798%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5798%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5798%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5798%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5798%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5798%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5798%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5798_ems_0e111d08-d2c3-4b34-866f-48311d2c7b1a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5798_ems_f5a33470-8d23-4fa4-abce-6717328ea056%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5798%22",
+   "document_date": "2017-02-08",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-08",
+  "sentences": [
+   "This bill makes a number of changes to welfare payments and introduces reforms to childcare assistance.",
+   "It adjusts payment rates, phases out certain supplements, introduces a new childcare subsidy, and changes rules around overseas pension payments and indexation.",
+   "Most changes take effect between July 2016 and September 2017, with some applying from 2018."
+  ],
+  "changes": [
+   "The standard fortnightly family tax benefit Part A rate is increased by $20.02 for each child up to age 19, with a similar increase for some youth allowance and disability support pension recipients.",
+   "Family tax benefit Part B is removed for most single-parent families from the year their youngest child turns 17.",
+   "The family tax benefit Part A supplement is reduced for families earning $80,000 or less per year, then withdrawn entirely.",
+   "A new Child Care Subsidy is introduced to simplify childcare payments.",
+   "The period that age pension and some other payments can be received at the basic rate while overseas is reduced from six weeks to four weeks.",
+   "The energy supplement is closed to new welfare recipients from September 2017."
+  ],
+  "affected": "Families receiving family tax benefits, young people on youth allowance, disability support pensioners, childcare users, age pensioners, and new welfare recipients.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:23:07Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4586",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017 - Second Reading - Don't agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-01/4"
+  },
+  {
+   "key": "federal-representatives-4587",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 73,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-01/5"
+  },
+  {
+   "key": "federal-representatives-4588",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "question": "Cathy McGowan I move the amendments circulated in my name: (1) Schedule 4, page 233 (after line 10), after item 235, insert: 235A After section 232 Insert: 232A Community Child Care Fund—guidelines for funding (1) The Secretary must, no later than 1 July 2017, publish on the Department's website guidelines outlining the criteria that will be used in determining how funding will be allocated from the Community Child Care Fund. (2) The Minister must table before each House of the Parliament, on the next sitting day of the House after the guidelines are published under subsection (1), a copy of the guidelines. 232B Community Child Care Fund—assessment of likely impact on rural and regional areas (1) The Secretary must, no later than 1 July 2017: (a) conduct an assessment of the impact that the replacement of the Budget Based Funded Program with the Community Child Care Fund will have on communities in rural and regional Australia (the _rural and regional impact assessment_); and (b) publish a report of the rural and regional impact assessment on the Department's website. (2) The rural and regional impact assessment must include, for each rural or regional area of each State and Territory of Australia: (a) a statement of the number of child care places that will be available in the area under the Budget Based Funded Program on 1 July 2017, as compared with the number of child care places that will be available under the Community Child Care Fund on 1 July 2018; and (b) an estimate of the number of child care services in the area that will cease to operate during the financial year beginning on 1 July 2017 (if any); and (c) an estimate of the number of child care services that will begin to operate in the area during the financial year beginning on 1 July 2017 (if any); and (d) an assessment of any other impacts that the replacement of the Budget Based Funded Program with the Community Child Care Fund will have on communities in the area. (3) The Minister must, by legisl",
+   "stage": "Consideration in detail",
+   "ayes": 70,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-01/6"
+  },
+  {
+   "key": "federal-representatives-4589",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "question": "No motion text available",
+   "stage": "Consideration in detail",
+   "ayes": 73,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-01/7"
+  },
+  {
+   "key": "federal-representatives-4590",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 73,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-01/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-342079",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017 is fundamentally unfair, listing cuts of $2.7 billion from families, $1 billion from the energy supplement, paid parental leave for 70,000 new mothers yearly, and support for young jobseekers, while the government also supports cutting penalty rates. Labor opposed the bill, linking its measures to the 2014 budget and stating it would not support the cuts."
+  },
+  {
+   "slug": "speech-342083",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The bill delivers nearly $5.5 billion in net savings, increases paid parental leave to 20 weeks, introduces a new childcare subsidy with an activity test, and raises family tax benefit part A by $20.02 per fortnight for lower-income families. The speaker argued the package is fair, responsible, and improves support for families while ensuring sustainability."
+  },
+  {
+   "slug": "speech-342207",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017 would strip money from pensioners, families, single parents, Indigenous communities, and young job seekers, claiming the government tripled the deficit since taking office. Specific figures cited include 1.5 million families worse off, 150,000 families losing childcare access under a new activity test, 41,000 pensioners losing education supplements, and a proposed $50 billion tax cut for big business."
+  },
+  {
+   "slug": "speech-342208",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017 will benefit around one million hardworking Australian families by simplifying and making childcare more flexible and affordable. The government will increase Family Tax Benefit A by $20 per fortnight for 11,594 recipients in the Durack electorate, maintain Family Tax Benefit B for single parents over 60, and repeal the energy supplement to save nearly $1 billion for the NDIS."
+  },
+  {
+   "slug": "speech-342209",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017, arguing it would cut funding for the Puggles mobile child-care service in the Snowy Valleys region, affecting 85 children and 70 families, and also criticised the government’s penalty rate cuts, the relocation of the APVMA, and the Black Spot Program."
+  },
+  {
+   "slug": "speech-342210",
+   "speaker": "Chris Crewther",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker announced full support for the Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017, calling it the largest investment in early learning and child care in Australia, with an 85% subsidy for low-income families, abolition of the $7,500 childcare rebate cap for families earning up to $185,000, and a $10,000 cap for higher earners, benefiting 6,040 families using approved childcare in Dunkley and expected to help 230,000 families nationally increase employment."
+  },
+  {
+   "slug": "speech-342212",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017, which would abolish the $7,500 childcare rebate cap for families earning under $185,000, increase the subsidy rate to 85% for lowest-earning families, and fund reforms through family tax benefit savings; they stated the package would benefit over one million families, encourage 230,000 more families into paid work, and increase funding for rural and remote childcare services from $62 million to $110 million."
+  },
+  {
+   "slug": "speech-342213",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill recycles previously rejected cuts that target pensioners, families, and young people, and that Labor opposes it because the childcare package leaves one in three families worse off and bundles $3.30 in cuts for every $1 spent on child care. Specific measures criticised include reducing pensions after six weeks overseas for migrants with less than 35 years' residence, abolishing the pensioner education supplement and energy supplement, and raising the Newstart age from 22 to 25."
+  },
+  {
+   "slug": "speech-342215",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The bill was supported for introducing the Jobs for Families Child Care Package, including a new Child Care Subsidy from July 2018 with an activity test and fee cap, aiming to make child care more affordable and accessible while achieving budget savings; it would provide an extra $20 per child per fortnight in family tax benefits to about 9,000 families in the Robertson electorate."
+  },
+  {
+   "slug": "speech-342216",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The Nick Xenophon Team opposed the omnibus bill, rejecting cuts to family tax benefits, energy supplements, and a four-week waiting period for young jobseekers, while supporting standalone childcare reform; they cited figures such as a single parent on $40,000 losing $3,387 annually and 730,000 Australian children living in poverty."
+  },
+  {
+   "slug": "speech-342217",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's proposed Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017 would cut $2.7 billion from low- and middle-income families, single parents, young jobseekers, and pensioners, while protecting tax cuts for high-income earners and big business. Specific impacts cited include cuts to penalty rates costing some workers $2,000 a year, a five-week wait for Newstart for young jobseekers, and changes to family tax benefits and childcare activity tests that would harm vulnerable families, including named constituents like a single mother, Beck Kelly, the Martin family, and a child named Paige."
+  },
+  {
+   "slug": "speech-342218",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's childcare package wrongly reduces support for vulnerable families, with a new three-tiered activity test that cuts guaranteed subsidised care from two days to one and harms parents in casual or unstable work, citing a PricewaterhouseCoopers report that early childhood education for disadvantaged children could boost GDP by $13.3 billion by 2050. They called for the \"zombie measures\" to be separated from the bill so Parliament can debate genuine improvements to childcare."
+  },
+  {
+   "slug": "speech-342219",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued the Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017 would devastate vulnerable Australians, especially in regional electorates like Braddon, and cited 8,000 families in Braddon losing Family Tax Benefit Part A, 6,335 families losing $354 from the Part B supplement, and cuts to the energy supplement for pensioners, carers and Newstart recipients. The speaker also accused the government of tying NDIS funding to these cuts to fund a $50 billion corporate tax cut."
+  },
+  {
+   "slug": "speech-342220",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017, arguing it would harm families, pensioners, and young people, particularly in the electorate of Hindmarsh. The bill includes $2.7 billion in cuts to family payments, removes the energy supplement for pensioners and Newstart recipients, reduces overseas pension portability from 26 to six weeks, cuts paid parental leave, and imposes a five-week waiting period and lower payments for young job seekers."
+  },
+  {
+   "slug": "speech-342221",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017, arguing it unfairly holds vulnerable groups to ransom by linking its passage to NDIS funding. Labor, through shadow minister Jenny Macklin, moved amendments to drop the cuts and end the threat to childcare assistance."
+  },
+  {
+   "slug": "speech-342223",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker criticised the omnibus bill's childcare reforms for leaving one in three families worse off and called the new activity test overly complex, citing 150,000 families losing eligibility or subsidy reductions. The speaker also argued the bill ties childcare changes to cuts in paid parental leave, family tax benefits, the energy supplement for pensioners, Newstart waiting periods for young jobseekers, and migrant pensions, harming lower- and middle-income families."
+  },
+  {
+   "slug": "speech-342225",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Turnbull government's Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017, arguing it would cut family tax benefits, paid parental leave, energy supplements, and Newstart payments while funding corporate tax cuts, leaving 1.5 million families worse off and 70,000 new mothers affected annually. Specific cuts included $750 per year for a single-income family with two kids, $3,186 for single parents losing FTB B, and a five-week income-free wait for 75,000 young jobseekers."
+  },
+  {
+   "slug": "speech-342226",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's bill cuts $2.7 billion in family payments and $5.6 billion total from family budgets while giving $50 billion in tax cuts to big business, freezing indexation on payments for the poorest Australians, including those on Newstart, family tax benefits, and pensions."
+  },
+  {
+   "slug": "speech-342282",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Turnbull government's welfare cuts—including to family tax benefits, paid parental leave, the energy supplement, and Newstart—are worsening poverty and inequality, and criticised the government for not opposing penalty rate cuts and for holding the National Disability Insurance Scheme hostage."
+  },
+  {
+   "slug": "speech-342384",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-28",
+   "stage_hint": null,
+   "brief": "The bill would cut $5.6 billion from low-income Australians, including $2.7 billion in family payments, to fund $1.6 billion in childcare assistance, while freezing welfare indexation for three years and halving early education access for families earning under $65,000. Labor opposed the legislation, arguing the government prioritised a $50 billion business tax cut over supporting pensioners, families, and jobseekers."
+  },
+  {
+   "slug": "speech-342385",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017 contains \"zombie cuts\" that harm pensioners, families, and young people, citing specific figures: 14,997 families in Blair losing FTB Part A, 12,358 losing FTB Part B supplements, 230,000 families worse off under childcare changes, and 9,403 Blair workers affected by penalty rate cuts. The speaker opposed the bill, accusing the government of prioritising $50 billion in tax cuts for big business over vulnerable Australians."
+  },
+  {
+   "slug": "speech-342389",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-02-28",
+   "stage_hint": null,
+   "brief": "The member opposed the Social Services Legislation Amendment (Omnibus Savings and Child Care Reform) Bill 2017, arguing it makes harsh welfare cuts of $7 billion that disproportionately hurt disadvantaged Australians, citing Australia’s above-OECD-average poverty rate and ACOSS figures showing sole parents losing around $1,000 a year. They affirmed support for genuine early childhood education reform and the National Disability Insurance Scheme, but rejected this bill as indefensible."
+  },
+  {
+   "slug": "speech-342392",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-28",
+   "stage_hint": null,
+   "brief": "The bill is criticised for hiding cuts to family tax benefits, paid parental leave, the energy supplement, and Newstart, while introducing a five-week wait for Newstart and reducing youth allowance for 22–24 year olds by $48 per week, all under the guise of childcare reform."
+  },
+  {
+   "slug": "speech-342548",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-28",
+   "stage_hint": null,
+   "brief": "The speaker commended the member for Moreton for his speech on the Parliamentary Joint Committee Report on Human Rights regarding free speech, and noted their own early career involvement with section 18C of the Racial Discrimination Act."
+  }
+ ],
+ "acts": []
+}

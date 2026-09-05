@@ -1,0 +1,223 @@
+{
+ "key": "au-federal-r6938",
+ "title": "Supply Bill (No. 3) 2022-2023",
+ "short_title": "Supply Bill (No. 3) 2022-2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-10-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2022-11-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6938%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6938%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6938%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6938%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6938%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6938%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6938%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6938%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6938%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6938%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6938%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6938%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6938_ems_b1660b13-57fd-4bb0-bb2f-01e05562f773%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6938%22",
+   "document_date": "2022-10-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00044",
+   "document_date": "2022-11-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-10-25",
+  "sentences": [
+   "This bill would let the government take money from its main fund to pay for its day-to-day running costs.",
+   "The funding would cover about seven-twelfths of what the government expects to spend in 2022-23, with some agencies getting less because they already received a large share earlier in the year.",
+   "The bill also reflects a reorganisation of government departments that took effect on 1 July 2022, including two newly created departments."
+  ],
+  "changes": [
+   "It proposes to take funds from the Consolidated Revenue Fund for ordinary annual services.",
+   "It sets the amount at about seven-twelfths of the estimated annual appropriations for 2022-23.",
+   "It gives some agencies less than that share, mainly to manage high early-year spending or support the COVID-19 response.",
+   "It aligns with the Administrative Arrangements Order of 1 July 2022, which created two new departments."
+  ],
+  "affected": "The government and its departments, particularly the two new ones created on 1 July 2022.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:41Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7787",
+   "date": "2022-10-26",
+   "house": "senate",
+   "question": "Supply Bill (No. 3) 2022-2023, Supply Bill (No. 4) 2022-2023 and another - Second Reading - Repeal stage 3 tax cuts",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "earliest": 19,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-10-26/1"
+  },
+  {
+   "key": "federal-senate-7788",
+   "date": "2022-10-26",
+   "house": "senate",
+   "question": "Supply Bill (No. 3) 2022-2023 and another - in Committee - Beetaloo Basin Drilling Program",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 22,
+    "dated": 15,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-10-26/2"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Supply Act (No. 3) 2022-2023",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00044",
+   "assent_date": "2022-11-03"
+  }
+ ]
+}

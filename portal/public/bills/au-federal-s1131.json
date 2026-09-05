@@ -1,0 +1,313 @@
+{
+ "key": "au-federal-s1131",
+ "title": "Telecommunications Legislation Amendment Bill 2018",
+ "short_title": "Telecommunications Legislation Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-25",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2019-03-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1131_ems_e6ae884f-32ff-4d39-ac9f-cc47c968dde7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1131_ems_e0a67273-6235-4900-bfaf-8dc0cc2a2b66%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1131_ems_15dcc2a1-b6c4-4ed4-9780-ec18f7ed2485%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1131%22",
+   "document_date": "2018-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00006",
+   "document_date": "2019-03-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2018-06-25",
+  "sentences": [
+   "The bill would give emergency services access to NBN towers and allow temporary telecom towers to be installed more easily.",
+   "It would require NBN corporations to publish standard access offers and let the Minister declare certain temporary towers as low-impact facilities.",
+   "Temporary towers would be limited to 30 metres in height, with exceptions for rural maintenance or emergency services where no height cap applies."
+  ],
+  "changes": [
+   "Creates a new regime for emergency service organisations to access NBN towers and sites.",
+   "Allows temporary telecommunications towers to be treated as low-impact facilities under a ministerial determination.",
+   "Makes minor technical amendments to transmitter licence refunds and broadcasting licensee support payments."
+  ],
+  "affected": "Emergency service organisations, NBN corporations, carriers, and land owners or occupiers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:26:57Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5564",
+   "date": "2018-11-28",
+   "house": "senate",
+   "question": "The majority voted in favour of [certain parts of schedule 2](https://www.openaustralia.org.au/senate/?gid=2018-11-28.209.2) remaining unchanged. In parliamentary jargon they voted for those parts to \"*stand as printed*\". This motion was put after Greens Senator Jordon Steele-John (WA) [moved to oppose them](https://www.openaustralia.org.au/senate/?id=2018-11-28.209.1). ### What was the motion? > *(2) [Schedule 2](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fs1131_third-senate%2F0002;query=Id%3A%22legislation%2Fbills%2Fs1131_third-senate%2F0000%22;rec=0), item 2, page 17 (line 4) to page 18 (line 6), paragraphs 6 (5)(d) to (f) of schedule 3, TO BE OPPOSED.* ### What does this bill do? The bill is made up of two schedules and [according to the bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1819a/19bd023): > *Schedule 1 seeks to amend the existing line of business restrictions in the NBN Act to allow NBN corporations to provide eligible persons access to telecommunication towers and associated sites in certain circumstances. Eligible persons are defined to include police, fire and ambulance services, and state and territory emergency services.* > *Schedule 2 seeks to minimise additional regulatory burden on carriers to allow them to quickly and cost effectively meet temporary community telecommunication requirements for certain high demand periods such as emergencies, maintenance, peak holiday periods, and major sporting, cultural and other events. It proposes to provide immunities from a range of state and territory laws, such as laws pertaining to land use, planning, design, construction, siting, tenancy, environmental assessments and protection for the installation of temporary communication facilities. To achieve this purpose, the Bill gives additional powers to the Minister of Communications to determine when a temporary telecommunications tower is a low-impact facility",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 18,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-11-28/10"
+  },
+  {
+   "key": "federal-senate-5584",
+   "date": "2018-12-03",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2018-12-03.188.1) to agree with the [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1131) as amended. This means they can now decide whether to pass the bill. ### What does this bill do? The bill is made up of two schedules and [according to the bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1819a/19bd023): > *Schedule 1 seeks to amend the existing line of business restrictions in the NBN Act to allow NBN corporations to provide eligible persons access to telecommunication towers and associated sites in certain circumstances. Eligible persons are defined to include police, fire and ambulance services, and state and territory emergency services.* > *Schedule 2 seeks to minimise additional regulatory burden on carriers to allow them to quickly and cost effectively meet temporary community telecommunication requirements for certain high demand periods such as emergencies, maintenance, peak holiday periods, and major sporting, cultural and other events. It proposes to provide immunities from a range of state and territory laws, such as laws pertaining to land use, planning, design, construction, siting, tenancy, environmental assessments and protection for the installation of temporary communication facilities. To achieve this purpose, the Bill gives additional powers to the Minister of Communications to determine when a temporary telecommunications tower is a low-impact facility.*",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 19,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-03/13"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-375114",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-14",
+   "stage_hint": null,
+   "brief": "The Telecommunications Legislation Amendment Bill 2018 creates a new tower access regime allowing emergency services like police, fire and ambulance to access NBN Co towers, and permits the Minister for Communications to designate temporary towers as low-impact facilities; it also includes minor technical amendments to transmitter licence refunds and broadcasting support payments."
+  },
+  {
+   "slug": "speech-375115",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Telecommunications Legislation Amendment Bill 2018, including its schedules to streamline temporary mobile tower deployment and require NBN Co to provide emergency services access to its towers, and noted a Labor amendment to specify Network Investments Pty Ltd as eligible for transitional support payments previously intended for Northern Rivers Television Pty Ltd."
+  },
+  {
+   "slug": "speech-375116",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-14",
+   "stage_hint": null,
+   "brief": "Labor supported Schedules 1 and 2 of the Telecommunications Legislation Amendment Bill 2018, which extend immunities from local planning laws for temporary mobile towers during natural disasters and emergencies. The party also highlighted a $250 million regional backbone blackspots program initiated under Labor, criticised the government's management of the program, and noted an amendment to permit Northern Rivers Television Pty Ltd to receive transitional support payments."
+  },
+  {
+   "slug": "speech-375117",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-14",
+   "stage_hint": null,
+   "brief": "The speaker argued for passage of the Telecommunications Legislation Amendment Bill 2018, which creates a tower access regime for NBN Co, allows the minister to designate temporary towers as low-impact facilities, and requires NBN Co to provide emergency services with tower access on a non-discriminatory basis, while also addressing committee recommendations and including technical amendments to transmitter licence refunds and broadcasting support payments."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Telecommunications Legislation Amendment Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00006",
+   "assent_date": "2019-03-01"
+  }
+ ]
+}

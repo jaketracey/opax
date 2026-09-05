@@ -1,0 +1,244 @@
+{
+ "key": "au-federal-r6753",
+ "title": "Electoral Legislation Amendment (Counting, Scrutiny and Operational Efficiencies) Bill 2021",
+ "short_title": "Electoral Legislation Amendment (Counting, Scrutiny and Operational Efficiencies) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2021-09-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6753%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6753%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6753%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6753%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6753%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6753%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6753%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6753%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6753%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6753%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6753%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6753%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6753_ems_3db6a959-c52f-4003-8b9c-789d9f387d5c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/8139731%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6753%22",
+   "document_date": "2021-08-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00092",
+   "document_date": "2021-09-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7418",
+   "date": "2021-08-26",
+   "house": "senate",
+   "question": "The same number of senators voted for and against a [motion](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=CHAMBER;id=chamber%2Fjournals%2F8f88a445-5a90-41ad-9489-2be5a3fb1796%2F0006;query=Id%3A%22chamber%2Fjournals%2F8f88a445-5a90-41ad-9489-2be5a3fb1796%2F0000%22) introduced by the opposition, which means it failed. ### Motion text > *At the end of the motion, add “, but the Senate:* > > *(a) notes that the Northern Territory’s enrolment rate lags behind the rest of the country with only 85.6% of eligible electors enrolled to vote; and* > > *(b) calls on the Morrison/Joyce Government to close the gap by providing more resources to the Australian Electoral Commission so that people living in disadvantaged, remote and regional communities can exercise their democratic right to vote”.*",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 12,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 14,
+    "member": 5,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-26/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-411334",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The bill amends the Commonwealth Electoral Act to modernise electoral processes, including enabling electronic witness steps for overseas postal voters, fixing a 12-day pre-poll voting period, increasing scrutineer access for computerised Senate scrutiny, and allowing the AEC to open and sort pre-poll votes from 4pm on election day."
+  },
+  {
+   "slug": "speech-411837",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "Labor supported the three electoral bills, but moved an amendment calling for more resources to address the Northern Territory's 85% enrolment rate, while also backing the shortened prepoll period to 12 days, a higher party membership threshold of 1,500, and new measures against multiple voting and electoral violence."
+  },
+  {
+   "slug": "speech-411839",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian Electoral Commission's failure to use direct enrolment in remote Aboriginal communities amounts to voter suppression and racial discrimination, citing a 68.7% enrolment rate for First Nations people in the Northern Territory and a legal complaint lodged with the Australian Human Rights Commission. They called on the government to provide more resources to close the enrolment gap and end the discrimination."
+  },
+  {
+   "slug": "speech-411840",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker argued for fixed four-year federal terms, a national integrity commission, truth in political advertising, and other structural reforms to restore trust in democracy, noting that over 16,500 First Nations Australians in the Northern Territory cannot vote. He supported the Electoral Legislation Amendment bill but said it does not go far enough."
+  },
+  {
+   "slug": "speech-411841",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker argued for three electoral amendments: increasing the minimum party membership for non-parliamentary parties to 1,500, expanding multiple voting offences, and limiting the pre-poll period to 12 days. They criticised Campbell Newman's opposition to the changes, noting that parties like Animal Justice and One Nation already meet the membership threshold."
+  },
+  {
+   "slug": "speech-411842",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bills raise party registration membership from 500 to 1,500 and lower the expenditure threshold for political campaigners to $100,000, calling them anticompetitive and antidemocratic; they announced they will introduce a private member's bill for truth in political advertising."
+  },
+  {
+   "slug": "speech-411843",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speech supported the Electoral Legislation Amendment bill but argued it only does half the job, calling for increased voter education, reducing informal voting, and closing the Indigenous enrolment gap (67.6% in Western Australia), while condemning the Prime Minister’s “cave people” insult and the silence of Liberal MPs from WA."
+  },
+  {
+   "slug": "speech-411847",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Electoral Legislation Amendment (Counting, Scrutiny and Operational Efficiencies) Bill 2021 but expressed reservations, particularly opposing the increase in party membership threshold from 500 to 1,500, arguing it unfairly disadvantages minor parties and independents. They also called for further electoral reforms, including a robust federal integrity commission with powers to investigate election-related corruption, and challenged the government to address donation and spending transparency."
+  },
+  {
+   "slug": "speech-411848",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker supported reducing prepoll time to 12 days but criticised the absence of voter ID requirements, and opposed the Electoral Legislation Amendment (Party Registration Integrity) Bill 2021 for raising party membership thresholds from 500 to 1,500, arguing it would restrict independent and alternate voices."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Electoral Legislation Amendment (Counting, Scrutiny and Operational Efficiencies) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00092",
+   "assent_date": "2021-09-02"
+  }
+ ]
+}

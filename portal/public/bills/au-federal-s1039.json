@@ -1,0 +1,280 @@
+{
+ "key": "au-federal-s1039",
+ "title": "Criminal Code Amendment (High Risk Terrorist Offenders) Bill 2016",
+ "short_title": "Criminal Code Amendment (High Risk Terrorist Offenders) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-15",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2016-12-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1039%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1039%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1039%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1039%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1039%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1039%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1039%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1039%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1039%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1039%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1039%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1039%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1039%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1039_ems_ed2c97b3-8122-4fcd-99e9-c30362b7d85a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1039_ems_3b9b5af2-90d5-44b2-aefe-06ed5ea3392d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1039_ems_3864980c-b008-408b-8a9b-aa4fbc15ff7c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1039_ems_5482faed-4030-48b2-8810-308ff932d3dd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1039%22",
+   "document_date": "2016-09-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00095",
+   "document_date": "2016-12-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2016-09-15",
+  "sentences": [
+   "The bill would let the government keep terrorist offenders in prison after their sentences end if a court finds they still pose a serious risk.",
+   "The Attorney-General could ask a state or territory supreme court for a continuing detention order of up to three years, with reviews every year.",
+   "The scheme covers people convicted of terrorism offences carrying a maximum penalty of seven or more years in prison."
+  ],
+  "changes": [
+   "Creates a continuing detention order scheme for terrorist offenders assessed as an unacceptable risk.",
+   "Allows the Attorney-General to apply to a supreme court for an order, which can be renewed without limit.",
+   "Requires annual court reviews of each order, with the Attorney-General bearing the burden of proof.",
+   "Mandates that detainees be treated as not serving a sentence and be kept separate from ordinary prisoners unless exceptions apply.",
+   "Requires the Attorney-General to report annually to Parliament on the scheme's operation.",
+   "Makes consequential amendments to several Acts to allow seized evidence to be used in applications."
+  ],
+  "affected": "Terrorist offenders convicted of specified terrorism offences who are about to finish their custodial sentences.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:11Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4493",
+   "date": "2016-12-01",
+   "house": "senate",
+   "question": "Criminal Code Amendment (High Risk Terrorist Offenders) Bill 2016 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 46,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 16,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-12-01/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-339659",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-12-01",
+   "stage_hint": null,
+   "brief": "The government introduced the Criminal Code Amendment (High Risk Terrorist Offenders) Bill to allow continued detention of high-risk terrorist offenders after their sentences expire, if a court deems them an unacceptable risk. The bill incorporates all 24 recommendations from the Parliamentary Joint Committee on Intelligence and Security, has support from all states and territories, and enables Supreme Courts to issue continuing detention orders for up to three years with annual reviews."
+  },
+  {
+   "slug": "speech-339660",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-12-01",
+   "stage_hint": null,
+   "brief": "The Criminal Code Amendment (High Risk Terrorist Offenders) Bill 2016 was supported, introducing a continuing detention order regime for convicted terrorists judged an unacceptable risk, with safeguards including removal of treason from scope, access to legal representation, a 10-year sunset clause, and confirmation of constitutional validity from acting Solicitor-General Thomas Howe PSM QC. The government agreed to implement all 24 recommendations from the Parliamentary Joint Committee on Intelligence and Security."
+  },
+  {
+   "slug": "speech-339661",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-12-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Criminal Code Amendment (High Risk Terrorist Offenders) Bill 2016, which enables courts to order continued detention of high-risk terrorist offenders for up to three years after their sentence, with annual reviews and safeguards. He cited the case of Sevdet Ramadan Besim, who received a 10-year sentence for a planned Anzac Day attack, and praised the MyHack program run by Abdullah Alim."
+  },
+  {
+   "slug": "speech-339663",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-12-01",
+   "stage_hint": null,
+   "brief": "Supported the Criminal Code Amendment (High Risk Terrorist Offenders) Bill 2016 with amendments, and commended the Parliamentary Joint Committee on Intelligence and Security (PJCIS) for 24 recommendations. Raised concerns about the bill's lack of a framework for assessing terrorist reoffending risk, absence of robust expertise, and the need for preventive deradicalisation programs and ongoing monitoring."
+  },
+  {
+   "slug": "speech-339868",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-12-01",
+   "stage_hint": null,
+   "brief": "The Criminal Code Amendment (High Risk Terrorist Offenders) Bill 2016 establishes a framework for the continued detention of high-risk terrorist offenders after their custodial sentence if the Supreme Court finds they pose an unacceptable risk of committing a serious terrorist offence. The bill is modelled on existing state and territory post-sentence detention regimes, has been agreed to by all state and territory governments, and includes an implementation plan with a report to the Parliamentary Joint Committee on Intelligence and Security due by 30 June 2017."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Criminal Code Amendment (High Risk Terrorist Offenders) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00095",
+   "assent_date": "2016-12-07"
+  }
+ ]
+}

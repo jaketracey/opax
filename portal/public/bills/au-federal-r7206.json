@@ -1,0 +1,234 @@
+{
+ "key": "au-federal-r7206",
+ "title": "National Health Amendment (Supporting Patient Access to Cheaper Medicines and Other Measures) Bill 2024",
+ "short_title": "National Health Amendment (Supporting Patient Access to Cheaper Medicines and Other Measures) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-06-06",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2024-07-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-06-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7206%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7206%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7206%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7206%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7206%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-07-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7206%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7206_ems_001c9f92-856d-41d9-a09f-2e257ffd98c7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7206%22",
+   "document_date": "2024-06-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00073",
+   "document_date": "2024-07-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-06-06",
+  "sentences": [
+   "This bill would put into law parts of a new agreement between the government and pharmacists that aims to keep medicine costs down and support pharmacies.",
+   "It would create a new payment for pharmacists, pause certain price adjustments for patients, and gradually end a discount that can be applied to patient charges.",
+   "The pause on the standard patient charge would last one year, while the pause on the reduced charge would last five years, and the discount would be eliminated over time starting in 2025."
+  ],
+  "changes": [
+   "Introduces a new payment for pharmacists who supply certain medicines.",
+   "Stops the usual yearly increase in the standard patient charge for one year.",
+   "Stops the usual yearly increase in the reduced patient charge for five years.",
+   "Phases out the $1 discount that pharmacists can offer on patient charges."
+  ],
+  "affected": "Pharmacists, patients who use the Pharmaceutical Benefits Scheme, and the Pharmacy Guild of Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:39:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8965",
+   "date": "2024-06-25",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2024-06-25.102.1) introduced by Mallee MP [Anne Webster](https://theyvoteforyou.org.au/people/representatives/mallee/anne_webster) (Nationals), which means it failed. The amendment would have added the text below to the usual second reading motion, which is \"that the bill be read a second time\" (parliamentary jargon for agreeing with the main idea). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes:* > > *(1) the measures contained in this bill are only a result of sustained advocacy from the Pharmacy Guild of Australia and other groups with the support of the Coalition; and* > > *(2) the bill is recognition by the Government that its initial approach to 60-day dispensing would have caused damage to all Australians who rely on their local community pharmacist\".*",
+   "stage": "Second reading",
+   "ayes": 58,
+   "noes": 82,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 76
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-06-25/3"
+  },
+  {
+   "key": "federal-senate-9003",
+   "date": "2024-06-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7206_amend_ecc35329-bc33-4e15-a1b1-b7554cddd5d1%22;rec=0) to the usual second reading motion \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea). The amendment was introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal) and would have added the text below. ### Amendment text > *At the end of the motion, add “, but the Senate notes that:* > > *(a) the measures contained in this bill are only a result of sustained advocacy from the Pharmacy Guild of Australia and other groups with the support of the Coalition;* > > *(b) the bill is recognition by the Government that its initial approach to 60-day dispensing would have caused damage to all Australians who rely on their local community pharmacist; and* > > *(c) the ink is not even dry on the Eighth Community Pharmacy Agreement and the Government is already undermining community pharmacies by foisting a rushed and ill-conceived vaping model on community pharmacies without their consultation or support”.*",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-06-27/7"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "National Health Amendment (Supporting Patient Access to Cheaper Medicines and Other Measures) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00073",
+   "assent_date": "2024-07-09"
+  }
+ ]
+}

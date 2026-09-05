@@ -1,0 +1,103 @@
+{
+ "key": "au-federal-r6902",
+ "title": "Financial Services Compensation Scheme of Last Resort Levy (Collection) Bill 2022",
+ "short_title": "Financial Services Compensation Scheme of Last Resort Levy (Collection) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2023-03-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6902%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6902%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6902%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6902%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6902%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-10-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6902%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6902%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6902%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6905_ems_a6bed40a-6605-4ffe-a06b-ea5b14b85835%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6902%22",
+   "document_date": "2022-09-08",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-08",
+  "sentences": [
+   "This bill is part of a package that would create a new system of responsibility for banks, insurers and superannuation funds.",
+   "The package would set rules for how senior managers and firms in those industries must behave, with penalties for breaches.",
+   "The banking industry would be subject to the regime six months after the main bill starts, while insurance and superannuation would have 18 months."
+  ],
+  "changes": [
+   "Introduce a new accountability regime for banking, insurance and superannuation.",
+   "Set different start dates for different industries.",
+   "Make consequential amendments to support the regime."
+  ],
+  "affected": "Banks, insurers and superannuation funds, and their senior managers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:10:34Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,262 @@
+{
+ "key": "au-federal-r7204",
+ "title": "Creative Australia Amendment (Implementation of Revive) Bill 2024",
+ "short_title": "Creative Australia Amendment (Implementation of Revive) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-06-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2024-07-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-07-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7204_ems_7bbbcc63-ab0c-4faf-9a66-a06916b679fb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7204%22",
+   "document_date": "2024-06-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00063",
+   "document_date": "2024-07-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-06-05",
+  "sentences": [
+   "This bill would create two new bodies within Creative Australia to support First Nations arts and the literature sector.",
+   "The Australia Council Board would oversee both bodies and could give them directions, but could not overrule the First Nations Board's funding decisions.",
+   "The First Nations Board would have up to ten members including two co-chairs, all appointed by the minister after consulting the co-chairs."
+  ],
+  "changes": [
+   "Establishes First Nations Arts and Writing Australia as separate parts of Creative Australia.",
+   "Creates a First Nations Board with a co-chair structure and a Writing Australia Council to advise the Australia Council Board.",
+   "Allows the chief executive officer to appoint a director of First Nations Arts who must be an Aboriginal or Torres Strait Islander person.",
+   "Applies the existing delegation rule for the Music Australia Council chair to the Writing Australia Council chair.",
+   "Waives consultation requirements for the first round of appointments to the new boards."
+  ],
+  "affected": "Creative Australia, First Nations arts organisations, the Australian literature sector, and the minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:38:19Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9492",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "Creative Australia Amendment (Implementation of Revive) Bill 2024 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 39,
+   "noes": 2,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/23"
+  },
+  {
+   "key": "federal-senate-9493",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "Creative Australia Amendment (Implementation of Revive) Bill 2024 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 39,
+   "noes": 2,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/24"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Creative Australia Amendment (Implementation of Revive) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00063",
+   "assent_date": "2024-07-09"
+  }
+ ]
+}

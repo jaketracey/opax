@@ -1,0 +1,172 @@
+{
+ "key": "au-federal-r6342",
+ "title": "Military Rehabilitation and Compensation Amendment (Single Treatment Pathway) Bill 2019",
+ "short_title": "Military Rehabilitation and Compensation Amendment (Single Treatment Pathway) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans' Affairs",
+ "status": "passed",
+ "status_as_of": "2019-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6342%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6342%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6342%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6342%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6342%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6342%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6342_ems_cd7d733f-1f93-4608-b8e4-fc26ab703b80%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/6796793%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6342%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00122",
+   "document_date": "2019-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-377415",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-07-04",
+   "stage_hint": null,
+   "brief": "The bill replaces the dual treatment pathway with a single model using a Department of Veterans' Affairs health card, eliminating upfront costs and claim forms so around 4,000 clients no longer need to pay first and seek reimbursement."
+  },
+  {
+   "slug": "speech-381236",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "Labor supported the Military Rehabilitation and Compensation Amendment (Single Treatment Pathway) Bill 2019, which replaces two existing medical treatment reimbursement pathways for veterans with a single system using the Department of Veterans' Affairs health card, benefiting approximately 4,000 veterans by eliminating upfront costs and paperwork. Labor also criticised the government for inconsistent veterans' health policies, including a $40 million cut to allied health care, a freeze on the repatriation medical fee schedule, and a problematic allied health referral system that requires veterans to obtain new GP referrals after 12 sessions."
+  },
+  {
+   "slug": "speech-381238",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Military Rehabilitation and Compensation Amendment (Single Treatment Pathway) Bill 2019, called for a royal commission into the use of malarial drugs mefloquine and tafenoquine in the ADF, urged the government to end the freeze on the Repatriation Medical Fee Schedule and restore human contact in the Veterans Area Network, and highlighted the case of veteran Wayne Douglas whose medical discharge lump sum was adversely affected by changed tax treatment."
+  },
+  {
+   "slug": "speech-381241",
+   "speaker": "Vince Connelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Military Rehabilitation and Compensation Amendment (Single Treatment Pathway) Bill 2019 will simplify medical treatment for about 4,000 veterans by allowing them to use a DVA health card instead of paying upfront and seeking reimbursement, reducing financial pressure and red tape."
+  },
+  {
+   "slug": "speech-381242",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The Minister for Veterans and Defence Personnel announced that the Military Rehabilitation and Compensation Amendment (Single Treatment Pathway) Bill 2019 will allow veterans to access medical treatment using only their DVA health card, eliminating upfront costs and claim forms for around 4,000 clients, while retaining discretionary reimbursement powers for the Commission."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Military Rehabilitation and Compensation Amendment (Single Treatment Pathway) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00122",
+   "assent_date": "2019-12-12"
+  }
+ ]
+}

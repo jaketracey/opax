@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-s1366",
+ "title": "Criminal Code Amendment (Inciting Illegal Disruptive Activities) Bill 2023",
+ "short_title": "Criminal Code Amendment (Inciting Illegal Disruptive Activities) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-02-08",
+ "originating_house": "senate",
+ "sponsor": "ANTIC, Sen Alex",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10954",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1366%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1366%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1366%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1366_ems_b30ae936-a7ae-4e63-8b6d-85a0610a3b4e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1366%22",
+   "document_date": "2023-02-08",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-02-08",
+  "sentences": [
+   "The bill would create three new federal offences for inciting trespass, property damage or theft, and blocking traffic in major business districts and cultural centres.",
+   "A person would commit an offence by using a telecommunications service to send or publish material intended to incite another person to commit those crimes in a major business area, which is defined as a central business district or another precinct that serves as a hub for business or culture.",
+   "The maximum penalty is 12 months imprisonment for inciting trespass or traffic obstruction, and 5 years for inciting property damage or theft, and the bill would exempt journalists reporting in the public interest and people acting under whistleblower protections."
+  ],
+  "changes": [
+   "Introduce three new offences for inciting trespass, property damage or theft, and unlawful traffic obstruction in major business areas.",
+   "Define 'major business area' as a central business district or another precinct that is a centre of significant business or cultural activity.",
+   "Exempt journalists reporting in the public interest and whistleblowers protected by Commonwealth, state or territory law.",
+   "Set maximum penalties of 12 months imprisonment for inciting trespass and traffic obstruction, and 5 years for inciting property damage or theft.",
+   "Commence the whole Act the day after it receives Royal Assent."
+  ],
+  "affected": "People who use a carriage service to incite illegal disruptive activities in major business areas, and organisers who plan such activities online.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:15Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

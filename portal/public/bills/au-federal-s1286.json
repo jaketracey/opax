@@ -1,0 +1,97 @@
+{
+ "key": "au-federal-s1286",
+ "title": "Environment Protection and Biodiversity Conservation Amendment (Regional Forest Agreements) Bill 2020",
+ "short_title": "Environment Protection and Biodiversity Conservation Amendment (Regional Forest Agreements) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2020-12-09",
+ "originating_house": "senate",
+ "sponsor": "MCKENZIE, Sen Bridget",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10758",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1286%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1286%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1286%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1286%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1286%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1286%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1286%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1286_ems_9ce36821-e239-4576-bfe7-5f4de33e6c0f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1286%22",
+   "document_date": "2020-12-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-09",
+  "sentences": [
+   "This bill would confirm that forestry activities under Regional Forest Agreements do not need federal environmental approval under Part 3 of the EPBC Act.",
+   "It would amend subsection 38(1) of the EPBC Act and section 6(4) of the Regional Forest Agreements Act 2002 to remove legal doubt about the exemption's meaning.",
+   "The changes would start the day after the Act receives Royal Assent."
+  ],
+  "changes": [
+   "Clarifies that forestry operations in a Regional Forest Agreement area are exempt from Part 3 of the EPBC Act.",
+   "Removes ambiguity created by a Federal Court ruling about the phrase 'undertaken in accordance with a Regional Forest Agreement'.",
+   "Ensures compliance matters are handled through state regulatory frameworks rather than federal approval."
+  ],
+  "affected": "Forestry operators, state governments, and the native forestry industry covered by Regional Forest Agreements.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:56Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

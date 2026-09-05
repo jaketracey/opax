@@ -1,0 +1,465 @@
+{
+ "key": "au-federal-r7378",
+ "title": "Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025",
+ "short_title": "Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-10-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "passed",
+ "status_as_of": "2026-03-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-03-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7378_ems_f845755a-5ca9-45c4-8de6-d7944ee6ba9b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7378%22",
+   "document_date": "2025-10-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00005",
+   "document_date": "2026-03-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-10-08",
+  "sentences": [
+   "This bill would create a new parliamentary committee to oversee Australia's defence agencies.",
+   "The committee would have up to 13 members and could request information, documents, and briefings, but would be restricted from publicly disclosing sensitive information without ministerial approval.",
+   "The bill includes criminal offences for unauthorised use or disclosure of protected information by committee members, their staff, and other authorised parliamentarians."
+  ],
+  "changes": [
+   "Creates the Parliamentary Joint Committee on Defence within the Defence Act 1903.",
+   "Gives the committee power to review, monitor, and report on Australian defence agencies, excluding certain intelligence organisations.",
+   "Imposes restrictions on public proceedings and disclosure of protected information, with ministerial certificates overriding disclosure requirements.",
+   "Establishes criminal offences for unauthorised use or disclosure of protected information."
+  ],
+  "affected": "Australian defence agencies, including the Australian Defence Force, Department of Defence, and Department of Veterans' Affairs, as well as committee members, their staff, and other authorised parliamentarians.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9899",
+   "date": "2026-02-05",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2026-02-05.46.2) to agree with the bill's main idea. In parliamentary jargon, they voted to read the bill for a second time. This means they can now discuss the bill in greater detail. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd023), which is a document put together by the parliamentary library: > *The security situation in the Indo–Pacific region is challenging and deteriorating. Australian defence spending and activity is increasing in response. Due to security risks, an increasing number of defence matters cannot be properly scrutinised in public hearings of the Joint Standing Committee on Foreign Affairs, Defence and Trade (JSCFADT).* > > *The Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025 (the Bill) proposes a Parliamentary Joint Committee on Defence (the Committee), to take on JSCFADT’s Defence-related functions. The Committee is modelled on the Parliamentary Joint Committee on Intelligence and Security (PJCIS).* > > *A Bill in very similar terms, the Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2024 (the 2024 Bill), was introduced to the 47th Parliament but negatived at third reading in the Senate. Despite proposal of a number of amendments, consensus could not be reached on Committee membership.* > > *There are very few changes from the 2024 Bill and those changes are technical rather than substantive. In particular, the membership provisions are unchanged.* > > *At the time of writing, the Bill had not been referred to or reported on by any parliamentary committees. However, the 2024 Bill was considered by the Senate Scrutiny of Bills Committee and the Parliamentary Joint Committee on Human Rights. Those committees raised concerns relating to:* > > * *whether it is appropriate for the executive to be able to limit a parliamentary comm",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-02-05/10"
+  },
+  {
+   "key": "federal-senate-9900",
+   "date": "2026-02-05",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-02-05.52.2) introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means it was unsuccessful. ### Amendment text > *(1) Schedule 1, item 2, page 6 (line 22) to page 7 (line 6), omit subsections 110ABA(2) and (3), substitute:* > >> *(2) The Committee is to consist of 13 members:* >> >>> *(a) 7 Government members, including at least:* >>> >>>> *(i) 2 Senators; and* >>>> >>>> *(ii) 2 members of the House of Representatives; and* >>> >>> *(b) 6 non‑Government members:* >>> >>>> *(i) 2 Opposition Senators; and* >>>> >>>> *(ii) 2 Opposition members of the House of Representatives; and* >>>> >>>> *(iii) 1 Senator who is not a member of the Government or the Opposition; and* >>>> >>>> *(iv) 1 member of the House of Representatives who is not a member of the Government or the Opposition.* >>>> >>>> *Note: For more detailed provisions on the appointment of Committee members, see Division 5.*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-02-05/11"
+  },
+  {
+   "key": "federal-senate-9901",
+   "date": "2026-02-05",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-02-05.69.1) introduced by Queensland Senator [Malcolm Roberts](https://theyvoteforyou.org.au/people/senate/queensland/malcolm_roberts) (One Nation), which means it failed. ### Amendment text > *(1) Schedule 1, item 2, page 6 (line 22) to page 7 (line 6), omit subsections 110ABA(2) and (3), substitute:* > >> *(2) The Committee is to consist of up to 13 Committee members and must include at least:* >> >>> *(a) 2 Senators who are Government members; and* >>> >>> *(b) 2 members of the House of Representatives who are Government members; and* >>> >>> *(c) 2 Senators who are Opposition members; and* >>> >>> *(d) 2 members of the House of Representatives who are Opposition members; and* >>> >>> *(e) 1 Senator or member of the House of Representatives from each minority party.* >>> >>> *Note: For more detailed provisions on the appointment of Committee members, see Division 5.* >> >> *(3) In this section:* >> >>> *minority party means a party that:* >>> >>>> *(a) is not part of the Government or the Opposition; and* >>>> >>>> *(b) has at least 5 members in the Parliament.*",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-02-05/12"
+  },
+  {
+   "key": "federal-senate-9951",
+   "date": "2026-03-03",
+   "house": "senate",
+   "question": "Varun Ghosh The committee is considering the Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2025. Yesterday evening a division on amendment (1) on sheet 3472 moved by Senator Shoebridge was deferred. The vote on that amendment will be held now. The question is that the amendment be agreed to.",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-03/2"
+  },
+  {
+   "key": "federal-senate-9971",
+   "date": "2026-03-04",
+   "house": "senate",
+   "question": "Jenny McAllister I move: That the question be now put. Nick McKim On a point of order, I would like to make a contribution on the third reading, and I would ask for the minister's indulgence to withdraw— Sue Lines As you are aware, it is the minister's prerogative to move that the question be put. You can vote either way, but the motion has been moved. Steph Hodgins-May The question is that the question be put on the third reading.",
+   "stage": "Third reading",
+   "ayes": 29,
+   "noes": 18,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-04/5"
+  },
+  {
+   "key": "federal-senate-9972",
+   "date": "2026-03-04",
+   "house": "senate",
+   "question": "Steph Hodgins-May The question now is that the bill be read a third time.",
+   "stage": "Third reading",
+   "ayes": 30,
+   "noes": 18,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-04/6"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Defence Amendment (Parliamentary Joint Committee on Defence) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00005",
+   "assent_date": "2026-03-13"
+  }
+ ]
+}

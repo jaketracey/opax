@@ -1,0 +1,82 @@
+{
+ "key": "au-federal-s1052",
+ "title": "Australian Human Rights Commission Amendment (Preliminary Assessment Process) Bill 2017",
+ "short_title": "Australian Human Rights Commission Amendment (Preliminary Assessment Process) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-07",
+ "originating_house": "senate",
+ "sponsor": "BURSTON, Sen Brian",
+ "sponsor_party": "Pauline Hanson&#39;s One Nation",
+ "sponsor_person_id": "10848",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1052%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1052%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1052%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1052%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1052_ems_df3961dd-b8be-43f7-97d7-87ca1f7b0088%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1052%22",
+   "document_date": "2017-02-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-07",
+  "sentences": [
+   "The bill would require the Australian Human Rights Commission to carry out a preliminary assessment of a discrimination complaint before starting a full inquiry.",
+   "The President of the Commission would appoint a committee to assess the complaint and evidence, inform both parties, and decide whether the complaint could be terminated early.",
+   "The new process would apply only to complaints lodged after the day after the bill receives Royal Assent."
+  ],
+  "changes": [
+   "Adds a preliminary assessment step before a full inquiry into complaints.",
+   "Requires the Commission to inform respondents about the complaint and invite them to provide evidence.",
+   "Allows termination of a complaint at any time, including before the inquiry begins.",
+   "Requires notification of respondents as well as complainants if a complaint is terminated.",
+   "Ensures the Commission does not have to notify itself if it is a respondent.",
+   "Makes the 60-day appeal period count from the day notice is sent to the first complainant."
+  ],
+  "affected": "People and organisations that lodge or are named in discrimination complaints under the Age Discrimination Act 2004, the Disability Discrimination Act 1992, the Racial Discrimination Act 2004 and the Sex Discrimination Act 1984.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:54Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

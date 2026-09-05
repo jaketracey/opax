@@ -1,0 +1,147 @@
+{
+ "key": "au-federal-s1004",
+ "title": "Food Standards Amendment (Fish Labelling) Bill 2015",
+ "short_title": "Food Standards Amendment (Fish Labelling) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-26",
+ "originating_house": "senate",
+ "sponsor": "XENOPHON, Sen Nick",
+ "sponsor_party": "Independent Member",
+ "sponsor_person_id": "10717",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2015-08-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1004%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1004%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1004%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1004%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1004_ems_c2a99ca1-f6c2-48c8-af50-d1df5b12c9d1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1004%22",
+   "document_date": "2015-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-26",
+  "sentences": [
+   "The bill would require fish sold for immediate eating to carry country-of-origin labels.",
+   "Food Standards Australia New Zealand would have 12 months to write a new standard applying only in Australia that sets these labelling rules.",
+   "Restaurants and pubs selling fish dishes would need to state on their menus whether the fish is Australian or from another country."
+  ],
+  "changes": [
+   "Removes the exemption from country-of-origin labelling for cooked or pre-prepared fish sold by food services.",
+   "Gives Food Standards Australia New Zealand 12 months to develop a new standard for fish sold for immediate consumption.",
+   "Extends existing country-of-origin labelling requirements for fish to meals served in restaurants and pubs."
+  ],
+  "affected": "Food services such as restaurants and pubs that sell fish dishes, and the Australian seafood industry.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:03Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3872",
+   "date": "2015-08-12",
+   "house": "senate",
+   "question": "The majority voted against the main idea of the [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1004). In parliamentary jargon, they voted against reading the bill for a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). This means that the bill won't proceed and will no longer by considered. ### What is the bill's main idea? This is a private bill that was introduced by Senators [Xenophon](https://theyvoteforyou.org.au/people/senate/sa/nick_xenophon), [Lazarus](https://theyvoteforyou.org.au/people/senate/queensland/glenn_lazarus), [Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie), [Whish-Wilson](https://theyvoteforyou.org.au/people/senate/tasmania/peter_whish-wilson), [Wang](https://theyvoteforyou.org.au/people/senate/wa/dio_wang) and [Madigan](https://theyvoteforyou.org.au/people/senate/victoria/john_madigan) in order to: > *require Food Standards Australia New Zealand to develop and approve within 12 months, a labelling standard to prescribe how the food services sector must identify the country of origin of fish offered for immediate consumption in Australia.*",
+   "stage": "Second reading",
+   "ayes": 15,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 13,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-08-12/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

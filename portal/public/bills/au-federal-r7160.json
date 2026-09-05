@@ -1,0 +1,158 @@
+{
+ "key": "au-federal-r7160",
+ "title": "Agriculture Legislation Amendment (Modernising Administrative Processes) Bill 2024",
+ "short_title": "Agriculture Legislation Amendment (Modernising Administrative Processes) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-02-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Fisheries and Forestry",
+ "status": "passed",
+ "status_as_of": "2024-05-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-03-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-05-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7160_ems_9ec21480-b5d3-4dc1-b56d-0f8069bee825%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7160%22",
+   "document_date": "2024-02-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00028",
+   "document_date": "2024-05-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-28",
+  "sentences": [
+   "The bill would update administrative processes in agricultural legislation.",
+   "It would change the Primary Industries Research and Development Act 1989 and abolish the Rural Adjustment Act 1992.",
+   "The National Rural Advisory Council would be closed because its functions are now done elsewhere."
+  ],
+  "changes": [
+   "The bill would change appointment and governance rules under the Primary Industries Research and Development Act 1989.",
+   "The bill would repeal the Rural Adjustment Act 1992.",
+   "The bill would end the National Rural Advisory Council.",
+   "The bill would update the Natural Heritage Trust of Australia Act 1997 and add transitional rules."
+  ],
+  "affected": "People and organisations involved in agricultural research, development, and adjustment, including the National Rural Advisory Council.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Agriculture Legislation Amendment (Modernising Administrative Processes) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00028",
+   "assent_date": "2024-05-30"
+  }
+ ]
+}

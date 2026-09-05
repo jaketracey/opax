@@ -1,0 +1,197 @@
+{
+ "key": "au-federal-r5677",
+ "title": "Primary Industries Levies and Charges Collection Amendment Bill 2016",
+ "short_title": "Primary Industries Levies and Charges Collection Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-08-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2016-09-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5677%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5677%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5677%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5677%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5677%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5677%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5677%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5677%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5677%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5677%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5677%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5677%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5677_ems_341a528f-25b6-4b9d-aecd-9de361b689b0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/4805059%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5677%22",
+   "document_date": "2016-08-31",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00056",
+   "document_date": "2016-09-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4280",
+   "date": "2016-09-12",
+   "house": "representatives",
+   "question": "Christopher Pyne I move: That so much of the standing orders be suspended as would prevent the motion for the third reading being moved without delay.",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 130,
+    "earliest": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-09-12/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-333219",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-12",
+   "stage_hint": null,
+   "brief": "Opposition supported the Primary Industries Levies and Charges Collection Amendment Bill 2016, which would allow research and development corporations to maintain levy payer registers, but raised ongoing concerns about inadequate safeguards preventing levy payer data from being shared with representative organisations like the Cattle Council for political purposes. The speaker also criticised the Minister for Agriculture and Water Resources for failing to deliver on pre-2013 election promises, including on the grass-fed cattle levy."
+  },
+  {
+   "slug": "speech-333220",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-12",
+   "stage_hint": null,
+   "brief": "The Primary Industries Levies and Charges Collection Amendment Bill 2016 allows the Department of Agriculture and Water Resources to share levy payer information with rural research and development corporations for creating registers, improving consultation and R&D outcomes. The bill was endorsed by the Cattle Council of Australia and the Sheepmeat Council of Australia."
+  },
+  {
+   "slug": "speech-333221",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-09-12",
+   "stage_hint": null,
+   "brief": "The Primary Industries Levies and Charges Collection Amendment Bill 2016 enables rural research and development corporations to establish levy payer registers, allowing them to directly identify and consult with levy payers and allocate voting entitlements accurately. The bill extends levy payer information distribution to 13 additional RDCs, with each register requiring industry consultation and ministerial approval."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Primary Industries Levies and Charges Collection Amendment Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00056",
+   "assent_date": "2016-09-16"
+  }
+ ]
+}

@@ -1,0 +1,194 @@
+{
+ "key": "au-federal-r6098",
+ "title": "Treasury Laws Amendment (2018 Measures No. 4) Bill 2018",
+ "short_title": "Treasury Laws Amendment (2018 Measures No. 4) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-03-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6098%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6098%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6098%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6098%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6098%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6098%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6098%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6098%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6098%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6098%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6098%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6098%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6098%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6098%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6098_ems_c4b88871-9374-4ec2-85c3-f52daffbd8d7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6098_ems_ea357ccd-0aec-4f51-a0a1-43bdb393fe80%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6098%22",
+   "document_date": "2018-03-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00008",
+   "document_date": "2019-03-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "This bill would give the Commissioner new powers to make employers meet their superannuation obligations.",
+   "The Commissioner could order an employer to pay a superannuation charge they owe or to complete an approved course, with criminal penalties for ignoring the order.",
+   "Fines for failing to follow an education direction would start at 20 penalty units for a first offence and rise to 50 penalty units or 12 months in jail for a third or later offence."
+  ],
+  "changes": [
+   "Allows the Commissioner to issue directions to employers who do not meet their superannuation guarantee duties.",
+   "Creates criminal sanctions for employers who do not follow a direction to pay or attend an education course.",
+   "Sets tiered penalties for education direction failures, with higher fines for repeat offences."
+  ],
+  "affected": "Employers who fail to comply with their superannuation guarantee obligations.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:29:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-365487",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "The speech argued that the Treasury Laws Amendment (2018 Measures No. 4) Bill 2018 protects workers' superannuation by giving the ATO new powers to direct unpaid super payments, with penalties up to 50 penalty units or 12 months imprisonment, extending Single Touch Payroll to all employers from 1 July 2019, and allowing the ATO to disclose recovery actions to employees. It also criticised Labor and union-negotiated agreements for reducing workers' pay, citing examples such as Cleanevent and five-star hotels."
+  },
+  {
+   "slug": "speech-365488",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "The speaker argued the Coalition is not a friend of workers, citing their opposition to restoring penalty rates, and announced Labor's broad support for the Treasury Laws Amendment Bill while reserving the right to propose amendments after a Senate inquiry. They highlighted the bill's measures to address unpaid superannuation, noting 2.4 million workers lose $5.6 billion annually, and detailed new powers for the tax commissioner to issue compliance directions and disclose noncompliance to affected employees."
+  },
+  {
+   "slug": "speech-365571",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "The bill amends superannuation guarantee laws to improve compliance through data reconciliation, single-touch payroll, and ATO enforcement, citing the case of Graeme and Victoria Smith-Webb from the Calare electorate who lost superannuation when their employer went into liquidation."
+  },
+  {
+   "slug": "speech-365572",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "The Turnbull government argued its Treasury Laws Amendment Bill would protect workers' superannuation entitlements by giving the ATO near real-time compliance information, introducing tougher penalties for repeated noncompliance, and strengthening powers to recover unpaid super. The bill also adds Australian Philanthropic Services, Foundation 1901 and Sydney Chevra Kadisha to the list of specified deductible gift recipients."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2018 Measures No. 4) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00008",
+   "assent_date": "2019-03-01"
+  }
+ ]
+}

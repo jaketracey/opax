@@ -1,0 +1,42 @@
+{
+ "key": "au-federal-s1153",
+ "title": "Plebiscite (Allowing Australians to Decide Who Comes Here) Bill 2018",
+ "short_title": "Plebiscite (Allowing Australians to Decide Who Comes Here) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-11-26",
+ "originating_house": "senate",
+ "sponsor": "ANNING, Sen Fraser",
+ "sponsor_party": "Katter&#39;s Australian Party",
+ "sponsor_person_id": "10902",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2018-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1153%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1153%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1153%22",
+   "document_date": "2018-11-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,161 @@
+{
+ "key": "au-federal-r5242",
+ "title": "Taxation (Trustee Beneficiary Non-disclosure Tax) (No. 1) Amendment (Temporary Budget Repair Levy) Bill 2014",
+ "short_title": "Taxation (Trustee Beneficiary Non-disclosure Tax) (No. 1) Amendment (Temporary Budget Repair Levy) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2014-06-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5242%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5242%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5242%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5242%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5242%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5242%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5242%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5242_ems_64be515e-00ba-4f20-9d5d-3c00c0a08001%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5242%22",
+   "document_date": "2014-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00054",
+   "document_date": "2014-06-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-13",
+  "sentences": [
+   "This bill is part of a package that would introduce a temporary budget repair levy for three years from 2014-15.",
+   "The levy would add two per cent tax on taxable income above $180,000, with no levy below that threshold except where integrity rules apply the top marginal rate.",
+   "The package would also adjust other tax rates linked to the top personal marginal rate and the Medicare levy to prevent avoidance."
+  ],
+  "changes": [
+   "Introduces a temporary budget repair levy on individuals for three years from 2014-15.",
+   "Sets the levy at two per cent of taxable income over $180,000.",
+   "Adjusts other tax rates tied to the top personal marginal rate and Medicare levy to maintain system integrity."
+  ],
+  "affected": "Australian resident and foreign resident individuals with taxable income above $180,000.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:09Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-287861",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-13",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Taxation (Trustee Beneficiary Non-disclosure Tax) (No. 1) Amendment (Temporary Budget Repair Levy) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00054",
+   "assent_date": "2014-06-25"
+  }
+ ]
+}

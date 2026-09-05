@@ -1,0 +1,357 @@
+{
+ "key": "au-federal-r7180",
+ "title": "Treasury Laws Amendment (Delivering Better Financial Outcomes and Other Measures) Bill 2024",
+ "short_title": "Treasury Laws Amendment (Delivering Better Financial Outcomes and Other Measures) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-03-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2024-07-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-07-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7180_ems_ab44b1ee-fea2-4d2d-8907-0c571574055c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7180_ems_6e5942d5-04e8-4840-9719-689f61ab6281%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7180_ems_80678dea-1d06-4eca-a13e-3113080f1385%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7180_ems_5cca0216-4016-4369-88d3-21555ca76a86%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7180%22",
+   "document_date": "2024-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00067",
+   "document_date": "2024-07-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8942",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual second reading motion, which is \"*that the bill be read a second time*\". Reading a bill a second time is equivalent to agreeing with the main idea of the bill. If this amendment had been successful, if would have replaced those words with the words below. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes this bill is the first legislative response to the Quality of Advice review, which was delivered to the government in December 2022 and commissioned by the former Coalition government;* > > *(2) notes the significant delay in this bill has caused deep uncertainty for our struggling financial advice sector, who have been slugged by higher fees, higher taxes, and more red tape under this Government;* > > *(3) notes that despite this significant delay, this bill has several widely publicised drafting errors that would gut the financial advice industry's revenue streams and make it harder for Australians to pay for financial advice through their super; and* > > *(4) calls on the Government to fix these drafting errors without delay to secure the future of our financial advice and prevent a future where Australians are under-advised, under-insured, and under-banked\".* ### What does this bill do? According to the bill homepage, the bill: > *Amends:* > > * *the Superannuation Industry (Supervision) Act 1993 and Income Tax Assessment Act 1997 to provide a legal basis for payment of advice fees from a member’s superannuation account and clarify the associated tax consequences;* > > * *the Corporations Act 2001 in relation to: ongoing fee renewal and consent requirements; financial services guide requirements; rules banning conflicted remuneration; and standardised consumer consent requirements for certain insurance commissions;* > > * *the Petroleum Resource Rent Tax Assessme",
+   "stage": "Report from Federation Chamber",
+   "ayes": 59,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 71
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-29/3"
+  },
+  {
+   "key": "federal-senate-9477",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Delivering Better Financial Outcomes and Other Measures) Bill 2024 - Second Reading - Local content quotas",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/8"
+  },
+  {
+   "key": "federal-senate-9478",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Delivering Better Financial Outcomes and Other Measures) Bill 2024 - Second Reading - Petroleum Resource Rent Tax",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/9"
+  },
+  {
+   "key": "federal-senate-9479",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2024-07-04.70.3) introduced by the Government. See the Government's [supplementary explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7180_ems_6e5942d5-04e8-4840-9719-689f61ab6281%22;rec=0) to learn more about them. ### Amendment text > *(1)—Schedule 1, item 2, page 4 (lines 14 and 15), omit \"the cost of providing financial product advice,\" substitute \"the cost of financial product advice provided to the member\".* > > *(2)—Schedule 1, item 2, page 4 (lines 16 and 17), omit \"and is wholly or partly about the member's interest in the fund\".* > > *(3)—Schedule 1, item 2, page 4 (lines 18 to 20), omit paragraph 99FA(1)(b).* > > *(4)—Schedule 1, item 2, page 5 (lines 6 and 7), omit note 1, substitute:* > >> *Note 1: The other obligations under this Act, including to act in the best financial interests of the beneficiaries (see paragraph 52(2)(c)) and to comply with the sole purpose test (see section 62), continue to apply to trustees.* > > *(5)—Schedule 1, item 2, page 5 (line 17), omit \"providing\".* > > *(6)—Schedule 1, item 2, page 5 (line 22), omit \"providing\".* > > *(7)—Schedule 1, item 2, page 5 (line 25), omit \"providing\".* > > *(8)—Schedule 1, item 2, page 5 (line 26), omit \"providing\".*",
+   "stage": "Committee of the Whole",
+   "ayes": 39,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/10"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Delivering Better Financial Outcomes and Other Measures) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00067",
+   "assent_date": "2024-07-09"
+  }
+ ]
+}

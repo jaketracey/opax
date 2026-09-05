@@ -1,0 +1,652 @@
+{
+ "key": "au-federal-r5280",
+ "title": "Carbon Farming Initiative Amendment Bill 2014",
+ "short_title": "Carbon Farming Initiative Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "passed",
+ "status_as_of": "2014-11-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5280%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5280%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5280%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5280%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5280%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5280%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5280%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5280%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5280%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5280_ems_5bc5670e-bc49-4b79-8083-78c9ee7389ed%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5280_ems_64751ee6-4d30-4a84-a223-741ae608c0b6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5280_ems_ce17c38d-7277-4d01-ae43-32cc0447b9fb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5280_ems_0aefbbe3-186d-4bd2-976a-0aa9169ce149%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5280%22",
+   "document_date": "2014-06-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00119",
+   "document_date": "2014-11-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3271",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "question": "Carbon Farming Initiative Amendment Bill 2014 - Second Reading - End debate on whether to criticise the Government's climate change policies",
+   "stage": "Second reading",
+   "ayes": 81,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-25/7"
+  },
+  {
+   "key": "federal-representatives-3272",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "question": "Carbon Farming Initiative Amendment Bill 2014 - Second Reading - Criticise the Government's climate change policies",
+   "stage": "Second reading",
+   "ayes": 57,
+   "noes": 81,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 53,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-25/8"
+  },
+  {
+   "key": "federal-representatives-3273",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "question": "Carbon Farming Initiative Amendment Bill 2014 — Second Reading — Read a second time",
+   "stage": "Second reading",
+   "ayes": 82,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-25/9"
+  },
+  {
+   "key": "federal-representatives-3274",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "question": "Carbon Farming Initiative Amendment Bill 2014 - Third Reading - Suspend standing orders so as to move third reading motion",
+   "stage": "Third reading",
+   "ayes": 81,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-25/10"
+  },
+  {
+   "key": "federal-representatives-3275",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "question": "Carbon Farming Initiative Amendment Bill 2014 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 82,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-25/11"
+  },
+  {
+   "key": "federal-senate-3578",
+   "date": "2014-10-30",
+   "house": "senate",
+   "question": "The majority disagreed with Labor Senator [Lisa Singh](https://theyvoteforyou.org.au/people/senate/tasmania/lisa_singh)'s [statement](http://www.openaustralia.org/senate/?gid=2014-10-30.161.20) that: * the [Abbott](https://theyvoteforyou.org.au/people/representatives/warringah/tony_abbott) Government's actions have damaged Australia's international reputation on [climate change](http://en.wikipedia.org/wiki/Climate_change) * an [emissions trading scheme](http://en.wikipedia.org/wiki/Emissions_trading) should be created * the impact of bill on the [Carbon Farming Initiative](http://www.daff.gov.au/climatechange/cfi) should be examined * the Government has not made a \"robust and defensible assurance\" about how the changes in this bill can achieve [Australia's emissions reduction target](http://www.climatechange.gov.au/climate-change/greenhouse-gas-measurement-and-reporting/australias-emissions-projections/australias). ###Main idea of the bill The bill creates an Emissions Reduction Fund so the Government can buy domestic [greenhouse gas](http://en.wikipedia.org/wiki/Greenhouse_gas) emissions reductions and [offsets](http://en.wikipedia.org/wiki/Carbon_offset) by [reverse auction](http://en.wikipedia.org/wiki/Reverse_auction). It also makes some changes to the [Carbon Farming Initiative](http://www.daff.gov.au/climatechange/cfi), like introducing a 25-year-long option for [carbon sequestration](http://en.wikipedia.org/wiki/Carbon_sequestration) projects (right now all projects have to run for 100 years). ###Carbon Farming Initiative The Carbon Farming Initiative lets farmers and land managers earn [carbon credits](http://www.cleanenergyregulator.gov.au/ANREU/Concise-description-of-units/Australian-carbon-credit-units/Pages/default.aspx) by reducing greenhouse gas emissions and [storing carbon](http://en.wikipedia.org/wiki/Carbon_sequestration) in vegetation and soils by changing their agricultural and land management practices. ###Background to the bill The Emissions R",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 45,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-10-30/5"
+  },
+  {
+   "key": "federal-senate-3579",
+   "date": "2014-10-30",
+   "house": "senate",
+   "question": "Carbon Farming Initiative Amendment Bill 2014 - Second Reading - Criticise the Direct Action policy",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 45,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-10-30/6"
+  },
+  {
+   "key": "federal-senate-3580",
+   "date": "2014-10-30",
+   "house": "senate",
+   "question": "Carbon Farming Initiative Amendment Bill 2014 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 45,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-10-30/7"
+  },
+  {
+   "key": "federal-senate-3581",
+   "date": "2014-10-30",
+   "house": "senate",
+   "question": "The majority agreed to an [amendment](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=CHAMBER;id=chamber%2Fhansards%2Fe89a1618-fea8-466d-ab43-821cf296f483%2F0222;query=Id%3A%22chamber%2Fhansards%2Fe89a1618-fea8-466d-ab43-821cf296f483%2F0000%22) that either the [Emissions Reduction Assurance Committee](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1415a/15bd023) (created by this bill) or the [Department of the Environment](http://en.wikipedia.org/wiki/Department_of_the_Environment_%28Australia%29) should publish a draft of a [methodology determination](http://www.climatechange.gov.au/reducing-carbon/carbon-farming-initiative/methodologies) and give the public at least two weeks to make submissions on that draft. Currently, the public have at least forty days to make submissions. ###Methodology determinations Methodology determinations are detailed rules that farmers and land managers must follow to earn [carbon credits](http://www.cleanenergyregulator.gov.au/ANREU/Concise-description-of-units/Australian-carbon-credit-units/Pages/default.aspx) for particular carbon reduction activities under the [Carbon Farming Initiative](http://www.daff.gov.au/climatechange/cfi). ###Carbon Farming Initiative The [Carbon Farming Initiative](http://www.daff.gov.au/climatechange/cfi) lets farmers and land managers earn [carbon credits](http://www.cleanenergyregulator.gov.au/ANREU/Concise-description-of-units/Australian-carbon-credit-units/Pages/default.aspx) by reducing greenhouse gas emissions and [storing carbon](http://en.wikipedia.org/wiki/Carbon_sequestration) in vegetation and soils by changing their agricultural and land management practices. ###Background to the bill The Emissions Reduction Fund is a key part of the Coalition Government's [Direct Action policy](http://www.abc.net.au/news/2013-12-20/coalition-climate-change-direct-action-policy-explained/5067188), which was an [election commitment](https://www.liberal.org.au/our-plan/envir",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 45,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-10-30/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-291929",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293645",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293646",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Carbon Farming Initiative Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00119",
+   "assent_date": "2014-11-25"
+  }
+ ]
+}

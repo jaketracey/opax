@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s1262",
+ "title": "Commonwealth Electoral Amendment (Ensuring Fair Representation of the Northern Territory) Bill 2020",
+ "short_title": "Commonwealth Electoral Amendment (Ensuring Fair Representation of the Northern Territory) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-06-11",
+ "originating_house": "senate",
+ "sponsor": "MCCARTHY, Sen Malarndirri",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10855",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1262%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1262%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1262%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1262%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1262_ems_f16045bb-b7cc-4d9c-8acf-962b4b7413fe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1262%22",
+   "document_date": "2020-06-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-11",
+  "sentences": [
+   "This bill would guarantee the Northern Territory at least two seats in the House of Representatives.",
+   "It changes the Commonwealth Electoral Act 1918 to require that two members be chosen for the Territory at each general election, overriding any redistribution that would reduce that number.",
+   "The bill would start the day after it receives royal assent."
+  ],
+  "changes": [
+   "Sets a minimum of two House of Representatives divisions for the Northern Territory.",
+   "Overrides the Electoral Commissioner's determination if it would reduce the Territory's seats below two.",
+   "Creates two new divisions for the Northern Territory when new electoral rolls are prepared."
+  ],
+  "affected": "Voters and residents of the Northern Territory, including Christmas Island and the Cocos Islands.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

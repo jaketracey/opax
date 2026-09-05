@@ -1,0 +1,1101 @@
+{
+ "key": "au-federal-r7181",
+ "title": "National Disability Insurance Scheme Amendment (Getting the NDIS Back on Track No. 1) Bill 2024",
+ "short_title": "National Disability Insurance Scheme Amendment (Getting the NDIS Back on Track No. 1) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-03-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "National Disability Insurance Scheme",
+ "status": "passed",
+ "status_as_of": "2024-09-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7181_ems_f83281ef-0f46-4fbb-a59f-2e19439dcacb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7181_ems_a39bef37-2037-4c26-b15a-4a80e008fa64%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7181_ems_12f5927d-c472-46f9-9029-f0d9153b8ff1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7181_ems_140b4c4b-afe4-4b77-a57c-9ba21236ab51%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7181_ems_a66dcf59-b655-454a-88f1-5a5177bb388e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7181_ems_4a8b3f2f-ce7f-420f-9f30-bf76aee5767e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7181_ems_0633c3c4-02dd-41ff-878d-be8001f47a72%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7181_ems_0b5af9f5-046a-4349-899e-58a245707523%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7181_ems_21fbaa8e-8e22-4c02-8768-dda71f5f3f8c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7181_ems_1b65d685-014d-443c-a2c4-d3e435774716%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7181_ems_8e3ab53e-e70c-45a1-8e6d-8e616eefc656%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7181_ems_b5d7685e-113b-434d-a67f-084419d2109c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7181%22",
+   "document_date": "2024-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00081",
+   "document_date": "2024-09-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2024-03-27",
+  "sentences": [
+   "This bill would change the National Disability Insurance Scheme Act 2013 to overhaul how participants get funding and what supports the scheme pays for.",
+   "It would create a new budget framework for participants' plans, with funding amounts set through legislative instruments and NDIS rules developed in consultation with the disability community and states.",
+   "The bill would also let the Agency change a participant's plan management type and impose shorter funding periods to protect them from exploitation."
+  ],
+  "changes": [
+   "Requires the Agency to give participants a written explanation of why they joined the NDIS.",
+   "Creates a new 'new framework plan' system with budgets based on whether a participant qualifies through disability or early intervention criteria.",
+   "Defines which supports the NDIS will fund and which it will not.",
+   "Allows the CEO to set a total funding amount in a participant's plan, with sub-limits for groups of supports.",
+   "Lets the Agency change plan management type and shorten funding periods to safeguard participants.",
+   "Adds conditions on quality auditors not to employ people subject to a banning order and expands delegation of the Commissioner's enforcement powers."
+  ],
+  "affected": "NDIS participants, the National Disability Insurance Agency, approved quality auditors, and the NDIS Commissioner.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:10:34Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8952",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_5dcdc309-8eb6-4abb-b043-eecd711cc589%22;rec=0) introduced by Deakin MP [Michael Sukkar](https://theyvoteforyou.org.au/people/representatives/deakin/michael_sukkar) (Liberal), which means it failed. The amendments would have changed the text of the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Motion text > *That all words after “That” be omitted with a view to substituting the following words:* > > *“whilst not declining to give the bill a second reading, the House:* > > *(1) notes:* > >> *(a) the NDIS is supporting the lives of more than 660,000 Australians;* >> >> *(b) the Coalition’s strong record of support for the NDIS;* >> >> *(c) the former Labor Government grossly mismanaged the establishment of the scheme, including the federal/state responsibilities;* >> >> *(d) the former Coalition Government recognised the financial pressures facing the NDIS and was committed to working with state and territory governments to address those pressures to ensure the future of the scheme;* >> >> *(e) ahead of the 2022 election, Labor claimed the scheme was sustainable and ran a shameful scaremongering campaign that the NDIS was at risk and plans were to be cut;* >> >> *(f) following the election, the Government finally acknowledged the scheme is unsustainable after opposing the Coalition’s attempts to put the scheme on a sustainable footing;* > > *(2) calls on the Government to:* > >> *(a) release the modelling that underpins the NDIS Financial Stability Framework and the cost savings to be made by this legislation; and* >> >> *(b) provide a detailed outline of the inevitable cuts that participants should expect as a result of these changes”.*",
+   "stage": "Second reading",
+   "ayes": 58,
+   "noes": 82,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 73
+    },
+    "Liberal": {
+     "ayes": 32,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-06-05/1"
+  },
+  {
+   "key": "federal-representatives-8953",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2024-06-05.26.1) introduced by Curtin MP [Kate Chaney](https://theyvoteforyou.org.au/people/representatives/curtin/kate_chaney) (Independent) at the request of Kooyong MP [Monique Ryan](https://theyvoteforyou.org.au/people/representatives/kooyong/monique_ryan) (Independent). This means they were unsuccessful. ### What do these amendments do? On behalf of Dr Ryan, Ms Chaney [explained that](https://www.openaustralia.org.au/debate/?id=2024-06-05.26.1): > *To run through those: in amendment (2), the proposed section 32H creates additional requirements for accessing support, which may include requiring supports provided by a specific person or specific conditions are satisfied. The advocacy groups are concerned that this wording could place an inappropriately broad range of potential constraints on participants' choice and control over their funding and supports, particularly where the discretion to impose those constraints would lie with the NDIA alone. Amendment (2) makes it clear that additional requirements could only be specified where necessary to achieve a specific purpose consistent with the objects of the scheme and where the imposition of that requirement would not be unduly burdensome for a participant.* > > *Amendment (4) relates to consultation on delegated legislation. Under the proposed amendments put by the government, the minister has addressed this. Additional delegated legislation for needs assessment and budget-setting can be created, and this amendment (4) provides greater comfort about to consultation process by requiring the tabling of a consultation statement, which seems reasonable given the level of concern in the sector about the lack of consultation and co-design and the consequences of that. The government must develop the delegated legislation—the NDIS rules—via consultation, co-design and testing, which must include First Nations people with disability; peo",
+   "stage": "Consideration in detail",
+   "ayes": 14,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-06-05/2"
+  },
+  {
+   "key": "federal-senate-9006",
+   "date": "2024-06-27",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2024-06-27.151.2) introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston), which means it passed and a [new inquiry](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Community_Affairs/NDISAmendment24) will be created. > *That the [National Disability Insurance Scheme Amendment (Getting the NDIS Back on Track No. 1) Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7181) be referred to the [Community Affairs Legislation Committee](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Community_Affairs) for further inquiry, including examining any circulated amendments to the bill and the positions of state and territory governments, and report by 5 August 2024.*",
+   "stage": "Reference to Committee",
+   "ayes": 43,
+   "noes": 20,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-06-27/10"
+  },
+  {
+   "key": "federal-senate-9336",
+   "date": "2024-08-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-08-12.16.1) introduced by Queensland Senator [Penny Allman-Payne](https://theyvoteforyou.org.au/people/senate/queensland/penny_allman-payne) (Greens), which means it was unsuccessful. ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Government to ensure that any methods developed as a part of the implementation of the bill must:* > > *(a) include transparency to participants on the inputs, detail of the method, and outputs;* > > *(b) include transparency to participants and the general public on the procedures, calculations and any other workings of the methods; and* > > *(c) be subject to both internal and external appeal by participants\".*",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-12/1"
+  },
+  {
+   "key": "federal-senate-9337",
+   "date": "2024-08-12",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2024-08-12.22.1) introduced by West Australian Senator [Dorinda Cox](https://theyvoteforyou.org.au/people/senate/wa/dorinda_cox) (Greens), which means it failed. ### Motion text > *At the end of the motion, add \", but the Senate calls on the Government to ensure that any decision that may be made by the CEO of the National Disability Insurance Agency, or their delegate, under the bill must:* > > *(a) be approved by a second decision maker within the Agency;* > > *(b) be subject to both internal and external appeal; and* > > *(c) provide transparency around the considerations, reasons and outcomes of the decision\".*",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-12/2"
+  },
+  {
+   "key": "federal-senate-9338",
+   "date": "2024-08-12",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-08-12.25.1) to agree with the main idea of the bill (parliamentary jargon for reading a second time). This means the bill can now be discussed in more detail. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd071): > *The National Disability Insurance Scheme Amendment (Getting the NDIS Back on Track No. 1) Bill 2024 is the first in a proposed series of Bills that amend the National Disability Insurance Scheme Act 2013 in response to the findings and recommendations of the Independent Review into the National Disability Insurance Scheme.* > > *Concerns have been raised in relation to aspects of the National Disability Insurance Scheme (NDIS), including in relation to financial sustainability, fraud and eligibility criteria.* > > *The Government has advised that the NDIS Financial Sustainability Framework agreed by National Cabinet in April 2023 will provide an annual growth target in the total costs of the NDIS of 8 per cent by 1 July 2026, with further moderation of growth as the Scheme matures.* > > *The Bill:* > > * *provides new definitions of disability supports, to clarify the scope of valid supports appropriately funded under the NDIS* > > * *provides for a new assessment process for gaining entry into the NDIS by way of the two eligibility streams of the NDIS—early intervention and disability requirements, or both and* > > * *sets out the manner in which an existing NDIS participant will transition from an old plan to a new plan.* > > *The Senate Community Affairs Legislation Committee is conducting an inquiry into the Bill and is due to report by 20 June 2024.* > > *At the time of writing, the Parliamentary Joint Committee on Human Rights and the Senate Standing Committee for the Scrutiny of Bills had not reported on the Bill.*",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-12/3"
+  },
+  {
+   "key": "federal-senate-9352",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted against amendments on [sheet 2772](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_0b7cc54e-49cb-46a3-9e7f-8394c7600de8%22;rec=0) and [sheet 2777](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_911d6859-e742-440a-87fb-3d8561b4e216%22;rec=0) circulated by the Australian Greens to government amendments (2) and (7) on [sheet SK118 revised](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_a4182f0e-6536-4c70-b880-78088adea270%22;rec=0). The question is that the Australian Greens amendments be agreed to. ### Amendment text **SHEET 2772** > *(1) Amendment (7), item 112A, paragraph 195(b), omit \"(other than financial hardship alone)\".* **SHEET 2777** > *(1) Amendment (2), item 36, subsection 32BA(2), omit \"the categories of impairments under subsection (3) that cover\" (wherever occurring).* > > *(2) Amendment (2), item 36, subsection 32BA(3), omit the subsection.* ### Text of original government amendments (2) and (7) on sheet SK118 revised > *(2) Schedule 1, item 36, page 16 (after line 21), after section 32B, insert:* > >> *32BA Notice of impairments* >> >>> *Giving notice of impairments* >>> >>> *(1) The CEO must give a participant a notice in writing in accordance with subsection (2):* >>> >>>> *(a) as soon as practicable after the participant becomes a participant; or* >>>> >>>> *(b) if a circumstance specified in the National Disability Insurance Scheme rules for the purposes of this paragraph applies in relation to the participant.* >>> >>> *(2) The notice must state:* >>> >>>> *(a) if the participant meets the disability requirements—the categories of impairments under subsection (3) that cover the impairments in relation to which the",
+   "stage": "Committee of the Whole",
+   "ayes": 10,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 8,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/5"
+  },
+  {
+   "key": "federal-senate-9353",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted in favour of government amendments (22) and (24) on [sheet SK120](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_56bab012-55b6-42a6-91e8-6f06a7c6cad7%22;rec=0) and amendments (2), (3), (4), (6), (9) and (11) on [sheet SK118 revised](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_a4182f0e-6536-4c70-b880-78088adea270%22;rec=0). ### What do these amendments do? For more information about these amendments, the government has prepared supplementary explanatory memoranda for both [sheet SK120](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7181_ems_b5d7685e-113b-434d-a67f-084419d2109c%22;rec=0) and [sheet SK118 revised](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7181_ems_8e3ab53e-e70c-45a1-8e6d-8e616eefc656%22;rec=0).",
+   "stage": "Committee of the While",
+   "ayes": 33,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 8,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/6"
+  },
+  {
+   "key": "federal-senate-9354",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted against amendments on [sheet 2838](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_094e4841-f628-4dd7-b075-57a009342c75%22;rec=0) and [sheet 2839 revised](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_cd041d39-8fa9-492d-8553-2fa500835e23%22;rec=0) to opposition amendments (1), (5) and (6) on [sheet 2651](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_b90e4ab4-9de7-45be-8a75-52feafc59244%22;rec=0). There amendments were introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent). ### Amendment text **SHEET 2838** > *(1) Amendment (1), item 63, subparagraph 43(2AA)(a)(i), omit \"2 years\", substitute \"5 years\".* > > *(2) Amendment (1), item 63, subparagraph 43(2AA)(b)(i), omit \"2 years\", substitute \"5 years\".* > > *(3) Amendment (5), item 67A, subparagraph 44(1)(aa)(i), omit \"2 years\", substitute \"5 years\".* > > *(4) Amendment (6), item 69A, subparagraph 44(2A)(aa)(i), omit \"2 years\", substitute \"5 years\".* **SHEET 2839 revised** > *(1) Amendment (1), item 63, subparagraph 43(2AA), omit \"must\", substitute \"may\".* ### Original opposition amendment (1), (5) and (6) text > *(1) Schedule 1, item 63, page 39 (after line 16), after subsection 43(2A), insert:* > >> *(2AA) The statement of participant supports for a new framework plan must provide for the funding for supports under the plan to be wholly managed by the Agency if:* >> >>> *(a) in the case the participant has made a plan management request covered by paragraph (1)(a) and the participant does not have a plan nominee—the participant has been convicted of an offence against a law of the Commonwealth, a State or a Ter",
+   "stage": "Committee of the Whole",
+   "ayes": 13,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 8,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/7"
+  },
+  {
+   "key": "federal-senate-9355",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "National Disability Insurance Scheme Amendment (Getting the NDIS Back on Track No. 1) Bill 2024 - Committee of the Whole - NDIS supports and persons managing funding under plans",
+   "stage": "Committee of the Whole",
+   "ayes": 31,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/8"
+  },
+  {
+   "key": "federal-senate-9356",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "National Disability Insurance Scheme Amendment (Getting the NDIS Back on Track No. 1) Bill 2024 - Committee of the Whole - Means-tested support and sex worker services",
+   "stage": "Committee of the Whole",
+   "ayes": 2,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/9"
+  },
+  {
+   "key": "federal-senate-9357",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_ec171531-08b5-4949-b634-fc77940c0fb4%22;rec=0) circulated by the Jacqui Lambie Network, which means they will not be included in the bill. ### Amendment text > *(1) Schedule 1, item 13, page 5 (after line 27), after the definition of total funding amount, insert:* > >> *veteran has the same meaning as in the Australian Veterans' Recognition (Putting Veterans and Their Families First) Act 2019.* > > *(2) Schedule 1, page 55 (after line 12), after item 105, insert:* > >> *105C At the end of section 127* >> >>> *Add:* >>> >>> *Appointment of Board members other than Chair — veterans that have lived experience with disability* >>> >>> *(8) In appointing Board members other than the Chair, the Minister must also ensure that at least one Board member other than the Chair is a veteran that has lived experience with disability (whether or not the Chair is a veteran that has lived experience with disability).* >> >> *105D After subsection 129(5) (before the note)* >> >>> *Insert:* >>> >>> *(7) In appointing a person under subsection (2) to act as a Board member other than the Chair, the Minister must ensure that at least one Board member other than the Chair is a veteran that has lived experience with disability (whether or not the Chair is a veteran that has lived experience with disability).* > > *(3) Schedule 1, page 63 (after line 27), after item 137, insert:* > >> *137B Appointment of veterans that have lived experience with disability to the Board of the Agency* >> >>> *(1) Subsection 127(8) of the National Disability Insurance Scheme Act 2013, as in force on and after the commencement of this Schedule, applies in relation to an appointment made under subsection 127(1) of that Act on or after that commencement.* >>> >>> *(2) Subsection 129(7) of the National Disability Insurance",
+   "stage": "Committee of the Whole",
+   "ayes": 13,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/10"
+  },
+  {
+   "key": "federal-senate-9358",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_b0a9b3b8-a1ee-43a1-98e5-2f42a92e31db%22;rec=0) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they failed and will not be integrated into the bill. ### Amendment text > *(1) Schedule 1, item 26, page 10 (line 7), at the end of subsection 28(2), add:* > >> *; and (c) the impairments in respect of which the participant meets the disability requirements or the early intervention requirements (as the case requires).* > > *(1A) Schedule 1, item 31, page 13 (after line 29), after subsection 30A(5A), insert:* > >> *(5B) The Agency must pay the participant an amount equal to any cost paid by the participant for an assessment or examination mentioned in subsection (5).* > > *(2) Schedule 1, item 31, page 14 (line 11), omit \"the CEO must\", substitute \"the CEO may\".* > > *(3) Schedule 1, item 36, page 18 (after line 5), after paragraph 32D(2)(c), insert:* > >> *(ca) the impairments in respect of which the participant meets the disability requirements or the early intervention requirements (as the case requires); and* > > *(4) Schedule 1, item 36, page 23 (lines 14 to 15), omit paragraph 32F(7)(b), substitute:* > >> *(b) there has been significant, intentional or repeated non-compliance with section 46 (acquittal of NDIS amounts) in relation to the plan or any of the participant's previous plans;* > > *(5) Schedule 1, item 36, page 25 (after line 14), after subsection 32H(1), insert:* > >> *(1A) However, such a requirement may only be specified if:* >> >>> *(a) the requirement is reasonably necessary to achieve a specific purpose consistent with the objects of the National Disability Insurance Scheme; and* >>> >>> *(b) to do so would not be unduly burdensome for the participant, after considering:* >>> >>>",
+   "stage": "Committee of the Whole",
+   "ayes": 13,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/11"
+  },
+  {
+   "key": "federal-senate-9359",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_43e66e60-861a-4f2b-9c28-4016d57d0a0a%22;rec=0) introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent), which means they will now be included as part of the bill. ### Amendment text > *(1) Schedule 1, item 4, page 4 (after line 7), after the definition of funding period, insert:* > >> *Indigenous person means a person who is:* >> >>> *(a) a member of the Aboriginal race of Australia; or* >>> >>> *(b) a descendant of an Indigenous inhabitant of the Torres Strait Islands.* > > *(2) Schedule 1, page 55 (after line 12), after item 105, insert:* > >> *105A At the end of section 127* >> >>> *Add:* >>> >>>> *Appointment of Board members other than Chair — Indigenous Persons* >>>> >>>> *(7) In appointing Board members other than the Chair, the Minister must also ensure that at least one Board member other than the Chair is an Indigenous person (whether or not the Chair is an Indigenous person).* >> >> *105B After subsection 129(5) (before the note)* >> >>> *Insert:* >>> >>>> *(6) In appointing a person under subsection (2) to act as a Board member other than the Chair, the Minister must ensure that at least one Board member other than the Chair is an Indigenous person (whether or not the Chair is an Indigenous person).* > > *(3) Schedule 1, page 63 (after line 27), after item 137, insert:* > >> *137A Appointment of Indigenous persons to the Board of the Agency* >> >>> *(1) Subsection 127(7) of the National Disability Insurance Scheme Act 2013, as in force on and after the commencement of this Schedule, applies in relation to an appointment made under subsection 127(1) of that Act on or after that commencement.* >>> >>> *(2) Subsection 129(6) of the National Disability Insurance Scheme Act 2013, as in force o",
+   "stage": "Committee of the Whole",
+   "ayes": 34,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/12"
+  },
+  {
+   "key": "federal-senate-9360",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted against the amendments on sheets [2670](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_76c2bda9-5532-46dc-b30c-ec61ceac40b6%22;rec=0), [2672](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_a4fd8750-8051-43a7-8a83-01ca3ba1e90c%22;rec=0), [2673](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_8bf13205-d057-468a-af00-58c832a64420%22;rec=0), [2674](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_6b58e3b4-47e1-43c8-a3c5-07cb336cd231%22;rec=0) and [2771](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_8cca090c-96b5-4158-8422-a659ff7a3bbd%22;rec=0), which were introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent).",
+   "stage": "Committee of the Whole",
+   "ayes": 11,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/13"
+  },
+  {
+   "key": "federal-senate-9361",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted in favour of a motion \"*that, in schedule 1, items 3, 19, 20, 47 and 124, and section 32H in item 36, stand as printed, and item 14 of schedule 1 stand as amended\"*. In other words, they voted to keep those items unchanged. This motion was put after the Greens Party introduced amendment sheets [2733](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_24af88b3-a445-4b72-8294-4a614362f6e1%22;rec=0) and [2734](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_a56aa07f-b4e2-409b-9545-480b13def2f7%22;rec=0) which proposed that those items be opposed.",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 5,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/14"
+  },
+  {
+   "key": "federal-senate-9362",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted against the remaining Greens Party amendments on sheets [2733](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_24af88b3-a445-4b72-8294-4a614362f6e1%22;rec=0) and [2734](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_a56aa07f-b4e2-409b-9545-480b13def2f7%22;rec=0) and the amendments on sheets [2735](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_0ab27fb4-a453-4d36-9094-eb17abbd347f%22;rec=0), [2736](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_6e5527f4-6183-4d8a-a6ca-b33b54dc591e%22;rec=0), [2737](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_d22bc3b4-63bb-4055-bcae-1c0bf5d1fbd6%22;rec=0), [2738](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_d3d3ad9d-7f76-40b0-a140-40171f16f892%22;rec=0) and [2739](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7181_amend_c9e267bc-3e16-4909-a2b7-1bf1361dc57f%22;rec=0). This means they have been unsuccessful and will not be included in the bill.",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 5,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/15"
+  },
+  {
+   "key": "federal-senate-9363",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2024-08-22.53.1) \"*that the remaining stages of the bill be agreed to and the bill be now passed*\" (parliamentary jargon for reading a third time). This means the bill will now be sent back to the House of Representatives where our MPs will decide on whether they agree with the Senate amendments. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd071): > *The National Disability Insurance Scheme Amendment (Getting the NDIS Back on Track No. 1) Bill 2024 is the first in a proposed series of Bills that amend the National Disability Insurance Scheme Act 2013 in response to the findings and recommendations of the Independent Review into the National Disability Insurance Scheme.* > > *Concerns have been raised in relation to aspects of the National Disability Insurance Scheme (NDIS), including in relation to financial sustainability, fraud and eligibility criteria.* > > *The Government has advised that the NDIS Financial Sustainability Framework agreed by National Cabinet in April 2023 will provide an annual growth target in the total costs of the NDIS of 8 per cent by 1 July 2026, with further moderation of growth as the Scheme matures.* > > *The Bill:* > > * *provides new definitions of disability supports, to clarify the scope of valid supports appropriately funded under the NDIS* > > * *provides for a new assessment process for gaining entry into the NDIS by way of the two eligibility streams of the NDIS—early intervention and disability requirements, or both and* > > * *sets out the manner in which an existing NDIS participant will transition from an old plan to a new plan.* > > *The Senate Community Affairs Legislation Committee is conducting an inquiry into the Bill and is due to report by 20 June 2024.* > > *At the time of writing, the Parliamentary Joint Committee on Human Rights and",
+   "stage": "Third reading",
+   "ayes": 39,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/16"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "National Disability Insurance Scheme Amendment (Getting the NDIS Back on Track No. 1) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00081",
+   "assent_date": "2024-09-05"
+  }
+ ]
+}

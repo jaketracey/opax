@@ -1,0 +1,229 @@
+{
+ "key": "au-federal-r5369",
+ "title": "Australian War Memorial Amendment Bill 2014",
+ "short_title": "Australian War Memorial Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans’ Affairs",
+ "status": "passed",
+ "status_as_of": "2014-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5369_ems_ede2b23e-e643-4bbd-b7b4-50d0cf23c3f2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5369%22",
+   "document_date": "2014-10-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00128",
+   "document_date": "2014-12-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-302322",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302329",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302947",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302948",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302949",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302950",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302951",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302952",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302955",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302956",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian War Memorial Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00128",
+   "assent_date": "2014-12-04"
+  }
+ ]
+}

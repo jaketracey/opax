@@ -1,0 +1,150 @@
+{
+ "key": "au-federal-r7317",
+ "title": "Telecommunications Amendment (Enhancing Consumer Safeguards) Bill 2025",
+ "short_title": "Telecommunications Amendment (Enhancing Consumer Safeguards) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-02-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications and the Arts",
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7317%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7317%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7317%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7317%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7317%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7317%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7317%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7317_ems_02585d46-6c0f-44f9-ae8a-7b2eed33412d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/10219563%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7317%22",
+   "document_date": "2025-02-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2025-02-12",
+  "sentences": [
+   "The bill would create a registration system for phone and internet providers and increase penalties for breaking consumer rules.",
+   "Providers would have to follow industry codes, and the minister could raise the maximum fines the communications regulator can issue.",
+   "The bill would amend the Telecommunications Act 1997, but the digest does not specify when the changes would start."
+  ],
+  "changes": [
+   "Create a registration system for carriage service providers.",
+   "Require providers to comply with industry codes.",
+   "Increase pecuniary penalties for breaches.",
+   "Expand the minister's authority to increase infringement notice penalties the ACMA can issue."
+  ],
+  "affected": "Phone and internet providers (carriage service providers) and the Australian Communications and Media Authority (ACMA).",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1194387",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194858",
+   "speaker": "Melissa McIntosh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194912",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195009",
+   "speaker": "Tania Lawrence",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-03-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195052",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-03-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

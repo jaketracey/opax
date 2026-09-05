@@ -1,0 +1,97 @@
+{
+ "key": "au-federal-s1147",
+ "title": "Discrimination Free Schools Bill 2018",
+ "short_title": "Discrimination Free Schools Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2018-10-16",
+ "originating_house": "senate",
+ "sponsor": "DI NATALE, Sen Richard",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10755",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1147%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1147%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1147%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1147%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1147%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1147%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1147%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1147_ems_56495903-a153-48b7-a04b-14013a24979c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1147%22",
+   "document_date": "2018-10-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-10-16",
+  "sentences": [
+   "The bill would stop religious schools from being allowed to turn away students or fire teachers because of their sexual orientation or gender identity.",
+   "It does this by deleting the current exemption in the Sex Discrimination Act 1984 that lets religious educational institutions discriminate on these grounds, and also amends the Fair Work Act 2009 to remove the same exemption for employment.",
+   "The main changes would start the day after the bill receives royal assent."
+  ],
+  "changes": [
+   "Removes the exemption for religious educational institutions to discriminate against students and staff based on sexual orientation, gender identity, marital status or pregnancy.",
+   "Amends the Fair Work Act 2009 so that religious exemptions from anti-discrimination rules no longer apply to educational institutions.",
+   "Inserts a definition of 'educational institution' into the Fair Work Act 2009 as a school, college, university or other place where education or training is provided."
+  ],
+  "affected": "Religious schools and other educational institutions, their students, and their employees including teachers, support workers, administrators and contract workers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:09Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

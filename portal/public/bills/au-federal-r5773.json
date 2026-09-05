@@ -1,0 +1,84 @@
+{
+ "key": "au-federal-r5773",
+ "title": "Australian Meat and Live-stock Industry (Amendment) (Tagging Live-stock) Bill 2016",
+ "short_title": "Australian Meat and Live-stock Industry (Amendment) (Tagging Live-stock) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-28",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "&#34;Independent Members&#34;",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2017-08-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5773%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5773%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5773%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5773_ems_7cf07d29-f031-4904-9897-edb7b82347fb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5773%22",
+   "document_date": "2016-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-28",
+  "sentences": [
+   "The bill would require all live animals shipped from Australia to carry an electronic tag.",
+   "Tag data would be recorded at every step of the export process, extending existing rules for cattle to sheep and other livestock.",
+   "The bill responds to public concerns about animal welfare and industry worries about the trade's long-term viability."
+  ],
+  "changes": [
+   "Requires electronic tagging of all exported livestock.",
+   "Extends mandatory tagging from cattle to sheep and other animals.",
+   "Makes current tagging requirements part of legislation.",
+   "Improves traceability and transparency in the live export supply chain."
+  ],
+  "affected": "Exporters, producers, and the live export industry.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:27Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-338740",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The Australian Meat and Live-stock Industry (Amendment) (Tagging Live-stock) Bill 2016 was moved, requiring all exported livestock to be fitted with electronic identification tags and data recorded at each stage of the export process, including after leaving Australia, to address failures in the ESCAS system and enable traceability and accountability for animal mistreatment."
+  }
+ ],
+ "acts": []
+}

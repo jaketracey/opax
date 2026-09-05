@@ -1,0 +1,133 @@
+{
+ "key": "au-federal-s1420",
+ "title": "Truth and Justice Commission Bill 2024",
+ "short_title": "Truth and Justice Commission Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-07-02",
+ "originating_house": "senate",
+ "sponsor": "COX, Sen Dorinda",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10964",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1420%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1420%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1420%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1420_ems_0a85e681-fc9b-4252-ad6b-513942b3f1fc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1420%22",
+   "document_date": "2024-07-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-07-02",
+  "sentences": [
+   "This bill would create a commission to investigate past and current wrongs against Indigenous Australians and report its findings to Parliament.",
+   "The commission would be made up of one member from each state and territory plus two chief commissioners, appointed jointly by the Attorney-General and the Indigenous Affairs Minister.",
+   "Most members would need to be Indigenous, and the commission must report within four years of the bill starting, unless the Senate extends that deadline."
+  ],
+  "changes": [
+   "Establishes a Truth and Justice Commission to examine injustices against First Peoples.",
+   "Requires the commission to report to Parliament with findings and recommendations within four years.",
+   "Sets appointment rules including a two-year term, a maximum of two consecutive terms, and a requirement that a majority of members be First Nations people."
+  ],
+  "affected": "First Peoples in Australia, the Commonwealth government, and non-government bodies that may have caused injustices.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:28:54Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9476",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2024-07-04.41.2) introduced by West Australian Senator [Dorinda Cox](https://theyvoteforyou.org.au/people/senate/wa/dorinda_cox) (Greens), which means it succeeded. ### Motion text > *That the Truth and Justice Commission Bill 2024 be referred to the Joint Standing Committee on Aboriginal and Torres Strait Islander Affairs [for inquiry and report by 11 February 2025](https://www.aph.gov.au/Parliamentary_Business/Committees/Joint/Aboriginal_and_Torres_Strait_Islander_Affairs/TruthandJusticeBill24).*",
+   "stage": "Reference to Committee",
+   "ayes": 32,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/7"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

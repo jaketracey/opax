@@ -1,0 +1,187 @@
+{
+ "key": "au-federal-r5329",
+ "title": "Tax and Superannuation Laws Amendment (2014 Measures No. 5) Bill 2014",
+ "short_title": "Tax and Superannuation Laws Amendment (2014 Measures No. 5) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-09-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-03-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5329%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5329%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5329%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5329%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5329%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5329%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5329%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5329%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5329%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5329%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5329%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5329%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5329%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5329%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5329_ems_6fd64fc9-98a1-458d-b565-d55801e7b80d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5329%22",
+   "document_date": "2014-09-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00020",
+   "document_date": "2015-03-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-297869",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297904",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297913",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297921",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298083",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298084",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax and Superannuation Laws Amendment (2014 Measures No. 5) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00020",
+   "assent_date": "2015-03-19"
+  }
+ ]
+}

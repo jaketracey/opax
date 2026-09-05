@@ -1,0 +1,152 @@
+{
+ "key": "au-federal-r7485",
+ "title": "Appropriation Bill (No. 5) 2025-2026",
+ "short_title": "Appropriation Bill (No. 5) 2025-2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-05-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2026-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7485%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7485%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7485%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7485%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7485%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7485%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7485_ems_1c028859-f0fd-4bb7-83d4-be32982af5fe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7485%22",
+   "document_date": "2026-05-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00051",
+   "document_date": "2026-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-05-12",
+  "sentences": [
+   "This bill would authorise extra spending from the Consolidated Revenue Fund for the government's everyday running costs.",
+   "It is one of two bills that together provide the additional annual appropriations needed for decisions made after the 2025-26 Mid-Year Economic and Fiscal Outlook.",
+   "The bill does not specify the total amount of money it would appropriate or the portfolios it would fund."
+  ],
+  "changes": [
+   "Proposes appropriations from the Consolidated Revenue Fund for ordinary annual services.",
+   "Forms part of the 2025-26 Supplementary Additional Estimates Appropriation Bills alongside the Appropriation Bill (No. 6) 2025-2026.",
+   "Provides funding for government decisions made after the 2025-26 Mid-Year Economic and Fiscal Outlook."
+  ],
+  "affected": "The government and its agencies that receive funding for ordinary annual services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1202645",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203688",
+   "speaker": "Tim Ayres",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-22",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 5) 2025-2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00051",
+   "assent_date": "2026-06-26"
+  }
+ ]
+}

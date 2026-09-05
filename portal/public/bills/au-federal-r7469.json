@@ -1,0 +1,224 @@
+{
+ "key": "au-federal-r7469",
+ "title": "Aviation Consumer Protection Bill 2026",
+ "short_title": "Aviation Consumer Protection Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-04-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+ "status": "before_parliament",
+ "status_as_of": "2026-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7469%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-06-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7469%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7469%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7469_ems_4aa6ad73-00ce-453b-9e1e-c8694b295813%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7469%22",
+   "document_date": "2026-04-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-04-01",
+  "sentences": [
+   "This bill is part of a package that would create a new Aviation Consumer Protection Framework to improve the flying experience for passengers.",
+   "The framework would let the minister set minimum standards for airline and airport services, and would set up a new regulator called the Aviation Consumer Protection Authority to oversee compliance and enforce those standards.",
+   "An independent Aviation Consumer Ombuds Scheme would handle aviation-specific complaints, and the bill would also establish an Aircraft Noise Ombudsperson within the department to review noise complaint handling by Airservices Australia and the Department of Defence."
+  ],
+  "changes": [
+   "Establishes the Aviation Consumer Protection Framework.",
+   "Enables the minister to issue an Aviation Consumer Protections Charter with minimum service standards.",
+   "Creates the Aviation Consumer Protection Authority for monitoring, compliance and enforcement.",
+   "Authorises an external dispute resolution scheme, the Aviation Consumer Ombuds Scheme, overseen by the Aviation Consumer Ombudsperson.",
+   "Establishes the Aircraft Noise Ombudsperson to review how Airservices Australia and the Department of Defence handle noise complaints."
+  ],
+  "affected": "Aviation consumers, airlines, airport operators, Airservices Australia, and the Department of Defence.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:21Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10623",
+   "date": "2026-06-29",
+   "house": "representatives",
+   "question": "Lisa Chesters The original question was that this bill be now read a second time. To this the honourable member for Riverina moved as an amendment that all words after 'That' be omitted with a view to substituting other words. The honourable member for Kooyong has moved as an amendment to the amendment that all words after 'notes that' be omitted with a view to substituting other words. The honourable member for Ryan has now moved a further amendment. The question now is that the amendment moved by the honourable member for Ryan be agreed to. Rowan Holzberger I rise to support the Aviation Consumer Protection Bill 2026 and the other bills. I definitely want to start by saying that the Minister for Infrastructure, Transport, Regional Development and Local Government has really done a quite a remarkable job over the last few years dealing with what is one of the biggest challenges in the Australian economy, which is our aviation industry. Of course, aviation sits well and truly as one of those essential services where we see a lot of the challenges exist, because they have been unintended consequences of what I like to talk about in this place every opportunity I get. Privatisation, economic rationalism and unfettered free trade have seen an essential service like our aviation industry really face challenges over and above what you would otherwise expect. I think that at the heart of this there is actually an argument for long-term Labor governments, because Labor governments are the ones that are prepared to make the reforms. While it was the Hawke-Keating government that privatised Qantas, there was also an approach by Keating in 1995 where he talked about ameliorating some of the unintended consequences of that agenda. As part of preparation for today's speech, I was going through some things that Keating had said about it. When he was talking about it at the time, it was a policy called Working Nation, which was really about rebalancing the role of government at t",
+   "stage": "Second reading",
+   "ayes": 47,
+   "noes": 86,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 85
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-29/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1202357",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202358",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202359",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204004",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204053",
+   "speaker": "Sam Birrell",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204142",
+   "speaker": "Claire Clutterham",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204186",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204455",
+   "speaker": "Jenny McAllister",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

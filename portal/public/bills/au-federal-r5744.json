@@ -1,0 +1,744 @@
+{
+ "key": "au-federal-r5744",
+ "title": "VET Student Loans Bill 2016",
+ "short_title": "VET Student Loans Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2016-12-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5744_ems_63b04702-228c-47d8-b44a-eb26744181e9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5744_ems_385678e4-e581-4c6d-89d9-b3be02dd83b2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5744_ems_58feeff4-330c-4202-a5b0-22ca14b581a1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5744%22",
+   "document_date": "2016-10-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00098",
+   "document_date": "2016-12-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-13",
+  "sentences": [
+   "The bill would replace the current VET FEE-HELP loan scheme with a new student loan program for vocational education and training starting on 1 January 2017.",
+   "Under the new program, the Commonwealth would approve student loans only for eligible students in approved courses, and providers would face stricter entry requirements, including a ban on using intermediaries to recruit students for loans.",
+   "Initial loan caps would be set at $5,000, $10,000, and $15,000, with the Minister able to exempt courses with high delivery costs."
+  ],
+  "changes": [
+   "The bill would introduce loan caps for eligible courses.",
+   "The bill would strengthen compliance and governance by allowing the Commonwealth to suspend providers immediately in urgent cases and withhold payments to non-compliant providers.",
+   "The bill would ban brokers or agents from recruiting students for loans and require student consent before providers can contact them about loan availability.",
+   "The bill would require all existing VET FEE-HELP providers to re-apply for approval under the new program, with some exemptions for certain bodies like TAFEs.",
+   "The bill would impose an application fee for providers and an annual levy through the accompanying Charges Bill.",
+   "The bill would require students to log in periodically to confirm active enrolment from 1 July 2017."
+  ],
+  "affected": "Students, vocational education and training providers, and the Commonwealth are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:11Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4370",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](http://www.openaustralia.org.au/debate/?id=2016-10-18.8.3) to the motion \"*That this bill be now read a [second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html)*\", which means it was rejected. This motion was to condemn the Government's handling of the [VET](https://en.wikipedia.org/wiki/Vocational_education) FEE-HELP scheme. ### Some more context This motion was introduced during a debate about three bills. Together, the bills [replace the VET FEE-HELP loan scheme](http://www.abc.net.au/triplej/programs/hack/crackdown-on-private-college-loans/7902640). These changes include: * limiting student loans to eligible students for approved courses; * introducing stronger eligibility requirements; * banning providers from using brokers or agents to interact or engage with students in relation to the loans; and * introducing civil penalties, infringement notices, enforceable undertakings and injunctions. Read more on the [Department of Education & Training](https://www.education.gov.au/vet-fee-help-reforms) website. ### Motion text > *That all the words after “That” be omitted with a view to substituting the following words:* > *“whilst not declining to give the bill a second reading, the House condemns the Government’s failure to properly administer the VET FEE-HELP scheme, leaving taxpayers and students to deal with the consequences of their mismanagement.”*",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-19/5"
+  },
+  {
+   "key": "federal-representatives-4371",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](http://www.openaustralia.org.au/debate/?id=2016-10-19.108.2) to the bill that were introduced by Labor MP [Kate Ellis](https://theyvoteforyou.org.au/people/representatives/adelaide/kate_ellis), which means they were unsuccessful. ### What are these bills all about? These three bills [replace the VET FEE-HELP loan scheme](http://www.abc.net.au/triplej/programs/hack/crackdown-on-private-college-loans/7902640). These changes include: * limiting student loans to eligible students for approved courses; * introducing stronger eligibility requirements; * banning providers from using brokers or agents to interact or engage with students in relation to the loans; and * introducing civil penalties, infringement notices, enforceable undertakings and injunctions. Read more on the [Department of Education & Training](https://www.education.gov.au/vet-fee-help-reforms) website. ### What were the amendments? The amendments would introduce a [VET](https://en.wikipedia.org/wiki/Vocational_education) Student Loans [Ombudsman](https://en.wikipedia.org/wiki/Ombudsman). The Coalition Government voted against the amendment but Liberal MP [Karen Andrews](https://theyvoteforyou.org.au/people/representatives/mcpherson/karen_andrews) said [in her contribution](http://www.openaustralia.org.au/debate/?id=2016-10-19.109.1): > *As I noted in my second reading speech on this bill, the government intends to establish an ombudsman. This will increase student protections and provide a further avenue for dispute resolution. I note that Labor never provided an ombudsman when it established or expanded the VET FEE-HELP scheme. Stakeholders have raised a number of different models for an ombudsman, which the government is currently considering. So, whilst it supports the principle of an ombudsman, it will not support the opposition's amendment.* ### Amendment text See the text of these amendments on [OpenAustralia](http://www.openaustralia.org.au/debate/?id=2016-10",
+   "stage": "Consideration in detail",
+   "ayes": 70,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-19/6"
+  },
+  {
+   "key": "federal-senate-4464",
+   "date": "2016-11-30",
+   "house": "senate",
+   "question": "Sarah Hanson-Young In respect of the VET Student Loans (Consequential Amendments and Transitional Provisions) Bill 2016, I move the Australian Greens amendment (1) on sheet 7971: (1) Schedule 1, page 8 (after line 16), after item 20, insert: 20A After subclause 46A(1) of Schedule 1A Insert: (1A) The \\*Secretary must also re-credit a person's \\*FEE-HELP balance with an amount equal to the amounts of \\*VET FEE-HELP assistance that the person received for a \\*VET unit of study if, as a result of information provided to the Secretary without the person applying for the re-credit, the Secretary is satisfied of the matters in subclause (1) (other than paragraphs (1) (d) to (f)). (1B) Before making a decision under subclause (1A), the \\*Secretary must give the person and the \\*VET provider a notice in writing in accordance with subclause (3). (1C) In deciding whether to make the decision under subclause (1A), the \\*Secretary must consider any submission received from the person, and from the \\*VET provider, within the 28 day period given for the person and the VET provider to provide submissions. (1D) The \\*Secretary must give written notice of a decision under subclause (1A) to the person and the \\*VET provider. The notice must be given within 28 days after the day the decision was made. There are a number of amendments that have been circulated. I have circulated an amendment that goes directly to the heart of this issue. We know that the system we are reforming with this bill is one that has been rorted, abused and exploited by those who have wished to make a lot of money and a private buck off the goodwill of vulnerable students and the willingness of this place, the parliament, to offer support to students who desperately want to get qualifications. I said right at the outset of my speech in the second reading debate that a number of the Australian Greens, along with a number of other voices, warned at the time that if this sector was to be so deregulated people would",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 37,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-30/13"
+  },
+  {
+   "key": "federal-senate-4465",
+   "date": "2016-11-30",
+   "house": "senate",
+   "question": "Simon Birmingham by leave—I move government amendments (1) to (25) on sheet GX140 together: (1) Clause 6, page 4 (before line 3), before the definition of _approved course provider_, insert: _approved course_: see section 13. (2) Clause 6, page 4 (after line 3), after the definition of _approved course provider_, insert: _approved external dispute resolution scheme_: see section 42B. _approved external dispute resolution scheme operator_: see paragraph 42B(c). (3) Clause 6, page 6 (after line 12), after the definition of _officer of an approved course provider_, insert: _officer of an approved external dispute resolution scheme operator_ means: (a) an officer or employee of an approved external dispute resolution scheme operator; or (b) a person who performs services for or on behalf of an approved external dispute resolution scheme operator. (4) Clause 6, page 6 (after line 14), after the definition of _officer of a Tertiary Admission Centre_, insert: _officer of a tuition assurance scheme operator_ means: (a) an officer or employee of a tuition assurance scheme operator; or (b) a person who performs services for or on behalf of a tuition assurance scheme operator. (5) Clause 6, page 8 (line 8), at the end of the definition of _VET officer_, add: ; (e) an officer of an approved external dispute resolution scheme operator. (6) Clause 15, page 12 (line 26), omit \"accredited\", substitute \"registered\". (7) Clause 17, page 14 (line 22), omit \"request the student to\". (8) Clause 17, page 14 (line 23), before \"provide\", insert \"request the student to\". (9) Clause 17, page 14 (line 25), omit \"may\". (10) Clause 25, page 21 (line 19), at the end of subclause (2), add: ; and (h) be a member of an approved external dispute resolution scheme. (11) Clause 25, page 21 (lines 20 to 22), omit all the words from and including \"the\" to the end of subclause (3), substitute: either or both of the following: (a) the requirement in paragraph (2) (g) to be a party to an approved tuition a",
+   "stage": "In committee",
+   "ayes": 4,
+   "noes": 50,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 32,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-30/14"
+  },
+  {
+   "key": "federal-representatives-4470",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "question": "Karen Andrews I move: That the requested amendments be not made. Kate Ellis I move: That all words after \"That\" be omitted with a view to substituting the following words: \"the House calls on the government to recommend an appropriation from the Governor-General consistent with the request from the Senate.\" Last night, the Senate made perfectly clear that they agree with Labor that it is time to stand up and protect our TAFE system. Today, the government has the opportunity, belatedly, to get on board. This is too important for us to ignore. What we know is that the measures within this bill will rip $7 billion out of our vocational education sector. That is something that the government agrees with, that the government states. But what they have not done is said in any way that they will help to protect quality providers, that they will stand up for the not-for-profits who will be hit hard and, most importantly, how they will ensure that this does not have a further and a devastating impact on our TAFE sector. We know that TAFE is the backbone of our system and that TAFE, along with the innocent students, has suffered the most in recent years from Liberal cuts and mismanagement at both the federal and state level. Today, Labor stands here and says enough is enough. Last night in the Senate the crossbench stood with us and said enough is enough. Because the truth is that a new national partnership is due at the end of next June in order to outline how TAFE will be supported—how the government will ensure that they do not have to cut more courses, lose more teachers, close more classes and campuses. But this government is not even committing to putting a new national partnership in place. In fact, just a couple of weeks ago the assistant minister, when asked about it, said, 'Well, if you want more money, you better go and speak to the Treasurer.' Well, no, Assistant Minister, that is actually your job. Your job is to go and speak to the Treasurer and make sure that t",
+   "stage": "Consideration of Senate message",
+   "ayes": 76,
+   "noes": 72,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-12-01/5"
+  },
+  {
+   "key": "federal-representatives-4471",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "question": "Tony Smith The original question was that the requested amendments be not made. To this the honourable member for Adelaide has moved as an amendment: That all the words after \"That\" be omitted with a view to substituting the following words: \"the House calls on the Government to recommend an appropriation from the Governor-General consistent with the request from the Senate\". The question now is that that amendment be agreed to. Anne Aly As someone who has worked in the vocational education and training sector— Tony Smith The member for Cowan will resume her seat. The Leader of the House? Christopher Pyne I move: That the question be now put. _A division having been called and the bells being rung—_ Dr Aly interjecting— Tony Smith The member for Cowan does not have the call. No-one can hear you. Resume your seat. There is a division. An opposition member interjecting— Whoever that was, I can remind you that there is still 30 seconds to be ejected under 94(a). The question is that the question be now put.",
+   "stage": "Consideration of Senate message",
+   "ayes": 76,
+   "noes": 73,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 147
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-12-01/6"
+  },
+  {
+   "key": "federal-representatives-4472",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "question": "Tony Smith The question now is that the amendment be agreed to. All those of that opinion say 'Aye'— Honourable members: Aye. To the contrary 'No'—to the contrary 'No'? Honourable members interjecting— Okay. I think the ayes have it. The noes have it? Opposition members interjecting— Members on my left will cease interjecting. I am going to put the question again. Mr Burke interjecting— No, no, I am sorry; I am entitled to put the question when there is confusion. The Manager of Opposition Business knows that. Honourable members interjecting— I am putting the question again. The original— Tony Burke Mr Speaker, on a point of order: you gave the division—you called the division. You announced it. You asked, 'All those against?' Not one member of the House voted no. Tony Smith No. Tony Burke You paused and then called it in favour of the ayes, and not one member of the House objected to that call. That does not constitute confusion. Tony Smith I am going to address this matter. Where there is confusion my intention is to put the question again. We have had this happen before. The Manager of Opposition Business has made his point. I did not restate the entire question. I did when the bells rang, but I did not restate the question. Mr Snowdon interjecting— The member for Lingiari is not going to sigh and moan in the chamber. He can do it in his office. Let me warn the member for Lingiari now: if he is going to sigh and moan when I am addressing the House he might as well just go back to his office, because I will cause more of it. I did not state the full question. Manager of Opposition Business, you have made your point, but I did not state the full question. You can spend a lot of time on this, and I appreciate you might want to— Tony Burke Yep! Tony Smith I think that is a very apt confession at Christmas time. I am now going to state the amendment and what the amendment was. I am going to then call and see whether a division is required. The original question was th",
+   "stage": "Consideration of Senate message",
+   "ayes": 72,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-12-01/7"
+  },
+  {
+   "key": "federal-representatives-4473",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "question": "Tony Smith The question is that the requested amendments be not made.",
+   "stage": "Consideration of Senate message",
+   "ayes": 76,
+   "noes": 72,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-12-01/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-335108",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The bill ends the VET FEE-HELP scheme, establishes transition arrangements for current students and providers, and makes consequential amendments to three related acts."
+  },
+  {
+   "slug": "speech-335109",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The speaker moved the second reading of the VET Student Loans (Charges) Bill 2016, which enables the Commonwealth to charge approved VET Student Loans program providers an annual charge."
+  },
+  {
+   "slug": "speech-335658",
+   "speaker": "Kate Ellis",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-18",
+   "stage_hint": null,
+   "brief": "Labor offered in-principle support for the VET Student Loans Bill 2016 but condemned the government's failure to administer the VET FEE-HELP scheme, citing a 400% blowout, billions wasted, five ministers in three years, and exploitation of vulnerable students, while noting the government had copied Labor's policies."
+  },
+  {
+   "slug": "speech-335661",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-18",
+   "stage_hint": null,
+   "brief": "The VET Student Loans Bill 2016 was supported as a fix for the VET FEE-HELP scheme, citing cost blowouts from $325 million in 2012 to $2.9 billion in 2015, completion rates of 22.9% overall and 7.8% for online students, and widespread exploitation of vulnerable students. The new scheme introduces stricter provider checks, a stepped loan cap, and course lists linked to skills priorities, with projected cuts of $2.4 billion in annual loans and $25 billion in HELP debt over 10 years, plus automatic entry for TAFEs such as Hornsby TAFE."
+  },
+  {
+   "slug": "speech-335812",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-18",
+   "stage_hint": null,
+   "brief": "The VET Student Loans Bill 2016 bans third-party brokers and agents from recruiting students and limits subcontracting, introducing stronger compliance measures including monitoring, civil penalties, and suspension powers. The bill aims to protect students from unethical practices, restore integrity to the VET sector, and reduce government debt."
+  },
+  {
+   "slug": "speech-335813",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's VET Student Loans Bill 2016 is overdue and copies Labor's policies after four years of inaction, noting that graduation rates for the 10 largest providers were under five per cent in 2014, wasting $900 million in taxpayer money. They criticised the bill for not going far enough on regulating education agents and for lacking measures to restore $2.75 billion cut from TAFE and apprenticeships."
+  },
+  {
+   "slug": "speech-335815",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-18",
+   "stage_hint": null,
+   "brief": "The Turnbull government introduced the VET Student Loans Bill 2016 to replace the VET FEE-HELP scheme, which had cost taxpayers $2.9 billion by 2015 and seen student loans increase by 792%. The new program includes annual levies on providers, loan caps of $5,000, $10,000 and $15,000, restrictions on eligible courses, a ban on brokers and unsolicited student contact, and stronger compliance powers."
+  },
+  {
+   "slug": "speech-335816",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the VET Student Loans Bill 2016 amendment, citing $3 billion in unrecoverable loans, graduation rates under 5% for the 10 largest providers costing $215,000 per graduate, and a 53.6% drop in apprenticeships in Oxley since 2013. They criticised the government for inaction and called for federal-state cooperation on TAFE funding."
+  },
+  {
+   "slug": "speech-335817",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the VET Student Loans Bill 2016 was needed to replace Labor's failed VET-FEE HELP scheme, citing a 792% loan increase from $325 million in 2012 to $2.9 billion in 2015 and examples of predatory providers using misleading job ads and offering free iPads. The bill introduces an approved course list aligned with industry needs, loan caps of $5,000, $10,000 and $15,000, a ban on brokers and cold-calling, and a seven-year provider approval limit."
+  },
+  {
+   "slug": "speech-335819",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the VET Student Loans Bill 2016 is essential to replace Labor's failed VET FEE-HELP scheme, which grew from $325 million in 2012 to $2.9 billion in 2015, and to introduce tighter controls including loan caps of $5,000, $10,000 and $15,000, a ban on brokers, and a focus on courses aligned with industry needs."
+  },
+  {
+   "slug": "speech-335922",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to the VET Student Loans Bill 2016, arguing the government failed to act quickly enough on VET FEE-HELP abuses as the scheme's cost blew out from $700 million to $3 billion under its watch, and called for a sector-wide review, reinvestment of savings, and support for TAFE and apprenticeships."
+  },
+  {
+   "slug": "speech-335923",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Vet Student Loans Bill 2016, encouraging students not to be defined by their ATAR scores and citing their own success without a university degree."
+  },
+  {
+   "slug": "speech-335925",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued the government’s VET Student Loans Bill adopts long-standing Labor policy after a \"backflip,\" but fails to provide redress for students defrauded by unscrupulous providers. They criticised the exclusion of over 60 creative arts courses from loan eligibility, citing concerns over inadequate consultation and potential harm to Tasmania’s arts communities, and noted that the bill lacks provision for a VET loans ombudsman."
+  },
+  {
+   "slug": "speech-335926",
+   "speaker": "Chris Crewther",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the VET Student Loans Bill 2016 and associated bills, arguing they would replace the flawed VET FEE-HELP scheme with tougher provider entry criteria, a list of 347 eligible courses (478 removed), and measures to protect students and taxpayers. The speaker also noted Dunkley's 3.6% economic growth and falling unemployment, and cited Phoenix Institute's revocation for inducements and a 4% graduation rate."
+  },
+  {
+   "slug": "speech-335927",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Coalition government's handling of the VET sector, citing widespread rorts and a lack of regulation that left students with large debts and no qualifications, and argued that Labor's proposed reforms—including an ombudsman, loan caps, and a TAFE funding guarantee—were copied by the government after years of inaction. Specific figures included Evocca College receiving $200 million in VET FEE-HELP funds with only a 25% completion rate, and VET FEE-HELP debt rising from $700 million in 2013 to $2.9 billion in 2015."
+  },
+  {
+   "slug": "speech-335928",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The coalition government is fixing Labor's VET FEE-HELP scheme, which saw loan values blow out from $26 million to $2.9 billion and completion rates at only 22%. The VET Student Loans Bill introduces tougher provider criteria, bans brokers, caps loans at $5,000–$15,000 per course, and allows ministerial exemptions for high-cost courses like aviation."
+  },
+  {
+   "slug": "speech-335930",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the VET Student Loans bills, which replace the VET FEE-HELP scheme from 1 January 2017 with loan caps of $5,000, $10,000 and $15,000, new student eligibility checks, and powers to suspend noncompliant providers. He also criticised the government for failing to act earlier on provider misconduct and for cutting $2.5 billion from skills and training, including $1 billion from apprenticeships, with apprentice numbers falling from 417,700 to 295,300 between 2013 and 2015."
+  },
+  {
+   "slug": "speech-336098",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The Turnbull government's mismanagement and incompetence caused widespread rorting in the VET student loans program, with figures including a 417% increase in students at Australian Careers Network to 25,784, and growth in payments to Careers Australia from $3.5 million to $108 million and Evocca from $24.9 million to $131 million; an estimated 40% of VET debts will never be repaid. The speaker argued the government was asleep at the wheel, delayed action until a Senate inquiry, and is now adopting Labor’s proposed reforms, including the need for an ombudsman."
+  }
+ ],
+ "acts": [
+  {
+   "title": "VET Student Loans Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00098",
+   "assent_date": "2016-12-07"
+  }
+ ]
+}

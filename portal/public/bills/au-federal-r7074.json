@@ -1,0 +1,181 @@
+{
+ "key": "au-federal-r7074",
+ "title": "Statutory Declarations Amendment Bill 2023",
+ "short_title": "Statutory Declarations Amendment Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-09-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2023-11-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7074%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7074%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7074%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7074%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7074%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7074%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7074%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7074%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7074%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7074%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7074%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7074%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7074%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7074%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7074_ems_1b3a2f95-66ea-4e2d-bc3c-d0d0b9d47d73%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/9366105%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7074%22",
+   "document_date": "2023-09-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00092",
+   "document_date": "2023-11-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8359",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2023-09-12.9.2) to the usual second reading motion - \"that the bill be read a second time\" (parliamentary jargon for agreeing with the main idea of the bill) - which was introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal). ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that:* > > *(1) the electronic execution of a Commonwealth statutory declaration was first implemented under the former government;* > > *(2) digital verification relies on MyGovID and the Trusted Digital Identity Framework, both of which were created by the former government;* > > *(3) the government is yet to formally respond to the MyGov User Audit; and* > > *(4) the government is yet to establish a legislated national digital identity system\".*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 55,
+   "noes": 85,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 32,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-09-13/1"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Statutory Declarations Amendment Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00092",
+   "assent_date": "2023-11-17"
+  }
+ ]
+}

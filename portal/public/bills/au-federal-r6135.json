@@ -1,0 +1,208 @@
+{
+ "key": "au-federal-r6135",
+ "title": "Fair Work Amendment (Restoring Penalty Rates) Bill 2018",
+ "short_title": "Fair Work Amendment (Restoring Penalty Rates) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-25",
+ "originating_house": "representatives",
+ "sponsor": "SHORTEN, Bill, MP",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10580",
+ "portfolio": "(s) SHORTEN, Bill, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6135%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6135%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6135%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6135%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6135%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6135%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6135%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6135%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6135%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6135_ems_e42eeea6-b7a8-4b9b-9069-a8caa0d4f983%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6135%22",
+   "document_date": "2018-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-366493",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that penalty rate cuts reduce take-home pay for low-paid workers by up to $3,273 annually, affect one in six workers in Parramatta, and have not led to increased hours or consumer spending, supporting the bill to restore penalty rates."
+  },
+  {
+   "slug": "speech-366495",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Fair Work Amendment (Restoring Penalty Rates) Bill 2018, criticising the Turnbull government for cutting penalty rates on 1 July while giving $80 billion in tax cuts to corporations. The speaker stated that 13,000 workers in the electorate of Moreton rely on penalty rates, and that the cuts disproportionately affect women, young people, and low-paid workers."
+  },
+  {
+   "slug": "speech-366496",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker argued the opposition's Fair Work Amendment (Restoring Penalty Rates) Bill 2018 is a dishonest scare campaign, and accused the Leader of the Opposition of cutting penalty rates in three 2006 union agreements with Big W, Target and Just Jeans workers in North Queensland, reducing Sunday rates from 200% to 150% and costing workers $53 per shift."
+  },
+  {
+   "slug": "speech-366497",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government’s support for corporate tax cuts and cuts to penalty rates harms over 700,000 low-paid workers, and supported the Fair Work Amendment (Restoring Penalty Rates) Bill 2018 as a means to provide practical relief for Australian families."
+  },
+  {
+   "slug": "speech-366499",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Restoring Penalty Rates) Bill should be passed to prevent the government from cutting penalty rates, which would harm low-income workers, families, and the economy. They criticised the Prime Minister for prioritising wealthy interests and claimed that penalty rates have existed for decades without harming economic growth."
+  },
+  {
+   "slug": "speech-366502",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Fair Work Amendment (Restoring Penalty Rates) Bill 2018, stating that penalty rates protect weekends, support social capital, and provide necessary compensation for low‑income workers, and that cutting them would harm families and the economy."
+  },
+  {
+   "slug": "speech-367744",
+   "speaker": "Susan Lamb",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Fair Work Amendment (Restoring Penalty Rates) Bill 2018 to restore penalty rates cut by the Turnbull government, citing a Bellmere retail worker whose pay was reduced despite 10 years without a holiday. Concrete positions included restoring $2.9 million to Caboolture Hospital, opposing $17 billion in bank handouts, and promising a Shorten Labor government would reverse cuts to schools, hospitals, and penalty rates."
+  },
+  {
+   "slug": "speech-367745",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Restoring Penalty Rates) Bill 2018, arguing penalty rates are critical for low-paid workers and noting the government has voted to cut them on eight separate occasions. They contrasted the cuts with executive excess, citing James Packer's $70 million yacht, and pledged to protect penalty rates for their electorate of Macarthur."
+  },
+  {
+   "slug": "speech-368521",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-10",
+   "stage_hint": null,
+   "brief": "The member for Fowler argued in support of the Fair Work Amendment (Restoring Penalty Rates) Bill 2018, stating that penalty rate cuts of up to $77 per week affect low-paid workers in retail, hospitality and accommodation, including about 10,500 people in Fowler, while the government gave an $80 million tax break to big business and ignored eight opportunities to oppose the cuts."
+  },
+  {
+   "slug": "speech-368523",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Restoring Penalty Rates) Bill 2018, arguing that the Fair Work Commission’s unilateral cuts to penalty rates harm low‑paid workers, and gave examples of annual losses in their electorate of Cunningham: $1,098 for fast‑food casual level 1, $1,271 for hospitality level 6, and $1,792 for retail level 6, affecting over 20,000 local workers."
+  },
+  {
+   "slug": "speech-370571",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The member for Oxley backed the Fair Work Amendment (Restoring Penalty Rates) Bill 2018, arguing it would protect take-home pay by restoring penalty rates and preventing future cuts. He cited that 700,000 Australians have faced reduced pay, private-sector wage growth is at 1.9% after 20 consecutive quarters of decline, and over 10,000 workers in his electorate lose up to $77 a week, while contrasting this with tax cuts for millionaires."
+  },
+  {
+   "slug": "speech-370572",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Liberal government's cuts to penalty rates, averaging $77 per week, harm 1.2 million retail workers—52% without post-school qualifications—and over 75,000 people in the Lindsay electorate, and called for restoring penalty rates via the Fair Work Amendment (Restoring Penalty Rates) Bill 2018, citing $27 million recovered by the Fair Work Ombudsman from 11,000 workers."
+  },
+  {
+   "slug": "speech-373718",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Restoring Penalty Rates) Bill 2018 was supported, arguing that penalty rate cuts have left over 147,000 Victorians and 15,000 McEwen residents worse off, with some losing up to $3,273 a year."
+  }
+ ],
+ "acts": []
+}

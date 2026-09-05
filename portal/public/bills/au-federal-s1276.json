@@ -1,0 +1,169 @@
+{
+ "key": "au-federal-s1276",
+ "title": "VET Student Payment Arrangements (Miscellaneous Amendments) Bill 2020",
+ "short_title": "VET Student Payment Arrangements (Miscellaneous Amendments) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-11-12",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "passed",
+ "status_as_of": "2021-03-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1276%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1276%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1276%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1276%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1276%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1276%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1276%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1276%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1276%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1276%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1276%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1276%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1276_ems_795bf600-8772-40ac-a6ab-970d8392edf2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1276%22",
+   "document_date": "2020-11-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00017",
+   "document_date": "2021-03-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-11-12",
+  "sentences": [
+   "The bill would help the Commonwealth resolve leftover matters from the closed VET FEE-HELP scheme and improve how the VET Student Loans program is run.",
+   "It would phase out payments to VET providers for old student data, let the Commonwealth recover debts by offsetting them against other payments, and revoke provider approvals while keeping legal powers to finalise the scheme.",
+   "The bill would also let the Secretary refuse to pay a provider for a student loan in the same situations where the student's HELP balance can be re-credited, without paying first."
+  ],
+  "changes": [
+   "Phase out the Commonwealth's obligation to pay VFH assistance to providers for old student data and stop providers chasing students for those unpaid amounts.",
+   "Allow the Commonwealth to set off debts owed by providers under the VFH scheme against FEE-HELP or VET student loan payments.",
+   "Revoke the approval of remaining VET providers while keeping HESA and related instruments active for resolving outstanding matters.",
+   "Add new circumstances where the Secretary does not have to pay a VET student loan amount to a provider, matching the re-crediting rules.",
+   "Automatically revoke a course provider's approval if it stops being a registered training organisation."
+  ],
+  "affected": "The Commonwealth, VET providers, and students who used the former VET FEE-HELP scheme or the VET Student Loans program.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:44:03Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-402585",
+   "speaker": "Luke Howarth",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": "The VET Student Payment Arrangements (Miscellaneous Amendments) Bill 2020 revokes remaining VET FEE-HELP provider approvals, sets reporting deadlines of 1 July 2021 for pre-2018 census dates and 1 January 2022 for later units, and discharges student liability for unreported tuition fees. It also allows the Commonwealth to offset VET FEE-HELP debts against other student loan payments and automatically revokes a provider's VET Student Loans approval if it ceases to be a registered training organisation."
+  },
+  {
+   "slug": "speech-402586",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": "Labor will support the VET Student Payment Arrangements (Miscellaneous Amendments) Bill 2020, which makes administrative changes including direct re-crediting of HELP balances and automatic revocation of provider approval, with assurances that students will not be adversely impacted. The speaker noted the government has cut billions from TAFE and training, and the number of apprentices and trainees has dropped by 140,000."
+  },
+  {
+   "slug": "speech-402587",
+   "speaker": "Luke Howarth",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": "The speaker argued the VET Student Payment Arrangements Bill 2020 will help close the former VET FEE-HELP scheme, replaced by VET Student Loans from 1 January 2017, and create a fairer student loans system to support Australia's economic recovery from the COVID-19 recession."
+  }
+ ],
+ "acts": [
+  {
+   "title": "VET Student Payment Arrangements (Miscellaneous Amendments) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00017",
+   "assent_date": "2021-03-01"
+  }
+ ]
+}

@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1158",
+ "title": "Social Security Commission Bill 2018 [No. 2]",
+ "short_title": "Social Security Commission Bill 2018 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-12-03",
+ "originating_house": "senate",
+ "sponsor": "STORER, Sen Tim",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10909",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1158%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1158%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1158%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1158_ems_dec3f65c-697b-4c0f-a452-e67f19f00639%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1158%22",
+   "document_date": "2018-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-12-03",
+  "sentences": [
+   "This bill would create an independent body to advise Parliament on minimum social security payment rates.",
+   "A new Social Security Commission would review payments every four years and recommend increases if current levels fall short of an acceptable standard of living.",
+   "The Commission must ensure recipients do not fall below the poverty line, using internationally accepted definitions."
+  ],
+  "changes": [
+   "Establishes the Social Security Commission to provide independent advice on minimum payment levels.",
+   "Requires the Commission to review each social security payment at least once every four years.",
+   "Requires the Minister to table reviews in Parliament and respond to recommendations."
+  ],
+  "affected": "Recipients of social security payments under the Social Security Act 1991.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:50Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

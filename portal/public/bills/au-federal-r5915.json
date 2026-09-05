@@ -1,0 +1,54 @@
+{
+ "key": "au-federal-r5915",
+ "title": "Renewable Energy (Electricity) Amendment (Continuing the Energy Transition) Bill 2017",
+ "short_title": "Renewable Energy (Electricity) Amendment (Continuing the Energy Transition) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-04",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-03-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5915%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5915%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5915%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5915_ems_369185bd-bacd-4e80-980f-335aea797d56%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5915%22",
+   "document_date": "2017-09-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

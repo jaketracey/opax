@@ -1,0 +1,326 @@
+{
+ "key": "au-federal-alrc-2346",
+ "title": "Aged Care (Bond Security) Amendment Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Ageing",
+ "status": "passed",
+ "status_as_of": "2013-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00077",
+   "document_date": "2013-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-2973",
+   "date": "2013-06-26",
+   "house": "senate",
+   "question": "The aye votes succeeded in passing amendments relating legislation. These amendments were mostly technical, and relate to Aged Care Pricing Commissioner, home care and people with special needs. This means that the amendment will be included in the legislation. This was a vote on the amendment proposed by [Senator McLucas](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Jan_McLucas&mpc=Senate&house=senate). Someone who votes aye for this amendment supports these measures. The majority voted aye so the amendment was successful. **Background to Bill** In April 2012 the Labor Government introduced the Living Longer Living Better Package. This was in response to the Productivity Commission's Inquiry ['Caring for Older Australians'](http://www.pc.gov.au/projects/inquiry/aged-care). The Package consists of five Bills, of which the Aged Care (Living Longer Living Better) Bill is the main one. The Aged Care (Living Longer Living Better) Bill makes changes to aged care which include: 1. Changes to residential aged care 2. Removes the distinction between high and low level care for residential aged care 3. Establishes Home Care to replace existing community aged care packages 4. Means testing for residential and home care 5. New payments for care recipients and providers 6. Independent reviews of the legislation by 2017 More information on the Bill and the context surrounding it can be found [here](http://parlinfo.aph.gov.au/parlInfo/download/legislation/billsdgs/2429310/upload_binary/2429310.pdf;fileType=application%2Fpdf#search=%22r4980%22). Alternatively, information about the package can be found at the [Department of Health and Ageing](http://www.livinglongerlivingbetter.gov.au/) website. The text of the proposed amendment can be found [here](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;adv=yes;db=CHAMBER;id=chamber%2Fhansards%2F62418f05-bfae-4b21-b883-5566181dff26%2F0012;orderBy=_fragment_number,doc_date-rev;page=0;query=Dataset%3Ahan",
+   "stage": "Bill",
+   "ayes": 34,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "member": 2,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-26/1"
+  },
+  {
+   "key": "federal-senate-2974",
+   "date": "2013-06-26",
+   "house": "senate",
+   "question": "The no votes succeeded in dismissing amendments relating to establishing an independent review of the Act and the associated legislation. This means that the amendment will not be included in the legislation. This was a vote on the amendment proposed by [Senator Xenophon](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Nick_Xenophon&mpc=Senate&house=senate). Someone who votes aye for this amendment supports these measures. The majority voted no so the amendment was unsuccessful. **Background to Bill** In April 2012 the Labor Government introduced the Living Longer Living Better Package. This was in response to the Productivity Commission's Inquiry ['Caring for Older Australians'](http://www.pc.gov.au/projects/inquiry/aged-care). The Package consists of five Bills, of which the Aged Care (Living Longer Living Better) Bill is the main one. The Aged Care (Living Longer Living Better) Bill makes changes to aged care which include: 1. Changes to residential aged care 2. Removes the distinction between high and low level care for residential aged care 3. Establishes Home Care to replace existing community aged care packages 4. Means testing for residential and home care 5. New payments for care recipients and providers 6. Independent reviews of the legislation by 2017 More information on the Bill and the context surrounding it can be found [here](http://parlinfo.aph.gov.au/parlInfo/download/legislation/billsdgs/2429310/upload_binary/2429310.pdf;fileType=application%2Fpdf#search=%22r4980%22). Alternatively, information about the package can be found at the [Department of Health and Ageing](http://www.livinglongerlivingbetter.gov.au/) website. The text of the proposed amendment can be found [here](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;adv=yes;db=CHAMBER;id=chamber%2Fhansards%2F62418f05-bfae-4b21-b883-5566181dff26%2F0014;orderBy=_fragment_number,doc_date-rev;page=0;query=Dataset%3Ahansards,hansards80%20Date%3A26%2F6%2F2013;rec=0;res",
+   "stage": "Bill",
+   "ayes": 29,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "member": 2,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-26/2"
+  },
+  {
+   "key": "federal-senate-2975",
+   "date": "2013-06-26",
+   "house": "senate",
+   "question": "The no votes succeeded in dismissing amendments opposing parts of the Aged Care (Living Longer Living Better) Bill 2013. These amendments were mostly technical, and relate to role Aged Care Pricing Commissioner and working of the Bill. This means that the amendment will not be included in the legislation. This was a vote on the amendment proposed by [Senator Fierravanti-Wells](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Concetta_Fierravanti-Wells&mpc=Senate&house=senate). Someone who votes aye for this amendment supports these measures. The majority voted no so the amendment was unsuccessful. **Background to Bill** In April 2012 the Labor Government introduced the Living Longer Living Better Package. This was in response to the Productivity Commission's Inquiry ['Caring for Older Australians'](http://www.pc.gov.au/projects/inquiry/aged-care). The Package consists of five Bills, of which the Aged Care (Living Longer Living Better) Bill is the main one. The Aged Care (Living Longer Living Better) Bill makes changes to aged care which include: 1. Changes to residential aged care 2. Removes the distinction between high and low level care for residential aged care 3. Establishes Home Care to replace existing community aged care packages 4. Means testing for residential and home care 5. New payments for care recipients and providers 6. Independent reviews of the legislation by 2017 More information on the Bill and the context surrounding it can be found [here](http://parlinfo.aph.gov.au/parlInfo/download/legislation/billsdgs/2429310/upload_binary/2429310.pdf;fileType=application%2Fpdf#search=%22r4980%22). Alternatively, information about the package can be found at the [Department of Health and Ageing](http://www.livinglongerlivingbetter.gov.au/) website. The text of the proposed amendment can be found [here](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;adv=yes;db=CHAMBER;id=chamber%2Fhansards%2F62418f05-bfae-4b21-b883-5566181dff26%",
+   "stage": "Bill",
+   "ayes": 34,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "member": 2,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-26/3"
+  },
+  {
+   "key": "federal-senate-2976",
+   "date": "2013-06-26",
+   "house": "senate",
+   "question": "The aye votes succeeded in passing amendments relating legislation. These amendments related to homeless supplements in the legislation. This means that the amendment will be included in the legislation. This was a vote on the amendment proposed by [Senator Siewert](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Rachel_Siewert&mpc=Senate&house=senate). Someone who votes aye for this amendment supports these measures. The majority voted aye so the amendment was successful. **Background to Bill** In April 2012 the Labor Government introduced the Living Longer Living Better Package. This was in response to the Productivity Commission's Inquiry ['Caring for Older Australians'](http://www.pc.gov.au/projects/inquiry/aged-care). The Package consists of five Bills, of which the Aged Care (Living Longer Living Better) Bill is the main one. The Aged Care (Living Longer Living Better) Bill makes changes to aged care which include: 1. Changes to residential aged care 2. Removes the distinction between high and low level care for residential aged care 3. Establishes Home Care to replace existing community aged care packages 4. Means testing for residential and home care 5. New payments for care recipients and providers 6. Independent reviews of the legislation by 2017 More information on the Bill and the context surrounding it can be found [here](http://parlinfo.aph.gov.au/parlInfo/download/legislation/billsdgs/2429310/upload_binary/2429310.pdf;fileType=application%2Fpdf#search=%22r4980%22). Alternatively, information about the package can be found at the [Department of Health and Ageing](http://www.livinglongerlivingbetter.gov.au/) website. The text of the proposed amendment can be found [here](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;adv=yes;db=CHAMBER;id=chamber%2Fhansards%2F62418f05-bfae-4b21-b883-5566181dff26%2F0018;orderBy=_fragment_number,doc_date-rev;page=0;query=Dataset%3Ahansards,hansards80%20Date%3A26%2F6%2F2013;rec=0;resCount=",
+   "stage": "Bill",
+   "ayes": 34,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "member": 2,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-26/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-270232",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822289",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271779",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272571",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care (Bond Security) Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00077",
+   "assent_date": "2013-06-28"
+  }
+ ]
+}

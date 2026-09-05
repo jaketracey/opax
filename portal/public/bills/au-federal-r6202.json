@@ -1,0 +1,266 @@
+{
+ "key": "au-federal-r6202",
+ "title": "Criminal Code Amendment (Food Contamination) Bill 2018",
+ "short_title": "Criminal Code Amendment (Food Contamination) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2018-09-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6202%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6202%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6202%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6202%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6202%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6202%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6202%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6202%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6202%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6202%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6202%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-09-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6202%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6202_ems_f4ef7049-1db8-4b57-a6a7-29563be155df%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6202%22",
+   "document_date": "2018-09-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00098",
+   "document_date": "2018-09-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-20",
+  "sentences": [
+   "The bill would strengthen Australia's food contamination offences after recent strawberry contamination incidents.",
+   "It would increase the maximum penalty for existing intention-based offences in the Criminal Code and create new recklessness-based offences punishable by 10 years' imprisonment.",
+   "The bill would also change the definition of 'public' in the Criminal Code to include food meant for public consumption and food-related services."
+  ],
+  "changes": [
+   "Increase the maximum penalty for existing food contamination offences under sections 380.1 to 380.5 of the Criminal Code.",
+   "Create new offences for recklessly causing public alarm, economic loss, or harm to public health, with a maximum penalty of 10 years' imprisonment.",
+   "Amend the definition of 'public' in the Criminal Code to cover food for public consumption and related services."
+  ],
+  "affected": "Individuals who contaminate food with the intention of causing public alarm, economic loss, or harm, and those who are reckless about causing such effects.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:43Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-370110",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The bill increases the maximum penalty for intentional food contamination from 10 to 15 years, creates new offences for reckless contamination causing public alarm, economic loss or harm, and expands sabotage laws to cover food supply infrastructure. The government also committed $1 million to support farmers affected by the contamination crisis."
+  },
+  {
+   "slug": "speech-370112",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Criminal Code Amendment (Food Contamination) Bill 2018, which increases maximum penalties for food contamination from 10 to 15 years and introduces new reckless contamination offences, but criticised the rushed process and potential unintended consequences of redefining public infrastructure to include food, calling for a statutory review within 12 months."
+  },
+  {
+   "slug": "speech-370113",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Criminal Code Amendment (Food Contamination) Bill 2018 and called for a national review of interjurisdictional arrangements for food sabotage, including a coordinated crisis management protocol led by the Commonwealth. They also urged Australians to buy and eat strawberries as usual to rebuild confidence in the industry."
+  },
+  {
+   "slug": "speech-370114",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the federal government's Criminal Code Amendment (Food Contamination Bill) 2018, increasing penalties for food contamination from 10 to 15 years, is necessary to protect strawberry growers and farmers from reckless sabotage. He named affected local growers including Rick Twist, Suncoast Harvest in Beerwah (which laid off 100 people), Braetop Berries, Strawberry Fields, Oakland Farms, and Roy's Farm, and criticised the member for Isaacs for making cheap political points."
+  },
+  {
+   "slug": "speech-370115",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The opposition supported the Criminal Code Amendment (Food Contamination) Bill 2018 but questioned whether increasing penalties from 10 to 15 years would deter offenders, and criticised Minister Littleproud for suggesting the Queensland government should not have warned the public about contaminated strawberries. The speaker called for improved Commonwealth-state cooperation, stronger food security frameworks, and rebuilding consumer confidence."
+  },
+  {
+   "slug": "speech-370116",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The speaker argued for the swift passage of the Criminal Code Amendment (Food Contamination) Bill 2018 to increase penalties for food sabotage, citing personal protection of children, economic damage to Queensland's 300 strawberry farmers (including one closure and 100 businesses shut, citing the Twist brothers and Di West), and national food security concerns."
+  },
+  {
+   "slug": "speech-370117",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Criminal Code Amendment (Food Contamination) Bill 2018 but called for a 12-month review, noting the unusual urgency and questioning the implications of redefining public infrastructure to include a strawberry."
+  },
+  {
+   "slug": "speech-370119",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Criminal Code Amendment (Food Contamination) Bill 2018 strengthens penalties for food contamination crimes, citing the needle-in-strawberry crisis that has caused dire financial harm to farmers like Laura Hendriksen of Chambers Flat. The speaker urged the public to buy strawberries to support farmers, noting bipartisan government action at federal and state levels to restore confidence and assist the industry."
+  },
+  {
+   "slug": "speech-370120",
+   "speaker": "Susan Lamb",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Criminal Code Amendment (Food Contamination) Bill 2018 for stricter penalties on fruit and vegetable tampering, commended the Queensland Labor government’s swift action, and relayed calls from farmers Gavin and Luigi for the public to resume normal strawberry consumption and for banks to support growers."
+  },
+  {
+   "slug": "speech-370121",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Criminal Code Amendment (Food Contamination) Bill 2018, which increases penalties for contaminating goods, threatening contamination, and making false statements that cause public alarm or economic loss, and urged Australians to buy strawberries to support growers, noting that Farmer Jacks supermarket chain is returning proceeds to growers."
+  },
+  {
+   "slug": "speech-370125",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Criminal Code Amendment (Food Contamination) Bill 2018, arguing that the recent needle contamination of fruit harmed producers, retailers, consumers and exports. They also called for a food security framework and urged stronger action against food fraud, particularly fake honey."
+  },
+  {
+   "slug": "speech-370131",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The member supported the Criminal Code Amendment (Food Contamination) Bill 2018, which increases maximum jail terms for food contamination offences from 10 to 15 years and introduces new offences for reckless contamination. The member also noted a needle found in a mango at West Gosford in the Robertson electorate and encouraged consumers to continue buying strawberries while cutting and inspecting them first."
+  },
+  {
+   "slug": "speech-370132",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The government argued for the swift passage of the Criminal Code Amendment (Food Contamination) Bill, increasing the maximum penalty for food contamination from 10 to 15 years imprisonment and introducing new offences for reckless conduct. The government also announced $1 million for additional food safety officials and urged Australians to resume buying strawberries to support farmers."
+  },
+  {
+   "slug": "speech-370209",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The Senate passed the Criminal Code Amendment (Food Contamination) Bill 2018, creating new offences with a maximum 10-year penalty for recklessly making false statements about food contamination. The government cited the 1997 Arnott's Biscuits contamination incident, which cost $10 million in 11 days, and stressed that these hoaxes harm hardworking farming families."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Criminal Code Amendment (Food Contamination) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00098",
+   "assent_date": "2018-09-21"
+  }
+ ]
+}

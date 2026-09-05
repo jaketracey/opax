@@ -1,0 +1,97 @@
+{
+ "key": "au-federal-s1307",
+ "title": "Customs Amendment (Banning Goods Produced By Forced Labour) Bill 2021",
+ "short_title": "Customs Amendment (Banning Goods Produced By Forced Labour) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-06-24",
+ "originating_house": "senate",
+ "sponsor": "PATRICK, Sen Rex",
+ "sponsor_party": "Rex Patrick Team",
+ "sponsor_person_id": "10903",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1307%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1307%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1307%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1307%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1307%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1307%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1307%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1307_ems_db6b4404-f991-4edf-aada-2106b8206f16%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1307%22",
+   "document_date": "2021-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-24",
+  "sentences": [
+   "This bill would ban importing any goods made with forced labour, no matter where they come from.",
+   "It would add forced-labour goods to the list of prohibited imports under the Customs Act, with the same penalties that apply to other banned imports.",
+   "The ban follows a Senate committee recommendation and uses the Criminal Code's definition of forced labour."
+  ],
+  "changes": [
+   "Imposes an absolute, global ban on importing goods produced wholly or partly by forced labour.",
+   "Applies the penalties for prohibited imports to any goods found to have been made with forced labour.",
+   "Implements a Senate committee recommendation from June 2021."
+  ],
+  "affected": "Importers of goods into Australia and any businesses or consumers involved in supply chains that use forced labour.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

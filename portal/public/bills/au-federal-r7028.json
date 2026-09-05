@@ -1,0 +1,145 @@
+{
+ "key": "au-federal-r7028",
+ "title": "Appropriation Bill (No. 4) 2022-2023",
+ "short_title": "Appropriation Bill (No. 4) 2022-2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-05-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2023-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7028%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7028%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7028%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7028%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7028%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7028%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7028%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7028%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7028%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7028%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7028%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7028%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7028%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7028_ems_13d66783-2119-4438-bed1-07ee511bda33%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7028%22",
+   "document_date": "2023-05-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00021",
+   "document_date": "2023-06-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-829850",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-09",
+   "stage_hint": null,
+   "brief": "The government introduced the 2022–23 additional estimates appropriation bills, seeking $5.5 billion in total, with allocations including $1.8 billion for Defence, over $1 billion for Social Services (mostly NDIS), nearly $1 billion for Employment and Workplace Relations (apprenticeship wage subsidy), close to $900 million for Health and Aged Care (vaccines, aged‑care reimbursements, COVID‑19 management), and over $235 million for Foreign Affairs and Trade (passport surge and Osaka World Expo pavilion)."
+  },
+  {
+   "slug": "speech-829901",
+   "speaker": "Carol Brown",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-09",
+   "stage_hint": null,
+   "brief": "Documents on proposed expenditure for 2023‑24 and additional expenditure for 2022‑23 were tabled, and a motion was passed to refer them, together with the final budget outcome for 2021‑22 and advances under annual Appropriation Acts, to committees for examination and report."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 4) 2022-2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00021",
+   "assent_date": "2023-06-19"
+  }
+ ]
+}

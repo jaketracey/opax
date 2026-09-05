@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r5650",
+ "title": "Statute Update Bill 2016",
+ "short_title": "Statute Update Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-03-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5650%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5650%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5650%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5650_ems_5ef4283c-f623-4248-aae1-bd923004332d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5650%22",
+   "document_date": "2016-03-17",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-17",
+  "sentences": [
+   "This bill is part of a package that updates Commonwealth laws to reflect modern drafting practices.",
+   "It would replace dollar amounts for penalties with penalty units and update references to 'maximum penalty' and evidentiary certificates.",
+   "The bill would also update references to aircraft registered under the Civil Aviation Regulations 1988."
+  ],
+  "changes": [
+   "Replace dollar penalty amounts with penalty units.",
+   "Update references to 'maximum penalty' and evidentiary certificates.",
+   "Update references to aircraft registered under the Civil Aviation Regulations 1988."
+  ],
+  "affected": "Commonwealth Acts with older drafting styles.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-330822",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-17",
+   "stage_hint": null,
+   "brief": "The Statute Update Bill 2016 makes minor and technical changes to Commonwealth statutes, including replacing dollar penalties with penalty units and updating references to aircraft regulations, to improve readability and consistency."
+  }
+ ],
+ "acts": []
+}

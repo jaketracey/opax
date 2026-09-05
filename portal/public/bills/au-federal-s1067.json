@@ -1,0 +1,159 @@
+{
+ "key": "au-federal-s1067",
+ "title": "Environment and Infrastructure Legislation Amendment (Stop Adani) Bill 2017",
+ "short_title": "Environment and Infrastructure Legislation Amendment (Stop Adani) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2017-06-13",
+ "originating_house": "senate",
+ "sponsor": "WATERS, Sen Larissa",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10764",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1067%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1067%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1067%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1067%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1067%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1067%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1067%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1067_ems_c4dd6fcb-f450-40f0-bfae-739c63d80e4c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1067%22",
+   "document_date": "2017-06-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-13",
+  "sentences": [
+   "This bill would stop the Australian Government from granting $1 billion to Adani for a coal railway through the Northern Australia Infrastructure Facility.",
+   "It would add a stricter suitability check under the Northern Australia Infrastructure Facility Act 2016, looking at any probes or verdicts against Adani's leaders for environmental harm, fraud, money laundering, tax dodging, and corruption, and would require talks with ASIC and the Australian Criminal Intelligence Commission.",
+   "The bill would also make environmental history, including overseas records, a mandatory factor in decisions on approvals under the Environment Protection and Biodiversity Conservation Act 1999, and it would set off an automatic re-examination of Adani's existing permits, such as those for the Carmichael mine, rail line, and Abbot Point port, given evidence that surfaced after the 2014 and 2015 approvals."
+  ],
+  "changes": [
+   "Blocks the $1 billion payment to Adani via the NAIF.",
+   "Creates a broad suitability test for Adani under the NAIF Act.",
+   "Forces consultation with ASIC and ACIC for that test.",
+   "Makes environmental history a required consideration for approval actions under the EPBC Act.",
+   "Automatically reviews Adani's existing approvals, including for the Carmichael mine, railway, and port."
+  ],
+  "affected": "Adani and its corporate group, along with bodies like ASIC and the Australian Criminal Intelligence Commission, and decisions under federal environment law.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:35:36Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4953",
+   "date": "2017-10-19",
+   "house": "senate",
+   "question": "Environment and Infrastructure Legislation Amendment (Stop Adani) Bill 2017 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 7,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 27,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-10-19/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

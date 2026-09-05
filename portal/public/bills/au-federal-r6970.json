@@ -1,0 +1,959 @@
+{
+ "key": "au-federal-r6970",
+ "title": "Housing Australia Future Fund Bill 2023",
+ "short_title": "Housing Australia Future Fund Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-02-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2023-09-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6970_ems_65319d44-1295-43e7-8718-251583e588fd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6970_ems_d91326bf-065e-41a7-8fe4-505ab40442aa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6970_ems_0456de50-d399-4cda-83a2-550738bb3912%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6970_ems_cdb5e185-4516-46a6-b177-6841ad13ee5c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6970%22",
+   "document_date": "2023-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00079",
+   "document_date": "2023-09-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2023-02-09",
+  "sentences": [
+   "This bill is part of a package that would create a $10 billion fund to boost social and affordable housing, and set up an independent advisory body on housing policy.",
+   "The fund would be managed by the Future Fund Board, with its earnings spent on housing for Indigenous communities, women, children, veterans, and other groups in need.",
+   "The bill would start on a day fixed by Proclamation, or six months after it receives Royal Assent, whichever comes first."
+  ],
+  "changes": [
+   "The bill would establish the Housing Australia Future Fund to provide a dedicated funding source for social and affordable housing.",
+   "The bill would create the National Housing Supply and Affordability Council as an independent body to advise the government on housing supply and affordability.",
+   "The bill would allocate $330 million to address acute housing needs over the fund's first five years."
+  ],
+  "affected": "The explanatory memorandum says the bill would affect people needing social or affordable housing, Indigenous communities, women, children, veterans, and the Future Fund Board.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:44:16Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7951",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with a second reading amendment introduced by Griffith MP [Max Chandler-Mather](https://theyvoteforyou.org.au/people/representatives/griffith/max_chandler-mather) (Greens), which means it failed. This amendment would have changed the usual second reading motion, which is \"*That this bill be now [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/).* To read a bill for a second time is to agree with its main idea. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that:* > > *(1) Australia currently has a shortage of 640,000 social and affordable homes, and that shortage is projected to increase by 75,000 homes over the next five years, which means the Government's plan to build 30,000 homes over five years will actually see the situation get worse;* > > *(2) this bill does nothing to help the millions of renters struggling with skyrocketing rents and record low vacancy rates;* > > *(3) this bill locks in a $500 million per year spending cap on housing, which will see a real term cut in spending every year; and* > > *(4) if the Government truly wanted to solve the housing crisis, they could:* > >> *(a) help renters by doubling Commonwealth Rent Assistance and putting a plan to freeze rent increases on the National Cabinet agenda;* >> >> *(b) phase out negative gearing and capital gains tax discounts; and* >> >> *(c) invest directly in building one million well-designed public homes, enough to not just clear the wait lists, but also to provide affordable housing to the teachers, nurses, aged care workers, cleaners and others locked out of the housing market\".*",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 83
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-02-15/1"
+  },
+  {
+   "key": "federal-representatives-7952",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "question": "Housing Australia Future Fund Bill 2023 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 84,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-02-15/2"
+  },
+  {
+   "key": "federal-representatives-7953",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2023-02-15.125.1) introduced by Fowler MP [Dai Le](https://theyvoteforyou.org.au/people/representatives/fowler/dai_le) (Independent), which means it failed. ### Amendment text > *(1) Clause 65, page 48 (line 24), omit \"2028\", substitute \"2025\".* ### What would this amendment do? Ms Le [explained that](https://www.openaustralia.org.au/debate/?id=2023-02-15.125.1): > *This amendment to the Housing Australia Future Fund Bill ensures there is a timely review process in which we should be able to see the effectiveness of the bill in two years, not five years. Not every piece of legislation is perfect. Sometimes we get the processes wrong.* ### Note from 17/02/23 Note that this division entry is currently showing Calare MP [Andrew Gee](https://theyvoteforyou.org.au/people/representatives/calare/andrew_gee) (Independent) as a rebel. This is an error and due to the fact we have not yet updated our system to show that Mr Gee has [left the Nationals](https://www.abc.net.au/news/2022-12-23/andrew-gee-resigns-national-party-indigenous-voice/101804776) and is now an Independent.",
+   "stage": "Consideration in detail",
+   "ayes": 72,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 85
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-02-15/3"
+  },
+  {
+   "key": "federal-representatives-7954",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "question": "Housing Australia Future Fund Bill 2023 - Consideration in Detail - Proportion of grants to regional, rural and remote Australia",
+   "stage": "Consideration in detail",
+   "ayes": 51,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 45,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 64
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-02-15/4"
+  },
+  {
+   "key": "federal-senate-8112",
+   "date": "2023-05-11",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-05-11.70.1) introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor), which means it failed. ### Amendment text > *Before paragraph (a), insert:* > > *(aa) Housing Australia Future Fund Bill 2023 and related bills*",
+   "stage": "Business motion",
+   "ayes": 21,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-05-11/12"
+  },
+  {
+   "key": "federal-senate-8165",
+   "date": "2023-06-19",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-06-19.23.1), moved by South Australian Senator [Don Farrell](https://theyvoteforyou.org.au/people/senate/sa/don_farrell) (Labor), to a [motion](https://www.openaustralia.org.au/senate/?gid=2023-06-19.22.1) moved by South Australian Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young) (Greens). This means the amendment failed. ### Amendment text > *Omit \"16 October 2023\", substitute \"the next day of sitting\".* ### Original motion text > *That, to allow time for National Cabinet to progress reforms to strengthen renters' rights as advised in the Prime Minister's press release of 28 April 2023, including reforms to limit rent increases, further consideration of the Housing Australia Future Fund Bill 2023 and two related bills be made an order of the day for 16 October 2023.*",
+   "stage": "Business motion",
+   "ayes": 23,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-19/3"
+  },
+  {
+   "key": "federal-senate-8166",
+   "date": "2023-06-19",
+   "house": "senate",
+   "question": "A majority of the Senate voted in favour of a motion moved by Greens Senator Sarah Hanson-Young to delay further consideration on the second reading and subsequent stages of the Housing Australia Future Fund Bill 2023, the National Housing Supply and Affordability Council Bill 2023 and the Treasury Laws Amendment (Housing Measures No. 1) Bill 2023 to 16 October 2023. The motion was supported by the Greens, the Coalition and the United Australia Party, and opposed by Labor, the Jacqui Lambie Network and independent Senator David Pocock. ### Motion text > That, to allow time for National Cabinet to progress reforms to strengthen renters' rights as advised in the Prime Minister's press release of 28 April 2023, including reforms to limit rent increases, further consideration of the Housing Australia Future Fund Bill 2023 and two related bills be made an order of the day for 16 October 2023.",
+   "stage": "Business motion",
+   "ayes": 37,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-19/4"
+  },
+  {
+   "key": "federal-senate-8351",
+   "date": "2023-09-12",
+   "house": "senate",
+   "question": "The majority voted in favour of the [motion](https://www.openaustralia.org.au/senate/?id=2023-09-12.4.2) below, which means it passed. ### Motion text > *That, in order to provide for the consideration of the Housing Australia Future Fund Bill 2023, National Housing Supply and Affordability Council Bill 2023 and Treasury Laws Amendment (Housing Measures No. 1) Bill 2023—* > > *(1) The order of the Senate of 19 June 2023 relating to the Housing Australia Future Fund Bill 2023 and related bills no longer apply, allowing them to be considered immediately, and the bills be called on as the next item of government business.* > > *(2) On Tuesday, 12 September 2023:* > >> *(a) the routine of business from 6 pm be consideration of the bills (second reading speeches only); and* >> >> *(b) the Senate adjourn without debate at the conclusion of the second reading debate, at 10 pm, or on the motion of a minister, whichever is earlier.* > > *(3) On Wednesday, 13 September 2023:* > >> *(a) the questions on all remaining stages of the bills be put at 11.45 am;* >> >> *(b) paragraph (a) operate as a limitation of debate under standing order 142; and* >> >> *(c) divisions may take place between 12.15 pm and 2 pm for the purposes of the bills.*",
+   "stage": "Business motion",
+   "ayes": 35,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 9,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-12/2"
+  },
+  {
+   "key": "federal-senate-8361",
+   "date": "2023-09-13",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-09-12.16.1) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Motion text > *At the end of the motion, add “, but the Senate:* > > *(a) notes that:* > >> *(i) Australia is in the middle of a rental crisis, and* >> >> *(ii) Labor had the power and opportunity to freeze and cap rent increases through National Cabinet, but refused despite the fact Labor holds government federally and in every state and territory on the mainland; and* > > *(b) agrees that every rent rise from here on out is Labor's fault and that unlimited rent rises should be illegal; and* > > *(c) calls on the Federal Labor Government to coordinate a 2-year freeze on rent increases, followed by ongoing caps of 2%, through National Cabinet”.*",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-13/2"
+  },
+  {
+   "key": "federal-senate-8362",
+   "date": "2023-09-13",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-09-13.19.1) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Albanese Government to:* > > *(a) recognise:* > >> *(i) that Australia is already the fourth quickest builder of housing in the entire OECD;* >> >> *(ii) the decision to allow over 1 million arrivals from net immigration and student visas in 12 months is the primary driver of the housing crisis;* >> >> *(iii) no amount of public expenditure on housing can fix the crisis facing Australians without significant change to the demand side of housing economics; and* > > *(b) abandon its irresponsible immigration intake in order to address the housing crisis\".*",
+   "stage": "Second reading",
+   "ayes": 3,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-13/3"
+  },
+  {
+   "key": "federal-senate-8363",
+   "date": "2023-09-13",
+   "house": "senate",
+   "question": "Housing Australia Future Fund Bill 2023 and two others - Second Reading - Agree with bills' main idea",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-13/4"
+  },
+  {
+   "key": "federal-senate-8364",
+   "date": "2023-09-13",
+   "house": "senate",
+   "question": "The majority voted in favour of three sets of amendments: * the requests for amendments on sheet UC149 to the [Housing Australia Future Fund Bill 2023](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6970) * the amendment on sheet UC142 to the Housing Australia Future Fund Bill 2023 and * the amendment on sheet ZC221 to the [Treasury Laws Amendment (Housing Measures No. 1) Bill 2023](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6972) be agreed to. ### Request for amendment text (sheet UC149) See the wording [here](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6970_amend_11999215-4d54-4126-861a-d9f020f41b6e%22;rec=0). ### Amendment text (sheet UC142) > *(1) Clause 65, page 48 (line 24), omit “31 December 2028”, substitute “31 December 2026”.* ### Amendment text (sheet ZC221) > *(1) Schedule 2, page 19 (after line 3), after item 12, insert:* > >> *12A At the end of section 48* >> >> *Add:* >> >> *(3) The Investment Mandate may include a direction that the Board must, for the purposes of subsections (1) and (2), disregard liabilities or loans of a specified type.*",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-13/5"
+  },
+  {
+   "key": "federal-senate-8368",
+   "date": "2023-09-13",
+   "house": "senate",
+   "question": "Housing Australia Future Fund Bill 2023 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 36,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 10,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-13/9"
+  },
+  {
+   "key": "federal-representatives-8372",
+   "date": "2023-09-14",
+   "house": "representatives",
+   "question": "Housing Australia Future Fund Bill 2023 - Consideration of Senate Message - Agree with the Senate amendment",
+   "stage": "Consideration of Senate message",
+   "ayes": 91,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 138,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-09-14/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-827436",
+   "speaker": "Anne Urquhart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-09",
+   "stage_hint": null,
+   "brief": "The Selection of Bills Committee presented its first report of 2023, referring multiple bills to committees for inquiry, including the Housing Australia Future Fund Bill 2023 and related housing bills to the Economics Legislation Committee with a reporting date of 22 March. Senator McKim moved an unsuccessful amendment to extend that reporting date to 22 April, arguing the government's housing response is inadequate and a longer inquiry is needed to hear from renters and housing sector stakeholders."
+  },
+  {
+   "slug": "speech-827495",
+   "speaker": "Matt O'Sullivan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-02-09",
+   "stage_hint": null,
+   "brief": "The motion to change committee memberships was agreed, with Senator Faruqi replacing McKim on the Economics Legislation Committee for the Housing Australia Future Fund Bill inquiry, and McKim replacing Shoebridge on the Legal and Constitutional Affairs Committee for the Migration Amendment (Evacuation to Safety) Bill inquiry. Senators Bilyk, Brockman, Payne, Shoebridge, Sterle and White were appointed to the National Anti-Corruption Commission Joint Statutory Committee."
+  },
+  {
+   "slug": "speech-827695",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Reconstruction Fund Corporation Bill 2022 and the Housing Australia Future Fund Bill 2023 are urgent election commitments that will rebuild manufacturing, create jobs, reduce imports, and lower social costs, and criticised opposition to the bills as politically and economically senseless."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Housing Australia Future Fund Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00079",
+   "assent_date": "2023-09-28"
+  }
+ ]
+}

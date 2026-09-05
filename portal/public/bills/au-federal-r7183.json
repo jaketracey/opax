@@ -1,0 +1,540 @@
+{
+ "key": "au-federal-r7183",
+ "title": "New Vehicle Efficiency Standard (Consequential Amendments) Bill 2024",
+ "short_title": "New Vehicle Efficiency Standard (Consequential Amendments) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-03-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2024-05-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7183%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7183%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7183%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7183%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7183%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7183%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7183%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7183%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-05-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7183%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7182_ems_1ca0d0ea-1fa8-4406-8c04-9a58cb1b5d5a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7183%22",
+   "document_date": "2024-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00035",
+   "document_date": "2024-05-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-03-27",
+  "sentences": [
+   "This bill is part of a package that would create a new vehicle efficiency standard for Australia, reducing carbon dioxide emissions from new cars and light commercial vehicles and boosting the supply of low and zero emission vehicles.",
+   "The standard would set annual emissions targets for suppliers, who would earn credits for beating them and face penalties for exceeding them, with the ability to trade credits and a two-year grace period to comply.",
+   "The package would amend the Clean Energy Regulator Act 2011 and the Road Vehicle Standards Act 2018 to support the new framework, and the bill includes a review of the scheme in 2026."
+  ],
+  "changes": [
+   "Establishes a new vehicle efficiency standard for Australia.",
+   "Sets CO2 emissions targets for each regulated year from 2025 to 2029.",
+   "Allows suppliers to earn and trade credits for exceeding targets.",
+   "Imposes civil penalties for suppliers whose emissions remain above target after the grace period.",
+   "Enables the Minister to set targets for later years via legislative instrument.",
+   "Triggers the Regulatory Powers (Standard Provisions) Act 2014 for enforcement."
+  ],
+  "affected": "Vehicle suppliers bringing new cars, SUVs, utes, and vans to the Australian market.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:41Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8834",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "question": "New Vehicle Efficiency Standard Bill 2024, New Vehicle Efficiency Standard (Consequential Amendments) Bill 2024 - Reference to Committee - Put the question",
+   "stage": "Reference to Committee",
+   "ayes": 74,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 136,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-27/5"
+  },
+  {
+   "key": "federal-representatives-8835",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2024-03-27.34.1) introduced by Fairfax MP [Ted O'Brien](https://theyvoteforyou.org.au/people/representatives/fairfax/ted_o'brien), which means it failed and the bills will not be referred to that Committee. ### Amendment text > *That the [New Vehicle Efficiency Standard Bill 2024](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7182) and the [New Vehicle Efficiency Standard (Consequential Amendments) Bill 2024](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7183) be referred to the [Standing Committee on Regional Development, Infrastructure and Transport](https://www.aph.gov.au/Parliamentary_Business/Committees/House/Regional_Development_Infrastructure_and_Transport) for consideration and an advisory report by 3 May 2024.*",
+   "stage": "Reference to Committee",
+   "ayes": 57,
+   "noes": 80,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 7
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 73
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-27/6"
+  },
+  {
+   "key": "federal-representatives-8880",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2024-05-16.17.2): > *That so much of the standing orders be suspended as would prevent the motion of the third reading being moved without delay.* Standing orders are the usual procedural rules of parliament. This vote is to allow the ordinary process of considering bills to be hurried along.",
+   "stage": "Third reading",
+   "ayes": 81,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 77,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 146,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-16/1"
+  },
+  {
+   "key": "federal-representatives-8881",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "question": "New Vehicle Efficiency Standard Bill 2024, New Vehicle Efficiency Standard (Consequential Amendments) Bill 2024 - Third Reading - Put the question",
+   "stage": "Third reading",
+   "ayes": 81,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 77,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 147,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-16/2"
+  },
+  {
+   "key": "federal-representatives-8885",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "question": "New Vehicle Efficiency Standard (Consequential Amendments) Bill 2024 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 82,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 77,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 147,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-16/6"
+  },
+  {
+   "key": "federal-representatives-8886",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "question": "New Vehicle Efficiency Standard (Consequential Amendments) Bill 2024 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 90,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 77,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 145,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-16/7"
+  },
+  {
+   "key": "federal-representatives-8887",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2024-05-16.37.1): > *That so much of the standing orders be suspended as would prevent the [motion for the third reading](https://theyvoteforyou.org.au/divisions/representatives/2024-05-16/9) being moved without delay.* Standing orders are the usual procedural rules of parliament.",
+   "stage": "Third reading",
+   "ayes": 81,
+   "noes": 65,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 76,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 144,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-16/8"
+  },
+  {
+   "key": "federal-representatives-8888",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "question": "New Vehicle Efficiency Standard (Consequential Amendments) Bill 2024 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 89,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 76,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 144,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-16/9"
+  },
+  {
+   "key": "federal-senate-8921",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "New Vehicle Efficiency Standard Bill 2024, New Vehicle Efficiency Standard (Consequential Amendments) Bill 2024 - First Reading - Consider the bill",
+   "stage": "First Reading",
+   "ayes": 34,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/28"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "New Vehicle Efficiency Standard (Consequential Amendments) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00035",
+   "assent_date": "2024-05-31"
+  }
+ ]
+}

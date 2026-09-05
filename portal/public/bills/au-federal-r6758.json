@@ -1,0 +1,164 @@
+{
+ "key": "au-federal-r6758",
+ "title": "Corporations (Aboriginal and Torres Strait Islander) Amendment Bill 2021",
+ "short_title": "Corporations (Aboriginal and Torres Strait Islander) Amendment Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Indigenous Australians",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6758%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6758%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6758%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6758%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6758%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6758%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6758%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6758%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6758%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6758_ems_469c811a-59b3-4ec3-a944-66e8050959b5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6758_ems_e50c6386-2cb7-44cc-96a5-f1396a72876b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6758%22",
+   "document_date": "2021-08-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-25",
+  "sentences": [
+   "The bill would update the law governing Aboriginal and Torres Strait Islander corporations.",
+   "It would give the Registrar more powers to investigate and enforce compliance, including by accepting enforceable undertakings.",
+   "A review of the legislation would be required every seven years."
+  ],
+  "changes": [
+   "Require a legislative review every seven years.",
+   "Broaden the Registrar's investigation and enforcement powers, including by accepting enforceable undertakings.",
+   "Make it easier for corporations to manage membership and give members more privacy for personal information.",
+   "Allow more flexible corporate structure designs.",
+   "Simplify size classification criteria.",
+   "Increase transparency of senior management, including reporting their remuneration to members and the Registrar."
+  ],
+  "affected": "Aboriginal and Torres Strait Islander corporations overseen by the Registrar of the CATSI Act.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-411829",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The Corporations (Aboriginal and Torres Strait Islander) Amendment Bill 2021 was moved to improve and modernise the CATSI Act, benefiting over 3,300 corporations. The bill introduces fines, enforceable undertakings, and investigative powers, aligns size classifications with the ACNC (classifying over 64% of corporations as small), reduces reporting burdens, allows virtual meetings, and establishes an Aboriginal and Torres Strait Islander assets protection special account."
+  },
+  {
+   "slug": "speech-412805",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the Corporations (Aboriginal and Torres Strait Islander) Amendment Bill 2021 but reserves final position pending a Senate inquiry report due 14 October 2021, criticising the short consultation period (8 July to 9 August) during COVID outbreaks and noting concerns from NACCHO and the Native Title Council about inadequate engagement and impractical changes."
+  },
+  {
+   "slug": "speech-412806",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The member for Grey supported the Corporations (Aboriginal and Torres Strait Islander) Amendment Bill 2021, arguing it improves transparency and accountability by requiring corporations to present reports—including new remuneration reports—at annual general meetings, and allowing low-income corporations to opt out of holding AGMs. He highlighted concerns about Indigenous corporations receiving millions in mining royalties yet failing to invest in community needs like housing, and pointed to instances of missed meetings, opaque finances, and corrupt membership practices."
+  },
+  {
+   "slug": "speech-412809",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Corporations (Aboriginal and Torres Strait Islander) Amendment Bill 2021 but criticised the lack of consultation with First Nations organisations, noting that 143 Aboriginal community controlled health organisations have raised concerns. The opposition will support the bill but refer it to a committee before finalising its position."
+  },
+  {
+   "slug": "speech-412829",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The Corporations (Aboriginal and Torres Strait Islander) Amendment Bill 2021 modernises the CATSI Act to improve governance, remove unnecessary regulatory burdens, and increase transparency for Indigenous corporations, following multiple rounds of consultation and reviews from 2016 to 2020."
+  }
+ ],
+ "acts": []
+}

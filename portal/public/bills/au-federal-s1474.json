@@ -1,0 +1,67 @@
+{
+ "key": "au-federal-s1474",
+ "title": "Mandatory Regulation Impact Statement Bill 2025",
+ "short_title": "Mandatory Regulation Impact Statement Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-03",
+ "originating_house": "senate",
+ "sponsor": "TYRRELL, Sen Tammy",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "11012",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-11-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1474%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1474%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1474_ems_01d671bb-8e1d-4cba-9ee8-a67a30da4207%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1474%22",
+   "document_date": "2025-11-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-03",
+  "sentences": [
+   "The bill would force any person who brings a federal bill or rule before Parliament to also table a statement of its expected effects.",
+   "That statement must weigh the costs and benefits for businesses, community groups and individuals, and describe other ways the policy could be achieved.",
+   "The requirement starts the day after the Act receives royal assent, and a failure to provide the statement would not make the bill or rule invalid."
+  ],
+  "changes": [
+   "Requires a Regulation Impact Statement to be prepared for every bill and legislative instrument, not just government ones.",
+   "Makes the existing rule from the Legislative Handbook 2017 a legal requirement.",
+   "Expands the requirement to cover non-government proposed bills and instruments."
+  ],
+  "affected": "Members of Parliament introducing bills or legislative instruments, and businesses, community organisations and individuals affected by those laws.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:37:22Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

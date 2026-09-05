@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-s944",
+ "title": "Criminal Code Amendment (Misrepresentation of Age to a Minor) Bill 2013",
+ "short_title": "Criminal Code Amendment (Misrepresentation of Age to a Minor) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-12-12",
+ "originating_house": "senate",
+ "sponsor": "XENOPHON, Sen Nick",
+ "sponsor_party": "Independent Member",
+ "sponsor_person_id": "10717",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s944%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s944%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s944%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s944%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s944%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s944_ems_1a843298-87f6-4fcd-8c8f-6a47e62bd0b6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s944%22",
+   "document_date": "2013-12-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-826814",
+   "speaker": "Helen Kroger",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": "The Selection of Bills Committee presented its 11th report of 2013, recommending six bills be referred to specific committees for inquiry with set reporting dates, including the Environment Legislation Amendment Bill 2013 (report by 12 February 2014) and the Criminal Code Amendment (Harming Australians) Bill 2013 (report by 4 March 2014)."
+  }
+ ],
+ "acts": []
+}

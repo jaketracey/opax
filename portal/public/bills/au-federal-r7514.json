@@ -1,0 +1,103 @@
+{
+ "key": "au-federal-r7514",
+ "title": "Treasury Laws Amendment (Strengthening Accountability for Tax Adviser Misconduct and Other Measures) Bill 2026",
+ "short_title": "Treasury Laws Amendment (Strengthening Accountability for Tax Adviser Misconduct and Other Measures) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-07-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "before_parliament",
+ "status_as_of": "2026-08-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7514%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7514%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7514%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7514_ems_dd8b52a8-6e96-4254-a8a3-5248b02871e8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7514_ems_c709e05f-b620-43a7-a4a2-e8c3cdc5550f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7514%22",
+   "document_date": "2026-07-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1205694",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205813",
+   "speaker": "Tom French",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

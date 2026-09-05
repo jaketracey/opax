@@ -1,0 +1,385 @@
+{
+ "key": "au-federal-r6784",
+ "title": "Corporations Amendment (Meetings and Documents) Bill 2021",
+ "short_title": "Corporations Amendment (Meetings and Documents) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2022-02-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6784_ems_b97410ce-aeaa-4800-96c1-03a4ce699db3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6784_ems_7a210f1e-c314-4cd0-bc74-61e2490f68fd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6784_ems_ff74525f-8008-4d57-9a19-6b8ddc5241d0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6784%22",
+   "document_date": "2021-10-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00009",
+   "document_date": "2022-02-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7601",
+   "date": "2022-02-10",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2022-02-10.145.2) \"*that clause (c)(i) be agreed to.*\" ### What is clause (c)(i)? > *(c) the routine of business from 4.30 pm, or after consideration of the [Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6697) concludes, whichever is earlier, be consideration of the following items:* > >> *(i) [Corporations Amendment (Meetings and Documents) Bill 2021](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6784)*",
+   "stage": "Business motion",
+   "ayes": 41,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 21,
+    "earliest": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-02-10/7"
+  },
+  {
+   "key": "federal-senate-7605",
+   "date": "2022-02-10",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?id=2022-02-10.177.1) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means they failed. Senator McKim [explained that](https://www.openaustralia.org.au/senate/?gid=2022-02-10.172.3): > *This amendment would prevent listed companies from holding wholly virtual AGMs. It's been revised to align it with the amendments agreed to in the House to establish a review into these provisions of the bill. By their nature, listed companies have a public responsibility and the parliament should ensure that their AGMs are conducted in a publicly observable manner. Allowing listed companies to hold hybrid AGMs will provide an opportunity for all of the issues associated with virtual meetings to be sorted out and for there to be a real-world confirmation of their purported benefits. Until then, wholly virtual AGMs for listed companies should not be allowed and shareholders should retain the opportunity to sit in the same room as the executive and the board to bear witness to exactly what they are up to and have the capacity to hold them to account for their actions.* ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd037), the bill was introduced in order to: > * *allow companies to use technology to execute company documents such as contracts and deeds and to also sign meetings-related documents and provide those to their members and* > * *allow companies and registered schemes to hold hybrid meetings (which give members the option of either attending in person or remotely).*",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 14,
+    "earliest": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-02-10/11"
+  },
+  {
+   "key": "federal-senate-7606",
+   "date": "2022-02-10",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2022-02-10.181.1) to pass the bill in the Senate. In parliamentary jargon, they voted to read the bill [for a third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). Because the bill has already passed in the House of Representatives, it will now become law. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd037), the bill was introduced in order to: > * *allow companies to use technology to execute company documents such as contracts and deeds and to also sign meetings-related documents and provide those to their members and* > * *allow companies and registered schemes to hold hybrid meetings (which give members the option of either attending in person or remotely).*",
+   "stage": "Third reading",
+   "ayes": 31,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 14,
+    "member": 10,
+    "earliest": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-02-10/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-413530",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Meetings and Documents) Bill 2021 permanently allows companies, registered schemes and their officers to use digital technologies for meetings, sending materials and executing documents, replacing temporary COVID-19 relief expiring 31 March 2022. It requires companies to give shareholders a reasonable opportunity to participate, including speaking or asking questions orally and in writing, and allows shareholders with at least 5% voting power to request an independent report on a poll."
+  },
+  {
+   "slug": "speech-416357",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker supported making virtual annual general meetings permanent but moved an amendment for an independent review within two years, focusing on whether small shareholders can still hold directors to account."
+  },
+  {
+   "slug": "speech-416358",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the Corporations Amendment (Meetings and Documents) Bill 2021, arguing its two core elements—expanding electronic document signing and allowing virtual or hybrid annual general meetings—will increase efficiency, transparency, and shareholder access, particularly for smaller investors who previously could not attend physical meetings."
+  },
+  {
+   "slug": "speech-416359",
+   "speaker": "Andrew Keith Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Corporations Amendment (Meetings and Documents) Bill 2021, which enables virtual and hybrid AGMs, should balance accessibility benefits against the reduced scrutiny and engagement of shareholders, noting the Australian Shareholders Association's criticism that virtual meetings lack dynamism and accountability compared to in-person formats. The speech also paid tribute to historian Stuart Macintyre, citing his works like *The History Wars* and *Australia's Boldest Experiment*."
+  },
+  {
+   "slug": "speech-416361",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Corporations Amendment (Meetings and Documents) Bill 2021 should make permanent the temporary relief allowing companies to hold meetings electronically and execute documents digitally, citing positive pandemic experiences and increased shareholder participation."
+  },
+  {
+   "slug": "speech-416363",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Meetings and Documents) Bill 2021 would increase flexibility for listed companies and shareholder-board interactions, with Labor’s opposition unsurprising given their history."
+  },
+  {
+   "slug": "speech-416374",
+   "speaker": "Katie Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Corporations Amendment (Meetings and Documents) Bill 2021, which makes permanent temporary COVID-19 relief allowing companies to hold hybrid meetings and use electronic signatures, reducing regulatory burden and saving an estimated $430 million per year for 10 years."
+  },
+  {
+   "slug": "speech-416375",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Meetings and Documents) Bill 2021 permanently allows companies to hold physical, hybrid, or virtual meetings (if permitted by their constitution), receive documents electronically or in hard copy, and execute documents using electronic or wet-ink signatures, with a 12-month opt-in review of annual general meetings."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Corporations Amendment (Meetings and Documents) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00009",
+   "assent_date": "2022-02-22"
+  }
+ ]
+}

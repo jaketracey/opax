@@ -1,0 +1,695 @@
+{
+ "key": "au-federal-r7343",
+ "title": "Aged Care and Other Legislation Amendment Bill 2025",
+ "short_title": "Aged Care and Other Legislation Amendment Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health, Disability and Ageing",
+ "status": "passed",
+ "status_as_of": "2025-09-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7343_ems_90075639-c44f-4e28-9a0d-06ab80610c21%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7343%22",
+   "document_date": "2025-07-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00045",
+   "document_date": "2025-09-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-24",
+  "sentences": [
+   "This bill makes technical corrections to aged care and related laws.",
+   "It would update the Aged Care Act 2024 and other legislation to support the start and operation of those Acts.",
+   "The bill also changes the Healthcare Identifiers Act 2010 to allow health identifiers to be used for aged care, disability and health administration purposes."
+  ],
+  "changes": [
+   "Amends the Aged Care Act 2024 and the Aged Care (Consequential and Transitional Provisions) Act 2024.",
+   "Makes consequential amendments to various related laws.",
+   "Amends the Healthcare Identifiers Act 2010 to permit use of healthcare identifiers for aged care, disability and other support services."
+  ],
+  "affected": "Older individuals, their families and carers, and providers of health, aged care and disability services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9752",
+   "date": "2025-09-03",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7343_amend_8b9539fd-2275-4854-a019-a8418db5a8ab%22;rec=0) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means that the wording of the usual motion will remain unchanged. ### Amendment text > *At the end of the motion, add “, but the Senate calls on the Government to:* > > *(a) immediately register the Aged Care Rules upon Royal Assent of these bills,* > > *(b) immediately publish a release schedule for Support at Home places to ensure the aged care sector can adequately plan and scale up the workforce,* > > *(c) immediately release the final Support at Home Manual to ensure sector readiness for 1 November 2025,* > > *(d) undertake further consultation on care management fee caps and service delivery, including with clinicians, to ensure no older Australian sees a reduction in the quality of care as a result of the Government’s decision to halve the value of care management,* > > *(e) expedite the design of the program to replace the Commonwealth Home Support Program to prevent the challenges associated with rushed policy implementation as seen with the Aged Care Act 2024 , and* > > *(f) acknowledge the regulatory and financial burden placed on the sector as a result of the Government’s decision to delay the implementation of the Aged Care Act”.*",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/3"
+  },
+  {
+   "key": "federal-senate-9753",
+   "date": "2025-09-03",
+   "house": "senate",
+   "question": "The majority voted in favour of [part (a) of the amendment on sheet 3426](https://www.openaustralia.org.au/senate/?gid=2025-09-03.18.1), which means it succeeded. The amendment changes the text of the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). While motions like these do not have any legal force, they are politically influential because they represent the will of the Senate. ### Amendment text > *At the end of the motion, add “, but the Senate:* > > *(a) notes that:* > >> *(i) the Albanese Labor Government promised to deliver 83,000 new home care places for older Australians, but to date has delivered zero,* >> >> *(ii) 87,597 older Australians are currently waiting on the National Priority System for a home care place they have been assessed as needing,* >> >> *(iii) 121,596 older Australians are waiting to be assessed for a home care place,* >> >> *(iv) as a result, more than 200,000 vulnerable Australians and their families are still waiting for either a home care place or an assessment for a home care place,* >> >> *(v) almost 5,000 vulnerable Australians have died in the past year while on the waiting list for a home care place,* >> >> *(vi) the most vulnerable Australians are now waiting up to 15 months for access to a home care place they have been assessed as needing, compared to 3 to 6 months under the former Coalition Government, and* >> >> *(vii) the aged care sector is ready to deliver home care places, despite the Minister falsely blaming the sector for the Government’s failures; and ...*",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/4"
+  },
+  {
+   "key": "federal-senate-9754",
+   "date": "2025-09-03",
+   "house": "senate",
+   "question": "The majority voted against [part (b) of the amendment on sheet 3426](https://www.openaustralia.org.au/senate/?gid=2025-09-03.18.1), which means it failed. The amendment would have changed the text of the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the usual motion will remain unchanged. ### Amendment text > *At the end of the motion, add “, but the Senate:* > > *(a) ...* > > *(b) condemns the Prime Minister for his cruel broken promise, which has put some of our most vulnerable Australians at risk”.*",
+   "stage": "Second reading",
+   "ayes": 23,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/5"
+  },
+  {
+   "key": "federal-senate-9755",
+   "date": "2025-09-03",
+   "house": "senate",
+   "question": "The majority voted against a [Greens amendment](https://www.openaustralia.org.au/senate/?gid=2025-09-03.20.1) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the usual motion will remain unchanged. ### Amendment text > *At the end of the motion, add “, but the Senate:* > > *(a) notes that:* > >> *(i) the Royal Commission into Aged Care Quality and Safety recommended that no person with disability under the age of 65 should remain living in residential aged care from 2025,* >> >> *(ii) while the Government accepted this recommendation, this bill retains in the Aged Care Act 2024 a formalised pathway to place people under 65 in aged care, and* >> >> *(iii) as of 31 March 2025, there are 959 people aged under 65 in residential aged care, this cohort includes disabled people who should not be in residential aged care and instead should be receiving NDIS supports to enable them to exit residential aged care; and* > > *(b) calls on the Government to implement the recommendation of the Royal Commission and ensure no disabled person under the age of 65 remains in residential aged care”.*",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/6"
+  },
+  {
+   "key": "federal-senate-9756",
+   "date": "2025-09-03",
+   "house": "senate",
+   "question": "The majority voted against requests for [amendments](https://www.openaustralia.org.au/senate/?gid=2025-09-03.74.1) moved by South Australian Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young) (Greens), which means they failed. ### Amendment text > *That the House of Representatives be requested to make the following amendment:* > > *(1) Schedule 1, page 68 (after line 12), after item 229, insert:* > >> *229A After subsection 323(6)* >> >> *Insert:* >> >>> *Excluding redress amounts* >>> >>> *(6A) In working out an individual's total assessable income, disregard an amount paid to, or for the benefit of, the individual by way of compensation under a scheme established by a law of the Commonwealth, a State or a Territory for providing redress to survivors of any form of abuse or wrongdoing.* >>> >>> *(6B) To avoid doubt, an amount mentioned in subsection (6A) is to also be disregarded in making determinations under subsection (1) or paragraph (2)(b), (3)(b), (4)(b) or (5)(b).* > > *(2) Schedule 1, page 69 (after line 6), after item 236, insert:* > >> *236A After subsection 330(8)* >> >> *Insert:* >> >>> *Excluding redress amounts* >>> >>> *(8A) In working out the value of an individual's assets, disregard an amount paid to, or for the benefit of, the individual by way of compensation under a scheme established by a law of the Commonwealth, a State or a Territory for providing redress to survivors of any form of abuse or wrongdoing.* >>> >>> *(8B) To avoid doubt, an amount mentioned in subsection (8A) is to also be disregarded in making determinations under paragraph (2)(a) or (b) or (3)(a) or (b) or subsection (4).* ### Statement in respect to the amendments > *Statement pursuant to the order of the Senate of 26 June 2000* > > *Amendments (1) and (2)* > >> *Amendments (1) and (2) are framed as requests because they amend the bill to exclude certain amounts from the means testing rules that determine the contributions and fee",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/7"
+  },
+  {
+   "key": "federal-senate-9768",
+   "date": "2025-09-03",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2025-09-03.276.1) introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which means it will now be incorporated into the bill. Senator Ruston [explained that](https://www.openaustralia.org.au/senate/?gid=2025-09-03.276.1) \"*The amendments that the opposition is proposing on this are to reduce the minister's rulemaking powers from 24 months to 12 months.*\" ### Amendment text > *(1) Schedule 2, heading to Part 2, page 107 (line 2), omit \"24 months\", substitute \"12 months\".* > > *(2) Schedule 2, item 30, page 107 (line 9), omit \"24 months\", substitute \"12 months\".* > > *(3) Schedule 2, item 30, page 108 (line 2), omit \"24 months\", substitute \"12 months\".* > > *(4) Schedule 2, item 30, page 108 (line 31), omit \"24 months\", substitute \"12 months\".* > > *(5) Schedule 2, item 30, page 109 (line 3), omit \"24 months\", substitute \"12 months\".*",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 21,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/19"
+  },
+  {
+   "key": "federal-senate-9769",
+   "date": "2025-09-03",
+   "house": "senate",
+   "question": "The majority voted in favour of [requests (1) and (2) on sheet 3414](https://www.openaustralia.org.au/senate/?gid=2025-09-03.280.1) introduced by South Australian [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which means they will now be included in the bill. Senator Ruston [explained that](https://www.openaustralia.org.au/senate/?gid=2025-09-03.280.1): > *What these amendments do is make sure that all new packages that are in the system are released immediately. We want to make sure that older Australians who have been assessed as needing care get these packages as soon as they are able to be delivered. So these amendments force the government's hand in making sure that any new home-care packages are released immediately upon royal assent.* ### Requests text > *(1) Clause 2, page 2 (at the end of the table), add:* > >> *7. Schedule 4* >> >>> *The day after this Act receives the Royal Assent.* > > *(2) Page 171 (after line 30), at the end of the Bill, add:* > >> *Schedule 4 — Release of remaining home care packages* >> >> *Aged Care Act 1997* >> >> *1 After subsection 23B‑1(5)* >> >>> *Insert:* >>> >>> *(5A) The Secretary must, as soon as practicable after the commencement of this subsection, make such determinations under subsection (1) as are necessary to ensure all home care packages that were available but not released immediately before that commencement under the Australian Government framework known as the National Priority System are released to recipients.* Statement pursuant to the order of the Senate of 26 June 2000 > *Amendments (1) and (2)* > > *Amendments (1) and (2) are framed as requests because they amend the bill to provide for the release of home care packages in accordance with the Commonwealth aged care system.* > > *This will likely increase the amount of expenditure under the appropriation in section 96-10 of the Aged Care Act 1997.* > > *Statement by the Clerk of the Senate pursuant to the order of the S",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 20,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/20"
+  },
+  {
+   "key": "federal-senate-9770",
+   "date": "2025-09-03",
+   "house": "senate",
+   "question": "The majority voted against [requests (1) and (2) on sheet 3405](https://www.openaustralia.org.au/senate/?gid=2025-09-03.289.1) introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent), which means they failed. Senator Thorpe [explained that](https://www.openaustralia.org.au/senate/?gid=2025-09-03.289.1): > *These are very simple amendments. They ensure that compensation or redress payments to Aboriginal and Torres Strait Islander people, including for ... stolen wages and stolen gen payments are excluded from income and assets tests under aged-care legislation.* ### Amendment text > *(1) Schedule 1, page 68 (after line 12), after item 229, insert:* > > *229AA Before subsection 323(7)* > > *Insert:* > >> *Excluding certain redress amounts* >> >> *(7AA) In working out an individual's total assessable income, disregard the following amounts:* >> >>> *(a) an amount paid to, or for the benefit of, the individual by way of compensation under a scheme established by a law of the Commonwealth, a State or a Territory for providing redress to Aboriginal or Torres Strait Islander survivors of any form of abuse or wrongdoing, including redress to the Stolen Generations and redress in respect of stolen wages;* >>> >>> *(b) an amount paid to, or for the benefit of, the individual by way of compensation pursuant to an order of a Commonwealth, State or Territory court in respect of any form of abuse or wrongdoing in relation to Aboriginal or Torres Strait Islander persons, including in respect of stolen wages.* >> >> *(7AB) To avoid doubt, the amounts mentioned in subsection (7AA) are to also be disregarded in making determinations under subsection (1) or paragraph (2)(b), (3)(b), (4)(b) or (5)(b).* > > *(2) Schedule 1, page 69 (after line 6), after item 236, insert:* > >> *236AA Before subsection 330(9)* >> >> *Insert:* >> >>> *Excluding certain redress amounts* >>> >>> *(9AA) In working out the value of an ind",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/21"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1195276",
+   "speaker": "Sam Rae",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195696",
+   "speaker": "Melissa McIntosh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-07-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195697",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195967",
+   "speaker": "Tony Sheldon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-31",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196375",
+   "speaker": "Anne Ruston",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-08-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196871",
+   "speaker": "Anne Ruston",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197004",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197139",
+   "speaker": "Jordon Steele-John",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2025-09-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197189",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197216",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197219",
+   "speaker": "Sam Rae",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197227",
+   "speaker": "Sam Rae",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care and Other Legislation Amendment Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00045",
+   "assent_date": "2025-09-19"
+  }
+ ]
+}

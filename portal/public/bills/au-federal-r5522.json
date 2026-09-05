@@ -1,0 +1,409 @@
+{
+ "key": "au-federal-r5522",
+ "title": "Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015",
+ "short_title": "Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-08-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5522%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5522%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5522%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5522%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5522%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5522%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5522%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5522%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5522%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5522_ems_0bc85faa-cfb9-404f-9462-440215d0296f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5522%22",
+   "document_date": "2015-08-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-08-20",
+  "sentences": [
+   "The bill would change who can challenge environmental decisions under the EPBC Act by adopting the standing test from the ADJR Act.",
+   "It would extend the meaning of 'person aggrieved' in the EPBC Act to match the broader standing provisions of the ADJR Act.",
+   "The change would apply to applications made under the ADJR Act from the day after Royal Assent, regardless of when the decision or conduct occurred."
+  ],
+  "changes": [
+   "Extends the meaning of 'person aggrieved' in the EPBC Act.",
+   "Aligns the EPBC Act's standing provisions with those of the ADJR Act.",
+   "Applies the new standing test to applications made the day after Royal Assent."
+  ],
+  "affected": "Persons who seek judicial review of decisions under the EPBC Act.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:53:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3911",
+   "date": "2015-09-10",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-09-10/1"
+  },
+  {
+   "key": "federal-representatives-3912",
+   "date": "2015-09-10",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 77,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-09-10/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-317863",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Environment Protection and Biodiversity Conservation Act 1999 needs updating to prevent eco-warriors and career protesters from using litigation to disrupt and delay projects, citing the Adani mine and Tasmanian timber industry as examples. They claimed the bill would not affect genuine objectors like farmers and landowners, and referenced a document from Greenpeace, CoalSwarm, and the Graeme Wood Foundation outlining a strategy to \"disrupt and delay\" key projects."
+  },
+  {
+   "slug": "speech-317869",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015, arguing it would remove a legal loophole that allows groups like Greenpeace to use litigation to disrupt and delay coal projects such as Adani in Queensland. The bill would preserve appeal rights for affected farmers and landholders while preventing unrelated activists from challenging approved projects."
+  },
+  {
+   "slug": "speech-317870",
+   "speaker": "Bert van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015 would remove the ability of groups like Greenpeace to mount legal challenges delaying major infrastructure projects such as mines, rail and ports. He noted the government has halved approval times, cleared a backlog, and approved over $1 trillion in projects, citing the Adani mine as an example of a project that would provide jobs."
+  },
+  {
+   "slug": "speech-317871",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015, arguing it would repeal extended standing provisions and hinder environmental challenges. They cited that only six of 5,500 EPBC-approved projects faced successful legal challenges, and referenced the Mackay Conservation Group's case against the Adani coalmine, where Minister Greg Hunt admitted an error."
+  },
+  {
+   "slug": "speech-317874",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The member argued that the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015 would protect Australian jobs by removing standing for activists with political interests to litigate against development projects, and cited 12,500 new jobs in Durack and over 335,000 nationally since the Abbott government took office."
+  },
+  {
+   "slug": "speech-317876",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015, which repeals section 487 of the EPBC Act to limit legal standing for environmental groups, citing the Carmichael mine case as an example of vexatious litigation. The speaker claimed the provision allows anyone in Australia to challenge developments, disrupting projects, and stated that genuine concerns can be raised through environmental impact statements instead."
+  },
+  {
+   "slug": "speech-317878",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015 is needed to stop people with minimal environmental involvement from objecting to projects anywhere in Australia. He supported the Carmichael mine and baseload coal-fired power for North Queensland, stating these are essential for local small businesses and economic development, and criticised opponents like the member for Melbourne for hypocrisy on energy use."
+  },
+  {
+   "slug": "speech-317880",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015, arguing it would restrict third parties' ability to challenge environmental approvals under the EPBC Act by limiting judicial review to individuals directly affected. The speaker cited community concerns in the electorate of Richmond, New South Wales, particularly opposition to coal seam gas mining, and criticised the Abbott government and the Nationals for supporting the bill and pro-CSG policies."
+  },
+  {
+   "slug": "speech-318050",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015 is needed to stop activist groups using \"lawfare\" to delay projects like Adani's Carmichael mine, which has spent $1 billion over seven years and would provide electricity to 100 million people in India while creating up to 10,000 jobs."
+  },
+  {
+   "slug": "speech-318065",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015, arguing it would remove third-party appeal rights and damage environmental protection and democracy, and cited Alan Jones's criticism and data that only 0.4% of projects had faced third-party legal challenges."
+  },
+  {
+   "slug": "speech-318067",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The speaker argued against repealing section 487 of the EPBC Act, stating it would weaken environmental protections and make it harder for ordinary Australians to challenge major projects. He criticised the Abbott government for using the Federal Court's consent order setting aside the Adani Carmichael coal mine approval—due to the minister's failure to follow mandatory rules—as a pretext for the bill, noting only 33 judicial challenges occurred out of 5,500 projects over 15 years."
+  },
+  {
+   "slug": "speech-318068",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the EPBC Amendment (Standing) Bill 2015 is needed to stop \"American-style\" litigation by green activists, which they claimed is used to disrupt and delay major projects and increase investor risk. They announced the government will repeal section 487 of the EPBC Act to restrict legal standing to those with a direct interest, citing a 2011 strategy to \"disrupt and delay key projects and infrastructure,\" and criticised Labor for opposing the change while also raising concerns about a proliferation of environmental science degrees and advocating for a future debate on nuclear power."
+  },
+  {
+   "slug": "speech-318070",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "Support was voiced for the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015, which removes section 487 to stop environmental groups from using courts to delay resource projects, citing Greenpeace's false Great Barrier Reef photo and its \"disrupt and delay\" strategy. The opposition and Independents were urged to back the bill to protect jobs, with the $583 million Moreton Bay Rail Link highlighted as an example of development and conservation coexisting."
+  },
+  {
+   "slug": "speech-318157",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-10",
+   "stage_hint": null,
+   "brief": "The speaker argued against the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015, stating it would weaken the EPBC Act by removing third-party appeal rights, which he said improve accountability and have not hindered major resource investments—over $280 billion approved under the Act, including the Gorgon Project and Carmichael mine. He noted only 33 Federal Court challenges against 22 projects since 2000 and called the amendment a bad one he could not support."
+  },
+  {
+   "slug": "speech-318158",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-10",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015, which removes the provision allowing environmental groups to challenge projects in court, claiming it protects jobs and prevents \"vigilante litigation.\" He also criticised Newcastle City Council and Labor politicians for moving investments away from coal, citing the industry's $5.9 billion direct expenditure and 11,078 employees in the Hunter region."
+  },
+  {
+   "slug": "speech-318159",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-10",
+   "stage_hint": null,
+   "brief": "Opposed the bill to remove extended standing for judicial review under the EPBC Act, arguing it would weaken environmental protections and democratic accountability—noting only about 30 third-party actions had been brought in 15 years and that the provision had been endorsed by a coalition-led Senate committee in 1998 and the Productivity Commission in 2013."
+  },
+  {
+   "slug": "speech-318160",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-10",
+   "stage_hint": null,
+   "brief": "The speaker argued for repealing section 487 of the EPBC Act, claiming it allows individuals and organisations with no direct interest to misuse legal challenges, particularly targeting the Adani Carmichael coal mine in Queensland. The speaker stated the extreme green movement has used \"lawfare\" to delay the project, costing jobs and harming regional communities like Mackay and Bowen, while the mine could lift millions of Indians out of energy poverty."
+  },
+  {
+   "slug": "speech-318163",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015 is poorly conceived legislation introduced for poor reasons."
+  },
+  {
+   "slug": "speech-318166",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2015-09-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015 is wrong because it diminishes environmental protections and denies Australian citizens the right to judicial review. The speaker also listed 10 characteristics of a \"pre police state\" in Australia, including mandatory metadata retention, media manipulation, secrecy around immigration responses, arrest on suspicion for terrorism, indefinite detention of asylum seekers, disregard for international law, lack of parliamentary debate on war, bullying of the Human Rights Commission president, and overreach by the Australian Border Force."
+  },
+  {
+   "slug": "speech-318167",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-10",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015, arguing it would weaken environmental protections and limit the ability of third parties, including farmers and community groups, to seek judicial review. They cited that only one out of 5,500 projects had been stopped under the current system, and accused the Abbott government of using the bill to cover up its own incompetence in approving the Adani Carmichael mine."
+  },
+  {
+   "slug": "speech-318168",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-10",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015, arguing that removing third-party legal standing under section 487 of the EPBC Act is unwarranted—citing that among 5,500 development applications, only 33 were challenged in court, 6 succeeded, and just one project was stopped. The speaker also criticised the Abbott government for undermining environmental protections, misrepresenting the Adani project court case, and attacking environmentalists, while noting the Hawke review did not raise concerns about section 487."
+  },
+  {
+   "slug": "speech-318169",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-10",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015, arguing it would remove communities' and farmers' rights to challenge developments like the Adani mine, and accused the government of falsely labeling concerned citizens as vigilantes to cover up its own failures."
+  },
+  {
+   "slug": "speech-318174",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-10",
+   "stage_hint": null,
+   "brief": "Opposed the bill to repeal section 487 of the EPBC Act, arguing it was a reaction to a single consent order on the Adani Carmichael project, not evidence of vexatious litigation; noted only 33 court challenges out of 5,500 projects (0.4%) and that the 2009 Hawke review recommended maintaining the provision."
+  },
+  {
+   "slug": "speech-318178",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-10",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Environment Protection and Biodiversity Conservation Amendment (Standing) Bill 2015, arguing it would remove the ability of third parties—such as community groups—to legally challenge environmental approvals, weakening natural justice. They criticised Minister Greg Hunt’s response to an error and defended community activism, citing their own leadership of the Werribee Residents Against the Toxic Dump campaign."
+  }
+ ],
+ "acts": []
+}

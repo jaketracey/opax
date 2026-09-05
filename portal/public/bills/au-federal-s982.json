@@ -1,0 +1,624 @@
+{
+ "key": "au-federal-s982",
+ "title": "Counter-Terrorism Legislation Amendment Bill (No. 1) 2014",
+ "short_title": "Counter-Terrorism Legislation Amendment Bill (No. 1) 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-29",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2014-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s982_ems_a8ef0a8b-6845-4e3c-942e-12c2d3c0417d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s982_ems_5ada80a9-3dc6-4894-b301-1618320acafd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s982_ems_e488a40a-d157-4520-966f-95d5256a0727%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s982_ems_fa346ccf-3cca-4947-94b3-a2655f0eaccc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/3514348%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s982%22",
+   "document_date": "2014-10-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00134",
+   "document_date": "2014-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-3619",
+   "date": "2014-11-26",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment Bill (No. 1) 2014 - in Committee - Control orders only if support/facilitation already provided",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 9,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-11-26/1"
+  },
+  {
+   "key": "federal-senate-3620",
+   "date": "2014-11-26",
+   "house": "senate",
+   "question": "The majority disagreed that a [definition](http://www.openaustralia.org.au/senate/?gid=2014-11-26.24.1) of the '[Convention Against Torture](http://en.wikipedia.org/wiki/Convention_Against_Torture)' should be inserted into the [Intelligence Services Act 2001](http://en.wikipedia.org/wiki/Intelligence_Services_Act_2001), which was proposed by Greens Senator [Penny Wright](https://theyvoteforyou.org.au/people/senate/sa/penny_wright). Attorney General [George Brandis](https://theyvoteforyou.org.au/people/senate/queensland/george_brandis) [said](http://www.openaustralia.org.au/senate/?gid=2014-11-26.26.1) that it was an unnecessary amendment. ### Background to the bill This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s982) is the third that has been introduced since mid-2014. A number of incidents have happened before and during the course of the introduction of these bills. There was [one of the biggest counter-terrorism operations](http://www.abc.net.au/news/2014-09-18/authorities-thwart-beheading-plot-in-australias-biggest-raid/5754276) in Australian history. The Prime Minister [Tony Abbott](https://theyvoteforyou.org.au/people/representatives/warringah/tony_abbott) also confirmed that Australia would be [sending the military to Iraq](http://www.abc.net.au/news/2014-10-15/special-forces-could-move-into-iraq-within-days-abbott/5815534) to fight the [Islamic State](http://en.wikipedia.org/wiki/Islamic_State_of_Iraq_and_the_Levant) (IS) (also known as the Islamic State of Iraq and Syria (ISIS) or the Islamic State of Iraq and the Levant (ISIL)). The scope of this bill is narrower than the earlier two but some of its measures are \"significant and warrant close scrutiny\" (see [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1415a/15bd050)). In particular, the proposed expansion of the [control order](http://www.ag.gov.au/NationalSecurity/Counterterrorismlaw/Pages/Controlorders.aspx)",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "earliest": 3,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-11-26/2"
+  },
+  {
+   "key": "federal-senate-3621",
+   "date": "2014-11-26",
+   "house": "senate",
+   "question": "The majority disagreed that a [new section](http://www.openaustralia.org.au/senate/?gid=2014-11-26.39.1) should be included in the bill that stated: > *In performing its functions, [ASIS](http://en.wikipedia.org/wiki/Australian_Secret_Intelligence_Service) must not engage in any conduct that would be contrary to Australia's obligations under the [Convention Against Torture](http://en.wikipedia.org/wiki/Convention_Against_Torture).* Attorney General [George Brandis](https://theyvoteforyou.org.au/people/senate/queensland/george_brandis) [said](http://www.openaustralia.org.au/senate/?gid=2014-11-26.26.1) that it was an unnecessary amendment. ### Background to the bill This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s982) is the third that has been introduced since mid-2014. A number of incidents have happened before and during the course of the introduction of these bills. There was [one of the biggest counter-terrorism operations](http://www.abc.net.au/news/2014-09-18/authorities-thwart-beheading-plot-in-australias-biggest-raid/5754276) in Australian history. The Prime Minister [Tony Abbott](https://theyvoteforyou.org.au/people/representatives/warringah/tony_abbott) also confirmed that Australia would be [sending the military to Iraq](http://www.abc.net.au/news/2014-10-15/special-forces-could-move-into-iraq-within-days-abbott/5815534) to fight the [Islamic State](http://en.wikipedia.org/wiki/Islamic_State_of_Iraq_and_the_Levant) (IS) (also known as the Islamic State of Iraq and Syria (ISIS) or the Islamic State of Iraq and the Levant (ISIL)). The scope of this bill is narrower than the earlier two but some of its measures are \"significant and warrant close scrutiny\" (see [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1415a/15bd050)). In particular, the proposed expansion of the [control order](http://www.ag.gov.au/NationalSecurity/Counterterrorismlaw/Pages/Controlorders.aspx)",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "earliest": 4,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-11-26/3"
+  },
+  {
+   "key": "federal-senate-3622",
+   "date": "2014-11-26",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment Bill (No. 1) 2014 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 38,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "earliest": 5,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-11-26/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-302321",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303035",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303039",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303181",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303182",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303183",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303184",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303185",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303187",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303189",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303190",
+   "speaker": "Wyatt Roy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303191",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303192",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303194",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303195",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303196",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303197",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303198",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303201",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303202",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303203",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303204",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303207",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303208",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-01",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Counter-Terrorism Legislation Amendment Act (No. 1) 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00134",
+   "assent_date": "2014-12-12"
+  }
+ ]
+}

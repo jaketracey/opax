@@ -1,0 +1,202 @@
+{
+ "key": "au-federal-r6719",
+ "title": "Medical and Midwife Indemnity Legislation Amendment Bill 2021",
+ "short_title": "Medical and Midwife Indemnity Legislation Amendment Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2021-06-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6719%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6719%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6719%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6719%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6719%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6719%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6719%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6719%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6719%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6719%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6719%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6719%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6719_ems_ffc02c21-3763-4c35-b015-1590fa0a2009%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6719%22",
+   "document_date": "2021-05-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00048",
+   "document_date": "2021-06-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-407181",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The Medical and Midwife Indemnity Legislation Amendment Bill 2021 expands eligibility for claims against privately practising midwives under Commonwealth indemnity schemes, including coverage for registered only midwives from 1 July 2020 and access for employed endorsed midwives, including those at Aboriginal Community Controlled Health Services, to the Midwife Professional Indemnity Scheme and run-off cover scheme."
+  },
+  {
+   "slug": "speech-408644",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The opposition supported the Medical and Midwife Indemnity Legislation Amendment Bill 2021, which expands indemnity insurance for midwives in private practice and Aboriginal community controlled health services, but does not cover home births. The speaker moved a second reading amendment urging the government to deliver policies to better support the health of families and healthcare workers."
+  },
+  {
+   "slug": "speech-408646",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Medical and Midwife Indemnity Legislation Amendment Bill 2021, arguing it corrects anomalies so that both employed and privately practising midwives, including those in remote Aboriginal Community Controlled Health Services, are covered under existing schemes—with the government covering 80% of claims above $100,000 and 100% of claims above $2 million, though homebirths remain excluded."
+  },
+  {
+   "slug": "speech-408647",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Medical and Midwife Indemnity Legislation Amendment Bill 2021, which extends indemnity insurance to all endorsed midwives regardless of employment status, including those working with Aboriginal Community Controlled Health Organisations on Birthing on Country models. They also called for reinstating the Medicare Benefits Schedule item for abdominoplasty for women with abdominal separation from pregnancy and for stillbirth to be made a national health priority."
+  },
+  {
+   "slug": "speech-408648",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The Medical and Midwife Indemnity Legislation Amendment Bill 2021 expands eligibility for the Midwife Professional Indemnity Scheme to all endorsed midwives in private practice regardless of employment or insurance arrangements, closing an eligibility gap and supporting Aboriginal community controlled health services, with measures taking effect from 1 July 2020 for registered midwives and 1 July 2021 for employment limitations."
+  },
+  {
+   "slug": "speech-408649",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Medical and Midwife Indemnity Legislation Amendment Bill 2021 but argued it does not go far enough, calling for a comprehensive national obstetric care plan and promoting a \"First 1,000 Days\" policy to improve pregnancy outcomes and reduce preventable stillbirths and neonatal deaths."
+  },
+  {
+   "slug": "speech-408650",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The bill expands Commonwealth indemnity schemes to cover all privately practising midwives, addressing insurance anomalies for employed endorsed midwives and registered-only midwives, to support continuity of midwifery care and give mothers-to-be more birthing choices."
+  },
+  {
+   "slug": "speech-408651",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The bill expands indemnity scheme eligibility for privately practising midwives and removes employment criteria to support Aboriginal community-controlled health services, but the speaker argued further reforms are needed—including insurance for homebirth intrapartum care and changes to Medicare item rules—to give women genuine choice and safety in maternity care."
+  },
+  {
+   "slug": "speech-408654",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The Medical and Midwife Indemnity Legislation Amendment Bill 2021 extends insurance arrangements for midwives and other health professionals, and the speaker supports the bill."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Medical and Midwife Indemnity Legislation Amendment Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00048",
+   "assent_date": "2021-06-23"
+  }
+ ]
+}

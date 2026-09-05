@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-s1241",
+ "title": "Public Governance, Performance and Accountability Amendment (Tax Transparency in Procurement and Grants) Bill 2019",
+ "short_title": "Public Governance, Performance and Accountability Amendment (Tax Transparency in Procurement and Grants) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-11-13",
+ "originating_house": "senate",
+ "sponsor": "PATRICK, Sen Rex",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10903",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1241%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1241%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1241%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1241_ems_2caf8455-62e6-4672-9752-c576195c229a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1241%22",
+   "document_date": "2019-11-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-11-13",
+  "sentences": [
+   "This bill would require government agencies to collect and publish information about companies and grant recipients that have links to countries the minister designates as tax havens.",
+   "The responsible minister would prescribe tax havens after consulting the Commissioner of Taxation and considering public submissions, and agencies would need to assess tax avoidance risks with the ATO before awarding contracts or grants above certain values.",
+   "Companies bidding for contracts worth over $4 million, or $7.5 million for construction, would have to disclose whether they or their related entities are located in a prescribed tax haven."
+  ],
+  "changes": [
+   "Require the minister to prescribe tax havens after consultation and public comment.",
+   "Impose a disclosure obligation on tenderers and grant applicants about tax haven links.",
+   "Require officials to consider tax avoidance risks in consultation with the ATO.",
+   "Require agencies to publish the number and total value of contracts awarded to entities with tax haven links in their annual reports.",
+   "Apply similar transparency requirements to grants awarded by Commonwealth agencies."
+  ],
+  "affected": "Companies bidding for Commonwealth contracts, grant applicants, and the government agencies that award them.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

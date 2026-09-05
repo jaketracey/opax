@@ -1,0 +1,199 @@
+{
+ "key": "au-federal-r5589",
+ "title": "Australian Crime Commission (National Policing Information Charges) Bill 2015",
+ "short_title": "Australian Crime Commission (National Policing Information Charges) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Justice",
+ "status": "passed",
+ "status_as_of": "2016-05-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-05-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5589_ems_db775faa-96d5-4b39-943d-8aaf2a56238b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/4333663%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5589%22",
+   "document_date": "2015-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00044",
+   "document_date": "2016-05-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-325393",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-03",
+   "stage_hint": null,
+   "brief": "The speaker moved to merge CrimTrac and the Australian Crime Commission into a single agency to improve national policing information and intelligence, supported by a self-funded charging model and a new Intergovernmental Agreement."
+  },
+  {
+   "slug": "speech-327200",
+   "speaker": "Ross Vasta",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-327202",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the merger of CrimTrac and the Australian Crime Commission under two bills to improve national policing information sharing. They noted recent seizures of 47 and 71 tonnes of illicit tobacco, argued that Labor’s proposed $47 billion tobacco excise increase would turbocharge the black market, and raised concerns about Australia Post’s subsidy of international mail increasing law enforcement workload."
+  },
+  {
+   "slug": "speech-327204",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Crime Commission Amendment (National Policing Information) Bill 2015, which merges the Australian Crime Commission with CrimTrac, and raised concerns about PayPass-enabled card theft fuelling crimes like burglaries and bag snatches, noting that serious and organised crime costs Australia $15 billion annually."
+  },
+  {
+   "slug": "speech-327205",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The Australian Crime Commission Amendment (National Policing Information) Bill and the Australian Crime Commission (National Policing Information Charges) Bill merge CrimTrac with the Australian Crime Commission, implementing a 2015 decision by the Law, Crime and Community Safety Council to improve intelligence sharing and law enforcement capability."
+  },
+  {
+   "slug": "speech-331526",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "A motion was moved requesting the Senate to resume consideration of 14 specified bills from the previous session, with each request to be conveyed in a separate message. The bills covered water amendment, managed investment trusts, social services, crime commission, deaths registration, tax and superannuation, crowd-sourced funding, firearms trafficking, and parliamentary entitlements."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Crime Commission (National Policing Information Charges) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00044",
+   "assent_date": "2016-05-05"
+  }
+ ]
+}

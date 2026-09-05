@@ -1,0 +1,163 @@
+{
+ "key": "au-federal-r5478",
+ "title": "Export Charges (Imposition—Excise) Bill 2015",
+ "short_title": "Export Charges (Imposition—Excise) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2015-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5478%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5478%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5478%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5478%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5478%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5478%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5478%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5478%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5478%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5478%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5478%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5478%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5478_ems_51e6cefd-c11c-47b9-9de1-980ffb6e6f1f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/3910072%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5478%22",
+   "document_date": "2015-06-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00094",
+   "document_date": "2015-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-311897",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-03",
+   "stage_hint": null,
+   "brief": "The Export Charges (Imposition-Excise) Bill 2015 imposes charges only when considered a duty of excise, with amounts and exemptions to be set in delegated legislation, not by the bill itself."
+  },
+  {
+   "slug": "speech-311898",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-03",
+   "stage_hint": null,
+   "brief": "The Export Charges (Collection) Bill 2015 was moved for second reading, providing authority to collect charges under related imposition bills, with regulations for payment timelines, agent liability, late fees, and mechanisms for nonpayment including service refusal or export approval revocation, to sustainably fund export services for Australia's agricultural sector."
+  },
+  {
+   "slug": "speech-313234",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-17",
+   "stage_hint": null,
+   "brief": "The opposition supported four export charges bills that recover certification and inspection costs from exporting companies rather than taxpayers. The speaker criticised the government for having no agriculture policy after two years, opposed discriminatory foreign investment rules that set lower thresholds for Asian investors compared to American and Canadian investors, and argued the government's approach to foreign investment in agricultural land was populist and would deter needed capital."
+  },
+  {
+   "slug": "speech-313236",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-17",
+   "stage_hint": null,
+   "brief": "Labor supported the Export Charges bills, arguing for fair cost recovery in primary production fees and warning that excessive charges could become a barrier to exports, while also calling for stronger biosecurity oversight on food imports and noting the $40 billion export industry and potential for a South Australian food hub."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Export Charges (Imposition—Excise) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00094",
+   "assent_date": "2015-06-29"
+  }
+ ]
+}

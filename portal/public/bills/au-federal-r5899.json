@@ -1,0 +1,188 @@
+{
+ "key": "au-federal-r5899",
+ "title": "Education Legislation Amendment (Provider Integrity and Other Measures) Bill 2017",
+ "short_title": "Education Legislation Amendment (Provider Integrity and Other Measures) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2017-08-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5899%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5899%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5899%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5899%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5899%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5899%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5899%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5899%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5899%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5899%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5899%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5899%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5899_ems_a9a6ede2-113d-4343-974b-0cb4df61e7c9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5899%22",
+   "document_date": "2017-06-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00083",
+   "document_date": "2017-08-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-01",
+  "sentences": [
+   "This bill would change laws for higher and international education to stop dishonest providers from exploiting student loan schemes.",
+   "It would give regulators stronger powers to check providers, require them to be fit and proper, and ban deceptive marketing and barriers to students quitting their studies.",
+   "The changes would apply mainly to private non-university providers offering FEE-HELP courses, not to universities listed in Tables A, B or C of the Higher Education Support Act."
+  ],
+  "changes": [
+   "Amend the Tertiary Education Quality and Standards Agency Act 2011 to let TEQSA consider the history of related entities and require all registered providers and their key personnel to be fit and proper persons.",
+   "Amend the Education Services for Overseas Students Act 2000 to strengthen fit and proper person checks, expand reporting obligations, and extend information sharing with the Overseas Students Ombudsman and enforcement bodies.",
+   "Amend the Higher Education Support Act 2003 to require students to be genuine, academically suited, and have a reasonable completion rate to keep FEE-HELP, and to ban unscrupulous marketing and barriers to withdrawal.",
+   "Introduce civil penalties for non-compliance under HESA and make it subject to monitoring under the Regulatory Powers (Standard Provisions) Act 2014.",
+   "Increase financial viability and transparency requirements, including requiring general purpose financial statements from larger providers and that their auditor be a registered auditor under the Corporations Act 2001 or approved by TEQSA.",
+   "Create a six-month exclusion period after a failed provider application and allow exemption for bodies established by Commonwealth, state or territory laws from the body corporate requirement."
+  ],
+  "affected": "Private non-university higher education providers and their students, international education providers, and the regulators TEQSA, the ESOS agency, and the department responsible for education and training.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:35:36Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-348098",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The Education Legislation Amendment (Provider Integrity and Other Measures) Bill 2017 introduces stronger regulation for higher education and international education providers, including expanded fit and proper person tests, enhanced information sharing, bans on cold-calling and withdrawal fees, and requirements for student academic suitability and progress to access FEE-HELP."
+  },
+  {
+   "slug": "speech-350493",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-08-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Education Legislation Amendment (Provider Integrity and Other Measures) Bill 2017 will strengthen regulatory controls and student protections in higher and international education, citing examples such as Australia’s $21.8 billion international education sector in 2016 and the Australia-Pacific Technical College’s training of over 1,130 Solomon Islanders since 2008. They noted the bill will bolster enforcement powers to prevent unscrupulous providers from exploiting loopholes after VET student loan reforms."
+  },
+  {
+   "slug": "speech-350601",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Education Legislation Amendment (Provider Integrity and Other Measures) Bill 2017, which prohibits inducements like free iPads and cold-calling, tightens 'fit and proper person' checks, and changes the definition of 'genuine student' for FEE-HELP. They also criticised the government for cutting $600 million from TAFE, $3.8 billion from universities, and $17 billion from schools, and announced Labor's alternative plan to invest $637.6 million in TAFE and vocational education, establish a $100 million building fund, and set apprentice targets."
+  },
+  {
+   "slug": "speech-350602",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Education Legislation Amendment (Provider Integrity and Other Measures) Bill 2017 is needed to stop unscrupulous training providers, citing $1.2 billion in inappropriate VET loans and examples of student harm, while expressing concern about ministerial powers and potential penalties for students who fail units."
+  },
+  {
+   "slug": "speech-350603",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Education Legislation Amendment (Provider Integrity and Other Measures) Bill 2017 strengthens regulation of higher education to prevent unscrupulous practices from the VET sector, and Labor supports it. The bill introduces a 'genuine student' test for FEE-HELP, prohibits aggressive marketing, and enhances regulator powers; the speaker also noted higher education is Australia’s largest service export worth $21.8 billion in 2016, and criticised the government for underinvestment in the sector."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Education Legislation Amendment (Provider Integrity and Other Measures) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00083",
+   "assent_date": "2017-08-16"
+  }
+ ]
+}

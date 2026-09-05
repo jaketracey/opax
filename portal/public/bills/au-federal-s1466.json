@@ -1,0 +1,67 @@
+{
+ "key": "au-federal-s1466",
+ "title": "Social Security and Other Legislation Amendment (Responding to Robodebt) Bill 2025 [No. 2]",
+ "short_title": "Social Security and Other Legislation Amendment (Responding to Robodebt) Bill 2025 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-08-26",
+ "originating_house": "senate",
+ "sponsor": "ALLMAN-PAYNE, Sen Penny",
+ "sponsor_party": "Queensland Greens",
+ "sponsor_person_id": "11002",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-08-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1466%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1466_ems_cfd99c8b-80e7-4410-afc6-b5b67db4d1c8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1466%22",
+   "document_date": "2025-08-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-08-26",
+  "sentences": [
+   "This bill would change several social security laws to implement recommendations from the Royal Commission into the Robodebt Scheme.",
+   "It would introduce new principles and duties on automated decision-making, compliance activities, vulnerability, and debt recovery within Services Australia.",
+   "The bill would require better notification and oversight of automated decision-making and more compassionate debt recovery processes."
+  ],
+  "changes": [
+   "Amends the A New Tax System (Family Assistance) (Administration) Act 1999, Social Security Act 1991, Social Security (Administration) Act 1999, and Student Assistance Act 1973.",
+   "Incorporates principles and duties aligned with Royal Commission recommendations on individual effects, compliance and vulnerability, automated decision making, and debt recovery.",
+   "Improves and expands principles and duties in social security law to better align with the needs of people Services Australia serves."
+  ],
+  "affected": "Services Australia and individuals who interact with the social security system.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:32Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,142 @@
+{
+ "key": "au-federal-s1237",
+ "title": "Protecting Australian Dairy Bill 2019",
+ "short_title": "Protecting Australian Dairy Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-16",
+ "originating_house": "senate",
+ "sponsor": "HANSON, Sen Pauline",
+ "sponsor_party": "Pauline Hanson&#39;s One Nation",
+ "sponsor_person_id": "10280",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-11-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1237%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1237%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1237%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1237%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1237_ems_018282a1-663b-450c-bb07-e1305873b1af%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1237%22",
+   "document_date": "2019-10-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-16",
+  "sentences": [
+   "The bill would set a minimum price for milk paid to farmers and create a mandatory code of conduct for the dairy industry.",
+   "The Australian Competition and Consumer Commission would be required to determine the base price for milk fat and protein content, and a new offence would apply to processors buying milk below that price.",
+   "The bill would also require the Productivity Commission to review the price-setting amendments and consider whether a divestiture regime for the food and grocery industries should be introduced."
+  ],
+  "changes": [
+   "The ACCC would establish a minimum price for milk fat and protein content.",
+   "A mandatory code of conduct would regulate the relationship between dairy farmers and processors.",
+   "The relevant Minister would refer an inquiry to the Productivity Commission.",
+   "A processor that agrees to buy milk for less than the base price would commit an offence.",
+   "The Productivity Commission would hold hearings and report on the effectiveness of the price amendments.",
+   "The Minister could not end the Productivity Commission inquiry before the report is submitted."
+  ],
+  "affected": "Dairy farmers, milk processors, the Australian Competition and Consumer Commission, and the Productivity Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5959",
+   "date": "2019-11-11",
+   "house": "senate",
+   "question": "Protecting Australian Dairy Bill 2019 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "earliest": 20,
+    "member": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-11/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

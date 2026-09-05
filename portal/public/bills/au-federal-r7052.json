@@ -1,0 +1,985 @@
+{
+ "key": "au-federal-r7052",
+ "title": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023",
+ "short_title": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-06-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy, the Environment and Water",
+ "status": "passed",
+ "status_as_of": "2023-11-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7052_ems_b204759e-31bd-4ae4-ba25-f0dbf4bee175%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7052%22",
+   "document_date": "2023-06-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00099",
+   "document_date": "2023-11-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-22",
+  "sentences": [
+   "This bill updates Australian law to align with international rules that allow carbon dioxide to be sent overseas for storage under the seabed and permit certain ocean-based climate experiments.",
+   "It would create two new permit types: one for exporting captured carbon dioxide for burial in geological formations beneath the sea floor, and another for placing materials in the ocean for marine geoengineering research.",
+   "The bill also makes small adjustments to existing rules and updates the language of the law, without adding any new fees or changing who enforces the rules."
+  ],
+  "changes": [
+   "Introduces permits for exporting carbon dioxide streams for sub-seabed storage.",
+   "Introduces permits for placing wastes or other matter for marine geoengineering research.",
+   "Makes consequential amendments to support the new permits.",
+   "Makes technical updates to simplify the law's wording."
+  ],
+  "affected": "Companies and researchers involved in carbon capture, export, and marine geoengineering, as well as the agency that issues sea dumping permits.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8259",
+   "date": "2023-08-03",
+   "house": "representatives",
+   "question": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 57,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 51,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 68,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-08-03/1"
+  },
+  {
+   "key": "federal-representatives-8260",
+   "date": "2023-08-03",
+   "house": "representatives",
+   "question": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023 - Consideration in Detail - Carbon dioxide streams",
+   "stage": "Consideration in detail",
+   "ayes": 12,
+   "noes": 53,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 64,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-08-03/2"
+  },
+  {
+   "key": "federal-representatives-8261",
+   "date": "2023-08-03",
+   "house": "representatives",
+   "question": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023 - Consideration in Detail - Limits on permits to capture & store carbon",
+   "stage": "Consideration in detail",
+   "ayes": 12,
+   "noes": 55,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 66,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-08-03/3"
+  },
+  {
+   "key": "federal-representatives-8262",
+   "date": "2023-08-03",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2023-08-03.21.1) introduced by North Sydney MP [Kylea Tink](https://theyvoteforyou.org.au/people/representatives/north_sydney/kylea_tink) (Independent), which means they failed. ### What do these amendments do? Ms Rink [explained that](https://www.openaustralia.org.au/debate/?id=2023-08-03.21.1), the purpose of these amendments was \"*to bring transparency and accountability to this bill, to ensure that the purpose it serves and in whose interests it is working on a daily basis are always clear for Australians to see.*\"",
+   "stage": "Consideration in detail",
+   "ayes": 13,
+   "noes": 56,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 68,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-08-03/4"
+  },
+  {
+   "key": "federal-representatives-8263",
+   "date": "2023-08-03",
+   "house": "representatives",
+   "question": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023 - Consideration in Detail - Not for new fossil fuel projects",
+   "stage": "Consideration in detail",
+   "ayes": 12,
+   "noes": 54,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 66
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-08-03/5"
+  },
+  {
+   "key": "federal-representatives-8264",
+   "date": "2023-08-03",
+   "house": "representatives",
+   "question": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023 - Consideration in Detail - Agree with the bill",
+   "stage": "Consideration in detail",
+   "ayes": 68,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 54,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 79,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-08-03/6"
+  },
+  {
+   "key": "federal-senate-8238",
+   "date": "2023-11-07",
+   "house": "senate",
+   "question": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-07/1"
+  },
+  {
+   "key": "federal-senate-8253",
+   "date": "2023-11-09",
+   "house": "senate",
+   "question": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023 - in Committee - Put the question",
+   "stage": "In committee",
+   "ayes": 21,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-09/4"
+  },
+  {
+   "key": "federal-senate-8431",
+   "date": "2023-11-10",
+   "house": "senate",
+   "question": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023 - in Committee - Put the question",
+   "stage": "In committee",
+   "ayes": 17,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 6,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-10/1"
+  },
+  {
+   "key": "federal-senate-8432",
+   "date": "2023-11-10",
+   "house": "senate",
+   "question": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023 - in Committee - Put the question",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-10/2"
+  },
+  {
+   "key": "federal-senate-8433",
+   "date": "2023-11-10",
+   "house": "senate",
+   "question": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023 - in Committee - Speed things along",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-10/3"
+  },
+  {
+   "key": "federal-senate-8445",
+   "date": "2023-11-13",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-11-13.12.1): > *That today—* > > *(a) the hours of meeting be 10 am till adjournment;* > > *(b) the routine of business following formal motions be government business only;* > > *(c) divisions may take place after 6.30 pm for the purposes of the Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023 only; and* > > *(d) the Senate adjourn without debate after consideration of the Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023 has concluded, or at 8 pm, whichever is later, or on the motion of a minister.*",
+   "stage": "Business motion",
+   "ayes": 33,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 7,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-13/5"
+  },
+  {
+   "key": "federal-senate-8449",
+   "date": "2023-11-13",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2023-11-09.57.1) introduced by Tasmanian Senator [Peter Whish-Wilson](https://theyvoteforyou.org.au/people/senate/tasmania/peter_whish-wilson), which means they failed. ### Amendment text > *(1) Schedule 1, page 4 (before line 4), before item 1, insert:* > >> *1A Subsection 4(1)* >> >> *Insert:* >> >>> *applicable risk framework and guidelines means the following:* >>> >>> *(a) the Risk assessment and management framework for CO2 sequestration in sub-seabed geological structures, in Annex 3 to Resolution LC/SG-CO2 1/7 adopted on 3 November 2006 by the Contracting Parties to the Protocol;* >>> >>> *(b) the Specific guidelines for the assessment of carbon dioxide for disposal into sub-seabed geological formations, in Annex 8 to Resolution LC 34/15 adopted on 2 November 2012 by the Contracting Parties to the Protocol.* >>> >>> *Note: These documents could in 2023 be viewed on the International Maritime Organization's website (https:// www.imo.org/en/).* > > *(2) Schedule 1, item 3, page 5 (after line 15), after paragraph 19(7B)(d), insert:* > >> *(da) that there is an agreement or arrangement in force:* >> >>> *(i) between the Commonwealth and each entity that is proposing to export the controlled material; and* >>> >>> *(ii) under which each of those entities agrees to comply with the applicable risk framework and guidelines; and* >>> >>> *(db) that the other country to which the export relates has equal or better standards of environmental management, regulation and enforcement as compared to Australia;* > > *(3) Schedule 1, page 5 (after line 16), after item 3, insert:* > >> *3A After section 21* >> >> *Insert:* >> >>> *22 Conditions imposed by this section in respect of permits for the export of controlled material* >>> >>> *(1) This section applies for each permit for the export of controlled material from Australia to another country for dumping.* >>> >>> *(2) A condition imposed",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-13/9"
+  },
+  {
+   "key": "federal-senate-8450",
+   "date": "2023-11-13",
+   "house": "senate",
+   "question": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023 - in Committee - No new fossil fuel facilities",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 22,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-13/10"
+  },
+  {
+   "key": "federal-senate-8451",
+   "date": "2023-11-13",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2023-11-13.266.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they failed. ### What do these amendments do? Senator Pocock [explained that](https://www.openaustralia.org.au/senate/?gid=2023-11-13.266.1): > *These amendments would place some conditions on the carbon dioxide streams and would also ensure that there is merits review for decisions. ... It's so important that Australian citizens and concerned communities do have an avenue to challenge decisions. I would say it's fundamental to living in a democracy. We've covered a little bit of this ground over the last six days. We could continue, but I'll leave it there.* ### Amendment text > *SHEET 2150* > > *(1) Schedule 1, page 5 (after line 16), after item 3, insert:* > >> *3A After section 21* >> >>> *Insert:* >>> >>> *22 Conditions imposed by this section in respect of permits for the export of certain carbon dioxide streams* >>> >>> *(1) This section applies for each permit for the export of controlled material for dumping, where the controlled material is carbon dioxide streams from carbon dioxide capture processes for sequestration into a sub-seabed geological formation.* >>> >>> *(2) A condition imposed in respect of the permit is that the holder of the permit, for an indefinite period after the permit has been granted, must:* >>> >>>> *(a) monitor whether the export, or any act or omission relating to the sequestration, is likely to cause or result in any condition or damage of the kind set out in paragraph 16(1)(a), (b) or (c); and* >>>> >>>> *(b) ensure the sequestration is maintained (including after the sequestration site is decommissioned) so that such a condition or such damage does not arise; and* >>>> >>>> *(c) repair or remedy any such condition, or mitigate any such damage, as does arise.* >>> >>> *(3) A condition imposed in resp",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 20,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-13/11"
+  },
+  {
+   "key": "federal-senate-8452",
+   "date": "2023-11-13",
+   "house": "senate",
+   "question": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023 - in Committee - Keep bill as is",
+   "stage": "In committee",
+   "ayes": 21,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-13/12"
+  },
+  {
+   "key": "federal-senate-8453",
+   "date": "2023-11-13",
+   "house": "senate",
+   "question": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Bill 2023 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 21,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-13/13"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Environment Protection (Sea Dumping) Amendment (Using New Technologies to Fight Climate Change) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00099",
+   "assent_date": "2023-11-27"
+  }
+ ]
+}

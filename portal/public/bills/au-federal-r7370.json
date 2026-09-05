@@ -1,0 +1,205 @@
+{
+ "key": "au-federal-r7370",
+ "title": "Social Security and Other Legislation Amendment (Technical Changes No. 2) Bill 2025",
+ "short_title": "Social Security and Other Legislation Amendment (Technical Changes No. 2) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-09-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2025-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7370_ems_76cf47eb-8c63-4504-b1e1-c397076fa366%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7370_ems_8f60bfde-9b73-4afb-a85a-49543ddc1af5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7370_ems_88c921a8-7afd-4b21-b0c0-f7919f43ade5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7370_ems_cc07e1a9-6448-42eb-b0b5-5f5c2fdb0c2b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7370_ems_addcf30f-649e-4ebb-a748-43e24b1b8f3b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7370%22",
+   "document_date": "2025-09-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00079",
+   "document_date": "2025-12-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2025-09-04",
+  "sentences": [
+   "This bill would set a method for dividing income earned from December 2020 that matches how the Social Security Act was actually run at the time.",
+   "It would retroactively confirm past calculations and create three ways to work out employment income once the validation rules start.",
+   "The bill would also set up the Income Apportionment Resolution Scheme, paid for by a new standing appropriation, and change debt waiver rules under several Acts."
+  ],
+  "changes": [
+   "Prescribes an apportionment method for income earned from December 2020.",
+   "Retrospectively validates prior calculations and provides three approaches to calculating employment income after commencement.",
+   "Amends social security and family payments law to reform debt waiver regimes under the Social Security Act, the Family Assistance Administration Act, the Student Assistance Act and the Paid Parental Leave Act.",
+   "Establishes the Income Apportionment Resolution Scheme, implemented by legislative instrument.",
+   "Creates a new standing appropriation for payments under the bill."
+  ],
+  "affected": "People and agencies affected by social security, family payments, student assistance and paid parental leave law.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:41Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1199127",
+   "speaker": "Penny Allman-Payne",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2025-11-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Security and Other Legislation Amendment (Technical Changes No. 2) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00079",
+   "assent_date": "2025-12-04"
+  }
+ ]
+}

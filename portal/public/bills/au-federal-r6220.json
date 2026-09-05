@@ -1,0 +1,159 @@
+{
+ "key": "au-federal-r6220",
+ "title": "Foreign Influence Transparency Scheme Legislation Amendment Bill 2018",
+ "short_title": "Foreign Influence Transparency Scheme Legislation Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-11-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2018-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6220%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6220%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6220%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6220%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6220%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6220%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6220%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6220%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6220%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6220%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6220%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6220%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6220_ems_d8d393f5-3fef-4241-8da8-37173712a385%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6220%22",
+   "document_date": "2018-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00152",
+   "document_date": "2018-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-11-28",
+  "sentences": [
+   "This bill updates the rules for a register that tracks people working for foreign governments and related groups.",
+   "It would let the department head keep publishing details about former registrants and allow them to fix or update that public information.",
+   "It would also cut the time people have to sign up after the register starts, from six months to three months, with a shorter deadline if election writs are issued."
+  ],
+  "changes": [
+   "Allows the department head to keep publishing information about people after they leave the register.",
+   "Lets the department head correct or update information that has been made public.",
+   "Shortens the registration grace period from six months to three months after the register starts.",
+   "Adds a rule that if election writs are issued during that three-month period, registration must happen within 14 days of the writs."
+  ],
+  "affected": "People who work for foreign governments, related entities, political organisations, or individuals, and who must register under the scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:28:47Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-372965",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The bill requires ongoing publication of historical registration data under the Foreign Influence Transparency Scheme and shortens the grace period for registration from six months to three months or until election writs are issued, whichever occurs sooner, to ensure transparency before the next federal election."
+  },
+  {
+   "slug": "speech-373879",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-12-04",
+   "stage_hint": null,
+   "brief": "The Foreign Influence Transparency Scheme Legislation Amendment Bill 2018 ensures the registration scheme is fully operational for the upcoming federal election and that historical information about registrants continues to be published after registration ceases, improving transparency of foreign influence in Australian government and political processes."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Foreign Influence Transparency Scheme Legislation Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00152",
+   "assent_date": "2018-12-10"
+  }
+ ]
+}

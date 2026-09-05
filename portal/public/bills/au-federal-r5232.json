@@ -1,0 +1,310 @@
+{
+ "key": "au-federal-r5232",
+ "title": "Energy Efficiency Opportunities (Repeal) Bill 2014",
+ "short_title": "Energy Efficiency Opportunities (Repeal) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-05-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry",
+ "status": "passed",
+ "status_as_of": "2014-09-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5232%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5232%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5232%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5232%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5232%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5232%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5232%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5232%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5232%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5232%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5232%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5232%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5232%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5232_ems_bd8bdcfb-d27d-469d-8bb5-acdbd1afd05a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5232_ems_c849287c-354f-487c-9c9d-c9fbfe419f60%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5232%22",
+   "document_date": "2014-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00097",
+   "document_date": "2014-09-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-15",
+  "sentences": [
+   "This bill would shut down the Energy Efficiency Opportunities program from 29 June 2014.",
+   "It would repeal the Energy Efficiency Opportunities Act 2006, which currently requires large energy users to assess and report on energy savings.",
+   "If the bill becomes law after 29 June 2014, the repeal would apply retrospectively from that date."
+  ],
+  "changes": [
+   "Terminates the Energy Efficiency Opportunities program on 29 June 2014.",
+   "Repeals the Energy Efficiency Opportunities Act 2006.",
+   "Provides that repeal may be retrospective if royal assent occurs after 29 June 2014."
+  ],
+  "affected": "Large energy-using businesses that consume over 0.5 petajoules annually and medium energy-users that participate voluntarily.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:09Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3547",
+   "date": "2014-09-04",
+   "house": "senate",
+   "question": "Lisa Singh This Energy Efficiency Opportunities (Repeal) Bill 2014 before us is another example of this government's repealing of a once bipartisan effective piece of legislation introduced by the Howard government to enable Australia to deal with this century's inevitable transformation of energy generation and supply. Its repeal is another irrevocable and incredible indication that this coalition government is more reactionary and owns less foresight than the Howard government, characteristics which many of us might not have thought possible back in 2007. But just like the Renewable Energy Target, the energy efficiency opportunities legislation is being repealed because it was too successful. Energy efficiency refers to gaining the same or higher level of useful output using less energy input. Increased energy efficiency is a very effective economic driver. It reduces overall demand for energy and delays the need for new energy generation equipment. Energy efficiency is also about productivity. It is about lower inputs and bigger outputs. It is about lower costs and doing things better, doing things smarter and doing things more cost-effectively. Improving Australia's uptake of commercial energy efficiency opportunities has the potential to increase our economic health and lower the rate of growth in greenhouse gas emissions. In 2004, along with the Labor Party, the Howard government recognised that bipartisan energy policy action was needed. The energy white paper in June 2004 entitled _Securing Australia's energy future_ identified the improvement of Australia's energy-efficiency performance as a key part of the Howard government's energy policy in order to achieve greater prosperity, sustainability and energy security. The Energy Efficiency Opportunities Bill 2005 was to establish the mandatory energy efficiency opportunities assessments announced in that white paper. It was part of a wide-ranging effort to ensure the careful and prudent use of our valuable ene",
+   "stage": "Second reading",
+   "ayes": 55,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 48,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-04/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-288193",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290016",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290017",
+   "speaker": "Matt Williams",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290018",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290019",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290020",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290021",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290022",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290148",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290150",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Energy Efficiency Opportunities (Repeal) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00097",
+   "assent_date": "2014-09-11"
+  }
+ ]
+}

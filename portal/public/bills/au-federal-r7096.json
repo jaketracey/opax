@@ -1,0 +1,238 @@
+{
+ "key": "au-federal-r7096",
+ "title": "Crown References Amendment Bill 2023",
+ "short_title": "Crown References Amendment Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-10-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister and Cabinet",
+ "status": "passed",
+ "status_as_of": "2024-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7096_ems_0ce6b86e-94e4-49ab-91c5-a1d2f9f0a608%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7096%22",
+   "document_date": "2023-10-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00115",
+   "document_date": "2024-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8519",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2023-11-27.46.1) to agree with the main idea of the bill, which is known as giving the bill a second reading in parliamentary jargon. This means they can now discuss it in more detail. ## What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7096), the bill: > *Amends 29 Acts to update certain references associated with the Crown to reflect the accession of a new Sovereign.* Perth MP [Patrick Gorman](https://theyvoteforyou.org.au/people/representatives/perth/patrick_gorman) (Labor) [explained that](https://www.openaustralia.org.au/debate/?id=2023-11-27.50.1): > *The government's view is that this bill is of an administrative nature that reflects the change that has occurred in Australia following the passing of Queen Elizabeth II and the ascension of King Charles III. We think other discussions could happen in other places, but this bill is of a purely administrative nature, and I'd urge all members to support it.* Berowra MP [Julian Leeser](https://theyvoteforyou.org.au/people/representatives/berowra/julian_leeser) (Liberal Party) [explained why](https://www.openaustralia.org.au/debate/?id=2023-11-15.182.1) the Coalition opposes the bill: > *The Crown References Amendment Bill 2023 makes several amendments to a variety of acts to replace references to 'Her Majesty', 'the Queen' and 'the King' with 'the Sovereign'. The bill creates a new term for senior counsel to include King's Counsel and Queen's Counsel. The bill amends oaths and affirmations by removing references to His or Her Majesty and replacing them with a direction to insert the applicable pronoun. The reason the coalition is opposing this is that when the coalition asked if the government had consulted with the Governor-General on the bill, we were advised that the Prime Minister and the cabinet had no intention of consult",
+   "stage": "Second reading",
+   "ayes": 85,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 135,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-27/4"
+  },
+  {
+   "key": "federal-senate-10485",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Crown References Amendment Bill 2023. I will first deal with the second reading amendment circulated by the opposition. The question is that the opposition amendment on sheet 2344 be agreed to. _Opposition's circulated amendment—_ Omit all words after \"That\", substitute \"further consideration of the bill be deferred until the first sitting day after the Government tables a letter in the Senate stating that: (a) the Government has consulted with the King or the Governor-General, on behalf of the King, on the legislative amendments proposed in the bill; and (b) the King or the Governor-General, on behalf of the King, supports the legislative amendments in the bill\". Question negatived. I will now deal with the second reading amendment circulated by the Australian Greens. The question is that the Australian Greens amendment on sheet 2261 be agreed to. _Australian Greens' circulated amendment—_ At the end of the motion, add \", but the Senate: (a) calls on the Government to: (i) stop celebrating the monarchs of an empire built on stolen lives, land and wealth of colonised peoples, (ii) cut ties with the British monarchy and make Australia a republic, and (iii) establish truth telling and treaties with First Nations people; and (b) acknowledges the need for reparations and justice for peoples harmed by colonisation\".",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 3,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/47"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Crown References Amendment Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00115",
+   "assent_date": "2024-12-10"
+  }
+ ]
+}

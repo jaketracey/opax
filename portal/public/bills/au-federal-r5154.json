@@ -1,0 +1,185 @@
+{
+ "key": "au-federal-r5154",
+ "title": "Education Services for Overseas Students Amendment Bill 2013",
+ "short_title": "Education Services for Overseas Students Amendment Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-12-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2014-02-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5154%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5154%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5154%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5154%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5154%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5154%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5154%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5154%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5154%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5154%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5154%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-02-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5154%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5154_ems_bac80e1b-1f84-4163-a0d2-1d3243461b2f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5154%22",
+   "document_date": "2013-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00002",
+   "document_date": "2014-02-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-12-04",
+  "sentences": [
+   "The bill would clarify how education providers handle pre-paid fees from overseas students.",
+   "It would give the Minister power to set refund calculation methods by legislative instrument when a student's visa is refused or no written agreement exists.",
+   "The bill would also update the title of the National Code to remove reference to registration authorities, which no longer apply after 2012 amendments."
+  ],
+  "changes": [
+   "Clarifies existing provisions on pre-paid fees under the ESOS Act.",
+   "Gives the Minister power to make a legislative instrument for refund calculations in cases of visa refusal or missing written agreement.",
+   "Amends the title of the National Code to reflect it now applies only to registered providers."
+  ],
+  "affected": "Overseas students and registered education providers under the ESOS Act.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:05:09Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-282074",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282198",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282199",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282200",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282202",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Education Services for Overseas Students Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00002",
+   "assent_date": "2014-02-28"
+  }
+ ]
+}

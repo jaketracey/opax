@@ -1,0 +1,77 @@
+{
+ "key": "au-federal-r7432",
+ "title": "Criminal Code Amendment (Flag Protection) Bill 2026",
+ "short_title": "Criminal Code Amendment (Flag Protection) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-02-09",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-02-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7432%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7432_ems_052e0321-37f3-47c3-af8b-89a673b4a504%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7432%22",
+   "document_date": "2026-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-02-09",
+  "sentences": [
+   "The bill would make it a criminal offence to burn or desecrate the Australian National Flag, the Australian Aboriginal Flag or the Torres Strait Islander Flag.",
+   "It would amend the Criminal Code Act 1995 to create the offence for intentional or reckless acts, with exceptions for artistic or educational representations, lawful disposal and incidental damage.",
+   "The maximum penalty would be two years imprisonment, with a minimum of 12 months for a second or subsequent offence."
+  ],
+  "changes": [
+   "Creates a criminal offence for burning or desecrating the three flags.",
+   "Sets a maximum penalty of two years imprisonment and a minimum of 12 months for repeat offences.",
+   "Exempts artistic or educational representations, lawful disposal and incidental damage."
+  ],
+  "affected": "Anyone who intentionally or recklessly burns or desecrates the Australian National Flag, the Australian Aboriginal Flag or the Torres Strait Islander Flag.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:06:37Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1199896",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2026-02-09",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

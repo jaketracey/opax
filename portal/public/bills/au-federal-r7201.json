@@ -1,0 +1,464 @@
+{
+ "key": "au-federal-r7201",
+ "title": "Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2024",
+ "short_title": "Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-05-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "lapsed",
+ "status_as_of": "2024-07-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7201%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7201%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7201%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7201%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7201%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7201%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7201%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7201%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7201%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7201%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7201%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7201%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7201%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7201_ems_582562fb-1006-4a28-9a21-4517b1b27334%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7201%22",
+   "document_date": "2024-05-30",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-05-30",
+  "sentences": [
+   "This bill creates a new parliamentary committee to oversee Australia's defence agencies and related matters.",
+   "The committee would have up to 13 members, drawn from both houses, and could demand evidence and documents, but must protect classified information.",
+   "The bill also sets out criminal penalties for unauthorized sharing of protected information by committee members and staff."
+  ],
+  "changes": [
+   "Establishes the Parliamentary Joint Committee on Defence.",
+   "Gives the committee power to summon witnesses and request documents.",
+   "Imposes restrictions on public hearings and publication of evidence.",
+   "Creates offences for unauthorized disclosure of protected information."
+  ],
+  "affected": "The committee members, their staff, and other parliamentarians authorized to attend, as well as Australian defence agencies including the ADF, Department of Defence, and Department of Veterans' Affairs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10418",
+   "date": "2024-07-01",
+   "house": "representatives",
+   "question": "Andrew Hastie by leave—I move amendments (1) to (3) as circulated in my name together: (1) Schedule 1, item 2, page 6 (line 22) to page 7 (line 6), omit subsections 110ABA(2) and (3), substitute: (2) The Committee is to consist of 13 Committee members and must include at least: (a) 2 Government Senators; and (b) 2 Opposition Senators; and (c) 2 Government members of the House of Representatives; and (d) 2 Opposition members of the House of Representatives. (3) The Committee is to consist of: (a) 7 members of the Government; and (b) 6 members of the Opposition. Note: For more detailed provisions on the appointment of Committee members, see Division 5. (2) Schedule 1, item 2, page 21 (lines 13 to 16), omit subsection 110AEA(2), substitute: (2) Before nominating the members, the Prime Minister must consult with the Leader of the Opposition. (3) Schedule 1, item 2, page 21 (lines 21 to 29), omit subsections 110AEA(4) and (5), substitute: (4) Before nominating the members, the Leader of the Government in the Senate must consult with the Leader of the Opposition in the Senate. I move these amendments on behalf of the coalition to safeguard the integrity of this proposed Parliamentary Joint Committee on Defence. This is a committee where important and sensitive national security matters will be discussed. It will be a committee bound by secrecy provisions to protect information that is vital to Australia's national interest. It will have access to information that needs to be protected in peace and especially safeguarded in war. Therefore, the membership of the joint defence committee must be selective—because of the obligation to protect sensitive information in the Australian national interest. As a baseline, we must have a committee membership that is committed to defending the Australian people with lethal force if necessary. We must have a committee membership that supports and upholds our alliances, including with democratic partners like the United States and Israel",
+   "stage": "Consideration in detail",
+   "ayes": 51,
+   "noes": 87,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 29,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 137,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-07-01/1"
+  },
+  {
+   "key": "federal-senate-9486",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-07-04.86.2) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the original motion will remain unchanged. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) expresses concern at the dramatic scaling back of Australia's contribution to the biennial Rim of the Pacific military exercises;* > > *(b) notes that the diminished contribution sends a dangerous message about the nation's capacity to deter regional threats;* > > *(c) notes that the former Coalition government grew defence spending from 1.56% of GDP under Labor—the lowest level since 1938—up to 2% of GDP;* > > *(d) notes that the Coalition founded and fostered the game-changing and nation-building AUKUS defence and security agreement with the United States and the United Kingdom; and* > > *(e) calls on the Albanese Labor Government to agree to take Australia's national security and defence seriously, show some leadership, and agree to the Opposition's sensible amendments to the bill\".*",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 7,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/17"
+  },
+  {
+   "key": "federal-senate-9487",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-07-04.88.1) introduced by the Opposition, which means they failed. ### Amendment text > *(1)—Schedule 1, item 2, page 6 (line 22) to page 7 (line 6), omit subsections 110ABA(2) and (3), substitute:* > >> *(2) The Committee is to consist of 13 Committee members and must include at least:* >> >>> *(a) 2 Government Senators; and* >>> >>> *(b) 2 Opposition Senators; and* >>> >>> *(c) 2 Government members of the House of Representatives; and* >>> >>> *(d) 2 Opposition members of the House of Representatives.* >> >> *(3) The Committee is to consist of:* >> >>> *(a) 7 members of the Government; and* >>> >>> *(b) 6 members of the Opposition.* >>> >>> *Note: For more detailed provisions on the appointment of Committee members, see Division 5.* > > *(2)—Schedule 1, item 2, page 21 (lines 13 to 16), omit subsection 110AEA(2), substitute:* > >> *(2) Before nominating the members, the Prime Minister must consult with the Leader of the Opposition.* > > *(3)—Schedule 1, item 2, page 21 (lines 21 to 29), omit subsections 110AEA(4) and (5), substitute:* > >> *(4) Before nominating the members, the Leader of the Government in the Senate must consult with the Leader of the Opposition in the Senate.*",
+   "stage": "Committee of the Whole",
+   "ayes": 25,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 8,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/18"
+  },
+  {
+   "key": "federal-senate-9488",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-07-04.90.1) introduced by the Australian Greens, which means it failed. ### Amendment text > *(1) Schedule 1, item 2, page 6 (line 22) to page 7 (line 6), omit subsections 110ABA(2) and (3), substitute:* > >> *(2) The Committee is to consist of 13 members:* >> >>> *(a) 7 Government members, including at least:* >>> >>>> *(i) 2 Senators; and* >>>> >>>> *(ii) 2 members of the House of Representatives; and* >>> >>> *(b) 6 non-Government members:* >>>> >>>> *(i) 2 Opposition Senators; and* >>>> >>>> *(ii) 2 Opposition members of the House of Representatives; and* >>>> >>>> *(iii) 1 Senator who is not a member of the Government or the Opposition; and* >>>> >>>> *(iv) 1 member of the House of Representatives who is not a member of the Government or the Opposition.* >>>> >>>> *Note: For more detailed provisions on the appointment of Committee members, see Division 5.*",
+   "stage": "Committee of the Whole",
+   "ayes": 16,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/19"
+  },
+  {
+   "key": "federal-senate-9489",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2024-07-04.92.1) introduced by Victorian Senator [David Van](https://theyvoteforyou.org.au/people/senate/victoria/david_van) (Independent), which means it failed. ### Amendment text > *(1)—Schedule 1, item 2, page 6 (line 22) to page 7 (line 6), omit subsections 110ABA(2) and (3), substitute:* > >> *(2) The Committee is to consist of 13 members:* >> >>> *(a) 7 Government members, including at least:* >>> >>>> *(i) 2 Senators; and* >>>> >>>> *(ii) 2 members of the House of Representatives; and* >>> >>> *(b) 6 non-Government members:* >>> >>>> *(i) 3 Senators, including 1 independent Senator; and* >>>> >>>> *(ii) 3 members of the House of Representatives, including 1 independent member of the House of Representatives.* >> >> *(3) To avoid doubt:* >> >>> *(a) if all Senators are members of a recognised political party—the requirement for 1 independent Senator to be a member of the committee in subparagraph (2)(b)(i) does not apply; and* >>> >>> *(b) if all members of the House of Representatives are members of a recognised political party—the requirement for 1 independent member of the House of Representatives to be a member of the committee in subparagraph (2)(b)(ii) does not apply.* >>> >>> *Note: For more detailed provisions on the appointment of Committee members, see Division 5.* > > *(2)—Schedule 1, item 2, page 21 (line 29), after \"political parties\", insert \"and independents\".*",
+   "stage": "Committee of the Whole",
+   "ayes": 6,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/20"
+  },
+  {
+   "key": "federal-senate-9490",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2024 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 24,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 8,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/21"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

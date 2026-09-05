@@ -1,0 +1,912 @@
+{
+ "key": "au-federal-r5187",
+ "title": "Qantas Sale Amendment Bill 2014",
+ "short_title": "Qantas Sale Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-06",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "passed",
+ "status_as_of": "2014-08-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-07-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-07-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-07-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-08-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5187_ems_d086b1ad-2429-4329-b53f-9a3183dc05e4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5187%22",
+   "document_date": "2014-03-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00094",
+   "document_date": "2014-08-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-06",
+  "sentences": [
+   "The bill would end special foreign ownership limits that apply only to Qantas and not to other Australian airlines.",
+   "It achieves this by removing Part 3 of the Qantas Sale Act 1992 and changing the Air Navigation Act 1920 so Qantas is treated like other Australian international airlines.",
+   "Foreign ownership of Qantas is currently capped at 49 per cent total, 25 per cent for a single investor and 35 per cent for foreign airlines, but the bill would repeal all these limits."
+  ],
+  "changes": [
+   "Repeals Part 3 of the Qantas Sale Act 1992, removing foreign ownership and other restrictions specific to Qantas.",
+   "Amends the Air Navigation Act 1920 to include Qantas in the definition of an Australian international airline.",
+   "Subjects Qantas to the same foreign ownership limits and regulatory framework as other Australian international airlines.",
+   "Retains designation criteria for Qantas's international operations, including requirements on ownership, board composition and location."
+  ],
+  "affected": "Qantas and its shareholders, as well as foreign investors and airlines.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:44Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3141",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "question": "Qantas Sale Amendment Bill 2014 - Second Reading - That the member be no longer heard",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-03-06/1"
+  },
+  {
+   "key": "federal-representatives-3142",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "question": "Qantas Sale Amendment Bill 2014 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 81,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-03-06/2"
+  },
+  {
+   "key": "federal-representatives-3143",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "question": "Qantas Sale Amendment Bill 2014 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 82,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-03-06/3"
+  },
+  {
+   "key": "federal-representatives-3144",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "question": "Qantas Sale Amendment Bill 2014 - Consideration in Detail - Put the question",
+   "stage": "Consideration in detail",
+   "ayes": 82,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-03-06/4"
+  },
+  {
+   "key": "federal-representatives-3145",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "question": "Qantas Sale Amendment Bill 2014 - Consideration in Detail - Agree to bill",
+   "stage": "Consideration in detail",
+   "ayes": 83,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-03-06/5"
+  },
+  {
+   "key": "federal-representatives-3146",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "question": "Qantas Sale Amendment Bill 2014 - Third Reading - That the member be no longer heard",
+   "stage": "Third reading",
+   "ayes": 81,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-03-06/6"
+  },
+  {
+   "key": "federal-representatives-3147",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "question": "Qantas Sale Amendment Bill 2014 - Third Reading - Put the question",
+   "stage": "Third reading",
+   "ayes": 83,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-03-06/7"
+  },
+  {
+   "key": "federal-representatives-3148",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "question": "Qantas Sale Amendment Bill 2014 - Third Reading - Suspend standing orders",
+   "stage": "Third reading",
+   "ayes": 83,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-03-06/8"
+  },
+  {
+   "key": "federal-representatives-3149",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "question": "Qantas Sale Amendment Bill 2014 - Third Reading - Put the question",
+   "stage": "Third reading",
+   "ayes": 83,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-03-06/9"
+  },
+  {
+   "key": "federal-representatives-3150",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "question": "Qantas Sale Amendment Bill 2014 - Third Reading - Read a third time",
+   "stage": "Third reading",
+   "ayes": 83,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-03-06/10"
+  },
+  {
+   "key": "federal-senate-3532",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "Qantas Sale Amendment Bill 2014 - Second Reading - Agree the main idea of the bill",
+   "stage": "Second reading",
+   "ayes": 52,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 50,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/25"
+  },
+  {
+   "key": "federal-senate-3533",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "Doug Cameron The opposition has three amendments in relation to this bill. I understand that we will be dealing with sheet 7476 initially. I move: (2) Schedule 1, page 3 (lines 1 to 5), omit the Schedule, substitute: Schedule 1—Amendments _Qantas Sale Act 1992_ 1 Paragraphs 7(1)(aa) and (b) Repeal the paragraphs. 2 Paragraph 7(1)(d) Omit \", (b)\". This amendment is basically the 25 per cent, 35 per cent proposition. This amendment will remove the 35 per cent and 25 per cent sublimits on foreign ownership but will retain the requirements for at least 51 per cent ownership of Qantas by Australians and all other elements of part III that give Qantas its Australian character. This includes keeping provisions that give legislative effect to those requirements. These are: the majority of Qantas international operations, including maintenance, housing of aircraft, catering, flight operations, training and administration, be based in Australia—that is, Qantas jobs should predominantly be Australian jobs; the Qantas board to remain composed of at least two-thirds Australians, including the chair; the Qantas name must be used for international services; Qantas's head office to remain in Australia; and Qantas to remain incorporated in Australia. Labor will not allow these provisions to be taken out of the legislation, as the government had proposed. The position is consistent with the recommendation of Labor senators on the Senate Economics Legislation Committee when the bill was considered. David Johnston The government will support the Australian Labor Party's amendment to this bill. The proposed amendment means that the bill removes the 25 and 35 per cent intermediate restrictions on foreign ownership of Qantas but leaves the other restrictions contained in part III unchanged. By removing those foreign investment restrictions, the bill allows foreign investors to acquire the same level of ownership in Qantas as they can in other Australian international airlines regulated by",
+   "stage": "In committee",
+   "ayes": 48,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 48,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/26"
+  },
+  {
+   "key": "federal-senate-3534",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "Gavin Marshall The next two items on the running sheet—one by Senators Madigan, Rhiannon and Xenophon and the other one by the opposition—effectively deal in part with the same item that we have just voted on. They also deal with schedule 2. I intend to separate the questions. The first question I will put before the committee—and people can talk about this, but I am letting the chamber know how I intend to proceed—is that schedule 1, as amended, be agreed to. Then I will separately put that schedule 2 stand as printed. That is how I intend to proceed. Lee Rhiannon I, and also on behalf of Senator Nick Xenophon and Senator John Madigan, oppose schedules 1 and 2 in the following terms: (3) Schedule 1, page 3 (lines 1 to 5), to be opposed. (4) Schedule 2, page 4 (lines 1 to 16), to be opposed. I have been working with Senator Madigan on this aspect of the committee proceedings. We do have concerns with these schedules. We are endeavouring to keep the current foreign ownership requirements contained in the Qantas Sale Act. We need to strengthen the requirements in the Qantas Sale Act in respect of Qantas facilities being located in Australia. I think that is where we, hopefully, have agreement. We have also specified that it is important that any future subsidiaries of Qantas are covered. That is also a point we have included. We are also preventing Qantas from creating any new subsidiaries in order to shift operations overseas. Under the current Qantas Sale Act the majority of Qantas's facilities are taken in aggregate and must be located in Australia. We are referring there obviously to maintenance, administration and catering. It is very important that the majority are located in Australia but, because they are grouped together, the Qantas Sale Act gives Qantas the potential to move individual facilities offshore as long as the majority of all facilities remain in Australia. You can see that this is a very unfortunate loophole that can be exploited. For example, Qan",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 43,
+   "outcome": "negative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 43,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/27"
+  },
+  {
+   "key": "federal-senate-3535",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "Gavin Marshall The question now is that this bill, as amended, be agreed to.",
+   "stage": "In committee",
+   "ayes": 40,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "earliest": 5,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/28"
+  },
+  {
+   "key": "federal-senate-3536",
+   "date": "2014-07-17",
+   "house": "senate",
+   "question": "Qantas Sale Amendment Bill 2014 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 44,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 44,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/29"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-284708",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284720",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284728",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284732",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284747",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284824",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284851",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-06",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Qantas Sale Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00094",
+   "assent_date": "2014-08-08"
+  }
+ ]
+}

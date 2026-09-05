@@ -1,0 +1,181 @@
+{
+ "key": "au-federal-r6004",
+ "title": "Agricultural and Veterinary Chemicals Legislation Amendment (Operational Efficiency) Bill 2017",
+ "short_title": "Agricultural and Veterinary Chemicals Legislation Amendment (Operational Efficiency) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-10-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6004%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6004%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6004%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6004%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6004%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6004%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6004%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6004%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6004%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6004_ems_8c48ed6e-e251-42c5-b433-35c0c99384b6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6004_ems_751b7916-8355-4500-8c4d-6d9c75198ea7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6004_ems_9bf2f157-fcda-4c8f-b8e9-fdf0f2a06b6c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6004%22",
+   "document_date": "2017-10-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5114",
+   "date": "2018-02-12",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2018-02-12.114.1) to the usual second reading motion, which is \"*that the bill be read for a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. This means it failed. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that since the former Agriculture Minister decided to force the relocation of the Australian Pesticides and Veterinary Medicines Authority (APVMA) to Armidale in his own electorate, the Authority has suffered critical staff loses and declines in operational efficiency\".*",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-02-12/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-356114",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker moved the Agricultural and Veterinary Chemicals Legislation Amendment (Operational Efficiency) Bill 2017, arguing it would streamline industry reporting, improve the APVMA's efficiency, and reduce regulatory burden while maintaining safety, and also expressed sympathies to the family of Linda Burney."
+  },
+  {
+   "slug": "speech-358995",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-12",
+   "stage_hint": null,
+   "brief": "The opposition supported the Agricultural and Veterinary Chemicals Legislation Amendment (Operational Efficiency) Bill 2017 but argued it was three years overdue, attributing the APVMA’s falling performance—down to 30% of assessments within statutory time frames in the March 2017 quarter—to the forced relocation to Armidale, which they called a costly boondoggle pushed by then‑minister Joyce."
+  },
+  {
+   "slug": "speech-359000",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Agricultural and Veterinary Chemicals Legislation Amendment (Operational Efficiency) Bill 2017 is important but criticized the forced relocation of the APVMA from Canberra to Armidale, citing costs over $60 million, potential loss of half the staff including senior scientists, and a lack of transparency, while noting that over 70% of antibiotics used in Australia are in agriculture and that antimicrobial resistance is a health emergency."
+  },
+  {
+   "slug": "speech-359002",
+   "speaker": "David Littleproud",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-02-12",
+   "stage_hint": null,
+   "brief": "The Agricultural and Veterinary Chemicals Legislation Amendment (Operational Efficiency) Bill 2017 was introduced to streamline industry reporting and improve the efficiency of the Australian Pesticides and Veterinary Medicines Authority (APVMA), including simplifying reporting requirements based on sales quantity and value, allowing label suspension revocation, and adding civil penalties for false or misleading information."
+  }
+ ],
+ "acts": []
+}

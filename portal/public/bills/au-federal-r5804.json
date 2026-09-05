@@ -1,0 +1,160 @@
+{
+ "key": "au-federal-r5804",
+ "title": "Diverted Profits Tax Bill 2017",
+ "short_title": "Diverted Profits Tax Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-04-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5804%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5804%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5804%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5804%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5804%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5804%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5804%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5804%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5804%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5804%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5804%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5804%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-04-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5804%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5804_ems_5d93cda5-e8e4-4ed0-b40a-acd21555c8d6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5804_ems_fc1341e7-ea58-4590-94e2-3b71d27093a6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5804%22",
+   "document_date": "2017-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00021",
+   "document_date": "2017-04-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-340611",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-09",
+   "stage_hint": null,
+   "brief": "The Diverted Profits Tax Bill 2017 imposes a 40% penalty tax on multinationals diverting Australian profits to low-tax offshore related parties lacking economic substance, aiming to reduce tax avoidance and speed up ATO dispute resolution."
+  },
+  {
+   "slug": "speech-343524",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The government's bill hides a $50 billion tax cut for big banks and multinationals behind a weak approach to multinational tax avoidance, raising only $200 million. Labor supports the bill but calls for an explanation, and notes its own proposals would raise $1.6 billion over the forward estimates."
+  },
+  {
+   "slug": "speech-343529",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Treasury Laws Amendment (Combating Multinational Tax Avoidance) Bill 2017 and the Diverted Profits Tax Bill 2017, which impose a 40% penalty rate on diverted profits and increase penalties for large multinationals (e.g., up to $525,000 for late lodgement). The laws are expected to claw back $2 billion in tax this financial year, raise $200 million over forward estimates, and have already prompted Facebook and Google to restructure their Australian tax arrangements."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Diverted Profits Tax Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00021",
+   "assent_date": "2017-04-04"
+  }
+ ]
+}

@@ -1,0 +1,178 @@
+{
+ "key": "au-federal-r5486",
+ "title": "Energy Grants and Other Legislation Amendment (Ethanol and Biodiesel) Bill 2015",
+ "short_title": "Energy Grants and Other Legislation Amendment (Ethanol and Biodiesel) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5486%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5486%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5486%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5486%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5486%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5486%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5486%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5486%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5486_ems_2f353e07-4588-402e-ae53-6dcfa5d1fb5d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5486_ems_4cf82145-133e-4d1b-9ef3-973c83ab9de4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5486%22",
+   "document_date": "2015-06-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00081",
+   "document_date": "2015-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-312191",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The Excise Tariff Amendment (Ethanol and Biodiesel) Bill 2015 implements 2014-15 budget measures replacing the Cleaner Fuels Grant Scheme and Ethanol Production Grants Scheme with reduced excise rates for domestically-produced biodiesel (reaching 50% of full fuel duty) and fuel ethanol (reaching 33%), while imported biodiesel and ethanol will be taxed at the full rate."
+  },
+  {
+   "slug": "speech-312192",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The speaker moved the second reading of the Energy Grants and Other Legislation Amendment (Ethanol and Biodiesel) Bill 2015, which removes existing grant schemes and imposes a reduced but gradually increasing excise rate on domestically produced biodiesel and fuel ethanol."
+  },
+  {
+   "slug": "speech-312912",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The Excise Tariff Amendment (Ethanol and Biodiesel) Bill 2015 and the accompanying Energy Grants and Other Legislation Amendment (Ethanol and Biodiesel) Bill 2015 were supported as a move to phase in reduced excise rates over 15 years—50% of the full rate for biodiesel and 33% for ethanol—while abolishing the Cleaner Fuels Grants Scheme and Ethanol Production Grants Scheme, creating a comparative advantage for domestic producers; the biodiesel industry was cited as contributing $64 million and over 400 full-time equivalent jobs, mostly in regional Australia."
+  },
+  {
+   "slug": "speech-313064",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The government will reduce excise on domestically manufactured biodiesel and ethanol to zero for one year from next month, with rates rising incrementally to 33% of petrol excise for ethanol and 50% of diesel excise for biodiesel by July 2020. The bills also remove grants for biodiesel and renewable fuels, while the member argued the new excise pathway provides industry certainty and supports a long-term plan, noting the Nationals' call for a 10% ethanol mandate nationally in 2015."
+  },
+  {
+   "slug": "speech-313066",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The bills implement the 2014-15 budget measures to remove existing grant schemes for biofuels and apply a reduced but gradually increasing excise rate, with ethanol reaching 33% of the petrol excise by 2020 and biodiesel reaching 50% of the diesel excise by 2030, providing a 50% discount on the energy-based excise for each category."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Energy Grants and Other Legislation Amendment (Ethanol and Biodiesel) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00081",
+   "assent_date": "2015-06-26"
+  }
+ ]
+}

@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r7293",
+ "title": "Customs Amendment (Expedited Seizure and Disposal of Engineered Stone) Bill 2024",
+ "short_title": "Customs Amendment (Expedited Seizure and Disposal of Engineered Stone) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2025-02-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-02-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7293_ems_034f21b9-b41b-49f0-8ba7-e1c17eff1f8f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7293%22",
+   "document_date": "2024-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00011",
+   "document_date": "2025-02-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-28",
+  "sentences": [
+   "This bill would let authorities quickly seize and destroy banned engineered stone benchtops, panels and slabs at the border.",
+   "It would give the Comptroller-General of Customs the power to order immediate destruction of these goods, bypassing the usual 30-day storage period.",
+   "The changes would start on 1 January 2025, supporting a domestic ban on engineered stone that began on 1 July 2024."
+  ],
+  "changes": [
+   "The bill amends the Customs Act 1901 to allow expedited seizure and disposal of prohibited engineered stone products.",
+   "It empowers the Comptroller-General of Customs to deal with seized goods as appropriate, including immediate destruction.",
+   "It removes the requirement to store seized prohibited imports for at least 30 days before disposal for these products."
+  ],
+  "affected": "The Australian Border Force and importers of engineered stone benchtops, panels and slabs would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1194647",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-02-13",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment (Expedited Seizure and Disposal of Engineered Stone) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00011",
+   "assent_date": "2025-02-20"
+  }
+ ]
+}

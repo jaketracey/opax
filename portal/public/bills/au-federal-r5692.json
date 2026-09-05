@@ -1,0 +1,778 @@
+{
+ "key": "au-federal-r5692",
+ "title": "Building and Construction Industry (Improving Productivity) Bill 2013",
+ "short_title": "Building and Construction Industry (Improving Productivity) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-08-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "passed",
+ "status_as_of": "2016-12-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5692_ems_2e60147d-3325-4ccd-a88c-359e2d104cc0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5692%22",
+   "document_date": "2016-08-31",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00087",
+   "document_date": "2016-12-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-08-31",
+  "sentences": [
+   "This bill is part of a package that would bring back the Australian Building and Construction Commission (ABCC) as the industry regulator.",
+   "It would replace the current Office of the Fair Work Building Industry Inspectorate with a regulator that has the same powers as the one under the earlier Building and Construction Industry Improvement Act 2005.",
+   "The package would restore higher penalties for breaking building industry-specific rules on unlawful action and coercion."
+  ],
+  "changes": [
+   "Re-establishes the Australian Building and Construction Commission (ABCC).",
+   "Replaces the existing inspectorate with the ABCC.",
+   "Restores higher penalties for certain building industry breaches."
+  ],
+  "affected": "The building and construction industry, including workers and employers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:46:01Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4364",
+   "date": "2016-10-18",
+   "house": "representatives",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-18/7"
+  },
+  {
+   "key": "federal-representatives-4365",
+   "date": "2016-10-18",
+   "house": "representatives",
+   "question": "Building and Construction Industry (Improving Productivity) Bill 2013 and one other - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 78,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-18/8"
+  },
+  {
+   "key": "federal-senate-4437",
+   "date": "2016-11-28",
+   "house": "senate",
+   "question": "Murray Watt I rise to strongly oppose the Building and Construction Industry (Improving Productivity) Bill 2013 and the Building and Construction Industry (Consequential and Transitional Provisions) Bill 2013. Over the course of this debate and, in fact, over the last three years, as this government has pursued their ideological agenda to cripple trade unions in this country, we have heard a lot from the government about why these bills are allegedly necessary. We have heard that they are the key to unlocking productivity in the construction sector and the economy more broadly. We have heard that they will drive down industrial disputes. We might as well have heard that they would cause world peace! You would think that every problem in the world is going to be solved by the passage of these two bills, when in fact what they really are this government's only agenda for this country—their ideological crusade to cripple the trade union movement, which will undoubtedly further entrench inequality in our society. These bills will not help the economy one iota. They will not help the community and they will not help working people. Instead, they are just a cynical, politically-motivated attack on hardworking Australians that will, tragically, put construction workers' lives at risk. These bills are a continuation of the $80 million political witch-hunt established by the then Prime Minister, Tony Abbott, in the form of the Heydon royal commission. That was the failed royal commission that has resulted in prosecution after prosecution falling over for lack of evidence. That royal commission, as we would all be familiar, was going to expose what was alleged to be endemic corruption within the trade union movement. It was going to line up all sorts of prosecutions of people within the trade union movement. To date, to my knowledge, it has resulted in an only one conviction and led to prosecution after prosecution falling over for lack of evidence. Time and time again we see",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 41,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-28/2"
+  },
+  {
+   "key": "federal-senate-4438",
+   "date": "2016-11-28",
+   "house": "senate",
+   "question": "George Brandis I move: That the resumption of the debate be an order of the day for a later hour. Stephen Parry The question is that that motion be agreed to.",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 41,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-28/3"
+  },
+  {
+   "key": "federal-senate-5061",
+   "date": "2016-11-29",
+   "house": "senate",
+   "question": "Doug Cameron It seems to me that things are very fluid out there in relation to this bill. There are a number of amendments we have got sheets for that outline amendments from Senator Xenophon and Senator Hinch—and we have got an amendment. But I notice that Senator Xenophon has been publicly indicating that there is some deal in place that means there will be some process to deal with water for South Australia that includes COAG. As I understand it, the deal is that there will be discussions at COAG and there will be some discussions on an ongoing basis like an estimates process within the processes of the Senate itself. Whether this is at estimates, whether there is going to be a special estimates process, is pretty unclear. But I did hear Peter Hartcher, one of the leading commentators on parliamentary issues, indicate that what has happened is that the issue of water for South Australia has been sent to what he described as 'the sinkhole of reform'—which, in his view, is COAG—and he said this was a win for the Liberal Party. In going through this, I cannot see much that Senator Xenophon has achieved in relation to this so-called agreement. I heard Paul Kelly indicate that he felt that Senator Xenophon had overreached in his rhetoric and that what he had was a deal on process. So there will be a process to talk about South Australian water. I do not understand. This is a bit like the situation we had under the Fair Work (Registered Organisations) Bill, where someone who was in a very powerful position to negotiate a settlement to the issues that he is concerned about simply rolled over. If I were a South Australian resident, I would be very worried about putting all this faith in the Xenophon political party and getting so little in return—commitments to process, which mean nothing. I noticed Senator Xenophon on the television later on. He said that, if there is no progress on the issue of water, then obviously there will be consequences. Well, if you are in the",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 38,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-29/6"
+  },
+  {
+   "key": "federal-senate-5062",
+   "date": "2016-11-29",
+   "house": "senate",
+   "question": "Kim Carr I move opposition amendment 8 on sheet 8024, which is being distributed: (1) Clause 34, page 29 (lines 17 to 19), omit subclause (2), substitute: (2) Without limiting subsection (1), the Minister: (a) must issue one or more documents under that subsection in relation to procurement matters relating to building work; and (b) may issue one or more documents under that subsection in relation to work health and safety matters relating to building work. (2A) A document issued under subsection (1) relating to procurement matters must include a requirement that a tenderer for building work must demonstrate the following: (a) the extent to which locally sourced and manufactured building materials will be used to undertake the building work; (b) whether the building materials to be used to undertake the building work comply with relevant Australian standards published by, or on behalf of, Standards Australia; (c) the whole-of-life costs of the project to which the building work relates; (d) the net economic impacts of the project to which the building work relates; (e) the jobs impact of the project to which the building work relates; (f) whether the project to which the building work relates will contribute to skills growth. [procurement matters] This is an amendment that goes to the question of the code. I am sure that senators would be aware of how important procurement is when it comes to the question of providing jobs for Australians in Australia. The value of Commonwealth procurement contracts in 2014-15 were around $59 billion. That is a very considerable amount of money in terms of our capacity in this country to shape the kind of economy we have. We should, I trust, in this chamber be seeking to develop an economy with a diverse industrial base, capable of generating high-skill, high-wage jobs. We should not be entirely dependent upon the vagaries of the commodity market. What we have, of course, are current circumstances where there is increasing casualisa",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 51,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 34,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-29/7"
+  },
+  {
+   "key": "federal-senate-4455",
+   "date": "2016-11-30",
+   "house": "senate",
+   "question": "Sue Lines The committee is considering the Building and Construction Industry (Improving Productivity Bill 2013 and a related bill and the amendment on sheet 8026 moved by Senator Hinch. The question is that the amendment, moved by Senator Hinch, on sheet 8026 be agreed to. Derryn Hinch I seek leave to amend amendment (1) on sheet 8026, which is currently before us, by inserting after '29 November 2018' the words 'expressions of interest' and the words 'be awarded', so it would now read: 'before 29 November 2018, submit expressions of interest, tender for and be awarded building work funded, whether directly or indirectly by the Commonwealth or a Commonwealth authority'. To assist senators I have circulated a revised sheet 8026, which does include this amendment. Leave granted. Michaelia Cash The government supports the amendment moved by Senator Hinch with the revised form of words he has outlined this morning. We understand that there are concerns in relation to whether this covers the undertaking of work on projects that are tendered for during this two-year transitional period. I can confirm that this will be the case. Doug Cameron Minister, can you guarantee that the amendment ensures that contractors with current agreements with terms prohibited by your 2014 Building Code will be able to continue doing government building work without having to renegotiate or change the existing EBAs? Michaelia Cash Yes. Doug Cameron Minister, will the position that has been achieved this morning be reflected in the code? Michaelia Cash Yes. The CHAIR: The question is that amendment (1) on sheet 8026, as amended, be agreed to. Question agreed to. Long debate text truncated.",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 42,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-30/4"
+  },
+  {
+   "key": "federal-senate-4456",
+   "date": "2016-11-30",
+   "house": "senate",
+   "question": "Sue Lines The question is that these bills, as amended, be agreed to.",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 42,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-30/5"
+  },
+  {
+   "key": "federal-senate-4457",
+   "date": "2016-11-30",
+   "house": "senate",
+   "question": "Michaelia Cash I move: That these bills be now read a third time. Stephen Parry The question is that the bills be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 36,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 42,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-30/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-332741",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-08-31",
+   "stage_hint": null,
+   "brief": "The coalition government re-presented the Building and Construction Industry (Improving Productivity) Bill 2013 to re-establish the Australian Building and Construction Commission (ABCC), arguing it would restore the rule of law, boost productivity, and deter unlawful conduct by construction unions like the CFMEU, which has faced over $8.25 million in fines and 107 officials before courts. The bill includes stronger penalties, a building code for government-funded projects, and retains the Federal Safety Commissioner, with claims that ABCC operation previously increased construction labour productivity by 20%."
+  },
+  {
+   "slug": "speech-332742",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-08-31",
+   "stage_hint": null,
+   "brief": "The speaker moved the second reading of the Building and Construction Industry (Consequential and Transitional Provisions) Bill 2013, which provides for a smooth transition from the Fair Work Building Industry Act 2012 to the re‑established Australian Building and Construction Commission under the Building and Construction Industry (Improving Productivity) Bill 2013, and also deals with residual operation of the Building and Construction Industry Improvement Act 2005."
+  },
+  {
+   "slug": "speech-335784",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-18",
+   "stage_hint": null,
+   "brief": "The speaker sought leave to amend the notice for suspension of standing orders to allow consideration of the Building and Construction Industry (Improving Productivity) Bill 2013 and the Building and Construction Industry (Consequential and Transitional Provisions) Bill 2013."
+  },
+  {
+   "slug": "speech-335786",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-18",
+   "stage_hint": null,
+   "brief": "The government moved to suspend standing orders to limit debate on the Building and Construction Industry (Improving Productivity) Bill 2013 and related bill, allowing only the opposition spokesman and the Member for Kennedy to speak before the Prime Minister summed up, aiming to pass the bills that afternoon, noting the bills had been repeatedly considered since 2013."
+  },
+  {
+   "slug": "speech-335795",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-18",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Building and Construction Industry (Improving Productivity) Bill 2013 and cognate bill, arguing the government gagged debate and that the bills are undemocratic, breach international labour conventions, and restrict civil liberties. The bills were introduced on 14 November 2013, defeated in the Senate on 17 August 2015 and again in April 2016, and served as a double dissolution trigger."
+  },
+  {
+   "slug": "speech-335894",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-18",
+   "stage_hint": null,
+   "brief": "Re-establishing the Australian Building and Construction Commission and passing the Building and Construction Industry (Improving Productivity) Bill 2013 were supported, citing Royal Commissioner Dyson Heydon's findings of rampant union corruption and claiming construction productivity grew 20.6% while the ABCC operated versus 2.8% after its abolition. The Senate was urged to pass the bill."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Federal Safety Commissioner Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00087",
+   "assent_date": "2016-12-01"
+  }
+ ]
+}

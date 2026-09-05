@@ -1,0 +1,139 @@
+{
+ "key": "au-federal-r5176",
+ "title": "Governor-General Amendment (Salary) Bill 2014",
+ "short_title": "Governor-General Amendment (Salary) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-02-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister",
+ "status": "passed",
+ "status_as_of": "2014-03-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5176%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5176%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5176%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5176%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5176%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5176%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-03-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5176%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5176_ems_783f162f-d535-4129-861c-68e83b29979c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5176%22",
+   "document_date": "2014-02-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00007",
+   "document_date": "2014-03-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-284183",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284185",
+   "speaker": "Jamie Briggs",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Governor-General Amendment (Salary) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00007",
+   "assent_date": "2014-03-13"
+  }
+ ]
+}

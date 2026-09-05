@@ -1,0 +1,675 @@
+{
+ "key": "au-federal-r7447",
+ "title": "Migration Amendment (2026 Measures No. 1) Bill 2026",
+ "short_title": "Migration Amendment (2026 Measures No. 1) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2026-03-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7447%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-03-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7447%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7447%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7447%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7447%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-03-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7447%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-03-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7447%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7447_ems_3693e0bf-117f-408a-bcc6-8abfdf540b86%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7447%22",
+   "document_date": "2026-03-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00010",
+   "document_date": "2026-03-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-10043",
+   "date": "2026-03-11",
+   "house": "representatives",
+   "question": "Migration Amendment (2026 Measures No. 1) Bill 2026 - Consideration in Detail - Safeguards",
+   "stage": "Consideration in detail",
+   "ayes": 9,
+   "noes": 103,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 112
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-11/1"
+  },
+  {
+   "key": "federal-representatives-10044",
+   "date": "2026-03-11",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2026-03-11.10.1) introduced by Kooyong MP [Monique Ryan](https://theyvoteforyou.org.au/people/representatives/kooyong/monique_ryan) (Independent), which means they failed. Dr Ryan [explained that](https://www.openaustralia.org.au/debate/?id=2026-03-11.10.1): > *This bill seeks to introduce significant changes to Australia's migration regime. It empowers the minister to suspend classes of temporary visas held by people offshore through so-called arrival control determinations. This is a sweeping power, one which could affect thousands of people who have already followed our migration rules in good faith and who have already obtained temporary visas in good faith. The amendments I have circulated in my name seek to strengthen the test for making these arrival control determinations to ensure that the minister will satisfy a higher and more proportionate threshold before exercising this extraordinary power. My amendments will ensure that determinations meet both limbs of the test under section 84B, ensuring that there is a reasonable probability that a controlled determination is actually necessary.* ### Amendment text > *(1) Schedule 1, item 6, page 4 (line 23), omit \"one or\".* > > *(2) Schedule 1, item 6, page 4 (line 25), omit \"may\", substitute \"would\".* > > *(3) Schedule 1, item 6, page 4 (line 31), omit \"may\", substitute \"would\".*",
+   "stage": "Consideration in detail",
+   "ayes": 7,
+   "noes": 84,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 91
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-11/2"
+  },
+  {
+   "key": "federal-representatives-10045",
+   "date": "2026-03-11",
+   "house": "representatives",
+   "question": "Migration Amendment (2026 Measures No. 1) Bill 2026 - Consideration in Detail - Safeguards",
+   "stage": "Consideration in detail",
+   "ayes": 8,
+   "noes": 85,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 93
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-11/3"
+  },
+  {
+   "key": "federal-representatives-10046",
+   "date": "2026-03-11",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2026-03-11.27.6) *that the bill be agreed to.* This means they will now stop considering potential amendments and instead vote on whether to pass the bill. ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7447), the bill: > *Amends the Migration Act 1958 to enable temporary restrictions on the arrival of certain classes of temporary visa holders in Australia, including when events or circumstances outside Australia mean that there is an increased risk that certain classes of temporary visa holders will not depart Australia when their visas cease to be in effect.* The [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7447_ems_3693e0bf-117f-408a-bcc6-8abfdf540b86%22;rec=0) (which is a document prepared by the party introducing the bill, which is the Government in this case) explains that: > *Currently, the Migration Act does not contain a general power to prevent cohorts of non-citizens who hold visas that are in effect from traveling to Australia, including in circumstances where that travel may present a risk to Australia’s national interest,. Although there are powers under the Migration Act to cancel a non-citizen’s visa in those circumstances, those powers are only capable of being exercised in relation to individual non-citizens. The existing powers are therefore resource intensive, and are not suited to responding at scale to events occurring overseas where it is appropriate and in the national interest to limit or prevent travel to Australia for current holders of a temporary visa who are outside of Australia.* > > *This may include during periods of international conflict or other rapid international developments that place unsustainable strains on the fu",
+   "stage": "Consideration in detail",
+   "ayes": 95,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 103
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-11/4"
+  },
+  {
+   "key": "federal-senate-10055",
+   "date": "2026-03-11",
+   "house": "senate",
+   "question": "Migration Amendment (2026 Measures No. 1) Bill 2026 - First Reading - Put the question",
+   "stage": "First Reading",
+   "ayes": 29,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-11/7"
+  },
+  {
+   "key": "federal-senate-10056",
+   "date": "2026-03-11",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2026-03-11.185.1) *that the bill proceed without formalities.* In other words, the Senate can now continue to consider the bill. ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7447), the bill: > *Amends the Migration Act 1958 to enable temporary restrictions on the arrival of certain classes of temporary visa holders in Australia, including when events or circumstances outside Australia mean that there is an increased risk that certain classes of temporary visa holders will not depart Australia when their visas cease to be in effect.* The [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7447_ems_3693e0bf-117f-408a-bcc6-8abfdf540b86%22;rec=0) (which is a document prepared by the party introducing the bill, which is the Government in this case) explains that: > *Currently, the Migration Act does not contain a general power to prevent cohorts of non-citizens who hold visas that are in effect from traveling to Australia, including in circumstances where that travel may present a risk to Australia’s national interest,. Although there are powers under the Migration Act to cancel a non-citizen’s visa in those circumstances, those powers are only capable of being exercised in relation to individual non-citizens. The existing powers are therefore resource intensive, and are not suited to responding at scale to events occurring overseas where it is appropriate and in the national interest to limit or prevent travel to Australia for current holders of a temporary visa who are outside of Australia.* > > *This may include during periods of international conflict or other rapid international developments that place unsustainable strains on the functioning of the migration",
+   "stage": "First Reading",
+   "ayes": 28,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-11/8"
+  },
+  {
+   "key": "federal-senate-10077",
+   "date": "2026-03-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-03-12.162.1) to the usual second reading motion, which is that the bill be read a second time (parliamentary jargon for agreeing with the main idea of the bill). This means the usual text will remain unchanged. This amendment had been introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens). ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Government to immediately raise the number of places in Australia's humanitarian intake to at least 27,000 places per year as set out in the Australian Labor Party's 2023 National Platform\".*",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-12/19"
+  },
+  {
+   "key": "federal-senate-10078",
+   "date": "2026-03-12",
+   "house": "senate",
+   "question": "Migration Amendment (2026 Measures No. 1) Bill 2026 - Second Reading - Condemns legislation",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-12/20"
+  },
+  {
+   "key": "federal-senate-10079",
+   "date": "2026-03-12",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2026-03-12.170.1) to read the bill for a second time. In other words, they voted to agree with the main idea of the bill. This means they can now discuss it in more detail. ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7447), the bill: > *Amends the Migration Act 1958 to enable temporary restrictions on the arrival of certain classes of temporary visa holders in Australia, including when events or circumstances outside Australia mean that there is an increased risk that certain classes of temporary visa holders will not depart Australia when their visas cease to be in effect.* The [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7447_ems_3693e0bf-117f-408a-bcc6-8abfdf540b86%22;rec=0) (which is a document prepared by the party introducing the bill, which is the Government in this case) explains that: > *Currently, the Migration Act does not contain a general power to prevent cohorts of non-citizens who hold visas that are in effect from traveling to Australia, including in circumstances where that travel may present a risk to Australia’s national interest,. Although there are powers under the Migration Act to cancel a non-citizen’s visa in those circumstances, those powers are only capable of being exercised in relation to individual non-citizens. The existing powers are therefore resource intensive, and are not suited to responding at scale to events occurring overseas where it is appropriate and in the national interest to limit or prevent travel to Australia for current holders of a temporary visa who are outside of Australia.* > > *This may include during periods of international conflict or other rapid international developments that place unsustainable",
+   "stage": "Second reading",
+   "ayes": 24,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-12/21"
+  },
+  {
+   "key": "federal-senate-10080",
+   "date": "2026-03-12",
+   "house": "senate",
+   "question": "Migration Amendment (2026 Measures No. 1) Bill 2026 - Limitation of Debate - Greens amendments",
+   "stage": "Limitation of debate",
+   "ayes": 11,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-12/22"
+  },
+  {
+   "key": "federal-senate-10081",
+   "date": "2026-03-12",
+   "house": "senate",
+   "question": "Migration Amendment (2026 Measures No. 1) Bill 2026 - Limitation of Debate - Strengthening preconditions, removing exclusion of rules of natural justice and compensation",
+   "stage": "Limitation of debate",
+   "ayes": 11,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-12/23"
+  },
+  {
+   "key": "federal-senate-10082",
+   "date": "2026-03-12",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2026-03-12.177.1) *that the remaining stages of the bill be agreed to and the bill now be passed.* Because the bill already passed in the House of Representatives it will now become law. ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7447), the bill: > *Amends the Migration Act 1958 to enable temporary restrictions on the arrival of certain classes of temporary visa holders in Australia, including when events or circumstances outside Australia mean that there is an increased risk that certain classes of temporary visa holders will not depart Australia when their visas cease to be in effect.* The [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7447_ems_3693e0bf-117f-408a-bcc6-8abfdf540b86%22;rec=0) (which is a document prepared by the party introducing the bill, which is the Government in this case) explains that: > *Currently, the Migration Act does not contain a general power to prevent cohorts of non-citizens who hold visas that are in effect from traveling to Australia, including in circumstances where that travel may present a risk to Australia’s national interest,. Although there are powers under the Migration Act to cancel a non-citizen’s visa in those circumstances, those powers are only capable of being exercised in relation to individual non-citizens. The existing powers are therefore resource intensive, and are not suited to responding at scale to events occurring overseas where it is appropriate and in the national interest to limit or prevent travel to Australia for current holders of a temporary visa who are outside of Australia.* > > *This may include during periods of international conflict or other rapid international developments that place",
+   "stage": "Limitation of debate",
+   "ayes": 26,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-12/24"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1200963",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201076",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201119",
+   "speaker": "Kate Chaney",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2026-03-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201382",
+   "speaker": "Karen Grogan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201388",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201394",
+   "speaker": "Jonathon Duniam",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201424",
+   "speaker": "David Pocock",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2026-03-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (2026 Measures No. 1) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00010",
+   "assent_date": "2026-03-13"
+  }
+ ]
+}

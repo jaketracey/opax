@@ -1,0 +1,280 @@
+{
+ "key": "au-federal-r6005",
+ "title": "Treasury Laws Amendment (National Housing and Homelessness Agreement) Bill 2018",
+ "short_title": "Treasury Laws Amendment (National Housing and Homelessness Agreement) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-10-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6005%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6005%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6005%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6005%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6005%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6005%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6005%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6005%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6005%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6005%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6005%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6005%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6005%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6005%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6005_ems_a8236f9a-4d7a-4e7d-a965-45286380b13f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6005_ems_a6c0323b-7fbd-436c-b5d9-98bf7cc5495b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6005_ems_275d48ae-aa97-41b4-af4d-d31c00fe96b7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6005%22",
+   "document_date": "2017-10-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00016",
+   "document_date": "2018-03-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-360678",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speech criticised the government for introducing the National Housing and Homelessness Agreement Bill 2017—which provides $4.6 billion over three years from 2018–19—without state and territory approval. Labor said it would support the bill but move an amendment making housing supply and strategy assessments solely a state and territory matter, and again called for reforming negative gearing and the capital gains tax discount, which it said cost over $10 billion annually."
+  },
+  {
+   "slug": "speech-360736",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-01",
+   "stage_hint": null,
+   "brief": "The bill provides $4.6 billion over three years for housing and homelessness but was introduced without state and territory consultation and fails to reform negative gearing and capital gains tax discounts, which are essential for affordability. Over 74,000 Tasmanians live below the poverty line, and on any given night about 1,500 are homeless in Tasmania, with 100,000 nationally."
+  },
+  {
+   "slug": "speech-360737",
+   "speaker": "Ann Sudmalis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the new Housing and Homelessness Agreement with tied funding is needed because previous funding of over $9 billion since 2009 failed to meet three of four benchmarks, with homelessness increasing 17.3% and rental stress rising 7%. The speaker also stated that domestic violence victims should not have to leave their homes; instead, state laws should remove perpetrators."
+  },
+  {
+   "slug": "speech-360738",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government avoided serious demand-side housing reform and instead introduced the Treasury Laws Amendment (National Housing and Homelessness Agreement) Bill 2017 as a minor measure, criticising the lack of government speakers and the use of a single member to read prepared material."
+  },
+  {
+   "slug": "speech-360741",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's lack of a housing minister and policies favouring wealthy investors—such as negative gearing and a $65 billion tax cut—have worsened homelessness, citing 105,000 homeless Australians including 17,000 children, and called for reforming negative gearing and capital gains tax discounts to improve housing affordability."
+  },
+  {
+   "slug": "speech-360742",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia faces a housing crisis of supply, affordability and suitability, and criticised the government for lacking a comprehensive housing plan while warning that the bill's conditionality could jeopardise frontline homelessness funding. They highlighted Coast Shelter's work on the Central Coast, which provided 64,000 overnight beds and nearly 50,000 meals last financial year, and called for additional federal resources."
+  },
+  {
+   "slug": "speech-360745",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia faces a housing crisis driven by generous tax concessions on negative gearing and capital gains tax, which the Turnbull government has refused to reform. They cited a 60-year low in homeownership, 100,000 homeless Australians, and an eight-year wait for public housing in their electorate of Kingsford Smith, contrasting Labor’s past National Rental Affordability Scheme and commitment to winding back these tax breaks."
+  },
+  {
+   "slug": "speech-360747",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-01",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to avoid delaying homelessness funding, but criticised it for adding red tape with no new funding and imposing one-sided obligations on states without Commonwealth commitments. The speaker contrasted the government’s cuts to homelessness programs and the National Rental Affordability Scheme with Labor’s past investments, including 60,000 dwellings and the Social Housing Initiative, and called for reforming negative gearing."
+  },
+  {
+   "slug": "speech-360748",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (National Housing and Homelessness Agreement) Bill maintains existing funding—$1.4 billion annually for affordable housing and $125 million for homelessness services—but fails to provide growth funding, address the shortfall of 458,000 affordable homes, or show national leadership, while criticising the government for abandoning previous Labor initiatives like the National Rental Affordability Scheme and the National Housing Supply Council."
+  },
+  {
+   "slug": "speech-360749",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the housing affordability crisis is driven by negative gearing and the 50% capital gains tax discount, which cost $3.7 billion and $4 billion annually respectively, with 75% of the capital gains discount benefiting the top 10% of income earners. Labor will not oppose the bill but supports limiting negative gearing to new housing, reducing the capital gains discount to 25%, and introducing a vacant property tax, while noting that current funding maintains the $44 million cut from the NPAH under the Abbott government."
+  },
+  {
+   "slug": "speech-360750",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (National Housing and Homelessness Agreement) Bill 2017 is a \"complete sham\" that fails to set aspirational targets or address wraparound services, mental health, financial stress, or rental stress. They cited 1,200 homeless people in Herbert, three youth beds in Townsville, and a veteran family evicted the day before Christmas, and called for greater accountability and a comprehensive federal plan to end homelessness."
+  },
+  {
+   "slug": "speech-360751",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-01",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill fails to address the housing crisis, noting the median house price in Wills is $1 million, home ownership among 25–34 year olds fell from 60% to 48%, and public housing stock dropped from 6% to under 3% over 25 years. They supported Labor’s proposed reforms to negative gearing and capital gains tax concessions as necessary for a credible national housing affordability plan."
+  },
+  {
+   "slug": "speech-360752",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-01",
+   "stage_hint": null,
+   "brief": "The Labor MP supported the Treasury Laws Amendment (National Housing and Homelessness Agreement) Bill 2017, which establishes the National Housing Finance and Investment Corporation, but argued that broader tax reform on negative gearing and capital gains concessions is needed, citing IMF endorsement of Labor's position. He also highlighted infrastructure and transport deficiencies in Western Sydney, including Mount Druitt, as barriers to housing affordability."
+  },
+  {
+   "slug": "speech-360754",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-01",
+   "stage_hint": null,
+   "brief": "The bill was criticised as insufficient to address Australia's housing affordability crisis, with home ownership at a 60-year low and rising homelessness; the speaker called for comprehensive reforms including reviewing negative gearing and capital gains tax, but Labor would not oppose the bill to avoid jeopardising homelessness support funding."
+  },
+  {
+   "slug": "speech-360755",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-01",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (National Housing and Homelessness Agreement) Bill 2017 ties Commonwealth housing payments to states and territories to conditions such as publishing housing strategies, matching homelessness funding, and improving data transparency. The government also committed to ongoing, annually indexed homelessness funding for the first time, after noting that three of four National Affordable Housing Agreement benchmarks had not been met despite over $9 billion in payments since 2009."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (National Housing and Homelessness Agreement) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00016",
+   "assent_date": "2018-03-28"
+  }
+ ]
+}

@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7497",
+ "title": "Private Health Insurance Amendment (Modernising the Private Health Insurance Rebate) Bill 2026",
+ "short_title": "Private Health Insurance Amendment (Modernising the Private Health Insurance Rebate) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-06-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health, Disability and Ageing",
+ "status": "before_parliament",
+ "status_as_of": "2026-06-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7497%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7497_ems_ec5293dd-479e-4ab6-944a-b73533b7144a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/10930034%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7497%22",
+   "document_date": "2026-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1203992",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204092",
+   "speaker": "Tony Sheldon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

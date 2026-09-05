@@ -1,0 +1,280 @@
+{
+ "key": "au-federal-alrc-2391",
+ "title": "Medicare Levy Amendment (DisabilityCare Australia) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2013-05-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-05-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00043",
+   "document_date": "2013-05-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-272033",
+   "speaker": "Julia Gillard",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272038",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272039",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272041",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272042",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272043",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272044",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272045",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272257",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823204",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823205",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823207",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823208",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823209",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823210",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823211",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823264",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823446",
+   "speaker": "Anne McEwen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": "The Selection of Bills Committee report recommended referring the Australian Jobs Bill 2013, Export Market Development Grants Amendment Bill 2013, Private Health Insurance Legislation Amendment (Base Premium) Bill 2013, and Public Governance, Performance and Accountability Bill 2013 to specific committees for inquiry by June 2013, and recommended not referring several other bills including the DisabilityCare Australia Fund Bill 2013 and related tax bills; the report was adopted."
+  },
+  {
+   "slug": "speech-823452",
+   "speaker": "Jacinta Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": "Moved to suspend standing orders so that 14 bills related to DisabilityCare Australia (the National Disability Insurance Scheme) could be considered during the current sitting period; the motion was agreed to."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Medicare Levy Amendment (DisabilityCare Australia) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00043",
+   "assent_date": "2013-05-28"
+  }
+ ]
+}

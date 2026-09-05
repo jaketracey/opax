@@ -1,0 +1,700 @@
+{
+ "key": "au-federal-r6652",
+ "title": "Treasury Laws Amendment (News Media and Digital Platforms Mandatory Bargaining Code) Bill 2021",
+ "short_title": "Treasury Laws Amendment (News Media and Digital Platforms Mandatory Bargaining Code) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2021-03-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6652_ems_2fe103c0-0f60-480b-b878-1c8e96cf51d2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6652_ems_60bd06bc-2590-42a9-bc1d-fc5f5209b6f3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6652_ems_0032ccbc-6d6c-4237-b89e-d906df51e71d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6652_ems_c352c005-974d-47e4-8999-35a566907f89%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6652_ems_bd80ad0e-6d72-4fd5-8f15-307599c10873%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6652%22",
+   "document_date": "2020-12-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00021",
+   "document_date": "2021-03-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2020-12-09",
+  "sentences": [
+   "This bill creates a mandatory code of conduct to address power imbalances between digital platforms and Australian news businesses.",
+   "The code sets out rules for bargaining, including good faith requirements, arbitration through the ACCC, and advance notice of algorithm changes.",
+   "The code applies only to digital platforms designated by the Minister, who must consider power imbalances before designating."
+  ],
+  "changes": [
+   "Establishes a mandatory code of conduct for bargaining between news businesses and digital platforms.",
+   "Requires parties to bargain in good faith.",
+   "Allows news businesses to start arbitration by notifying the ACCC if bargaining fails.",
+   "Requires digital platforms to give advance notice of significant algorithm changes.",
+   "Prohibits platforms from treating participating news businesses' content differently from non-participants.",
+   "Allows platforms to make standard offers that bypass the code's bargaining and arbitration rules if accepted."
+  ],
+  "affected": "Australian news businesses and digital platform corporations designated by the Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7002",
+   "date": "2021-02-23",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-02-22.167.2) to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means that the text below will be added to the end of the usual motion. This doesn't have any legal consequences, but is significant because it represents the will of the Senate. ### Motion text > *At the end of the motion, add: \", but the Senate:* > > *(a) notes that:* > >> *(i) Australia has one of the most concentrated media markets in the world,* >> >> *(ii) since the Government's changes to media law in 2017, there have been alarming contractions and warning signs of market failure in Australia's media landscape, and* >> >> *(iii) the Bill was introduced 18 months after the ACCC delivered the Final Report of the Digital Platforms Inquiry in June 2019 and does not address all of the ACCC's recommendations to support public interest journalism; and* > > *(b) calls on the Government to:* > >> *(i) do more to support public interest journalism in Australia as a matter of urgency,* >> >> *(ii) deliver a support and transition package to assist news media publishers unduly negatively impacted as a consequence of this Bill, and* >> >> *(iii) make appropriate provision to ensure the viability of AAP newswire as a matter of priority\".*",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 26,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-23/6"
+  },
+  {
+   "key": "federal-senate-7003",
+   "date": "2021-02-23",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (News Media and Digital Platforms Mandatory Bargaining Code) Bill 2021 - Second Reading - ABC funding",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 26,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-23/7"
+  },
+  {
+   "key": "federal-senate-7004",
+   "date": "2021-02-23",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (News Media and Digital Platforms Mandatory Bargaining Code) Bill 2021 - Second Reading - Media diversity and funding",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 54,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 27,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-23/8"
+  },
+  {
+   "key": "federal-senate-7005",
+   "date": "2021-02-23",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (News Media and Digital Platforms Mandatory Bargaining Code) Bill 2021 - Second Reading - Privacy concerns",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 27,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-23/9"
+  },
+  {
+   "key": "federal-senate-7632",
+   "date": "2021-02-24",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-02-24.156.4) introduced by South Australian Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young) (Greens), which means it failed. This was an amendment to an original Government amendment. Senator Hanson-Young [explained that](https://www.openaustralia.org.au/senate/?gid=2021-02-24.156.1): > *It is an amendment to the government's amendment in relation to schedule 1, item 1, page 8, proposed subsection (3)(b). It goes to this point that we've been debating here this morning in relation to significant contributions to the sustainability of the Australian news industry. I think it's fair to say that all the questions this morning have been surrounding this element. As I said, there is a concern that, unless this is specifically referenced, small, medium and regional publishers will be overlooked in that definition of the significant contribution. So all I am asking for is that we clarify that in paragraph (3)(b) with the words 'including by entering into agreements with a significant number of those businesses'—and this is the important amendment—'that include small, medium and regional organisations'. The government has said it intends to ensure that this is the case. I don't see why there would be any problem in ensuring that they are included. I urge the government to accept this amendment. It would put at ease a number of nervous organisations this morning.* ### Amendment text > *AMENDMENT OF GOVERNMENT AMENDMENTS [SHEET PG138]* > > *(1) Paragraph (3)(b), omit \"(including agreements to remunerate those businesses for their news content)\", substitute \"(including by entering into agreements with a significant number of those businesses, that include small, medium and regional organisations, to remunerate those businesses for their news content)\".* ### Original Government amendment text > *(1) Schedule 1, item 1, page 8 (lines 10 to 1",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 21,
+    "dated": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-24/1"
+  },
+  {
+   "key": "federal-senate-7633",
+   "date": "2021-02-24",
+   "house": "senate",
+   "question": "The majority voted in favour of item (1) of [Government amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6652_amend_49f1e4e9-d99c-4b80-84d4-3225e4f6491a%22;rec=0), which means it will now form part of the bill. South Australian Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Independent) opposed item (1) and [explained that](https://www.openaustralia.org.au/senate/?gid=2021-02-24.274.1): > *It's a small amendment to what is a very significant bill, a very large bill. I would liken it to the two wires on the service module of Apollo 13. They might seem like just small wires, but after launch of this legislation we're going to find that it doesn't accomplish the mission. We're going to find that the Treasurer will simply be able to not designate Facebook and Google in accordance with the act. That would leave all of the small players, all of the regional players, without the ability to bargain properly against these very large digital companies, these foreign companies. We would, in effect, still have the very thing that Mr Rod Sims of the ACCC was most concerned about, which is a huge imbalance in power between Facebook, Google and the small players. So I would urge the chamber, when this is put, to reject item No. (1) of these amendments because it effectively undermines the whole bill.* ### Item (1) text > *(1) Schedule 1, item 1, page 8 (lines 10 to 13), omit subsection 52E(3), substitute:* > >> *(3) In making the determination, the Minister must consider:* >> >>> *(a) whether there is a significant bargaining power imbalance between Australian news businesses and the group comprised of the corporation and all of its related bodies corporate; and* >>> >>> *(b) whether that group has made a significant contribution to the sustainability of the Australian news industry through agreements relating to news content of Australian n",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 19,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-24/2"
+  },
+  {
+   "key": "federal-senate-7634",
+   "date": "2021-02-24",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-02-24.289.1) introduced by South Australian Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Independent), which means the amendments failed. Senator Patrick [explained his amendments](https://www.openaustralia.org.au/senate/?gid=2021-02-24.289.1): > *These amendments deal with yet another aspect of the situation—the opaque nature of the algorithms and business practices of big tech. A fairly new area of engineering, which I know might be foreign to those present in the chamber, is where independent auditors look at algorithms—it can be algorithms in respect of commercial applications or algorithms used by government—to make sure that those algorithms are performing the functions that they ought to perform and, indeed, not introducing unintended consequences into what are automated processes.* > > *[...]* > > *The ACCC actually has the power to go and look at the activities and, indeed, the algorithms of companies—that was confirmed by Mr Sims at the committee inquiry—and the intent of this amendment is to make sure that the ACCC does so. Whilst they have the power now, there is no requirement for them to do algorithm audits.*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "earliest": 20,
+    "dated": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-24/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-402481",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the mandatory bargaining code bill but criticised the government for delays and failing to implement broader ACCC recommendations, noting that around 200 newspapers have closed and hundreds of journalism jobs lost since 2017 media law changes."
+  },
+  {
+   "slug": "speech-402482",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (News Media and Digital Platforms Mandatory Bargaining Code) Bill 2020 was introduced to require digital platforms like Google and Facebook to pay Australian news media for using their content, addressing bargaining power imbalances through six elements including good faith bargaining, compulsory arbitration, algorithm change notifications, non-differentiation, contracting out, and standard offers. Recent deals between Google and Seven, Nine, and Junkee Media were cited as early outcomes."
+  },
+  {
+   "slug": "speech-402483",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The Labor opposition supported the Treasury Laws Amendment (News Media and Digital Platforms Mandatory Bargaining Code) Bill 2020 as amended, arguing journalists should be paid for their content. The speaker criticised the government for delays and overpromising, noted the inclusion of ABC and SBS after Labor’s advocacy, and highlighted ongoing concerns about media diversity, small business uncertainty, and the need for a 12-month review."
+  },
+  {
+   "slug": "speech-402484",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (News Media and Digital Platforms Mandatory Bargaining Code) Bill 2020 establishes a mandatory code to address bargaining power imbalances between digital platforms and Australian news businesses, with provisions including a negotiate-arbitrate model, registration for news businesses with annual revenue over $150,000, and a requirement for platforms to give 14 days' notice of algorithm changes that affect news businesses."
+  },
+  {
+   "slug": "speech-402485",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "Labor supported the Treasury Laws Amendment (News Media and Digital Platforms Mandatory Bargaining Code) Bill 2020 but raised concerns about ministerial discretion, potential legal challenges, and the lack of mechanisms to ensure the code increases media diversity or journalist employment. The speaker also criticised the Morrison government for failing to address other ACCC recommendations and for not providing transparency on how digital platform payments to news outlets are used."
+  },
+  {
+   "slug": "speech-402486",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (News Media and Digital Platforms Mandatory Bargaining Code) Bill 2020 addresses a bargaining power imbalance between digital platforms like Google and Facebook and Australian news media businesses, establishing a code to encourage fair commercial deals with government intervention where markets fail. Recent deals between Google and Seven West, and with Nine and Fairfax, were cited as evidence of the framework working."
+  },
+  {
+   "slug": "speech-402487",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the mandatory bargaining code is necessary to address power imbalances between digital platforms and news businesses, support public interest journalism, and assert democratic sovereignty over unaccountable corporations. Labor supported a workable code, criticised government delays, and welcomed recent commercial deals between Google and Seven and Nine, while calling for similar arrangements involving the ABC and SBS."
+  },
+  {
+   "slug": "speech-402488",
+   "speaker": "Craig Kelly",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's principle that digital platforms should compensate original news content creators under copyright law, but raised significant concerns about freedom of speech and the boundaries of content blocking by social media companies."
+  },
+  {
+   "slug": "speech-402490",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Treasury Laws Amendment (News Media and Digital Platforms Mandatory Bargaining Code) Bill 2020, emphasising the need to protect public interest journalism and criticising social media as not equivalent to curated journalism. They noted that 106 local and regional newspapers closed between 2008 and 2018, leaving 21 local government areas with no local newspaper coverage, and called for more direct government support for the Australian Associated Press and for an information campaign to help smaller publishers access the code."
+  },
+  {
+   "slug": "speech-402493",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "Centre Alliance supported the mandatory bargaining code bill requiring Google and Facebook to pay for Australian news content, noting Google had begun negotiating deals but Facebook had not. The party expressed concern that small and regional publishers could be disadvantaged, as occurred with earlier funding programs where only 15% of the Public Interest News Gathering program went to regional and remote publishers."
+  },
+  {
+   "slug": "speech-402495",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (News Media and Digital Platforms Mandatory Bargaining Code) Bill 2020 establishes a mandatory code to address bargaining power imbalances between digital platforms and Australian news media businesses, based on the ACCC's digital platforms inquiry, with a review after one year."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (News Media and Digital Platforms Mandatory Bargaining Code) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00021",
+   "assent_date": "2021-03-02"
+  }
+ ]
+}

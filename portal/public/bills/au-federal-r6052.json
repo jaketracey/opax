@@ -1,0 +1,209 @@
+{
+ "key": "au-federal-r6052",
+ "title": "Interstate Road Transport Legislation (Repeal) Bill 2018",
+ "short_title": "Interstate Road Transport Legislation (Repeal) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Regional Development and Cities",
+ "status": "passed",
+ "status_as_of": "2018-05-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6052%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6052%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6052%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6052%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6052%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6052%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6052%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6052%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6052%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6052%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6052%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-05-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6052%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6052_ems_d8f6e718-b51c-4431-81d4-2fb5f7f012a7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6052%22",
+   "document_date": "2018-02-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00035",
+   "document_date": "2018-05-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-28",
+  "sentences": [
+   "The bill would shut down a federal scheme that registers interstate trucks.",
+   "It would amend two 1985 Acts, then repeal them entirely once the scheme ends.",
+   "The scheme would close to all operators by 30 June 2019, with a 12-month transition period."
+  ],
+  "changes": [
+   "Close the Federal Interstate Registration Scheme to new entrants and re-registrations.",
+   "Keep some provisions running for a 12-month transition.",
+   "End all scheme operations by 30 June 2019."
+  ],
+  "affected": "Operators registered under the Federal Interstate Registration Scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:29:39Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5208",
+   "date": "2018-05-10",
+   "house": "senate",
+   "question": "Interstate Road Transport Legislation (Repeal) Bill 2018 - Second Reading - Address emissions",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 27,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-05-10/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-362003",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The Interstate Road Transport Legislation (Repeal) Bill 2018 repeals the Federal Interstate Registration Scheme (FIRS), a 1987 scheme for heavy vehicles over 4.5 tonnes in interstate trade, which the speaker argued is now redundant due to improved jurisdictional cooperation and reforms, paving the way for a modern national registration system."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Interstate Road Transport Legislation (Repeal) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00035",
+   "assent_date": "2018-05-22"
+  }
+ ]
+}

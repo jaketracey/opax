@@ -1,0 +1,255 @@
+{
+ "key": "au-federal-r5475",
+ "title": "Passports Legislation Amendment (Integrity) Bill 2015",
+ "short_title": "Passports Legislation Amendment (Integrity) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs",
+ "status": "passed",
+ "status_as_of": "2015-09-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5475%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5475%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5475%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5475%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5475%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5475%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5475%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5475_ems_5f853278-5d02-4f2d-82d7-2e2d666720cd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5475_ems_ddc60ca0-3d64-4506-82fc-22e745009f78%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5475_ems_67c459ad-5c2a-4d0e-b6d2-caabdf8266ac%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5475%22",
+   "document_date": "2015-06-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00122",
+   "document_date": "2015-09-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2015-06-04",
+  "sentences": [
+   "The bill aims to make passport rules clearer and give the government more power to fight fraud involving Australian travel documents.",
+   "It would let the Minister issue a travel document without a request if someone needs to travel by law, and align the definition of parental responsibility with the Family Law Act 1975.",
+   "The Minister could stop processing a passport application where fraud or dishonesty is suspected, and new criminal offences would target fraudulent use of travel documents."
+  ],
+  "changes": [
+   "Allows the Minister to issue a travel-related document on their own initiative for a lawful travel requirement.",
+   "Aligns the definition of parental responsibility with the Family Law Act 1975.",
+   "Lets the Minister refuse to process an application when fraud or dishonesty is reasonably suspected.",
+   "Updates existing offences and creates a new one to address fraudulent use of travel documents."
+  ],
+  "affected": "People applying for or using Australian travel documents, and those with parental responsibility for child passport applicants.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-312190",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The Passports Legislation Amendment (Integrity) Bill 2015 was introduced to strengthen the integrity and security of Australian travel documents by allowing the minister to issue passports without consent for lawful removal, extradition or prison transfer; aligning parental consent rules with the Family Law Act; enabling refusal of applications where fraud is suspected; and creating new offences for making or using false passports, with a maximum penalty of 10 years’ imprisonment."
+  },
+  {
+   "slug": "speech-314944",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "Labor supports the Passports Legislation Amendment (Integrity) Bill 2015, which creates an offence for falsely reporting a document as stolen, and noted Labor's previous reforms allowing gender diverse Australians to obtain passports reflecting their gender identity."
+  },
+  {
+   "slug": "speech-314945",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The Passports Legislation Amendment (Integrity) Bill 2015 was supported, introducing measures to issue travel documents without consent for deportation or extradition, aligning parental responsibility definitions with the Family Law Act, and creating new offences for fraudulent use of travel documents with penalties up to 10 years' imprisonment. Around 40,000 Australian passports are lost or stolen each year, with escalating fees of $111, $250, and $500 for successive losses and reduced validity after three losses."
+  },
+  {
+   "slug": "speech-314946",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The speaker argued the Passports Legislation Amendment (Integrity) Bill 2015 updates passport laws to address national security, identity theft, and fraud, including provisions for issuing travel documents without consent for lawful removal or extradition, clarifying parental consent for child passports, and creating new offences for fraudulent use of travel documents. The speaker noted 40,000 Australian passports go missing and warned about identity theft risks from online information sharing."
+  },
+  {
+   "slug": "speech-314947",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Passports Legislation Amendment (Integrity) Bill 2015, arguing it would prevent fraudulent use of Australian passports, update parental consent rules for child passports, allow the minister to refuse processing on fraud grounds, create a new offence for making false travel documents, and permit refusal of offensive or misleading names, as part of a timely 10-year legislative review."
+  },
+  {
+   "slug": "speech-314948",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The Passports Legislation Amendment (Integrity) Bill 2015 strengthens passport controls by allowing the minister to issue travel documents on their own initiative, aligning parental responsibility definitions with the Family Law Act, enabling refusal of applications on reasonable suspicion of fraud, and creating new offences for fraudulent use of travel documents."
+  },
+  {
+   "slug": "speech-316958",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Passports Legislation Amendment (Integrity) Bill 2015, arguing that passport integrity is essential given the rise in Australian overseas travel from 656,000 trips in 1976 to 9.2 million in the last year, and that the China-Australia Free Trade Agreement will create over 200,000 jobs and boost exports, while condemning union-led opposition as xenophobic and economically damaging."
+  },
+  {
+   "slug": "speech-316970",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The Passports Legislation Amendment (Integrity) Bill 2015 was supported, strengthening passport security by making false statements an offence, aligning parental consent definitions with the Family Law Act, and expanding ministerial power to issue travel documents for extradition, deportation, or prisoner transfer. In the past three financial years, 65 Australian passports were suspected of being forged or tampered with, 114,000 were reported lost or stolen, and the case of Ahmad Saiyer Naizmand leaving Australia on his brother's passport after his own was cancelled was cited."
+  },
+  {
+   "slug": "speech-316971",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The Passports Legislation Amendment (Integrity) Bill 2015 was supported, updating laws to allow the minister to issue travel documents without consent in deportation, extradition or prison transfer cases; align parental responsibility with the Family Law Act; refuse processing on suspicion of fraud; and extend offences for tampering with e‑passport chips and other fraudulent conduct."
+  },
+  {
+   "slug": "speech-316973",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The government argued the Passports Legislation Amendment (Integrity) Bill 2015 is needed to strengthen passport security and deter fraud, including new offences for making false travel documents and allowing the minister to refuse applications suspected of fraud. The bill also enables the minister to issue travel documents for lawful removal, deportation, extradition or prisoner transfer, and aligns parental responsibility definitions with the Family Law Act."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Passports Legislation Amendment (Integrity) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00122",
+   "assent_date": "2015-09-10"
+  }
+ ]
+}

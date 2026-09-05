@@ -1,0 +1,928 @@
+{
+ "key": "au-federal-r5790",
+ "title": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 (No. 2)",
+ "short_title": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 (No. 2)",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2016-12-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5790_ems_ba1c8a2d-433f-4895-8e1f-e9e05731f9ea%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5790%22",
+   "document_date": "2016-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00092",
+   "document_date": "2016-12-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4443",
+   "date": "2016-11-29",
+   "house": "representatives",
+   "question": "Mark Coulton The question now is that the amendment be agreed to. Scott Morrison I move: That the question be put. Tony Smith The question is that the motion be put.",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-11-29/1"
+  },
+  {
+   "key": "federal-representatives-4444",
+   "date": "2016-11-29",
+   "house": "representatives",
+   "question": "Tony Smith The original question was that this bill be now read a second time. To this the honourable member for McMahon has moved as an amendment that all words after 'That' be omitted with a view to substituting other words. The question now is that that amendment be agreed to. The question is that the bill be now read a second time. Bill read a second time.",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-11-29/2"
+  },
+  {
+   "key": "federal-representatives-4445",
+   "date": "2016-11-29",
+   "house": "representatives",
+   "question": "No motion text available",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-11-29/3"
+  },
+  {
+   "key": "federal-representatives-4446",
+   "date": "2016-11-29",
+   "house": "representatives",
+   "question": "Chris Bowen Eighteen months of rolling farce only for the government to gag legislation. Eighteen months of mistakes, mis-steps and lack of consultation, and all of a sudden, after failing to bring it into the House and the Senate last week, after failing to deal with this matter comprehensively, the government takes the decisive action of a gag. Why? To allow National Party members to vote for a 15 per cent backpacker tax. That is what happened in the House a few moments ago: Nationals and rural Liberals voted for a backpacker tax rate of 15 per cent when they could have shown a bit of backbone, a bit of courage, and insisted on a 10½ per cent backpacker tax rate. We will give them another opportunity. We will give them another opportunity, because we will move now, in detail, an amendment which would substitute 10½ per cent for 15 per cent. This is an opportunity for the National Party to grow a spine. This is an opportunity for the National Party to stand up, in Canberra, to the Liberals. This is an opportunity now for this parliament, yet again, to tell this Treasurer that he is out of touch and he has got it wrong. It is an opportunity to tell this Treasurer that he is not up to the job and to go back to the drawing board. It is an opportunity to give us a backpacker tax rate that is competitive with New Zealand so that the horticultural, agricultural, hospitality and tourism sectors can be competitive and attract backpackers, and in those regions those backpackers can then spend their earnings. I have a little update for the Treasurer, who says, 'The Labor Party wants backpackers in Australia to pay no tax.' Well, 10½ per cent is not nothing. That is my update for the Treasurer. It has a zero in it, in the 10. I do accept that fact. I concede that point to the Treasurer, who has been going around saying, 'Bill Shorten and the Labor Party don't want backpackers to pay any tax.' That has never been true. It is not true now. And 10½ is more than zero. It is a rat",
+   "stage": "Consideration in detail",
+   "ayes": 70,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-11-29/4"
+  },
+  {
+   "key": "federal-senate-4458",
+   "date": "2016-11-30",
+   "house": "senate",
+   "question": "Katy Gallagher by leave—I move amendments (1) and (2) on sheet 8018: (1) Schedule 1, item 6, page 5 (line 15) omit \"15%\", substitute \"10.5%\". [tax rate for part of working holiday income not exceeding $37,000] (2) Schedule 1, item 7, page 5 (table item 1), omit \"15%\", substitute \"10.5%\". [tax rate for part of working holiday income not exceeding $37,000] And I move that the question be put. The CHAIR: The question is that the question be now put. The CHAIR: The question is that the requests standing in the name of Senator Gallagher be agreed to. The CHAIR: The question is that the bill be passed subject to requests. Bill reported with requests.",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 40,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-30/7"
+  },
+  {
+   "key": "federal-senate-4459",
+   "date": "2016-11-30",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 40,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-30/8"
+  },
+  {
+   "key": "federal-senate-4460",
+   "date": "2016-11-30",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 39,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-30/9"
+  },
+  {
+   "key": "federal-representatives-4479",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "question": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 (No. 2) - Consideration of Senate Message - Speed things along",
+   "stage": "Consideration of Senate message",
+   "ayes": 79,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 147
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-12-01/14"
+  },
+  {
+   "key": "federal-representatives-4480",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "question": "Tony Smith The question now is that the requested amendments be not made.",
+   "stage": "Consideration of Senate message",
+   "ayes": 79,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 147
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-12-01/15"
+  },
+  {
+   "key": "federal-senate-4507",
+   "date": "2016-12-01",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org.au/senate/?id=2016-12-01.205.2) to deal with the bill (and the message returned by the House of Representatives) right now, rather than waiting any longer. The message from the House of Representatives was that the House refused to agree to the amendments suggested in the Senate. This means that the Senate now have to discuss whether or not to insist on the amendments or just let the bill pass as is. ### What is this bill? The Government has already tried to pass this bill once in November but was unsuccessful because the Senate [wanted to make changes](https://theyvoteforyou.org.au/divisions/senate/2016-11-24/2) to the bill that the House of Representatives [didn't agree with](https://theyvoteforyou.org.au/divisions/representatives/2016-11-24/2). It is part of a series of bills to change the income tax arrangements for working holiday visa holders. If passed, they will mean that visa holders will be taxed from the first dollar earned, rather than having the usual tax free threshold. The [original version](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5740) of this bill would have applied a tax rate of 19% for visa holders earning up to $37,000. This [new version](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5790) will apply a tax rate of 15%.",
+   "stage": "Returned from the House of Representatives",
+   "ayes": 40,
+   "noes": 20,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 14,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-12-01/15"
+  },
+  {
+   "key": "federal-senate-4508",
+   "date": "2016-12-01",
+   "house": "senate",
+   "question": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 (No. 2) - in Committee - Don't insist on amendments",
+   "stage": "In committee",
+   "ayes": 39,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 15,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-12-01/16"
+  },
+  {
+   "key": "federal-senate-4509",
+   "date": "2016-12-01",
+   "house": "senate",
+   "question": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 (No. 2) - Third Reading - Speeding things along",
+   "stage": "Third reading",
+   "ayes": 39,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 15,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-12-01/17"
+  },
+  {
+   "key": "federal-senate-4510",
+   "date": "2016-12-01",
+   "house": "senate",
+   "question": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 (No. 2) - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 43,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 15,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-12-01/18"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-339075",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 (No. 2), which sets a 15% tax rate for working holiday makers, and criticised Labor for supporting a 10.5% rate that would allow backpackers to pay less tax than Australian workers. The bill also includes a $10 million global youth campaign to attract backpackers to Australia."
+  },
+  {
+   "slug": "speech-339077",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2016-11-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill and announced a two-year seasonal workers incentives trial from July next year, allowing up to 6,000 job seekers to do seasonal work without losing Newstart or youth allowance, with incentives for employment providers and a $300 living-away-from-home allowance; they also criticised political delays on the backpacker tax for harming farmers."
+  },
+  {
+   "slug": "speech-339078",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the backpacker labour shortage is solely due to uncertainty created by the government's 2015 budget tax, introduced by Treasurer Hockey, noting that backpackers currently pay zero tax. They also criticised the National Party as a \"bunyip aristocracy\" for failing to support workers and businesses."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Income Tax Rates Amendment (Working Holiday Maker Reform) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00092",
+   "assent_date": "2016-12-02"
+  }
+ ]
+}

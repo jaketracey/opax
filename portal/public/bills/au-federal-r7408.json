@@ -1,0 +1,233 @@
+{
+ "key": "au-federal-r7408",
+ "title": "Universities Accord (Australian Tertiary Education Commission) (Consequential and Transitional Provisions) Bill 2025",
+ "short_title": "Universities Accord (Australian Tertiary Education Commission) (Consequential and Transitional Provisions) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2026-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7408%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7408%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7408%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7408%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7408%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7408%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7408%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7416_ems_8589e86c-60a7-4fb9-b54b-6f5186e89c8b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7408%22",
+   "document_date": "2025-11-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00026",
+   "document_date": "2026-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-26",
+  "sentences": [
+   "This bill is part of a package that establishes the Australian Tertiary Education Commission (ATEC) as the steward of the higher education system.",
+   "The package would create a National Tertiary Education Objective, require ATEC to consider it, and set up a three-member commission with a First Nations Commissioner.",
+   "The package would also introduce mission-based compacts with higher education providers, which could lead to compliance action if not in force for a year."
+  ],
+  "changes": [
+   "Establishes the Australian Tertiary Education Commission (ATEC) as the steward of the higher education system.",
+   "Creates a National Tertiary Education Objective (NTEO) that ATEC must have regard to.",
+   "Provides for ATEC to be led by three independent commissioners, including a First Nations Commissioner.",
+   "Requires ATEC to establish a First Nations Advisory Committee.",
+   "Introduces mission-based compacts with higher education providers, with potential compliance action under HESA if not in force.",
+   "Embeds equity by requiring ATEC to consider improving outcomes for people facing systemic barriers to education."
+  ],
+  "affected": "Higher education providers, students, First Nations communities, and people facing systemic barriers to education.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9906",
+   "date": "2026-02-10",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2026-02-10.6.1) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a second time. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd038), which is a document prepared by the parliamentary library: > *The Universities Accord (Australian Tertiary Education Commission) (Consequential and Transitional Provisions) Bill 2025 (the C&T Bill) amends related legislation to implement the Bill, including transferring responsibilities for the Higher Education Standards Framework to [Australian Tertiary Education Commission (ATEC)](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd038), and enabling information sharing between the Department of Education and ATEC.*",
+   "stage": "Second reading",
+   "ayes": 97,
+   "noes": 38,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Labor": {
+     "ayes": 88,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-02-10/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1199735",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-02-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199901",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202175",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202181",
+   "speaker": "Matt O'Sullivan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-03-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Universities Accord (Australian Tertiary Education Commission) (Consequential and Transitional Provisions) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00026",
+   "assent_date": "2026-04-01"
+  }
+ ]
+}

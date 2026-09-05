@@ -1,0 +1,420 @@
+{
+ "key": "au-federal-r5698",
+ "title": "Excise Tariff Amendment (Tobacco) Bill 2016",
+ "short_title": "Excise Tariff Amendment (Tobacco) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-08-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2016-09-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5698%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5698%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5698%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5698%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5698%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5698%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5698%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5698%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5698%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5698%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5698%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5698%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5698%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-09-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5698%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5698_ems_12832ec4-ee8e-40e2-aa61-f12d49411613%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5698%22",
+   "document_date": "2016-08-31",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00060",
+   "document_date": "2016-09-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4287",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "question": "Andrew Leigh I move: That all words after 'That' be omitted with a view to substituting the following words: 'whilst not declining to give the bill a second reading, the House condemns the government for failing to implement comprehensive budget measures that are fair and sustainable for Australia.' Cigarettes are the only legal product which, if consumed as directed, will kill half of their users. They are extremely addictive. Ask smokers if they plan to quit and 92 per cent will say yes. Yet Australia has managed over time to significantly decrease the share of people who smoke. Rates since 1980 have approximately halved, with smoking rates now around 18 per cent for men and 14 per cent for women. How did we do it? Part of the answer was information. People are more likely today to know that cigarettes cause cancer, and they are more likely to understand the risks of smoking while pregnant and the risks of smoking around children. We have also made available cheaper nicotine patches. Since 2011 patches that previously cost $4 a day have now been available for $1 a day for anyone with a doctor's prescription. One of the things, too, that has changed smoking rates in Australia is the change in price. Over the past generation the cost of cigarettes after inflation has increased from about 40c a stick to about 70c a stick. Whose behaviour is most changed by that? Well, young people are particularly price responsive. So we have seen a rapid drop in the share of young people taking up smoking. The old days of a bunch of boys getting together behind the toilet block to light up are, thankfully, rarer than they once were. Economists estimate the elasticity is about minus 0.5, meaning that if you increase prices by 10 per cent you will decrease smoking rates by five per cent. Plain packaging also played an important part—a measure which I am proud to say was spearheaded by the Gillard government and ultimately supported by the then coalition opposition. These changes will",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-09-13/1"
+  },
+  {
+   "key": "federal-representatives-4290",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "question": "No motion text available",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 59
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 130,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-09-13/4"
+  },
+  {
+   "key": "federal-representatives-4291",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "question": "Tony Smith Is leave granted for the third reading? Leave not granted. Christopher Pyne I move: That so much of the standing orders be suspended as would prevent the motion for the third reading being moved without delay. Tony Burke The Leader of the House is having a shocking day—an absolutely shocking day. Christopher Pyne I move: That the question be now put. Tony Smith The question is that the question be put.",
+   "stage": "Third reading",
+   "ayes": 79,
+   "noes": 65,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-09-13/5"
+  },
+  {
+   "key": "federal-representatives-4292",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "question": "Tony Smith The question is that the motion moved by the Leader of the House be agreed to.",
+   "stage": "Third reading",
+   "ayes": 79,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-09-13/6"
+  },
+  {
+   "key": "federal-representatives-4293",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "question": "Christopher Pyne I move: That this bill be now read a third time. Andrew Leigh Mr Speaker— Tony Smith No, members on my right will cease interjecting. The Manager of Opposition Business. Tony Burke Given that no-one was speaking and no-one had the call at the time that the Leader of the House moved that motion, I simply ask your advice as to who it is who will no longer be heard if that motion is carried. Tony Smith The Manager of Opposition Business is right: no-one had the call. I call the Leader of the House. Christopher Pyne I move: That the motion be put. Tony Smith The question now is that this bill be read a third time. Question agreed to. Bill read a third time.",
+   "stage": "Third reading",
+   "ayes": 79,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-09-13/7"
+  },
+  {
+   "key": "federal-senate-4308",
+   "date": "2016-09-14",
+   "house": "senate",
+   "question": "Excise Tariff Amendment (Tobacco) Bill 2016, Customs Tariff Amendment (Tobacco) Bill 2016 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 46,
+   "noes": 2,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 14,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-09-14/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-333551",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Excise Tariff Amendment (Tobacco) Bill 2016, noting it was originally a Labor policy adopted by the government after initial opposition, and argued that tobacco excise increases reduce smoking rates—citing 15,000 deaths and $31.5 billion in health and economic costs annually, with projections of 320,000 smokers quitting and 40,000 teenagers deterred from starting. The speaker also criticised the government for previously dismissing the policy and for cutting the Indigenous smoking cessation program."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Excise Tariff Amendment (Tobacco) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00060",
+   "assent_date": "2016-09-23"
+  }
+ ]
+}

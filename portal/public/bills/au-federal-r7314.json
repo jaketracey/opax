@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7314",
+ "title": "National Land Transport Act Amendment (Better Value for Taxpayers) Bill 2025",
+ "short_title": "National Land Transport Act Amendment (Better Value for Taxpayers) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-02-10",
+ "originating_house": "representatives",
+ "sponsor": "SPENDER, Allegra, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "11001",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7314%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7314%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7314%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7314_ems_c72b45ec-672d-4101-810b-4ff4af6ac32e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7314%22",
+   "document_date": "2025-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-10",
+  "sentences": [
+   "The bill would require the Federal Government to publish more information about how it chooses and manages large land transport projects.",
+   "It would mandate a long-term national transport plan, public release of business cases for large projects, and published reviews of completed projects.",
+   "The government has committed $120 billion to infrastructure over ten years, but reviews found $32 billion in cost pressures and a lack of transparency in project selection."
+  ],
+  "changes": [
+   "The bill would require the government to create and release a periodic national land transport plan that details priorities and investment assumptions.",
+   "It would make all business cases for federally funded projects above an unspecified threshold publicly available.",
+   "It would require the government to carry out and publish post-completion reviews for projects over a certain cost and time threshold."
+  ],
+  "affected": "The Federal Government and taxpayers are affected by the bill.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:52Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

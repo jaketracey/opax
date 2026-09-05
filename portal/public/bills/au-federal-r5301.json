@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r5301",
+ "title": "Family Assistance Legislation Amendment (Child Care Measures) Bill (No. 2) 2014",
+ "short_title": "Family Assistance Legislation Amendment (Child Care Measures) Bill (No. 2) 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5301%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5301%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5301%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5301_ems_8bb08786-ab55-4622-82fa-bb5100928603%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5301%22",
+   "document_date": "2014-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-25",
+  "sentences": [
+   "The bill would freeze the income thresholds for the Child Care Benefit at their 30 June 2014 levels for three years from 1 July 2014.",
+   "It amends the A New Tax System (Family Assistance) Act 1999 to stop indexation of those thresholds until 1 July 2017.",
+   "The standard hourly rate, minimum hourly amount and multiple child loadings for the Child Care Benefit would still be indexed each year by the Consumer Price Index."
+  ],
+  "changes": [
+   "Freezes Child Care Benefit income thresholds at 30 June 2014 amounts for three income years starting 1 July 2014.",
+   "Defers the first indexation of these thresholds to 1 July 2017.",
+   "Maintains annual CPI indexation of the Child Care Benefit standard hourly rate, minimum hourly amount and multiple child loadings."
+  ],
+  "affected": "Families receiving the Child Care Benefit.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-293374",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

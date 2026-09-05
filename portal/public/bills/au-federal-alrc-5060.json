@@ -1,0 +1,142 @@
+{
+ "key": "au-federal-alrc-5060",
+ "title": "Marriage Act Amendment (Recognition of Foreign Marriages for Same-Sex Couples) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-16",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2013-06-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-2954",
+   "date": "2013-06-20",
+   "house": "senate",
+   "question": "Marriage Act Amendment (Recognition of Foreign Marriages for Same-Sex Couples) Bill 2013 - Second Reading - End debate on bill's main idea",
+   "stage": "Second reading",
+   "ayes": 36,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 56,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-20/1"
+  },
+  {
+   "key": "federal-senate-2955",
+   "date": "2013-06-20",
+   "house": "senate",
+   "question": "Marriage Act Amendment (Recognition of Foreign Marriages for Same-Sex Couples) Bill 2013 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 11
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 63,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-20/2"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

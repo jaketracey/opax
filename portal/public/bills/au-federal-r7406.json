@@ -1,0 +1,571 @@
+{
+ "key": "au-federal-r7406",
+ "title": "Health Legislation Amendment (Prescribing of Pharmaceutical Benefits) Bill 2025",
+ "short_title": "Health Legislation Amendment (Prescribing of Pharmaceutical Benefits) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health, Disability and Ageing",
+ "status": "passed",
+ "status_as_of": "2026-07-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-07-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7406_ems_03c80df2-ad93-47bf-9b14-88efe15533f6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7406%22",
+   "document_date": "2025-11-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00065",
+   "document_date": "2026-07-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-26",
+  "sentences": [
+   "The bill would let certain registered nurses prescribe medicines listed on the Pharmaceutical Benefits Scheme.",
+   "The Secretary of the Department of Health could approve eligible nurses as prescribers, suspend or revoke that approval, and the Minister could decide which medicines they may prescribe.",
+   "The Professional Services Review would also gain the power to oversee these nurses' prescribing, matching the oversight of other PBS prescribers."
+  ],
+  "changes": [
+   "Creates a process for the Secretary to approve eligible registered nurses as authorised nurse prescribers.",
+   "Adds authorised nurse prescribers as a new type of PBS prescriber.",
+   "Gives the Professional Services Review authority to review PBS prescribing by these nurses.",
+   "Allows the Minister to specify which pharmaceutical benefits authorised nurse prescribers may prescribe.",
+   "Ensures patients of authorised nurse prescribers can receive PBS prescriptions.",
+   "Makes consequential amendments to reflect the new prescriber type."
+  ],
+  "affected": "Endorsed registered nurses who meet specified criteria, their patients, and the Professional Services Review.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9889",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2026-02-05.20.2) introduced by Mallee MP [Anne Webster](https://theyvoteforyou.org.au/people/representatives/mallee/anne_webster) (Nationals), which means it was unsuccessful. ### Amendment text > *(1) Schedule 1, page 12 (after line 4), at the end of the Schedule, add:* > >> *37 Application of amendments* >> >> *(1) The amendments made by this Schedule apply only if a declaration under subitem (2) is in force.* >> >> *(2) The Minister may, by notifiable instrument, declare that the amendments made by this Schedule apply on and after a day, or throughout a period, specified in the declaration.* >> >> *(3) However, the Minister may make a declaration under subitem (2) only if:* >> >>> *(a) a trial of nurse prescriber treatments (within the meaning of the National Health Act 1953) is conducted in at least one State or Territory; and* >>> >>> *(b) after the end of the trial, the Nursing and Midwifery Board of Australia conducts a review of the trial; and* >>> >>> *(c) the review demonstrates a suitably supportive evidence base for the safety and effectiveness of the amendments made by this Schedule.*",
+   "stage": "Consideration in detail",
+   "ayes": 17,
+   "noes": 92,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 7
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 82
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 109
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-02-05/1"
+  },
+  {
+   "key": "federal-representatives-10545",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Mark Butler I move: That the amendments be disagreed to. This bill is the result of more than 10 years of work—work conducted in a proper, iterative, evidence based way, work that seeks to continue to expand the opportunity for nurses to work at their full scope of practice. Given that there are quite a number of different proposals for the expansion of what we would regard, I think, as the existing work provinces of different parts of the health profession, can I make my view clear that this is best practice. This has been conducted by the nurses board in very close consultation with all relevant groups—medical professionals, patients, colleges and universities. As a result of 10 years of hard work, this endorsement for registered nurses, appropriately qualified, to be able to prescribe medicines has been enthusiastically endorsed by all health ministers in the health ministers group. The Senate has proposed a last-minute amendment to bolt on to this best-practice piece of work, conducted to support the work of our hardworking nurses, a proposal to expand opportunities to podiatrists to prescribe medicines, which reasonable people might think is a good idea in principle. I can indicate that we have been engaging with podiatry groups, including the Australian Podiatry Association, about this issue for endorsed podiatrists. There is a live discussion about whether the sort of expansion for registered nurses that we're seeing now, in the bill that the government presented, should be available to podiatrists as well. But let me be clear; the work in relation to podiatrists is not finished. It is still underway. It is far too early, in my view, to bolt on at the last minute an amendment to expand the opportunity to podiatrists to prescribe PBS medicines when that work has not yet been completed. Unlike the work for podiatrists, the work for registered nurses has been completed. Universities have already started delivering their programs. The Pharmaceutical Benefits Advi",
+   "stage": "Consideration of Senate message",
+   "ayes": 90,
+   "noes": 43,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 6
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 89,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/13"
+  },
+  {
+   "key": "federal-representatives-10546",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Mark Butler I present the reasons for the House disagreeing to the Senate amendments and I move: That the reasons be adopted. Sharon Claydon The question is that the reasons for disagreeing to the Senate amendments be adopted.",
+   "stage": "Consideration of Senate message",
+   "ayes": 90,
+   "noes": 43,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 6
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 89,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/14"
+  },
+  {
+   "key": "federal-senate-10554",
+   "date": "2026-07-01",
+   "house": "senate",
+   "question": "Jenny McAllister To continue the remarks that I commenced last night—the matters contemplated by the legislation before the Senate have been considered since 2017 by the Nursing and Midwifery Board of Australia. The board and the chief nursing and midwifery officers have conducted extensive research and consultation on nurse prescribing models. The NMBA developed the standard for designated registered nurse prescribers through multiple rounds of public consultation. Matt O'Sullivan Sorry, Minister; I'll just get you to pause. Colleagues, I'm struggling to hear the minister speak. Can I ask—if you are wanting conversations to continue, please do that outside. Thank you, Minister. Back to you. Jenny McAllister During these multiple rounds of public consultation, the standards for designated registered nurse prescribers received strong support. All health ministers endorsed the Scheduled Medicines Standard, which came into effect in September 2025, with the first cohort of nurses expected to complete their education and receive endorsement by July 2026. By enabling designated registered nurse prescribing under the PBS, the bill supports safe, timely and affordable access to medicines. Registered nurses can already prescribe. This bill that we contemplate today enables them to prescribe under the PBS. That improves affordability for consumers. It enables registered nurses to better meet community health needs and strengthens the health system by addressing workforce shortages and building long-term capacity and sustainability. As with other prescribers, the list of medicines able to be prescribed under the PBS by a designated registered nurse prescriber will be considered by the independent Pharmaceutical Benefits Advisory Committee. This reform aligns with the objectives of the National Medicines Policy. It promotes equitable, affordable and timely access to high-quality medicines and related services. It supports the government's commitment to deliver cheaper medicine",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-07-01/2"
+  },
+  {
+   "key": "federal-senate-10555",
+   "date": "2026-07-01",
+   "house": "senate",
+   "question": "Sue Lines Senator Steele-John, I believe you have indicated you have a second reading amendment, which you need to move. Jordon Steele-John I move the second reading amendment standing in my name: At the end of the motion, add \", but the Senate: (a) notes that: (i) podiatrists and podiatric surgeons are the only professions in Australia who can gain endorsement to prescribe medicines but are not able to access PBS benefits for those prescriptions, (ii) Australians are paying out of pocket for non-PBS subsidised medicines or taking an extra trip to the GP to get around this barrier, and (iii) allowing endorsed podiatrists and podiatric surgeons to access PBS benefits when prescribing medicines would save patients money in the short term and would achieve budget savings by reducing avoidable hospitalisations; and (b) calls on the Government to, as soon as practicable, allow endorsed podiatrists and podiatric surgeons to access PBS benefits when prescribing medicines\". Sue Lines The question is the second reading amendment as moved by Senator Steele-John be agreed to.",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-07-01/3"
+  },
+  {
+   "key": "federal-senate-10556",
+   "date": "2026-07-01",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?id=2026-07-01.16.1) introduced by Queensland Senator [Malcolm Roberts](https://theyvoteforyou.org.au/people/senate/queensland/malcolm_roberts) (Pauline Hanson's One Nation Party) at the request of Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie) (Jacqui Lambie Network), which means they passed. This means that these amendments will now be included in the bill. The amendments would have opened up the changes included in this bill to podiatrists so that they can also prescribe pharmaceutical benefits. There was one rebellious vote, with South Australian Senator [Alex Antic](https://theyvoteforyou.org.au/people/senate/sa/alex_antic) (Liberal) voting No against the majority of his party, which voted Yes. ### Amendment text See the [aph.gov.au website](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7406_amend_9cb71092-c136-4064-b54d-880f7c6e2eb6%22;rec=0) for the amendment wording.",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 21,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-07-01/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1198978",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199431",
+   "speaker": "Melissa McIntosh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-02-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199554",
+   "speaker": "Ali France",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199616",
+   "speaker": "Madonna Jarrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199733",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-02-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202467",
+   "speaker": "Anne Ruston",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204396",
+   "speaker": "Jordon Steele-John",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2026-06-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204457",
+   "speaker": "Charlotte Walker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Legislation Amendment (Prescribing of Pharmaceutical Benefits) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00065",
+   "assent_date": "2026-07-06"
+  }
+ ]
+}

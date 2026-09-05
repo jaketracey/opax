@@ -1,0 +1,145 @@
+{
+ "key": "au-federal-r6928",
+ "title": "Customs Amendment (Australia-United Kingdom Free Trade Agreement Implementation) Bill 2022",
+ "short_title": "Customs Amendment (Australia-United Kingdom Free Trade Agreement Implementation) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-10-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2022-11-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6928%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6928%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6928%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6928%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6928%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6928%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6928%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6928%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6928%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6928%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6928%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6928%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6928%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6928_ems_ae15bb63-ec63-41fb-bed8-348c791f45ee%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6928%22",
+   "document_date": "2022-10-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00059",
+   "document_date": "2022-11-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-10-27",
+  "sentences": [
+   "This bill would change the rules for deciding which goods imported from the United Kingdom qualify for lower customs duties.",
+   "It would amend the Customs Act 1901 to set out new rules of origin for goods from the United Kingdom.",
+   "The changes would take effect on the later of the bill receiving royal assent and the free trade agreement entering into force."
+  ],
+  "changes": [
+   "Introduces new rules of origin for goods imported from the United Kingdom.",
+   "Enables goods that satisfy those rules to enter Australia at preferential customs duty rates.",
+   "Makes complementary amendments to the Customs Tariff Act 1995."
+  ],
+  "affected": "Importers of goods from the United Kingdom and Australian businesses trading under the free trade agreement.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Customs Amendment (Australia-United Kingdom Free Trade Agreement Implementation) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00059",
+   "assent_date": "2022-11-23"
+  }
+ ]
+}

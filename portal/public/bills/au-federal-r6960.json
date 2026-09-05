@@ -1,0 +1,402 @@
+{
+ "key": "au-federal-r6960",
+ "title": "Paid Parental Leave Amendment (Improvements for Families and Gender Equality) Bill 2022",
+ "short_title": "Paid Parental Leave Amendment (Improvements for Families and Gender Equality) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-11-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2023-03-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-03-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6960_ems_0ec3067a-6007-4ac1-9b6f-aadaad8a88dd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6960_ems_9d9cd38d-9935-4e99-976e-96f8a978fdaf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6960%22",
+   "document_date": "2022-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00004",
+   "document_date": "2023-03-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-30",
+  "sentences": [
+   "The bill would make Australia's paid parental leave scheme more accessible, flexible and gender-neutral.",
+   "It would increase the payment period to 20 weeks from 1 July 2023, remove the concepts of 'primary' and 'secondary' claimants, and allow leave to be taken in single-day blocks over two years.",
+   "A family income limit of $350,000 would be introduced, and dad and partner pay would be abolished."
+  ],
+  "changes": [
+   "Parental leave pay would extend from 18 weeks to 20 weeks starting 1 July 2023, with two weeks reserved for each claimant on a use-or-lose basis.",
+   "Single parents could access the full 20 weeks.",
+   "The requirement for the birth parent to be the primary claimant would be removed, so families could decide who claims first.",
+   "Permission rules for claims not made by the birth parent would be revised.",
+   "Paid parental leave would become entirely flexible, allowing claimants to take it in blocks as short as one day within two years of the birth or adoption.",
+   "The return-to-work requirement for eligibility would be removed."
+  ],
+  "affected": "This would affect parents and partners claiming paid parental leave, including single parents and those where the birth parent does not meet the income test or residency requirements.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:38:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7958",
+   "date": "2023-03-06",
+   "house": "senate",
+   "question": "Paid Parental Leave Amendment (Improvements for Families and Gender Equality) Bill 2022 - Second Reading - Parental leave and the superannuation guarantee",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "earliest": 1,
+    "dated": 38,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-06/1"
+  },
+  {
+   "key": "federal-senate-7959",
+   "date": "2023-03-06",
+   "house": "senate",
+   "question": "The majority voted against [amendment requests (1) to (5)](https://www.openaustralia.org.au/senate/?gid=2023-03-06.25.1) on sheet 1819 moved by Queensland Senator [Larissa Waters](https://theyvoteforyou.org.au/people/senate/queensland/larissa_waters) (Greens), which means they failed. ### Amendment text > *(1) Schedule 1, item 2, page 4 (line 13), omit \"100\", substitute \"130\".* > > *(2) Schedule 1, item 38, page 13 (line 6), omit \"100\", substitute \"130\".* > > *(3) Schedule 1, item 66, page 25 (line 19), omit \"90\", substitute \"120\".* > > *(4) Schedule 1, item 66, page 25 (line 31), omit \"100\", substitute \"130\".* > > *(5) Schedule 1, item 66, page 26 (line 12), omit \"100\", substitute \"130\".* > > ———— > > *Statement pursuant to the order of the Senate of 26 June 2000* > > *Amendments (3), (4) and (5)* > >> *Amendments (3), (4) and (5) are framed as requests because they amend the bill to increase the maximum number of days for which paid parental leave can be paid in relation to a child from 100 days to 130 days.* >> >> *As this will increase the total amount of paid parental leave that can be paid, the amendments will increase the amount of expenditure under the standing appropriation in section 307 of the Paid Parental Leave Act 2010.* > > *Amendments (1) and (2)* > >> *Amendments (1) and (2) are consequential to amendments (3), (4) and (5).* > > *Statement by the Clerk of the Senate pursuant to the order of the Senate of 26 June 2000* > > *Amendments (3), (4) and (5)* > >> *If the effect of the amendments is to increase expenditure under the standing appropriation in section 307 of the Paid Parental Leave Act 2010 then it is in accordance with the precedents of the Senate that the amendments be moved as requests.* > > *Amendments (1) and (2)* > >> *These amendments are consequential on the requests. It is the practice of the Senate that an amendment that is consequential on an amendment framed as a request may also be framed as a request.*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-06/2"
+  },
+  {
+   "key": "federal-senate-7960",
+   "date": "2023-03-06",
+   "house": "senate",
+   "question": "The majority voted against [amendment requests (1) to (11)](https://www.openaustralia.org.au/senate/?gid=2023-03-06.28.1) on sheet 1828 moved by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens), which means it failed. ### What does the amendment do? Senator Faruqi [explained that](https://www.openaustralia.org.au/senate/?gid=2023-03-06.28.1): > *... a key shortcoming of this bill is that PhD students are not included in the Paid Parental Leave scheme. They, despite often conducting research on a fulltime basis, cannot access the same parental leave entitlement as other working parents. Currently the PhD students don't qualify for the scheme because their activities are counted as study through a scholarship or other award or financial aid and that blocks them out of this act as it stands currently. There is no good reason for this, and this has to change.* ### Amendment text > *(1) Schedule 1, item 1, page 3 (line 10), after \"paid workforce\", insert \"or from eligible postgraduate work\".* > > *(2) Schedule 1, page 9 (after line 1), after item 13, insert:* > >> *13A Section 6* >> >> *Insert:* >> >>> *eligible postgraduate work: see section 35AA.* > > *(3) Schedule 1, item 58, page 23 (line 23), omit \"or taken enough paid leave\", substitute \", taken enough paid leave or performed enough eligible postgraduate work\".* > > *(4) Schedule 1, page 24 (after line 19), after item 61, insert:* > >> *61A After paragraph 31AA(2)(c)* >> >> *Insert:* >> >>> *(ca) on that day the person is performing no more than one hour of eligible postgraduate work; and* > > *(5) Schedule 1, page 27 (after line 9), after item 75, insert:* > >> *75A Section 32 (at the end of paragraph (b) of note 1)* >> >> *Add \"or eligible postgraduate work\".* > > *(6) Schedule 1, item 86, page 28 (lines 19 to 21), omit the item, substitute:* > >> *86 Paragraphs 33(2A)(a) and (b)* >> >>> *Omit \"primary claimant\", substitute \"PPL claimant or special PPL claimant",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "earliest": 2,
+    "dated": 35,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-06/3"
+  },
+  {
+   "key": "federal-senate-7961",
+   "date": "2023-03-06",
+   "house": "senate",
+   "question": "The majority voted against [amendments (1) to (10)](https://www.openaustralia.org.au/senate/?gid=2023-03-06.33.1) on sheet 1832 moved by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which means it failed. ### What does the amendment do? Senator Ruston [explained that](https://www.openaustralia.org.au/senate/?gid=2023-03-06.33.1): > *... This pay clerk function of the PPL scheme is something we have long supported so as to remove the unnecessary red tape that's associated with the administration of this really important initiative that has got the bipartisan, or the multipartisan, support of this place. We certainly believe that small businesses and stakeholders and industry groups generally don't support the employer role in the administration of PPL payments because it adds a burden to what is already a very onerous life as a small business operator in this country.*",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 3,
+    "dated": 52,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-06/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-827002",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "The Paid Parental Leave Amendment Bill 2022 increases the combined parental leave payment from 18 to 20 weeks, introduces a $350,000 family income test, removes gender-based claimant distinctions, and allows flexible use over two years; the government plans to expand to 26 weeks by 2026, benefiting around 181,000 families, though some speakers argued the timeline is too slow."
+  },
+  {
+   "slug": "speech-827049",
+   "speaker": "Carina Garland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "The bill amends paid parental leave to create a single 20-week scheme, reserve leave for each parent, remove primary/secondary carer designations, introduce a $350,000 family income test, and increase flexibility. Speakers argued the changes would improve gender equality, noting Australia ranks 43rd on the global gender gap index with a 14.1% pay gap, and called for expansion to 26 weeks and inclusion of superannuation."
+  },
+  {
+   "slug": "speech-827218",
+   "speaker": "Henry Pike",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2023-02-08",
+   "stage_hint": null,
+   "brief": "The bill amends the Paid Parental Leave scheme to combine two existing payments into a single 20-week entitlement from 1 July 2023, reserving two weeks for each parent, removing the primary/secondary carer distinction, introducing a $350,000 family income test, and allowing flexible use of leave within two years. The government plans to further expand the scheme to 26 weeks by 2026, while the coalition supported the bill, noting it builds on their previous March 2022 budget measures."
+  },
+  {
+   "slug": "speech-827962",
+   "speaker": "Anne Ruston",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-06",
+   "stage_hint": null,
+   "brief": "The bill combines the existing 18-week parental leave and two-week partner pay into a single 20-week scheme, removes the categories of primary and secondary claimants, introduces a $350,000 family income test, and allows parents to take leave in flexible blocks over two years. The government plans to expand the scheme to 26 weeks by 2026."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Paid Parental Leave Amendment (Improvements for Families and Gender Equality) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00004",
+   "assent_date": "2023-03-10"
+  }
+ ]
+}

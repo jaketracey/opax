@@ -1,0 +1,82 @@
+{
+ "key": "au-federal-r7312",
+ "title": "Universities Accord (National Higher Education Code to Prevent and Respond to Gender-based Violence) Bill 2025",
+ "short_title": "Universities Accord (National Higher Education Code to Prevent and Respond to Gender-based Violence) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-02-06",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7312%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7312%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7312%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7312%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7312_ems_c06778c8-1fa2-4f7b-99ba-d00ade4ee426%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7312%22",
+   "document_date": "2025-02-06",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-06",
+  "sentences": [
+   "This bill is part of a package that creates a new regulatory system to reduce gender-based violence in higher education and make providers more accountable, including in student housing.",
+   "The minister would set a National Code with binding standards, and a new unit in the Department of Education would monitor compliance, with powers to investigate, issue notices and seek court penalties.",
+   "The bill also requires each provider's Vice-Chancellor or equivalent leader to be accountable for compliance and to report regularly to the governing body on incident data and prevention efforts."
+  ],
+  "changes": [
+   "Establishes a new regulatory framework for preventing and responding to gender-based violence in higher education.",
+   "Gives the minister power to make a National Code as a legislative instrument.",
+   "Creates a specialist gender-based violence unit within the Department of Education.",
+   "Gives the Secretary monitoring, investigation and enforcement powers including compliance notices, infringement notices and civil penalties.",
+   "Requires providers to develop a Gender Equality Action Plan and Gender Impact Assessments.",
+   "Requires providers to have trauma-informed policies and procedures and appropriately skilled staff."
+  ],
+  "affected": "Higher education providers, their staff and students, and the Department of Education.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

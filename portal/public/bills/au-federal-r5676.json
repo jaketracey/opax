@@ -1,0 +1,169 @@
+{
+ "key": "au-federal-r5676",
+ "title": "Statute Law Revision (Spring 2016) Bill 2016",
+ "short_title": "Statute Law Revision (Spring 2016) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2016-10-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5676%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5676%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5676%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5676%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5676%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5676%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5676%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5676%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5676%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5676%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5676%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5676%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5676%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-10-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5676%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5676_ems_51854b32-fb0c-4f19-a24e-af58ab6eed60%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5676%22",
+   "document_date": "2016-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00067",
+   "document_date": "2016-10-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-332935",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-01",
+   "stage_hint": null,
+   "brief": "The Statute Law Revision (Spring 2016) Bill 2016 corrects technical errors, modernises language, and repeals obsolete provisions in Commonwealth legislation, including amendments to the Public Lending Right Act 1985 and repeal of spent parts of the International Labour Organisation (Compliance with Conventions) Act 1992."
+  },
+  {
+   "slug": "speech-333871",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "Three bills—Statute Law Revision (Spring 2016) Bill 2016, Statute Update Bill 2016, and Corporations Amendment (Auditor Registration) Bill 2016—were referred to the Federation Chamber for further consideration upon adjournment of debate."
+  },
+  {
+   "slug": "speech-333872",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "The bill makes technical corrections to Commonwealth laws, including fixing numbering errors and replacing obsolete references; Labor supports it but criticises the government for presenting routine legislation as part of a 25-point priority reform plan."
+  },
+  {
+   "slug": "speech-334052",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "The Statute Law Revision (Spring 2016) Bill 2016 makes only minor corrections without changing the substance of the law, reflecting a lack of vision in the Turnbull-Joyce government. The government’s proposed plebiscite on same-sex marriage was criticised as harmful to LGBTQI Australians and as undermining representative democracy, while the government was noted to have lost 300 full-time jobs per day since the start of the year."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Statute Law Revision (Spring 2016) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00067",
+   "assent_date": "2016-10-20"
+  }
+ ]
+}

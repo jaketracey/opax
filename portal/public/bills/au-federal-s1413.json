@@ -1,0 +1,204 @@
+{
+ "key": "au-federal-s1413",
+ "title": "Competition and Consumer Amendment (Divestiture Powers) Bill 2024",
+ "short_title": "Competition and Consumer Amendment (Divestiture Powers) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2024-03-20",
+ "originating_house": "senate",
+ "sponsor": "MCKIM, Sen Nick",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10841",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-08-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1413%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1413%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1413%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1413_ems_50cde336-c2da-4648-8b74-2aab02abd0e0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1413%22",
+   "document_date": "2024-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-03-20",
+  "sentences": [
+   "The bill would give courts new powers to break up companies that have misused their market power.",
+   "The Australian Competition and Consumer Commission could ask a court to order a reduction in a company's market share or power.",
+   "Courts could also make these orders by consent of all parties, even without a finding of misuse of market power."
+  ],
+  "changes": [
+   "Adds a legal remedy for misuse of market power under section 46 of the Competition and Consumer Act 2010.",
+   "Grants courts power to order divestiture of a corporation's market power or share.",
+   "Allows courts to exercise these powers by consent without a prior finding of misuse."
+  ],
+  "affected": "Corporations with substantial market power that misuse it, and the Australian Competition and Consumer Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:11:31Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8981",
+   "date": "2024-06-26",
+   "house": "senate",
+   "question": "Competition and Consumer Amendment (Divestiture Powers) Bill 2024 - Second Reading - Vote on the question immediately",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 5,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-06-26/1"
+  },
+  {
+   "key": "federal-senate-8982",
+   "date": "2024-06-26",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2024-06-26.11.1) to agree with the main idea of the [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1413), which means it will no longer be considered in parliament. In parliamentary jargon, they voted against giving it a second reading. This bill was introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens). ### Nationals Party split with the Coalition The Nationals Party and LNP's Queensland Senator [Matt Canavan](https://theyvoteforyou.org.au/people/senate/queensland/matthew_canavan) voted against the Liberal Party to support this bill. ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1413), the bill: > *Amends the Competition and Consumer Act 2010 to enable the Court, following an application by the Australian Competition and Consumer Commission, to give directions for the purpose of securing a reduction in a corporation’s power in, or share of, the market.* Senator McKim [explained that](https://www.openaustralia.org.au/senate/?gid=2024-03-27.3.3): > *The Greens' Competition and Consumer Amendment (Divestiture Powers) Bill would, if passed, give the courts and competition regulators the power, where misuse of market power has occurred, to break up firms across the Australian economy. This would include firms in the banking sector, the energy sector and a range of other sectors including the supermarket sector. If passed, this bill would establish a framework whereby a company that is found to have misused its market power to inflate prices, to exploit supply chains or to keep out competition could be required to reduce their market power or share of the market by divesting assets.*",
+   "stage": "Second reading",
+   "ayes": 15,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-06-26/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1196527",
+   "speaker": "Wendy Askew",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-08-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

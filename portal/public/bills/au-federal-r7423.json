@@ -1,0 +1,263 @@
+{
+ "key": "au-federal-r7423",
+ "title": "National Health Amendment (Passive Immunological Products) Bill 2026",
+ "short_title": "National Health Amendment (Passive Immunological Products) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-02-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health, Disability and Ageing",
+ "status": "passed",
+ "status_as_of": "2026-04-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7423%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7423%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7423%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7423%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7423%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7423%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7423%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7423%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7423_ems_e29ebb18-af07-40f6-831e-45dc849ce5ce%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7423%22",
+   "document_date": "2026-02-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00034",
+   "document_date": "2026-04-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-10188",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2026-04-01.37.1) introduced by One Nation, which means it failed. The amendment would have required all vaccines to be tested against an inert saline placebo in order to fall under the definition of ‘vaccine’. #### Why aren't placebo-controlled trials always conducted? According the [John Hopkins Bloomberg School of Public Health](https://publichealth.jhu.edu/ivac/vaccine-safety-trials-and-placebos-an-explainer): > *While placebo-controlled trials are often considered the gold standard for evaluating medical interventions, the use of inert placebos (e.g., the injection of saline solution) is not always required for vaccine trials and in fact is sometimes unethical. Trials of new vaccines may instead use comparison groups that receive the current vaccine or another established vaccine so that children receive some benefit from participating, as it would be unethical to withhold an established vaccine with demonstrated effectiveness. For example, if a hypothetical new measles vaccine were being tested, it would be unethical to withhold established measles vaccines and leave children vulnerable to disease. In this case, one group of children would receive the new vaccine, while the comparison group would receive the current measles vaccine.* > > *Other vaccine trials may involve the use of placebos that contain vaccine components, such as adjuvants or stabilizers, but not the target antigen. By including almost all the same ingredients as the vaccine, researchers can determine if potential side effects are due to the antigen itself or one of the other ingredients.* #### Rebellion South Australian Senator [Alex Antic](https://theyvoteforyou.org.au/people/senate/sa/alex_antic) (Liberal) crossed the floor to vote \"Yes\" against the rest of the Liberal Party. ### Amendment text > *(1) Schedule 1, page 3 (after line 8), at the end of the Schedule, add:* > >> *2 Subsection 9B(7)* >> >>> *Aft",
+   "stage": "Limitation of debate",
+   "ayes": 5,
+   "noes": 43,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 8
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/11"
+  },
+  {
+   "key": "federal-senate-10189",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2026-04-01.39.1) to agree with the remaining stages of the bill (parliamentary jargon for reading the bill a third time), meaning it will now be passed in the Senate. Since the bill has already passed in the House of Representatives, it now becomes law. #### Rebellion South Australian Senator [Alex Antic](https://theyvoteforyou.org.au/people/senate/sa/alex_antic) (Liberal) crossed the floor to vote \"No\" against the rest of the Liberal Party. ### What does this bill do? According to the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7423_ems_e29ebb18-af07-40f6-831e-45dc849ce5ce%22;rec=0), which a document prepared by the Government (the party that introduced the bill): > *The purpose of the National Health Amendment (Passive Immunological Products) Bill 2026 (the Bill) is to amend the definition of ‘vaccine’ in the National Health Act 1953 (the Act) to enable new and emerging technologies to be listed on the National Immunisation Program (the NIP).* > > *The NIP provides free vaccines to eligible individuals in Australia to reduce the incidence and severity of vaccine-preventable diseases. It is an established collaborative program involving the Australian Government and state and territory governments.* > > *The NIP relies on section 9B of the Act, which enables a vaccine to be specified as a ‘designated vaccine’ by legislative instrument. The legislative instrument can only specify vaccines if they are defined within the meaning of ‘vaccine’ under section 4 of the Act. There is no scope to designate another product that is not a vaccine as defined in the Act.* > > *The current definition of ‘vaccine’ in the Act supports the technical meaning of ‘vaccine’ being a substance administered to elicit an immune response – that is a mode of active immunisation. Immunisa",
+   "stage": "Limitation of debate",
+   "ayes": 39,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1199730",
+   "speaker": "Rebecca White",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200015",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200018",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200184",
+   "speaker": "Monique Ryan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2026-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202461",
+   "speaker": "Sue Lines",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Health Amendment (Passive Immunological Products) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00034",
+   "assent_date": "2026-04-08"
+  }
+ ]
+}

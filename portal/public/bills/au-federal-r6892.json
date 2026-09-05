@@ -1,0 +1,230 @@
+{
+ "key": "au-federal-r6892",
+ "title": "Defence, Veterans’ and Families’ Acute Support Package Bill 2022",
+ "short_title": "Defence, Veterans’ and Families’ Acute Support Package Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-08-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans' Affairs",
+ "status": "passed",
+ "status_as_of": "2022-10-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6892%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6892%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6892%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6892%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6892%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6892%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6892%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6892%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6892%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6892%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6892%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-10-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6892%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6892_ems_ad697438-319e-4d5f-8514-e2c1bd83fa91%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/8744561%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6892%22",
+   "document_date": "2022-08-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00040",
+   "document_date": "2022-10-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2022-08-03",
+  "sentences": [
+   "The bill would create an acute support package of assistance and benefits for eligible current and former Australian Defence Force members and their families.",
+   "The Military Rehabilitation and Compensation Commission would make a legislative instrument setting out eligibility, types of assistance, conditions and payment limits.",
+   "Eligibility includes being under 65, receiving certain compensation, and the Commission being satisfied the person is in or at risk of a crisis."
+  ],
+  "changes": [
+   "Renames Chapter 5A of the Military Rehabilitation and Compensation Act 2004 from 'Family and employment support' to 'Acute support'.",
+   "Removes the warlike service requirement from the simplified outline of Part 1 of that Act.",
+   "Adds eligibility criteria for members, former members, related persons, wholly dependent partners and former partners.",
+   "Makes acute support package decisions subject to merits review by the Veterans' Review Board.",
+   "Extends overpayment recovery provisions to amounts paid under the package if obtained by false statements or omissions.",
+   "Makes similar amendments to the Safety, Rehabilitation and Compensation (Defence-related Claims) Act 1988."
+  ],
+  "affected": "Current and former Australian Defence Force members under 65, their related persons, wholly dependent partners of deceased members, and former partners, as well as those covered under the Safety, Rehabilitation and Compensation (Defence-related Claims) Act 1988.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:11:31Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-422010",
+   "speaker": "Scott Buchholz",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The Defence, Veterans' and Families' Acute Support Package Bill 2022 was commended as critically important and believed to have bipartisan support, following a resolution that provided financial packages for veterans with PTSD for study and equal remuneration."
+  },
+  {
+   "slug": "speech-422012",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence, Veterans' and Families' Acute Support Package Bill 2022, which expands eligibility for services beyond warlike service, removes caps on packages, backdates compensation, and costs around $36–37 million, arguing it strengthens national resilience and bipartisan veteran support."
+  },
+  {
+   "slug": "speech-422014",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence, Veterans' and Families' Acute Support Package Bill 2022, which extends crisis support and eligibility to family members of working-age veterans and removes the warlike service requirement. The speaker noted the bill benefits about 120 veterans, 430 families who lost a parent, and 450 widows or widowers, and called on the minister to urgently review the withdrawal of a $5 million grant for a veteran wellbeing unit on the North Coast."
+  },
+  {
+   "slug": "speech-422015",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia fails to adequately support defence personnel during and after service, citing high suicide rates and a royal commission. They announced the Defence, Veterans' and Families' Acute Support Package Bill 2022, which expands family support eligibility to at-risk working-age veterans regardless of warlike service or rehabilitation, offering up to $12,500 over two years, plus additional child care and widowed partner support, with around 430 families and 450 widowed partners expected to benefit in the first year."
+  },
+  {
+   "slug": "speech-422018",
+   "speaker": "Sophie Scamps",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The bill expands flexible support to veterans and their families, including those who did not serve in combat roles, but the speaker stressed that clearing the backlog of 43,000 people with 60,000 claims taking up to 30 months is critical to saving lives."
+  },
+  {
+   "slug": "speech-422019",
+   "speaker": "Bridget Archer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence, Veterans' and Families' Acute Support Package Bill 2022, which makes support payments tax-free and exempt from social security income tests. The speaker also announced $250,000 in funding secured for the Launceston RSL to expand the Launceston veterans hub, and noted that the rate of suicide is 22% higher for ex-serving male veterans and 127% higher for ex-serving female veterans compared to the general population."
+  },
+  {
+   "slug": "speech-422021",
+   "speaker": "Keith Wolahan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that the current veterans' legislative regime is confusing and supported the Defence, Veterans' and Families' Acute Support Package Bill 2022, highlighting three key aspects: an income tax exemption, expanded family services like childcare and household assistance, and removing the link to warlike service. He referenced fallen veterans Greg Sher and Marcus Case, as well as Marco De Vincentis and his partner Natalie, to illustrate the need for better support."
+  },
+  {
+   "slug": "speech-422196",
+   "speaker": "Keith Wolahan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence, Veterans' and Families' Acute Support Package Bill 2022 for removing the requirement of warlike service, and highlighted peacetime deaths including three commandos—Warrant Officer Class II George Drakopoulos, Private Roger Wood and Private Eddie Meyer—who died in a 1960 training exercise at the Rip in Melbourne."
+  },
+  {
+   "slug": "speech-422197",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-06",
+   "stage_hint": null,
+   "brief": "The Defence, Veterans' and Families' Acute Support Package Bill 2022 is supported, including the removal of the requirement for warlike service to expand eligibility. The bill aims to improve support for veterans, their families, and children, with the Jamie Larcombe Centre in the Sturt electorate cited as an example of existing services."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Defence, Veterans’ and Families’ Acute Support Package Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00040",
+   "assent_date": "2022-10-07"
+  }
+ ]
+}

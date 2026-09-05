@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1132",
+ "title": "Commonwealth Inscribed Stock Amendment (Restoring the Debt Ceiling) Bill 2018",
+ "short_title": "Commonwealth Inscribed Stock Amendment (Restoring the Debt Ceiling) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-25",
+ "originating_house": "senate",
+ "sponsor": "HANSON, Sen Pauline",
+ "sponsor_party": "Pauline Hanson&#39;s One Nation",
+ "sponsor_person_id": "10280",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1132%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1132%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1132_ems_eba8b521-9bd6-4701-9f0e-153a36fad318%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1132%22",
+   "document_date": "2018-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-25",
+  "sentences": [
+   "This bill would cap government borrowing at 35% of Australia's gross domestic product.",
+   "The Australian Office of Financial Management would be blocked from issuing new stock if doing so would push total stock and securities above that limit.",
+   "The bill would start the day after it receives royal assent."
+  ],
+  "changes": [
+   "It limits the amount the government can borrow to 35% of GDP.",
+   "It prevents the Australian Office of Financial Management from issuing further stock that would exceed that threshold.",
+   "It requires the provisions to commence the day after royal assent."
+  ],
+  "affected": "The Australian government and the Australian Office of Financial Management.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:26:57Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

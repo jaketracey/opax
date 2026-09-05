@@ -1,0 +1,327 @@
+{
+ "key": "au-federal-r6541",
+ "title": "Export Control Legislation Amendment (Certification of Narcotic Exports) Bill 2020",
+ "short_title": "Export Control Legislation Amendment (Certification of Narcotic Exports) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Water and the Environment",
+ "status": "passed",
+ "status_as_of": "2020-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6541%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6541%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6541%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6541%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6541%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6541%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-06-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6541%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6541%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6541%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6541%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6541%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6541%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6541%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6541_ems_10cf9500-ddda-4793-b3bd-a69cf09c46d6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6541%22",
+   "document_date": "2020-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00073",
+   "document_date": "2020-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6332",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "question": "The majority voted in favour of the following [motion](https://www.openaustralia.org.au/debate/?id=2020-05-13.6.1): > *That the resumption of the debate be made an order of the day for a later hour this day.*",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 6,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 66
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-05-13/1"
+  },
+  {
+   "key": "federal-senate-6430",
+   "date": "2020-06-17",
+   "house": "senate",
+   "question": "The majority voted against a [second reading amendment](https://www.openaustralia.org.au/senate/?gid=2020-06-17.11.1) introduced by Victorian Senator [Richard Di Natale](https://theyvoteforyou.org.au/people/senate/victoria/richard_di_natale), which means it failed. The amendment would have added the words below to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is \"*that the bill be read for a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Motion amendment > *At the end of the motion, add:* > > *\", but the Senate calls on the Government to urgently implement the recommendations contained in the report of the [Community Affairs References Committee](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Community_Affairs) on its inquiry into current barriers to patient access to medicinal cannabis\".*",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 17,
+    "dated": 19,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-17/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-391014",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The speaker moved to rescind a House resolution that had set a later hour for resuming debate on the Export Control Legislation Amendment (Certification of Narcotic Exports) Bill 2020."
+  },
+  {
+   "slug": "speech-391021",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The opposition argued that the government had not justified the urgency of the Export Control Legislation Amendment (Certification of Narcotic Exports) Bill 2020, unlike the COVIDSafe app and aged-care bills where cooperation was given, and warned against abusing opposition goodwill."
+  },
+  {
+   "slug": "speech-391499",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-391501",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "The Export Control Legislation Amendment (Certification of Narcotic Exports) Bill 2020 was supported as enabling government certification for medicinal cannabis exports, citing Cannatrek's Shepparton development and the industry's strong growth potential. Labor's water buyback policy was also criticised as destructive to regional communities."
+  },
+  {
+   "slug": "speech-391502",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "The member for Gilmore argued that the government has repeatedly failed to deliver adequate support to the New South Wales South Coast during drought, bushfires and COVID-19, citing only $30,000 from the Building Better Regions Fund for her electorate, delays in drought loans and the Bushfire Recovery Fund not reaching communities, and called for targeted assistance including road projects, affordable housing and mental health services."
+  },
+  {
+   "slug": "speech-391503",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "The Export Control Legislation Amendment (Certification of Narcotic Exports) Bill 2020 was argued to enhance agricultural exports by removing regulatory obstacles for medicinal cannabis and non-hallucinogenic hemp seeds, with the global hemp market projected to reach $270 million by 2025; the bill amends the Export Control Act to let the Department of Agriculture issue certificates for narcotic goods, while the speaker cautioned that smoking marijuana is harmful and not a safe drug."
+  },
+  {
+   "slug": "speech-391504",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Export Control Legislation Amendment (Certification of Narcotic Exports) Bill 2020 to allow medicinal cannabis exports, but criticised its fast-tracking and the government’s lack of a strategic plan for trade-exposed industries. They also condemned the government’s neglect of international students during COVID-19, noting resource exports near $300 billion and education exports worth $37 billion."
+  },
+  {
+   "slug": "speech-391505",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "The speech backed the Export Control Legislation Amendment (Certification of Narcotic Exports) Bill 2020, arguing it would remove regulatory barriers for exports of medicinal cannabis and low-THC hemp, and promoted the Northern Territory's hemp industry potential, citing the new Hemp Industry Act and a consortium led by NT Farmers Association CEO Paul Burke. It also criticised the federal government for neglecting northern Australia and noted the slow delivery of the $5 billion Northern Australia Infrastructure Facility."
+  },
+  {
+   "slug": "speech-391507",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "The Export Control Legislation Amendment (Certification of Narcotic Exports) Bill 2020 was supported to allow exports of medicinal cannabis and low-THC hemp, but the government was condemned for rushing the bill through in May without proper justification and for lacking a strategic plan for agriculture, with Australia’s agricultural exports at $50 billion compared to the Netherlands’ $160 billion."
+  },
+  {
+   "slug": "speech-391508",
+   "speaker": "Bob Katter",
+   "party": "Katter's Australian Party",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australian agricultural and industrial decline—including a 72% drop in wool production, a 70% fall in prawn and fish farming, and the closure of motor vehicle and petrol industries—resulted from government policies and deregulation, contrasting Australia's $56 billion agricultural output with the Netherlands' $160 billion. He also criticised the government for overriding Magna Carta principles by using executive power to destroy livelihoods, citing the destruction of taxi licence values and cattlemen's incomes, and called for the government to be held accountable."
+  },
+  {
+   "slug": "speech-391509",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "The Export Control Legislation Amendment (Certification of Narcotic Exports) Bill 2020 amends the Export Control Acts to allow phytosanitary certification for narcotic goods, enabling Australian exporters of industrial hemp and medicinal cannabis to meet international biosecurity requirements and access markets including the US, Canada, China, Japan, Thailand, Vietnam, Korea, and New Zealand."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Export Control Legislation Amendment (Certification of Narcotic Exports) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00073",
+   "assent_date": "2020-06-22"
+  }
+ ]
+}

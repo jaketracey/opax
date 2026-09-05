@@ -1,0 +1,556 @@
+{
+ "key": "au-federal-r5121",
+ "title": "Tax Laws Amendment (Research and Development) Bill 2013",
+ "short_title": "Tax Laws Amendment (Research and Development) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-03-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5121_ems_28188e37-dc65-4a9c-8734-396e63efb7e2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5121%22",
+   "document_date": "2013-11-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00013",
+   "document_date": "2015-03-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-3669",
+   "date": "2015-02-09",
+   "house": "senate",
+   "question": "Kim Carr At the start of the second reading debate on the Tax Laws Amendment (Research and Development) Bill 2013 I explained that Labor oppose this bill because it is not in the nation's interests. Senator Wang has circulated an amendment on behalf of the Palmer United Party, which will be debated if we actually reach the committee stage. I commend Senator Wang for seeking to alleviate some of the concerns that the Palmer United Party has identified about this bill. For instance, he and his colleagues felt that the government measure unfairly disadvantaged Australian firms over multinationals. In respect of Senator Wang's concerns I, in fact, have even more serious concerns about the implications of what is being proposed in the Palmer United amendment. The Palmer United amendment would see the removal of the R&D tax incentive for all firms with expenditure over $100 million. In practice this means that, for companies thinking of investing in R&D in Australia, any expenditure above $100 million would not attract an incentive. In a private briefing before the economics committee, Treasury officials admitted that there was no modelling available to show how many businesses would be affected by this $100 million cap. I repeat: no modelling for this measure has been undertaken. We have got no understanding of what impact this measure would have on whether firms would actually invest hundreds of millions of dollars in an R&D capacity in this country. We have no modelling, either, to indicate the longer term impacts on our economy or on jobs. In the same briefing Treasury estimated that the measure could affect up to 25 consolidated groupings of companies. The term 'consolidated grouping' means that diverse companies held by a common investment company will be treated as one single business entity. As such, when compared to their peers, smaller companies held within the larger group would be disadvantaged by the proposals. Quite frankly, that is not the only concern abou",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 10,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-02-09/3"
+  },
+  {
+   "key": "federal-senate-3670",
+   "date": "2015-02-09",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 10,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-02-09/4"
+  },
+  {
+   "key": "federal-senate-3678",
+   "date": "2015-02-10",
+   "house": "senate",
+   "question": "Alex Gallacher The Senate is considering amendments (1) and (2) on sheet 7618 moved by Senator Wang and amendment (1) on sheet 7650 moved by Senator Carr to Senator Wang's amendment (2). Kim Carr Before question time I was asking the minister what impact the retrospective nature of this bill would have on companies and, in particular, about the issue of companies that seek pre-approvals of their work, which of course is standard practice. I was making the point that in the cases of companies like CSL strategic investment decisions have already been taken based on the advice received. So I would ask the minister: how many firms have received advanced approval for R&D spends in 2015-16 from AusIndustry? Mathias Cormann Actually, it is not technically an approval, because you only qualify for relevant incentives once relevant expenditure has occurred, consistent with the requirements in the legislation. What relevant businesses are required to do is preregister the activity that they might want to make a claim in relation to. That is all. I note that Senator Carr does not accept responsibility at all, even though he was a minister in the Gillard and Rudd governments, which put this measure on the table and which had it as part of their pre-election costings in the lead-up to the last election. He does not accept any responsibility for the fact that this is a measure which was announced in 2013-14 in Labor's last budget, with a starting date of 1 July 2013. We have delayed the starting date by one year, to 1 July 2014, in recognition of the fact that delays caused by Labor against the implementation of their own budget measure have made that necessary. The practical effect is that this will only impact on companies lodging tax returns after 1 July 2015. It is a measure which was announced in 2013. It will not impact on businesses until after 1 July 2015, which is very much prospective. There cannot be any doubt that relevant businesses in the marketplace had very good n",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 10,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-02-10/4"
+  },
+  {
+   "key": "federal-senate-3679",
+   "date": "2015-02-10",
+   "house": "senate",
+   "question": "Gavin Marshall The question now is that Palmer United Party amendments (1) and (2) on sheet 7618 revised be agreed to. Christine Milne I am glad that Senator Wang is here, because it would be good for him to answer some questions about his own amendment, which he has not spoken on at all. He has moved it but has not been here for the debate at all. I have put some questions to the minister that he has refused to answer, so I now put those questions to Senator Wang since it is his amendment. Number 1: the University of New South Wales has indicated in its submission that it will see a substantial reduction in its research effort if this legislation is to pass and that in fact 30 per cent of its research effort currently relies on what the university gets in relation to this particular provision on research and development. I would like to ask Senator Wang: what consultation have you had with universities around the country as to the impact of this legislation on their research effort? I can ask through you, Mr Chairman— The CHAIRMAN: Senator Milne, could you resume your seat. Barry O'Sullivan Mr Chairman, I rise on a point of order. I seek clarification from the chair on this issue. The time of the Senate is valuable, and I know of no capacity or precedent for one senator to seek a question of another senator in the chamber. The CHAIRMAN: It is quite in order, Senator O'Sullivan. There is no point of order. Christine Milne It is quite normal practice in the committee state of a bill, if someone raises an amendment and puts it to the Senate, for them to speak to their own amendments, so I am putting this question very clearly. Universities around the country, in conjunction with institutions like the CSIRO and with small businesses, benefit enormously from large corporations spending money in the research and development area. So I am asking: what consultation has been done with universities around the country, for a start, as to what impact this will have, firstly, o",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 9,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-02-10/5"
+  },
+  {
+   "key": "federal-senate-3680",
+   "date": "2015-02-10",
+   "house": "senate",
+   "question": "Mathias Cormann I move: That this bill be now read a third time. The Senate divided. [18:14] (The President—Senator Parry) Question agreed to. Bill read a third time.",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 9,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-02-10/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-280986",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280988",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280990",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280991",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280992",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281018",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281020",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281021",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305430",
+   "speaker": "Russell Matheson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax Laws Amendment (Research and Development) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00013",
+   "assent_date": "2015-03-05"
+  }
+ ]
+}

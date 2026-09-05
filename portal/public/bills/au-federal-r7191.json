@@ -1,0 +1,345 @@
+{
+ "key": "au-federal-r7191",
+ "title": "Education Services for Overseas Students Amendment (Quality and Integrity) Bill 2024",
+ "short_title": "Education Services for Overseas Students Amendment (Quality and Integrity) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-05-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7191%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7191%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7191%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7191%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7191%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7191_ems_0ada3a18-e5be-4bde-b53c-aa9ef5cdf8c0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7191_ems_73f8b4ff-cf90-44bc-a171-0d0b959a9bdc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7191%22",
+   "document_date": "2024-05-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2024-05-16",
+  "sentences": [
+   "This bill would change the main law for international education to improve quality and integrity in the sector.",
+   "It would give the Education Minister new powers to set limits on student numbers and to manage how providers and courses are registered.",
+   "Providers would need to deliver courses only to domestic students for two years before they can apply to register a course for overseas students."
+  ],
+  "changes": [
+   "Requires regulators to check if a provider or an education agent owns or controls the other when deciding if the provider is fit and proper.",
+   "Forces providers to tell the Education Department Secretary what commissions they pay to education agents.",
+   "Lets the Minister cap how many overseas students a provider or a class of providers can enrol in a year.",
+   "Allows automatic cancellation of a provider's registration if it has not taught any overseas students for 12 consecutive months.",
+   "Sets up automatic suspension and cancellation of courses the Minister identifies as having systemic quality problems or offering limited value to Australia's skills needs.",
+   "Requires providers to have taught only domestic students for two consecutive years before they can apply to register a new course for overseas students."
+  ],
+  "affected": "Higher education providers, vocational education and training providers, and schools that teach overseas students would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9035",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2024-06-04.9.2) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This amendment was introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal). ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that:* > > *(1) the Government has taken decisions to drastically increase the migration intake putting further strain on housing, infrastructure and essential services in Australia;* > > *(2) the Government's mismanagement of Australia's immigration system has led to more than double the number of international students in Australia from 336,845 in March 2022 to 713,144 as at February 2024;* > > *(3) under Labor there are 80,000 student visa holders who are on to their third student visa or more. Some are on an eighth, ninth or tenth student visa, as a backdoor way to stay in Australia to work;* > > *(4) the Government's failure to manage Australia's international education sector is causing economic harm to Australian universities, private higher education providers, English language course providers and the vocational education sector;* > > *(5) the bill reflects the lack of confidence the Government has in the Minister for Immigration and Minister for Home Affairs by giving the power to determine the number of international students who can study in Australia to the Minister for Education;* > > *(6) calls on the Government to rebalance Australia's migration program and manage its impacts on housing, congestion and essential services; and* > > *(7) given its deficiencies, the bill has been referred to the Senate Education and Employment Legislation Committee for inquiry to report by",
+   "stage": "Second reading",
+   "ayes": 56,
+   "noes": 88,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 75
+    },
+    "Liberal": {
+     "ayes": 32,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-08-13/1"
+  },
+  {
+   "key": "federal-representatives-9036",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "question": "Education Services for Overseas Students Amendment (Quality and Integrity) Bill 2024 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 80,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 93,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-08-13/2"
+  },
+  {
+   "key": "federal-representatives-9037",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2024-08-13.93.1) introduced by North Sydney MP [Kylea Tink](https://theyvoteforyou.org.au/people/representatives/north_sydney/kylea_tink), which means it failed. Ms Tink [explained that](https://www.openaustralia.org.au/debates/?id=2024-08-13.93.1): > *The amendment I'm moving seeks to remove the ministerial power to set caps at the course level, instead allowing for caps at the provider level only. The reason I believe this amendment is required is that ministerial intervention at the course level is a dangerous overreach that would have serious consequences for institutional autonomy, existing regulations and student choice.* ### Amendment text > *(1) Schedule 1, item 45, page 23 (lines 6 to 10), omit the definition of course enrolment limit in section 5.* > > *(2) Schedule 1, item 46, page 23 (lines 16 to 26), omit the item, substitute:* > >> *46 Section 15A (after the paragraph beginning \"Division 1 contains\")* >> >>> *Insert:* >>> >>>> *The Minister may determine under Division 1AA a limit (called the total enrolment limit) on the number of overseas students that may be enrolled in all courses provided by a provider in a year. A provider must not exceed its total enrolment limit for a year.* > > *(3) Schedule 1, item 47, page 29 (line 11) to page 34 (line 8), omit Subdivision C.* > > *(4) Schedule 1, item 48, page 34 (lines 9 to 18), omit the item, substitute:* >> >> *48 Section 83A (after the paragraph beginning \"The ESOS agency\")* >> >>> *Insert:* >>> >>>> *Division 1AA provides for automatic suspension of a provider’s registration for all courses in relation to a year if the provider exceeds its total enrolment limit for the year.* > > *(5) Schedule 1, item 49, page 36 (line 4) to page 37 (line 20), omit section 96A.* > > *(6) Schedule 1, item 50, page 37 (table item 13), omit the table item.* > > *(7) Schedule 1, item 51, page 38 (line 5), omit \"or 96A(6)\".* > > *(8) Sche",
+   "stage": "Consideration in detail",
+   "ayes": 14,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-08-13/3"
+  },
+  {
+   "key": "federal-representatives-9038",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "question": "Education Services for Overseas Students Amendment (Quality and Integrity) Bill 2024 - Consideration in Detail - Sunset clause on power to cap international student enrolments",
+   "stage": "Consideration in detail",
+   "ayes": 11,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 56,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-08-13/4"
+  },
+  {
+   "key": "federal-representatives-9039",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "question": "Education Services for Overseas Students Amendment (Quality and Integrity) Bill 2024 - Consideration in Detail - Power to cap international student enrolments",
+   "stage": "Consideration in detail",
+   "ayes": 12,
+   "noes": 48,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-08-13/5"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

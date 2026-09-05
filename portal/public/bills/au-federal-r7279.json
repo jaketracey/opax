@@ -1,0 +1,144 @@
+{
+ "key": "au-federal-r7279",
+ "title": "Electoral Legislation Amendment (Electoral Communications) Bill 2024",
+ "short_title": "Electoral Legislation Amendment (Electoral Communications) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7279%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7279%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7279%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7279_ems_358a46e6-fb2d-4a23-a9ee-0abcab55e85a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7279%22",
+   "document_date": "2024-11-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9219",
+   "date": "2024-11-18",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/28037/&sid=0000) introduced by Curtin MP [Kate Chaney](https://theyvoteforyou.org.au/people/representatives/curtin/kate_chaney) (Independent), which means it failed. ### Motion text > *That Electoral Legislation Amendment (Electoral Reform) Bill 2024 and the Electoral Legislation Amendment (Electoral Communications) Bill 2024 be referred to the Joint Standing Committee on Electoral Reform for consideration and an advisory report by 3 March 2025.*",
+   "stage": "Reference to Committee",
+   "ayes": 14,
+   "noes": 50,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 63,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-18/1"
+  },
+  {
+   "key": "federal-senate-9222",
+   "date": "2024-11-19",
+   "house": "senate",
+   "question": "The majority voted against a motion introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent) and Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie), which means it failed. ### Motion text > *That the Electoral Legislation Amendment (Electoral Reform) Bill 2024 and the Electoral Legislation Amendment (Electoral Communications) Bill 2024 be referred to the Joint Standing Committee on Electoral Matters for inquiry and report by 3 March 2025.*",
+   "stage": "Reference to Committee",
+   "ayes": 18,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-19/3"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

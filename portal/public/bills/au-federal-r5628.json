@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r5628",
+ "title": "Flags Amendment (Protecting Australian Flags) Bill 2016",
+ "short_title": "Flags Amendment (Protecting Australian Flags) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-29",
+ "originating_house": "representatives",
+ "sponsor": "CHRISTENSEN, George, MP",
+ "sponsor_party": "Liberal National Party of Queensland",
+ "sponsor_person_id": "10726",
+ "portfolio": "(s) CHRISTENSEN, George, MP",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5628%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5628%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5628%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5628_ems_697f737d-53dc-4fe4-ae23-621cea49132c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5628%22",
+   "document_date": "2016-02-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-329305",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Flags Amendment (Protecting Australian Flags) Bill 2016 should criminalise the wilful destruction or mutilation of the Australian flag, the Australian red ensign, the Aboriginal flag, and the Torres Strait Islander flag, citing a 2015 flag-burning incident where protesters chanted \"No pride in genocide\" and \"Always was, always will be, Aboriginal land.\" The speaker claimed the Australian Human Rights Commission had failed to apply section 18C of the Racial Discrimination Act equally, and warned that suppressing free speech through political correctness could lead to the rise of figures like Pauline Hanson and Donald Trump."
+  }
+ ],
+ "acts": []
+}

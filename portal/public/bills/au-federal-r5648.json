@@ -1,0 +1,264 @@
+{
+ "key": "au-federal-r5648",
+ "title": "Tax Laws Amendment (Tax Incentives for Innovation) Bill 2016",
+ "short_title": "Tax Laws Amendment (Tax Incentives for Innovation) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-03-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2016-05-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-05-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5648_ems_2bbbf614-2900-40ad-afeb-09a1b8ca4e39%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5648%22",
+   "document_date": "2016-03-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00054",
+   "document_date": "2016-05-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-4244",
+   "date": "2016-05-04",
+   "house": "senate",
+   "question": "Nick McKim by leave—I move: (1) Schedule 1, item 1, page 9 (lines 10 to 25), omit paragraph 360-40(1)(e), substitute: (e) at the test time: (i) the company has at least 100 points under section 360-45; or (ii) all of the following apply to the company: (A) the company is genuinely focussed on developing for commercialisation one or more new, or significantly improved, products, processes, services or marketing or organisational methods; (B) the business relating to those products, processes, services or methods has a high growth potential; (C) the company can demonstrate that it has the potential to be able to successfully scale that business; (D) the company can demonstrate that it has the potential to be able to address a broader than local market, including global markets, through that business; (E) the company can demonstrate that it has the potential to be able to have competitive advantages for that business; or (iii) all of the following apply to the company: (A) the company can demonstrate that it has an economic, social, cultural or environmental mission that is consistent with a public or community benefit; (B) the company reinvests the majority of the profit it makes to fulfil that mission. (2) Schedule 1, item 1, page 9 (line 29), omit \"Subparagraphs (1)(e)(i) to (v)\", substitute \"Sub-subparagraphs (1)(e)(ii)(A) to (E)\". I will give a very brief explanation. As I indicated and as the minister has indicated in the second reading, the bill currently proposes two limbs of tests, the early-stage limb and the innovation limb. We are proposing a third limb, the social innovation limb. Just for clarity, this would mean that should this amendment be accepted a company would still need to satisfy the early-stage limb, but it could qualify for the tax incentives contained in this legislation if it satisfied the early-stage limb and the social innovation limb. The social innovation limb the Greens are proposing makes it clear that if the company can demonstrate it",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "dated": 37,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-05-04/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-331690",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The mover proposed resuming proceedings on five lapsed bills: the Tax Laws Amendment (Tax Incentives for Innovation) Bill 2016, Financial System Legislation Amendment (Resilience and Collateral Protection) Bill 2016, National Disability Insurance Scheme Amendment Bill 2016, National Disability Insurance Scheme Savings Fund Special Account Bill 2016, and Omnibus Repeal Day (Autumn 2015) Bill 2015."
+  },
+  {
+   "slug": "speech-331691",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "Labor supported the Tax Laws Amendment (Tax Incentives for Innovation) Bill 2016, which introduces a 20 per cent non-refundable tax offset capped at $200,000 and a 10-year capital gains tax exemption for investments in early-stage innovation companies, while also expanding venture capital arrangements. Labor criticised the government for setting the angel investment start date at 1 July rather than aligning it with the venture capital date of 7 December, warning of an 'investor strike', and flagged it would review the exclusion of start-up founders, the allowance of trusts and companies, and the 10-year CGT cap if elected."
+  },
+  {
+   "slug": "speech-331692",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Tax Laws Amendment (Tax Incentives for Innovation) Bill 2016, which provides a 20% non-refundable tax offset for early stage investors capped at $200,000 per year and a 10-year capital gains tax exemption for shares held at least 12 months, as part of the government's National Innovation and Science Agenda to transition the economy from mining to a more diversified, innovation-based economy."
+  },
+  {
+   "slug": "speech-331697",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "Tax Laws Amendment (Tax Incentives for Innovation) Bill 2016 provides investors in eligible early-stage companies a 20 per cent tax offset up to $200,000 and a 10-year capital gains tax exemption for shares held at least 12 months; eligible companies must be under three years old with income under $200,000 or expenses under $1 million. The bill was backed as encouraging entrepreneurship and risk-taking to grow the economy and fund services, while Labor's negative gearing, capital gains tax and carbon pricing policies were criticised as investment disincentives."
+  },
+  {
+   "slug": "speech-331698",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The Tax Laws Amendment (Tax Incentives for Innovation) Bill 2016 provides a 20% non-refundable tax offset on investments up to $200,000 in early stage innovation companies and a 10-year capital gains tax exemption for qualifying shares. The speech cited Tesla Motors' job growth from 3,000 to 13,000 employees as an example of innovation-driven employment."
+  },
+  {
+   "slug": "speech-331699",
+   "speaker": "Matt Williams",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Tax Laws Amendment (Tax Incentives for Innovation) Bill 2016, citing success stories like SEEK and Atlassian, and noted that over $600 million in venture capital was raised or planned since June 2015, to address the \"valley of death\" for startups and support Australia's transition from the mining boom to an ideas boom."
+  },
+  {
+   "slug": "speech-331700",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The Tax Laws Amendment (Tax Incentives for Innovation) Bill 2016 was introduced to provide a 20% non-refundable tax offset (capped at $200,000 per year) and a 10-year capital gains tax exemption for investments in early stage innovation companies, as well as to reform venture capital arrangements with a 10% non-refundable offset for new capital in early stage venture capital limited partnerships and an increase in maximum fund size from $100 million to $200 million."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax Laws Amendment (Tax Incentives for Innovation) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00054",
+   "assent_date": "2016-05-05"
+  }
+ ]
+}

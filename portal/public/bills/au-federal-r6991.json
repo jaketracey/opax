@@ -1,0 +1,685 @@
+{
+ "key": "au-federal-r6991",
+ "title": "Education Legislation Amendment (Startup Year and Other Measures) Bill 2023",
+ "short_title": "Education Legislation Amendment (Startup Year and Other Measures) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "passed",
+ "status_as_of": "2023-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-06-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6991_ems_bd3393fd-d556-459e-9fb8-d4b9b1de9cb7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6991_ems_52e197cd-1e2e-4cf9-b04f-7219fb4404cf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6991_ems_352a9c74-0dcb-48b5-ab3c-467f1e8c7d28%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6991_ems_10b4a21f-0854-4f81-b521-2ff6b5d8ef7c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6991%22",
+   "document_date": "2023-03-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00036",
+   "document_date": "2023-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8023",
+   "date": "2023-03-23",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with a second reading amendment introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal), which means it failed. It would have added the text below to the usual second reading amendment: \"*that the bill be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the bill is deficient in a number of respects including that:* > > *(1) the bill's purpose is not clear, including whether it is intended to build a pool of skilled entrepreneurs or create more firms;* > > *(2) the value proposition for students is unclear, in that the Startup Year program may result in students incurring a substantial additional debt without obtaining any academic credentials;* > > *(3) the value proposition for higher education institutions is unclear, given that the SY-HELP funds available are unlikely to fund a full year's course;* > > *(4) the bill does not make it clear how SY-HELP loan funds will flow, including whether students will be able to access any of the funding as startup capital;* > > *(5) the bill does not provide funding for shorter courses under six months in duration;* > > *(6) given the barriers to commencing a new accelerator or incubator program, students attending regional or smaller universities which do not have an existing accelerator or incubator program may be at a disadvantage;* > > *(7) the bill does not provide sufficient clarity in relation to whether students in Startup Year programs will retain intellectual property rights in relation to their work funded through SY-HELP; and* > > *(8) the bi",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 6
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-23/1"
+  },
+  {
+   "key": "federal-senate-8173",
+   "date": "2023-06-19",
+   "house": "senate",
+   "question": "Education Legislation Amendment (Startup Year and Other Measures) Bill 2023 - Second Reading - Tertiary education & student debt",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-19/11"
+  },
+  {
+   "key": "federal-senate-8174",
+   "date": "2023-06-19",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping [schedule 1](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6991_first-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6991_first-reps%2F0000%22;rec=0) unchanged. In parliamentary jargon, they voted that the schedule \"*stand as printed*.\" This vote was moved after Victorian Senator [Sarah Henderson](https://theyvoteforyou.org.au/people/senate/victoria/sarah_henderson) (Liberal) proposed that it should be removed from the bill. ### What is schedule 1? The [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd065) explains that Schedule 1 creates a new loan, SY-HELP, \"*which is designed to support students participating in accelerator program courses, as part of the Higher Education Loan Program (HELP)*\". It also \"*amends social security legislation to include participation in accelerator courses for eligibility for student payments.*\"",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-19/12"
+  },
+  {
+   "key": "federal-senate-8175",
+   "date": "2023-06-20",
+   "house": "senate",
+   "question": "The majority voted against [amendments (4) and (5)](https://www.openaustralia.org.au/senate/?gid=2023-06-19.185.1) introduced by Victorian Senator [Sarah Henderson](https://theyvoteforyou.org.au/people/senate/victoria/sarah_henderson) (Liberal), which means they failed. ### What do the amendments do? Senator Henderson [explained that](https://www.openaustralia.org.au/senate/?gid=2023-06-19.185.1): > *Amendments (4) and (5) on sheet 1937 concern the ability of students to access a refund. We think this is critically important. So this provision provides that the debt for an accelerator program course with a higher education provider can be reversed if the secretary is satisfied that the course has not met its stated objectives. We propose these particular amendments because there is such high risk involved with these accelerator courses because they are full-fee-paying courses.* ### Amendment text > *(4) Schedule 1, item 25, page 22 (after line 25), at the end of Subdivision 128E-B, add:* > >> *128E-40 Reversal of STARTUP-HELP assistance: accelerator program course objectives not met* >> >> *(1) An amount of *STARTUP-HELP assistance that a person received for an *accelerator program course with a higher education provider is reversed if the *Secretary is satisfied that the course has not met its stated objectives.* >> >> *Note 1: For example, a course may not have met its stated objectives if the course has not developed a person's skills, capabilities and connections for the purposes of startup businesses: see paragraph 128B-25(1)(a).* >> >> *Note 2: For the consequences if an amount of assistance is reversed, see sections 128D-5, 128D-10 and 137-17. See also paragraph 128B-1(1)(c).* >> >> *(2) Without limiting the matters that may be included in the STARTUP-HELP guidelines, those guidelines must set out:* >> >>> *(a) principles and procedures that the Secretary must follow in deciding whether the stated objectives of an accelerator program course have been met; and",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 7,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-20/1"
+  },
+  {
+   "key": "federal-senate-8176",
+   "date": "2023-06-20",
+   "house": "senate",
+   "question": "The majority voted against amendment (1) on sheet 1937 revised 2, which was introduced by Victorian Senator [Sarah Henderson](https://theyvoteforyou.org.au/people/senate/victoria/sarah_henderson) (Liberal), meaning it was not successful. ### What do the amendments do? Senator Henderson [explained that](https://www.openaustralia.org.au/senate/?gid=2023-06-19.199.1): > *This provides that the bill effectively proceed the day after this act receives royal assent and the day after a copy of the proposed STARTUP-HELP guidelines have been tabled in the Senate. I appreciate that the guidelines have now been tabled in the Senate, but I would still like to put that to the Senate please.* ### Amendment text > *(1) Clause 2, page 2 (cell at table item 1, column 2), omit the cell, substitute:* > >> *The later of:* >> >>> *(a) the day after this Act receives the Royal Assent; and* >>> >>> *(b) the day after a copy of the proposed STARTUP-HELP Guidelines has been tabled in the Senate.* >> >> *However, the provisions do not commence at all if the event mentioned in paragraph (b) does not occur.*",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-20/2"
+  },
+  {
+   "key": "federal-senate-8177",
+   "date": "2023-06-20",
+   "house": "senate",
+   "question": "The majority voted against [amendment (1) on sheet 1965 revised](https://www.openaustralia.org.au/senate/?gid=2023-06-19.203.1), which was introduced by Victorian Senator [Sarah Henderson](https://theyvoteforyou.org.au/people/senate/victoria/sarah_henderson) (Liberal), meaning it was not successful. ### What do the amendments do? Senator Henderson [explained that](https://www.openaustralia.org.au/senate/?gid=2023-06-19.203.1): > *This is a very important proposal to provide that, before the Startup Year program is rolled out in full, the universities or the government require the universities to conduct a pilot.* ### Amendment text > *(1) Schedule 1, item 25, page 9 (after line 17), after Division 128A, insert:* > >> *Division 128AA — Accelerator program course pilot* >> >> *128AA-1 Accelerator program course pilot* >> >> *(1) The Minister must cause an accelerator program course pilot to be conducted.* >> >> *(2) Without limiting the matters that may be included in the STARTUP-HELP Guidelines, those guidelines must:* >> >>> *(a) nominate at least one, but no more than 2, higher education providers to conduct the pilot (the nominated higher education providers); and* >>> >>> *(b) prescribe requirements in relation to the conduct of the pilot; and* >>> >>> *(c) provide for an independent review of the pilot; and* >>> >>> *(d) prescribe requirements in relation to the conduct of the independent review; and* >>> >>> *(e) provide that a report of the independent review be tabled in each House of the Parliament.* >> >> *(3) A higher education provider (other than the nominated higher education providers) must not enrol a person in an accelerator program course until the pilot is completed.* >> >> *(4) The pilot must be completed no later than 2 years after the commencement of this section.* >> >> *(5) For the purposes of subsections (3) and (4), the pilot is completed when the report of the independent review of the pilot is tabled in each House of the Parliament.* >> >>",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 7,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-20/3"
+  },
+  {
+   "key": "federal-senate-8178",
+   "date": "2023-06-20",
+   "house": "senate",
+   "question": "Education Legislation Amendment (Startup Year and Other Measures) Bill 2023 - in Committee - Abolishing indexation",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 6,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-20/4"
+  },
+  {
+   "key": "federal-senate-8179",
+   "date": "2023-06-20",
+   "house": "senate",
+   "question": "The majority voted against [amendment (2) on sheet 1931 revised](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6991_amend_1b123ac0-e3c8-442a-8da6-36ee44a80089%22;rec=0), which means it failed. It was introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens). It would have raised the minimum repayment income for student debts.",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 7,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-20/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-828325",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-09",
+   "stage_hint": null,
+   "brief": "The bill establishes a Startup Year program providing up to 2,000 income-contingent loans of up to $11,800 per year for eligible students in university accelerator programs, lists Avondale University as a table B provider, and allocates an additional $1 billion to the Australian Research Council through amended indexation rates."
+  },
+  {
+   "slug": "speech-828653",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-21",
+   "stage_hint": null,
+   "brief": "Bills on financial accountability, financial services compensation, health, national security, education and vocational training were referred to the Federation Chamber for further consideration. The speaker also remarked that they hoped their next speech would be more interesting."
+  },
+  {
+   "slug": "speech-828771",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-21",
+   "stage_hint": null,
+   "brief": "The motion called for the government to table all submissions and student survey data from the Startup Year program consultation by 23 March 2023. The government opposed the motion, stating that cleared submissions and de-identified survey data would be published in the coming days."
+  },
+  {
+   "slug": "speech-828878",
+   "speaker": "Carina Garland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-22",
+   "stage_hint": null,
+   "brief": "The bill creates a new HELP loan (SY-HELP) for students to participate in university-based accelerator programs, with a pilot of 1,000 places from July 2023. Government members argued it will foster innovation and entrepreneurship, while opposition members raised concerns about insufficient detail, potential debt traps, and called for a Senate inquiry."
+  },
+  {
+   "slug": "speech-829044",
+   "speaker": "Anne Urquhart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-23",
+   "stage_hint": null,
+   "brief": "The Selection of Bills Committee report recommended referrals for several bills; an amendment to not refer the Financial Accountability Regime Bill 2023 and related bills was opposed by the Greens, who argued for an inquiry into the Australian Banking Association's influence and the removal of million-dollar fines for bankers."
+  },
+  {
+   "slug": "speech-829299",
+   "speaker": "Carol Brown",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-27",
+   "stage_hint": null,
+   "brief": "The bill establishes a Startup Year program offering up to 2,000 income-contingent loans per year to students in higher education accelerator programs, with loans capped at $11,800 and prioritising under-represented groups, piloting from July 2023 and fully rolling out in July 2024. It also lists Avondale University as a Table B provider and provides over $1 billion in additional Australian Research Council funding through new indexation and a 2025-26 funding cap."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Education Legislation Amendment (Startup Year and Other Measures) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00036",
+   "assent_date": "2023-06-28"
+  }
+ ]
+}

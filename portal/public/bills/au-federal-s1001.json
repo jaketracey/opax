@@ -1,0 +1,97 @@
+{
+ "key": "au-federal-s1001",
+ "title": "Automotive Transformation Scheme Amendment (Securing the Automotive Component Industry) Bill 2015",
+ "short_title": "Automotive Transformation Scheme Amendment (Securing the Automotive Component Industry) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2015-11-10",
+ "originating_house": "senate",
+ "sponsor": "RICE, Sen Janet",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10836",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1001%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1001%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1001%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1001%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1001%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1001%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1001%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1001_ems_5c87d9e7-b053-4e05-b637-441f54d06f19%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1001%22",
+   "document_date": "2015-11-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-11-10",
+  "sentences": [
+   "This bill would redirect existing funding under the Automotive Transformation Scheme to prioritise investment in making sustainable transport options.",
+   "It would change eligibility rules so that Australian parts makers could qualify for support even if they are not supplying major domestic vehicle producers, including those aiming to join supply chains for low-emission vehicles and renewable energy.",
+   "The bill would commence 28 days after receiving Royal Assent."
+  ],
+  "changes": [
+   "Redirects existing Automotive Transformation Scheme funding toward sustainable transport manufacturing.",
+   "Broadens eligibility for assistance to automotive parts makers seeking to enter local or global supply chains for electric, alternative fuel or renewable energy technologies.",
+   "Extends eligibility to new car makers planning to produce electric or alternative fuel vehicles."
+  ],
+  "affected": "Australian component manufacturers, automotive parts makers, and new car makers involved in sustainable transport, electric vehicles, alternative fuel vehicles, or renewable energy technologies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:21Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

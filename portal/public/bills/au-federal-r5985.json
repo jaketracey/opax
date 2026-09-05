@@ -1,0 +1,197 @@
+{
+ "key": "au-federal-r5985",
+ "title": "Investigation and Prosecution Measures Bill 2017",
+ "short_title": "Investigation and Prosecution Measures Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2018-05-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5985_ems_59538aa8-645f-471e-843b-f3e8eef18401%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5985_ems_6a773687-0074-4501-9294-c86a16dff817%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5985_ems_1ffc4cdc-b5cc-4254-8660-5c86f6c913d2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5985%22",
+   "document_date": "2017-09-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00037",
+   "document_date": "2018-05-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-13",
+  "sentences": [
+   "The bill updates references in two Commonwealth Acts to match a 2016 New South Wales law that reorganised the Independent Commission Against Corruption.",
+   "It changes the titles of the commission's leadership from a single Commissioner and Assistant Commissioners to a Chief Commissioner and two part-time Commissioners, with Assistant Commissioners appointed as needed.",
+   "The bill does not alter the commission's existing powers under the TIA Act or the SD Act."
+  ],
+  "changes": [
+   "Amends the TIA Act and the SD Act to reflect the restructured commission.",
+   "Replaces references to the former single Commissioner and Assistant Commissioners with the new Chief Commissioner and two part-time Commissioners.",
+   "Confirms the commission retains its existing status as an interception agency and criminal law enforcement agency."
+  ],
+  "affected": "The Independent Commission Against Corruption (NSW) and officers within it.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:41:36Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-353899",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The Investigation and Prosecution Measures Bill 2017 amends the Telecommunications (Interception and Access) Act 1979 and the Surveillance Devices Act 2004 to reflect the restructure of the New South Wales Independent Commission Against Corruption, replacing a single commissioner with a full-time chief commissioner and two part-time commissioners, and extends the functions of the Commonwealth Director of Public Prosecutions to the laws of Norfolk Island."
+  },
+  {
+   "slug": "speech-359033",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-12",
+   "stage_hint": null,
+   "brief": "Labor supported the Investigation and Prosecution Measures Bill 2017, which updates Commonwealth references to the restructured New South Wales ICAC and extends the Commonwealth Director of Public Prosecutions' powers to Norfolk Island. The speaker also argued for a national integrity commission, pledging a Shorten Labor government would establish one to combat corruption in federal institutions."
+  },
+  {
+   "slug": "speech-359186",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-13",
+   "stage_hint": null,
+   "brief": "The Investigation and Prosecution Measures Bill 2017 amends the Telecommunications (Interception and Access) Act 1979 and the Surveillance Devices Act 2004 to reflect the restructured New South Wales Independent Commission Against Corruption, and extends the functions of the Commonwealth Director of Public Prosecutions to the laws of Norfolk Island."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Investigation and Prosecution Measures Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00037",
+   "assent_date": "2018-05-22"
+  }
+ ]
+}

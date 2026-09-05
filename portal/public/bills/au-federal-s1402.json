@@ -1,0 +1,152 @@
+{
+ "key": "au-federal-s1402",
+ "title": "Federal Courts Legislation Amendment (Judicial Immunity) Bill 2023",
+ "short_title": "Federal Courts Legislation Amendment (Judicial Immunity) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-07",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2023-11-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1402%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1402%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1402%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1402%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1402%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1402%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1402%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1402_ems_65d97046-7e4f-4f46-8f1f-e900e1632b10%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/9458837%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1402%22",
+   "document_date": "2023-11-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00102",
+   "document_date": "2023-11-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2023-11-07",
+  "sentences": [
+   "The bill would extend the same legal protection and immunity that superior court judges have to certain other people working in federal courts.",
+   "It would give judges of Division 2 of the Federal Circuit and Family Court of Australia the same immunity as Division 1 judges, and also extend that immunity to arbitrators, mediators, and senior court staff in specific circumstances.",
+   "The changes would apply only to functions performed on or after the day the bill starts, and would not affect matters already before the courts or causes of action that have already accrued."
+  ],
+  "changes": [
+   "Extends the common law judicial immunity of Division 1 judges to Division 2 judges of the Federal Circuit and Family Court of Australia.",
+   "Gives family law arbitrators, mediators in non-family law proceedings, and arbitrators in non-family law proceedings the same immunity as a superior court judge.",
+   "Gives the Chief Executive Officer, Senior Registrars, and Registrars of the Federal Circuit and Family Court of Australia the same immunity as a Division 1 judge when conducting certain conferences or exercising delegated powers.",
+   "Applies the amendments only to functions performed on or after the bill's commencement."
+  ],
+  "affected": "Judges of Division 2 of the Federal Circuit and Family Court of Australia, family law arbitrators, mediators and arbitrators in non-family law proceedings, and the Chief Executive Officer, Senior Registrars, and Registrars of the Federal Circuit and Family Court of Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Federal Courts Legislation Amendment (Judicial Immunity) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00102",
+   "assent_date": "2023-11-27"
+  }
+ ]
+}

@@ -1,0 +1,190 @@
+{
+ "key": "au-federal-r7224",
+ "title": "Migration Amendment (Strengthening Sponsorship and Nomination Processes) Bill 2024",
+ "short_title": "Migration Amendment (Strengthening Sponsorship and Nomination Processes) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7224%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7224%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7224%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7224%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7224%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7224%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7224%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7224%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7224%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7224%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7224%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7224%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7224%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7224_ems_26de2615-e479-4fe9-b5e5-0944b35da60d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7224_ems_0c2af4da-3a9c-4794-8981-e6c28b9ce0b8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7224%22",
+   "document_date": "2024-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-07-04",
+  "sentences": [
+   "The bill would amend the Migration Act to strengthen skilled migration arrangements by setting income thresholds in legislation and changing labour market testing rules.",
+   "It would require the minister to be satisfied that skilled migrant workers are paid at least the temporary skilled migration income threshold and as much as equivalent Australian workers.",
+   "A public register of approved sponsors would include business names, numbers, postcodes, the count of sponsored workers, and their occupations."
+  ],
+  "changes": [
+   "The bill legislates income thresholds for skilled workers, including a Specialist Skills Income Threshold of $135,000 and a Core Skills Income Threshold of $73,150.",
+   "It increases the time for labour market testing from 4 months to 6 months before a sponsor lodges a nomination.",
+   "It provides for annual indexation of the income thresholds on 1 July each year, based on changes in Average Weekly Ordinary Time Earnings."
+  ],
+  "affected": "Employers sponsoring skilled migrant workers and skilled visa applicants.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9404",
+   "date": "2024-11-06",
+   "house": "representatives",
+   "question": "The majority voted against amendments introduced by Wannon MP [Dan Tehan](https://theyvoteforyou.org.au/people/representatives/wannon/dan_tehan) (Liberal), which means they will not be included in the bill. The amendments related to excluded occupations. ### Amendment text > *(1) Schedule 1, item 4, page 5 (line 10), before \"different kinds of occupations\", insert \"subject to subsection (5A),\".* > > *(2) Schedule 1, item 4, page 5 (after line 11), after subsection 140GB(5), insert:* > >> *(5A) None of the following kinds of occupations may be prescribed for the purposes of subparagraph (2)(c)(iii):* >> >>> *(a) trade workers;* >>> >>> *(b) machinery operators or drivers;* >>> >>> *(c) labourers.*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 63,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 73
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-06/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

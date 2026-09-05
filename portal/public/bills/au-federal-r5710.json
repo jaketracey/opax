@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5710",
+ "title": "Foreign Acquisitions and Takeovers Amendment (Strategic Assets) Bill 2016",
+ "short_title": "Foreign Acquisitions and Takeovers Amendment (Strategic Assets) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-10",
+ "originating_house": "representatives",
+ "sponsor": "KATTER, Bob, Jnr, MP",
+ "sponsor_party": "&#34;Independent Members&#34;",
+ "sponsor_person_id": "10352",
+ "portfolio": "(s) KATTER, Bob, Jnr, MP",
+ "status": "lapsed",
+ "status_as_of": "2017-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5710%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5710%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5710%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5710_ems_f130ca6a-d5f3-43ad-b22c-4f85aaebe685%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5710%22",
+   "document_date": "2016-10-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-10",
+  "sentences": [
+   "This bill would stop foreign individuals and companies from buying a 10% or larger share of Australian land, water, or other assets considered vital to the economy or defence.",
+   "A new body called the Foreign Ownership Assessment Board would decide which assets count as strategically important, with its membership set by a Senate majority.",
+   "A foreign entity could still acquire up to a 45% interest if both houses of Parliament approve it by a two-thirds majority vote."
+  ],
+  "changes": [
+   "Creates a Foreign Ownership Assessment Board to classify assets as strategically important.",
+   "Bans foreign acquisitions of a 10% or greater interest in assets deemed strategically important, unless Parliament overrides the ban.",
+   "Allows appeals of Board decisions to a Tribunal and then to a court."
+  ],
+  "affected": "Foreign persons and entities seeking to acquire interests in Australian land, water, or other assets of strategic importance.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:11Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

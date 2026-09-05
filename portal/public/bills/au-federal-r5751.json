@@ -1,0 +1,242 @@
+{
+ "key": "au-federal-r5751",
+ "title": "Migration Amendment (Visa Revalidation and Other Measures) Bill 2016",
+ "short_title": "Migration Amendment (Visa Revalidation and Other Measures) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5751%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5751%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5751%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5751%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5751%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5751%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5751%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5751%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5751%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5751_ems_2fb75e14-e450-4d1c-9c16-e0c27f0913b0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5751%22",
+   "document_date": "2016-10-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-19",
+  "sentences": [
+   "The bill would let the Minister require some visa holders to periodically update their details.",
+   "A revalidation check would be passed if the Minister finds no adverse information about the person, or if it is reasonable to ignore any such information.",
+   "The framework is designed to support a trial of a longer validity Visitor visa, created as part of a government policy for developing northern Australia."
+  ],
+  "changes": [
+   "The bill creates a visa revalidation framework in the Migration Act.",
+   "It gives the Minister a general power to require revalidation checks for prescribed visa holders, and a personal non-compellable power to apply this to a class of persons by legislative instrument.",
+   "It allows a visa that has ceased to be in effect to be revived if the holder later completes and passes the revalidation check within the visa period."
+  ],
+  "affected": "Holders of prescribed visas, particularly those with longer validity Visitor visas, and the Department of Immigration and Border Protection.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:44:16Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4529",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org.au/debates/?id=2017-02-09.20.2) to agree with the main idea of the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5751). In parliamentary jargon, they voted to read the bill [for a second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What was the bill's main idea? The bill aims to introduce a new revalidation check framework for visas, though at the beginning it will only apply to the newly created ten year visitor visa. It will also: * clarify when a visa ‘ceases to be in effect’ under the Migration Act; and * allow for the use of contactless SmartGate technology during immigration clearance. According to the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd051): > *A requirement that a visa-holder’s eligibility be reassessed during the course of the visa period appears to be relatively uncommon—for example, it does not appear to be currently used by any of the countries which have implemented ten-year visas for Chinese nationals. However, the United States is in the process of introducing the [Electronic Visa Update System](https://www.evus.gov/evus/#/) (EVUS), maintained by US Customs and Border Protection within the Department of Homeland Security.*",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-02-09/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-335906",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The bill introduces a 10-year visitor visa with routine and public-interest revalidation checks, clarifies visa cessation rules, and enables contactless SmartGate technology, aiming to boost tourism (which supports 600,000 jobs and $120 billion in economic activity) and streamline border processing."
+  },
+  {
+   "slug": "speech-340521",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-08",
+   "stage_hint": null,
+   "brief": "Labor opposed Schedule 1 of the Migration Amendment (Visa Revalidation and Other Measures) Bill 2016, arguing it gives the immigration minister unfettered power to target whole groups of visa holders for revalidation based on nationality, region, or religion, with insufficient parliamentary oversight. Labor supported the 10-year Chinese visitor visa pilot and SmartGate expansion, and moved to remove Schedule 1 from the bill."
+  },
+  {
+   "slug": "speech-340523",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that Schedule 1 of the bill grants the immigration minister extreme, non-disallowable powers to compel any \"class of persons\"—including permanent residents—to undergo visa revalidation checks without clear limits or parliamentary oversight, calling it an unwarranted executive overreach that could enable discrimination. He urged splitting the bill to remove Schedule 1 while supporting Schedules 2 and 3, and criticised the government for lacking a tourism plan despite tourism overtaking coal as a major export."
+  },
+  {
+   "slug": "speech-340524",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's aim to revalidate 10-year visas for Chinese nationals but opposed its broad grant of power to the minister to require revalidation checks on any visa class based on vague \"adverse information,\" with no parliamentary disallowance, warning it could be used to discriminate against entire groups."
+  },
+  {
+   "slug": "speech-340625",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Visa Revalidation and Other Measures) Bill 2016 grants the minister overly broad discretionary power to require revalidation checks for any visa category, including permanent residents, without parliamentary oversight, and announced Labor will move amendments to the bill."
+  },
+  {
+   "slug": "speech-340626",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-09",
+   "stage_hint": null,
+   "brief": "Labor supported the 10-year Chinese visitor visas and SmartGate expansion but opposed the visa revalidation provisions, arguing they granted the minister unfettered power over broad classes of people without parliamentary oversight. The speaker called on Minister Dutton to amend the bill, citing concerns raised by the Law Council of Australia about the provisions being unnecessary, disproportionate, and lacking disallowance mechanisms."
+  },
+  {
+   "slug": "speech-340627",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-09",
+   "stage_hint": null,
+   "brief": "The Labor opposition supported the bill's provisions for 10-year Chinese visitor visas (with India from late 2017) and SmartGate airport technology, but opposed the visa revalidation clause, arguing it grants Immigration Minister Peter Dutton the power to require revalidation of any visa class or group of people—based on race, age, or transit country—without parliamentary disallowance, and demanded those measures be removed."
+  },
+  {
+   "slug": "speech-340628",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-09",
+   "stage_hint": null,
+   "brief": "The speaker rebutted claims that the bill mirrors a Trump-style Muslim ban, arguing the US policy is a 90-day suspension applying to seven non-democratic countries and affects only some faith groups. They also welcomed the bill granting Chinese tourists 10-year visas to boost Australia's tourism economy."
+  },
+  {
+   "slug": "speech-340630",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Visa Revalidation and Other Measures) Bill 2016 grants the minister overly broad discretionary powers to revalidate visas for entire classes of people, which could be used to target individuals based on race, religion or nationality, and is not proportionate to the bill's stated objectives. While supporting the 10-year visitor visa pilot for China (commenced 12 December 2016) and contactless SmartGate technology (estimated to save $33 million annually), the speaker opposed the bill in its current form due to concerns about executive overreach and lack of parliamentary oversight, echoing criticisms from the Law Council of Australia and the Parliamentary Joint Committee on Human Rights."
+  },
+  {
+   "slug": "speech-340631",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-09",
+   "stage_hint": null,
+   "brief": "The speaker argued the Migration Amendment (Visa Revalidation and Other Measures) Bill 2016 should be passed, announcing a 10-year visitor visa trial for Chinese nationals under the subclass 600 visa and a ministerial power for public interest revalidation in exceptional circumstances. He rejected Labor's opposition as a \"failed political stunt,\" stating Labor had previously supported the bill except for one technical issue, and accused the shadow minister of misleading the public."
+  }
+ ],
+ "acts": []
+}

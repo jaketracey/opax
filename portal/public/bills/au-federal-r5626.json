@@ -1,0 +1,3470 @@
+{
+ "key": "au-federal-r5626",
+ "title": "Commonwealth Electoral Amendment Bill 2016",
+ "short_title": "Commonwealth Electoral Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2016-03-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5626_ems_4aea5cae-8ce1-478b-ab54-74c95ece5377%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5626_ems_163fe201-e01e-4154-95bc-ec2c01e9febb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5626_ems_955e56de-c7ba-4a4a-8ca1-01ab948694f5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5626_ems_d7b8ba11-9ddb-46db-a329-a10d310be710%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5626%22",
+   "document_date": "2016-02-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00025",
+   "document_date": "2016-03-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2016-02-22",
+  "sentences": [
+   "The bill would change how Australians vote in Senate elections.",
+   "It would introduce a system where voters must number at least six boxes above the line to cast a valid ballot.",
+   "The bill would also stop political party officials from holding registration roles in more than one party at once."
+  ],
+  "changes": [
+   "Introduces a partial optional preferential voting method for Senate ballots above the line.",
+   "Removes the use of group and individual voting tickets.",
+   "Stops a person from being the registered officer or deputy registered officer of more than one political party at the same time.",
+   "Allows political party logos to be printed on ballot papers."
+  ],
+  "affected": "Voters, political parties and their registered officers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:49:30Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4077",
+   "date": "2016-02-22",
+   "house": "representatives",
+   "question": "Scott Morrison I move: That the Commonwealth Electoral Amendment Bill 2016 be referred to the Joint Standing Committee on Electoral Matters for inquiry and report by no later than 9 am on 2 March 2016. Chris Bowen I would like to speak on the motion moved by the Treasurer. It is extraordinary that the Treasurer is moving this motion. His No. 1 priority, the thing he wants to talk to the House about, is how votes get counted—not his plans for the economy, not his policies, not the future of the Australian economy but political matters. That is the Treasurer's one big priority this week. He gave a speech last week. At least Rob Oakeshott had an announcement to make at the end of his 17-minute speech! Ian Goodenough The member for McMahon will resume his seat. I call the Leader of the House. Christopher Pyne I move: That the question be now put. Ian Goodenough The question is that the question be now put. The question now is that the motion moved by Mr Morrison be agreed to. Question agreed to.",
+   "stage": "Bill",
+   "ayes": 80,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-02-22/4"
+  },
+  {
+   "key": "federal-representatives-4093",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "question": "Commonwealth Electoral Amendment Bill 2016 - Second Reading - Agree with the main idea",
+   "stage": "Second reading",
+   "ayes": 83,
+   "noes": 47,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-02-24/1"
+  },
+  {
+   "key": "federal-representatives-4094",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "question": "Peter Hendy I ask leave of the House to move a motion relating to the consideration of the Commonwealth Electoral Amendment Bill 2016. Leave not granted. I move: That so much of the standing orders be suspended as would enable consideration of the remaining stages of the Commonwealth Electoral Amendment Bill 2016 to proceed immediately. Tony Burke It is interesting that the mover of the motion, the member for Eden-Monaro, offered no reason why this is being moved. It is not an ordinary occasion when leave is asked to proceed to the third reading. This is this situation. On Monday morning the Treasurer moved that the Commonwealth Electoral Amendment Bill 2016 be referred to the Joint Standing Committee on Electoral Matters to report on Wednesday of next week at 9 am. This bill in this form has never been through that committee. Speaker after speaker on the government side has relied on findings from JSCEM to reach their conclusions. Speaker after speaker has said that the deliberations of this committee matter for the conclusions of this House. The Treasurer did the right thing when he referred the bill to that committee to report on Wednesday next week at 9 am. What the government is wanting to do now is say that only members of the Senate get to deal with the findings of a joint committee before they reach their final vote. What is the point in having a joint committee if the attitude of the members of the government is that the deliberations of this House do not matter? What is the point of having this House vote on who will be members of a joint committee if the approach of the government is going to be that you simply ignore the findings of the committee? Worse than ignoring those findings, we have a situation where they are saying we should vote before the committee has even reached its conclusions. Standing order 148 is there for a very clear reason. It says: … except that a bill referred to a standing or select committee under standing order 143(b) shall not",
+   "stage": "Second reading",
+   "ayes": 81,
+   "noes": 50,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-02-24/2"
+  },
+  {
+   "key": "federal-senate-4117",
+   "date": "2016-03-02",
+   "house": "senate",
+   "question": "Commonwealth Electoral Amendment Bill 2016 - First Reading - Put the question",
+   "stage": "First Reading",
+   "ayes": 40,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 49,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-02/3"
+  },
+  {
+   "key": "federal-senate-4118",
+   "date": "2016-03-02",
+   "house": "senate",
+   "question": "The majority voted against the following [motion](http://www.openaustralia.org.au/senate/?id=2016-03-02.11.2): > *The question now is that the amendment moved by Senator Collins be agreed to.* Senator [Jacinta Collin](https://theyvoteforyou.org.au/people/senate/victoria/jacinta_collins)'s [amendment](http://www.openaustralia.org.au/senate/?id=2016-03-01.3.2) was the following: > *At the end of the motion [which is \"That this bill may proceed without formalities\"], add, \"but, may not be further proceeded with until 12 May 2016.\"* In other words, Senator Collin's motion was to delay the passage of this bill through the Senate until at least 12 May 2016, but it was unsuccessful.",
+   "stage": "First Reading",
+   "ayes": 30,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 49,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-02/4"
+  },
+  {
+   "key": "federal-senate-4119",
+   "date": "2016-03-02",
+   "house": "senate",
+   "question": "Commonwealth Electoral Amendment Bill 2016 - First Reading - Put the question",
+   "stage": "First Reading",
+   "ayes": 40,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 48,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-02/5"
+  },
+  {
+   "key": "federal-senate-4120",
+   "date": "2016-03-02",
+   "house": "senate",
+   "question": "The majority voted in favour of the following [motion](http://www.openaustralia.org.au/senate/?id=2016-03-02.11.2): > *The question now is that this bill proceed without formalities.* This means that the normal parliamentary formalities that can delay bills will now be ignored and so the bill can proceed through the Senate faster. As the [Annotated Standing Orders of the Australian Senate](http://www.aph.gov.au/About_Parliament/Senate/Powers_practice_n_procedures/aso/so113) explains: > *this [type of motion] shall have the effect of suspending any requirements for stages of the passage of the bill or bills to take place on different days, for notice of motions for such stages, and for the printing and certification of the bill or bills during passage*",
+   "stage": "First Reading",
+   "ayes": 40,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 48,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-02/6"
+  },
+  {
+   "key": "federal-senate-4121",
+   "date": "2016-03-02",
+   "house": "senate",
+   "question": "Commonwealth Electoral Amendment Bill 2016 - First Reading - Read for the first time",
+   "stage": "First Reading",
+   "ayes": 40,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 48,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-02/7"
+  },
+  {
+   "key": "federal-senate-4122",
+   "date": "2016-03-02",
+   "house": "senate",
+   "question": "Commonwealth Electoral Amendment Bill 2016 - First Reading - Put the question",
+   "stage": "First Reading",
+   "ayes": 40,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 48,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-02/8"
+  },
+  {
+   "key": "federal-senate-4123",
+   "date": "2016-03-02",
+   "house": "senate",
+   "question": "Commonwealth Electoral Amendment Bill 2016 - First Reading - Suspend standing orders",
+   "stage": "First Reading",
+   "ayes": 39,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 46,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-02/9"
+  },
+  {
+   "key": "federal-senate-4124",
+   "date": "2016-03-02",
+   "house": "senate",
+   "question": "Commonwealth Electoral Amendment Bill 2016 - First Reading - Put the question",
+   "stage": "First Reading",
+   "ayes": 39,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 46,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-02/10"
+  },
+  {
+   "key": "federal-senate-4125",
+   "date": "2016-03-02",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org.au/senate/?id=2016-03-02.11.2) introduced by Liberal Senator [George Brandis](https://theyvoteforyou.org.au/people/senate/queensland/george_brandis): > *That a motion to exempt these bills from the bills cut-off order may be moved immediately and determined without amendment or debate.* This motion is effectively an attempt by Senator Brandis to speed things up so that the bill can be considered faster.",
+   "stage": "First Reading",
+   "ayes": 38,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 45,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-02/11"
+  },
+  {
+   "key": "federal-senate-4126",
+   "date": "2016-03-02",
+   "house": "senate",
+   "question": "Commonwealth Electoral Amendment Bill 2016 - First Reading - Put the question",
+   "stage": "First Reading",
+   "ayes": 37,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 43,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-02/12"
+  },
+  {
+   "key": "federal-senate-4127",
+   "date": "2016-03-02",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org.au/senate/?id=2016-03-02.11.2) introduced by the Leader of the Government in the Senate, Liberal Senator [George Brandis](https://theyvoteforyou.org.au/people/senate/queensland/george_brandis): > *That the provisions of paragraphs (5) to (8) of [standing order 111](http://www.aph.gov.au/Parliamentary_Business/Chamber_documents/Senate_chamber_documents/standingorders/b00/b20) not apply to this bill, allowing it to be considered during this period of sittings.* Basically, this motion was to speed up consideration of the bill, so the senators who supported the motion were voting to hurry things along.",
+   "stage": "First Reading",
+   "ayes": 37,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 43,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-02/13"
+  },
+  {
+   "key": "federal-representatives-4146",
+   "date": "2016-03-17",
+   "house": "representatives",
+   "question": "Commonwealth Electoral Amendment Bill 2016 - Consideration of Senate Message - Agree with Senate amendments",
+   "stage": "Consideration of Senate message",
+   "ayes": 81,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 112
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-03-17/2"
+  },
+  {
+   "key": "federal-senate-4151",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Dio Wang The crossbench senators certainly have their differences and I would argue that even though there is only a relatively small number of us, we are a true broad church. But we do have one thing in common, one thing that justifies our existence—that is, that we are not rubber-stampers. We are here because 25 per cent of the Australian voters did not want rubber-stampers in the Senate, the house of review. Therefore, we of course do not always endorse the government's legislative agenda, but we do try to get to the bottom of the issues and approve, reject or amend legislation, according to our assessments. Sometimes in this very chamber, ministers would even praise the constructive approach we take. So why have they formed the 'Liberal National Greens Xenophon Union', the LNGXU, to wipe out the crossbench? Why, all of a sudden, has the same crossbench become the coalition's enemy? I can tell you that being a crossbench senator is not easy. I am often expected to have a view on anything and everything. I am required to have discussions with ministers and shadow ministers on subjects they have researched for years. But that is okay. They may have earned more knowledge on such subjects than me while I was busy living a civilian life, but I enjoy those discussions because I can pick their brains. That is why when I came into this place, I came with a promise: all sides of politics always get a fair hearing from me. This has been the principle I operate under. I know some of the crossbench senators are fair and balanced too. However, despite our hard work and the voting record that speaks for itself, whenever the government fails to pass a bill, we are likely to be the ones who are blamed. Ironically, the Greens have suddenly become the Liberal-National coalition's new mates. What does the Commonwealth Electoral Amendment Bill 2016 do? Or should the real question be: what does the LNGXU want to do through this bill? There are all sorts of analyses with all sorts of",
+   "stage": "Second reading",
+   "ayes": 36,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 15,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/5"
+  },
+  {
+   "key": "federal-senate-4152",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Penny Wong I move the second reading amendment standing in my name, as circulated in the chamber on sheet 7881: Omit \"now\", substitute \"this day 6 months\". Stephen Parry The question is that the second reading amendment moved by Senator Wong be agreed to.",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 15,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/6"
+  },
+  {
+   "key": "federal-senate-4153",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Claire Moore I move the amendment to the second reading motion I foreshadowed in my earlier speech: At the end of the motion, add: and further consideration of the bill be an order of the day for the next sitting day after the following document is laid on the table: a statement by the Minister for Finance and the Special Minister of State (Senator Cormann) specifying the harm to the commercial interests of the Commonwealth that could result from the disclosure of information in the documents recording communications between the Australian Electoral Commission and either the Department of Finance or Ministers in the Finance portfolio relating to proposed electoral reform in the Commonwealth Electoral Amendment Bill 2016. Stephen Parry The question is that the second reading amendment be agreed to.",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 15,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/7"
+  },
+  {
+   "key": "federal-senate-4154",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Commonwealth Electoral Amendment Bill 2016 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 15,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/8"
+  },
+  {
+   "key": "federal-senate-4155",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Jenny McAllister Pursuant to standing order 115(2)(a) I move: That the Commonwealth Electoral Amendment Bill 2016 be referred to the Finance and Public Administration Legislation Committee for inquiry and report by 12 May 2016. It is no secret that those of us on this side of the chamber have been frustrated and disappointed by the time frame in which this bill has been sought to be dealt with in this chamber. People here understand that these are significant changes to our electoral laws that speak to the character of this chamber and the character more broadly of our democracy. And it is true that it has generated an interesting public debate already about the nature of representation in a chamber such as this, which is characterised by proportional representation. Only today I was asked by a member of the public, 'Can you explain to me what are the issues at stake in this debate around electoral reform that is being dealt with in the Senate?' I of course gave that person my perspective on the issues at stake, but it brought home to me the challenge we face, which is that the community has not had time to engage with these significant changes. I know that those opposite and those in favour of moving this bill through this place quickly have argued repeatedly that this was all dealt with in the JSCEM. Well, people in this chamber do not accept that. Many opposition senators feel that the bill differs substantially from the issues that were canvassed in JSCEM. But, more significantly, everybody here understands that when a Senate committee starts investigating an idea in the abstract there is a certain level of interest from a particular group in the community that always takes an interest in those policy issues. It is, however, at the point of legislation that community interest is truly piqued. It is when the parliament decides that it is actually going to take a step towards implementing recommendations of a committee that the community start to understand that t",
+   "stage": "Bill",
+   "ayes": 24,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 14,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/9"
+  },
+  {
+   "key": "federal-senate-4156",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Jacinta Collins In that brief moment we had earlier in addressing some of the arguments for why this bill has not been adequately considered, I indicated that it is very unfortunate that proper consideration of a piece of legislation with the significance of this—a major change that has not occurred in 30 years—in terms of how we elect senators and that there will be many areas of questions arising from the poor consideration that had occurred. I intend at the outset to highlight a number of those areas. For example, I think I said in that five-minute statement when I had the opportunity to review the _Hansard_ of the very brief hearing we had—in fact, let me take this moment to go to that point. I was reminded by one of my colleagues—in fact Senator Moore but also others—during that division that the report that Senator Birmingham was referring, but I see he has now left the chamber; it was a very brief interest. Mathias Cormann No, he hasn't. Jacinta Collins Oh, he's here. Good—where is he? Senator Birmingham, the interim report on the inquiry into the conduct of the 2013 federal election covered many issues. To maintain the pretence that that was an adequate consideration of the issues that this government has done a fix with the Greens behind closed doors to create this bill—and even when I say create this bill, you have got to look at what this bill is once you wade through four explanatory memorandums. It has shifted because of the farce of process that occurred in its creation. I would like to remind the Senate that the genesis of the considerations that the minister refers to when he tries to misrepresent Labor's position was the joint parliamentary committee's consideration of the conduct of the 2013 federal election. So let me remind senators of what some of the issues in the conduct of that election were. They are quite pertinent to what we will deal with during the course of what, unfortunately, for senators will be a very lengthy committee stage conside",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 15,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/10"
+  },
+  {
+   "key": "federal-senate-4157",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Penny Wong I was accused prior to the break—it is all right we are not going to vote for a while; you can all go—of misleading the chamber, again; it is a serial accusation and untrue. I did actually say a couple of things. I said that voter behaviour obviously depends on a whole set of assumptions about— The TEMPORARY CHAIRMAN: Senator Wong, would you resume your seat. Colleagues, would you please either resume your seats or leave the chamber quietly so we can hear the speaker. Senator Wong. I think I did actually in the discussion about assumptions about voter behaviour when assessing— Senator McGrath interjecting— Senator McGrath, if you are going to laugh, can you at least laugh on your side? James McGrath Sorry. Penny Wong If you could just cackle over there— The TEMPORARY CHAIRMAN: Senator Wong, don't be distracted. Resume. I cannot help it. I have got this bloke behind me who seems to have lost it, and it is not Senator Conroy; it is one of yours and he is on our side. You can stay here, if you want—if you vote with us! I will start again—I am sure you are very happy about that. Senator Cormann, I think, just prior to the division, was accusing me of misleading the chamber in relation to some evidence before JSCEM and voter behaviour. I would make the point: I was actually quite clear that you do have to make a set of assumptions about how voters will respond to a new system. Senator Cormann places great store in the fact that the instruction on the ballot paper will be there. That will ensure a great many people change their voting behaviour. He might be right. He might be wrong. The point I was making is that, if you look at the statistics over 30 years, if you look at the New South Wales position and if you also look at what the Parliamentary Library were saying, it is a reasonable assumption that many people will continue voting 1 above the line. He may be right. It may be that people, overnight, are able to change their voting behaviour. I make the point",
+   "stage": "In committee",
+   "ayes": 24,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 15,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/11"
+  },
+  {
+   "key": "federal-senate-4158",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Kim Carr Chairman, I was seeking an answer to a straight question. The committee has considered the question of whether or not a vote 1 above the line is a formal vote, irrespective of the directions issued on a ballot paper, and the advice of the Electoral Commission is that it is, and that is a position I understand the government has actually accepted. My question goes to matters that relate to people arguing in favour of 'just vote 1'. In the Langer case, the High Court found that Mr Albert Langer's campaign for people to just vote 1 was illegal. It was, in fact, a crime for Mr Langer to undertake that course of action, but that relied upon section 329A, which has been removed—that is, it was a crime to promote voting in a way that was inconsistent with section 240. Of course, the proposition that was put at the time was that, if people had access to this information, they might use it and that would be regarded as a criminal offence, but that section has been repealed. I am asking the minister a direct question: is there a replacement section in this amendment bill? And is it a crime for a citizen to promote voting just 1, which of course would be a formal vote? Mathias Cormann I have, of course, answered questions in relation to this issue several times now. For the benefit of the chamber, let me advise the Senate that Senator Carr is completely incorrect in what he is asserting. The Langer matter related to voting in the House of Representatives, not to voting in the Senate. That is the first mistake that Senator Carr made. Clearly, he was handed something. He has not got a clue what he is talking about. He is just reading some notes that have been handed to him by some apparatchik from the Labor Party. Let's make sure we know what we are talking about. The Langer matter related to voting in the House of Representatives. Mr Langer proposed a House of Representatives ballot paper with 1, 2, 2, 3, 3. The relevant section of the act dealing with formality of Hou",
+   "stage": "In committee",
+   "ayes": 22,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 14,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/12"
+  },
+  {
+   "key": "federal-senate-4159",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Jacinta Collins I think on the last occasion I highlighted fairly comprehensively the government's failure to respond to some quite significant issues. Perhaps the one quip— Honourable Senator An honourable senator interjecting— Jacinta Collins Sorry, what was that point? Sean Edwards Ignore the interjections, Senator Collins. Proceed. An honourable senator interjecting— Jacinta Collins No, I am not going to say it all again. An honourable senator interjecting— No. The TEMPORARY CHAIRMAN: Senator Collins, please ignore the interjections. Stephen Conroy Particularly from people not in their seats. Jacinta Collins Yes, not in their seats—it is quite a problem. No, the only additional remark I was going to make was the one that I forgot to make earlier, which was that, if Senator Cormann actually responded to legitimate questions rather than playing on social media about representations of hours and the like, we might actually make some progress. Senators need to understand: whilst he is being asked legitimate questions by a number of senators and failing to respond, what is he doing instead? He is sitting there playing on his mobile, engaging with social media on unrelated issues such as the amount of time that has been involved so far and his misrepresentations in part on that point. But, as we know, we are at the first of government amendments on sheet JP109. Because this amendment is in a sense definitional and relates to other amendments in this set, I will deal with the opposition's position in relation to all of those amendments, (1) to (9). It will not surprise—oh, look, Senator Cormann is even looking happy! The TEMPORARY CHAIRMAN: Order! Mathias Cormann You are talking about the amendments. That is good. The TEMPORARY CHAIRMAN: Order! Jacinta Collins Well, Senator Cormann, you give me the opportunity— The TEMPORARY CHAIRMAN: Senator Collins, ignore the interjections. No, he does give me the opportunity to reflect on some of the taunts and the helpfulness that",
+   "stage": "In committee",
+   "ayes": 24,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 14,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/13"
+  },
+  {
+   "key": "federal-senate-4160",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Jacinta Collins I had been partly led away, by some of the distractions, from our response to government amendments (1) to (9), so I might return to conclude those. I will move on from some of the concerns with process to the policy arguments with respect to those amendments. The government's amendments will lead to poor policy outcomes. The Australian Labor Party supports the current compulsory preferential system. Compulsory preferential voting means that 100 per cent of the formal votes elect a senator or go to the seventh unsuccessful candidate in the race. No votes are wasted. I encourage senators to look at the _Hansard_ discussion we were having earlier with Senator Cormann about choice. He, in my view—but, given the nature of this debate, we will only know when we can see the _Hansard_was practically arguing for voluntary voting in his suggestion that people should not be forced to vote for more than the number of parties that they might want to. I encourage the Greens to consider the implications of the approach that Senator Cormann seemed to be indicating in his fairly philosophical and, possibly, not considered government position on that point. I note that Senator Xenophon is back. He was not here at the time I raised the issue. Given Senator Xenophon's earlier discussion about benchmarking and what standards we might want to test these measures against in the future, I returned to the issues that he had raised and encouraged him to have a look at the discussion that had occurred some time earlier when Senator Cormann became quite philosophical about what things voters should be forced to do. As I said, my reading of that contribution at the time—and we will only know when we get to see the _Hansard_was that he was practically moving a pretty strong way down the voluntary voting path. That is certainly not the Labor Party's position. Our view is very clear: no votes should be wasted. Under optional preferential voting large numbers of Senate votes will b",
+   "stage": "In committee",
+   "ayes": 42,
+   "noes": 17,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 12,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/14"
+  },
+  {
+   "key": "federal-senate-4161",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Mathias Cormann I move the second government amendment which relates to the same issue, which I have previously talked to. I move: (2) Schedule 1, item 19, page 5 (line 32) to page 6 (line 1), omit the item, substitute: 19 Subsection 239(1) Repeal the subsection, substitute: _Voting below the line_ (1) Subject to subsection (2), a person must mark his or her vote on the ballot paper in a Senate election by: (a) writing at least the numbers 1 to 12 in the squares printed on the ballot paper below the line (with the number 1 being given to the candidate for whom the person votes as his or her first preference, and the numbers 2, 3, 4 and so on to at least the number 12 being given to other candidates so as to indicate the order of the person's preference for them); or (b) if there are 12 or fewer squares printed on the ballot paper below the line—numbering the squares consecutively from the number 1 (in order of preference as described in paragraph (a)). Note: See also section 268A for when the vote is formal. I commend the amendment to the Senate, which continues to help give effect to the government's commitment to introduce a form of optional preferential voting below the line where guidance is provided to voters to fill in at least 12 boxes below the line in order of their preference from 1 to 12. Deborah O'Neill I think there has been a great deal of discussion in here, particularly from Senator Cormann, about filibustering being conducted. I want to put the some remarks on the record around that issue this evening. Honourable Senators Honourable senators interjecting— Sean Edwards Senator O'Neill, resume your seat. Honourable senators interjecting— The CHAIRMAN: Senator O'Neill. Long debate text truncated.",
+   "stage": "In committee",
+   "ayes": 40,
+   "noes": 18,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "earliest": 4,
+    "member": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/15"
+  },
+  {
+   "key": "federal-senate-4162",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Deborah O'Neill I seek to continue the scrutiny that is required of these bills and hark back to a significant political speech nearly 100 years ago by a very important senator of this place: Senator Gardiner, who in 1918 was trying to make a point in a similar way that I think is being undertaken by the opposition this evening. It was to draw attention to the fact of the unseemly haste of the government in advancing a deliberate agenda to marginalise the voice of the Australian people in the way in which our democracy operates. I just got up to recounting the point that there was a concern about the nature of debate happening through the middle of the night, and that is indeed what we have seen. In this last bit of the pre-light hours I want to indicate that, at that time, the attempted action was particularly egregious in that it sought to alter electoral law after the issue of the writ for the by-election in the division of Corangamite was achieved. It was for this reason that Senator Gardiner even went so far as to say about the bill that its title should be changed. He advocated that it should be called 'A Bill to Improve the Chances of the National Party at the Corangamite Election'. I am thinking perhaps I should move an amendment to this bill before the chamber to change the title to 'A Bill to Improve the Chances of Larger Parties to Squash the Smaller Ones in the Senate Election,' especially if it ends up being a double dissolution on 2 July. This government, in cohorts with the Greens, is attempting to wipe out all the Independents who have found their place in this parliament and, I think we could say through the contribution of senators tonight, are well and truly able to hold this government to account in language and practices that the Australian people respect, admire and understand. As a Labor senator, like all my illustrious colleagues on this side of the chamber, Senator Gardiner was a very astute man. Being the astute man that he was, he made thi",
+   "stage": "In committee",
+   "ayes": 40,
+   "noes": 18,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "earliest": 4,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/16"
+  },
+  {
+   "key": "federal-senate-4163",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Mathias Cormann I move government amendment No. (4) on sheet JP109: (4) Schedule 1, item 23, page 7 (after line 9), at the end of subsection 269(1A), add: Note: Paragraph (1A)(b) applies both for the purposes of determining whether a ballot paper is formal, and for the purposes of determining which numbers marked on a ballot paper are counted in the election. Example: A ballot paper has squares above the line that are numbered 1, 1, 2 and 3. The vote is informal because, by disregarding the numbers 1 and upwards under subparagraph (2)(b)(i), no squares have been numbered. A second ballot paper has squares above the line that are numbered consecutively from 1 to 9 and then 11, 12, 13 and 14. The vote is formal under paragraph (1)(b). However, only the squares numbered from 1 to 9 are counted for the purposes of sections 273 and 273A because the numbers 11 and upwards are disregarded under subparagraph (b)(ii) of this subsection. Doug Cameron I just want to go back to an issue that Senator Wong raised in relation to this voting below the line. This was an analysis that was done by Ross Gittins. The article I have was reported in _The Canberra Times_ on 29 February. What Mr Gittins is saying in relation to this issue—and I did mention this myself in a contribution I made earlier—is that if this bill were passed it would make life a lot easier for lobbyists. They would have a much smaller list of Senate parties to get around—in both senses, he argues. He says: Another fear about Turnbull’s voting change – being supported by the Greens and Nick Xenophon, but opposed by everyone else in the Senate – is that it will lead to a decline in political competition by raising the barriers to entry by other, newly emerging parties. I think it is clear that the purpose of this bill is to consolidate those who are here in this Senate and to ensure that no other emerging parties could challenge the Greens in relation to the position they have at the moment. They have basically made s",
+   "stage": "In committee",
+   "ayes": 40,
+   "noes": 18,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 12,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/17"
+  },
+  {
+   "key": "federal-senate-4164",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Mathias Cormann by leave—I move government amendments (5) to (9) on sheet JP109 together: (5) Schedule 1, item 24, page 7 (lines 11 to 13), omit the item, substitute: 24 Subsection 269(2) Repeal the subsection, substitute: (2) If a ballot paper in a Senate election: (a) has squares marked above the line in accordance with subsection 239(2) or paragraph (1)(b) of this section; and (b) has squares marked below the line in accordance with subsection 239(1) or section 268A; then, for the purposes of sections 272 and 273, the only squares that are taken to have been marked on the ballot paper are the squares that are marked below the line. (6) Schedule 1, items 26 and 27, page 7 (lines 16 to 21), omit the items, substitute: 26 Section 270 Repeal the section. (7) Schedule 1, item 41, page 13, omit \"By numbering these boxes 1 to (7) in the order of your choice (with number 1 as your first choice)\", substitute \"By numbering at least 12 of these boxes in the order of your choice (with number 1 as your first choice)\\*\\*\". (8) Schedule 1, item 41, page 13, omit \"(7) Here insert number of candidates.\". (9) Schedule 1, item 41, page 13, after \"\\* If the ballot paper has 6 or fewer squares above the line, replace the instruction with \"By numbering these boxes in the order of your choice (with number 1 as your first choice)\".\", insert \"\\*\\* If the ballot paper has 12 or fewer squares below the line, replace the instruction with \"By numbering these boxes in the order of your choice (with number 1 as your first choice)\".\". The CHAIRMAN: The question is that government amendments (5) to (9) on sheet JP109 be agreed to.",
+   "stage": "In committee",
+   "ayes": 40,
+   "noes": 18,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 12,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/18"
+  },
+  {
+   "key": "federal-senate-4165",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Jacinta Collins I move opposition amendment (1) on a sheet 7859: (1) Clause 2, page 2 (table item 1), omit \"The day after this Act receives the Royal Asset.\", substitute \"19 July 2016\". Before I address that amendment, because Senator Rhiannon seems to think that commentary about how we are proceeding is the order of the day—and, of course, hers is not particularly accurate—I will indicate, given some of the nature of the interjections that occurred during that last division, that, as an example of how we are proceeding in a way that deals with the substantive matters in this bill, Labor did not believe it was appropriate or necessary to pull out of the previous discussion amendments such as amendment (6) which is simply: (6) Schedule 1, items 26 and 27, page 7 (lines 16 to 21), omit the items, substitute: 26 Section 270 Repeal the section. There have been accusations during this debate about the time wasting and the like that has been occurring. We have made our points in relation to those amendments and we are more than happy to move on to our first significant amendment. This amendment, which will delay the commencement of the bill until 19 July 2016, demonstrates to the minister that it is possible to be very clear about when the provisions of the bill will first apply. He could, hypothetically, have been far more clear with us about how an advertising campaign might occur and when it could commence and, therefore, give the AEC the certainty that they need. But of course the one thing it would not do is give the government their policy rationale, which is to run a double-D. So, whilst the minister in the earlier discussion attempted, disingenuously, to argue that the issue of a double-D and the provisions in this bill were independent, anyone following this debate knows otherwise—except, of course, the Greens, who cottoned on a little bit too late. But I will come to that in a moment. Setting a clear commencement date of 19 July is important because it will prev",
+   "stage": "In committee",
+   "ayes": 23,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "earliest": 4,
+    "member": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/19"
+  },
+  {
+   "key": "federal-senate-4166",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Bob Day I move the Family First amendment on sheet 7858: (1) Clause 2, page 2 (table item 1), omit \"The day after this Act receives the Royal Assent\", substitute \"22 August 2016\". This amendment delays the commencement date of the bill until 22 August and substitutes the ordinary day after royal assent clause with 22 August 2016. Mathias Cormann The government will oppose this amendment for the same reasons as we opposed a similar amendment with a different date by the Labor Party. The government will support the Greens amendment on sheet 7882, which proposes an appropriate arrangement for commencement of the bill. Jacinta Collins I thank Senator Day for giving us the opportunity to address once again the issues that were canvassed with respect to our earlier amendment, which just failed. This once again gives the Greens the opportunity to reconsider their poorly-formed position. I suspect it will not change, given the behaviour that we have observed consistently— Senator Ian Macdonald interjecting— Thank you, Senator Macdonald, that is very generous of you—especially at this hour of the process. I gather that was somewhat tongue in cheek. For the reasons that we have already outlined, in the absence of the success of our motion we will support this one. The CHAIRMAN: The question is that amendment (1) on sheet 7858 moved by Senator Day be agreed to.",
+   "stage": "In committee",
+   "ayes": 23,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 14,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/20"
+  },
+  {
+   "key": "federal-senate-4167",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Dio Wang I move my amendment on sheet 7876 as revised: (1) Page 2 (after line 20), after clause 3, insert: 4 Review of the operation of amendments (1) The Minister must cause an independent review of the operation of the amendments made by Schedule 1 to be undertaken and completed within 6 months after the result of the election first held on or after the commencement of this clause has been declared. (2) The review must consider: (a) the effectiveness of the amendments made by Schedule 1; and (b) the effectiveness and accuracy of systems and processes put in place by the Australian Electoral Commission to give effect to the amendments made by Schedule 1; and (c) the adequacy of resources given to the Australian Electoral Commission for the election; and (d) any other related matters that the Minister specifies. (3) The person who undertakes the review must give the Minister a written report of the review. (4) The Minister must cause a copy of the report of the review to be tabled in each House of the Parliament within 15 sittings days of receiving it. My amendment simply asks the AEC to do a very simply and I think also very warranted job after the first election, when the changes we have been discussing overnight come into effect. Because of the changes and because of the election that follows, I think that given the time allowed for the AEC to make such changes, to change the system and to make sure their staffing levels are adequate, it is very possible that we are asking AEC to do a very rushed job. So I think it is very prudent that we ask the AEC to do a review within six months after the results of the election and for the review just to tell us the effectiveness of the amendment, the accuracy of the system and the process that will be put in place, and whether the resourcing that is given to AEC is adequate or not. That is all this amendment is asking for, and I think it is very prudent that as lawmakers of this country we all make sure we follow through th",
+   "stage": "In committee",
+   "ayes": 21,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 12,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/21"
+  },
+  {
+   "key": "federal-senate-4168",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Ricky Muir by leave—I move my amendments (2), (3) and (1) on sheet 7874 together: (1) Clause 2, page 2 (table item 1), omit the table item, substitute: (2) Page 3 (before line 1), before Schedule 1, insert: Schedule 1A—Amendments commencing day after Royal Assent _Commonwealth Electoral Act 1918_ 1 Paragraph 239(1)(a) Repeal the paragraph, substitute: (b) writing the numbers 2, 3, 4, 5 and 6 in the squares opposite the names of other candidates on the ballot paper to indicate the order of the person's preference for them. 2 Paragraph 268(1)(b) Repeal the paragraph, substitute: (b) subject to section 269, in a Senate election, it has no vote indicated on it, or it is not marked in accordance with subsection 239(1); 3 Section 270 Repeal the section. 4 Schedule 1, Form E Omit \"By placing the numbers 1 to (7) in the order of your preference\", substitute \"By numbering a minimum of 6 boxes in the order of your preference (with the number 1 as your first preference)\". 5 Schedule 1, Form E (footnote 7) Repeal the footnote. (3) Schedule 1, heading, page 3 (line 1), at the end of the heading, add \"commencing 15January 2017\". The CHAIRMAN: We can separate the questions, if you request that. These changes are transitional provisions to address some urgent changes now. They relate to recommendation 3 of my dissenting report, which I was going to read out, but we have been here long enough. It is only applicable for the next election. That is the purpose of a transitional change. It allows for further consultation and changes that have broad support. It reduces the scope of change for the AEC and therefore reduces the amount of change needed at the next election, therefore reducing the likelihood of any errors from a rushed implementation. This also reduces the amount of change for the voter at the ballot box. It reduces the size of the education campaign that the AEC needs to undertake. I think something that has become clear over the last 14 hours or so is that it is a big task",
+   "stage": "In committee",
+   "ayes": 23,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 14,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/22"
+  },
+  {
+   "key": "federal-senate-4169",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Ricky Muir The Australian Motoring Enthusiast Party opposes items 26 and 27 in schedule 1 in the following terms: (4) Schedule 1, items 26 and 27, page 7 (lines 16 to 21), to be opposed. The TEMPORARY CHAIRMAN: The question is that items 26 and 27 of schedule 1, as amended, be agreed to. Question agreed to. by leave—moved Australian Motoring Enthusiast Party amendments (1) to (5) and (7) on sheet 7875 together: (1) Schedule 1, item 1, page 3 (lines 6 to 8), omit the definition of above the line, substitute: _ above the line_: a square is printed _above the line_ on a ballot paper if the square is printed on the ballot paper in accordance with subparagraph 210(3)(f)(ii) or (iii). (2) Schedule 1, page 3 (after line 8), after the definition of above the line, insert: _ above the line candidate_ means: (a) two or more candidates who have made a joint request under section 168 for their names to be grouped on the ballot paper; or (b) a candidate that has made a request under section 168A for a square to be printed above the dividing line for the candidate. (3) Schedule 1, page 3 (after line 11), after item 1, insert: 1A Subsection 168(1) Repeal the subsection, substitute: (1) Two or more candidates for election to the Senate may make a joint request that their names be grouped in the ballot papers. 1B After section 168 Insert: 168A Candidate may request square be printed above the line (1) A candidate for election to the Senate that has not joined in a request under section 168 in relation to the election may make a request that a square be printed on the ballot paper for the candidate above the dividing line. (4) Schedule 1, item 2, page 3 (lines 12 to 15), omit the item, substitute: 2 Subsection 169(4) Repeal the subsection, substitute: (4) Where: (a) a request has been made under subsection (1) in respect of a candidate in a Senate election; and (b) the candidate is an above the line candidate; the request may include a further request that the name of the registered",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 20,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 12,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/23"
+  },
+  {
+   "key": "federal-senate-4170",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Gavin Marshall The question now is that amendments (3) and (7) on sheet 7861 moved by Senator Day be agreed to.",
+   "stage": "In committee",
+   "ayes": 20,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 13,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/24"
+  },
+  {
+   "key": "federal-senate-4171",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Ricky Muir by leave—I move amendments (6) and (8) on sheet 7875: (6) Schedule 1, items 6 and 7, page 4 (lines 1 to 12), omit the items, substitute: 6 Section 210 210 Printing of Senate ballot papers _Senate ballot papers to be printed in batches_ (1) Ballot papers for a Senate election are to be printed in batches with the ballot papers within a batch having the same order of candidate names. (2) There are to be 2 sets of ballot papers printed. Each set is made up of a number of separate batches of ballot papers. Note: The number of separate batches within a set of ballot papers will depend on the number of candidates to be listed in a column on the ballot paper. _First set of Senate ballot papers_ (3) The first set of ballot papers for a Senate election must be printed so that: (a) the names of above the line candidates are printed on the ballot paper before the names of other candidates; and (b) the names of candidates by whom requests have been made under section 168 are printed on the ballot paper in groups with each group being printed in a single column on the ballot paper; and (c) the order of several above the line candidates across the ballot paper must be determined by the Australian Electoral Officer in accordance with section 213; and (d) the names of candidates who are not above the line candidates must: (i) unless subparagraph (ii) applies, be printed in a single column on the ballot paper; and (ii) if a single column would be longer than the longest column containing the names of above the line candidates, be printed in 2 or more columns on the ballot paper; and (iii) if the names of the candidates are printed in 2 or more columns, be printed in columns that are no longer than the longest column containing names of above the line candidates; and (e) where similarity in the names of 2 or more candidates is likely to cause confusion, the names of those candidates may be arranged with such description or addition as will distinguish them from one another",
+   "stage": "In committee",
+   "ayes": 21,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 12,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/25"
+  },
+  {
+   "key": "federal-senate-4172",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Gavin Marshall The question now is that items 24 and 39 of schedule 1 as amended be agreed to.",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 21,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 12,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/26"
+  },
+  {
+   "key": "federal-senate-4173",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Lee Rhiannon This amendment is really quite straightforward. It deals with the important issue of the commencement date for this legislation once it is passed. It identifies 1 July 2016. There has been some debate about this previously when I have spoken on it. To just reiterate: we have had the clear advice from the Australian Electoral Commission that about three months is needed to get the necessary software and the other plans in place to be able to take forward the Senate voting system in the way the reforms will outline. The commencement date is there, 1 July 2016. That is the essence of this amendment and I would urge senators to support it. The CHAIRMAN: Senator Rhiannon, you will need to move it. I move Greens amendment— The CHAIRMAN: So you will be seeking leave to move Greens amendments (2) and (3) on sheet 7882 together? I seek leave to move Greens amendments (2) and (3) on sheet 7782 together. Leave not granted. The CHAIRMAN: Leave is not granted for you to move them together so if you just move one. I move Greens amendment (2). (2) Division 2—Application provisions 42A Application of amendments The amendments of the _Commonwealth Electoral Act 1918_ made by this Part do not apply in relation to any election whose polling day is before 1 July 2016. Note: Things may be done (for example, a person may vote by pre-poll vote) before 1 July 2016, in accordance with the _Commonwealth Electoral Act 1918_ as amended by this Part, in relation to elections whose polling day is on or after that day. Mathias Cormann On behalf of the government, I am pleased to indicate that the government will be supporting Greens amendments (1), (2) and (3) on sheet 7882. These amendments change the commencement of the bill to only apply to elections with a polling day after 1 July 2016 but enables the Electoral Commission to begin preparatory work before that date if required. The government will be supporting these amendments from the Australian Greens. We understand that these",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 21,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "earliest": 4,
+    "member": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/27"
+  },
+  {
+   "key": "federal-senate-4174",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Lee Rhiannon I move Greens amendment (3) on sheet 7882: (3) Schedule 1, item 95, page 26 (lines 22 to 26), omit the item, substitute: 95 Application of amendments (1) The amendments made by this Part apply (subject to subitem (2)) after this item commences in relation to any registered political party (whether registered before or after this item commences). (2) The following do not apply in relation to any election whose polling day is before 1 July 2016: (a) section 214A of the _Commonwealth Electoral Act 1918_ as inserted by this Part; (b) the amendments of the following provisions made by this Part: (i) sections 169B, 209 and 366 of that Act; (ii) Schedule 1 to that Act. Note: Things may be done (for example, ballot papers that include party logos may be printed) before 1 July 2016, in accordance with the _Commonwealth Electoral Act 1918_ as amended by this Part, in relation to elections whose polling day is on or after that day. Considering the lateness of the hour, I will not go into detail. This is about the commencement date, and the issues have been well canvassed. The CHAIRMAN: The question is that amendment (3) on sheet 7882 be agreed to.",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 21,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "earliest": 4,
+    "member": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/28"
+  },
+  {
+   "key": "federal-senate-4175",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Lee Rhiannon I move Greens amendment (1) on sheet 7882: (1) Schedule 1, page 3 (after line 2), after Part 1, insert: Division 1—Amendments It is very straightforward. This just inserts the title on the measures that we have just dealt with in amendments (2) and (3). Ricky Muir by leave—I move amendments (4) and (5) on sheet 7887: (4) Amendment (2), item 42A, omit \"1 July 2016\" (wherever occurring), substitute \"5 August 2016\". (5) Amendment (3), item 95, omit \"1 July 2016\" (wherever occurring), substitute \"5 August 2016\". I will speak very briefly. This amendment omits 1 July 2016 and substitutes it with 5 August 2016. It is delaying the implementation till a general election or the possibility of a general election. This is a very serious change to our electoral system. It is very vague as to whether the AEC would be able to make the appropriate implementations in time. It is all but mitigating risk. Essentially, as things are with the current date, the Greens are handing the government a double dissolution, or the potential for a double dissolution trigger. But, most importantly, there is the risk of administrative errors, which would of course raise constitutional issues at the time of the election if votes were not counted properly, if the implementation that the AEC put in place was not successful. Mathias Cormann I indicate that the government will not be supporting Senator Muir's amendments to the Greens amendment. We believe that the 1 July date that is part of the Greens amendment is the appropriate date. It does give sufficient time for the Electoral Commission to do all of the necessary preparation for an effective implementation of these changes at an election. The 5 August date is unnecessarily delaying the effective date of these important changes. Jacinta Collins The opposition will not be supporting these amendments. As I explained when I spoke to Senator Rhiannon's amendments, Labor has concerns about the legal efficacy of these application provision",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 20,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "earliest": 3,
+    "member": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/29"
+  },
+  {
+   "key": "federal-senate-4176",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Bob Day I move amendment (1) on sheet 7890: (1) Schedule 1, page 11 (after line 21), after item 39, insert: 39A After section 328B Insert: 328C Distributing misleading or deceptive how - to - vote cards A person commits an offence if: (a) the person distributes a how-to-vote card in relation to a Senate election; and (b) the how-to-vote card is distributed during the relevant period in relation to the Senate election; and (c) the how-to-vote card is likely to mislead or deceive a voter in relation to marking a Senate ballot paper in a way that is contrary to the ways set out in section 239. Penalty: 25 penalty units. 328D Offence for publicly advocating certain forms of voting (1) A person commits an offence if the person publicly advocates, during the relevant period in relation to a Senate election, that a voter should mark a Senate ballot paper in a way that is contrary to the ways set out in section 239. Penalty: 25 penalty units. (2) Section 15.2 of the _Criminal Code_ (extended geographical jurisdiction—category B) applies to an offence against subsection (1). The chamber has tried a number of times in this marathon debate to ascertain whether or not it will be an offence to promote just voting 1 above the line, but to no avail. This amendment will mirror the South Australian electoral law, section 126 of the South Australian Electoral Act, which prohibits the distribution of how-to-vote cards and advertising material that encourage or instruct or in any other way promote a voter to cast their ballot contrary to section 239, which requires more than just 1 in a box. This section, among other things, requires voters to number at least six boxes on the Senate ballot paper above the line or as many as are listed if fewer than six options are available. One only has to look at the underhanded way that Queensland elections allow for advertising that deliberately seeks to exhaust preferences. Mathias Cormann This is probably the issue that we spent most of the time",
+   "stage": "In committee",
+   "ayes": 21,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "earliest": 4,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/30"
+  },
+  {
+   "key": "federal-senate-4177",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "David Leyonhjelm I withdraw my amendment on sheet 7886, and I move amendment No. (1) on sheet 7868 standing in my name: (1) Schedule 1, item 89, page 24 (lines 19 to 25), omit paragraphs 214A(3)(a) and (b), substitute: (a) no more than 3 logos may be printed adjacent to the square that is printed, in accordance with paragraph 214(2)(d), adjacent to the names of the parties; and (b) if more than 3 of those parties have logos entered in the Register—the parties must notify the Electoral Commission, in writing, which of the logos are to be printed adjacent to that square. Existing electoral law allows candidates from different parties to appear in the same column on the ballot and for the names of each of these parties to be printed in that column above the line. There could be two, three, four or more parties that wish to share a column under this provision. The government's bill allows for party logos to be printed above the line also. However, it does not allow for the logo of each party in a column to be printed above the line; it only allows for two logos to be printed in a column above the line. By sheer coincidence, I am sure, this assists the Liberal-National coalition. They have regularly used the existing provision to have their candidates appear in the same column. Now each of their logos will appear in that column above the line. This will make the Liberal-National coalition more prominent on the ballot compared to their rivals, like the Labor Party. I am surprised that the government did not go further and require that the logos of the Liberals and the Nationals should appear in colour while everyone else's logos must be in black and white. However, in the preparation of the government's bills there has been an oversight. Because I want to help the government, my amendment addresses this oversight—after all, we crossbenchers are here to help. It appears that the drafters of the government's bill did not realise the potential for a Liberal-National-Greens c",
+   "stage": "In committee",
+   "ayes": 5,
+   "noes": 45,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "earliest": 4,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/31"
+  },
+  {
+   "key": "federal-senate-4178",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "David Leyonhjelm I move amendment (1) on sheet 7866 standing in my name: (1) Schedule 1, page 26 (after line 26), at the end of the Schedule, add: Part 4—Election funding 96 Subsection 294(2) Omit \"$1.50\", substitute $1.125\". 97 Section 297 Repeal the section, substitute: 297 Payment not to be made in House of Representative elections in certain circumstances A payment under this Division must not be made in respect of votes given in a House of Representative election for a candidate unless the total number of eligible votes polled in the candidate's favour is at least 4% of the total number of eligible votes polled in favour of all of the candidates in the election. 98 Application provision The amendments made by this Part apply in relation to elections the writs for which are issued on or after the commencement of this item. This amendment reduces Senate election funding per vote by a quarter and removes the requirement in the Senate to receive four per cent of first preference votes in order to receive funding. The amendment leaves funding arrangements for House of Representatives elections untouched. Removing the four per cent barrier will remove baseless discrimination against minor parties and minor-party voters. It is unconscionable that major parties get a couple of dollars per vote but minor parties do not. This is the antithesis of one-vote, one-value. The Liberal/Nationals/Greens coalition say that attacking minor parties is not the purpose of their bill. If this is the case they will take this opportunity to remove the four per cent barrier. At the very least they will explain why the four per cent barrier should be retained. I can see no principle nor practical reason for this four per cent barrier. My amendment reduces Senate election funding per vote to ensure that the removal of the four per cent barrier does not increase the burden on taxpayers to fund party-political election campaigning. I commend my amendment to the Senate. Mathias Cormann The go",
+   "stage": "In committee",
+   "ayes": 22,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "earliest": 4,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/32"
+  },
+  {
+   "key": "federal-senate-4179",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Ricky Muir by leave—I move my amendments (1) and (3) on 7873 together: (1) Clause 2, page 2 (table item 1), omit the table item, substitute: (3) Page 26 (after line 26), at the end of the Bill, add: Schedule 2—Other amendments _Commonwealth Electoral Act 1918_ 1 Subsections 269(1) and (1A) Repeal the subsections, substitute: (1) A ballot paper in a Senate election is not informal under paragraph 268(1)(b) if the voter has marked the ballot paper in accordance with subsection 239(2). 2 Subsection 269(2) Omit \"or paragraph (1)(b) of this section\" (wherever occurring). 3 Subsections 272(1) and (2) Repeal the subsections, substitute: (1) This section applies if a ballot paper for a Senate election is marked in accordance with subsection 239(2). (2) The ballot paper is taken to have been marked as if, instead of the numbers written in squares printed on the ballot paper above the line in relation to groups of candidates (each group being a _preferenced group_): (a) each candidate in a preferenced group was given a different number starting from 1; and (b) candidates in a preferenced group were numbered consecutively starting with the candidate whose name on the ballot paper is at the top of the group to the candidate whose name is at the bottom; and (c) the order in which candidates in different preferenced groups are numbered is worked out by reference to the order in which the groups were numbered on the ballot paper, starting with the group marked 1; and (d) when all the candidates in a preferenced group have been numbered, the candidate whose name is at the top of the next preferenced group is given the next consecutive number. 4 Subsection 282(4) Omit \"or paragraph 269(1)(b) (wherever occurring)\". 5 Application provisions The amendments made by this Schedule apply in relation to elections the writs for which are issued on or after the commencement of this Schedule. I will make only a very short contribution in relation to these amendments. The amendments insert a su",
+   "stage": "In committee",
+   "ayes": 6,
+   "noes": 50,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "earliest": 4,
+    "member": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/33"
+  },
+  {
+   "key": "federal-senate-4180",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Commonwealth Electoral Amendment Bill 2016 - in Committee - Agree to the bill",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "earliest": 4,
+    "member": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/34"
+  },
+  {
+   "key": "federal-senate-4181",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Mathias Cormann I move: That the report from the committee be adopted.",
+   "stage": "Bill",
+   "ayes": 36,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "earliest": 4,
+    "member": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/35"
+  },
+  {
+   "key": "federal-senate-4182",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Mathias Cormann I move: That this bill be now read a third time. In moving the third reading of this bill, may I thank all senators who have participated in this debate for their contributions. This, it is fair to say, has been a rather lengthy debate. Obviously, the government is of the view that this is a very important reform for Australia. It is a reform which will help ensure that future Senate election results truly reflect the will of the Australian people. It is a reform which will empower voters to direct their preferences according to their wishes instead of having them traded and directed by backroom operators in political parties through insufficiently transparent group voting ticket arrangements. I thank the Senate for the work over what has been a debate that has been going for nearly 39 hours since the message of the House of Representatives was received on 29 February 2016. I believe that that is the seventh longest debate on any piece of legislation since 1990. We have, of course, over the past 20 or so hours had a very intensive continuous debate on this legislation, taking us to this point today. I would like to pay particular tribute to the very active participants in this debate tonight: senators Wong and Collins, senators Di Natale and Rhiannon and also senators Xenophon, Leyonhjelm, Day and Muir, who have all made a very active contribution and put effort into drafting amendments to improve the bill in the ways that they saw fit. The Senate has made a judgement in relation to the form of the bill that should go forward. The government supports the final form of this bill. We will be supporting the bill, as amended by the Senate, in the House of Representatives. This will mean that, for any future election after 1 July 2016, these will be the voting arrangements that will apply for the Australian Senate. That is a good thing because it means that people across Australia will be able to determine what happens to their vote. I thank the Senators",
+   "stage": "Third reading",
+   "ayes": 23,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "earliest": 4,
+    "member": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/36"
+  },
+  {
+   "key": "federal-senate-4183",
+   "date": "2016-03-17",
+   "house": "senate",
+   "question": "Commonwealth Electoral Amendment Bill 2016 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 36,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "earliest": 4,
+    "member": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-17/37"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-328082",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The Commonwealth Electoral Amendment Bill 2016 was introduced to simplify the Senate voting system by introducing optional preferential voting above the line (requiring at least six numbered squares) and abolishing group voting tickets, while also requiring unique registered officers for political parties and allowing party logos on ballot papers to reduce voter confusion."
+  },
+  {
+   "slug": "speech-328088",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-328095",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The mover proposed that participating members be appointed to the Joint Standing Committee on Electoral Matters for its inquiry into the Commonwealth Electoral Amendment Bill 2016, allowing them to form a quorum and participate in hearings and deliberations but not vote, and requested Senate concurrence."
+  },
+  {
+   "slug": "speech-328776",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that Senate electoral reform is needed because the current system allows manipulation, citing that a candidate with 0.51% of formal votes was elected over one with 11.56% in 2013, and Liberal Senator Helen Kroger lost with 389,745 votes to a candidate with just over 17,000 votes. The speaker supported the Joint Standing Committee on Electoral Matters' unanimous recommendation to abolish group voting tickets and introduce optional preferential voting."
+  },
+  {
+   "slug": "speech-328778",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Commonwealth Electoral Amendment Bill 2016, which introduces optional preferential voting above the line, abolishes group voting tickets, and restricts individuals from holding official positions in multiple parties, citing a Victorian senator elected with 0.5% of first preferences as an example of the current system's flaws. The speaker criticised Labor for opposing the bill despite earlier bipartisan support from the Joint Standing Committee on Electoral Matters."
+  },
+  {
+   "slug": "speech-328779",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The Commonwealth Electoral Amendment Bill 2016 would give voters control over their Senate preferences, a principle previously championed by former Greens leader Bob Brown, and the reform had bipartisan support on the joint standing committee."
+  },
+  {
+   "slug": "speech-328780",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Commonwealth Electoral Amendment Bill 2016, arguing it allows voters in electorates like Dickson to direct their preferences, and noted concerns about Clive Palmer's influence on senators in Queensland. The speaker praised Gary Gray's long-term support for electoral reform and urged Labor to cooperate with the government to clean up the system."
+  },
+  {
+   "slug": "speech-328781",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Commonwealth Electoral Amendment Bill 2016 was rushed through parliament via a \"dirty deal\" between the Greens and Liberals without proper scrutiny, and that it will disadvantage smaller parties and reduce voter participation. They accused the Greens of hypocrisy, citing Senator Lee Rhiannon's past support for term limits while seeking re-election, and predicted the bill will advantage the coalition in the Senate."
+  },
+  {
+   "slug": "speech-328782",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Commonwealth Electoral Amendment Bill 2016 would make Senate voting more transparent by introducing partial optional preferential voting, abolishing group and individual voting tickets, and closing loopholes around party registration. He cited the 2013 Victorian Senate election where two senators were elected with 0.2% and 0.5% of the quota, noted that over 1,000 people in his Lyne electorate responded to surveys on the broken system, and referenced the unanimous recommendations of the Joint Standing Committee on Electoral Matters."
+  },
+  {
+   "slug": "speech-328785",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Commonwealth Electoral Amendment Bill 2016, which would introduce optional preferential above-the-line voting (requiring at least six preferences), abolish group and individual voting tickets, restrict party office holding to one party, and allow party logos on ballot papers to better reflect voter intention and reduce manipulation."
+  },
+  {
+   "slug": "speech-328787",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Senate voting system is overly complex and produces unexpected winners, citing Senators John Madigan and Nick Xenophon as examples of candidates elected with very small primary votes."
+  },
+  {
+   "slug": "speech-328955",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speech endorsed the Commonwealth Electoral Amendment Bill 2016, which would abolish group voting tickets, introduce optional preferential voting above the line, restrict individuals from holding office in multiple parties, and add party logos to ballot papers. It cited examples of preference harvesting, such as candidates elected with as little as 0.5 per cent of the primary vote, and sought passage by 17 March 2016."
+  },
+  {
+   "slug": "speech-328956",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Commonwealth Electoral Amendment Bill 2016, which introduces optional preferential voting above the line, abolishes group and individual voting tickets, and restricts individuals from holding official positions in multiple parties. He also noted that Labor opposes the bill despite some of its members supporting reform, and expressed concerns about the provision allowing logos on ballot papers."
+  },
+  {
+   "slug": "speech-328957",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The Commonwealth Electoral Amendment Bill 2016 introduces optional preferential voting above the line, abolishes individual and group voting tickets, allows party logos on ballot papers, and includes savings provisions to reduce informal votes, with technical amendments reinstating an early count of first-preference Senate votes."
+  },
+  {
+   "slug": "speech-328959",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-328960",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-328961",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the motion to proceed to the third reading of the Commonwealth Electoral Amendment Bill 2016, arguing that the government was ignoring the Joint Standing Committee on Electoral Matters' findings and rendering the committee system irrelevant by voting before the committee had reported."
+  },
+  {
+   "slug": "speech-329317",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-329783",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The Joint Standing Committee on Electoral Matters presented its advisory report, including dissenting reports, on the Commonwealth Electoral Amendment Bill 2016."
+  },
+  {
+   "slug": "speech-329784",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The speaker presented the Joint Standing Committee on Electoral Matters report on the Commonwealth Electoral Amendment Bill 2016, arguing that group-voting tickets should be abolished because they allow parties to control preference flows and undermine voter choice, as demonstrated by the 2013 election of the Australian Motoring Enthusiast Party candidate with only 0.51% of the primary vote. The committee recommended implementing optional preferential voting below the line, requiring a minimum of 12 preferences, with a savings provision for ballots with at least six sequential boxes."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Commonwealth Electoral Amendment Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00025",
+   "assent_date": "2016-03-21"
+  }
+ ]
+}

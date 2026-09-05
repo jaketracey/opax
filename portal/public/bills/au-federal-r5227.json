@@ -1,0 +1,280 @@
+{
+ "key": "au-federal-r5227",
+ "title": "Dental Benefits Legislation Amendment Bill 2014",
+ "short_title": "Dental Benefits Legislation Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2014-11-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5227%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5227%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5227%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5227%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5227%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5227%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5227%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5227%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5227%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5227%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5227%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5227%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5227%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5227%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5227_ems_a66abb7d-242c-4324-bc52-643cdc8de8d4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5227%22",
+   "document_date": "2014-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00115",
+   "document_date": "2014-11-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-26",
+  "sentences": [
+   "The bill would let the Chief Executive Medicare cancel certain debts owed by dentists under the old Chronic Disease Dental Scheme.",
+   "It would also update the Child Dental Benefits Schedule by adding compliance powers and allowing reviews of suspected poor practice.",
+   "The waiver applies to services before 1 April 2010 if all legal requirements were met, and to later services if the dentist shows intent to follow the rules."
+  ],
+  "changes": [
+   "Creates a waiver provision for debts under the Medicare Chronic Disease Dental Scheme.",
+   "Amends the Dental Benefits Act 2008 to add compliance powers for the Child Dental Benefits Schedule.",
+   "Extends the Professional Services Review scheme to dental services under the Child Dental Benefits Schedule.",
+   "Allows the Chief Executive Medicare and Department of Human Services staff to get documents from dentists to verify payments.",
+   "Makes machinery changes to the Dental Benefits Act, including clarifying protected information disclosure and updating the definition of 'dental provider'."
+  ],
+  "affected": "Dentists who provided services under the Chronic Disease Dental Scheme and children aged 2 to 17 eligible for the Child Dental Benefits Schedule.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-286990",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299486",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299488",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299491",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299492",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299493",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299671",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299674",
+   "speaker": "Bob Katter",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2014-10-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299675",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299677",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299678",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299983",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299985",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299991",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Dental Benefits Legislation Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00115",
+   "assent_date": "2014-11-03"
+  }
+ ]
+}

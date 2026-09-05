@@ -1,0 +1,203 @@
+{
+ "key": "au-federal-r6175",
+ "title": "Shipping Registration Amendment Bill 2018",
+ "short_title": "Shipping Registration Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport and Regional Development",
+ "status": "passed",
+ "status_as_of": "2018-11-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6175%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6175%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6175%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6175%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6175%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6175%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6175%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6175%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6175%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6175%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6175%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6175%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6175_ems_d8fb8e28-2217-473e-b93a-43646b2e0f25%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6175%22",
+   "document_date": "2018-09-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00140",
+   "document_date": "2018-11-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-13",
+  "sentences": [
+   "The bill makes minor technical corrections to the Shipping Registration Act 1981 so that the Shipping Registration Regulations 1981 can be rewritten.",
+   "It removes all references to prescribed forms of certificates and clarifies which provisions need a proper legal basis in the regulations.",
+   "The bill does not alter the purpose or effect of the Act, and the amendments are only about form and structure."
+  ],
+  "changes": [
+   "Removes all provisions that require the regulations to prescribe the form of certificates.",
+   "Removes all references to prescribed forms of certificates.",
+   "Clarifies the appropriate head of power for provisions in the regulations where required."
+  ],
+  "affected": "Agencies, regulators, and persons who use or administer the Shipping Registration Act 1981.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-369084",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-13",
+   "stage_hint": null,
+   "brief": "The Shipping Registration Amendment Bill 2018 makes minor technical changes to the Shipping Registration Act 1981 to allow the remaking of the Shipping Registration Regulations before their sunset on 1 April 2019, including clarifying regulatory powers and enabling the Australian Maritime Safety Authority to approve certificate forms."
+  },
+  {
+   "slug": "speech-371440",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The bill makes minor amendments to modernise shipping registration by removing certificate forms from regulations and allowing the Australian Maritime Safety Authority to approve and update them directly, but the government is criticised for failing to support the Australian shipping industry, which is in decline despite contributing over $400 billion in exports annually and being critical for jobs, the environment, and national security."
+  },
+  {
+   "slug": "speech-371441",
+   "speaker": "Anne Stanley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Shipping Registration Amendment Bill 2018, arguing it gives the Australian Maritime Safety Authority greater flexibility and reduces red tape, while criticising the government's 2015 reforms that they said led to Australian crews being replaced by foreign ones, citing the Pasha Bulker and Shen Neng 1 accidents as examples of risks from foreign crews."
+  },
+  {
+   "slug": "speech-371442",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Shipping Registration Amendment Bill 2018 would allow foreign-flagged ships to replace Australian-crewed vessels, threatening Tasmania’s maritime industry and over 400 local jobs. They noted that 99% of Tasmania’s freight moves by sea, with ports in their electorate handling 12.5 million tonnes annually, and criticised the government for not consulting industry bodies like MIAL."
+  },
+  {
+   "slug": "speech-371445",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The Greens criticised the bill as a missed opportunity, arguing that government deregulation has reduced Australian-flagged vessels and exploited overseas workers, and called for tighter regulation to protect local jobs, the environment, and develop renewable hydrogen."
+  },
+  {
+   "slug": "speech-371446",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The Shipping Registration Amendment Bill 2018 makes the registration system more flexible and transfers it to the Australian Maritime Safety Authority. The speaker expressed concern that Australian-flagged vessels have declined sharply, citing a drop from nine to four major international trading ships between 2005-06 and 2014-15, and blamed coalition governments for destroying the industry, referencing the Patrick dispute two decades ago."
+  },
+  {
+   "slug": "speech-371448",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The government argued the Shipping Registration Amendment Bill 2018 makes minor technical amendments to maintain efficient shipping registration, reduce regulatory burden by letting AMSA approve certificate forms, and clarify legal authority for regulations. The speaker also defended Senator Steve Martin as a committed Tasmanian representative."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Shipping Registration Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00140",
+   "assent_date": "2018-11-29"
+  }
+ ]
+}

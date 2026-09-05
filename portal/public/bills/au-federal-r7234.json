@@ -1,0 +1,220 @@
+{
+ "key": "au-federal-r7234",
+ "title": "Family Law Amendment Bill 2024",
+ "short_title": "Family Law Amendment Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-08-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2024-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7234_ems_b743ce40-9aa5-4155-90fb-6374e274d5bf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7234_ems_d9233ec7-832e-4627-88c2-6970f86eb262%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7234_ems_10168446-b188-4987-a475-1ba1a82a0675%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7234%22",
+   "document_date": "2024-08-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00118",
+   "document_date": "2024-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2024-08-22",
+  "sentences": [
+   "This bill would make clarifying changes to the Family Law Amendment Bill 2024 to improve how it works.",
+   "It would adjust property and spousal maintenance rules to resolve relationship breakdowns more safely and fairly.",
+   "A measure on divorce attendance would start six months after Royal Assent, matching the timing for removing the two-year marriage counselling requirement."
+  ],
+  "changes": [
+   "Clarifies that economic consequences of family violence are relevant to de facto maintenance and superannuation decisions.",
+   "Broadens the definition of 'protected confidence' to cover a wider range of therapeutic communications.",
+   "Removes the requirement for couples married two years or less to seek court leave or file a counselling certificate before divorce.",
+   "Gives the minister power to approve transition factors for superannuation splitting calculations.",
+   "Removes separation declaration requirements for superannuation splitting when the member's interest exceeds the low rate cap.",
+   "Changes the start date for the divorce attendance measure to six months after Royal Assent."
+  ],
+  "affected": "Separating couples, family law courts, and parties to family law proceedings in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-10474",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Family Law Amendment Bill 2024. I will first deal with the second reading amendment circulated by the Australian Greens. The question is that the Australian Greens amendment on sheet 3099 be agreed to. _Australian Greens' circulated amendment—_ At the end of the motion, add \", but the Senate: (a) notes that: (i) the court process is often re-traumatising for victim-survivors and all judges and legal professionals within the family law system must undertake ongoing comprehensive trauma-informed training, (ii) community legal centres, and specifically women's legal services, need more funding to assist women to navigate the family law system; and (b) calls on the Government to require trauma-informed training for legal professionals and increase funding for legal assistance services\".",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/36"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Family Law Amendment Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00118",
+   "assent_date": "2024-12-10"
+  }
+ ]
+}

@@ -1,0 +1,151 @@
+{
+ "key": "au-federal-r6116",
+ "title": "Treasury Laws Amendment (Tax Integrity and Other Measures No. 2) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Tax Integrity and Other Measures No. 2) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-08-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6116%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6116%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6116%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6116%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6116%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6116%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6116%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6116%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6116%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6116%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6116%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6116%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6116%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6116_ems_4e62c2ab-2361-4a1c-84ae-efb0b7d2093e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6116_ems_664ea3b8-ef0f-4977-9164-1d835b25b0f9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6116%22",
+   "document_date": "2018-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00084",
+   "document_date": "2018-08-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-365479",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "Labor will support the bill but move an amendment to change the start date of schedule 3 from 1 July 2017 to 1 July 2018, citing lack of consultation and retrospectivity; the speaker also criticised the government for missing the original implementation date on hybrid mismatch rules and for voting against Labor’s earlier multinational tax measures, including the Chevron case that secured $300 million."
+  },
+  {
+   "slug": "speech-365480",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Tax Integrity and Other Measures No. 2) Bill 2018 was argued to improve tax system sustainability and integrity, implementing OECD hybrid mismatch rules to prevent multinational tax avoidance, clarifying the producer offset for overseas filming, providing a five-year income tax exemption for an International Cricket Council subsidiary to host the 2020 ICC World Twenty20, and listing the Melbourne Korean War Memorial Committee as a deductible gift recipient until 31 December 2019."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Tax Integrity and Other Measures No. 2) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00084",
+   "assent_date": "2018-08-24"
+  }
+ ]
+}

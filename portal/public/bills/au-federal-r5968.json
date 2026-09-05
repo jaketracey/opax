@@ -1,0 +1,95 @@
+{
+ "key": "au-federal-r5968",
+ "title": "Fair Work Amendment (Recovering Unpaid Superannuation) Bill 2017",
+ "short_title": "Fair Work Amendment (Recovering Unpaid Superannuation) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-11",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Nick Xenophon Team",
+ "sponsor_person_id": "10874",
+ "portfolio": "(s) SHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-05-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5968%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5968%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5968%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5968_ems_8e946ae4-35e6-4010-bf86-7bd3b2ba0429%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5968%22",
+   "document_date": "2017-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-11",
+  "sentences": [
+   "The bill would give employees a direct legal way to recover unpaid superannuation from their employers.",
+   "It would include superannuation contributions in the National Employment Standards, letting the Fair Work Ombudsman act on unpaid contributions and requiring employers to notify employees each pay period about contributions.",
+   "The bill would remove the $450 monthly threshold exemption for superannuation contributions and require the Commissioner for Taxation to review employer compliance after 12 months."
+  ],
+  "changes": [
+   "Include superannuation contributions within the National Employment Standards.",
+   "Require employers to provide notice of contributions each pay period.",
+   "Remove the loophole allowing salary-sacrifice contributions to be claimed as employer contributions.",
+   "Remove the exemption for employers not to make contributions to employees paid less than $450 in a calendar month.",
+   "Remove restrictions on choice of superannuation fund from 1 July 2018.",
+   "Require the Commissioner for Taxation to review employer compliance with superannuation payment obligations."
+  ],
+  "affected": "Employees, employers, the Fair Work Ombudsman, the Australian Taxation Office, superannuation trustees, and superannuation providers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:33:38Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-353390",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-09-11",
+   "stage_hint": null,
+   "brief": "The bill would give employees and the Fair Work Ombudsman new powers to recover unpaid superannuation, require employers to notify workers when contributions are paid, close loopholes on salary-sacrificed super and the $450 monthly threshold, and mandate a review of employer compliance. The speaker cited 2.4 million workers underpaid $3.6 billion, projected to reach $66 billion by 2024, and 12,000 constituents in Mayo missing an average $1,748 each."
+  },
+  {
+   "slug": "speech-353391",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-09-11",
+   "stage_hint": null,
+   "brief": "The speaker seconded the Fair Work Amendment (Recovering Unpaid Superannuation) Bill 2017, proposed by the member for Mayo, and urged the government to bring crossbench private members' legislation to debate and vote. They noted only some of the 32 recommendations from the Senate Economics References Committee had been addressed and called for action on superannuation impacts for women."
+  }
+ ],
+ "acts": []
+}

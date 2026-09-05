@@ -1,0 +1,170 @@
+{
+ "key": "au-federal-s980",
+ "title": "Civil Law and Justice Legislation Amendment Bill 2014",
+ "short_title": "Civil Law and Justice Legislation Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-29",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2015-08-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s980%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s980%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s980%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s980%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s980%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s980%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s980%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s980%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s980%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s980%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s980%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s980%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s980_ems_51b162aa-8d61-4817-89d2-b1d545c18214%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s980%22",
+   "document_date": "2014-10-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00113",
+   "document_date": "2015-08-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-10-29",
+  "sentences": [
+   "This bill would make small, non-controversial fixes to several federal civil justice laws.",
+   "It would amend seven Acts, including the Bankruptcy Act, the Copyright Act and the Family Law Act, with changes detailed in seven schedules.",
+   "For example, publishers of electronic works would have to deliver copies to the National Library of Australia, extending a scheme that currently only covers physical copies."
+  ],
+  "changes": [
+   "The bill would allow the Official Trustee to manage assets for other government agencies.",
+   "It would expand the bankruptcy concealment offence to cover electronic fund transfers.",
+   "The bill would permit information about family law cases to be shared with prescribed state and territory child welfare authorities.",
+   "It would clarify that the International Arbitration Act applies to international commercial arbitration agreements.",
+   "The bill would let the National Cultural Heritage Committee keep functioning even if its membership falls below the maximum number.",
+   "It would require publishers of electronic literary, dramatic, musical or artistic works to deliver copies to the National Library of Australia."
+  ],
+  "affected": "People and agencies involved in civil justice, including the Official Trustee, Official Receiver, bankruptcy trustees, family law participants, court security officers, publishers, and the National Library of Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:51:50Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-314940",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The Civil Law and Justice Legislation Amendment Bill 2014 makes minor and technical amendments to multiple acts to reduce regulation and improve clarity, including allowing electronic deposit under the Copyright Act, protecting National Disability Insurance Scheme assistance from bankruptcy creditors, and clarifying information sharing with child welfare authorities in family law."
+  },
+  {
+   "slug": "speech-314941",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The Civil Law and Justice Legislation Amendment Bill 2014 makes minor technical amendments to several Commonwealth acts, including clarifying that National Disability Insurance Scheme payments are exempt from creditors in bankruptcy and introducing an electronic deposits scheme for the National Library of Australia under the Copyright Act."
+  },
+  {
+   "slug": "speech-314942",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The Civil Law and Justice Legislation Amendment Bill 2014 makes minor, technical amendments to improve clarity and efficiency in civil justice legislation, including allowing electronic deposit of works under the Copyright Act, protecting NDIS assistance from bankruptcy creditors, and enabling child welfare authorities to access family law information."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Civil Law and Justice Legislation Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00113",
+   "assent_date": "2015-08-17"
+  }
+ ]
+}

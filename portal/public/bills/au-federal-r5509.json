@@ -1,0 +1,423 @@
+{
+ "key": "au-federal-r5509",
+ "title": "Asian Infrastructure Investment Bank Bill 2015",
+ "short_title": "Asian Infrastructure Investment Bank Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-08-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-10-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5509_ems_ac27fea9-0f1e-42e0-b40a-c6d42dd40a99%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5509%22",
+   "document_date": "2015-08-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00134",
+   "document_date": "2015-10-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-3928",
+   "date": "2015-09-15",
+   "house": "senate",
+   "question": "Ian Macdonald I relish joining this debate on the Asian Infrastructure Investment Bank Bill. Senator Lambie was the last speaker on this just before question time. I am not quite sure who writes Senator Lambie's speeches, but I cannot believe that she believes the words she said in her speech—that this bank is like the Chinese military taking over the world or an attempt by the Chinese government to expand communism. I think those were the words she used. Sarah Hanson-Young I raise a point of order, Acting Deputy President. I would like clarification as to who Senator 'lammie' is—perhaps you meant Senator Lambie, Senator Macdonald. I am not sure. But referring to people by their correct name would probably be helpful. Deborah O'Neill There is no point of order. Ian Macdonald Senator Lambie was, in her speech, likening the Asian Infrastructure Investment Bank Bill to the communist Chinese government expanding communism. I cannot believe that even Senator Lambie would believe that. This bill will help Australia be part of the Asian Infrastructure Investment Bank. It provides the parliament's authority for Australia's involvement and also an appropriation for the payment of Australia's capital contribution to the Asian Infrastructure Investment Bank. Why do we want to become part of this bank? Why does Australia think that this is a good idea and wants to be part of it? It is because the establishment of this bank, and Australia's part in it, will be good for Australia and for Australian jobs. Following completion of all the necessary ratification processes, Australia will lodge its instrument of ratification with the bank's depository, which is in China, and Australia's membership of the bank will become effective on the latter of the date of lodgement or on the day on which the bank is established. The commencement set out in the bill addresses the situation of the bill having received royal assent and the bank not yet having been established. That is provided for in",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 11,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-09-15/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-315846",
+   "speaker": "Joe Hockey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-13",
+   "stage_hint": null,
+   "brief": "The Asian Infrastructure Investment Bank Bill was moved for a second reading, with Australia becoming a founding member and contributing US$3.7 billion (US$738 million paid-in) to fund regional infrastructure, which the speaker argued will boost Australian trade and jobs."
+  },
+  {
+   "slug": "speech-316977",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The Labor Party supported the Asian Infrastructure Investment Bank Bill 2015, arguing the government’s delay in joining was a strategic error while noting Australia’s eventual shareholding of about US$3.7 billion and that India was the second-largest shareholder at US$8.3 billion (7.5%)."
+  },
+  {
+   "slug": "speech-316980",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The Asian Infrastructure Investment Bank Bill 2015 was supported to enable Australia’s membership as a founding member, with a paid-up capital contribution of approximately A$932 million over five years, securing Australia as the sixth largest shareholder and a seat on the board. The bank aims to address an estimated US$8 trillion infrastructure funding gap in Asia, creating opportunities for Australian trade, businesses, and jobs."
+  },
+  {
+   "slug": "speech-316984",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The Asian Infrastructure Investment Bank Bill 2015 will enable Australia to become a founding member with a US$3.7 billion shareholding, including US$738 million in paid-in capital, making it the sixth-largest shareholder; the bank aims to boost regional infrastructure, trade, and jobs."
+  },
+  {
+   "slug": "speech-316988",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Asian Infrastructure Investment Bank Bill 2015, arguing Australia's delayed membership resulted from the government's initial zero-sum security perspective and missed opportunities for influence. Australia is contributing an initial $930 million, with an anticipated US$3.7 billion, making it the sixth largest shareholder."
+  },
+  {
+   "slug": "speech-316990",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The member supported the Asian Infrastructure Investment Bank Bill 2015, arguing it would benefit Australia's economic and strategic interests in the region."
+  },
+  {
+   "slug": "speech-316994",
+   "speaker": "Russell Broadbent",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-316997",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that infrastructure is a key government priority, citing the Abbott government's $50 billion commitment to road and rail projects, and supported Australia's $932 million capital contribution over five years to become a founding member of the Asian Infrastructure Investment Bank, which aims to address an estimated $8 trillion infrastructure financing gap in Asia. Concrete projects mentioned include the $3 billion NorthConnex project, WestConnex, the Western Sydney airport at Badgerys Creek, and the $5 billion Northern Australia Infrastructure Facility."
+  },
+  {
+   "slug": "speech-316998",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia should join the Asian Infrastructure Investment Bank (AIIB) as a founding member, criticizing the government's delay while other nations like the UK, Germany, and China joined; the AIIB is estimated to have $50–$100 billion in capital and can address an $8 trillion infrastructure deficit in Asia by 2020, with Australia promoting governance standards and regional development, including in the Pacific."
+  },
+  {
+   "slug": "speech-317059",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-20",
+   "stage_hint": null,
+   "brief": "The Asian Infrastructure Investment Bank Bill 2015 enables Australia to become a founding member with a $932 million capital investment over five years, making it the sixth largest shareholder, and is argued to complement free trade agreements with Korea, Japan and China by boosting regional infrastructure and export opportunities."
+  },
+  {
+   "slug": "speech-317060",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2015-08-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Asian Infrastructure Investment Bank Bill 2015 could shift Australia’s \"debt phobia\" and allow sensible public borrowing for domestic infrastructure, citing Melbourne’s rail needs and eastern seaboard high-speed rail. He noted the irony of a government that opposes domestic debt-financed projects while supporting overseas ones, and called for binding environmental and labour standards on bank-funded projects, criticising the current government’s record."
+  },
+  {
+   "slug": "speech-317061",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-20",
+   "stage_hint": null,
+   "brief": "Australia should join the Asian Infrastructure Investment Bank (AIIB) as a founding member, a $100 billion fund for Asia-Pacific infrastructure that will boost trade, jobs and Australia–China relations. The speaker criticised opposition claims about the China–Australia Free Trade Agreement, stating that temporary workers will still be subject to existing 457 visa rules, with pay and conditions at least as good as Australian workers’."
+  },
+  {
+   "slug": "speech-317062",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-20",
+   "stage_hint": null,
+   "brief": "Labor argues Australia must proactively embrace Asia, citing that only 9% of Australian businesses have significant operations in the region and that Asian language learning has declined since 2000. The speaker urged a nuanced national discussion on the China-Australia Free Trade Agreement and criticized the government's delayed decision to join the Asian Infrastructure Investment Bank."
+  },
+  {
+   "slug": "speech-317063",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-08-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Asian Infrastructure Investment Bank Bill 2015 is essential for Australia to become a foundation member, with a US$3.7 billion contribution and a seat on the board, to finance infrastructure in Asia on a commercial basis and boost trade opportunities. He also defended the China-Australia Free Trade Agreement, citing benefits for beef, dairy, wine and pharmaceutical producers, and dismissed union criticisms of labour market testing and investor-state dispute settlement provisions."
+  },
+  {
+   "slug": "speech-317065",
+   "speaker": "Wyatt Roy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Asian Infrastructure Investment Bank Bill would help address Asia’s $8 trillion infrastructure shortfall, boost Australian exports and jobs, and that Australia’s $932 million paid-in capital over five years as a founding member would strengthen economic ties with Asia."
+  },
+  {
+   "slug": "speech-317066",
+   "speaker": "Matt Williams",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Asian Infrastructure Investment Bank Bill 2015, arguing that becoming a founding member with a $1 billion capital contribution over five years would deepen ties with Asia, boost jobs, and benefit Australian businesses through infrastructure investment."
+  },
+  {
+   "slug": "speech-317067",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-20",
+   "stage_hint": null,
+   "brief": "The Asian Infrastructure Investment Bank Bill 2015 was introduced, with Australia as a founding member contributing US$3.7 billion to help fund infrastructure projects in Asia and address an estimated US$8 trillion financing gap. The speaker also argued that free trade agreements with Asian countries, particularly China, are essential for Australian exporters like the Abbey family's cattle operation, and criticised opposition to these agreements."
+  },
+  {
+   "slug": "speech-317068",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Asian Infrastructure Investment Bank Bill 2015 aligns with Australia’s trade interests and free trade agreements with China, Japan and South Korea, and defended the Treasurer as the first to sign, while criticising the opposition and the CFMEU for opposing the China free trade agreement."
+  },
+  {
+   "slug": "speech-317069",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia should join the Asian Infrastructure Investment Bank because it would fund coal-fired power stations in developing countries, unlike the World Bank, and condemned the CFMEU and unions for opposing the China free trade agreement, calling their campaign lies and anti-Australian. He noted 300 million people in India lack electricity and that 100,000 jobs have been created from exports to China."
+  },
+  {
+   "slug": "speech-317070",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-20",
+   "stage_hint": null,
+   "brief": "Labor supported the Asian Infrastructure Investment Bank Bill, noting it was an early adopter, but warned against sacrificing Australian jobs and pointed to clause 4 of the memorandum of understanding as a major change for Australian workers."
+  },
+  {
+   "slug": "speech-317217",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-20",
+   "stage_hint": null,
+   "brief": "The Asian Infrastructure Investment Bank Bill 2015 was backed as a way for Australia to become a founding member of the bank, which would use its $100 billion capital base to address an estimated $8 trillion in regional infrastructure needs. The speech also defended free trade agreements with Asia, citing benefits such as an extra one million head of cattle exports."
+  },
+  {
+   "slug": "speech-317307",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Asian Infrastructure Investment Bank Bill 2015, announcing Australia's $930 million commitment and noting the bank could boost regional infrastructure investment by over $100 billion, while criticising the government's initial reluctance and highlighting Labor's historical role in fostering Australia-China relations."
+  },
+  {
+   "slug": "speech-317308",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-07",
+   "stage_hint": null,
+   "brief": "The speech argued that Australia should join the Asian Infrastructure Investment Bank as a founding member, citing the $930 million capital commitment and the need to better promote Australian aid. It also linked the bank to regional infrastructure and anti-corruption, and praised Treasurer Joe Hockey's role."
+  },
+  {
+   "slug": "speech-317310",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-07",
+   "stage_hint": null,
+   "brief": "Australia will contribute US$738.3 million (A$932 million) over five years to become a founding member and the sixth largest shareholder of the Asian Infrastructure Investment Bank, which has a US$100 billion capital base to address Asia's US$8 trillion infrastructure financing gap."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Asian Infrastructure Investment Bank Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00134",
+   "assent_date": "2015-10-13"
+  }
+ ]
+}

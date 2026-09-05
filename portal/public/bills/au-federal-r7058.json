@@ -1,0 +1,166 @@
+{
+ "key": "au-federal-r7058",
+ "title": "Migration Amendment (Strengthening Employer Compliance) Bill 2023",
+ "short_title": "Migration Amendment (Strengthening Employer Compliance) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-06-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2024-02-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7058_ems_1204d6a7-026c-4380-b2ca-aef91d596ff7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7058_ems_fbe82d9e-49bf-4ca0-b0ac-d8388d3c93de%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7058%22",
+   "document_date": "2023-06-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00001",
+   "document_date": "2024-02-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-22",
+  "sentences": [
+   "The bill would create new offences and penalties to stop employers exploiting temporary migrant workers.",
+   "It would let the minister prohibit an employer from hiring more temporary migrants when a court finds the employer broke migration, workplace or slavery laws.",
+   "The bill also requires the minister to publish the names of employers subject to such a prohibition and raises maximum penalties for work-related breaches."
+  ],
+  "changes": [
+   "Creates new criminal offences and civil penalties for unduly influencing, pressuring or coercing a temporary migrant worker to breach a visa condition or accept exploitative work.",
+   "Introduces a mechanism to prohibit an employer found by a court to have contravened the Migration Act, Fair Work Act or Criminal Code from hiring more temporary non-citizens.",
+   "Allows the minister to publish names of prohibited employers.",
+   "Creates a new offence for hiring a temporary migrant worker while subject to a prohibition.",
+   "Increases and aligns maximum penalties for work-related and sponsorship breaches.",
+   "Repeals section 235 of the Migration Act to avoid unintended consequences for workers."
+  ],
+  "affected": "Temporary migrant workers, their employers and labour hire intermediaries.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:41Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Migration Amendment (Strengthening Employer Compliance) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00001",
+   "assent_date": "2024-02-20"
+  }
+ ]
+}

@@ -1,0 +1,155 @@
+{
+ "key": "au-federal-r6551",
+ "title": "Superannuation Supervisory Levy Imposition Amendment Bill 2020",
+ "short_title": "Superannuation Supervisory Levy Imposition Amendment Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6551%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6551%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6551%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6551%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6551%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6551%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6551%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6551%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6551%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6551%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6551%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6551%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6551%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6555_ems_f8870fc3-bf1a-4558-8c6d-e3cf2abcfc9c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6551%22",
+   "document_date": "2020-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00060",
+   "document_date": "2020-06-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-13",
+  "sentences": [
+   "This bill is part of a package that would let the Commonwealth recover costs for a broader set of activities it funds through the financial institution supervisory levy framework.",
+   "The package would increase the maximum levy amount that can be set under certain Acts to $10 million for the year starting 1 July 2020.",
+   "The bills would also allow the method for adjusting that maximum to use the latest available consumer price index figures."
+  ],
+  "changes": [
+   "Expands the range of activities for which the Commonwealth can recover costs.",
+   "Raises the statutory cap on certain levies to $10 million.",
+   "Updates the indexation rule to reference recent CPI data."
+  ],
+  "affected": "Financial institutions subject to the supervisory levy framework.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:32:56Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-391044",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Superannuation Supervisory Levy Imposition Amendment Bill 2020 was moved for a second reading to give the Treasurer flexibility to set levies so superannuation industry institutions pay their appropriate share, complementing the APRA Industry Funding Bill 2020."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Superannuation Supervisory Levy Imposition Amendment Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00060",
+   "assent_date": "2020-06-19"
+  }
+ ]
+}

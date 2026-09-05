@@ -1,0 +1,834 @@
+{
+ "key": "au-federal-r6684",
+ "title": "Social Services Legislation Amendment (Strengthening Income Support) Bill 2021",
+ "short_title": "Social Services Legislation Amendment (Strengthening Income Support) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2021-03-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6684%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6684%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6684%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6684%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6684%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6684%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6684%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6684_ems_d53107bb-5028-47bc-a43f-d2d30b50eccb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6684%22",
+   "document_date": "2021-02-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00023",
+   "document_date": "2021-03-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7034",
+   "date": "2021-03-16",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2021-03-16.121.2) introduced by Tasmanian Senator [Anne Urquhart](https://theyvoteforyou.org.au/people/senate/tasmania/anne_urquhart) (Labor), which means it failed. ### Motion text > *That—* > > *(a) a message from the House of Representatives relating to the Social Services Legislation Amendment (Strengthening Income Support) Bill 2021 be reported immediately after it has been received but not so as to interrupt a senator speaking;* > > *(b) after the message is reported, consideration of the bill have precedence over all other government business until determined;* > > *(c) if by 1.30 pm on Thursday, 18 March 2021, consideration of the bill has not been completed, the questions on all remaining stages be put without debate; and* > > *(d) paragraph (c) operate as a limitation of debate under standing order 142.*",
+   "stage": "Business motion",
+   "ayes": 29,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 27,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-16/7"
+  },
+  {
+   "key": "federal-representatives-7038",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with the [motion](https://www.openaustralia.org.au/debate/?id=2021-03-17.23.1) introduced by Melbourne MP [Adam Bandt](https://theyvoteforyou.org.au/people/representatives/melbourne/adam_bandt) (Greens Leader), which means it failed. ### Amended motion text > *That the following words be added after \"education services\":* > > *\"; and* > > *(d) increase the Jobseeker Payment to above the poverty line.\"* ### Original motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), the House:* > > *(1) notes that:* > >> *(a) the effect of this bill will be to cut unemployment payments by $100 per fortnight at the end of March, at the same time as JobKeeper is ending; and* >> >> *(b) over 1.3 million people are on unemployment payments—almost double the number before the pandemic; and* > > *(2) calls on the Government to:* > >> *(a) abandon its counterproductive and punitive plans for a dob-in-a-jobseeker hotline that will only make life harder for job seekers and employers by further increasing mutual obligation requirements at a time when unemployment and underemployment is high;* >> >> *(b) consider allowing people to keep more of their earnings from part-time, casual or seasonal work, to help people move into employment; and* >> >> *(c) do more to support Australians facing poverty and hardship—through adequate payments to those who need them, housing, addressing child poverty, and better health and education services\"*",
+   "stage": "Second reading",
+   "ayes": 64,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 68
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-03-17/1"
+  },
+  {
+   "key": "federal-representatives-7039",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "question": "The majority voted in favour of a motion to keep the usual [second reading motion](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) - \"*That this bill be now read a second time*\" - unchanged. To read a bill a second time is to agree with its main idea. This vote took place after Barton MP [Linda Burney](https://theyvoteforyou.org.au/people/representatives/barton/linda_burney) introduced an amendment. Because this vote passed, the amendment failed. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes that:* > >> *(a) the effect of this bill will be to cut unemployment payments by $100 per fortnight at the end of March, at the same time as JobKeeper is ending; and* >> >> *(b) over 1.3 million people are on unemployment payments—almost double the number before the pandemic; and* > > *(2) calls on the Government to:* > >> *(a) abandon its counterproductive and punitive plans for a dob-in-a-jobseeker hotline that will only make life harder for job seekers and employers by further increasing mutual obligation requirements at a time when unemployment and underemployment is high;* >> >> *(b) consider allowing people to keep more of their earnings from part-time, casual or seasonal work, to help people move into employment; and* >> >> *(c) do more to support Australians facing poverty and hardship—through adequate payments to those who need them, housing, addressing child poverty, and better health and education services\"*",
+   "stage": "Second reading",
+   "ayes": 64,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-03-17/2"
+  },
+  {
+   "key": "federal-representatives-7040",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debates/?id=2021-03-17.33.1) introduced by Barton MP [Linda Burney](https://theyvoteforyou.org.au/people/representatives/barton/linda_burney) (Labor), which means it failed. Ms Burney [explained that](https://www.openaustralia.org.au/debate/?id=2021-03-17.33.2): > *Labor believes in mutual obligation. The government's proposed changes to mutual obligation will only make those requirements more punitive. They have always been punitive under this government. Mutual obligation should be about keeping workers engaged with the workforce. It should be about assisting workers to get back into jobs. But mutual obligation has been weaponised by this government to punish workers looking for work.* ### Amendment text > *(1) Schedule 1, page 22 (after line 18), at the end of the Schedule, add:* > > *Part 6—Mutual obligation* > > *Social Security (Administration) Act 1999* > > *40 At the end of Subdivision A of Division 3AA of Part 3* > > *Add:* > >> *42ABA General principles* >> >> *(1) The Secretary must exercise his or her mutual obligation powers consistently with the following principles:* >> >>> *(a) the purpose of the powers is to help persons to get:* >>> >>>> *(i) jobs; or* >>>> >>>> *(ii) the skills necessary to get jobs;* >>> >>> *(b) the powers are intended to be used as part of a mutual arrangement in which the Commonwealth undertakes a reciprocal obligation to help the persons to find work;* >>> >>> *(c) in exercising the powers in relation to a person, the Secretary must take into account:* >>> >>>> *(i) the availability of suitable jobs; and* >>>> >>>> *(ii) the person's skills and abilities; and* >>>> >>>> *(iii) the person's personal circumstances including caring responsibilities, access to transport, medical conditions and disability;* >>> >>> *(d) the exercise of the powers must not cause unnecessary annoyance or burden for employers.* >> >> *(2) The Secretary'",
+   "stage": "Consideration in detail",
+   "ayes": 62,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 118
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-03-17/3"
+  },
+  {
+   "key": "federal-senate-7065",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2021-03-18.77.1) to the usual [second reading motion]( https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is *”that the bill be read a second time”*. Reading a bill for a second time in parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *At the end of the motion, add: \", but the Senate calls on the Government to:* > > *(a) increase the Jobseeker Payment to above the poverty line;*",
+   "stage": "Second Reading – Increase Jobseeker Payment",
+   "ayes": 12,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 21,
+    "dated": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/19"
+  },
+  {
+   "key": "federal-senate-7066",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2021-03-18.77.1) to the usual [second reading motion]( https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is *”that the bill be read a second time”*. Reading a bill for a second time in parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *At the end of the motion, add: \", but the Senate calls on the Government to:* > > *(a) […]* > > *(b) abolish mutual obligations which are hurting unemployed Australians and making it harder to find work; and* > > *(c) abolish all forms of compulsory income management from our social security system, including the Cashless Debit Card and the Basics Card\".*",
+   "stage": "Second Reading – Mutual obligations and income management",
+   "ayes": 9,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "earliest": 21,
+    "dated": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/20"
+  },
+  {
+   "key": "federal-senate-7067",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2021-03-18.77.1) to the usual [second reading motion]( https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is *”that the bill be read a second time”*. Reading a bill for a second time in parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *At the end of the motion, add: \", but the Senate calls on the Government to increase the Jobseeker Payment to above the poverty line\".*",
+   "stage": "Second Reading – Increase JobSeeker",
+   "ayes": 12,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "earliest": 21,
+    "dated": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/21"
+  },
+  {
+   "key": "federal-senate-7068",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "Social Services Legislation Amendment (Strengthening Income Support) Bill 2021 - Second Reading - Unemployment pay",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 27,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/22"
+  },
+  {
+   "key": "federal-senate-7069",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-03-18.90.7) to keep the bill unchanged. This motion was put after the Greens Party proposed to oppose [items 24, 25, 28, 29, 31 and 32](https://www.openaustralia.org.au/senate/?gid=2021-03-18.87.3) of Schedule 1 in respect to the indexation of income free areas. Because this vote was successful, those parts of the bill will remain as they are. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd055), the purpose of the bill is to: > * *increase the maximum basic rates of JobSeeker Payment, Youth Allowance, Youth Disability Support Pension, Parenting Payment and Austudy by $50 per fortnight from 1 April 2021* > * *increase the ordinary income free area for JobSeeker Payment, Youth Allowance (Other), Parenting Payment Partnered and Widow Allowance to $150 per fortnight from 1 April 2021 and cease indexation of the JobSeeker Payment income free area* > * *extend special COVID-19 qualification criteria for Youth Allowance (Other) and JobSeeker Payment until 30 June 2021—the criteria cover those in quarantine or self-isolation or caring for a family member or household member in quarantine or self-isolation due to COVID-19* > * *extend until 30 June 2021 the waiver of the ordinary waiting period for JobSeeker Payment and Youth Allowance (Other)—the waiver was introduced as part of the Government’s COVID-19 response, and* > * *give the Secretary of the Department of Social Services the discretionary power—until 30 June 2021—to extend the portability period for certain Age Pension and Disability Support Pension recipients unable to return to, or depart from, Australia within 26 weeks due to the impact of COVID-19—portability determines a person’s eligibility for a pension and payment rate when they live permanently outside Australia.*",
+   "stage": "Second reading",
+   "ayes": 41,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "earliest": 19,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/23"
+  },
+  {
+   "key": "federal-senate-7070",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "Social Services Legislation Amendment (Strengthening Income Support) Bill 2021 - Second Reading - Greens amendments (raise youth allowance etc)",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 43,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 24,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/24"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-404141",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": "A permanent $50 per fortnight increase to the JobSeeker base rate, totaling $9 billion, was announced along with a permanent rise in the income-free area to $150 per fortnight, plus temporary extensions of certain waiting period waivers and eligibility criteria."
+  },
+  {
+   "slug": "speech-404142",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": "The $50 per fortnight increase to JobSeeker from the bill is insufficient because the simultaneous end of the $150 coronavirus supplement results in a $100 per fortnight net cut, leaving recipients below the Henderson poverty line. The speaker also criticised the government's mutual obligation requirement of 20 job applications per month and a new employer hotline to report refusals, supporting the member for Barton's amendment to remove that measure."
+  },
+  {
+   "slug": "speech-404145",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the $50 per week permanent increase to JobSeeker is inadequate, as it replaces the $150 coronavirus supplement, resulting in a net loss of $100 per fortnight for 1.9 million Australians. They called for an independent social security commission to set payment rates, highlighted recommendations from a previous parliamentary inquiry to review payment adequacy and change the age at which single parents move to JobSeeker from 8 to 12, and warned of negative economic impacts on small businesses and increased hardship for recipients, particularly older women."
+  },
+  {
+   "slug": "speech-404150",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": "The government has no plan to eliminate poverty, and the Social Services Legislation Amendment (Strengthening Income Support) Bill 2021 only makes people \"a little less poor\" rather than lifting them out of poverty. The speaker noted that 1,950,000 Australians are on these payments and that the government also lacks plans for jobs, Medicare, social housing, and the Gonski reforms."
+  },
+  {
+   "slug": "speech-404200",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (Strengthening Income Support) Bill 2021, which permanently increases the JobSeeker payment by 9.6% at a cost of $9 billion over the forward estimates, and strengthens mutual obligation requirements."
+  },
+  {
+   "slug": "speech-404201",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for cutting the COVID supplement while increasing JobSeeker, arguing the net effect is a real cut for recipients. They highlighted that 40% of Australians under 35 have never had a full-time permanent job, and called for genuine job creation, better support for older unemployed people, and action on poverty, housing, and homelessness."
+  },
+  {
+   "slug": "speech-404202",
+   "speaker": "Ross Vasta",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Social Services Legislation Amendment (Strengthening Income Support) Bill 2021, citing the Morrison government's pandemic response and economic recovery, including 93% of COVID-era jobs regained. The bill permanently increases the income-free area to $150 per fortnight for JobSeeker and youth allowance payments from 1 April 2021."
+  },
+  {
+   "slug": "speech-404203",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The speaker reluctantly supports the bill but argues the $3.57 per day increase is insufficient, criticises mutual obligation requirements and lack of jobs in remote communities, and cites ALPA data showing COVID supplement improved nutrition by 36–60% as evidence of a public health issue."
+  },
+  {
+   "slug": "speech-404205",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The bill increases the base JobSeeker rate by $50 a fortnight from March but ends the $150 coronavirus supplement, producing a net $100 cut and leaving recipients with $615 per fortnight ($44 per day) — 41.2% of the minimum wage and 70% of the poverty line, with 1.35 million people on benefits and 192,000 job vacancies. Labor will not block the bill but will continue to advocate for a higher payment."
+  },
+  {
+   "slug": "speech-404206",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued the Morrison government’s bill, which raises JobSeeker by only $3.57 per day ($50 a fortnight), is woefully inadequate when 60 Australians compete for every entry-level job and over one million children live in poverty. Labor will not oppose the bill but will continue pushing for a substantial permanent increase, criticising the government’s punitive mutual obligation requirements and cuts to coronavirus support."
+  },
+  {
+   "slug": "speech-404210",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The speaker announced they would not block the Social Services Legislation Amendment (Strengthening Income Support) Bill 2021, which permanently increases working-age social security payments by $50 a fortnight, raising JobSeeker from $565 to $615 a fortnight and benefiting 1.9 million people, despite arguing the increase is insufficient and that the government only acted under pressure."
+  },
+  {
+   "slug": "speech-404211",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The Labor MP argued that while they will not block the $50 per fortnight increase to JobSeeker, the removal of the coronavirus supplement means recipients will actually lose $100 per fortnight, leaving them below the poverty line with less than one per cent of private rentals affordable. They stressed the pandemic is not over and the increase is insufficient for Australians to live with dignity."
+  },
+  {
+   "slug": "speech-404212",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Strengthening Income Support) Bill 2021 cuts support for people struggling during the pandemic, plunging hundreds of thousands of children and others into poverty with a $3.57-a-day increase, and moved an amendment to raise JobSeeker above the poverty line, criticising the government for simultaneously delivering billions in tax cuts to millionaires and billionaires."
+  },
+  {
+   "slug": "speech-404215",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the JobSeeker rate cut from $50 to $44 per day is overly punitive and counterproductive, citing structural barriers like housing, transport, childcare, and skills mismatches that prevent jobseekers from working, and called for a comprehensive regional investment agenda instead. They supported the bill to avoid an even larger cut but noted that the new rate leaves recipients in towns like Mansfield with only $30 per fortnight after rent."
+  },
+  {
+   "slug": "speech-404216",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Social Services Legislation Amendment (Strengthening Income Support) Bill 2021, arguing that the $3.57 daily increase leaves 1.3 million Australians with inadequate support and that 5,000 people in the Oxley electorate will be cut adrift when JobKeeper ends. The speaker also raised concerns about the \"dob in a jobseeker\" hotline and noted they would not oppose the bill but would continue advocating for better income support."
+  },
+  {
+   "slug": "speech-404217",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the proposed $43.50 per day JobSeeker rate is too low, calling for at least $60 per day, and criticised the government for ending the coronavirus supplement and JobKeeper simultaneously, which they said will harm the economy and vulnerable groups like older workers and women."
+  },
+  {
+   "slug": "speech-404223",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The Labor MP argued that the $40 per day Newstart rate was too low and that the proposed $50 per fortnight permanent increase still leaves recipients $100 worse off when the coronavirus supplement ends, so Labor will not block the bill but criticised the government's mutual obligation changes, including a hotline for employers to report job refusals, and supported the member for Barton's amendment to legislate principles for mutual obligation focused on helping jobseekers."
+  },
+  {
+   "slug": "speech-404224",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment (Strengthening Income Support) Bill 2021 provides an additional $50 per fortnight to working-age payment recipients from 1 April, permanently increases the income-free area to $150 for JobSeeker and youth allowance, and extends several temporary pandemic measures until 30 June 2021, at an estimated cost of $9 billion."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (Strengthening Income Support) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00023",
+   "assent_date": "2021-03-22"
+  }
+ ]
+}

@@ -1,0 +1,292 @@
+{
+ "key": "au-federal-alrc-2358",
+ "title": "Television Licence Fees Amendment Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Broadband, Communications and the Digital Economy",
+ "status": "passed",
+ "status_as_of": "2013-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-03-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-03-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-03-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00025",
+   "document_date": "2013-03-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-33",
+   "date": "2013-03-20",
+   "house": "senate",
+   "question": "Joe Ludwig I table a statement of reasons justifying the need for these bills to be considered during these sittings and move: That these bills be now read a second time. I seek leave to have the second reading speeches and statement of reasons incorporated in _Hansard_. Leave granted. _The statement read as follows—_ STATEMENT OF REASONS FOR INTRODUCTION AND PASSAGE IN THE 2013 AUTUMN SITTINGS BROADCASTING LEGISLATION AMENDMENT (CONVERGENCE REVIEW AND OTHER MEASURES) BILL 2013 Purpose of the bills The Broadcasting Legislation Amendment (Convergence Review and Other Measures) Bill 2013 amends the _Broadcasting Services Act 1992_, the _Australian Broadcasting Corporation Act 1983_ and the _Special Broadcasting Service Act 1991_ to implement initial measures arising from the government's consideration of the Convergence Review. Recognition of the current online and digital activities of the Australian Broadcasting Corporation and Special Broadcasting Service, increased Australian content requirements, and a requirement for the appointment of an Indigenous non-executive director to the SBS Board. Reasons for Urgency Passage of the bill in the Autumn 2013 sittings will ensure that the communications and media policy framework continues to provide appropriate and important community safeguards in relation to the availability of quality Australian content on free-to-air television. The Convergence Review received significant interest from industry groups, businesses, academics, community groups and members of the public. The government publicly committed to implementing its initial reforms by early 2013. STATEMENT OF REASONS FOR INTRODUCTION AND PASSAGE IN THE 2013 AUTUMN SITTINGS TELEVISION LICENCE FEES AMENDMENT BILL Purpose of the bills The Television Licence Fees Amendment Bill 2013 amends the _Television Licence Fees Act 1964_ to reduce the licence fees payable by commercial television broadcasters by 50 per cent. Reasons for Urgency Passage of the bill in the Autumn",
+   "stage": "Second reading",
+   "ayes": 36,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 57,
+    "earliest": 3,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-03-20/13"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-270527",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822437",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822561",
+   "speaker": "Ursula Stephens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": "A motion was agreed to discharge and appoint senators to committees, including appointing Senators Birmingham, Cameron, Joyce, Ludlam and Thistlethwaite to the Broadcasting Legislation Joint Select Committee, and appointing Senator Ludlam as a substitute member for Senator Waters on two Environment and Communications Legislation Committee inquiries."
+  },
+  {
+   "slug": "speech-271257",
+   "speaker": "John Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271258",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271259",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271260",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271261",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271262",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271263",
+   "speaker": "Paul Neville",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271265",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271269",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271272",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822737",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822959",
+   "speaker": "Joe Ludwig",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": "The speaker announced the Broadcasting Legislation Amendment (Convergence Review and Other Measures) Bill 2013 and the Television Licence Fees Amendment Bill 2013, which implement initial Convergence Review measures including legislating a 55% Australian content quota, capping commercial TV licences at three, and reducing broadcasters' licence fees by 50%. The coalition supported these bills but opposed excluding the Australia Network from future tender processes."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Television Licence Fees Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00025",
+   "assent_date": "2013-03-28"
+  }
+ ]
+}

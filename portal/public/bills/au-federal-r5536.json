@@ -1,0 +1,157 @@
+{
+ "key": "au-federal-r5536",
+ "title": "Tax and Superannuation Laws Amendment (2015 Measures No. 5) Bill 2015",
+ "short_title": "Tax and Superannuation Laws Amendment (2015 Measures No. 5) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-10-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-11-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5536%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5536%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5536%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5536%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5536%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5536%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5536%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5536%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5536%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5536%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5536%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5536%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5536_ems_34cc6537-7d03-4d72-9937-ebb24fe745f8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5536%22",
+   "document_date": "2015-10-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00162",
+   "document_date": "2015-11-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-323424",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The speaker argued against higher taxes and for more responsible spending, noting Australia's $30 billion deficit and $154 billion welfare bill, and opposed a change to car expense claims that would cost rural businesses around $500 in deductions."
+  },
+  {
+   "slug": "speech-323426",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "Labor supported the Tax and Superannuation Laws Amendment (2015 Measures No. 5) Bill 2015, which saves $1.4 billion over forward estimates by reforming work-related car expenses, zone tax offset, salary packaged entertainment benefits, and third-party reporting to the ATO. The speaker argued the government's \"spending problem\" narrative is false, citing high tax-to-GDP ratios and opposition to a regressive GST increase that would hurt low-income earners."
+  },
+  {
+   "slug": "speech-323427",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "Supported the Tax and Superannuation Laws Amendment Bill 2015 for modernising tax collection and streamlining processes, and criticised the member for Fraser's amendment and Labor's failure to restrain expenditure growth."
+  },
+  {
+   "slug": "speech-323428",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The bill amends tax laws to modernise work-related car expense deductions (abolishing two outdated methods, introducing a single 66c per km rate, raising $845 million), tighten the zone tax offset by excluding fly-in fly-out workers ($325 million), cap uncapped entertainment benefits for not-for-profit employees at $5,000, and create a third-party reporting regime for specified transactions."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax and Superannuation Laws Amendment (2015 Measures No. 5) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00162",
+   "assent_date": "2015-11-30"
+  }
+ ]
+}

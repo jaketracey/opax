@@ -1,0 +1,243 @@
+{
+ "key": "au-federal-r7186",
+ "title": "Appropriation Bill (No. 1) 2024-2025",
+ "short_title": "Appropriation Bill (No. 1) 2024-2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-05-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2024-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-06-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-06-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7186_ems_24c5d496-322a-4885-8b45-4b5bcd77541c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7186%22",
+   "document_date": "2024-05-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00047",
+   "document_date": "2024-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-05-14",
+  "sentences": [
+   "This bill would authorise spending from the national fund for the government's day-to-day running costs.",
+   "It is one of several budget bills that together fund new measures and ongoing programs for the 2024-25 financial year.",
+   "The explanatory memorandum says details of the specific amounts are in the Portfolio Budget Statements, which should be read alongside this document."
+  ],
+  "changes": [
+   "Proposes to draw money from the Consolidated Revenue Fund for ordinary annual services.",
+   "Continues existing government programs for 2024-25.",
+   "Funds new Budget measures for 2024-25."
+  ],
+  "affected": "The government and its agencies that receive annual appropriations for ordinary services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8974",
+   "date": "2024-06-25",
+   "house": "senate",
+   "question": "Appropriation Bill (No. 1) 2024-2025 and four others - Second Reading - Coal and gas",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-06-25/9"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 1) 2024-2025",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00047",
+   "assent_date": "2024-06-26"
+  }
+ ]
+}

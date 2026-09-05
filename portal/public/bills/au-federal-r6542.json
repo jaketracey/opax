@@ -1,0 +1,450 @@
+{
+ "key": "au-federal-r6542",
+ "title": "Payment Times Reporting Bill 2020",
+ "short_title": "Payment Times Reporting Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment, Skills, Small and Family Business",
+ "status": "passed",
+ "status_as_of": "2020-10-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-10-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-10-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6542_ems_5baa7c8d-5f15-46d3-85b6-99f9015460fa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6542_ems_c24cf319-30ab-4d2f-b13d-fb0b1e1829da%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6542%22",
+   "document_date": "2020-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00091",
+   "document_date": "2020-10-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-13",
+  "sentences": [
+   "This bill is part of a package that would create a Payment Times Reporting Scheme requiring businesses and government enterprises with over $100 million in annual total income to disclose their payment terms and practices for small business suppliers.",
+   "The scheme would set up a Payment Times Reporting Regulator to collect and publish reports every six months, and the accompanying bill would let the Commissioner of Taxation share certain tax data with that regulator.",
+   "A small business would be defined as one with an annual turnover under $10 million, and a tool would help large businesses identify which of their suppliers are small."
+  ],
+  "changes": [
+   "Requires large entities to submit reports on their small business payment practices every six months.",
+   "Creates a Regulator to publish reports on a public register and enforce compliance.",
+   "Allows the Taxation Commissioner to disclose tax information to the Regulator.",
+   "Establishes a tool to help identify small business suppliers.",
+   "Exempts charities and not-for-profits from reporting.",
+   "Provides an 18-month penalty-free transition period after the scheme starts."
+  ],
+  "affected": "Large businesses and government enterprises with over $100 million annual total income, and their small business suppliers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6360",
+   "date": "2020-06-11",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping unchanged the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This question was put after Gorton MP [Brendan O'Connor](https://theyvoteforyou.org.au/people/representatives/gorton/brendan_o'connor) (Labor) moved an amendment that would have removed all the words after 'that' and replaced them with other words (see below). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House expresses concerns over deficiencies in the bill, including the:* > > *(1) lack of certainty that the measure will lower payment times;* > > *(2) light treatment of supply chain financing; and* > > *(3) ability for businesses to hide extremely long payment times to small businesses\".*",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 6,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 66
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-11/6"
+  },
+  {
+   "key": "federal-senate-6619",
+   "date": "2020-09-03",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2020-09-03.89.1) moved by South Australia Senator [Don Farrell](https://theyvoteforyou.org.au/people/senate/sa/don_farrell) (Labor), which means they failed. Senator Farrell [explained that](https://www.openaustralia.org.au/senate/?gid=2020-09-03.89.1): > *Labor believes that complementary back-up measures are necessary to ensure the Payment Times Reporting Scheme improves general payment times to small business. Our amendments would introduce a fail-safe mechanism. That fail-safe mechanism means that over the next few years, if the government's scheme does not broadly improve payment times to small businesses to 30 days or less, the mechanism is triggered.* Read more about the proposed Payment Times Reporting Scheme in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd101).",
+   "stage": "In committee",
+   "ayes": 23,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "earliest": 14,
+    "dated": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-03/11"
+  },
+  {
+   "key": "federal-representatives-6624",
+   "date": "2020-10-06",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2020-10-06.12.1) introduced by MP for Burt [Matt Keogh](https://theyvoteforyou.org.au/people/representatives/burt/matt_keogh), which means they failed. Mr Keogh [explained](https://www.openaustralia.org.au/debate/?id=2020-10-06.12.1) that his amendments: > *... seek to amend the amendments passed by the Senate, to include Labor's fail-safe mechanism. For the benefit of the House, Labor believes that this complementary backup measure is necessary to ensure the Payment Times Reporting Scheme improves general payment times for small business. Our amendment would introduce a fail-safe mechanism. This means that over the next few years, if the government scheme does not broadly improve payment times to small businesses to 30 days or less, then the mechanism will be triggered. The fail-safe mechanism can be triggered after three years of the scheme operating and will allow the regulator to force large businesses not paying small businesses on time to pay them within 30 days or face hefty fines. This will provide an incentive for reporting entities to collectively improve their payment practices or run the risk of more stringent regulation.* > > *The fail-safe mechanism has the following features. The regulator will be required to report to the minister after each reporting period, with the reports being tabled in both houses of parliament. This will start after the first three reporting periods of the scheme—18 months after the commencement. The payment time fail-safe mechanism is triggered if, after the first six reporting periods of the scheme, the representative time to pay small business reported by all reporting entities is more than 30 days. The regulator must report this fact to the minister. Once the payment time fail-safe mechanism has been triggered, the regulator must declare any reporting entity that had a median payment time for small business invoices",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 74
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-06/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-391030",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Payment Times Reporting Bill 2020 was introduced to require large businesses and government enterprises with annual income over $100 million to report their payment terms and times to small businesses (turnover under $10 million), with penalties for non-compliance and a public register to improve transparency and cash flow, particularly during COVID-19."
+  },
+  {
+   "slug": "speech-391031",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Payment Times Reporting (Consequential Amendments) Bill 2020 was introduced to amend the *Taxation Administration Act 1953*, enabling the Commissioner of Taxation to disclose certain tax information to the Payment Times Reporting Regulator for administering the new reporting framework."
+  },
+  {
+   "slug": "speech-391797",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The speaker moved to amend the Payment Times Reporting Bill 2020, expressing concerns that it lacks certainty to lower payment times, inadequately addresses supply chain financing, and allows businesses to hide extremely long payment times to small businesses. Labor supports the bill as a first step but will refer it to a Senate committee for further inquiry."
+  },
+  {
+   "slug": "speech-391799",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-391919",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The Payment Times Reporting Bill 2020 requires large businesses and government enterprises with annual income over $100 million to publicly report payment times to small businesses, with penalties for non-compliance; over a third of small business invoices are paid after 30 days (average 63 days), and paying within 30 days would transfer $7 billion in working capital to small businesses."
+  },
+  {
+   "slug": "speech-391920",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "Labor supported the Payment Times Reporting Bill 2020 as a first step but argued it is insufficient, calling for a Senate inquiry to consider mandating 30-day payment times for large businesses to small suppliers, penalties for late payments, and better regulator resourcing, citing the EU and New Zealand as examples."
+  },
+  {
+   "slug": "speech-391921",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Payment Times Reporting Bill 2020, which requires large businesses and government enterprises to publicly report their payment terms and times to small businesses, citing that late payments cost small businesses cash flow and that the measure would deliver a net benefit of $313 million per year to the national economy."
+  },
+  {
+   "slug": "speech-391922",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The speaker argued the Payment Times Reporting Bill 2020 would improve payment transparency and cash flow for small businesses, while criticising the government for six-month delays in delivering bushfire recovery grants to businesses in Indi electorate areas like Indigo, Wangaratta and Mansfield. They noted only 7% of $76 million in tourism funding had been spent and demanded transparency on three announced bushfire schemes."
+  },
+  {
+   "slug": "speech-391923",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The Payment Times Reporting Bill 2020 requires large businesses and government enterprises with total income over $100 million to publish information on how and when they pay small businesses, addressing that over a third of small-business invoices are paid after 30 days (averaging 63 days). The speaker noted that public exposure already led Rio Tinto and Telstra to shorten payment policies to 20 days."
+  },
+  {
+   "slug": "speech-391924",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The member for Warringah supported the Payment Times Reporting Bill 2020, citing estimated benefits of over $500 million per year to small business and over $300 million per year to the Australian economy from normalised 30-day payment times, and urged the government to consider legislating a maximum payment term of 20 to 30 days."
+  },
+  {
+   "slug": "speech-391925",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The member for Dobell announced Labor's support for the Payment Times Reporting Bill 2020 as a first step, but argued it should be referred to the Senate economics legislation committee for inquiry over concerns including the lack of mandated 30‑day payment times, no penalties for late payments, and insufficient reporting on supply chain financing."
+  },
+  {
+   "slug": "speech-391926",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Payment Times Reporting Bill 2020 and its consequential amendments as a first step, but argued the legislation is a weak measure relying on self-regulation rather than tough penalties to address late payments and supply chain financing fees harming small businesses."
+  },
+  {
+   "slug": "speech-391928",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The Payment Times Reporting Bill 2020 is a step forward but insufficient, as late payments by large businesses cost Australian SMEs $7 billion annually and voluntary codes have failed; the speaker called for stronger regulation, including mandated 30-day payment terms and a Senate inquiry into systemic reforms."
+  },
+  {
+   "slug": "speech-391929",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Payment Times Reporting Bill 2020 is unlikely to effectively address late payments to small businesses, citing 53% of invoices paid late and $115 billion in delayed payments annually. They criticized the bill for lacking penalties, relying on self-regulation, and excluding late payments from other small businesses or individuals."
+  },
+  {
+   "slug": "speech-391930",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Payment Times Reporting Bill 2020 as a step toward transparency in large business payment practices but called for a Senate committee inquiry to address concerns about its effectiveness."
+  },
+  {
+   "slug": "speech-391932",
+   "speaker": "Luke Howarth",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The Payment Times Reporting Bill 2020 will increase transparency on payment times and practices, incentivising faster payments to small businesses, as seen when Rio Tinto and Telstra revised policies after public exposure; the speaker opposed legislated payment times, arguing they could delay payments, and noted government support including $50,000 cashback and JobKeeper for small businesses."
+  },
+  {
+   "slug": "speech-395416",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-06",
+   "stage_hint": null,
+   "brief": "The member for Clark would have supported the opposition amendments to the Payment Times Reporting Bill 2020 during the division earlier that afternoon."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Payment Times Reporting Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00091",
+   "assent_date": "2020-10-14"
+  }
+ ]
+}

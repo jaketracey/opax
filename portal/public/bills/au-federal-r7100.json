@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r7100",
+ "title": "Lobbying (Improving Government Honesty and Trust) Bill 2023",
+ "short_title": "Lobbying (Improving Government Honesty and Trust) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-13",
+ "originating_house": "representatives",
+ "sponsor": "RYAN, Monique, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10987",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-07-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7100%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7100%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7100%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7100_ems_0a5df7be-8eba-472f-a041-9a1ef8906f4e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7100%22",
+   "document_date": "2023-11-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-13",
+  "sentences": [
+   "The bill would expand the register of lobbyists and impose new rules on their activities.",
+   "It would require quarterly reports of meetings with politicians, ban gifts from lobbyists, and publish ministers' diaries.",
+   "Former ministers and senior officials would face a three-year wait before they can lobby government."
+  ],
+  "changes": [
+   "Extends the Register of Lobbyists to include professional lobbyists, service firms and in-house lobbyists.",
+   "Makes it an offence for an unregistered lobbyist to engage in lobbying with a government representative.",
+   "Requires lobbyists to disclose ownership structure, major shareholders and third-party clients.",
+   "Restricts gifts and hospitality from lobbyists to government representatives.",
+   "Restricts lobbying where a lobbyist has a close personal relationship with the government representative.",
+   "Gives the National Anti-Corruption Commission power to investigate breaches of the law."
+  ],
+  "affected": "Lobbyists, government representatives, ministers, parliamentary secretaries, and former ministers and senior officials.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:46Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

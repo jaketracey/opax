@@ -1,0 +1,614 @@
+{
+ "key": "au-federal-r5491",
+ "title": "Migration Amendment (Regional Processing Arrangements) Bill 2015",
+ "short_title": "Migration Amendment (Regional Processing Arrangements) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2015-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5491%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5491%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5491%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5491%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5491%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5491%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5491%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5491%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5491%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5491%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5491%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5491%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5491%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5491_ems_69664dbc-a4f0-4331-9f52-590524956ff3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5491%22",
+   "document_date": "2015-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00104",
+   "document_date": "2015-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-24",
+  "sentences": [
+   "This bill would give the Australian government legal authority to act on regional processing arrangements with other countries.",
+   "It would let the Commonwealth take action, make payments, and do anything incidental to those arrangements.",
+   "The changes would apply both before and after the bill becomes law."
+  ],
+  "changes": [
+   "Provides statutory authority for the Commonwealth to take action related to regional processing arrangements.",
+   "Allows the Commonwealth to make payments for regional processing functions.",
+   "Confirms Australian officials can assist foreign governments in regional processing countries."
+  ],
+  "affected": "The Commonwealth, Australian officials, and the governments of regional processing countries such as Nauru and Papua New Guinea.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:49:30Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3857",
+   "date": "2015-06-25",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org.au/senate/?id=2015-06-25.11.2) to \"*exempt this bill from the [bills cut-off](http://www.aph.gov.au/About_Parliament/Senate/Powers_practice_n_procedures/aso/so111) order*\". If this motion hadn't been successful, the Senate would have had to wait until the next sitting period in order to consider this bill. Read more about bills cut-off orders in [Odgers’ Australian Senate Practice](http://www.aph.gov.au/About_Parliament/Senate/Powers_practice_n_procedures/aso/~/link.aspx?_id=49DC5DA705D1472F95440FDF517201FA&_z=z). Liberal Senator [Mitch Fifield](https://theyvoteforyou.org.au/people/senate/victoria/mitch_fifield) (Vic) [explained](http://www.openaustralia.org.au/senate/?id=2015-06-25.11.2) the Coalition were seeking this: > *As I indicated in my contribution on the motion relating to hours, the offshore processing arrangements are central to the government's efforts to protect our borders. We place a very high premium as a government on the protection of our borders. We are seeking exemption from the cut-off in order to enable this legislation to be debated and resolved today. The government is clearly of the view that it is important to that it is important to ensure certainty and a robust legislative basis for offshore processing. In seeking to move exemption from the cut-off, we are not attempting to do anything other than what has frequently been done in this place for bills which are time critical.* ### Motion text > *That a motion to exempt this bill from the bills cut-off order may be moved immediately and have precedence over all other business today until determined.* ### What does the bill do? According to its [parliamentary website](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5491), the bill: > *Amends the Migration Act 1958 to provide statutory authority for the Commonwealth to provide assistance to other countries to carry into effect",
+   "stage": "First Reading",
+   "ayes": 42,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 11,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-25/3"
+  },
+  {
+   "key": "federal-senate-3858",
+   "date": "2015-06-25",
+   "house": "senate",
+   "question": "Migration Amendment (Regional Processing Arrangements) Bill 2015 - Second Reading - Agree with the main idea",
+   "stage": "Second reading",
+   "ayes": 37,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 10,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-25/4"
+  },
+  {
+   "key": "federal-senate-3864",
+   "date": "2015-06-25",
+   "house": "senate",
+   "question": "Migration Amendment (Regional Processing Arrangements) Bill 2015 - in Committee - Detention of children",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 10,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-25/10"
+  },
+  {
+   "key": "federal-senate-3865",
+   "date": "2015-06-25",
+   "house": "senate",
+   "question": "Migration Amendment (Regional Processing Arrangements) Bill 2015 - in Committee - Mandatory reporting of abuse",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 11,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-25/11"
+  },
+  {
+   "key": "federal-senate-3866",
+   "date": "2015-06-25",
+   "house": "senate",
+   "question": "Migration Amendment (Regional Processing Arrangements) Bill 2015 - in Committee - Access to regional detention centres",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-25/12"
+  },
+  {
+   "key": "federal-senate-3867",
+   "date": "2015-06-25",
+   "house": "senate",
+   "question": "Migration Amendment (Regional Processing Arrangements) Bill 2015 - in Committee - Limit detention to 3 months",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 11,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-25/13"
+  },
+  {
+   "key": "federal-senate-3868",
+   "date": "2015-06-25",
+   "house": "senate",
+   "question": "Migration Amendment (Regional Processing Arrangements) Bill 2015 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 41,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 12,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-25/14"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-314787",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-24",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Regional Processing Arrangements) Bill 2015 provides express statutory authority for the Commonwealth to make payments and take actions to assist regional processing countries—currently Nauru and Papua New Guinea—in processing unauthorized maritime arrivals, with retrospective effect from 18 August 2012."
+  },
+  {
+   "slug": "speech-314788",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-24",
+   "stage_hint": null,
+   "brief": "The opposition leader announced Labor would support the Migration Amendment (Regional Processing Arrangements) Bill, arguing it aligns with Labor’s own policy of offshore processing and regional resettlement to deter dangerous boat voyages and prevent deaths at sea. He criticised the government for rushing the bill, attacked past coalition opposition to Labor’s Malaysia arrangement, and called for an end to dehumanising political rhetoric on asylum seekers."
+  },
+  {
+   "slug": "speech-314789",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the opposition leader's support for the Migration Amendment (Regional Processing Arrangements) Bill 2015 cannot undo seven years of Labor decisions since 2008 that weakened border control and caused tragedy."
+  },
+  {
+   "slug": "speech-314804",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-24",
+   "stage_hint": null,
+   "brief": "The speaker endorsed the Migration Amendment (Regional Processing Arrangements) Bill 2015, arguing that the government's border protection policies—including regional processing, turn-backs, and prioritising refugees from camps over those who can pay people smugglers—have integrity and are supported by former refugees in his electorate of Cowan. He cited 1,000 places for women and children at risk and criticised the opposition's past Malaysia plan as a swap rather than regional processing."
+  },
+  {
+   "slug": "speech-314805",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2015-06-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Regional Processing Arrangements) Bill 2015 is shameful and constitutes a crime against humanity under the Rome Statute, calling for an end to offshore processing, mandatory detention, and temporary visas, and for Australia to grant permanent refuge to asylum seekers found to be fleeing persecution. He also noted he had made a formal complaint to the International Criminal Court regarding the government's actions."
+  },
+  {
+   "slug": "speech-314806",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-24",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Regional Processing Arrangements) Bill 2015 is necessary to maintain border control; anyone arriving illegally by boat will never be settled in Australia. Previous Labor policies led to 50,000 boat arrivals, over 1,000 deaths at sea, and an $11 billion cost blowout."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Regional Processing Arrangements) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00104",
+   "assent_date": "2015-06-30"
+  }
+ ]
+}

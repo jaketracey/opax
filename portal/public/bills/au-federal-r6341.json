@@ -1,0 +1,273 @@
+{
+ "key": "au-federal-r6341",
+ "title": "Treasury Laws Amendment (2018 Measures No. 2) Bill 2019",
+ "short_title": "Treasury Laws Amendment (2018 Measures No. 2) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-02-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6341_ems_54c01a4c-d610-49a1-8822-829d8ff9c444%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6341%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00008",
+   "document_date": "2020-02-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5897",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (2018 Measures No. 2) Bill 2019 - Consideration in Detail - Restrict fintech sandbox exemption",
+   "stage": "Consideration in detail",
+   "ayes": 63,
+   "noes": 72,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-10-15/4"
+  },
+  {
+   "key": "federal-senate-6197",
+   "date": "2020-02-10",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (2018 Measures No. 2) Bill 2019 - in Committee - Limit the exemption",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 15,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-02-10/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-381990",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-19",
+   "stage_hint": null,
+   "brief": "Labor supports the bill but will move amendments to require firms accessing the fintech regulatory sandbox to demonstrate genuine innovation and customer benefit; the speaker also argued the bill does not address key industry barriers such as skills shortages and capital access."
+  },
+  {
+   "slug": "speech-381992",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-19",
+   "stage_hint": null,
+   "brief": "Labor supported the bill creating a fintech regulatory sandbox and minor venture capital tax changes, but argued the government is not doing enough to boost start-ups and productivity, citing Australia's falling global rankings and declining business investment. Labor planned to introduce amendments addressing consumer advocate concerns about the sandbox."
+  },
+  {
+   "slug": "speech-382751",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-15",
+   "stage_hint": null,
+   "brief": "The government argued that the Treasury Laws Amendment (2018 Measures No. 2) Bill 2019 would support fintech innovation by extending the regulatory sandbox in the Corporations Act to allow testing without an ASIC licence and by making technical amendments to clarify tax incentives for venture capital and early-stage investors."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2018 Measures No. 2) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00008",
+   "assent_date": "2020-02-26"
+  }
+ ]
+}

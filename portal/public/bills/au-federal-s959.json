@@ -1,0 +1,224 @@
+{
+ "key": "au-federal-s959",
+ "title": "Defence Legislation Amendment (Woomera Prohibited Area) Bill 2014",
+ "short_title": "Defence Legislation Amendment (Woomera Prohibited Area) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-27",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "passed",
+ "status_as_of": "2014-08-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-07-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-08-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s959_ems_217c0ea9-2991-4e9c-9e75-3f86decce9d9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s959_ems_044fcd26-b50f-4277-88b8-eba665a33eeb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s959_ems_1359899c-6022-4db0-a259-31c0b1469ba7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s959_ems_2dd38fd7-8166-446c-bd78-9e9cad8b28a9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s959%22",
+   "document_date": "2014-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00095",
+   "document_date": "2014-08-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2014-03-27",
+  "sentences": [
+   "The bill would open the Woomera Prohibited Area to mining and other non-defence activities while keeping Defence as the main user.",
+   "It would create a permit system for non-defence access, divide the area into three zones and set up a coordination office and an advisory board.",
+   "New users would be barred from the red zone except for a geological survey by the South Australian Government with Commonwealth agencies."
+  ],
+  "changes": [
+   "Authorise the Minister for Defence to make rules defining the Woomera Prohibited Area and its zones.",
+   "Create a permit system for non-defence access and use of the area.",
+   "Introduce offences and penalties for entering without permission or breaking a permit condition.",
+   "Provide for compensation when property is acquired on other than just terms under the new Part VIB.",
+   "Confirm that compensation remains available for loss or damage caused by Defence testing.",
+   "Allow the Rules to limit the Commonwealth's liability for breach of duty of care in the testing area."
+  ],
+  "affected": "Non-defence users such as miners, pastoralists, Indigenous groups and railway operators, as well as the Defence portfolio and the South Australian Government.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-294697",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294698",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294700",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294952",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294953",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Defence Legislation Amendment (Woomera Prohibited Area) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00095",
+   "assent_date": "2014-08-08"
+  }
+ ]
+}

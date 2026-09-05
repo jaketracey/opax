@@ -1,0 +1,131 @@
+{
+ "key": "au-federal-r5608",
+ "title": "Veterans’ Affairs Legislation Amendment (Single Appeal Path) Bill 2016",
+ "short_title": "Veterans’ Affairs Legislation Amendment (Single Appeal Path) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans’ Affairs",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5608%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5608%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5608%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5608%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5608%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5608%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5608%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5608%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5608_ems_a26ba4df-b593-454e-a9e7-ebbc7d8b3b66%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5608%22",
+   "document_date": "2016-02-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-11",
+  "sentences": [
+   "The bill would create a single path for appealing decisions made under the Military Rehabilitation and Compensation Act.",
+   "It would give the Administrative Appeals Tribunal the power to order costs for claimants in some cases.",
+   "The bill aims to encourage early evidence and cooperation by limiting when costs can be awarded."
+  ],
+  "changes": [
+   "Creates a single appeal path for reviews of original determinations under the Military Rehabilitation and Compensation Act.",
+   "Gives the Administrative Appeals Tribunal discretion to order costs in favour of claimants under certain circumstances.",
+   "Limits the circumstances for awarding costs to encourage early presentation of evidence and claimant participation."
+  ],
+  "affected": "Claimants and the Administrative Appeals Tribunal are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:49:30Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-327823",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-11",
+   "stage_hint": null,
+   "brief": "The bill amends the Military Rehabilitation and Compensation Act to create a single first-tier appeal path to the Veterans' Review Board, removing the choice between that board and the Military Rehabilitation and Compensation Commission, while retaining the second-tier appeal to the Administrative Appeals Tribunal. The government also committed to reviewing the $467.50 cap on reimbursement for medical reports and to evaluating a trial of alternative dispute resolution for a potential national rollout."
+  },
+  {
+   "slug": "speech-329981",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The bill creates a single appeal path for veterans under the Military Rehabilitation and Compensation Act 2004, allowing cost recovery at the Administrative Appeals Tribunal in certain circumstances and imposing a 28-day statutory timeframe for the Military Rehabilitation and Compensation Commission to consider new evidence. Labor supports the bill after negotiations with ministers Stuart Robert and Dan Tehan addressed previous flaws."
+  },
+  {
+   "slug": "speech-329982",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The bill creates a single first-tier appeal path directly to the Veterans' Review Board under the Military Rehabilitation and Compensation Act, streamlining the process for claimants. It also gives the Administrative Appeals Tribunal discretion to award costs in favour of claimants."
+  }
+ ],
+ "acts": []
+}

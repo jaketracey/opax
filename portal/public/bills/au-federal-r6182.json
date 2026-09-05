@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-r6182",
+ "title": "Customs Amendment (Product Specific Rule Modernisation) Bill 2018",
+ "short_title": "Customs Amendment (Product Specific Rule Modernisation) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2018-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6182%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6182%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6182%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6182%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6182%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6182%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6182%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6182%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6182%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6182%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6182%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6182%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6182_ems_363b957f-637e-45d4-bddf-96494899546b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6182%22",
+   "document_date": "2018-09-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00151",
+   "document_date": "2018-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-369868",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The bill amends the Customs Act to give effect to free trade agreement product specific rules by direct reference to annexes, replacing lengthy regulations, and includes updates for AANZFTA, ChAFTA, and JAEPA to meet a 1 January 2019 deadline, with AANZFTA trade totalling A$120 billion in 2017."
+  },
+  {
+   "slug": "speech-370855",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "Labor supported the Customs Amendment (Product Specific Rule Modernisation) Bill 2018, which streamlines product-specific rules of origin for four free trade agreements (SAFTA, AANZFTA, JAEPA, ChAFTA) to allow updates without further legislative changes. The shadow minister also introduced the Fair Go for Australians in Trade Bill 2018, proposing measures to increase transparency, require independent national interest assessments, and ban clauses allowing foreign companies to sue the Australian government."
+  },
+  {
+   "slug": "speech-370856",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "The Customs Amendment (Product Specific Rule Modernisation) Bill 2018 makes technical changes to four free trade agreements—with ASEAN-New Zealand, Japan, China and Singapore—to automatically update product-specific rules of origin in domestic law, repealing over 2,500 pages of regulations. The member for Mallee argued the bill must pass in 2018 to meet treaty commitments, and emphasised that trade fosters peace and understanding, citing Australia’s post-war trade relationship with Japan as an example."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment (Product Specific Rule Modernisation) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00151",
+   "assent_date": "2018-12-10"
+  }
+ ]
+}

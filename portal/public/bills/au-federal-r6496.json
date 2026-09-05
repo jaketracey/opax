@@ -1,0 +1,751 @@
+{
+ "key": "au-federal-r6496",
+ "title": "Appropriation Bill (No. 3) 2019-2020",
+ "short_title": "Appropriation Bill (No. 3) 2019-2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2020-03-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6496_ems_40934758-2600-4ed8-9cbb-67aec2f76777%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6496%22",
+   "document_date": "2020-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00033",
+   "document_date": "2020-03-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6257",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "question": "Appropriation Bill (No. 3) 2019-2020 and another - Second Reading - Stop Mr Kelly from speaking",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 40
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-26/15"
+  },
+  {
+   "key": "federal-representatives-6258",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debate/?id=2020-02-26.147.1) \"*That the debate be adjourned.*\" This means that the debate will continue. It was introduced by Watson MP [Tony Burke](https://theyvoteforyou.org.au/people/representatives/watson/tony_burke) (Labor).",
+   "stage": "Second reading",
+   "ayes": 65,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 40
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-26/16"
+  },
+  {
+   "key": "federal-representatives-6259",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "question": "Appropriation Bill (No. 3) 2019-2020 and another - Second Reading - Stop Ms Bell from speaking",
+   "stage": "Second reading",
+   "ayes": 65,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 39
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-26/17"
+  },
+  {
+   "key": "federal-representatives-6278",
+   "date": "2020-02-27",
+   "house": "representatives",
+   "question": "Appropriation Bill (No. 3) 2019-2020 and another - Second Reading - Stop Ms Wicks from speaking",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-27/5"
+  },
+  {
+   "key": "federal-representatives-6279",
+   "date": "2020-02-27",
+   "house": "representatives",
+   "question": "Appropriation Bill (No. 3) 2019-2020 and another - Second Reading - Stop Ms Liu from speaking",
+   "stage": "Second reading",
+   "ayes": 65,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-27/6"
+  },
+  {
+   "key": "federal-representatives-6280",
+   "date": "2020-02-27",
+   "house": "representatives",
+   "question": "Appropriation Bill (No. 3) 2019-2020 and another - Second Reading - Stop Mr Pearce from speaking",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-27/7"
+  },
+  {
+   "key": "federal-representatives-6281",
+   "date": "2020-02-27",
+   "house": "representatives",
+   "question": "Appropriation Bill (No. 3) 2019-2020 and another - Second Reading - Stop Mr Simmonds from speaking",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-27/8"
+  },
+  {
+   "key": "federal-representatives-6282",
+   "date": "2020-02-27",
+   "house": "representatives",
+   "question": "Appropriation Bill (No. 3) 2019-2020, Appropriation Bill (No. 4) 2019-2020 - Second Reading - Stop Ms McIntosh from speaking",
+   "stage": "Second reading",
+   "ayes": 65,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-27/9"
+  },
+  {
+   "key": "federal-representatives-6297",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is \"*that this bill be now read for a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that:* > > *(1) after six years in office the economy is floundering on the Government's watch;* > > *(2) Australians are struggling with stagnant wages, with wage growth stalling further;* > > *(3) net debt has more than doubled under this Government;* > > *(4) the Government does not have a plan to boost wages or growth in the economy; and* > > *(5) it is because of the Government's failures that Australia meets the challenges and uncertainties of the bushfires and coronavirus from a position of weakness, not strength.\"*",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-03-04/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-388136",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "The government introduced the additional estimates appropriation bills for 2019-2020, with Appropriation Bill (No. 3) seeking just over $3.310 billion. The funding includes $948.4 million for Home Affairs, $592.6 million for Social Services, $488.8 million for Defence (including $87.9 million for Operation Bushfire Assist), $287.5 million for Services Australia, $170.6 million for Health, and $66.2 million for Agriculture, with several amounts responding to the recent bushfire emergency."
+  },
+  {
+   "slug": "speech-388137",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 4) 2019-2020 seeks $2.171 billion in additional funding, including $1.567 billion for the Department of Infrastructure, Transport, Regional Development and Communications—comprising a $1.2 billion loan to NBN Co, $176.9 million for the Australian Rail Track Corporation and Western Sydney Airport, and $166.9 million for the Drought Response, Resilience and Preparedness Plan—and $247.9 million for the Department of Agriculture, Water and the Environment, with $235 million in loans to farmers through the Regional Investment Corporation."
+  },
+  {
+   "slug": "speech-388965",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-26",
+   "stage_hint": null,
+   "brief": "Labor argued that the economy was already underperforming before the bushfires and coronavirus, with GDP growth of only 1.7%, wages growing at one-fifth the pace of profits, and the private domestic economy declining for two quarters. The party will support the appropriation bills but criticised the government's emphasis on a surplus, stating that supporting bushfire-affected communities and workers should be the priority."
+  },
+  {
+   "slug": "speech-388969",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government has no economic plan, leading to low growth, stagnant wages, falling business investment and labour productivity, and that the NBN rollout cost $51 billion (far above the promised $29.5 billion) while Australia dropped to 68th globally in internet speeds."
+  },
+  {
+   "slug": "speech-388970",
+   "speaker": "Terry Young",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-02-26",
+   "stage_hint": null,
+   "brief": "The member for Longman argued in support of Appropriation Bills (No. 3 and 4) 2019-2020, which provide $3.3 billion and $2.2 billion in top-up funding for bushfire response, border protection, social services, defence, and local projects. Specific local benefits cited include the Moreton Bay Jobs Fair with 737 jobs on offer, $4.5 million in Roads to Recovery funding, and over $423,000 in grants to local organisations and schools in the Longman electorate."
+  },
+  {
+   "slug": "speech-388972",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-26",
+   "stage_hint": null,
+   "brief": "The Morrison government invested $6.7 million in the Soldier On Fussell House accommodation facility at Concord Hospital, $2.2 million for community midwifery services, and $1.2 million for Cintra Park netball court upgrades in Reid. The government also extended electricity price protections to over one million extra consumers and provided $135,000 for security upgrades at the Sri Karphaga Vinayakar Temple."
+  },
+  {
+   "slug": "speech-388980",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the appropriation bills, arguing the Morrison government delivered the first budget surplus in 11 years, created over 1.5 million jobs, provided $158 billion in tax relief, and increased health funding to $22.5 billion for hospitals alongside a $503 million youth mental health and suicide prevention plan. The speech also highlighted the government's coronavirus response, including early travel restrictions, a $2 million investment in vaccine research, and containment measures that resulted in no human-to-human transmission in Australia."
+  },
+  {
+   "slug": "speech-389170",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-26",
+   "stage_hint": null,
+   "brief": "The Bureau of Meteorology removed from its website a climate education page about Marble Bar's 160-day heatwave record from 1923–24, and researcher Chris Gillham found the removal occurred as the bureau carried out \"homogenisation\" or adjustment of the data."
+  },
+  {
+   "slug": "speech-389195",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that climate change is real and human-caused, criticised the member for Hughes for amplifying conspiracy theories, and called for Australia to commit to net zero emissions by 2050, noting that all state premiers and international agreements support this target."
+  },
+  {
+   "slug": "speech-389256",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-27",
+   "stage_hint": null,
+   "brief": "The Morrison government's appropriation bills fund multiple Central Coast projects, including $35 million for commuter car parks at Gosford and Woy Woy stations, $70 million for 29 local roads, $4.3 million for North Avoca roads and footpaths, $9 million for The Glen women's drug rehabilitation centre, $3.8 million for a third linear accelerator at Central Coast Cancer Centre, $8.25 million for Umina recreational precinct upgrades, $80,000 for Woy Woy Oval scoreboard, $1.45 million for Lemon Grove netball courts amenities, and $18 million for a Gosford health and innovation precinct."
+  },
+  {
+   "slug": "speech-389266",
+   "speaker": "Gavin Pearce",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that Tasmania has become the fastest-growing economy in Australia due to Coalition and state Liberal governments since 2013-2014, citing 3.3% state growth and a per capita rate nearly double the national average. They announced joint federal-state investments of $170 million into Tranche 3 irrigation projects (Don, Sassafras, Wesley Vale) expected to deliver 78,000 megalitres of water, create 2,500 jobs, and increase annual on-farm production by $114 million, along with a $40 million commitment to the Bass Highway Cooee to Wynyard Planning Study."
+  },
+  {
+   "slug": "speech-389269",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government lacks an economic plan and mismanaged the economy before the bushfires and coronavirus, citing a per capita recession, stagnant wages, and six consecutive deficits. They criticised the Urban Congestion Fund for allocating 83% of its $3 billion to Liberal or targeted seats, and noted that infrastructure investment in MYEFO was $50 million short, with construction output down three per cent in the December quarter."
+  },
+  {
+   "slug": "speech-389283",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's economic management enables tax relief for hardworking families, with 4.5 million Australians receiving $1,080 per year and 10 million taxpayers benefiting overall, including 72,083 in the Ryan electorate."
+  },
+  {
+   "slug": "speech-389286",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment moved by the member for Rankin and confirmed Labor would not block supply for the appropriation bills, but argued the government has no plan for wages or economic growth. The speaker cited net debt doubling, gross debt at $542 billion, youth unemployment at 12.1% with 270,000 young people unemployed, and private sector wage growth stuck at around 2%, while criticising the government for using bushfires and coronavirus as excuses for longstanding economic failures."
+  },
+  {
+   "slug": "speech-389291",
+   "speaker": "Melissa McIntosh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-27",
+   "stage_hint": null,
+   "brief": "The member for Lindsay detailed Morrison government investments in the electorate, including $5.3 billion for Western Sydney International Airport, $3.5 billion for the North South Rail Link, and commuter car parks at Kingswood, north St Marys and Emu Plains stations, as well as funding for the Nepean River, local community programs and a Western Sydney Indigenous jobseekers program with 154 guaranteed placements."
+  },
+  {
+   "slug": "speech-389293",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government's 1 January cut to bulk-billing incentives in Shortland and 13 other regions threatens health access, noting that fewer than 60% of Shortland residents are bulk-billed and out-of-pocket costs average $37 per GP visit and $80 per specialist visit. The speaker also announced $423,000 in grants to 31 Shortland organisations and criticised $11.8 billion in cuts to Australia's official development assistance, citing specific reductions including 30% to Southeast Asia, 42% to South Asia, and 86% to Indonesia's health aid."
+  },
+  {
+   "slug": "speech-389295",
+   "speaker": "Phillip Thompson",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-02-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that all forms of violence against women and children are unacceptable, highlighting that one woman is killed every nine days by a partner and that sexual violence rose 8% from 2016 to 2017. They announced $340 million committed to the fourth action plan, which focuses on primary prevention, support for Aboriginal and Torres Strait Islander women, and tailored community responses, referencing the murder of Hannah and her three children."
+  },
+  {
+   "slug": "speech-389296",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-27",
+   "stage_hint": null,
+   "brief": "The speaker thanked the member for Herbert for addressing domestic violence and highlighted Hannah Clarke's murder as a national wake-up call, while also arguing that Australia must take significant action on climate change after the summer's catastrophic fires, floods and smoke haze, noting that Labor has committed to zero net emissions by 2050."
+  },
+  {
+   "slug": "speech-389537",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-03-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-389538",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-02",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for economic uncertainty, weak wages growth, high underemployment, and rising out-of-pocket GP and specialist costs in Greenway, and condemned the Treasurer for disrespecting the Hindu community."
+  },
+  {
+   "slug": "speech-389649",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-02",
+   "stage_hint": null,
+   "brief": "Labor supported the appropriation bills but criticised the government over veteran suicide prevention, arguing a royal commission is needed instead of the proposed National Commissioner, and highlighted failures including DVA staffing cuts, delayed mental health strategies, unreleased TPI review, and a bungled veterans card rollout."
+  },
+  {
+   "slug": "speech-389650",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-03-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the appropriation bills, allocating over $3 billion including $948 million for Home Affairs, $592 million for Social Services, $488.8 million for Defence, and $287 million for Services Australia, while also defending Newstart increases and urging state governments to expedite bushfire recovery payments."
+  },
+  {
+   "slug": "speech-389658",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-02",
+   "stage_hint": null,
+   "brief": "The speaker argued the Morrison government’s bushfire recovery response for the New South Wales South Coast has been slow, inadequate and out of touch, citing delays in small‑business loans, mental health support and tourism funding, and noting that only 20% of grants and 5% of loans had been approved amid widespread business closures and job losses."
+  },
+  {
+   "slug": "speech-389659",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-02",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for economic mismanagement, citing wasted taxpayer funds on the Great Barrier Reef Foundation ($444 million) and the sports rorts scandal, and argued that underfunding of the NDIS, health services, and aged care has harmed vulnerable Australians. They also highlighted local infrastructure needs in Macarthur, including a paediatric ICU at Campbelltown Hospital and a rail link from Western Sydney Airport, and warned that the economy was already floundering before the bushfires and coronavirus."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 3) 2019-2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00033",
+   "assent_date": "2020-03-26"
+  }
+ ]
+}

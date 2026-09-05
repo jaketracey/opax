@@ -1,0 +1,253 @@
+{
+ "key": "au-federal-r5235",
+ "title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2014-2015",
+ "short_title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2014-2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2014-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5235_ems_8c49db69-3ca7-49bd-8db2-0cbc59c02927%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5235%22",
+   "document_date": "2014-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00065",
+   "document_date": "2014-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-287847",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-05-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287848",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-05-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288185",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288849",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289133",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289501",
+   "speaker": "Anthony Byrne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290676",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293614",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation (Parliamentary Departments) Act (No. 1) 2014-2015",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00065",
+   "assent_date": "2014-06-30"
+  }
+ ]
+}

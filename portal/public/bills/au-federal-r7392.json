@@ -1,0 +1,185 @@
+{
+ "key": "au-federal-r7392",
+ "title": "Environment Protection and Biodiversity Conservation (Restoration Charge Imposition) Bill 2025",
+ "short_title": "Environment Protection and Biodiversity Conservation (Restoration Charge Imposition) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-10-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy, the Environment and Water",
+ "status": "passed",
+ "status_as_of": "2025-12-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7392_ems_8ebdf684-5813-4f4b-a5c0-12eb4573370f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7392%22",
+   "document_date": "2025-10-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00067",
+   "document_date": "2025-12-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-10-30",
+  "sentences": [
+   "This bill creates several fees for activities under Australia's main environmental law, which are tied to changes proposed in another bill.",
+   "The fees would apply to approvals, registrations, and exemptions, with the amounts to be set by regulations rather than in the bill itself.",
+   "The money collected would go into a special account to fund environmental restoration work, and the bill also names who must pay each fee."
+  ],
+  "changes": [
+   "It imposes a fee on approvals that require a restoration contribution.",
+   "It imposes a fee for registering a priority action under a bioregional plan.",
+   "It imposes fees for national interest and Part 13 exemptions.",
+   "It directs the fees to a new special account for environmental restoration.",
+   "It leaves the fee amounts to be determined by regulations.",
+   "It specifies the persons liable for each fee."
+  ],
+  "affected": "Approval holders, people registering priority actions, and those seeking exemptions under the EPBC Act.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1197772",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-10-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198472",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-06",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Environment Protection and Biodiversity Conservation (Restoration Charge Imposition) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00067",
+   "assent_date": "2025-12-01"
+  }
+ ]
+}

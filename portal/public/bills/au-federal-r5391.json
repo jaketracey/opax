@@ -1,0 +1,139 @@
+{
+ "key": "au-federal-r5391",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment (Designated Coastal Waters) Bill 2014",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment (Designated Coastal Waters) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry",
+ "status": "passed",
+ "status_as_of": "2015-03-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5391%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5391%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5391%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5391%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5391%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5391%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5391_ems_a40db7fd-db1d-45e8-9f35-010e3281179d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5391%22",
+   "document_date": "2014-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00016",
+   "document_date": "2015-03-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-12-03",
+  "sentences": [
+   "This bill would change how a levy law applies to certain coastal waters to avoid a constitutional problem.",
+   "The levy law would keep using the current, narrower definition of designated coastal waters rather than an expanded one being introduced in another bill.",
+   "The government says the change would create no net financial impact."
+  ],
+  "changes": [
+   "The bill would confine the levy regime to the existing geographic area of designated coastal waters.",
+   "The bill would prevent the levy law from automatically covering an expanded area defined in another Act.",
+   "The bill would reduce the risk that the levy law could be found unconstitutional."
+  ],
+  "affected": "Offshore petroleum companies that pay levies to fund NOPSEMA's regulatory activities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:03Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment (Designated Coastal Waters) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00016",
+   "assent_date": "2015-03-19"
+  }
+ ]
+}

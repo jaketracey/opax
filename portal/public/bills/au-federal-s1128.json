@@ -1,0 +1,135 @@
+{
+ "key": "au-federal-s1128",
+ "title": "Treasury Laws Amendment (Axe the Tampon Tax) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Axe the Tampon Tax) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-09",
+ "originating_house": "senate",
+ "sponsor": "RICE, Sen Janet",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10836",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1128%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1128%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1128%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1128%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1128%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1128%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1128%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1128_ems_a8ef6b9c-2afc-4400-b548-5e1b71ddc181%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1128%22",
+   "document_date": "2018-05-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-09",
+  "sentences": [
+   "The bill would stop the goods and services tax from applying to menstrual products.",
+   "It would add a new GST-free category for items used during menstruation, including tampons, pads, cups and sponges among others.",
+   "The change would start the day after the bill receives royal assent."
+  ],
+  "changes": [
+   "Removes GST from sanitary products.",
+   "Defines the products that would be exempt.",
+   "Sets the commencement date as the day after royal assent."
+  ],
+  "affected": "People who menstruate and purchase sanitary products.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:29:38Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5223",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Axe the Tampon Tax) Bill 2018 - First Reading - Put the question",
+   "stage": "First Reading",
+   "ayes": 74,
+   "noes": 62,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-06-18/2"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

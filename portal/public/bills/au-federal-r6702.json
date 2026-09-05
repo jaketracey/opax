@@ -1,0 +1,177 @@
+{
+ "key": "au-federal-r6702",
+ "title": "Financial Regulator Assessment Authority (Consequential Amendments and Transitional Provisions) Bill 2021",
+ "short_title": "Financial Regulator Assessment Authority (Consequential Amendments and Transitional Provisions) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2021-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6702%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6702%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6702%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6702%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6702%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6702%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6702%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6702%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6702%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6702%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6702%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6702%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6701_ems_1d3a15e8-09c1-4070-bab0-6774760e9821%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6702%22",
+   "document_date": "2021-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00064",
+   "document_date": "2021-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-13",
+  "sentences": [
+   "This bill is part of a package that puts into effect recommendations from the Financial Services Royal Commission.",
+   "A new independent authority would be created to regularly review and report on the performance of the Australian Prudential Regulation Authority and the Australian Securities and Investments Commission.",
+   "The package would make it a criminal offence to use or disclose protected information supplied to the new authority without authorisation."
+  ],
+  "changes": [
+   "Establishes an independently-chaired body to assess the effectiveness and capability of APRA and ASIC.",
+   "Requires APRA and ASIC to cooperate with the new body, including by giving it information and documents it requests.",
+   "Sets out how members and staff are appointed or made available and how decisions are made.",
+   "Makes unauthorised use or disclosure of protected information a criminal offence."
+  ],
+  "affected": "the Australian Prudential Regulation Authority and the Australian Securities and Investments Commission",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-406910",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "A second reading amendment was moved, criticising the government for taking too long to address financial misconduct after the royal commission, noting that the Financial Regulator Assessment Authority should have been established eight years ago. The speech cited David Murray's warnings, 10,000 submissions to the royal commission, and criticised the government's 27 votes against oversight and the handling of responsible lending laws."
+  },
+  {
+   "slug": "speech-406917",
+   "speaker": "The DEPUTY SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-406920",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued the Financial Regulator Assessment Authority Bill 2021 will implement Hayne Royal Commission recommendations by establishing an independent authority to assess the effectiveness of APRA and ASIC. The Morrison government committed to acting on all 76 royal commission recommendations, with the authority to conduct biennial reviews and provide strategic insights to improve regulator performance."
+  },
+  {
+   "slug": "speech-406933",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The Financial Regulator Assessment Authority Bill 2021 establishes an authority to assess the effectiveness and capability of ASIC and APRA, with a companion bill ensuring confidential information can flow between regulators and the authority, as part of the government’s response to the Financial Services Royal Commission."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Financial Regulator Assessment Authority (Consequential Amendments and Transitional Provisions) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00064",
+   "assent_date": "2021-06-29"
+  }
+ ]
+}

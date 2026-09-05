@@ -1,0 +1,430 @@
+{
+ "key": "au-federal-r6396",
+ "title": "Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2019",
+ "short_title": "Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2020-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6396_ems_4639dbba-d525-434c-8e64-3146eeba7da9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6396_ems_45a306c4-b81b-4aed-891c-f806fc5b3189%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6396%22",
+   "document_date": "2019-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00070",
+   "document_date": "2020-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-6391",
+   "date": "2020-06-15",
+   "house": "senate",
+   "question": "Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2019 - in Committee - Mandatory minimum sentences",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 29,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-15/12"
+  },
+  {
+   "key": "federal-senate-6392",
+   "date": "2020-06-15",
+   "house": "senate",
+   "question": "Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2019 - in Committee - Mandatory minimum sentences",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 29,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-15/13"
+  },
+  {
+   "key": "federal-senate-6406",
+   "date": "2020-06-16",
+   "house": "senate",
+   "question": "Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2019 - Consideration of House of Representatives Message - Put the question",
+   "stage": "Consideration of House message",
+   "ayes": 41,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 25,
+    "earliest": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-16/2"
+  },
+  {
+   "key": "federal-senate-6407",
+   "date": "2020-06-16",
+   "house": "senate",
+   "question": "Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2019 - Consideration of House of Representatives Message - Mandatory minimum sentences",
+   "stage": "Consideration of House message",
+   "ayes": 44,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "earliest": 16,
+    "dated": 26
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-16/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-380397",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The Crimes Legislation Amendment (Sexual Crimes against Children and Community Protection Measures) Bill 2019 introduces mandatory minimum sentences of five to seven years for the most serious child sex offences and one to four years for recidivist offenders, with judges retaining discretion to deviate by up to 25% for early guilty pleas or cooperation. It also creates new offences for facilitating online child abuse material and grooming third parties, establishes a presumption against bail for repeat or serious offenders, and requires courts to set supervision and treatment conditions for all child sex offenders upon sentencing."
+  },
+  {
+   "slug": "speech-380546",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2019 is needed to protect children, citing 18,000 child exploitation complaints to the AFP last year, a doubling from the previous year, and that 28% of convicted Commonwealth child sex offenders received no prison time in 2018–19, with 42% receiving no imprisonment since 2012. The bill introduces new offences for grooming and online platforms, aggravated offences for severe abuse, presumptions against bail, and minimum sentences for the most serious offences, while the speaker noted that Labor has opposed minimum sentencing but has supported them in other contexts such as people smuggling, homicide, home invasion, and assault on public officers."
+  },
+  {
+   "slug": "speech-382590",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-15",
+   "stage_hint": null,
+   "brief": "The government is rushing the Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2019 through the House before the Senate Legal and Constitutional Affairs Legislation Committee has completed its inquiry, due 7 November 2019. Labor opposes the bill's introduction of mandatory minimum sentences, citing a lack of evidence of effectiveness and expert concerns that it may hinder prosecutions, and moved an amendment to remove those provisions."
+  },
+  {
+   "slug": "speech-382594",
+   "speaker": "Llew O'Brien",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-10-15",
+   "stage_hint": null,
+   "brief": "The Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2019 was backed as urgently needed, with mandatory sentencing for recidivist child sex offenders, increased maximum penalties, a presumption of imprisonment, tougher bail laws, and protections allowing prerecorded evidence. Labor was criticised for opposing mandatory sentencing, with supporters noting that about a third of Commonwealth child sex offenders were convicted without jail and citing prior reforms such as Carly’s Law and overseas travel bans."
+  },
+  {
+   "slug": "speech-382595",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's objectives to protect children from sexual abuse but opposed the mandatory sentencing measures in schedule 6, arguing they undermine judicial discretion, risk disproportionate outcomes, and may affect jury trials. They also highlighted Labor's previous child protection achievements under the Keating, Rudd, and Gillard governments."
+  },
+  {
+   "slug": "speech-382596",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor's rhetoric on child protection does not match their actions, as they refuse to support the Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2019, and criticised the member for Isaacs for focusing on parliamentary process rather than child protection."
+  },
+  {
+   "slug": "speech-382746",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-15",
+   "stage_hint": null,
+   "brief": "Labor supported the bill's child-protection objectives but opposed its mandatory minimum sentencing, citing the Royal Commission's 409 recommendations (none of which included mandatory sentences) and concerns from the Law Council, Knowmore and the Australian Lawyers Alliance that such penalties create unjust outcomes and could imprison teenagers for consensual or reckless behaviour. The speaker urged the government to reconsider, arguing mandatory sentencing undermines judicial discretion, violates human rights obligations and will not achieve the bill's aims."
+  },
+  {
+   "slug": "speech-392643",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-06-16",
+   "stage_hint": null,
+   "brief": "The speaker argued for minimum mandatory penalties for child sex offences, citing a 123% increase in child exploitation reports, that 39% of Commonwealth offenders received no jail time, and a case where a 22-year-old received nine months for a 15-year-maximum offence; they accused opponents of hypocrisy by comparing Labor's support for mandatory minimums in people-smuggling."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00070",
+   "assent_date": "2020-06-22"
+  }
+ ]
+}

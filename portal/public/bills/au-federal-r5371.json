@@ -1,0 +1,248 @@
+{
+ "key": "au-federal-r5371",
+ "title": "Customs Amendment (Japan-Australia Economic Partnership Agreement Implementation) Bill 2014",
+ "short_title": "Customs Amendment (Japan-Australia Economic Partnership Agreement Implementation) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2014-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5371%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5371%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5371%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5371%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5371%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5371%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5371_ems_11767f38-b723-4f93-827c-9f1b78c0dba0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5371%22",
+   "document_date": "2014-10-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00124",
+   "document_date": "2014-12-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-10-29",
+  "sentences": [
+   "This bill would change customs law so that goods from Japan can enter Australia at lower duty rates under a trade deal.",
+   "It would set rules to decide which products count as made in Japan, based on where they were produced.",
+   "The new system would start on the later of the day the bill becomes law or the day the trade deal takes effect for Australia."
+  ],
+  "changes": [
+   "Creates rules for determining whether imported goods are Japanese-origin goods.",
+   "Allows goods that meet the origin rules to enter Australia at preferential customs duty rates.",
+   "Imposes requirements on Australian exporters and producers who claim preferential duty for goods sent to Japan."
+  ],
+  "affected": "Importers and exporters of goods between Australia and Japan, and producers of such goods.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:00:07Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-300905",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300906",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301988",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301990",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301991",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301997",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302209",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302210",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302211",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302215",
+   "speaker": "Wyatt Roy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302216",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302217",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment (Japan-Australia Economic Partnership Agreement Implementation) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00124",
+   "assent_date": "2014-12-04"
+  }
+ ]
+}

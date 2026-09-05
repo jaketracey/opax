@@ -1,0 +1,392 @@
+{
+ "key": "au-federal-r6167",
+ "title": "Federal Circuit and Family Court of Australia Bill 2018",
+ "short_title": "Federal Circuit and Family Court of Australia Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-08-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-08-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6167%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6167%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6167%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6167%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6167%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6167%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6167%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6167%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6167%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6167%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6167_ems_6d64539a-88f2-46c4-b98e-79a27a41eb7a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6167_ems_29a13474-5658-469b-b42e-4175aa45d580%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6167_ems_c86f2b0c-ccc8-42d1-9c67-82640a5d1f9e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6167%22",
+   "document_date": "2018-08-23",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2018-08-23",
+  "sentences": [
+   "The bill would merge the Federal Circuit Court and the Family Court into a single administrative structure called the Federal Circuit and Family Court of Australia.",
+   "The new court would have two divisions, with one Chief Justice holding a dual commission to both divisions, and would create a consistent case management approach for family law matters.",
+   "The bill would not allow decided family law matters to be reopened based on these reforms alone."
+  ],
+  "changes": [
+   "Creates the Federal Circuit and Family Court of Australia as an overarching administrative structure.",
+   "Establishes two divisions, with Division 1 continuing the Family Court and Division 2 continuing the Federal Circuit Court.",
+   "Provides for a single Chief Justice with a dual commission to both divisions.",
+   "Confers family law jurisdiction on both divisions under the Family Law Act 1975.",
+   "Allows matters to be transferred between divisions with the approval of the receiving division's Chief Justice or Chief Judge.",
+   "Requires the Chief Justice and Chief Judge to work cooperatively on common case management approaches."
+  ],
+  "affected": "Australian families and children involved in family law disputes in the federal court system.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5381",
+   "date": "2018-08-23",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2018-08-23.20.1) moved by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which means it failed. It would have amended an [original amendment ](https://www.openaustralia.org.au/senate/?gid=2018-08-23.18.1). ### Amendment > *Omit \"15 April 2019\", substitute \"1 November 2018\".* ### Original amendment > *At the end of the motion, add:* > > *\"and, in respect of the provisions of the Federal Circuit and Family court of Australia Bill 2018 and the Federal Circuit and Family Court of Australia (Consequential Amendments and Transitional Provisions) Bill 2018, the Legal and Constitutional Affairs Legislation Committee report by 15 April 2019\".*",
+   "stage": "Committee motion",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 33,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-23/3"
+  },
+  {
+   "key": "federal-representatives-5536",
+   "date": "2018-11-27",
+   "house": "representatives",
+   "question": "Federal Circuit and Family Court of Australia Bill 2018 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 76,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 54,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-11-27/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-368248",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-23",
+   "stage_hint": null,
+   "brief": "The bill merges the Family Court of Australia and the Federal Circuit Court of Australia into a single Federal Circuit and Family Court of Australia, creating a unified administrative structure and a new family law appeal division in the Federal Court, aiming to resolve disputes more quickly and efficiently while addressing a backlog of 21,000 pending cases and rising median trial times."
+  },
+  {
+   "slug": "speech-368249",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-23",
+   "stage_hint": null,
+   "brief": "The Federal Circuit and Family Court of Australia (Consequential Amendments and Transitional Provisions) Bill 2018 establishes a new Family Law Appeal Division in the Federal Court from 1 January 2019, transferring most Family Court appellate functions to that division and providing $4 million for harmonising court rules."
+  },
+  {
+   "slug": "speech-372391",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-26",
+   "stage_hint": null,
+   "brief": "Labor opposed the Federal Circuit and Family Court of Australia Bill 2018 and related bill, citing no stakeholder consultation, insufficient evidence for clearing 8,000 extra cases, and concerns that the merger would effectively abolish the specialist Family Court by attrition, with appeals heard by a single Federal Court judge lacking family law experience."
+  },
+  {
+   "slug": "speech-372392",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that merging the Family Court and Federal Circuit Court would reduce inefficiencies, delays, and costs for families, citing the case of John Edwards, who murdered his two children and himself after custody hearings."
+  },
+  {
+   "slug": "speech-372503",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Federal Circuit and Family Court of Australia Bill 2018 was rushed, lacked adequate consultation, and would effectively abolish the Family Court by not replacing retiring judges. They criticised the Morrison government for underfunding the family law system and failing to consult stakeholders, noting the bill spans 500 pages and amends 125 other bills."
+  },
+  {
+   "slug": "speech-372505",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Federal Circuit and Family Court of Australia Bill 2018, arguing it would gradually abolish the specialist Family Court by merging it with the Federal Circuit Court, halting new appointments to Division 1, and transferring appellate jurisdiction to the Federal Court. They criticised inadequate consultation with stakeholders, reliance on a PricewaterhouseCoopers report, and the government's failure to properly resource the Family Court, which they said caused the backlogs the bill purportedly addresses."
+  },
+  {
+   "slug": "speech-372506",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Federal Circuit and Family Court of Australia Bill 2018, arguing it would abolish the Family Court without proper consultation, and criticised the coalition government for undermining institutions and lacking a governing plan, referencing former Prime Ministers Tony Abbott and Malcolm Turnbull."
+  },
+  {
+   "slug": "speech-372515",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bills merging the Family Court of Australia into the Federal Circuit Court, arguing the government rushed the process without consulting stakeholders or awaiting the Australian Law Reform Commission’s report, and that the true cause of delays is inadequate resourcing—not court structure—pointing to the Family Court of Western Australia having only five judges, unchanged since 1975 despite population growth."
+  },
+  {
+   "slug": "speech-372516",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Federal Circuit and Family Court of Australia Bill 2018, arguing it would abolish the family law system by stealth rather than fix under-resourcing, and called for adequate funding of courts and legal aid instead of amalgamation."
+  },
+  {
+   "slug": "speech-372517",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-26",
+   "stage_hint": null,
+   "brief": "Labor will oppose the proposed merger of the Family Court and Federal Circuit Court, arguing it would eliminate specialist family-law expertise and endanger domestic-violence victims while providing zero additional funding—despite backlogs growing from 17,000 to 21,000 cases and median trial times rising to 15.2 and 17 months."
+  },
+  {
+   "slug": "speech-372519",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Federal Circuit and Family Court of Australia Bill 2018, arguing it would merge specialist and generalist judges, ignore 33 recommendations from a 2017 inquiry into family law and violence, and prioritise cost-cutting over protecting children and families. They called for proper investment, funding, and replacement of retiring judges instead."
+  },
+  {
+   "slug": "speech-372521",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's plan to merge the Family Court and Federal Circuit Court, through the two bills, was based on a rushed six-week desktop review by PwC and a three-week consultation period for a 500-page bill, with virtually no input from experts or the sector, and would eliminate specialist family law expertise, prioritising speed and cost over the best outcomes for children and families. They noted that the Law Council and other bodies opposed the changes, only two government members spoke on the bills, and a Law Reform Commission review was due in March 2019."
+  },
+  {
+   "slug": "speech-372523",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-11-26",
+   "stage_hint": null,
+   "brief": "Centre Alliance supported the Federal Circuit and Family Court of Australia Bill 2018 in the House but not as an endorsement, pending Senate committee review. The speaker raised concerns that removing the Family Court’s appellate function could erode specialist knowledge and that the government’s efficiency focus may overlook quality, noting the claimed 8,305 additional matters resolved per year remains untested."
+  },
+  {
+   "slug": "speech-372524",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Federal Circuit and Family Court of Australia Bill 2018 to merge the two family courts, citing current wait times exceeding 15 months and cases taking up to five years, and claimed the merger would finalise an additional 3,000 cases per year and eliminate 35,000 cases being referred to the wrong court."
+  },
+  {
+   "slug": "speech-372526",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Federal Circuit and Family Court of Australia Bill 2018, arguing it would abolish the Family Court against the advice of legal stakeholders and a pending review, and claimed the government ignored the need for more judges and funding. They contrasted the federal approach with the Victorian Labor government’s $152 million investment in a new Bendigo law court."
+  },
+  {
+   "slug": "speech-372879",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Federal Circuit and Family Court of Australia Bill 2018 merges the Family Court and Federal Circuit Court into a single structure without abolishing the Family Court, creates a new family law appeal division in the Federal Court, and delays the commencement date due to a Senate inquiry. The government allocated $4 million for implementation and predicted $3 million in savings to be reinvested, aiming to reduce waiting times and improve case management."
+  }
+ ],
+ "acts": []
+}

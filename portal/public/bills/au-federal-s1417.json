@@ -1,0 +1,97 @@
+{
+ "key": "au-federal-s1417",
+ "title": "Commission of Inquiry into Antisemitism at Australian Universities Bill 2024",
+ "short_title": "Commission of Inquiry into Antisemitism at Australian Universities Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2024-06-25",
+ "originating_house": "senate",
+ "sponsor": "HENDERSON, Sen Sarah",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10790",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-09-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1417%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1417%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1417%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1417_ems_d1e33301-8b93-4de9-a596-231178d0e8b0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1417%22",
+   "document_date": "2024-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-06-25",
+  "sentences": [
+   "This bill would create a body to investigate the hatred of Jewish people at Australian universities.",
+   "A current or former judge appointed by the minister would lead the probe, with the same powers as a royal commission.",
+   "The commission would look at antisemitic activity both before and after 7 October 2023, including harassment, support for listed terrorist organisations, and universities' responses."
+  ],
+  "changes": [
+   "Establishes a commission of inquiry focused solely on antisemitism at Australian universities.",
+   "Gives the commissioner powers equivalent to a royal commission, including the ability to hear evidence confidentially and grant immunities.",
+   "Directs the commission to examine university responses to antisemitism, including actions by leaders, regulators, and student bodies."
+  ],
+  "affected": "Jewish students, academics, staff, and visitors at Australian universities, as well as university authorities and campus groups.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,141 @@
+{
+ "key": "au-federal-s1428",
+ "title": "Blayney Gold Mine Bill 2024",
+ "short_title": "Blayney Gold Mine Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-09-12",
+ "originating_house": "senate",
+ "sponsor": "DUNIAM, Sen Jonathon",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10847",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-11-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1428%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1428_ems_78f72b6f-33f5-46db-8b6e-b902923c7d66%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1428%22",
+   "document_date": "2024-09-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-09-12",
+  "sentences": [
+   "The bill would reverse a federal environment minister's declaration that stopped a gold mine's tailings dam near Blayney, New South Wales.",
+   "It would repeal that declaration and prevent any future cultural heritage declarations under the Aboriginal and Torres Strait Islander Heritage Protection Act from affecting the mine site.",
+   "The bill would take effect on the day it receives royal assent."
+  ],
+  "changes": [
+   "Repeals the environment minister's declaration made on 13 August 2024.",
+   "Prevents the minister from making any further declarations under the Heritage Protection Act that would affect the gold mine's construction or operation.",
+   "Defines the Blayney gold mine area to cover the full proposed mine site."
+  ],
+  "affected": "Regis Resources' proposed gold mine project near Blayney, New South Wales, and the Federal Environment Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9423",
+   "date": "2024-11-20",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2024-11-20.11.2) to agree with the main idea of the bill, which means the bill will no longer be considered in parliament. In parliamentary jargon, the majority voted against reading the bill for a second time. The bill was sponsored by Tasmanian Senator [Jonathon Duniam](https://theyvoteforyou.org.au/people/senate/tasmania/jonathon_duniam) (Liberal). ### What is the bill's main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1428), the bill: > *Repeals the Aboriginal and Torres Strait Islander Heritage Protection (Kings Plains) Declaration 2024 and prevents the minister from making a declaration that would affect the construction or operation of a gold mine in the Blayney gold mine area.* Read more about Blayney gold mine decision on [ABC News](https://www.abc.net.au/news/2024-08-19/mcphillamys-gold-project-mine-deemed-not-viable/104241418).",
+   "stage": "Second reading",
+   "ayes": 24,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 7,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-20/3"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

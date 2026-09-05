@@ -1,0 +1,496 @@
+{
+ "key": "au-federal-r6180",
+ "title": "Aged Care Quality and Safety Commission Bill 2018",
+ "short_title": "Aged Care Quality and Safety Commission Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2018-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6180_ems_74c70007-05dd-46b8-9979-10dd9a48be3a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6180_ems_94100116-cd41-4fb5-9649-3b2052674931%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6180_ems_db864472-70fa-4aa3-a417-83dd01fcb551%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6180%22",
+   "document_date": "2018-09-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00149",
+   "document_date": "2018-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-12",
+  "sentences": [
+   "The bill would create a new national regulator for aged care services.",
+   "The regulator would combine existing agencies and take over accreditation, monitoring, complaints, and from 1 January 2020, provider approval and compliance.",
+   "The regulator would be led by a statutory commissioner who could get clinical advice from a panel of experts."
+  ],
+  "changes": [
+   "Establishes a single regulator for aged care quality and safety.",
+   "Transfers functions from the existing Australian Aged Care Quality Agency and another body to the new commission.",
+   "Gives the commission responsibility for accreditation, assessment, monitoring and complaints handling.",
+   "From 1 January 2020, the commission would also approve providers, enforce compliance and handle mandatory assault reporting.",
+   "Creates a statutory commissioner and an advisory council to support the regulator.",
+   "Allows the commissioner to seek clinical advice and engage a clinical advisor supported by an expert panel."
+  ],
+  "affected": "Aged care consumers, providers of residential, home, flexible and Commonwealth-funded aged care services, and the existing Australian Aged Care Quality Agency and another body.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:09Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5467",
+   "date": "2018-10-17",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debates/?id=2018-10-17.111.2) to amend the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html), which is a motion on whether to agree with the main idea of the bill. The usual wording is: \"*That this bill be now read a second time.*\" ### Amendment wording > *That all words after \"That\" be omitted with a view to substituting the following words:* > *\"whilst not declining to give the bill a second reading, the House notes the Government's mismanagement of aged care reform\".*",
+   "stage": "Second reading",
+   "ayes": 68,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-10-17/2"
+  },
+  {
+   "key": "federal-senate-5525",
+   "date": "2018-11-26",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2018-11-26.27.1) to government amendment (8), which means it failed. ### Amendment text > *(1) Amendment (8), after paragraph 59A(1) (d), insert:* > >> *(da) the number of staff, and the skill mix of staff, providing direct care to persons who are recipients of the service;* ### Original government amendment (8) > *(8) Page 36 (after line 26) , at the end of Division 3 , add:* > >> *59A Information about Commonwealth-funded aged care service may be made publicly available* >> >> *(1) The Commissioner may make publicly available the following information about a Commonwealth-funded aged care service:* >> >>> *(a) the name and address of the service;* >>> >>> *(b) the number of persons who are recipients of the service;* >>> >>> *(c) the services provided by the service;* >>> >>> *(d) the facilities and activities available to persons who are recipients of the service;* >>> >>> *(e) the name of the service provider of the service;* >>> >>> *(f) information about the variety and type of service provided by the service provider;* >>> >>> *(g) information about the service provider’s performance in relation to the provider’s responsibilities under the funding agreement that relates to the service;* >>> >>> *(h) any action taken, or intended to be taken, under this Act or the rules to protect the welfare of persons who are recipients of the service, and the reasons for that action;* >>> >>> *(i) any other information of a kind specified in the rules for the purposes of this paragraph.* >> >> *(2) Information disclosed under subsection (1) must not include personal information.*",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 25,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-11-26/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-368847",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The Aged Care Quality and Safety Commission Bill 2018 was introduced to establish a single independent commission, merging the Australian Aged Care Quality Agency, the Aged Care Complaints Commissioner, and aged-care regulatory functions of the Department of Health from 1 January 2020, in response to the 2018-19 budget commitment and the Carnell-Paterson review."
+  },
+  {
+   "slug": "speech-368848",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The Aged Care Quality and Safety Commission (Consequential Amendments and Transitional Provisions) Bill 2018 repeals the Australian Aged Care Quality Agency Act 2013 and its transitional provisions, amends the Aged Care Act 1997 to replace references to the CEO of the Aged Care Quality Agency, the Agency and the Aged Care Complaints Commissioner with the Aged Care Quality and Safety Commissioner, and provides for transferring functions, continuing existing advisory council appointments, and transitional flexibility from 1 January 2019."
+  },
+  {
+   "slug": "speech-370070",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "Labor supported the bills establishing the Aged Care Quality and Safety Commission from 1 January 2019, while criticising the government for delaying the legislation, failing to give the new commissioner stronger dispute-resolution powers, and leaving 108,000 people on the home care waitlist. A second reading amendment was moved noting the government’s mismanagement of aged care reform."
+  },
+  {
+   "slug": "speech-370073",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Quality and Safety Commission Bill 2018 and its companion bill, which consolidate existing aged-care agencies into a single commission, and noted that reportable assaults in residential aged care increased by 32% to 3,773 cases in the last financial year. The speaker also welcomed the announcement of a royal commission into the aged-care sector."
+  },
+  {
+   "slug": "speech-370074",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Quality and Safety Commission Bill 2018 and an amendment, but argued the government had delayed aged-care reform for five years and that the bill addressed only one of ten recommendations from the Carnell-Paterson review. They noted the government’s recent announcement of a royal commission, criticised its rushed and inadequate approach, and called for bipartisan cooperation to improve care for older Australians."
+  },
+  {
+   "slug": "speech-370075",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Quality and Safety Commission Bill 2018, citing 27,738 age pensioners and 47,506 pensioner concession card holders in his electorate of Hinkler. He detailed local investments of $8.6 million in 2014, along with new residential care places across 2014–2017, and urged the state Labor government to fix ACAT assessment wait times in regional Australia."
+  },
+  {
+   "slug": "speech-370407",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Quality and Safety Commission Bill 2018 but criticised the government for cutting nearly $2 billion from aged care under then‑Treasurer Morrison, accused it of a “cruel hoax” by reallocating existing funds rather than adding new money, and argued the government has prioritised tax cuts for big business over older Australians."
+  },
+  {
+   "slug": "speech-370408",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care Quality and Safety Commission Bill will improve care standards by consolidating regulatory functions into a single independent body, backed by $106 million in funding, and noted that aged care spending reached $18.6 billion in 2017–18 with an additional $5 billion over five years. They also highlighted the upcoming royal commission into aged care and cited the Treendale Gardens facility in their electorate as a model for young people with disabilities."
+  },
+  {
+   "slug": "speech-370409",
+   "speaker": "Anne Stanley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care Quality and Safety Commission Bill 2018 is inadequate, as it implements only one of ten Carnell-Paterson review recommendations while the government has delayed action for nearly a year. They called for immediate implementation of the aged-care workforce strategy, criticised $2 billion in cuts to the sector under Treasurer Morrison, and urged the government to act before the royal commission finishes."
+  },
+  {
+   "slug": "speech-370410",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Aged Care Quality and Safety Commission Bill 2018, citing 3,773 assaults and rapes of nursing home residents, 61 homes identified as serious risks, and 209 nursing homes that failed the quality audit. He announced $106 million for the new commission, record aged-care funding of $18.6 billion in 2017-18 with an additional $5 billion over five years, and a royal commission into aged care, while urging families to visit residents more often."
+  },
+  {
+   "slug": "speech-370505",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to establish the Aged Care Quality and Safety Commission from 1 January 2019, but criticised the government for slow introduction, billions in funding cuts, and 121,000 people on the home care waiting list. The speaker called for immediate action on aged care, not merely waiting for the royal commission."
+  },
+  {
+   "slug": "speech-370506",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Quality and Safety Commission Bill 2018, which merges the Australian Aged Care Quality Agency and the Aged Care Complaints Commissioner from 1 January 2019, and noted record aged-care funding of $18.6 billion in 2017–18, growing to $23.6 billion, alongside $1.6 billion for 20,000 additional home care packages and the recently announced royal commission."
+  },
+  {
+   "slug": "speech-370507",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The Aged Care Quality and Safety Commission Bill 2018 was supported, merging the Aged Care Quality Agency and the Aged Care Complaints Commissioner into a single commission. Nearly $2 billion in cuts to aged care were criticised, with over 108,000 people on the home care package waiting list and a royal commission called for."
+  },
+  {
+   "slug": "speech-370508",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The member for Lyne argued that the Aged Care Quality and Safety Commission bills will create a single oversight body for aged care, merging the Australian Aged Care Quality Agency and the Aged Care Complaints Commissioner. He noted that aged-care funding in his electorate rose from $90 million to $130 million annually, with specific expansions including 144 new high-care places at Pacific Cape, 80 new places at a Salvation Army facility, and $8 million for a new Anglicare nursing home in Gloucester, while home care packages nationally increased from 71,000 to 85,000 recipients."
+  },
+  {
+   "slug": "speech-370512",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's $1.2 billion cut to aged care in its first budget and a further $500 million cut in 2015 have caused a crisis, with 121,000 people on the home care package waiting list—an increase of 13,000 in three months—and over 3,000 waiting in Tasmania."
+  },
+  {
+   "slug": "speech-370513",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Quality and Safety Commission bills, citing the Oakden nursing home scandal as a catalyst for reform, and noted record funding including $1.6 billion for 14,000 new home care packages, while calling for reinvestment in smaller rural aged-care facilities."
+  },
+  {
+   "slug": "speech-370516",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The member for Petrie argued that older Australians deserve respect and first-class care, supporting the Aged Care Quality and Safety Commission Bill 2018 and Prime Minister Scott Morrison's call for a royal commission into aged care. He named several aged-care facilities in his electorate, including BallyCara, Seasons Aged Care, Azure Blue, Holy Spirit Home, Aveo, Opal North Lakes, Beaumont Care, Compton Gardens, and St James Terrace."
+  },
+  {
+   "slug": "speech-370519",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care Quality and Safety Commission Bill 2018 is an insufficient reorganisation, not a real structural change, as it transfers responsibility from the minister to a commissioner without addressing ongoing failures—over 4,000 Australians shared care experiences after the Four Corners program, and staffing expenditure varies from 45 to 75 percent of income across homes. The speaker called for greater transparency and accountability, and supported the announced royal commission while urging it not to delay immediate reforms."
+  },
+  {
+   "slug": "speech-370521",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Quality and Safety Commission bills but criticised the government for delaying the legislation by nearly a year after the Carnell-Paterson review, for cutting nearly $2 billion from aged care under then-Treasurer Scott Morrison, and for a home care package waiting list of 121,000 people (95,000 with high needs) while spending $8.2 million on an advertising campaign. They called for immediate action on staffing ratios, training, and funding, noting the workforce must expand by 300% by 2056 to meet demand."
+  },
+  {
+   "slug": "speech-370522",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the royal commission into aged care but criticised the government for slow, piecemeal action, noting over a dozen unactioned reviews and hundreds of unaddressed recommendations since the Carnell-Paterson review in October 2017. They highlighted understaffing and underfunding, with 1.3 million Australians receiving care from 400,000 workers, and projected the workforce must triple to one million by 2056."
+  },
+  {
+   "slug": "speech-370525",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the shadow minister's amendment to the Aged Care Quality and Safety Commission bills, but argued the bills should pass if the amendment fails, noting over 100,000 people nationally—including over 1,000 in their own electorate—are waiting for home care packages, and called for better funding, workforce planning, and recognition of aged-care workers during National Carers Week."
+  },
+  {
+   "slug": "speech-370942",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to the Aged Care Quality and Safety Commission Bill 2018, arguing the aged-care system is in crisis with rising complaints (4,315 in 2017-18), 43% of facilities operating at a loss, a $7.30 per day funding shortfall per resident, and 1 in 6 deaths in residential care being preventable. They welcomed the royal commission but warned it must not delay urgent action, and criticised the government's funding cuts and regulatory failures, citing 64 inspections at Oakden that missed widespread abuse until public scrutiny."
+  },
+  {
+   "slug": "speech-370943",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-17",
+   "stage_hint": null,
+   "brief": "Labor supported the Aged Care Quality and Safety Commission bills but criticised the government for cutting $1.2 billion from aged care, ignoring numerous reports (including only one of ten Carnell-Paterson recommendations implemented), and providing just 14,000 new home care packages despite a waitlist of 121,000 older Australians."
+  },
+  {
+   "slug": "speech-370944",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-17",
+   "stage_hint": null,
+   "brief": "The speaker supported merging the Aged Care Quality Agency and Complaints Commission into a single commission but argued it was a missed opportunity to give the new body stronger powers. They criticised the government for failing to address workforce issues, citing 121,418 people waiting for home care packages (55,000 with highest needs), and named aged-care workers Jocelyn Hofman, Annette Peters, Shirley Ross-Shuley, and constituents Anthea Cox-Norman, Kim, and Susan as examples of the crisis."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care Quality and Safety Commission Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00149",
+   "assent_date": "2018-12-10"
+  }
+ ]
+}

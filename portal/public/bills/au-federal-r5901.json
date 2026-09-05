@@ -1,0 +1,642 @@
+{
+ "key": "au-federal-r5901",
+ "title": "Medicare Guarantee (Consequential Amendments) Bill 2017",
+ "short_title": "Medicare Guarantee (Consequential Amendments) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5901%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5901%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5901%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5901%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5901%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5901%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5901%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5901%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5901%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5901%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5901%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5901%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5901_ems_f5f09c68-9999-4f08-813f-10eb5328b469%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5901%22",
+   "document_date": "2017-06-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00072",
+   "document_date": "2017-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 9,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-01",
+  "sentences": [
+   "This bill is part of a package that creates the Medicare Guarantee Fund, which would split into a Treasury and a Health special account.",
+   "From 1 July 2017 or later, MBS and PBS payments would be automatically taken from and paid out of the Health special account.",
+   "The Treasurer would each year credit the Treasury special account with an amount matching estimated liabilities and transfer that sum to the Health account, with top-up mechanisms to cover shortfalls."
+  ],
+  "changes": [
+   "Establishes the Medicare Guarantee Fund with Treasury and Health special accounts.",
+   "Automatically debits MBS and PBS payments from the Health special account from 1 July 2017 or later.",
+   "Requires the Treasurer to annually credit the Treasury special account with estimated liabilities and transfer that amount to the Health account.",
+   "Creates mechanisms to address over and under estimates, including top-ups to the Health account."
+  ],
+  "affected": "The package affects the Department of Health, the Department of the Treasury, and recipients of Medicare and Pharmaceutical Benefits Scheme payments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:56:36Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4715",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "question": "Medicare Guarantee Bill 2017, Medicare Guarantee (Consequential Amendments) Bill 2017 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-19/4"
+  },
+  {
+   "key": "federal-representatives-4716",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "question": "Tony Smith The question is that the amendment be agreed to.",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-19/5"
+  },
+  {
+   "key": "federal-representatives-4717",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "question": "Tony Smith Is leave granted for the third reading to be moved immediately? Leave not granted . Scott Morrison I move: That so much of the standing orders be suspended as would prevent the motion for the third reading being moved without delay. Tony Smith The question is that so much of standing orders be suspended as would prevent the motion for the third reading being moved without delay.",
+   "stage": "Bill",
+   "ayes": 78,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-19/6"
+  },
+  {
+   "key": "federal-representatives-4718",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "question": "Scott Morrison I move: That this bill be now read a third time. Tony Smith The question is that this bill be now read a third time. The Manager of Opposition Business? Tony Burke I move: That so much of the standing orders be suspended as would prevent the Members for Macarthur, Ballarat, Newcastle, Blair, Lalor, Brand, Kingston, Bendigo, Lingiari, Parramatta, Corangamite, Forrest and Calare from speaking for a period of no more than 15 minutes on the bill's third reading. This debate was unacceptably cut short— Tony Smith No, the Manager of Opposition Business will resume his seat. Members, I have a difficulty with this— Ms Chesters interjecting— The member for Bendigo has already been ejected today. Members can cease giving me advice by way of interjection. I have a difficulty with this suspension motion because it is not being moved between items of business. I am prepared to— Tony Burke Mr Speaker, on a point of order— Tony Smith I will hear from the Manager of Opposition Business. Tony Burke Mr Speaker, we regularly have procedural suspensions of standing orders, but the ruling within practice is: they must relate to the business before the House. We ordinarily deal with suspensions between items because they are suspensions of standing orders that do not relate to what is before the House at that moment. Right at this moment, what is before the House is that the bill be read a third time. The suspension that I have moved goes only to the order of debate for the third reading and who will be allowed to speak for 15 minutes each; it goes to nothing else. Tony Smith I will hear from the Leader of the House. Christopher Pyne Mr Speaker, I believe your immediate hunch was the correct one—that is, that suspensions of standing orders are perfectly entitled to be moved but not in the middle of an item of government business or, in fact, in any other matter of business. Therefore, the suspension of standing orders can be moved after this if he wishes to do so. But the",
+   "stage": "Third reading",
+   "ayes": 77,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-19/7"
+  },
+  {
+   "key": "federal-representatives-4719",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "question": "Tony Smith Is the motion seconded? Catherine King I second the motion. The fact that a 30 year— Tony Smith The member for Ballarat will resume her seat. The Leader of the House. Christopher Pyne I move that the member for Ballarat be no further heard. _A division having been called and the bells being/having been rung—_ Ms Catherine King interjecting— Tony Smith It would be regrettable if the member for Ballarat was asked to leave in the 30 seconds before I lock the doors. The Leader of the House has moved that the member for Ballarat be no longer heard.",
+   "stage": "Third reading",
+   "ayes": 77,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-19/8"
+  },
+  {
+   "key": "federal-representatives-4720",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "question": "Tony Smith The question now is that the motion be agreed to. Mike Freelander Mr Speaker, trusting this government to make our universal health— Tony Smith The member for Macarthur will resume his seat. The Leader of the House. Christopher Pyne I move: That the motion be put. Tony Smith The question is that the motion be put. The question now is that the motion of suspension moved by the Manager of Opposition Business be agreed to. The House divided. [17:18] (The Speaker—Hon. Tony Smith) Question negatived.",
+   "stage": "Third reading",
+   "ayes": 77,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-19/9"
+  },
+  {
+   "key": "federal-representatives-4721",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "question": "No motion text available",
+   "stage": "Third reading",
+   "ayes": 67,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-19/10"
+  },
+  {
+   "key": "federal-representatives-4722",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "question": "Tony Smith The question now before the House is that this bill be read a third time. The member for Ballarat? Catherine King There were questions I asked the minister in summing up to actually— Tony Smith The member for Ballarat will resume her seat. Scott Morrison I move: That the motion be put. Tony Smith The question is that the motion be put.",
+   "stage": "Third reading",
+   "ayes": 78,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-19/11"
+  },
+  {
+   "key": "federal-representatives-4723",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "question": "Tony Burke The motion that the minister has just moved is once again another example of this government preventing— Government Member A government member interjecting— Tony Burke No, it is a suspension of standing orders; I am allowed to speak. Tony Smith No, it is not a suspension of standing orders. Just to be clear—the Manager of Opposition Business can just resume his seat for a second—this is a contingent motion that the minister has moved, and debate may ensue, so the Manager of Opposition Business has the call. Tony Burke The mover had already sat down. Tony Smith The Manager of Opposition Business will resume his seat. Tony Burke He had already sat down. Tony Smith The Leader of the House has now moved that the Manager of Opposition Business— Christopher Pyne No, I moved the motion be put. Tony Smith The question is that motion be put.",
+   "stage": "Third reading",
+   "ayes": 78,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-19/12"
+  },
+  {
+   "key": "federal-representatives-4724",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "question": "Christopher Pyne I move: That this bill be now read a third time. Tony Smith The question is that this bill be now read a third time. Christopher Pyne I move: That the motion be put. Tony Smith The question is that the motion be put.",
+   "stage": "Third reading",
+   "ayes": 78,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-19/13"
+  },
+  {
+   "key": "federal-senate-4732",
+   "date": "2017-06-19",
+   "house": "senate",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/senate/?gid=2017-06-19.197.1) introduced by Senator [Helen Polley](https://theyvoteforyou.org.au/people/senate/tasmania/helen_polley) (Tas), which means it failed. The motion asked for this bill to be withdrawn and redrafted *\"to provide actual guarantees for the future of Medicare\"*. ### What do these bills do? If passed, the [bills](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5900) will create the Medicare Guarantee Fund. The Fund will be used to fund both Medicare benefits and payments under the Pharmaceutical Benefits Scheme [**PBS**]. The creation of this fund is a response to the 2016 election, which the Labor Party accused the Coalition of wanted to privatise Medicare. The [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd108) emphasises that these bills don't *\"guarantee the continuing existence of Medicare of itself ... [but] will make funding of both the MBS [Medicare Benefits Schedule] and PBS more visible because all the Medicare benefit payments and PBS payments will be made through the Health Special Account.\"* ### Motion text > *Leave out all words after \"that\" insert:* > *\"the bill be withdrawn and redrafted to provide actual guarantees for the future of Medicare, specifically by:* >> *(a) setting out the purpose of Medicare, namely to provide a universal public health insurance scheme that provides access to medical, pharmaceutical and public hospital services based on clinical need, not capacity to pay;* >> *(b) including funding to support universal access to public hospital treatment, along with medical and pharmaceutical benefits, in the purpose of the bill;* >> *(c) guaranteeing immediate and annual indexation of Medicare rebates that have been frozen by this Government;* >> *(d) guaranteeing proper Commonwealth investment in public hospitals, so that all Australians can access acute",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 17,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-06-19/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-348087",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The MP moved the Medicare Guarantee (Consequential Amendments) Bill 2017, which amends the Health Insurance Act 1973 and National Health Act 1953 to replace existing special appropriations for the MBS and PBS with a Medicare Guarantee Fund, aiming to increase transparency and secure funding for these schemes."
+  },
+  {
+   "slug": "speech-349493",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Medicare Guarantee Bill 2017 establishes a Medicare Guarantee Fund to secure ongoing funding for the Medicare Benefits Schedule and Pharmaceutical Benefits Scheme from 1 July 2017, with an estimated $33.8 billion credited in the next financial year, including $12.1 billion from the Medicare levy."
+  },
+  {
+   "slug": "speech-349494",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-19",
+   "stage_hint": null,
+   "brief": "The speaker argued the Medicare Guarantee Bill is a meaningless accounting trick that does not protect Medicare, citing the government's $2.2 billion freeze on patient rebates, cuts to public hospitals, and only 67% of urgent emergency patients seen within 30 minutes. They proposed amendments to include public hospital funding, immediate indexation of frozen rebates, and reinvestment of savings from the Medicare Benefits Schedule Review."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Medicare Guarantee (Consequential Amendments) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00072",
+   "assent_date": "2017-06-26"
+  }
+ ]
+}

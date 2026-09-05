@@ -1,0 +1,398 @@
+{
+ "key": "au-federal-alrc-2421",
+ "title": "Early Years Quality Fund Special Account Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "School Education, Early Childhood and Youth",
+ "status": "passed",
+ "status_as_of": "2013-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-29",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00110",
+   "document_date": "2013-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-2907",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "question": "Ken O'Dowd I wish to speak on the Early Years Quality Fund Special Account Bill 2013, which I oppose in its entirety. This legislation seeks to establish a $300 million fund to provide wage increases to around 30 to 40 per cent, although this figure is not clear, of the long day care workforce and it only lasts for two years. As for what happens after two years, we guess it reverts back to where it is today. The centres will need to enter into enterprise bargaining agreements with staff and meet eligibility criteria. Given the limited pool of funds, it could be on a 'first in' basis, yet this is not even clear. After the two years workers will revert back to their previous wage. This would be history-making if this were the case. This bill is unbalanced. It is divisive, it is unfair and it will create a wage war. The bill has come around as a result of the union involved waging the Big Steps campaign, seeking to increase wages and conditions in the early childhood sector. The United Voice union—previously the Liquor, Hospitality and Miscellaneous Union, or the LHMU—have been campaigning for an increase in childcare sector wages since 2008, with their requests for increases ranging between $7 and $10 an hour. They proposed that the government fund this increase, and they were actually originally looking for $1.4 billion a year—and indexed. The coalition have a number of serious concerns with this bill. We do not dispute that childcare educators are low paid. We know these workers are skilled and work long and hard hours. Any wage increase should come through the Fair Work Commission, the body that the government has established with the responsibility of determining appropriate and fair levels of remuneration. Yet the United Voice union has refused to lodge a wage claim with the Fair Work Commission. Can you believe this? They rely instead on a Labor government to just hand over money hand over fist. It is unheard of. This $300 million is nothing more than an act of",
+   "stage": "Second reading",
+   "ayes": 74,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-25/1"
+  },
+  {
+   "key": "federal-senate-2435",
+   "date": "2013-06-28",
+   "house": "senate",
+   "question": "The majority voted in favour of a motion to agree with the main idea of the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5074). In parliamentary jargon, they voted to read the bill for a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). the Senate will now discuss the bill in more detail. ### What is the bill's main idea? The [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5074) was introduced to establish the Early Years Quality Fund Special Account to: > *provide $300 million over two years to approved centre based long day care services in the form of grants to be used exclusively for the remuneration of employees and other employment-related costs and expenses.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1213a/13bd133).",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 58,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-28/10"
+  },
+  {
+   "key": "federal-senate-2436",
+   "date": "2013-06-28",
+   "house": "senate",
+   "question": "John Hogg The question now is that the remaining stages of the bill be agreed to and the bill be now passed.",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 58,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-28/11"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-273922",
+   "speaker": "Anna Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277308",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277309",
+   "speaker": "Kate Ellis",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277310",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277486",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277487",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277488",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277489",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277490",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277491",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277492",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277493",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277496",
+   "speaker": "Ken O'Dowd",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277498",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277504",
+   "speaker": "Peter Garrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825303",
+   "speaker": "Kate Lundy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-28",
+   "stage_hint": null,
+   "brief": "The speaker moved a motion to set the Senate's sitting hours for 28 June 2013 from 9:30 am to 3:40 pm, with specific time allocations for general business notice no. 1288 (relating to the Committee of Privileges) and for government business including the Early Years Quality Fund Special Account Bill 2013 and the Migration Amendment (Temporary Sponsored Visas) Bill 2013, each with limited debate time."
+  },
+  {
+   "slug": "speech-825319",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-28",
+   "stage_hint": null,
+   "brief": "The government introduced the Early Years Quality Fund Special Account Bill 2013, establishing a $300 million fund to support wage increases for early childhood educators and assist with implementing the National Quality Framework. The opposition argued the fund would benefit fewer than 40% of childcare workers, primarily served union membership drives, and created a two-tiered system."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Early Years Quality Fund Special Account Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00110",
+   "assent_date": "2013-06-29"
+  }
+ ]
+}

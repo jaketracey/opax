@@ -1,0 +1,151 @@
+{
+ "key": "au-federal-r5618",
+ "title": "Passenger Movement Charge Amendment (Norfolk Island) Bill 2016",
+ "short_title": "Passenger Movement Charge Amendment (Norfolk Island) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2016-03-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5618%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5618%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5618%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5618%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5618%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5618%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5618%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5618%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5618%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5618%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5618%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5618%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5618_ems_bed52ad0-5d0b-4f47-bcac-d8826e22af1a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5618%22",
+   "document_date": "2016-02-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00032",
+   "document_date": "2016-03-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-24",
+  "sentences": [
+   "This bill is part of a package that amends several laws to integrate Norfolk Island into the mainland legal framework.",
+   "The package would extend all Commonwealth laws to Norfolk Island unless stated otherwise, and make related changes including amendments to electoral and social security law.",
+   "The Passenger Movement Charge Amendment (Norfolk Island) Bill 2016 is a consequential amendment to this primary measure."
+  ],
+  "changes": [
+   "The package gives New Zealand permanent visa holders on Norfolk Island access to social security.",
+   "It brings forward the early claims period for family assistance payments to match other payment types.",
+   "It extends child support to Christmas Island and Cocos (Keeling) Island residents.",
+   "It makes eligible Norfolk Island residents enrol and vote in federal elections.",
+   "It lets the Norfolk Island Regional Council have a more flexible definition under local government law."
+  ],
+  "affected": "People and residents of Norfolk Island, Christmas Island and Cocos (Keeling) Island, and federal agencies including those administering social security and elections.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:49:30Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-330501",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The bills extend Commonwealth laws to Norfolk Island, making voting compulsory and including the island in the Division of Canberra and ACT senators, with a phased introduction of the national minimum wage and a two-year delay on modern awards."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Passenger Movement Charge Amendment (Norfolk Island) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00032",
+   "assent_date": "2016-03-23"
+  }
+ ]
+}

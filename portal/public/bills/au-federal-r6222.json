@@ -1,0 +1,390 @@
+{
+ "key": "au-federal-r6222",
+ "title": "Future Drought Fund Bill 2019",
+ "short_title": "Future Drought Fund Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-11-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6222%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6222%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6222%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6222%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6222%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6222_ems_ba43731e-ee0a-4049-9388-61dda3a89a76%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6222_ems_3bd45ac3-40ab-476b-880b-dbc67e829801%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6222%22",
+   "document_date": "2018-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2018-11-28",
+  "sentences": [
+   "The bill creates a government-backed investment account to pay for projects that make Australia better prepared for future droughts.",
+   "Money not yet spent from the Building Australia Fund, about $3.9 billion, would move into the new account, and yearly the Finance Minister must put $100 million into a separate grant account for drought resilience.",
+   "The investment account is expected to grow to about $5 billion by 2028-29, with the first payments from the fund starting on 1 July 2020."
+  ],
+  "changes": [
+   "Establishes the Future Drought Fund and its associated special account.",
+   "Transfers uncommitted Building Australia Fund money into the new fund.",
+   "Creates the Agriculture Future Drought Resilience Special Account.",
+   "Sets an annual $100 million debit from the fund to the agriculture special account.",
+   "Requires the Agriculture Minister to get advice from the Regional Investment Corporation Board and a new Consultative Committee.",
+   "Gives the Future Fund Board responsibility for investing the money."
+  ],
+  "affected": "Australian farmers, agricultural bodies, and the agencies and ministers responsible for drought programs are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:40:30Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5699",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "question": "Future Drought Fund Bill 2018, Future Drought Fund (Consequential Amendments) Bill 2018 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 41,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-02-21/3"
+  },
+  {
+   "key": "federal-representatives-5700",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2019-02-21.36.2) to agree with the main idea of the bills. In parliamentary jargon, they voted to read the bills for a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What is the bills' main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1819a/19bd058): > *The purpose of the Future Drought Fund Bill 2018 (the Fund Bill) is to establish the Future Drought Fund which includes the Future Drought Fund Special Account, and the Agriculture Future Drought Resilience Special Account to fund initiatives that enhance future drought resilience, preparedness and response across Australia.* > > *The purpose of the Future Drought Fund (Consequential Amendments) Bill 2018 (the Consequential Amendments Bill) is to make consequential amendments to a number of existing statutes to:* > > * *extend the Future Fund Board’s duties to include managing the Future Drought Fund and* > * *allow for amounts to be transferred between the Future Drought Fund and the Future Fund.*",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 41,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-02-21/4"
+  },
+  {
+   "key": "federal-representatives-5701",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2019-02-21.41.1) to agree with the bills as amended. This means they can now stop discussing the bills in detail and instead decide whether they want to pass the bill in the House. ### What do the bills do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1819a/19bd058): > *The purpose of the Future Drought Fund Bill 2018 (the Fund Bill) is to establish the Future Drought Fund which includes the Future Drought Fund Special Account, and the Agriculture Future Drought Resilience Special Account to fund initiatives that enhance future drought resilience, preparedness and response across Australia.* > > *The purpose of the Future Drought Fund (Consequential Amendments) Bill 2018 (the Consequential Amendments Bill) is to make consequential amendments to a number of existing statutes to:* > > * *extend the Future Fund Board’s duties to include managing the Future Drought Fund and* > * *allow for amounts to be transferred between the Future Drought Fund and the Future Fund.*",
+   "stage": "Consideration in detail",
+   "ayes": 75,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 43,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-02-21/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-372967",
+   "speaker": "David Littleproud",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The government introduced the Future Drought Fund Bill 2018, establishing a $3.9 billion fund (to grow to $5 billion) that will provide $100 million annually from 2020 for drought resilience projects, managed by the Future Fund Board of Guardians, using uncommitted Building Australia Fund money after fully funding the National Disability Insurance Scheme."
+  },
+  {
+   "slug": "speech-375939",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The opposition will oppose the Future Drought Fund Bill 2018, arguing it misuses $3.9 billion from the Building Australia Fund instead of being funded through the budget, and criticises the lack of clear spending plans, warning the money will be used as a National Party slush fund during the election campaign. The speaker also outlined a broader vision for agriculture, including improving foreign and domestic investment, addressing risks like climate change and market volatility, and advocating for proactive adaptation to evolving community attitudes on animal welfare and sustainability."
+  },
+  {
+   "slug": "speech-376100",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "Labor supported drought resilience funding but opposed the bill because it would abolish the Building Australia Fund; Labor proposed matching the $100 million annual commitment from new appropriations, with an expert panel to ensure transparent allocation."
+  },
+  {
+   "slug": "speech-376101",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Future Drought Fund Bill, which would establish a $3.9 billion fund (growing to $5 billion) to provide $100 million annually for drought resilience, and noted that the government had already delivered $1 million in Drought Communities Program grants to 13 councils in his electorate of Grey and 17 in South Australia. He also accused Labor of opposing the bill and misrepresenting its funding sources."
+  },
+  {
+   "slug": "speech-376102",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Future Drought Fund Bill 2018, arguing it would gut the Building Australia Fund, take too long to deliver results, and only cover drought rather than all natural disasters; Labor proposed an alternative with faster funding, a panel of expert guardians, and no raid on the Building Australia Fund."
+  },
+  {
+   "slug": "speech-376103",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The member for O'Connor argued in support of the Future Drought Fund Bill 2018, which establishes a $3.9 billion fund (growing to $5 billion) to provide $100 million annually for drought resilience projects. He specifically cited the Southern Forests Irrigation Scheme ($90 million, with $39 million still needed) and the Ravensthorpe-Esperance barrier fence ($11 million, needing $2 million) as suitable projects, while criticising Western Australian Minister Alannah MacTiernan for threatening to withdraw state funding for the irrigation scheme."
+  },
+  {
+   "slug": "speech-376104",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker argued the Future Drought Fund Bill is too narrow, focusing only on drought while farmers also face floods and fires, and criticised the government for using the Building Australia Fund for this purpose; they praised Labor’s irrigation projects in Tasmania and announced support for a dairy floor price."
+  },
+  {
+   "slug": "speech-376105",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Future Drought Fund Bill, a $3.9 billion investment building to $5 billion disbursing $100 million annually for water infrastructure and drought resilience, and criticised Labor for opposing the bill and for proposing to lift the 1,500 gigalitre cap on Commonwealth water buybacks, warning that New South Wales may withdraw from the Murray-Darling Basin Plan if the cap is removed."
+  },
+  {
+   "slug": "speech-376106",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker argued the Future Drought Fund Bill 2018 is rushed and lacks accountability, giving the minister unchecked power to spend $100 million annually with no parliamentary oversight, and will move amendments to require transparency, a consultative committee, and Productivity Commission reviews."
+  },
+  {
+   "slug": "speech-376107",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Future Drought Fund Bill 2018 would provide $100 million per year for drought resilience projects, and highlighted severe drought conditions in Gippsland—some areas experiencing the worst rainfall in 100 years. He criticised the Victorian government for not signing the On-Farm Emergency Water Infrastructure Rebate Scheme and called for reduced red tape on the Farm Household Allowance."
+  },
+  {
+   "slug": "speech-376108",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker argued for support for drought-affected farmers and communities under the Future Drought Fund Bill, noting that 58.1% of Queensland's land area was drought declared, and claimed that Labor's policies on education, Medicare, and the NBN have done more for the bush than the National Party."
+  },
+  {
+   "slug": "speech-376110",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The member supported the Future Drought Fund Bill 2018, which provides a $3.9 billion credit growing to $5 billion, with $100 million drawn down annually from July 2020 for drought resilience projects. He criticised the opposition and the member for Hunter for opposing the fund, the Regional Investment Corporation, and the working holiday visa scheme, and praised local drought-relief efforts such as the Geurie Lions Club's distribution of over 4,685 bales of hay."
+  },
+  {
+   "slug": "speech-376207",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-21",
+   "stage_hint": null,
+   "brief": "The speaker denied leave for a motion on the dairy industry, arguing that the government must prioritise passing the Future Drought Fund Bill today to deliver drought support to farmers."
+  }
+ ],
+ "acts": []
+}

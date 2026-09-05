@@ -1,0 +1,772 @@
+{
+ "key": "au-federal-r6447",
+ "title": "Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019",
+ "short_title": "Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-11-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-09-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6447_ems_5a84afb7-ebc9-44ae-b9ec-cb03bd0c4ea1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6447_ems_3fac8a8a-c22a-4b2e-bfd5-a549a316b5e4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6447%22",
+   "document_date": "2019-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00080",
+   "document_date": "2020-09-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6211",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual second reading motion, which was introduced by Whitlam MP [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor). The second reading motion is whether to read the bill for a [second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes that too many Australians retire without adequate retirement savings; and* > > *(2) reaffirms its commitment to the legislated superannuation guarantee rise to 12 per cent by 2025\"*",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 40
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-12/1"
+  },
+  {
+   "key": "federal-senate-6433",
+   "date": "2020-06-17",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2020-06-17.41.9) to agree with the bill's main idea. In parliamentary jargon, they voted to read the bill for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which means that they will now discuss it in more detail. ### What is the main idea of the bill? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd104): > *The purpose of the Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019 (the Bill) is to amend the Superannuation Guarantee (Administration) Act 1992 (SGAA) to ensure employees under new workplace determinations or enterprise agreements have an opportunity to choose the superannuation fund for their compulsory employer contributions.*",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "earliest": 22,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-17/4"
+  },
+  {
+   "key": "federal-senate-6434",
+   "date": "2020-06-17",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?id=2020-06-17.43.1) introduced by NSW Senator [Jenny McAllister](https://theyvoteforyou.org.au/people/senate/nsw/jenny_mcallister), which means they failed. ### What was the purpose of the amendments? Senator McAllister [explained that](https://www.openaustralia.org.au/senate/?id=2020-06-17.43.1): > *As we've made clear in this debate, Labor supports choice in superannuation, but we are committed to making sure that every worker is in a high-performing fund and that adequate information is available to empower consumers with the information they need to make choices that are in their best interests. We are concerned that there is a significant risk that this bill poses to defined benefit offerings, and we're concerned that the effect of this risk will be to lessen choice and to achieve the opposite of what this bill purports to achieve. These amendments specifically address the issues raised by UniSuper when they appeared before the Senate Economics Legislation Committee in its inquiry into the bill. They address issues relating to defined benefit schemes in order to ensure that the bill does not inadvertently threaten the viability of those schemes.* ### Amendment texts > *(2) Schedule 1, item 6, page 4 (lines 3 and 4), omit the item, substitute:* > >> *6 Paragraph 32C(6) (h)* >> >> *Repeal the paragraph, substitute:* >> >> *(h) an enterprise agreement:* >> >>> *(i) made before 1 July 2020; or* >>> >>> *(ii) if the agreement includes a restriction on the choice of superannuation funds—made on or after 1 July 2020; or* >>> >>> *(iii) to which subsection (6AAA) applies; or* >> >> *[choice of fund]* > > *(3) Schedule 1, item 7, page 4 (before line 7), before subsection 32C(6AA), insert:* > >> *(6AAA) For the purposes of subparagraph (6) (h) (iii), this subsection applies to an enterprise agreement that provides for an employee to join a fund in relation to which:* >> >> *(a) the employee",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 20,
+    "dated": 26,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-17/5"
+  },
+  {
+   "key": "federal-senate-6461",
+   "date": "2020-06-18",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6447_amend_e40a8500-7e7d-4369-b894-4f4fb6ebef82%22;rec=0) moved by NSW Senator [Jenny McAllister](https://theyvoteforyou.org.au/people/senate/nsw/jenny_mcallister) (Labor), which means it failed. Senator McAllister [explained that](https://www.openaustralia.org.au/senate/?id=2020-06-18.30.2): > *This amendment relates to the Fair Work Act and Fair Work Commission consideration of what is in the best interest of employees. I went through Labor's thinking about this proposition in my speech on the second reading, and I don't intend to canvass all of those arguments again. Labor supports, in principle, the important role of collective bargaining in Australia's industrial relations system. Workers are better off as a result of collective bargaining. Labor is moving an amendment to the bill to include a provision that allows for workers to bargain for a single fund or set of funds where it is determined by the Fair Work Commission that it is in their best interests.* ### Amendment text > *(1) Schedule 1, page 3 (before line 5), before the heading specifying Superannuation Guarantee (Administration) Act 1992, insert:* > >> *Fair Work Act 2009* >> >> *1A At the end of section 187* >> >> *Add:* >> >> *Requirement relating to restrictions of choice of superannuation fund* >> >> *(7) If the agreement includes a restriction on the choice of superannuation fund or funds available to employees, the FWC must be satisfied that the restriction is in the interests of the employees who will be covered by the agreement.* >> >> *(8) For the purposes of considering whether the restriction is in the interests of the employees, the FWC must consider:* >> >>> *(a) the extent to which the employers who will be covered by the agreement have complied, or are likely to comply, with the requirements of the Supera",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "member": 12,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-18/7"
+  },
+  {
+   "key": "federal-senate-6462",
+   "date": "2020-06-18",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019 - in Committee - Speed things along",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 14,
+    "dated": 17,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-18/8"
+  },
+  {
+   "key": "federal-senate-6481",
+   "date": "2020-08-25",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6447_amend_172d30f0-3747-4b04-b622-5709c788aa3d%22;rec=0) introduced by Tasmanian Senator [Peter Whish-Wilson](https://theyvoteforyou.org.au/people/senate/tasmania/peter_whish-wilson) (Greens), which means they failed. ### Amendment text > *(1) Schedule 1, item 6, page 4 (lines 3 and 4), omit the item, substitute:* > > *6 Paragraph 32C(6)(h)* > > *Repeal the paragraph, substitute:* > >> *(h) an enterprise agreement:* >> >>> *(i) made before 1 July 2020; or* >>> >>> *(ii) to which subsection (6AAA) applies; or* > > *(2) Schedule 1, item 7, page 4 (before line 7), before subsection 32C(6AA), insert:* > >> *(6AAA) For the purposes of subparagraph (6)(h)(ii), this subsection applies to an enterprise agreement that provides for an employee to join a fund in relation to which:* >> >>> *(a) the employee is eligible to become a defined benefit member; and* >>> >>> *(b) either or both of the following are satisfied:* >>> >>>> *(i) the governing rules of the fund permit the employee, within a period specified within those rules, to choose not to remain a defined benefit member;* >>>> >>>> *(ii) the employee may choose another fund.* > > *(3) Schedule 1, page 4 (after line 16), at the end of the Schedule, add:* > > *8 At the end of section 32F* > >> *Add:* >> >> *(4) A fund (the selected fund ) cannot become a chosen fund for an employee or a person who will become an employee under this section if the person has become or is eligible to become a defined benefit member pursuant to an arrangement of the kind referred to in paragraph 32C(6)(h).* > > *9 Subsection 32NA(2)* > >> *After “An employer is not required under section 32N to give an employee”, insert “or a person who is eligible to become an employee”.* > > *10 Paragraph 32NA(2)(a)* > >> *After “the employer is making”, insert “or will make”",
+   "stage": "In committee",
+   "ayes": 23,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 20,
+    "earliest": 15,
+    "member": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-25/1"
+  },
+  {
+   "key": "federal-senate-6482",
+   "date": "2020-08-25",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6447_amend_8a73013a-6547-4691-8d4b-71f3424b0d50%22;rec=0) introduced by Queensland Senator [Larissa Waters](https://theyvoteforyou.org.au/people/senate/queensland/larissa_waters) (Greens), which means they failed. ### Amendment texts > *(1) Schedule 1, page 3 (after line 27), after item 4, insert:* > >> *4A Subsection 27(1)* >> >> *Omit “(1)”.* >> >> *4B Subsection 27(2)* >> >> *Repeal the subsection.* > > *(2) Schedule 1, page 4 (after line 16), at the end of the Schedule, add:* > >> *8 Application provision* >> >> *Despite the repeal made by item 4B, subsection 27(2) of the Superannuation Guarantee (Administration) Act 1992 , as in force immediately before the commencement of this Act, continues to apply at and after that time in relation to an employer for an employee if the employer is entitled to a jobkeeper payment (within the meaning of the Coronavirus Economic Response Package (Payments and Benefits) Rules 2020 ) for the employee during the calendar month.* ### What is the main idea of the bill? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd104): > *The purpose of the Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019 (the Bill) is to amend the Superannuation Guarantee (Administration) Act 1992 (SGAA) to ensure employees under new workplace determinations or enterprise agreements have an opportunity to choose the superannuation fund for their compulsory employer contributions.*",
+   "stage": "In committee",
+   "ayes": 6,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 11,
+    "earliest": 14,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-25/2"
+  },
+  {
+   "key": "federal-senate-6483",
+   "date": "2020-08-25",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2020-08-25.36.1) introduced by NSW Senator [Jenny McAllister](https://theyvoteforyou.org.au/people/senate/nsw/jenny_mcallister) (Labor), which means they failed. ### What is the main idea of the bill? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd104): > *The purpose of the Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019 (the Bill) is to amend the Superannuation Guarantee (Administration) Act 1992 (SGAA) to ensure employees under new workplace determinations or enterprise agreements have an opportunity to choose the superannuation fund for their compulsory employer contributions.* ### Amendments text > *(1) Schedule 1, page 3 (before line 5), before the heading specifying Superannuation Guarantee (Administration) Act 1992, insert:* > >> *Fair Work Act 2009* >> >> *1A At the end of section 187* >> >> *Add:* >> >> *Requirement relating to restrictions of choice of superannuation fund* >> >>> *(7) If the agreement includes a restriction on the choice of superannuation fund or funds available to employees, the FWC must be satisfied that the restriction is in the interests of the employees who will be covered by the agreement.* >>> >>> *(8) For the purposes of considering whether the restriction is in the interests of the employees, the FWC must consider:* >>> >>>> *(a) the extent to which the employers who will be covered by the agreement have complied, or are likely to comply, with the requirements of the Superannuation Guarantee (Administration) Act 1992; and* >>>> >>>> *(b) the features of the proposed default superannuation fund or funds, including matters such as insurance; and* >>>> >>>> *(c) any other relevant matters.* > > *(2) Schedule 1, item 6, page 4 (lines 3 and 4), omit the item, substitute:* >> >> *6 Paragraph 32C(6 )( h)* >> >> *Repeal the paragraph, substitute:* >> >>> *(h) an enterpri",
+   "stage": "In committee",
+   "ayes": 22,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "earliest": 16,
+    "dated": 20,
+    "member": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-25/3"
+  },
+  {
+   "key": "federal-senate-6484",
+   "date": "2020-08-25",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-08-25.41.1) introduced by NSW Senator [Jenny McAllister](https://theyvoteforyou.org.au/people/senate/nsw/jenny_mcallister) (Labor), which means it failed. ### What is the main idea of the bill? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd104): > *The purpose of the Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019 (the Bill) is to amend the Superannuation Guarantee (Administration) Act 1992 (SGAA) to ensure employees under new workplace determinations or enterprise agreements have an opportunity to choose the superannuation fund for their compulsory employer contributions.* ### Amendment text > *(1) Page 4 (after line 16) , at the end of the Bill, add:* > > *Schedule 2 — Superannuation contributions in National Employment Standards* > > *Fair Work Act 2009* > >> *1 After paragraph 61(2)(h)* >> >> *Insert:* >> >>> *(ha) superannuation contributions (Division 10A);* >> >> *2 After Division 10 of Part 2-2 of Chapter 2* >> >> *Insert:* >> >> *Division 10A — Superannuation contributions* >> >> *116A Superannuation contributions* >> >> *Obligation in relation to contributions* >> >>> *(1) An employer must make contributions to a superannuation fund for the benefit of an employee so as to avoid liability to pay superannuation guarantee charge under the Superannuation Guarantee Charge Act 1992 in relation to the employee.* >> >> *Amount of contributions* >> >>> *(2) The amount of the contributions relating to the employee is to be worked out:* >>> >>>> *(a) in accordance with the Superannuation Guarantee (Administration) Act 1992 ; or* >>>> >>>> *(b) if a modern award or enterprise agreement applies to the employee and provides for an amount higher than the amount applicable under paragraph (a)—in accordance with the modern award or enterprise agreement (as the case requires).* >>> >>> *Superannuati",
+   "stage": "In committee",
+   "ayes": 22,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 20,
+    "earliest": 15,
+    "member": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-25/4"
+  },
+  {
+   "key": "federal-senate-6485",
+   "date": "2020-08-25",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2020-08-25.19.2): > *That the report of the committee be adopted.* ### What is the main idea of the bill? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd104): > *The purpose of the Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019 (the Bill) is to amend the Superannuation Guarantee (Administration) Act 1992 (SGAA) to ensure employees under new workplace determinations or enterprise agreements have an opportunity to choose the superannuation fund for their compulsory employer contributions.*",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 14,
+    "dated": 21,
+    "member": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-25/5"
+  },
+  {
+   "key": "federal-senate-6486",
+   "date": "2020-08-25",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2020-08-25.53.1) to pass the bill. In parliamentary jargon, they voted to read the bill for a [third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). The bill will now be sent back to the House of Representatives, where our MPs will decide whether they agree with the amendments. If so, the bill will become law. ### What is the main idea of the bill? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd104): > *The purpose of the Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019 (the Bill) is to amend the Superannuation Guarantee (Administration) Act 1992 (SGAA) to ensure employees under new workplace determinations or enterprise agreements have an opportunity to choose the superannuation fund for their compulsory employer contributions.*",
+   "stage": "Third reading",
+   "ayes": 26,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 14,
+    "dated": 21,
+    "member": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-25/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-387812",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-02-11",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019, which from 1 July 2020 gives workers under enterprise agreements or awards the right to choose their own superannuation fund, and criticised the opposition for proposing $387 billion in new taxes at the last election."
+  },
+  {
+   "slug": "speech-387813",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-11",
+   "stage_hint": null,
+   "brief": "Labor referred the Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019 to a Senate inquiry over concerns that vulnerable employees could be forced into underperforming funds, while also criticising the government's record on superannuation and supporting consumer protections such as APRA heat maps."
+  },
+  {
+   "slug": "speech-387817",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that industry super funds squander and take control of Australians' retirement savings, criticising the member for Kingsford Smith for defending them during debate on the Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019."
+  },
+  {
+   "slug": "speech-387823",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-11",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019, which gives workers under new workplace determinations or enterprise agreements the right to choose their superannuation fund from July 1, 2020. They highlighted that Australia’s superannuation system holds $2.8 trillion in assets, noted that 2.85 million Australians were underpaid $5.9 billion in superannuation, and pointed out that women retire with significantly lower balances than men, with 34% of single women over 60 living in poverty."
+  },
+  {
+   "slug": "speech-387824",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-11",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to allow employees under new enterprise agreements to choose their superannuation fund, arguing for stronger consumer protections and warning the change could undermine collective choice in industry funds, which have historically outperformed retail funds. The member for Corangamite also criticised the government for failing to address employer non-payment of superannuation and for freezing the Super Guarantee."
+  },
+  {
+   "slug": "speech-387825",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2020-02-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019 would allow banks to access workers' retirement savings by removing the ability to collectively bargain over superannuation funds, and compared it to the WorkChoices era. They noted that industry funds, often negotiated through enterprise agreements, deliver better returns than bank-run funds, and accused the government of acting on donations from big banks."
+  },
+  {
+   "slug": "speech-387826",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2020-02-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019, which gives workers the choice of superannuation fund for workplace determinations and enterprise agreements from 1 July 2020 and closes a loophole allowing employers to claim salary sacrifice super as employer contributions. The speaker cited complaints from casual university staff forced into UniSuper, where fees eroded their balances."
+  },
+  {
+   "slug": "speech-387877",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "Labor supported the bill’s intent to give employees choice of superannuation fund but reserved its position pending a Senate inquiry, citing concerns about unintended consequences and the government’s ideological opposition to industry super funds. The speaker noted that only 7.4% of employees under enterprise agreements currently lack choice, and supported amendments highlighting inadequate retirement savings and the legislated super guarantee rise to 12% by 2025."
+  },
+  {
+   "slug": "speech-387879",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment (Your Superannuation, Your Choice) Bill 2019, arguing it would harm working Australians by offering a false choice that could lead to lower retirement incomes, and characterised conservative policy as a \"double whammy\" of flat wages and no increase in superannuation contributions. They supported referring the bill to a Senate committee for further scrutiny."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Your Superannuation, Your Choice) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00080",
+   "assent_date": "2020-09-03"
+  }
+ ]
+}

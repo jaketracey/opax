@@ -1,0 +1,276 @@
+{
+ "key": "au-federal-r7055",
+ "title": "Crimes Legislation Amendment (Combatting Foreign Bribery) Bill 2023",
+ "short_title": "Crimes Legislation Amendment (Combatting Foreign Bribery) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-06-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2024-03-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-03-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7055_ems_f4929a53-6cf5-4ea3-95b7-3689e6c81df9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7055_ems_32f0a557-8f28-43b7-ba12-a35a6de71b70%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7055%22",
+   "document_date": "2023-06-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00005",
+   "document_date": "2024-03-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-22",
+  "sentences": [
+   "The bill would replace Australia's current law against bribing foreign officials with a new version.",
+   "It removes the need to prove a bribe or advantage was 'not legitimately due', instead requiring proof of 'improperly influencing' a foreign public official.",
+   "The new offence would also cover bribes aimed at securing a personal advantage, such as a visa or personal title, not just business ones."
+  ],
+  "changes": [
+   "Replaces the existing foreign bribery offence with a new one.",
+   "Removes the 'not legitimately due' requirement and introduces 'improperly influencing' as the test.",
+   "Extends the offence to cover bribes for a personal advantage."
+  ],
+  "affected": "Individuals and corporations who bribe foreign public officials.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:42:49Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8750",
+   "date": "2024-02-29",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansards/27578/&sid=0000) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the text below will be added to the usual motion. The amendment was introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that [Deferred Prosecution Agreements](https://en.wikipedia.org/wiki/Deferred_prosecution) (DPAs) have been implemented in the United Kingdom and United States to help combat foreign bribery by incentivising companies to self-report; and* > > *(b) is of the opinion that:* > >> *(i) establishing a DPA scheme in Australia is worthy of consideration,* >> >> *(ii) such a scheme should not function as a 'get-out-of-jail-free card' and should prioritise transparency so as to avoid the creation of a two-tiered justice system where corporate criminals are able to secretly negotiate agreements related to wrongdoings while private individuals are subject to the full force of a court of law,* >> >> *(iii) further reform is needed to abolish facilitation payments, and* >> >> *(iv) further reform is needed to prevent companies convicted of foreign bribery from being awarded Australian government contracts, potentially through a whole-of-government debarment scheme\".*",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-02-29/5"
+  },
+  {
+   "key": "federal-senate-8751",
+   "date": "2024-02-29",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-02-29.45.1) introduced by West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal), which means it failed. The amendment would have introduced an [deferred prosecution agreement](https://en.wikipedia.org/wiki/Deferred_prosecution) (DPA) scheme. ### Amendment text See the official parliamentary website for the [text of the bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7055_amend_4fc9a9f4-2e31-4408-9bfb-405e8f8f193c%22;rec=0).",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-02-29/6"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Crimes Legislation Amendment (Combatting Foreign Bribery) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00005",
+   "assent_date": "2024-03-08"
+  }
+ ]
+}

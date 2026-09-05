@@ -1,0 +1,313 @@
+{
+ "key": "au-federal-r5130",
+ "title": "Building and Construction Industry (Consequential and Transitional Provisions) Bill 2013",
+ "short_title": "Building and Construction Industry (Consequential and Transitional Provisions) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2015-08-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5130%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5130%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5130%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5130_ems_75ed8318-a897-4ec3-a7fb-570a541840eb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5130_ems_f6081c9d-97cc-4b69-8f34-367b4d7703ad%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5130_ems_6b0af589-af91-43b7-9df9-a78f41f5e622%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5130%22",
+   "document_date": "2013-11-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-14",
+  "sentences": [
+   "This bill is part of a package that would re-establish the Australian Building and Construction Commission and replace the Fair Work (Building Industry) Act 2012 with a new regime.",
+   "It would repeal the Fair Work (Building Industry) Act 2012, make minor consequential amendments to Commonwealth laws, and set out transitional rules for institutions, staff, and legal proceedings.",
+   "The bill says section 7 of the Acts Interpretation Act 1901, which preserves investigations and liabilities, would not be limited by this bill."
+  ],
+  "changes": [
+   "Repeal the Fair Work (Building Industry) Act 2012.",
+   "Make minor consequential amendments to Commonwealth legislation relevant to the Building and Construction Industry (Improving Productivity) Bill 2013.",
+   "Provide transitional provisions for changes of names of institutions and offices, preserving appointments of senior position holders, and preserving employment entitlements of staff."
+  ],
+  "affected": "The Australian Building and Construction Commission, staff of affected organisations, and bodies operating under the building and construction industry regime.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:03Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3877",
+   "date": "2015-08-17",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 47,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-08-17/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-278427",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825553",
+   "speaker": "Mitch Fifield",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-14",
+   "stage_hint": null,
+   "brief": "The Selection of Bills Committee recommended referring several bills to Senate committees for inquiry, including carbon tax repeal bills to report by 2 December 2013, while a proposed amendment to extend the reporting date to March 2014 was rejected."
+  },
+  {
+   "slug": "speech-279715",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279722",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279880",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279894",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825900",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825933",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281806",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281824",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826740",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

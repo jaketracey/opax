@@ -1,0 +1,210 @@
+{
+ "key": "au-federal-r5610",
+ "title": "Dairy Produce Amendment (Dairy Service Levy Poll) Bill 2016",
+ "short_title": "Dairy Produce Amendment (Dairy Service Levy Poll) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2016-03-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5610%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5610%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5610%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5610%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5610%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5610%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5610%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5610%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5610%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5610%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5610%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5610%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5610%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5610_ems_a5b395ce-3f8b-4008-b8d6-c037b62f73b2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5610%22",
+   "document_date": "2016-02-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00030",
+   "document_date": "2016-03-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-11",
+  "sentences": [
+   "This bill ends a legal requirement for the dairy sector to conduct a levy poll every five years.",
+   "Instead, the industry services body would set up a committee to examine levy rates at five-year intervals and hold a poll if the committee recommends a rate change.",
+   "Group A members of Dairy Australia Limited—dairy farmers—could also request a poll if they disagree with the committee's decision not to vary the rate."
+  ],
+  "changes": [
+   "Removes the mandatory five-year levy poll requirement from the Dairy Produce Act 1986.",
+   "Requires the industry services body to create a levy poll advisory committee that reviews the levy rate every five years.",
+   "Requires the industry services body to run a levy poll if the committee recommends a rate change.",
+   "Lets Group A members of Dairy Australia Limited (dairy farmers) ask for a poll if they disagree with a committee decision not to change the rate."
+  ],
+  "affected": "Dairy farmers (Group A members of Dairy Australia Limited), the industry services body, the levy poll advisory committee, and the dairy industry.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:49:30Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-328751",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Dairy Produce Amendment (Dairy Service Levy Poll) Bill 2016 removes the five-year mandatory levy poll, requiring one only when a levy increase is proposed, saving the industry an estimated $750,000 per poll. The speaker also criticised the government for breaking a pre-election promise to add $100 million to agricultural R&D, citing cuts of over $100 million to CSIRO, forestry, and other areas, and condemned Minister Joyce for moving RDCs from Canberra against staff interests."
+  },
+  {
+   "slug": "speech-328758",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The Dairy Produce Amendment (Dairy Service Levy Poll) Bill 2016 removes the requirement for a dairy levy poll every five years, saving up to $1 million per poll for research and development. The speaker, a dairy farmer, supported the bill and noted that dairy farmers in Western Australia and elsewhere contributed to bushfire fighting efforts in Waroona, Yarloop, and Uduc."
+  },
+  {
+   "slug": "speech-328760",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The member for Indi announced her support for the Dairy Produce Amendment (Dairy Service Levy Poll) Bill 2016, which removes the requirement for a five-yearly levy poll and replaces it with a consultative committee, while warning the dairy industry to monitor the change closely. She also detailed her achievements in the electorate, including securing 40 NBN wireless towers and 30 mobile phone towers, and highlighted the Alpine Valleys Dairy Pathways Project’s findings that over 60% of dairy farmers are aged over 50 and fewer than 25% of farming businesses have a clear succession plan."
+  },
+  {
+   "slug": "speech-328761",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Dairy Produce Amendment (Dairy Service Levy Poll) Bill 2016, which removes the requirement for a levy poll every five years and instead requires a poll only when a change in the levy rate is proposed, reducing regulatory costs for the dairy industry. The speaker also advocated for federal and state funding to modernise the Macalister Irrigation District in Gippsland, a project estimated to cost $60 million and deliver $45–50 million in annual benefits."
+  },
+  {
+   "slug": "speech-328770",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Dairy Produce Amendment (Dairy Service Levy Poll) Bill 2016, arguing it would save the dairy industry up to $1 million by removing mandatory five-year levy polls and redirecting funds to research and development; he also defended the sale of VDL in Woolnorth to a Chinese company, rejecting outside interference."
+  },
+  {
+   "slug": "speech-328773",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The Dairy Produce Amendment (Dairy Service Levy Poll) Bill 2016 removes the requirement for a five-yearly levy poll, replacing it with a dairy advisory committee and a mechanism for farmers to request a poll; the speaker noted dairy farmers estimated the poll cost up to $1 million."
+  },
+  {
+   "slug": "speech-328774",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The Dairy Produce Amendment (Dairy Service Levy Poll) Bill 2016 removes the legislative requirement for a dairy levy poll every five years, saving industry up to $1 million per cycle, and was requested by Australian Dairy Farmers and Dairy Australia. The speech also noted increased government investment in agricultural R&D, including $1.1 billion for the National Innovation and Science Agenda and $260 million in Commonwealth matching funds for rural R&D corporations."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Dairy Produce Amendment (Dairy Service Levy Poll) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00030",
+   "assent_date": "2016-03-23"
+  }
+ ]
+}

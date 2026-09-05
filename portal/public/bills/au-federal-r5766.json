@@ -1,0 +1,428 @@
+{
+ "key": "au-federal-r5766",
+ "title": "Corporations Amendment (Crowd-sourced Funding) Bill 2016",
+ "short_title": "Corporations Amendment (Crowd-sourced Funding) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5766_ems_c3332e6c-db63-4bd9-9e75-c1e59e31266e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5766%22",
+   "document_date": "2016-11-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00017",
+   "document_date": "2017-03-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-24",
+  "sentences": [
+   "This bill creates a new regulatory system for crowd-sourced funding, letting small unlisted public companies raise money from many investors.",
+   "The system sets out who can raise funds, what they must disclose, the duties of funding platforms, how offers are made, rules for bad disclosure, and protections for investors.",
+   "The new rules start on a day chosen by the government, or automatically six months after royal assent if not started earlier, except for one schedule that starts the day after royal assent."
+  ],
+  "changes": [
+   "It amends the Corporations Act to introduce the crowd-sourced funding regime.",
+   "It changes the ASIC Act to treat crowd-funding services as financial services.",
+   "It gives new eligible public companies temporary relief from usual reporting and governance duties.",
+   "It lets the Minister exempt some financial market and clearing and settlement operators from certain requirements.",
+   "It updates the Australian Market Licence and clearing and settlement licensing to allow secondary trading of crowd-sourced funding securities."
+  ],
+  "affected": "Small unlisted public companies, crowd-funding intermediaries, retail investors, and operators of financial markets and clearing and settlement facilities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4517",
+   "date": "2017-02-08",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/debates/?id=2016-11-30.125.2) introduced by Labor MP [Ed Husic](https://theyvoteforyou.org.au/people/representatives/chifley/ed_husic) (Chifley), which means it was unsuccessful. ### Motion text > *That all the words after \"That\" be omitted with a view to substituting the following words:* > *\"Whilst not declining to give the bill a second reading, the Australian Government is required to present on the first day of the Autumn sitting of the House legislation that contains a genuine and comprehensive framework for the introduction of equity crowdfunding to Australia, that:* > *(1) can be used effectively by both unlisted public companies and privately held firms;* > *(2) provides improved protections for retail investors, stronger than those currently proposed by the Government; and* > *(3) avoids placing a heavy regulatory or investor relations burden on startup enterprises and small businesses.*",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-02-08/1"
+  },
+  {
+   "key": "federal-senate-4616",
+   "date": "2017-03-20",
+   "house": "senate",
+   "question": "Katy Gallagher In my speech in the second reading debate I flagged a number of questions and indicated that I would be moving two amendments. I seek leave to move the amendments on page 8047 together. Leave granted. I move: (1) Schedule 1, item 14, page 10 (line 17), omit paragraph 738H(1) (a), substitute: (a) the company has an agreement with a CSF intermediary that is legally enforceable; (2) Schedule 1, item 14, page 32 (line 27), omit \"48 hours\", substitute \"5 business days\". I would also like to flag that I want the questions put separately when the time is appropriate. I will not delay the Senate further with the amendments I am moving. Amendment (1) on page 8047 would allow privately held companies access to this important capital market. I indicated in my speech that we are moving this amendment so small businesses and start-ups are not denied access to this important new capital-raising facility due to the onerous reporting burdens and regulations of becoming a public company. Amendment (2) simply increases the investor cooling off rights from two days to five days. I hope that I can get support from the Senate for both of these important amendments. Mathias Cormann The government will not be supporting these amendments today, although, in relation to the first issue that Senator Gallagher has raised, the government is entirely sympathetic to her position and what I believe Senator Whish-Wilson as well has been putting on the table. The issue is that extending crowdfunding to proprietary companies is not simple and would require significant changes to the law. It would represent a fundamental change to the traditional concept of a proprietary company. The opposition's amendment would be inconsistent with the current law, which prohibits a proprietary company from engaging in any public fundraising that would require disclosure to investors. Extending the crowdsourced funding regime to proprietary companies is a priority for the government. The government ex",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 36,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-20/1"
+  },
+  {
+   "key": "federal-senate-4617",
+   "date": "2017-03-20",
+   "house": "senate",
+   "question": "Gavin Marshall The question now is that amendment (2) on sheet 8047 be agreed to. Peter Whish-Wilson I want to quickly address this. As I alluded to in my second reading debate contribution, we have considered the pros and cons of a two-day or a five-day cooling off period. We understand that there are risks either way. It is fair to say the Greens have come down in this debate on the side of protecting investors, and that we feel that the five-day cooling off period would be preferable to two days. This is a risky financing platform, and five days is a reasonable period of time for people to consider their investment in what is essentially a high-risk investment. It is potentially a high return on investment, Chair, but it is also certainly a high risk, and we do not believe the extra three days, the loss of three days, would be that significant. I would just make one point, and Senator Cormann may wish to answer this, although he may not: I do not necessarily understand how competitors might game the system with the cooling off period. I understand how the promoters of the system themselves may game the system by getting in bids to make this look like it is a sure thing and everyone should get some. I do feel that the extra period of cooling off is an added investor protection, and that would outweigh any potential risk over that three days of gaming the system. So the Greens will be supporting Labor's second amendment. The TEMPORARY CHAIR: The question is that amendment (2) on sheet 8047 be agreed to.",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 40,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-20/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-338483",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-24",
+   "stage_hint": null,
+   "brief": "The Turnbull Government introduced the Corporations Amendment (Crowd-sourced Funding) Bill 2016 to create a regulatory framework allowing public companies to raise up to $5 million per year through crowd-sourced equity funding, with a $10,000 per issuer per 12-month investor cap and reduced disclosure requirements for eligible companies meeting a $25 million assets and turnover test."
+  },
+  {
+   "slug": "speech-339543",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Corporations Amendment (Crowd-sourced Funding) Bill 2016 will reduce regulatory barriers for startups and small businesses, allowing them to raise up to $5 million per year from investors with a $10,000 per investor cap, and that this supports the government's pro-growth agenda to foster innovation and economic diversification."
+  },
+  {
+   "slug": "speech-339545",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Crowd-sourced Funding) Bill 2016 allows small unlisted public companies to raise up to $5 million per year through crowd-sourced equity funding, with an increased turnover threshold of $25 million and retail investors able to contribute up to $10,000 per company per year with a 48-hour cooling-off period."
+  },
+  {
+   "slug": "speech-339555",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Corporations Amendment (Crowd-Sourced Funding) Bill 2016 should support high-growth startups and democratise asset ownership, but criticised the government for not extending the regime to proprietary limited companies, warning that delaying this would create uncertainty. The speaker supported a second reading amendment calling for better retail investor protections and a comprehensive bill rather than a partial one to be amended later."
+  },
+  {
+   "slug": "speech-339556",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The Turnbull government's Corporations Amendment (Crowd-sourced Funding) Bill 2016 allows unlisted public companies with under $25 million in assets and annual turnover to access crowd-sourced equity funding, and the speaker rejected Labor's calls to delay the bill, arguing it supports small business growth and job creation."
+  },
+  {
+   "slug": "speech-340343",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Corporations Amendment (Crowd-sourced Funding) Bill 2016 is essential to boost Australia's weak venture capital sector, which is only 0.01% of GDP and one-twentieth the size of the US market. The bill allows startups to raise up to $5 million via online platforms with a $10,000 annual cap per retail investor, limited to public companies with turnover or assets under $25 million."
+  },
+  {
+   "slug": "speech-340345",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-08",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Crowd-Sourced Funding) Bill 2016 introduces a framework for crowd-sourced equity funding, allowing eligible unlisted public companies to raise up to $5 million per year from retail investors with a $10,000 per issuer per year investment cap, and provides $7.8 million to ASIC for implementation. The government committed to extending the regime to proprietary companies through subsequent legislation."
+  },
+  {
+   "slug": "speech-340348",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-08",
+   "stage_hint": null,
+   "brief": "The Treasurer argued that the Corporations Amendment (Crowd-Sourced Funding) Bill 2016 should pass now, with a subsequent bill to extend provisions to proprietary companies, and criticised the opposition—specifically Bill Shorten—for delaying these measures. He noted that the bill was improved by consultation with the FinTech Advisory Committee and that the government is acting on industry feedback to prevent gaming of the system."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Corporations Amendment (Crowd-sourced Funding) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00017",
+   "assent_date": "2017-03-28"
+  }
+ ]
+}

@@ -1,0 +1,394 @@
+{
+ "key": "au-federal-r7217",
+ "title": "Veterans' Entitlements, Treatment and Support (Simplification and Harmonisation) Bill 2024",
+ "short_title": "Veterans' Entitlements, Treatment and Support (Simplification and Harmonisation) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-07-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans' Affairs",
+ "status": "passed",
+ "status_as_of": "2025-02-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-07-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-02-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7217_ems_61ebe5c5-1445-4750-98a3-82b393de4af4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7217_ems_279b263b-6372-46b1-947d-ec7fb8d34292%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7217_ems_6de93a4e-a089-463e-90a2-25f136039918%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7217_ems_37c30100-0af0-4a60-ae7b-47354adc368e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7217%22",
+   "document_date": "2024-07-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00017",
+   "document_date": "2025-02-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-07-03",
+  "sentences": [
+   "This bill would replace the current three-Act system for veterans' compensation and rehabilitation with a single ongoing Act from 1 July 2026.",
+   "The Military Rehabilitation and Compensation Act (MRCA) would become the single Act, while the Veterans' Entitlements Act (VEA) and the Defence-Related Claims Act (DRCA) would be closed to new compensation claims.",
+   "A new periodic payment called the additional disablement amount would be introduced for veterans of age-pension age with high impairment and lifestyle impacts."
+  ],
+  "changes": [
+   "Closes the VEA and DRCA to new compensation and rehabilitation claims from 1 July 2026.",
+   "Makes the MRCA the single ongoing Act for all future compensation claims regardless of when or where the veteran served.",
+   "Introduces a presumptive liability mechanism for specified medical conditions under the MRCA.",
+   "Creates the additional disablement amount payment for older veterans with high impairment.",
+   "Consolidates compensation payments and support schemes under a single system.",
+   "Allows treating doctors to provide estimates of when an impairment became permanent and stable for determining payment start dates."
+  ],
+  "affected": "Veterans, their families, advocates, and the Department of Veterans' Affairs (DVA).",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9573",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted in favour an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-02-12.36.2) introduced by NSW Senator [Perin Davey](https://theyvoteforyou.org.au/people/senate/nsw/perin_davey) (Nationals), which means it succeeded and the text below will be added to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add “but the Senate,* > > *(a) notes that there remains concern about aspects of the operation of this bill and, in particular, the rigid nature of the Statement of Principles used in determining claims for liability for injuries, diseases and deaths made by veterans; and* > > *(b) calls on the Government to cause a review to be undertaken by the Senate Foreign Affairs, Defence and Trade Legislation Committee, and in consultation with relevant stakeholders, into:* > >> *(i) whether the Statement of Principles are fit for purpose in ensuring that every veteran receives just and timely support,* >> >> *(ii) the functions of the Repatriation Medical Authority, and* >> >> *(iii) whether further changes are needed to relevant legislation, policy, procedures or guidelines to improve outcomes for veterans with unique or unusual circumstances”.*",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 18,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 8,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/17"
+  },
+  {
+   "key": "federal-senate-9574",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2025-02-12.194.1) on sheets 2913 and 3051 and amendments (1) and (2) on sheet 3049, which were introduced by the Jacqui Lambie Party. This means the amendments were not successful. The amendments related to time limits for determining certain claims, research into veteran health and wellbeing and legal representation before Veterans’ Review Board. ### Amendment text **SHEET 2913** > *(1) Schedule 1, Part 3, page 69 (after line 36), at the end of the Part, add:* > >> *Division 15 — Time limits for determining certain claims* >> >> *Military Rehabilitation and Compensation Act 2004* >> >> *204 At the end of Part 2 of Chapter 7* >> >> *Add:* >> >>> *343A Time limit for determining certain claims* >>> >>>> *Claims for compensation for permanent impairment* >>>> >>>> *(1) If a person makes a claim under section 319 for compensation under Part 2 of Chapter 4 (permanent impairment), the Commission must determine the claim by the end of the period of 120 days (the consideration period) beginning on the day the claim is made.* >>>> >>>> *(2) If the Commission does not determine the claim by the end of the consideration period, the Commission is taken to have accepted the claim.* >>>> >>>> *Claims for compensation for incapacity* >>>> >>>> *(3) If a person makes a claim under section 319 for compensation under Part 3 or 4 of Chapter 4 (incapacity), the Commission must determine the claim by the end of the period of 90 days (the consideration period) beginning on the day the claim is made.* >>>> >>>> *(4) If the Commission does not determine the claim by the end of the consideration period, the Commission is taken to have accepted the claim.* >>>> >>>> *Stopping the clock* >>>> >>>> *(5) If the Commission requests further information in relation to a claim for compensation under Part 2, 3 or 4 of Chapter 4, the time taken for the Commission to receive the further information is not to be inclu",
+   "stage": "In committee",
+   "ayes": 17,
+   "noes": 22,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/18"
+  },
+  {
+   "key": "federal-senate-9576",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?id=2025-02-12.201.2) introduced by the Australian Greens party, which means they were not successful. The amendments related to a review of peacekeeping service status, nuclear test participants, definitions of warlike and non-warlike service and the National Service Act service. ### Amendment text **SHEET 3285** > *(1) Schedule 1, page 21 (after line 6), after item 66, insert:* > >> *66A After Part 6 of Chapter 11* >> >> *Insert:* >> >> *Part 6A — Review* >> >> *438A Review of meaning of warlike service* >> >> *(1) The Minister must cause an independent review to be conducted into whether it is appropriate for the meaning of the expression warlike service in section 6 to include peacekeeping service, including in areas of high risk and local or regional instability.* >> >> *(2) The review must make provision for public consultation.* >> >> *(3) The review must start as soon as practicable after the commencement of this section.* >> >> *(4) The persons who conduct the review must give the Minister a written report of the review within 6 months of the commencement of the review.* >> >> *(5) The Minister must cause a copy of the report to be tabled in each House of the Parliament within 15 sitting days of that House after the report is given to the Minister.* **SHEET 3021** > *(1) Clause 2, page 2 (table item 5), omit the table item, substitute:* > > *(2) Page 268 (after line 14), after Schedule 6, insert:* > >> *Schedule 6A — Nuclear test participants* >> >> *Australian Participants in British Nuclear Tests and British Commonwealth Occupation Force (Treatment) Act 2006* >> >> *1 Subparagraph 5(3A)(b)(iv)* >> >>> *Omit \"; and\".* >> >> *2 At the end of paragraph 5(3A)(b)* >> >>> *Add:* >>> >>> *; or (v) an officer or employee of a government body, or an authority, of South Australia acting in the course of the officer or employee's duties; and* > > *Statement pursuant to the order of the S",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/20"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1194460",
+   "speaker": "Perin Davey",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194522",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194551",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-02-13",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Veterans’ Entitlements, Treatment and Support (Simplification and Harmonisation) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00017",
+   "assent_date": "2025-02-20"
+  }
+ ]
+}

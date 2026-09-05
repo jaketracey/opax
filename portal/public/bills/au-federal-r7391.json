@@ -1,0 +1,207 @@
+{
+ "key": "au-federal-r7391",
+ "title": "Veterans’ Affairs Legislation Amendment (Miscellaneous Measures No. 1) Bill 2025",
+ "short_title": "Veterans’ Affairs Legislation Amendment (Miscellaneous Measures No. 1) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-10-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans' Affairs",
+ "status": "passed",
+ "status_as_of": "2025-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7391%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7391%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7391%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7391%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7391%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7391%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7391%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7391%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7391_ems_91562d0d-1862-4f07-9902-89e0e0c5904f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7391%22",
+   "document_date": "2025-10-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00076",
+   "document_date": "2025-12-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-10-29",
+  "sentences": [
+   "This bill would make minor corrections to four veterans' compensation laws to match the government's original policy intent.",
+   "It would give the Military Rehabilitation and Compensation Commission power to make rules before July 2026 and preserve some treatment-related instruments under the Veterans' Entitlements Act as if they were made under the Military Rehabilitation and Compensation Act.",
+   "The bill also clarifies that funeral compensation claims are decided under the act they were lodged under and fixes the review path for certain determinations made before 21 April 2025."
+  ],
+  "changes": [
+   "Gives the Military Rehabilitation and Compensation Commission pre-commencement powers to make instruments before 1 July 2026.",
+   "Keeps treatment-related instruments made under the Veterans' Entitlements Act operating as if they were made under the Military Rehabilitation and Compensation Act.",
+   "Confirms that funeral compensation claims are decided under the act under which they were lodged.",
+   "Clarifies the review pathway for claimants with original determinations under the DRCA made before 21 April 2025."
+  ],
+  "affected": "Veterans and their families who claim compensation or rehabilitation under the MRCA, VEA or DRCA.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:41Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1197718",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198289",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198294",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-11-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198976",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198990",
+   "speaker": "Emma Comer",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199166",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Veterans’ Affairs Legislation Amendment (Miscellaneous Measures No. 1) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00076",
+   "assent_date": "2025-12-04"
+  }
+ ]
+}

@@ -1,0 +1,253 @@
+{
+ "key": "au-federal-r7419",
+ "title": "Defence and Veterans’ Service Commissioner Bill 2025",
+ "short_title": "Defence and Veterans’ Service Commissioner Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister and Cabinet",
+ "status": "passed",
+ "status_as_of": "2026-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7419_ems_310b7525-a9a6-417f-8b4a-9752365aa4ef%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/10704864%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7419%22",
+   "document_date": "2025-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00027",
+   "document_date": "2026-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2025-11-27",
+  "sentences": [
+   "This bill is part of a package that would establish an independent Defence and Veterans’ Service Commissioner under a new standalone act.",
+   "The Commissioner could investigate systemic issues related to veteran suicide prevention and wellbeing, and report publicly to the Minister and Parliament.",
+   "The Commissioner would not be allowed to make findings of civil or criminal wrongdoing, determine the manner or cause of a veteran’s death, or investigate a single use of a power or duty."
+  ],
+  "changes": [
+   "Establish the Defence and Veterans’ Service Commissioner as an independent office under its own legislation.",
+   "Repeal Part VIIIE of the Defence Act.",
+   "Expand the Commissioner’s functions to cover veterans’ families.",
+   "Strengthen the Commissioner’s independence from direction on inquiries.",
+   "Allow the Commission to include Deputy Commissioners, Assistant Commissioners, contractors, consultants and other helpers.",
+   "Enable the Commissioner to start inquiries on their own initiative into suicide prevention or veteran wellbeing."
+  ],
+  "affected": "Veterans, their families, and Australian Defence Force members would be affected by the Commissioner’s inquiries and reports.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:28:49Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9909",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2026-02-11.110.1) Herbert MP [Phillip Thompson](https://theyvoteforyou.org.au/people/representatives/herbert/phillip_thompson) (LNP), which means it was unsuccessful. Mr Thompson [explained that](https://www.openaustralia.org.au/debates/?id=2026-02-11.110.1): > *The coalition is moving an amendment to bring forward the timing of the first implementation review by the commissioner. As currently drafted, the first assessment of the government's implementation of the royal commission recommendations is not required to be completed until December 2027. That means the report may not be tabled until 2028, almost four years after the royal commission reported. That is too slow and risks weakening accountability.* ### Amendment text > *(1) Clause 18, page 20 (line 11), omit \"2 December 2027\", substitute \"30 September 2026\".*",
+   "stage": "Consideration in detail",
+   "ayes": 47,
+   "noes": 86,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 86
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-02-11/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1199165",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200108",
+   "speaker": "Phillip Thompson",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2026-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202175",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202178",
+   "speaker": "Susan McDonald",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2026-03-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Defence and Veterans’ Service Commissioner Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00027",
+   "assent_date": "2026-04-01"
+  }
+ ]
+}

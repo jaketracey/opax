@@ -1,0 +1,169 @@
+{
+ "key": "au-federal-r6191",
+ "title": "Income Tax Rates Amendment (Sovereign Entities) Bill 2018",
+ "short_title": "Income Tax Rates Amendment (Sovereign Entities) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-04-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6191%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6191%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6191%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6191%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6191%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6191%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6192_ems_27989603-1d0f-4051-8ae3-a96b06a474a0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6191_ems_c7a5c137-3019-4ea2-80f9-bcb5da9cb329%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6191%22",
+   "document_date": "2018-09-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00036",
+   "document_date": "2019-04-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-370142",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The government opposed suspending standing orders, citing important business including the bipartisan passage of strawberry industry legislation, and listed several bills for introduction, such as the Higher Education Support Amendment (VET FEE-HELP Student Protection) Bill 2018 and the Treasury Laws Amendment (Making Sure Foreign Investors Pay Their Fair Share of Tax in Australia and Other Measures) Bill 2018."
+  },
+  {
+   "slug": "speech-374658",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor’s policy to remove refundable franking credits would effectively impose a \"retirement tax\" on a million Australian retirees, stealing their overpaid tax. He noted the Economics Committee is conducting an inquiry into the issue, not opposition policy, and that affected retirees want comprehensive tax reform rather than targeted changes."
+  },
+  {
+   "slug": "speech-375015",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-375017",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-02-13",
+   "stage_hint": null,
+   "brief": "The three bills close tax loopholes for foreign investors, particularly stapled structures and double-gearing, which allowed them to pay under 15% tax or nothing on Australian business income while Australian entities pay up to 30%. The measures are expected to raise $400 million over the forward estimates and build on previous actions that have raised about $7 billion in liabilities from multinationals."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Income Tax Rates Amendment (Sovereign Entities) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00036",
+   "assent_date": "2019-04-05"
+  }
+ ]
+}

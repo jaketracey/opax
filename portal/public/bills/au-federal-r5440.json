@@ -1,0 +1,179 @@
+{
+ "key": "au-federal-r5440",
+ "title": "Norfolk Island Legislation Amendment Bill 2015",
+ "short_title": "Norfolk Island Legislation Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure",
+ "status": "passed",
+ "status_as_of": "2015-05-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5440%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5440%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5440%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5440%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5440%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5440%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5440%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5440%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5440%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5440%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5440%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-05-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5440%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5440_ems_55b38ba9-a7e9-4c18-8bb7-31ad62c23e53%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5440%22",
+   "document_date": "2015-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00059",
+   "document_date": "2015-05-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-26",
+  "sentences": [
+   "This bill is part of a package that would reform governance of Norfolk Island and extend mainland social security, immigration, health and tax arrangements to the territory.",
+   "The package would abolish the Norfolk Island Legislative Assembly, establish an interim Advisory Council, and later apply New South Wales state law as Commonwealth law from 1 July 2016.",
+   "During the interim transition starting after the bill's passage, the Governor-General would gain broad legislative power to make Ordinances for the territory, subject to disallowance but not sunsetting."
+  ],
+  "changes": [
+   "Abolish the Norfolk Island Legislative Assembly and terminate members' offices.",
+   "Establish an Advisory Council to advise the Administrator on territory governance.",
+   "Create a statutory Executive Director position to run the Norfolk Island Administration day to day.",
+   "Give the Commonwealth Minister overarching supervisory powers over the Administration and related bodies.",
+   "Confer powers under Norfolk Island enactments on the Commonwealth Minister instead of Norfolk Island Ministers during the interim period.",
+   "Abolish the Executive Council."
+  ],
+  "affected": "Residents and government of Norfolk Island, including the Legislative Assembly, Administration, and community representatives.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:37:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-309430",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-12",
+   "stage_hint": null,
+   "brief": "The speaker endorsed the Norfolk Island Legislation Amendment Bill 2015, arguing that Norfolk Island's self-government model since 1979 has failed and that the reforms—including extending Medicare, social security, and Australian taxes while establishing a regional council—will improve economic activity by 14% and household consumption by 38%, at a cost of $136 million over four years."
+  },
+  {
+   "slug": "speech-309431",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Norfolk Island Legislation Amendment Bill 2015, arguing that Norfolk Island's self-governance model had failed and that transitioning to a regional council with inclusion in Australia’s tax and social security systems was essential to address a $7.4 million annual deficit, a population drop to about 1,600, and residents’ lack of access to Medicare, the PBS, and unemployment benefits. Concrete details included that Australian taxpayers had spent $60 million on bailouts over five years, 40% of shops had closed, and 25% of men aged 25–50 had left the island since August 2011."
+  },
+  {
+   "slug": "speech-309433",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-12",
+   "stage_hint": null,
+   "brief": "Labor supported the Norfolk Island Legislation Amendment Bill 2015, which integrates Norfolk Island into Australia's tax and social security systems and transitions its legislative assembly to a regional council, with elections in the first half of 2016. The speaker noted Norfolk Islanders will pay taxes but be excluded from the GST, while gaining access to social security, Medicare, and pharmaceutical benefits, and highlighted ongoing infrastructure needs including a $13 million Cascade pier upgrade."
+  },
+  {
+   "slug": "speech-309434",
+   "speaker": "Jamie Briggs",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-12",
+   "stage_hint": null,
+   "brief": "The bill would extend taxation, social security, and healthcare to Norfolk Island, addressing unsustainable local governance and critical infrastructure needs, following extensive consultation and numerous inquiries including a royal commission."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Norfolk Island Legislation Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00059",
+   "assent_date": "2015-05-26"
+  }
+ ]
+}

@@ -1,0 +1,977 @@
+{
+ "key": "au-federal-r6573",
+ "title": "Recycling and Waste Reduction Bill 2020",
+ "short_title": "Recycling and Waste Reduction Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-08-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "passed",
+ "status_as_of": "2020-12-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6573_ems_f574377a-a9cc-4c31-a8c3-ade79b7f460c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6573_ems_c888393b-0624-4bfc-9799-d01a922a4696%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6573_ems_32bac37e-ac9b-46fb-8535-fed9f89d4f6d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6573%22",
+   "document_date": "2020-08-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00119",
+   "document_date": "2020-12-15",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2020-08-27",
+  "sentences": [
+   "This bill would create a national system to reduce harm from waste and products.",
+   "It would ban exporting unprocessed waste glass, plastics, tyres and paper unless they are turned into reusable materials.",
+   "The bill would replace the Product Stewardship Act 2011 and let the Minister make rules that are subject to parliamentary oversight."
+  ],
+  "changes": [
+   "Establishes a framework to regulate waste exports and product stewardship.",
+   "Bans the export of untreated waste glass, plastics, tyres and paper.",
+   "Repeals the Product Stewardship Act 2011 and replaces it with new rules.",
+   "Sets obligations for businesses involved in making, importing, distributing or designing certain products.",
+   "Provides enforcement powers including licence suspension, civil penalties and criminal offences.",
+   "Allows fees on a cost-recovery basis for Commonwealth activities under the bill."
+  ],
+  "affected": "Manufacturers, importers, distributors, designers, exporters, businesses, community organisations and individuals involved in waste exports and product stewardship schemes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6664",
+   "date": "2020-10-26",
+   "house": "representatives",
+   "question": "Recycling and Waste Reduction Bill 2020 and others - Consideration in Detail - Packaging",
+   "stage": "Consideration in detail",
+   "ayes": 51,
+   "noes": 47,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 97
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-26/5"
+  },
+  {
+   "key": "federal-representatives-6665",
+   "date": "2020-10-26",
+   "house": "representatives",
+   "question": "Recycling and Waste Reduction Bill 2020 and others - Third Reading - Speed things along",
+   "stage": "Third reading",
+   "ayes": 54,
+   "noes": 43,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 96
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-26/6"
+  },
+  {
+   "key": "federal-representatives-6666",
+   "date": "2020-10-26",
+   "house": "representatives",
+   "question": "Recycling and Waste Reduction Bill 2020 and others - Third Reading - Speed things along",
+   "stage": "Third reading",
+   "ayes": 54,
+   "noes": 43,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 96
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-26/7"
+  },
+  {
+   "key": "federal-senate-6800",
+   "date": "2020-12-07",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual second reading motion, which is \"*that these bills be read a second time*.\" To read a bill a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is to agree with its main idea. Because this amendment failed, the usual second reading motion will remain unchanged. ### Amendment text > *At the end of the motion, add: \", but the Senate:* > > *(a) agrees that waste-to-energy incineration has no place in a sustainable zero waste management and circular economy agenda; and* > > *(b) calls on the Government to rule out any financial or regulatory support for waste-to-energy incineration\".*",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 18,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-07/13"
+  },
+  {
+   "key": "federal-senate-6801",
+   "date": "2020-12-07",
+   "house": "senate",
+   "question": "Recycling and Waste Reduction Bill 2020 and others - in Committee - Single-use plastics",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 16,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-07/14"
+  },
+  {
+   "key": "federal-senate-6802",
+   "date": "2020-12-07",
+   "house": "senate",
+   "question": "Recycling and Waste Reduction Bill 2020 and others - in Committee - Mandate",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 26,
+    "earliest": 26
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-07/15"
+  },
+  {
+   "key": "federal-senate-6803",
+   "date": "2020-12-07",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2020-12-07.190.4) introduced by Tasmanian Senator [Peter Whish-Wilson](https://theyvoteforyou.org.au/people/senate/tasmania/peter_whish-wilson) (Greens), which means they failed. Senator Whish-Wilson [explained that](https://www.openaustralia.org.au/senate/?gid=2020-12-07.190.4) these amendments would \"*establish a product stewardship scheme advisory group.*\"",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 26,
+    "earliest": 26
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-07/16"
+  },
+  {
+   "key": "federal-senate-6804",
+   "date": "2020-12-07",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2020-12-07.198.1) introduced by Tasmanian Senator [Peter Whish-Wilson](https://theyvoteforyou.org.au/people/senate/tasmania/peter_whish-wilson) (Greens), which means they failed. Senator Whish-Wilson [explained that](https://www.openaustralia.org.au/senate/?gid=2020-12-07.198.1): > *These amendments are simply about financial contributions. Everybody agrees we need better information, better labelling laws. The problem is: when you're talking about education programs, how do you fund them? These amendments are fairly straightforward. They require certain members of the Packaging Covenant, or potentially a new iteration if it falls under this legislation as a voluntary product stewardship scheme, to make financial contributions to help pay for raising that education and awareness.*",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 16,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-07/17"
+  },
+  {
+   "key": "federal-senate-6805",
+   "date": "2020-12-07",
+   "house": "senate",
+   "question": "Recycling and Waste Reduction Bill 2020 and others - in Committee - Stronger labelling",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 16,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-07/18"
+  },
+  {
+   "key": "federal-senate-6806",
+   "date": "2020-12-07",
+   "house": "senate",
+   "question": "Recycling and Waste Reduction Bill 2020 and others - in Committee - Plastic packaging",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 26,
+    "earliest": 26
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-07/19"
+  },
+  {
+   "key": "federal-senate-6815",
+   "date": "2020-12-08",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6573_amend_3deb1ab3-ee20-4f45-b7e9-7b71826f37fc%22;rec=0) introduced by Greens Senator [Peter Whish-Wilson](https://theyvoteforyou.org.au/people/senate/tasmania/peter_whish-wilson), which means it failed. ### Amendment text > *Clause 67, page 68 (line 27) to page 69 (line 6), omit subclause (2A), substitute:* > > *(2A) In preparing a Minister’s priority list, the Minister must consult with one or more persons or organisations, groups or authorities (as applicable) from each of the following:* > >> *(a) persons or organisations involved in, or advocating for, best practice in relation to the reuse, remanufacture, recycling and recovery of products, waste from products and waste material;* >> >>> *(b) industry groups;* >>> >>> *(c) consumer groups;* >>> >>> *(d) environmental groups;* >>> >>> *(e) local government authorities.* > > *The Minister may also consult with any other person or organisation the Minister considers should be consulted.*",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 26,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-08/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-394001",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The Recycling and Waste Reduction (Consequential and Transitional Provisions) Bill 2020 repeals the Product Stewardship Act 2011 and transitions its provisions into the new Recycling and Waste Reduction Bill 2020, ensuring continuity for existing schemes like the National Television and Computer Recycling Scheme without disruption to industry or the public."
+  },
+  {
+   "slug": "speech-394002",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The Recycling and Waste Reduction Charges (General) Bill 2020 enables cost recovery for administering the waste export ban, which phases out exports of waste glass from 1 January 2021, mixed plastics from 1 July 2021, whole used tyres from 1 December 2021, single polymer plastics from 1 July 2022, and mixed paper and cardboard from 1 July 2024."
+  },
+  {
+   "slug": "speech-394118",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The government introduced the Recycling and Waste Reduction Bill 2020 to phase out the export of 645,000 tonnes of unprocessed plastic, paper, glass and tyres, aiming to create over 10,000 jobs and divert over 10 million tonnes from landfill, backed by a $190 million Recycling Modernisation Fund."
+  },
+  {
+   "slug": "speech-396661",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-22",
+   "stage_hint": null,
+   "brief": "Labor supported the Recycling and Waste Reduction Bill 2020 but moved an amendment criticising the government's chronic delay and poor handling of waste reform, noting that only 12% of Australia's 100kg per capita plastic waste is recycled, $120 million of a $167 million recycling package remained unspent after 18 months, and the 70% plastic packaging recycling target for 2025 is far off track at 16%."
+  },
+  {
+   "slug": "speech-396665",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-22",
+   "stage_hint": null,
+   "brief": "Labor supported the Recycling and Waste Reduction Bill 2020 but argued it was a missed opportunity, noting Australia recycles only 12% of plastics and 58% of total waste, and that the government allocated just $10 million in the budget for growing waste and recycling capacity."
+  },
+  {
+   "slug": "speech-396666",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Recycling and Waste Reduction Bill 2020, which will ban waste exports, divert 10 million tonnes of waste from landfill, generate an extra $1.5 billion in the economy and create hundreds of jobs over 20 years. Specific timelines include bans on unprocessed mixed plastics by 1 July 2021, whole used tyres by December 2021, single resin plastics by July 2022, and mixed paper/cardboard by July 2024."
+  },
+  {
+   "slug": "speech-396669",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Recycling and Waste Reduction Bill 2020, arguing Australia generates 67 million tonnes of waste annually but recycles only 37 million, with just 12% of plastic waste recycled. The bill aims to end the export of 640,000 tonnes of rubbish and establish a national recycling framework, backed by a $190 million Recycling Modernisation Fund and a $60 million National Waste Policy Action Plan to create 10,000 jobs."
+  },
+  {
+   "slug": "speech-396670",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-22",
+   "stage_hint": null,
+   "brief": "Labor supported the Recycling and Waste Reduction Bill 2020, arguing the Coalition wasted seven years on waste policy and that the $100 million Recycling Investment Fund was a repackaged existing fund. The opposition committed to a $20 billion Rewiring the Nation plan, net zero emissions by 2050, and increasing Australia's plastics recycling capacity by 400%."
+  },
+  {
+   "slug": "speech-396671",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-22",
+   "stage_hint": null,
+   "brief": "The Recycling and Waste Reduction Bill 2020 bans waste exports in phases from July 2021, establishes product stewardship schemes, and aims to generate $1.5 billion in economic activity and 10,000 jobs through a $191 million Recycling Modernisation Fund."
+  },
+  {
+   "slug": "speech-396673",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-22",
+   "stage_hint": null,
+   "brief": "The Recycling and Waste Reduction Bill 2020 bans the export of unprocessed waste glass, plastic, tyres and paper, improves product stewardship, and is projected to create 10,000 jobs over 10 years. The speaker highlighted local businesses Licella and iQRenew as examples of innovation in waste recycling."
+  },
+  {
+   "slug": "speech-396674",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2020-10-22",
+   "stage_hint": null,
+   "brief": "Support was expressed for the Recycling and Waste Reduction Bill 2020, highlighting South Australia’s container deposit legislation since 1977 and plastic bag ban since 2009. A proposed recycling hub in McLaren Vale from three councils was noted, projected to create over 80 construction and 20 ongoing jobs, with encouragement for federal and state support."
+  },
+  {
+   "slug": "speech-396675",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-22",
+   "stage_hint": null,
+   "brief": "The Recycling and Waste Reduction Bill 2020 bans waste exports (mixed plastics from July 2021, whole tyres from December 2021, single plastics from 2022, paper and cardboard from July 2024) and strengthens product stewardship through voluntary, co-regulatory and mandatory schemes, with additional investments like the Recycling Modernisation Fund."
+  },
+  {
+   "slug": "speech-396676",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia's recycling performance has declined, with only 9.4% of 3.4 million tonnes of plastic recycled in 2017-18, and criticised the government for seven years of inaction on product stewardship. They highlighted the Bower's right-to-repair campaign and called for community-led recycling initiatives in Parramatta, noting that the major recycling contract expires in two years."
+  },
+  {
+   "slug": "speech-396677",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Recycling and Waste Reduction Bill 2020 embodies Liberal principles of stewardship, aiming to reduce waste, promote a circular economy, and create economic opportunities. He praised Assistant Minister for Waste Reduction and Environmental Management Trevor Evans for advancing practical, industry-inclusive reforms to improve environmental outcomes and build a sustainable 21st-century economy."
+  },
+  {
+   "slug": "speech-396678",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Recycling and Waste Reduction Bill 2020 is a positive step but does not go far enough, citing Australia’s 12% plastic recycling rate and the government’s failure to invest in product stewardship funds. They highlighted that 4,000 microplastic pieces per square metre are found on Sydney beaches, 14 million tonnes of plastic sit on the ocean floor, and Australia’s export ban by 2024 requires a 400% increase in domestic reprocessing capacity."
+  },
+  {
+   "slug": "speech-396679",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-10-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Recycling and Waste Reduction Bill 2020, which introduces a sequential ban on exporting unprocessed waste including plastic, paper, glass, and tyres. The bill aims to reduce waste by 10% per person by 2030, recover 80% of waste, increase recycled content use, and phase out problematic plastics by 2025, with $190 million allocated for recycling modernisation."
+  },
+  {
+   "slug": "speech-396901",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-10-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Recycling and Waste Reduction Bill 2020, citing that 76% of Warringah residents listed waste as their top issue and noting Australia uses 130 kg of plastic per person annually with only 9% recycled. They called for stronger measures including packaging content targets, a ban on single-use plastics, and five-yearly reviews, while commending the government’s $250 million Recycling Modernisation Fund and $1.5 billion Manufacturing Strategy."
+  },
+  {
+   "slug": "speech-396903",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-26",
+   "stage_hint": null,
+   "brief": "The Recycling and Waste Reduction Bill 2020 was supported but criticised as too little too late, with the Morrison government accused of failing to deliver on promised recycling infrastructure; Australia generated 67 million tonnes of waste in 2016-17 and recycles only 12% of plastic, while local initiatives like the City of Newcastle's $24 million organics recycling facility and Feedback Organic Recovery's 700,000 litre food waste diversion were highlighted."
+  },
+  {
+   "slug": "speech-396904",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Recycling and Waste Reduction Bill 2020 and related bills will create a recycling industry in Australia, with $190 million in infrastructure funding expected to generate 10,000 jobs and eliminate 10 million tonnes of landfill, while banning waste exports to guarantee supply for domestic recyclers. They highlighted the need for cost-effective regional recycling capacity, citing South Australia's long-running container deposit scheme and the potential for e-waste processing at Port Pirie's smelter."
+  },
+  {
+   "slug": "speech-396905",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-26",
+   "stage_hint": null,
+   "brief": "The MP for Dunkley argued the Recycling and Waste Reduction Bill is insufficient, noting that while Labor will support it, the government still lags behind the environmental action of young people in schools like Frankston High School and Elisabeth Murdoch College. They cited community suggestions for tax offsets for businesses reducing waste, government‑owned recycling plants, and a shift away from single‑use plastics."
+  },
+  {
+   "slug": "speech-396911",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-10-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Recycling and Waste Reduction Bill 2020, arguing it establishes a national framework for waste management and an export ban on waste plastic, paper, glass, and tyres, expected to generate $1.5 billion in economic activity over 20 years. They cited specific local recycling initiatives in the electorate of Forde, including grants to Beenleigh and Marsden State High Schools, and named companies like Gold Coast Resource Recovery, V Resource, Molectra, Recycling Developments, BlockTexx, and TES."
+  },
+  {
+   "slug": "speech-396912",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-26",
+   "stage_hint": null,
+   "brief": "Labor supported the Recycling and Waste Reduction Bill 2020 and its export ban on waste, but criticised the government for taking credit for a ban forced by China and other countries' import restrictions, noting Australia now has less recycling infrastructure than in 2005 and produces 100 kilograms of plastic waste per capita annually."
+  },
+  {
+   "slug": "speech-397016",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Recycling and Waste Reduction Bill 2020, highlighting South Australia’s leadership in recycling since the 1970s and criticising the federal government for seven years of inaction, including a $100 million recycling fund that remains untouched. Concrete figures cited include Australia recycling only 12% of plastics and 58% of total waste, with a need to increase local plastic reprocessing capacity by 400%."
+  },
+  {
+   "slug": "speech-397017",
+   "speaker": "Bridget Archer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Recycling and Waste Reduction Bill, citing local initiatives like Envorinex (which received over $700,000 in federal funding, doubling its workforce and processing 500 kg of soft plastics per hour) and the ASPIRE digital waste platform. The bill ends the export of 645,000 tonnes of waste annually, invests $1 billion to create 10,000 jobs, and aims to divert 10 million tonnes from landfill."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Recycling and Waste Reduction Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00119",
+   "assent_date": "2020-12-15"
+  }
+ ]
+}

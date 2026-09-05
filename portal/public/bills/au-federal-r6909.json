@@ -1,0 +1,227 @@
+{
+ "key": "au-federal-r6909",
+ "title": "Financial Sector Reform Bill 2022",
+ "short_title": "Financial Sector Reform Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2022-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6909%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6909%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6909%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6909%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6909%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-10-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6909%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6909%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6909%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6909%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6909%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6909%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6909%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6909%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6905_ems_a6bed40a-6605-4ffe-a06b-ea5b14b85835%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6909_ems_0f1ea32f-1047-41e3-b623-3a8b00538b4e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6909_ems_1fb96217-15f2-4c98-8c8e-88e0f3e73b19%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6909%22",
+   "document_date": "2022-09-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00087",
+   "document_date": "2022-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-08",
+  "sentences": [
+   "This bill is part of a package that would create new accountability rules for banks, insurers and superannuation funds, and its schedules make changes to other laws to support that framework.",
+   "The main mechanism is the Financial Accountability Regime Bill 2022, which would force these industries to meet higher responsibility standards, with this bill making the necessary consequential amendments.",
+   "The new rules would apply to banks six months after the main bill starts, and to insurers and superannuation providers 18 months after its commencement."
+  ],
+  "changes": [
+   "Consequential amendments would be made to relevant Acts to support the accountability regime.",
+   "The bill's schedules would commence at the same time as the Financial Accountability Regime Bill 2022.",
+   "Amendments under this bill would take effect when the regime applies to the banking industry, six months after the main bill starts."
+  ],
+  "affected": "The banking, insurance and superannuation industries and their new entrants would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7907",
+   "date": "2022-12-01",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2022-12-01.395.2) introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor), which means it passed. ### Motion text > *That—* > > *(a) after consideration of the [Animal Health Australia and Plant Health Australia Funding Legislation Amendment Bill 2022](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6913) has concluded, the questions on all remaining stages of the [Financial Sector Reform Bill 2022](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6909) only be put without debate; and* > > *(b) paragraph (a) operate as a limitation of debate under [standing order 142](https://www.aph.gov.au/Parliamentary_Business/Chamber_documents/Senate_chamber_documents/standingorders/b00/b20#standing-order_c20-142).*",
+   "stage": "Business motion",
+   "ayes": 36,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "earliest": 35,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-12-01/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-422505",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The Financial Sector Reform Bill 2022 implements remaining banking royal commission recommendations, including a Compensation Scheme of Last Resort (CSLR) providing up to $150,000 for unpaid Australian Financial Complaints Authority determinations, and strengthens consumer protections for small amount credit contracts and consumer leases with new caps, repayment rules, and prohibitions."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Financial Sector Reform Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00087",
+   "assent_date": "2022-12-12"
+  }
+ ]
+}

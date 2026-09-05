@@ -1,0 +1,606 @@
+{
+ "key": "au-federal-r7129",
+ "title": "Australian Citizenship Amendment (Citizenship Repudiation) Bill 2023",
+ "short_title": "Australian Citizenship Amendment (Citizenship Repudiation) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2023-12-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7129%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7129%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7129%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7129%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7129%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7129%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7129%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7129_ems_f206e8ad-21dd-4591-895d-799b3e7f6811%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7129%22",
+   "document_date": "2023-11-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00109",
+   "document_date": "2023-12-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-29",
+  "sentences": [
+   "The bill would let a court decide to end a dual citizen's Australian citizenship after a serious criminal conviction.",
+   "The minister could ask a court to make an order ending citizenship, moving the power from the executive to the judiciary.",
+   "The bill repeals the provisions the High Court struck down in 2022 and sets up a court-based regime instead."
+  ],
+  "changes": [
+   "The bill repeals sections 36B and 36D of the Australian Citizenship Act 2007.",
+   "The bill gives courts the power to make citizenship cessation orders.",
+   "The bill requires the minister to apply to a court for a citizenship cessation order.",
+   "The bill applies to dual citizens convicted of serious offences."
+  ],
+  "affected": "Dual Australian citizens convicted of serious offences.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10312",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "question": "Peter Dutton This is one of the most serious debates that this parliament could enter into, but we're entering into this debate in one of the most farcical circumstances I can recall in my more than two decades in this parliament. This is a very serious issue for the government to contemplate. To put it into context, the government has had since June to compose legislation, to seek legal advice from the Solicitor-General and to resolve these matters which have arisen because of the judgement within the High Court. None of that has taken place. We went in for briefings earlier this week, on Monday, to be told by the Minister for Home Affairs and the Minister for Immigration, Citizenship and Multicultural Affairs that this bill, the Australian Citizenship Amendment (Citizenship Repudiation) Bill 2023, and the Migration Amendment (Bridging Visa Conditions) Bill 2023 were to be dealt with on Monday. They wanted to deal with the two bills, to rush them through, in a haphazard way, which is a similar outcome to what happened in the last sitting week—no correspondence entered into, no legal advice being made available to the opposition so that we can contemplate our position, just this jackboot operation to drive it through the chamber here. What we're seeing at the moment is an opportunity for the government to move this bill as quickly as possible into the upper house, because that would mean that there would be no consideration in detail in the lower house. It would mean that the reasonable amendments that we have to move wouldn't be individually voted on by the members of the government, because they don't want to be in a position where their constituents hear what Labor is really concocting here, and that is a vote against the very reasonable suggestions that we've made by way of amendments—which have been outlined by the shadow minister for immigration—to make Australia safer. That's what they're trying to circumvent here, and that's why the motion has just been move",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 67,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 78
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-29/12"
+  },
+  {
+   "key": "federal-representatives-10313",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "question": "Milton Dick The question is that the amendment moved by the honourable member for North Sydney be agreed to.",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 72,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 84
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-29/13"
+  },
+  {
+   "key": "federal-representatives-10314",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "question": "Milton Dick The question is that the amendment moved by the honourable member for Wannon be agreed to.",
+   "stage": "Second reading",
+   "ayes": 60,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 70
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-29/14"
+  },
+  {
+   "key": "federal-representatives-10315",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "question": "Milton Dick The question now is that this bill be now read a second time.",
+   "stage": "Second reading",
+   "ayes": 109,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 119,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-29/15"
+  },
+  {
+   "key": "federal-senate-8567",
+   "date": "2023-12-04",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2023-12-04.199.2) introduced by Tasmanian Senator [Wendy Askew](https://theyvoteforyou.org.au/people/senate/tasmania/wendy_askew) (Liberal Party), which means it was successful. ### Motion text > *That, following the passage of the bill, the following matter be referred to the Parliamentary Joint Committee on Intelligence and Security for inquiry and report by 14 March 2024:* > > *The operation, effectiveness and implications of the amendments made by the Australian Citizenship Amendment (Citizenship Repudiation) Bill 2023.*",
+   "stage": "Committee motion",
+   "ayes": 43,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-04/6"
+  },
+  {
+   "key": "federal-senate-8599",
+   "date": "2023-12-06",
+   "house": "senate",
+   "question": "Australian Citizenship Amendment (Citizenship Repudiation) Bill 2023 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-06/2"
+  },
+  {
+   "key": "federal-senate-8600",
+   "date": "2023-12-06",
+   "house": "senate",
+   "question": "Australian Citizenship Amendment (Citizenship Repudiation) Bill 2023 - Second Reading - Let another motion be introduced",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 9,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-06/3"
+  },
+  {
+   "key": "federal-senate-8601",
+   "date": "2023-12-06",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2023-12-06.39.3) introduced by South Australian [Andrew McLachlan](https://theyvoteforyou.org.au/people/senate/sa/andrew_mclachlan) (Liberal), which means they failed. ### Amendment text > *(1) Schedule 1, item 4, page 5 (after line 22), after paragraph 36C(3)(b), insert:* > >> *(ba) a provision of Subdivision C of Division 80 of the Criminal Code (urging violence and advocating terrorism or genocide);* > > *(2) Schedule 1, item 4, page 5 (line 23), omit paragraph 36C(3)(c), substitute:* > >> *(c) a provision of Division 83 of the Criminal Code (other threats to security);* > > *(3) Schedule 1, item 4, page 5 (line 33), omit subparagraph 36C(3)(f)(v).* > > *(4) Schedule 1, item 4, page 5 (after line 33), after paragraph 36C(3)(f), insert:* > >> *(fa) a provision of Part 5.4 of the Criminal Code (harming Australians);* > > *(5) Schedule 1, item 4, page 5 (line 35), at the end of subsection 36C(3), add:* > >> *; (h) a provision of Division 270 of the Criminal Code (slavery and slavery-like offences);* >> >> *(i) a provision of Division 272 of the Criminal Code (child sex offences outside Australia);* >> >> *(j) a provision of Division 274 of the Criminal Code (torture);* >> >> *(k) a provision of Part 9.4 of the Criminal Code (dangerous weapons);* >> >> *(l) a provision of Subdivision D of Division 474 of the Criminal Code (use of carriage service for child abuse material);* >> >> *(m) a provision of Subdivision F of Division 474 of the Criminal Code (use of carriage service involving sexual activity with, or causing harm to, person under 16).*",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 9,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-06/4"
+  },
+  {
+   "key": "federal-senate-8602",
+   "date": "2023-12-06",
+   "house": "senate",
+   "question": "Australian Citizenship Amendment (Citizenship Repudiation) Bill 2023 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 39,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 7,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-06/5"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Australian Citizenship Amendment (Citizenship Repudiation) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00109",
+   "assent_date": "2023-12-07"
+  }
+ ]
+}

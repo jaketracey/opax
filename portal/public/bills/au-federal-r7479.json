@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r7479",
+ "title": "Sex Discrimination Amendment (Sex-based Rights) Bill 2026",
+ "short_title": "Sex Discrimination Amendment (Sex-based Rights) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-05-25",
+ "originating_house": "representatives",
+ "sponsor": "PENFOLD, Alison, MP",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "11046",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7479%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7479%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7479%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7479_ems_b1ba6e8f-bff1-4cbc-8c22-888c4b606b7f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7479%22",
+   "document_date": "2026-05-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1204136",
+   "speaker": "Andrew Willcox",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2026-06-29",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

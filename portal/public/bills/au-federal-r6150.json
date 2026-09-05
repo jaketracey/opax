@@ -1,0 +1,190 @@
+{
+ "key": "au-federal-r6150",
+ "title": "Social Services Legislation Amendment (Student Reform) Bill 2018",
+ "short_title": "Social Services Legislation Amendment (Student Reform) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-08-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2018-09-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6150%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6150%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6150%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6150%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6150%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-09-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6150%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6150_ems_c84de817-c762-4149-85d5-5e8cdd06829f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6150%22",
+   "document_date": "2018-08-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00111",
+   "document_date": "2018-09-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-368196",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speech supported the Social Services Legislation Amendment (Student Reform) Bill 2018, which expands Youth Allowance access to regional and remote students who move away to study, raising the parental income limit from $150,000 to $160,000 plus $10,000 per additional child and allowing the financial year before a gap year to be used for income assessment. It also moved an amendment condemning Turnbull Government Centrelink cuts that have delayed Youth Allowance processing for regional students, citing average 35-minute call wait times, a 28-day median processing time, and university funding cuts including $57 million from Charles Sturt University, $69 million from the University of Newcastle, $51 million from the University of Wollongong, $36 million from James Cook University, and $81 million from La Trobe University."
+  },
+  {
+   "slug": "speech-368199",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (Student Reform) Bill 2018, which increases the parental income cap for regional workforce independence from $150,000 to $160,000, adds $10,000 per extra child, and lets students choose the year before their self-supporting period for income assessment, effective 1 January 2019."
+  },
+  {
+   "slug": "speech-368258",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-23",
+   "stage_hint": null,
+   "brief": "The member for O'Connor argued that the Social Services Legislation Amendment (Student Reform) Bill 2018 should be passed to increase the combined gross parental income cap for independent youth allowance from $150,000, enabling more regional students—such as children of a nurse earning $75,000 and a policeman earning $90,000—to qualify, and noted that under the changes an estimated 75% of O'Connor's 1,400 year 12 graduates would become eligible."
+  },
+  {
+   "slug": "speech-368259",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (Student Reform) Bill 2018, which raises the parental income limit for regional students from $150,000 to $160,000, but criticised the government for cutting $2.2 billion from universities, including $48 million from Flinders University, $52 million from the University of Adelaide, and $60 million from the University of South Australia, and for causing an estimated 10,000 students to miss out on university places."
+  },
+  {
+   "slug": "speech-368260",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that rural and regional students face a $25,000 additional cost for tertiary education compared to city students, and that only 18.3% of people in remote areas and 20.4% in regional areas obtain a bachelor's degree, versus 42.4% in cities. He announced the government’s adoption of recommendations from Emeritus Professor John Halsey’s review, including lifting the parental income threshold for independent youth allowance from $150,000 to $160,000, and highlighted the 2016 removal of the parental assets test for accessing the allowance."
+  },
+  {
+   "slug": "speech-368261",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-23",
+   "stage_hint": null,
+   "brief": "The bill reduces the qualifying work period for independent youth allowance from 18 to 14 months, lifts the combined parental income threshold from $150,000 to $160,000 ($170,000 for two children), and introduces 1,200 rural and regional enterprise scholarships of $18,000 each for STEM and health studies. These changes aim to improve higher education access for rural, regional and remote students, who are half as likely as city counterparts to complete a university degree."
+  },
+  {
+   "slug": "speech-368262",
+   "speaker": "John McVeigh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-23",
+   "stage_hint": null,
+   "brief": "The bill increases the parental income threshold for youth allowance from $150,000 to $160,000 and introduces a $10,000-per-child allowance, effective 1 January 2019, to improve access for regional, rural and remote students who must live away from home to study. It also reduces the required self-supporting period from 18 months to 14 months, and is expected to increase qualifying students by 75%, from 3,029 to over 5,300."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (Student Reform) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00111",
+   "assent_date": "2018-09-21"
+  }
+ ]
+}

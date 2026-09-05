@@ -1,0 +1,187 @@
+{
+ "key": "au-federal-r6315",
+ "title": "Social Services Legislation Amendment (Energy Assistance Payment) Bill 2019",
+ "short_title": "Social Services Legislation Amendment (Energy Assistance Payment) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-04-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2019-04-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-04-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6315%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6315%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6315%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6315%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6315%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6315%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6315%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6315%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6315%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6315%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6315%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6315%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6315_ems_db1b5adb-9d2b-48fd-8989-87497366e559%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6315%22",
+   "document_date": "2019-04-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00028",
+   "document_date": "2019-04-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-5720",
+   "date": "2019-04-03",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2019-04-03.159.1) introduced by WA Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert) (Greens). It would have added the words below to the end of the usual motion \"*that the bill be read [for a second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html)*\", which is parliamentary jargon for: \"*that the majority agree with the main idea of the bill*\". ### Words added > *At the end of the motion, add:* > > *\", but the Senate calls upon the Government to re-regulate electricity prices and establish a public retailer to lower electricity prices.\"*",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 9,
+    "dated": 21,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-04-03/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-376649",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-04-03",
+   "stage_hint": null,
+   "brief": "The bill provides a one-off energy assistance payment of $75 for singles and $62.50 per eligible couple member to all income support recipients and veterans residing in Australia on 2 April 2019, costing $365 million and automatically paid by June 2019."
+  },
+  {
+   "slug": "speech-376652",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-04-03",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment (Energy Assistance Payment) Bill provides a one-off, tax-free energy assistance payment of $75 for singles and $62.50 per eligible couple member to pension, allowance and veteran payment recipients residing in Australia on 2 April 2019, costing $365 million and helping around five million Australians."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (Energy Assistance Payment) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00028",
+   "assent_date": "2019-04-05"
+  }
+ ]
+}

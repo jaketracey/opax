@@ -1,0 +1,218 @@
+{
+ "key": "au-federal-s1062",
+ "title": "Banking and Financial Services Commission of Inquiry Bill 2017",
+ "short_title": "Banking and Financial Services Commission of Inquiry Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-22",
+ "originating_house": "senate",
+ "sponsor": "WHISH-WILSON, Sen Peter",
+ "sponsor_party": "independent candidate for the federal seat of Bass, Tas",
+ "sponsor_person_id": "10780",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2018-02-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1062%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1062%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1062%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1062%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1062%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1062%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1062%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1062%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1062%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1062_ems_05bee780-1fd5-4194-9236-1ecb1eadeee0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1062%22",
+   "document_date": "2017-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-22",
+  "sentences": [
+   "The bill would create a commission that investigates misconduct in Australia's banking and finance industry.",
+   "This commission would report its findings to the Parliament, using powers like legal cross-examination and forensic analysis.",
+   "The bill would start only after royal assent and when government funds are available to pay for the inquiry."
+  ],
+  "changes": [
+   "Establishes a parliamentary commission to examine banking and finance misconduct.",
+   "Requires the commission to identify causes like flawed incentives, culture and weak regulation.",
+   "Delays commencement until both royal assent and funding from the Consolidated Revenue Fund occur."
+  ],
+  "affected": "Banks, insurance companies, superannuation funds, credit providers, financial advisors and other financial services license holders would be examined, and victims of misconduct would have their experiences considered.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4707",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "question": "Adam Bandt I move: That this bill be now read a second time. We need a royal commission into the big banks, and the best way to make this happen is to vote for this bill, because we will either then get a royal commission, when the government realises that there is support both in the Senate and in this House for a royal commission into the big banks, or we will get the next best thing, which is a parliamentary commission of inquiry that will have the power to do what a royal commission can. This bill is very similar in its terms to that moved by my colleague the member for Kennedy and seconded by the member for Denison. There is a broad-based support for this approach in this chamber. There is a broad-based support for this in the Senate. That is why this bill that the Greens have drafted was co-sponsored and moved by a broad cross-section of the Senate. Too many people have lost too much money. There have been homes that have been lost, there have been farms that have been lost, and there have been lives that have been wrecked. At its core, the problem is that within the banks there is a conflict in their business model. Part of their business model takes people's money and invests it, but the other part of their business model is about making as much money as they possibly can. Those two often come into conflict. This parliament has tried its best to inquire into what is going on in the big banks and whether we can fix it. There have been Senate inquiries. The House economics committee has looked into this. Each time, what we find is that the CEOs of the banks front up to parliament and wring their hands and say, 'We're sorry that we've done the wrong thing.' But we find out that back at the ranch—when they leave parliament and go back to running their businesses—nothing, fundamentally, changes. We found out that no-one lost their job, even though people were fleeced and lost enormous amounts of money and lives were ruined. There were no substantive changes to th",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-15/1"
+  },
+  {
+   "key": "federal-senate-4708",
+   "date": "2017-06-15",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 38,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 42,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-06-15/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

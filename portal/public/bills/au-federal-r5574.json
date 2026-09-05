@@ -1,0 +1,301 @@
+{
+ "key": "au-federal-r5574",
+ "title": "Communications Legislation Amendment (Deregulation and Other Measures) Bill 2015",
+ "short_title": "Communications Legislation Amendment (Deregulation and Other Measures) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-12-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-02-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-03-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5574_ems_5fcc9fc9-ceb2-4fb3-9fe6-fd6a66b74e7c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5574_ems_7e4ef8d6-e1ee-4f26-a10e-47592c313306%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5574%22",
+   "document_date": "2015-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-02",
+  "sentences": [
+   "This bill is part of a package that aims to cut red tape in broadcasting and telecommunications while keeping consumer protections.",
+   "It would simplify regulation by removing outdated requirements and giving regulators more discretion in fee collection and complaints handling.",
+   "The package would also allow the telecommunications industry to create a private scheme for managing phone numbers, subject to safeguards."
+  ],
+  "changes": [
+   "Streamline accounting and fee rules for commercial broadcasters by removing audit requirements and expanding who can declare earnings.",
+   "End duplicate reporting of media ownership changes to the ACMA.",
+   "Apply a single classification standard for all TV programs, including films.",
+   "Remove overlap in the ACMA's complaint and investigation processes.",
+   "Stop the ACCC from ordering carriers and service providers to submit tariff filings.",
+   "Repeal several outdated Acts that are no longer needed."
+  ],
+  "affected": "Commercial broadcasters, datacasting licensees, television broadcasters, carriers, carriage service providers, the ACMA, and the ACCC.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:21Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4081",
+   "date": "2016-02-22",
+   "house": "senate",
+   "question": "Stephen Conroy I move opposition amendment (1) to the Communications Legislation Amendment (Deregulation and Other Measures) Bill 2015 on sheet 7844: (1) Page 5 (after line 25), after Schedule 1, insert: Schedule 1A—NBN Co Reporting _National Broadband Network Companies Act 2011_ 1 After section 98A Insert: 98AA Financial and deployment forecasts report (1) The Board must prepare a report setting out NBN Co's financial and deployment forecasts for the period beginning on 1 July 2015 and ending on 30 June 2022. (2) The report must include: (a) forecasts for each financial year during the period of the following: (i) number of premises ready for service for each access technology; (ii) number of premises activated for each access technology; (iii) total revenue; (iv) total operating expenditure; (v) earnings before interest, taxes, depreciation and amortisation; (vi) earnings before interest, taxes, depreciation and amortisation margin; (vii) operating profit before deduction of interest and income taxes; (viii) net cash interest (funding costs); (ix) earnings before taxes; (x) total capital expenditure; (xi) movement in working capital; (xii) cash tax; (xiii) levered free cash flow; (xiv) government funding; (xv) debt funding; (xvi) total funding; and (b) totals for the whole of the period for each forecast mentioned in paragraph (a). (3) The Board must, within 60 days of the day on which this item commences: (a) give the Minister the report; and (b) publish the report on NBN Co's website. (4) The Minister must cause a copy of the report to be tabled in each House of the Parliament within 5 sitting days of receiving it. I am always grateful to listen to contributions from Senator Smith, as someone who worked in the telecommunications sector. As someone who campaigned for the deregulation and structural separation of Telstra, for him to make a contribution is always valuable. He took the time to read out a whole list—a litany—of failures of the National Broadband Netw",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 11,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-02-22/3"
+  },
+  {
+   "key": "federal-representatives-4100",
+   "date": "2016-02-25",
+   "house": "representatives",
+   "question": "Paul Fletcher I move: That the amendment be disagreed to. The amendment made by the Senate proposes to insert a new section 98AA into the National Broadband Network Companies Act 2011. The proposed section would require the board of nbn co, within 60 days, to prepare, provide to the minister and publish on its website a report setting out nbn co's financial and deployment forecasts for the period 1 July 2015 to 30 June 2022. The minister would be required to table the report in each house of the parliament within five sitting days of receipt. The amendment proposed is not related to the matters dealt with by the Communications Legislation Amendment (Deregulation and Other Measures) Bill 2015. That bill, as introduced, does not seek to amend the NBN Companies Act. The amendment proposed to the bill in fact is inconsistent with the underlying purpose of the Communications Legislation Amendment (Deregulation and Other Measures) Bill 2015, that underlying purpose being to streamline regulatory processes and to reduce the compliance burden faced by the broadcasting and telecommunications sectors. For these reasons, I put to the House that it ought to disagree with the amendment proposed by the Senate. Jason Clare I have to ask the question: what does this government have to hide? Seriously—what does the government have to hide? What is it worried about here that it is willing to take this bill back to the House in trying to remove these provisions from the bill? Just so that honourable members understand what we are talking about here: what the government is trying to do right now is to amend legislation so that nbn co does not have to release information that it used to release—basic, simple information, like total capex, total opex, total revenue and the amount of interest that nbn co will pay. All of this is information that nbn co used to release in corporate plans when we were in government. So this argument that the government is now using, that this is somehow com",
+   "stage": "Consideration of Senate message",
+   "ayes": 78,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 62,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 127
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-02-25/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-325128",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The government moved the Communications Legislation Amendment (Deregulation and Other Measures) Bill to remove outdated regulation, claiming it has already cut over 3,000 pages of red tape and saved $300 million annually. Key measures include streamlining licence fee administration, removing duplicate control notifications, implementing a single TV classification scheme, repealing tariff-filing arrangements, reforming information collection powers, and enabling industry self-management of telephone numbering."
+  },
+  {
+   "slug": "speech-325129",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The Telecommunications (Numbering Charges) Amendment Bill 2015 makes consequential amendments to allow the telecommunications industry to self-manage telephone numbering resources, while ensuring the Australian Communications and Media Authority continues to collect $60 million in annual charges from carriage service providers."
+  },
+  {
+   "slug": "speech-327596",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The speaker argued the deregulation bills are a routine clean-up exercise that save nothing, despite previous bills saving $35 million and $350,000 respectively, and the opposition will not oppose them. The bills amend the Broadcasting Services Act and provide a framework for an industry-managed telephone numbering scheme, with support from the Communications Alliance, ACCAN, and Free TV Australia."
+  },
+  {
+   "slug": "speech-327597",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Communications Legislation Amendment (Deregulation and Other Measures) Bill 2015 is not a rudimentary cleanup, but includes significant deregulation, such as removing duplicate notification requirements and enabling the telecommunications industry to develop its own numbering scheme, potentially improving efficiency."
+  },
+  {
+   "slug": "speech-329053",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-25",
+   "stage_hint": null,
+   "brief": "The speaker moved to disagree with a Senate amendment requiring nbn co to publish financial and deployment forecasts for 2015–2022, arguing the amendment is unrelated to the bill's purpose of streamlining regulation and reducing compliance burdens."
+  }
+ ],
+ "acts": []
+}

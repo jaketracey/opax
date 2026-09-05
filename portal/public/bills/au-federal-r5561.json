@@ -1,0 +1,248 @@
+{
+ "key": "au-federal-r5561",
+ "title": "Omnibus Repeal Day (Spring 2015) Bill 2015",
+ "short_title": "Omnibus Repeal Day (Spring 2015) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-11-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5561%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5561%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5561%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5561%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5561%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5561%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5561%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5561%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5561%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5561%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5561_ems_7a98c342-a035-4003-8517-65362da7462c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5561_ems_76493516-efa0-41bb-8f78-dcc1bd0c71ed%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5561%22",
+   "document_date": "2015-11-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-11-12",
+  "sentences": [
+   "This bill would cut red tape by changing or removing laws across 14 government portfolios.",
+   "It would repeal Acts that are no longer needed, such as the Customs (Tariff Concessions Validations) Act 1999, and simplify notification rules for aged care providers.",
+   "The explanatory memorandum does not give a start date for the changes."
+  ],
+  "changes": [
+   "Removes the requirement for aged care providers to tell the department within 28 days about changes to key personnel that do not materially affect suitability.",
+   "Repeals the Customs (Tariff Concessions Validations) Act 1999, which has been obsolete since June 1999.",
+   "Deletes redundant provisions in the Broadcasting Services Act 1992 related to SBS television activities."
+  ],
+  "affected": "Businesses, families, individuals and the community sector would have lower regulatory burdens.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:12:55Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-323097",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-12",
+   "stage_hint": null,
+   "brief": "The government introduced three repeal bills to remove over 900 redundant Commonwealth acts, including the Wool International Act 1993, the Wool International Privatisation Act 1999, and the Papua and New Guinea Loan (International Bank) Act 1970, and to abolish the Medical Training Review Panel and the Fishing Industry Policy Council, while simplifying aged-care provider notifications to save $1.16 million annually in compliance costs."
+  },
+  {
+   "slug": "speech-325076",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-12-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's red tape repeal bills are largely symbolic, with only $6.9 million in claimed savings—1.4% of the $4.5 billion total—and that over half the measures are recycled from a previous bill. The speaker also announced Labor would reinstate the Commonwealth Cleaning Services Guidelines and criticised a measure reducing penalties for employers who fail to pay superannuation on time."
+  },
+  {
+   "slug": "speech-325081",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-12-01",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government's fourth repeal day bill, arguing it claims billions in savings but delivers only $6.2 million, and accused the government of wasting $11,000 on a redundant review of the Stronger Futures in the Northern Territory Act. The speaker noted Labor repealed 16,794 redundant acts and cut $4 billion in business costs, and supported the bill's aged-care amendments."
+  },
+  {
+   "slug": "speech-325083",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Omnibus Repeal Day (Spring 2015) Bill, arguing that reducing red tape saves businesses money, citing a $4.5 billion saving and an example of compliance costs of $4 per tonne on a product worth $18 per tonne."
+  },
+  {
+   "slug": "speech-325084",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-01",
+   "stage_hint": null,
+   "brief": "The speaker argued the Omnibus Repeal Day (Spring 2015) Bill would cut red tape by abolishing the Medical Training Review Panel, repealing the Wool International Act 1993 and Wool International Privatisation Act 1999, simplifying aged-care provider notifications to save $1.16 million annually, and repealing part 3 of the Fisheries Administration Act 1991. The speaker also noted the coalition had repealed over 10,000 legislative instruments and reduced compliance costs by $4.5 billion, while criticising Labor for leaving a projected $667 billion deficit."
+  },
+  {
+   "slug": "speech-325085",
+   "speaker": "Wyatt Roy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-01",
+   "stage_hint": null,
+   "brief": "A Liberal Party MP argued that prosperity comes from removing government from people's lives, and announced that the Omnibus Repeal Day (Spring 2015) Bill has reduced red tape by $4.5 billion over two years and removed 3,600 spent acts and over 10,000 legislative mechanisms."
+  },
+  {
+   "slug": "speech-325160",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-325163",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Omnibus Repeal Day (Spring 2015) Bill 2015 would reduce regulatory burdens across 14 portfolios, repeal 905 Commonwealth acts, and save $4.5 billion annually in compliance costs. The bill removes redundant legislation, such as amending aged care notification requirements and abolishing administrator adviser panels, to support small businesses and aged-care providers."
+  },
+  {
+   "slug": "speech-325164",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The Omnibus Repeal Day Bill lacks evidence of claimed red tape savings, the economy is stagnant with cash rate at 2% and the budget deficit increasing by $38 billion, and a GST increase should be opposed; real savings could come from fixing bureaucratic passport processing inefficiencies."
+  },
+  {
+   "slug": "speech-325305",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government could make real savings by cutting red tape in areas such as passport and citizenship certificate processes and the approval of deductible gift recipient (DGR) status, citing the Vietnamese Catholic community in Pooraka whose DGR application for a multipurpose community centre was rejected over a misunderstanding and now awaits a ministerial response. The speaker noted DGR approval can take up to 18 months and urged a more efficient process."
+  },
+  {
+   "slug": "speech-325306",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The speech supported the Omnibus Repeal Day (Spring 2015), Amending Acts 1990-1999 Repeal, and Statute Law Revision (No. 3) bills as deregulation measures, opposing Labor's ETS as a cost-of-living increase and citing $1 billion in monthly interest on previous government debt. It argued overregulation had forced remittance businesses underground and that the Moorebank rail freight project would increase particulate matter nine-fold."
+  },
+  {
+   "slug": "speech-325308",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Omnibus Repeal Day (Spring 2015) Bill 2015 would reduce red tape by repealing or amending redundant legislation across 14 Commonwealth departments, including changes to the Aged Care Act 1997 to simplify provider notifications, abolishing the Medical Training Review Panel due to overlap with the National Medical Training Advisory Network, and repealing the Fishing Industry Policy Council, which had not met for 14 years. The bill also removes inconsistent consultation requirements in communications and arts legislation and repeals spent acts such as the Statistical Bureau (Tasmania) Act 1924 and the Papua and New Guinea Loan (International Bank) Act 1970, with the Department of Health estimating annual compliance savings of over $1 million."
+  },
+  {
+   "slug": "speech-325309",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The speaker supported three repeal bills to cut red tape, citing a coalition commitment to reduce it by $1 billion annually and $4.5 billion in savings announced in the first two years."
+  },
+  {
+   "slug": "speech-325311",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The three repeal day bills repeal over 900 Commonwealth acts, with the government reporting $2 billion in red tape reductions and a $4.5 billion annual decrease in compliance costs since September 2013."
+  }
+ ],
+ "acts": []
+}

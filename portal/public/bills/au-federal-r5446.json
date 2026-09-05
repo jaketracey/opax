@@ -1,0 +1,397 @@
+{
+ "key": "au-federal-r5446",
+ "title": "Copyright Amendment (Online Infringement) Bill 2015",
+ "short_title": "Copyright Amendment (Online Infringement) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2015-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5446%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5446%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5446%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5446%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5446%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5446%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5446%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5446%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5446%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5446%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5446%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5446%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5446%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5446%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5446_ems_1599ec23-c036-4dee-9562-a8a2e4d3d6fe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5446_ems_5438d128-79b5-401c-b45d-96959e8f35ec%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5446_ems_87ada78b-8836-421e-bc2f-96cfc19d1f81%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5446%22",
+   "document_date": "2015-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00080",
+   "document_date": "2015-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-26",
+  "sentences": [
+   "This bill would let copyright owners ask the Federal Court to order internet providers to block websites that mainly exist to infringe copyright.",
+   "The court would consider factors like how blatant the infringement is and whether blocking is a fair response before granting an injunction.",
+   "The injunction power would only apply to websites operated outside Australia and would not require the internet provider to be found liable for copyright infringement."
+  ],
+  "changes": [
+   "Creates a new court order for blocking overseas websites that primarily infringe copyright.",
+   "Lets copyright owners apply directly to the Federal Court without first proving the internet provider is liable.",
+   "Sets a high threshold for the court to grant an injunction, considering factors like flagrancy and proportionality."
+  ],
+  "affected": "Copyright owners and carriage service providers (internet providers) would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:56:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3823",
+   "date": "2015-06-22",
+   "house": "senate",
+   "question": "Jacinta Collins Labor will support the Copyright Amendment (Online Infringement) Bill 2015 after closely considering it in the Senate Legal and Constitutional Affairs Committee. The bill makes a modest contribution to the suite of measures required to deal with Australia's online copyright piracy problem. The bill implements a site-blocking process under which rights holders can seek a Federal Court injunction requiring ISPs to block overseas websites that have the primary purpose of infringing copyright or facilitating the infringement of copyright. As this test indicates, the bill is directed—as my colleague the shadow Attorney-General said in the other place—at the worst of the worst. It is intended to give rights holders a remedy against a category of websites which deliberately and flagrantly flout copyright laws and operate as havens for pirate activity. A blocking mechanism is necessary because these websites are hosted overseas; were they hosted within Australia, they would be able to be dealt with by the ordinary remedies of the copyright law. In deciding whether to make an order under this bill, the court will take account of a range of factors including: the flagrancy of the infringement, or the facilitation of infringement, by a site; whether the site shows a disregard for copyright generally; and whether the website contains a directory or index of ways to infringe copyright. On the other hand, the court will consider whether other remedies under the copyright law are available. Importantly, the court will consider the impact of a site-blocking order on any other persons or class of persons and whether making such an order would be a proportionate response in the circumstances. As I said, Labor considered this bill closely in the Legal and Constitutional Affairs Committee. While Labor supports measures which will discourage or disrupt piracy, the power to block websites is clearly to be exercised with great caution, and we wanted to ensure that the powe",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 10,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-22/1"
+  },
+  {
+   "key": "federal-senate-3825",
+   "date": "2015-06-22",
+   "house": "senate",
+   "question": "Scott Ludlam I move Australian Greens amendment (2) on sheet 7710: (2) Schedule 1, item 1, page 3 (lines 13 and 14), omit paragraph 115A(1)(b), substitute: (b) the online location flagrantly infringes the copyright; and Peter Whish-Wilson The committee is considering the Copyright Amendment (Online Infringement) Bill 2015. The question is that amendment (2) on sheet 7710, moved by Senator Ludlam, be agreed to. Jacinta Collins When we concluded just before question time, Senator Fierravanti-Wells had just concluded the government's position. I will now move to our position on Greens amendment (2). I might suggest to Senator Ludlam that he move amendments (2), (3), (7) and (8) together, as they all deal with the issues he raised, as indeed does amendment (2), which removes facilitation of copyright infringement as a criterion for issuing an injunction, and the issue of imposing flagrancy as a criterion. With respect to the first point, Labor understands the concerns raised by some in this debate about the breadth of the term 'facilitate' in this bill. However, it is important to note the context in which the word appears. The bill only covers websites which have the primary purpose of infringing copyright or facilitating copyright infringement. Clearly, all manner of websites might unwittingly and unintentionally facilitate the infringement of copyright in one way or another, but that is not the test. The question is whether it is the primary purpose of a website to do so. As a result, Labor is satisfied that it is appropriate for facilitation to remain in the bill, and we will not support this amendment. With regard to the second point, with respect to flagrancy, as I have said, the 'primary purpose' test in this bill imposes a deliberately high burden on rights holders making their case to the Federal Court. This amendment would add to the test a requirement that a site flagrantly infringed copyright. Flagrancy is a concept known to Australian copyright law, and it",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 26,
+    "earliest": 5,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-22/3"
+  },
+  {
+   "key": "federal-senate-3826",
+   "date": "2015-06-22",
+   "house": "senate",
+   "question": "Concetta Fierravanti-Wells I move: That this bill be now read a third time. Gavin Marshall The question is that the Copyright Amendment (Online Infringement) Bill 2015 be read a third time.",
+   "stage": "Third reading",
+   "ayes": 37,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "earliest": 5,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-22/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-309224",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-26",
+   "stage_hint": null,
+   "brief": "The Copyright Amendment (Online Infringement) Bill 2015 introduces a new power for rights holders to apply to the Federal Court for an order directing carriage service providers to block access to foreign-based websites whose primary purpose is to infringe or facilitate copyright infringement. The bill includes safeguards to ensure legitimate sites are not affected and requires the court to consider factors such as flagrancy, proportionality and public interest."
+  },
+  {
+   "slug": "speech-313077",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The Copyright Amendment (Online Infringement) Bill 2015 will allow copyright owners to apply to the Federal Court for orders requiring internet service providers to block access to websites whose primary purpose is facilitating copyright infringement, addressing Australia’s high rate of online piracy—21% of adults have illegally downloaded content, and 11.6% of global *Game of Thrones* downloads occur in Australia."
+  },
+  {
+   "slug": "speech-313078",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "Labor supported the Copyright Amendment (Online Infringement) Bill 2015 as a modest but worthwhile measure to combat online piracy, citing $1.37 billion in lost sales and 6,100 jobs lost annually. The speaker also moved an amendment calling on the government to fully respond to the Australian Law Reform Commission's copyright report and the House IT pricing inquiry recommendations by 17 September 2015."
+  },
+  {
+   "slug": "speech-313080",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The bill to block overseas piracy websites should be amended to clarify VPNs are not caught, address ISP cost indemnity, and include a two-year review; affordable legal streaming services like Netflix and Spotify are key to reducing piracy."
+  },
+  {
+   "slug": "speech-313083",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Copyright Amendment (Online Infringement) Bill 2015 and the Shadow Attorney-General’s amendment, arguing that site blocking alone is insufficient and that high prices and poor availability of content drive piracy, citing a Choice survey where 50% of pirates cited price and 41% cited wanting content sooner. The speaker also noted the bill would not block VPNs and that the government had agreed to clarify this in the explanatory memorandum."
+  },
+  {
+   "slug": "speech-313084",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The member argued that the Copyright Amendment (Online Infringement) Bill 2015 is needed to address Australia’s high online piracy rate, citing a Choice survey that one in three Australians accesses pirated data. He also criticised the Attorney-General’s budget decision to strip $105 million from the Australia Council."
+  },
+  {
+   "slug": "speech-313087",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Copyright Amendment (Online Infringement) Bill 2015 is a modest, balanced measure to block foreign websites primarily designed for piracy, while criticising the government for failing to address consumer concerns about pricing and access—citing that 79% of Australians are concerned about paying more than US counterparts and 58% about delayed or unavailable legal downloads. She supported the bill, expressing confidence that the Federal Court would exercise site-blocking powers cautiously and that the bill would not affect VPNs, but urged broader copyright reform and noted the government had not responded to the 2013 ALRC report."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Copyright Amendment (Online Infringement) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00080",
+   "assent_date": "2015-06-26"
+  }
+ ]
+}

@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1070",
+ "title": "Corporations Amendment (Modernisation of Members Registration) Bill 2017",
+ "short_title": "Corporations Amendment (Modernisation of Members Registration) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-15",
+ "originating_house": "senate",
+ "sponsor": "XENOPHON, Sen Nick",
+ "sponsor_party": "Independent Member",
+ "sponsor_person_id": "10717",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1070%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1070%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1070%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1070_ems_02d8c9aa-6c97-42bb-8ae0-5b73a8eace3a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1070%22",
+   "document_date": "2017-06-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-15",
+  "sentences": [
+   "The bill updates the Corporations Act 2001 to require companies to include members' email addresses in their register of members, reflecting modern communication methods.",
+   "It would amend the register requirements so that, in addition to the member's name and address, an email address must be recorded.",
+   "The change would take effect the day after the bill receives Royal Assent, and it does not alter existing protections for register inspection and use."
+  ],
+  "changes": [
+   "The bill adds email addresses to the mandatory information in the register of members.",
+   "The bill aligns the Corporations Act 2001 with modern communication practices.",
+   "The bill preserves existing protections for the inspection and use of register information."
+  ],
+  "affected": "Companies and their members, who would need to include email addresses in the register of members.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:34:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,215 @@
+{
+ "key": "au-federal-r5489",
+ "title": "Gene Technology Amendment Bill 2015",
+ "short_title": "Gene Technology Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2015-09-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5489%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5489%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5489%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5489%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5489%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5489%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5489%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5489%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5489%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5489%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5489%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5489%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5489_ems_e57a12df-d606-42b5-bee5-a523d014cdaa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5489%22",
+   "document_date": "2015-06-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00121",
+   "document_date": "2015-09-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-18",
+  "sentences": [
+   "The bill would make minor and technical changes to the Gene Technology Act 2000 without altering its core intent or the national regulatory framework for gene technology.",
+   "It would implement five recommendations from a 2011 independent review, including ending quarterly ministerial reports and clarifying rules for inadvertent dealings licences.",
+   "The changes would also remove information on GM products authorised by other agencies from the Regulator's record and allow more flexible licence variation requirements."
+  ],
+  "changes": [
+   "Quarterly reporting to the Minister would be discontinued.",
+   "The types of dealings that can be covered by an inadvertent dealings licence would be clarified.",
+   "Information about GM products approved by other agencies would be taken out of the Gene Technology Regulator's record.",
+   "Licence holders would get more flexibility through changed variation requirements.",
+   "The factors considered before dealings are classified as notifiable low risk dealings would be updated.",
+   "Ambiguous wording in the Act would be clarified."
+  ],
+  "affected": "The Gene Technology Regulator, licence holders, and the Minister would be affected by the proposed changes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:50:27Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-313638",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-18",
+   "stage_hint": null,
+   "brief": "The Gene Technology Amendment Bill 2015 makes minor and technical changes to the Gene Technology Act 2000 to improve efficiency, reduce regulatory burden, and increase flexibility for licence-holders, following an independent review that found the regulatory system working well."
+  },
+  {
+   "slug": "speech-316737",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The Gene Technology Amendment Bill 2015 makes five minor and technical amendments to the Gene Technology Act 2000, including discontinuing quarterly ministerial reporting, clarifying inadvertent dealings licences, updating advertising requirements for public consultations, removing duplicate information from the GMO record, and changing licence variation requirements to give greater flexibility while maintaining public health and safety. The bill was supported by all five submissions to a Senate committee inquiry, including from CSIRO, the Australian Academy of Science, and CropLife Australia, and is supported by the Labor opposition."
+  },
+  {
+   "slug": "speech-316738",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The government's Gene Technology Amendment Bill makes minor legislative changes, including moving from quarterly to annual ministerial reporting and increasing flexibility for licence holders. The speaker argued that opponents of genetic modification ignore scientific evidence and cited examples like golden rice preventing childhood blindness and Bt cotton reducing pesticide use by over 50%."
+  },
+  {
+   "slug": "speech-316739",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Gene Technology Amendment Bill 2015, which makes minor technical changes to Australia's national gene technology regulatory scheme, citing endorsements from the Australian Academy of Science, Acting Gene Technology Regulator Dr Robyn Cleland, and CropLife Australia. The speaker also cautioned that gene technology law is struggling to keep pace with science, referencing the D'Arcy v Myriad Genetics patent case."
+  },
+  {
+   "slug": "speech-316740",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The Gene Technology Amendment Bill 2015 was introduced to reduce regulatory burden by removing restrictions on licence variations, updating low-risk dealing categories, discontinuing quarterly reporting, and clarifying several provisions, all aimed at encouraging investment and research in gene technology, including a $20 billion Medical Research Future Fund and potential advances in vaccines and disease treatment."
+  },
+  {
+   "slug": "speech-316954",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The Gene Technology Amendment Bill 2015 implements recommendations from the Legislative and Governance Forum on Gene Technology to reduce regulatory duplication among federal bodies (including the APVMA, TGA, FSANZ, and NICNAS), streamline licensing and reporting requirements, and cut red tape—with the government having achieved nearly $2.5 billion in red-tape reductions to date."
+  },
+  {
+   "slug": "speech-316955",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The speaker argued the Gene Technology Amendment Bill 2015 risks reducing transparency and scrutiny of genetically modified crops, and expressed concern over legal issues for non-GM farmers, herbicide-resistant modifications, and corporate-led research by companies like Monsanto. He urged independent research, a fair legal framework, and clear labelling of GM foods to protect consumer choice and farmer rights."
+  },
+  {
+   "slug": "speech-316956",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The Gene Technology Amendment Bill 2015 amends the Gene Technology Act 2000 to reduce the regulatory burden for regulated organisations while maintaining rigorous, science-based risk assessments, as recommended by an independent review."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Gene Technology Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00121",
+   "assent_date": "2015-09-10"
+  }
+ ]
+}

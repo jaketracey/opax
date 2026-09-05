@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6894",
+ "title": "Anti-Money Laundering and Counter-Terrorism Financing Amendment (Making Gambling Businesses Accountable) Bill 2022",
+ "short_title": "Anti-Money Laundering and Counter-Terrorism Financing Amendment (Making Gambling Businesses Accountable) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-05",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-03-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6894%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6894%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6894%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6894_ems_6f98aba5-18f1-459b-8f95-fdf052893b6b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6894%22",
+   "document_date": "2022-09-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-05",
+  "sentences": [
+   "This bill is part of a package that would make gambling entities more accountable and stop them profiting from illegal behaviour.",
+   "It would require gambling companies to tell AUSTRAC if they suspect a customer paid for a gambling service with illegally obtained money.",
+   "The Federal Court could order a gambling company to compensate a victim for loss or damage when a bettor used illegally obtained funds."
+  ],
+  "changes": [
+   "Gambling companies must report suspicious payments to AUSTRAC.",
+   "The Federal Court can order compensation from gambling companies to injured parties.",
+   "Gambling entities are prevented from profiting from illegal behaviour."
+  ],
+  "affected": "Gambling companies, bettors, and victims of illegal fund use are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:10:34Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-421658",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2022-09-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Anti-Money Laundering and Counter-Terrorism Financing Amendment (Making Gambling Businesses Accountable) Bill 2022, noting that Australians lost $25 billion in 2018 and over 1.3 million are at risk of harmful gambling, and argued for banning gambling advertisements during children's and daylight hours."
+  }
+ ],
+ "acts": []
+}

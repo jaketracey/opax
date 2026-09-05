@@ -1,0 +1,683 @@
+{
+ "key": "au-federal-r7240",
+ "title": "Criminal Code Amendment (Hate Crimes) Bill 2025",
+ "short_title": "Criminal Code Amendment (Hate Crimes) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-09-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2025-02-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7240_ems_5018e217-732d-4cdc-8c9d-45c46fd58bd1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7240_ems_c7393ebc-4d2f-4878-ac7e-e8041c3d31ca%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7240_ems_492fd6bc-9ece-4f13-88e7-fdf7a4ef321b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7240_ems_c4398ac8-633b-4794-8f11-884ead78c87f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7240%22",
+   "document_date": "2024-09-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00001",
+   "document_date": "2025-02-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9513",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "question": "Criminal Code Amendment (Hate Crimes) Bill 2024 - Report from Federation Chamber - Mandatory minimum sentences and maximum penalties",
+   "stage": "Report from Federation Chamber",
+   "ayes": 116,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 62,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 32,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 126,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-06/1"
+  },
+  {
+   "key": "federal-representatives-9514",
+   "date": "2025-02-06",
+   "house": "representatives",
+   "question": "Criminal Code Amendment (Hate Crimes) Bill 2024 - Third Reading - Put the question",
+   "stage": "Third reading",
+   "ayes": 118,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 32,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-06/2"
+  },
+  {
+   "key": "federal-senate-9528",
+   "date": "2025-02-06",
+   "house": "senate",
+   "question": "Criminal Code Amendment (Hate Crimes) Bill 2024 - in Committee - Sunset provision on mandatory minimum sentences",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 3,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-06/10"
+  },
+  {
+   "key": "federal-senate-9529",
+   "date": "2025-02-06",
+   "house": "senate",
+   "question": "Criminal Code Amendment (Hate Crimes) Bill 2024 - in Committee - Put the question",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 18,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 3,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-06/11"
+  },
+  {
+   "key": "federal-senate-9530",
+   "date": "2025-02-06",
+   "house": "senate",
+   "question": "Criminal Code Amendment (Hate Crimes) Bill 2024 - in Committee - Suspend standing orders",
+   "stage": "In committee",
+   "ayes": 18,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-06/12"
+  },
+  {
+   "key": "federal-senate-9531",
+   "date": "2025-02-06",
+   "house": "senate",
+   "question": "Criminal Code Amendment (Hate Crimes) Bill 2024 - in Committee - Mandatory minimum sentencing and maximum penalties",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-06/13"
+  },
+  {
+   "key": "federal-senate-9532",
+   "date": "2025-02-06",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2025-02-06.85.1) introduced by the Greens party, which means they were unsuccessful. ### What do these amendments do? These amendments would have replaced the term “intersex status” with “sex characteristics” and introduced the requirement for a review by the Australian Law Reform Commission. ### Amendment text **SHEET 3273** > *(1) Schedule 1, item 4, page 4 (line 16), omit \"intersex status\", substitute \"sex characteristics\".* > > *(2) Schedule 1, item 7, page 4 (line 28), omit \"intersex status\", substitute \"sex characteristics\".* > > *(3) Schedule 1, item 12, page 6 (line 8), omit \"intersex status\", substitute \"sex characteristics\".* > > *(4) Schedule 1, item 15, page 6 (line 27), omit \"intersex status\", substitute \"sex characteristics\".* > > *(5) Schedule 1, item 19, page 8 (line 2), omit \"intersex status\", substitute \"sex characteristics\".* > > *(6) Schedule 1, item 19, page 8 (line 14), omit \"intersex status\", substitute \"sex characteristics\".* > > *(7) Schedule 1, item 19, page 9 (line 20), omit \"intersex status\", substitute \"sex characteristics\".* > > *(8) Schedule 1, item 19, page 10 (line 5), omit \"intersex status\", substitute \"sex characteristics\".* > > *(9) Schedule 1, item 19, page 11 (line 29), omit \"intersex status\", substitute \"sex characteristics\".* > > *(10) Schedule 1, item 19, page 12 (line 24), omit \"intersex status\", substitute \"sex characteristics\".* > > *(11) Schedule 1, item 19, page 14 (line 18), omit \"intersex status\", substitute \"sex characteristics\".* > > *(12) Schedule 1, item 19, page 15 (line 11), omit \"intersex status\", substitute \"sex characteristics\".* > > *(13) Schedule 1, item 20, page 18 (line 6), omit \"intersex status\", substitute \"sex characteristics\".* **SHEET 3283** > *(1) Page 2 (after line 11), after clause 3, insert:* > >> *4 Review by the Australian Law Reform Commission* >> >> *(1) The Minister must cause a review to be conducted of the",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-06/14"
+  },
+  {
+   "key": "federal-senate-9533",
+   "date": "2025-02-06",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2025-02-06.87.1) that schedule 1, items 10, 18 and 21 stand as printed. In other words, they wanted to keep these items unchanged. This vote took place after Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent) introduced an amendment to oppose them. ### Item text > *10 Subsection 80.2A(5) of the Criminal Code (note)* > >> *Repeal the note.* > > *18 Subsection 80.2B(6) of the Criminal Code (note)* > >> *Repeal the note.* > > *21 Subsection 80.3(1) of the Criminal Code* > >> *After “and C”, insert “(other than sections 80.2A, 80.2B, 80.2BA, 80.2BB, 80.2BC and 80.2BD and 80.2BE)”.* ### What do items 10, 18 and 21 in Schedule 1 do? These items are all related to removing the good faith defence to certain offences. According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2425/25bd021) (a document prepared by the parliamentary library): > *Exclusion from good faith defence* > > *Item 21 would amend subsection 80.3(1) of the Criminal Code to exclude the existing urging force or violence offences (sections 80.2A and 80.2B) and the proposed threatening force or violence offences (proposed sections 80.2BA and 80.2BB) from the existing good faith defences provided in section 80.3.* > > *At present, section 80.3 provides that the offences in ‘Subdivision C—Urging violence and advocating terrorism or genocide’ do not apply to a person who has done so in certain listed ways or for certain listed aims, where those are considered to be done ‘in good faith’.* > > *The Explanatory Memorandum (at page 39) notes that the good faith defence had carried over from an earlier sedition offence, and claims that, in a 2006 Report the Australian Law Reform Commission (ALRC):* > >> *recommended that section 80.3 of the Criminal Code be amended so that the good faith defences do not apply to the offences",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-06/15"
+  },
+  {
+   "key": "federal-senate-9534",
+   "date": "2025-02-06",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2025-02-06.89.1) (2) and (4) to (9) on sheet 3259, which were introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent). This means they were not successful. The amendments would have added minimum age requirements so that these offences do not apply to to people under 14 years old. ### Amendment text > *(2) Schedule 1, at the end of item 10A, at the end of section 80.2A of the Criminal Code, add:* > >> *Offences do not apply to persons under 14* >> >>> *(7) Subsections (1) and (2) do not apply if the first person is under the age of 14.* > > *(4) Schedule 1, at the end of item 18A, at the end of section 80.2B of the Criminal Code, add:* > >> *Offences do not apply to persons under 14* >> >>> *(8) Subsections (1) and (2) do not apply if the first person is under the age of 14.* > > *(5) Schedule 1, item 19, after subsection 80.2BA(7), insert:* > >> *Offences do not apply to persons under 14* >> >>> *(7A) Subsections (1) and (2) do not apply to a person if person is under the age of 14.* > > *(6) Schedule 1, item 19, after subsection 80.2BB(8), insert:* > >> *Offences do not apply to persons under 14* >> >>> *(8A) Subsections (1) and (2) do not apply if the first person is under the age of 14.* > > *(7) Schedule 1, item 19, at the end of section 80.2BC of the Criminal Code, add:* > >> *Offences do not apply to persons under 14* >> >>> *(9) Subsections (1) and (2) do not apply if the first person is under the age of 14.* > > *(8) Schedule 1, item 19, at the end of section 80.2BD of the Criminal Code, add:* > >> *Offences do not apply to persons under 14* >> >>> *(10) Subsections (1) and (2) do not apply if the first person is under the age of 14.* > > *(9) Schedule 1, item 19, at the end of section 80.2BE of the Criminal Code, add:* > >> *Offences do not apply to persons under 14* >> >>> *(8) Subsections (1) and (2)",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-06/16"
+  },
+  {
+   "key": "federal-senate-9535",
+   "date": "2025-02-06",
+   "house": "senate",
+   "question": "Criminal Code Amendment (Hate Crimes) Bill 2024 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 41,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 8,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-06/17"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Criminal Code Amendment (Hate Crimes) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00001",
+   "assent_date": "2025-02-07"
+  }
+ ]
+}
