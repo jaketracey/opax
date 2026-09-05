@@ -5883,7 +5883,12 @@ function billRowHTML(b) {
   const year = String(b.introduced || "").slice(0, 4);
   const members = billSponsorFromPortfolio(b.portfolio);
   const figures = [
-    Number(b.divisions) ? `${b.divisions} division${b.divisions === 1 ? "" : "s"}` : "",
+    // Not "28 divisions": the index counts the register's division records, and
+    // the source records one division several times, so the bill page folds
+    // that same Medibank bill to eight. The list cannot fold — it would have to
+    // open every file — so it says which number this is instead of asserting a
+    // count the next page denies.
+    Number(b.divisions) ? `${b.divisions} division record${b.divisions === 1 ? "" : "s"}` : "",
     Number(b.speeches) ? `${b.speeches} speech${b.speeches === 1 ? "" : "es"}` : "",
     Number(b.acts) ? "became law" : "",
     // Absence is the norm here, so only a summary that exists is worth a word.
@@ -5896,7 +5901,7 @@ function billRowHTML(b) {
       year ? esc(year) : "",
       b.sponsor_party ? partyChipHTML(b.sponsor_party) : "",
       members ? esc(billMembersLabel(members)) : esc(billPortfolio(b)),
-    ].filter(Boolean).join(" · ")}</span>
+    ].filter(Boolean).join("&nbsp;· ")}</span>
     ${b.short_title && b.short_title !== b.title ? `<p class="bill-row-long">${esc(b.title)}</p>` : ""}
     ${figures.length ? `<p class="bill-row-figures">${figures.join(" · ")}</p>` : ""}
   </li>`;
@@ -5906,7 +5911,9 @@ const BILLS_FINEPRINT =
   `Bills, their dates and their divisions come from the parliamentary record; each bill page links the
    official source it was read from. Summaries are written by a model from the explanatory memorandum or
    the Bills Digest, are marked as such wherever they appear, and are not the record. A bill missing from
-   this list is not evidence it does not exist: the register is still being built.`;
+   this list is not evidence it does not exist: the register is still being built. The source records
+   some divisions more than once, so a division record here is a row in the register rather than a
+   separate vote of the house; a bill page folds the duplicates and usually shows fewer.`;
 
 /** /bills — the whole list, searchable by name, filtered by parliament, status and year. */
 async function openBillsIndex(params, manageFocus) {
@@ -5975,7 +5982,7 @@ async function openBillsIndex(params, manageFocus) {
       ["newest", "Newest first", (a, b) => String(b.introduced || "").localeCompare(String(a.introduced || ""))],
       ["oldest", "Oldest first", (a, b) => String(a.introduced || "").localeCompare(String(b.introduced || ""))],
       ["title", "By name", byName],
-      ["divisions", "Most divisions", byNumDesc((b) => Number(b.divisions) || 0)],
+      ["divisions", "Most division records", byNumDesc((b) => Number(b.divisions) || 0)],
     ],
     row: billRowHTML,
     fineprint: BILLS_FINEPRINT,
@@ -6005,6 +6012,35 @@ function billRulerHTML(dates) {
   </svg>`;
 }
 
+/* The register records a stage on every day it was before the house, so a
+   second reading debated across seven sitting days arrives as seven rows. Set
+   one under another they read as seven second readings — the same mistake the
+   duplicated divisions made, the source's bookkeeping printed as parliament's
+   actions. A run of one stage in one chamber is one entry carrying its span.
+   The ruler above still draws every recorded date as its own tick, so nothing
+   is hidden: the density moves to where density belongs. */
+function billStageRuns(dates) {
+  const runs = [];
+  for (const d of dates) {
+    const stage = billStage(d.stage) || "Stage not named";
+    const house = billHouse(d.house);
+    const last = runs[runs.length - 1];
+    if (last && last.stage === stage && last.house === house) { last.dates.push(d); continue; }
+    runs.push({ stage, house, dates: [d] });
+  }
+  return runs;
+}
+
+/* A span in a column six characters wide breaks wherever it runs out, so
+   "25 Nov 2009 – 1 Dec 2009" came apart as "25 Nov 2009 –" and "1 Dec 2009"
+   with the dash orphaned. The two dates take a line each, the second saying
+   what it is, and the row reads the same at every width. */
+function billDateSpanHTML(dates) {
+  const first = dates[0]?.date, last = dates[dates.length - 1]?.date;
+  if (!last || first === last) return esc(fmtDate(first));
+  return `${esc(fmtDate(first))}<span class="bill-date-to">to ${esc(fmtDate(last))}</span>`;
+}
+
 function billTimelineHTML(bill) {
   const dates = (bill.key_dates || []).filter((d) => d?.date)
     .slice().sort((a, b) => String(a.date).localeCompare(String(b.date)));
@@ -6012,21 +6048,30 @@ function billTimelineHTML(bill) {
     return `<section class="bill-section"><h3 class="subject-section-title">How it moved</h3>
       <p class="status">No dates recorded.</p></section>`;
   }
-  const rows = dates.map((d) => {
-    const url = safeUrl(d.url);
-    const stage = billStage(d.stage) || "Stage not named";
-    const house = billHouse(d.house);
+  const runs = billStageRuns(dates);
+  const folded = dates.length - runs.length;
+  const rows = runs.map((run) => {
+    const url = safeUrl(run.dates[0].url);
+    // "Royal assent · Assent": with no chamber to name, the register writes the
+    // stage into the house field, and the row says the same word twice.
+    const house = run.house && !run.stage.toLowerCase().includes(run.house.toLowerCase())
+      ? run.house : "";
+    const days = run.dates.length;
     return `<li class="bill-date">
-      <span class="bill-date-when">${esc(fmtDate(d.date))}</span>
+      <span class="bill-date-when">${billDateSpanHTML(run.dates)}</span>
       <span class="bill-date-what">${url
-        ? `<a href="${esc(url)}" rel="noopener" target="_blank">${esc(stage)} ↗︎</a>` : esc(stage)}${
-        house ? `<span class="bill-date-house">${esc(house)}</span>` : ""}</span>
+        ? `<a href="${esc(url)}" rel="noopener" target="_blank">${esc(run.stage)} ↗︎</a>` : esc(run.stage)}${
+        house ? `<span class="bill-date-house">${esc(house)}</span>` : ""}${
+        days > 1 ? `<span class="bill-date-days">on ${days} recorded days</span>` : ""}</span>
     </li>`;
   }).join("");
   return `<section class="bill-section">
     <h3 class="subject-section-title">How it moved</h3>
     ${billRulerHTML(dates)}
     <ol class="bill-dates" role="list">${rows}</ol>
+    ${folded ? `<p class="fineprint">The register records a stage on each day it was before the house.
+      These ${runs.length} entries carry ${dates.length} such dates: a stage that ran across sitting days
+      is one entry with its span, not one entry a day. Every date is a tick on the ruler.</p>` : ""}
   </section>`;
 }
 
@@ -6051,14 +6096,18 @@ function billSplitHTML(division) {
   let folded = splits.slice(drawn.length);
   if (folded.length === 1) { drawn = splits; folded = []; } // one line saved is no saving
   const max = Math.max(...drawn.map((s) => Math.max(s.ayes, s.noes)), 1);
+  /* Name and figures on one line, the bars beneath them. The grid always said
+     so; the source order did not, and the grid places what it is given in the
+     order it is given, so "0–22" landed a row below its own bars and directly
+     above the next party's name — nearer the party it does not describe. */
   const rows = drawn.map((s) => `
     <li class="bill-split">
       <span class="bill-split-party">${partyDotHTML(s.party)}${esc(billParty(s.party))}</span>
+      <span class="bill-split-n">${s.ayes}<span aria-hidden="true">–</span>${s.noes}<span class="visually-hidden"> ayes to noes</span></span>
       <span class="bill-split-bars" aria-hidden="true">
         <span class="bill-split-bar-track"><i class="bill-bar-aye" style="width:${((s.ayes / max) * 100).toFixed(1)}%"></i></span>
         <span class="bill-split-bar-track"><i class="bill-bar-no" style="width:${((s.noes / max) * 100).toFixed(1)}%"></i></span>
       </span>
-      <span class="bill-split-n">${s.ayes}<span aria-hidden="true">–</span>${s.noes}<span class="visually-hidden"> ayes to noes</span></span>
     </li>`).join("");
   const rest = folded.length
     ? `<p class="fineprint bill-split-rest">Also ${esc(folded
@@ -6097,14 +6146,82 @@ function billDivisionHref(d) {
 /** Prose about a division rather than the motion put: it must not be set as a heading. */
 const BILL_DESCRIPTION = /^(this (is|division|motion|amendment)\b|the (majority|motion) )/i;
 
-function billQuestionParts(text) {
-  const whole = billQuestion(text);
-  if (!whole) return { head: "", note: "" };
-  if (BILL_DESCRIPTION.test(whole)) return { head: "", note: whole };
-  if (whole.length <= 110) return { head: whole, note: "" };
-  const cut = whole.slice(0, 160).search(/[.?!](\s|$)/);
-  if (cut < 20) return { head: `${whole.slice(0, 105).trimEnd()}…`, note: whole };
-  return { head: whole.slice(0, cut + 1), note: whole.slice(cut + 1).trim() };
+/* The record's prose arrives as Markdown — "[motion](https://…)", "_[For
+   privatising government assets](/policies/21)_" — and flattening it to text
+   leaves "(Read more about these types of motions here. )": a pointer with
+   nothing behind it, several times in one note. Those links are the record
+   citing itself, so they are kept as links, relative ones resolved against the
+   site the field came from. Only the formatting marks are dropped. */
+const BILL_NOTE_BASE = "https://theyvoteforyou.org.au";
+const BILL_MD_LINK = /\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
+/** Emphasis marks off; the words they wrapped stay. */
+const billPlain = (t) => String(t).replace(/[*_]{1,3}(?=\S)([^*_]+?)(?<=\S)[*_]{1,3}/g, "$1");
+/** The same field, as plain words: what the length and sentence tests judge. */
+const billFlat = (t) => billPlain(String(t || "").replace(BILL_MD_LINK, "$1")).trim();
+
+/* The source writes a quote straight onto its next bracket — '"the
+   guillotine"(Read more' — and leaves a space inside the closing one. Repaired
+   before anything is split, and never at "](", which would break a link. */
+function billNoteRepair(text) {
+  return String(text || "")
+    // Emphasis wrapped around a whole link leaves one mark on each side of it,
+    // and neither has a partner once the link becomes a link: "_For
+    // privatising government assets_" arrived as "the Policy _For … assets _.".
+    .replace(/([*_]{1,3})(\[[^\]]+\]\([^)\s]+\))\1/g, "$2")
+    .replace(/([^\s(\]])\(/g, "$1 (")
+    .replace(/\s+([.,;:])/g, "$1")
+    .replace(/\s+\)/g, ")")
+    .replace(/\s+/g, " ").trim();
+}
+
+/** A note as HTML: the record's own links live, everything else escaped. */
+function billNoteHTML(text) {
+  const raw = billNoteRepair(text);
+  let out = "", i = 0;
+  BILL_MD_LINK.lastIndex = 0;
+  for (let m = BILL_MD_LINK.exec(raw); m; m = BILL_MD_LINK.exec(raw)) {
+    out += esc(billPlain(raw.slice(i, m.index)));
+    const href = safeUrl(m[2].startsWith("/") ? BILL_NOTE_BASE + m[2] : m[2]);
+    const label = billPlain(m[1]);
+    // Inside running prose the mark must not be able to start a line of its own.
+    out += href
+      ? `<a href="${esc(href)}" rel="noopener" target="_blank">${esc(label)}&nbsp;↗︎</a>`
+      : esc(label);
+    i = m.index + m[0].length;
+  }
+  return out + esc(billPlain(raw.slice(i)));
+}
+
+/* The record writes "<Bill> - <Stage> - <Question>", and 164 of the fixture's
+   209 title-prefixed questions carry the division's own stage in that middle
+   segment. With the title gone the heading read "Second Reading - Read a
+   second time" directly above a meta line reading "Second reading · Senate ·
+   4 Dec 2006". The stage is the meta's job; the heading keeps the question. */
+function billStripStage(text, stage) {
+  const s = String(stage || "").trim();
+  const out = String(text || "").trim();
+  if (!s || !out.toLowerCase().startsWith(s.toLowerCase())) return out;
+  const rest = out.slice(s.length).replace(/^\s*[-–—:]\s*/, "").trim();
+  // Only when something is left: a division named by its stage alone keeps it.
+  return rest || out;
+}
+
+function billQuestionParts(division, bill) {
+  const raw = billStripStage(
+    billStripTitle(billNoteRepair(division?.question), bill), division?.stage);
+  const plain = billFlat(raw);
+  if (!plain) return { head: "", note: "" };
+  if (BILL_DESCRIPTION.test(plain)) return { head: "", note: raw };
+  if (plain.length <= 110) return { head: plain, note: "" };
+  // The first sentence stands as the heading, measured in words a reader sees
+  // rather than in a URL's characters; the rest is the note it is.
+  for (const m of raw.matchAll(/[.?!](\s|$)/g)) {
+    const head = billFlat(raw.slice(0, m.index + 1));
+    if (head.length < 20) continue;
+    if (head.length > 160) break;
+    return { head, note: raw.slice(m.index + 1).trim() };
+  }
+  return { head: `${plain.slice(0, 105).trimEnd()}…`, note: raw };
 }
 
 /* TheyVoteForYou records the same division several times — the Medibank bill's
@@ -6112,7 +6229,7 @@ function billQuestionParts(text) {
    field. Copied straight out, the page shows ten third readings and a reader
    counts ten. Rows identical in day, stage and counts are one division; the
    one that carries the motion is kept and the section says this is happening. */
-function billDedupeDivisions(divisions) {
+function billDedupeDivisions(divisions, bill) {
   const groups = new Map();
   for (const d of divisions || []) {
     const k = [d.date, String(d.stage || "").toLowerCase(), d.ayes, d.noes].join("|");
@@ -6123,7 +6240,7 @@ function billDedupeDivisions(divisions) {
   let collapsed = 0;
   for (const group of groups.values()) {
     // Prefer a row whose question is the motion; then one that has a question at all.
-    const best = group.find((d) => billQuestionParts(d.question).head)
+    const best = group.find((d) => billQuestionParts(d, bill).head)
       || group.find((d) => d.question) || group[0];
     kept.push(best);
     collapsed += group.length - 1;
@@ -6132,18 +6249,29 @@ function billDedupeDivisions(divisions) {
   return { divisions: kept, collapsed };
 }
 
-/* On a party page the bill's name is already the row's link, and the record
-   writes its questions as "<Bill> - <Stage> - <Question>", so repeating the
-   title inside the question spends the row's width saying it twice. The
-   leading title segment comes off and the rest is clamped on a word. */
-function billQuestionShort(question, bill, max = 104) {
-  // From the whole cleaned question, not the bill page's heading: clipping
-  // first and stripping the title afterwards throws away the useful end.
-  let text = billQuestion(question);
-  const title = String(bill?.title || "");
-  if (title && text.toLowerCase().startsWith(title.toLowerCase())) {
-    text = text.slice(title.length).replace(/^\s*[-–—:]\s*/, "").trim();
+/* The record writes its questions as "<Bill> - <Stage> - <Question>", so on a
+   party page — where the bill's name is already the row's link — and on the
+   bill's own page — where the name is the headline — the leading title spends
+   the width saying it twice. It comes off in both places; on the bill page it
+   was costing a three-line heading whose first line and a half were the H1. */
+function billStripTitle(text, bill) {
+  let out = String(text || "").trim();
+  for (const t of [bill?.title, bill?.short_title]) {
+    const title = String(t || "").trim();
+    if (title && out.toLowerCase().startsWith(title.toLowerCase())) {
+      out = out.slice(title.length).replace(/^\s*[-–—:]\s*/, "").trim();
+    }
   }
+  return out;
+}
+
+function billQuestionShort(division, bill, max = 104) {
+  // From the whole cleaned question, not the bill page's heading: clipping
+  // first and stripping the title afterwards throws away the useful end. The
+  // stage comes off for the same reason it does there — the row's meta line
+  // is already saying it, two lines up.
+  const text = billStripStage(
+    billStripTitle(billQuestion(division?.question), bill), division?.stage);
   if (text.length <= max) return text;
   const cut = text.slice(0, max).lastIndexOf(" ");
   return `${text.slice(0, cut > 40 ? cut : max).trimEnd()}…`;
@@ -6153,10 +6281,10 @@ function billQuestionShort(question, bill, max = 104) {
 const BILL_PARTY_LABELS = { PRES: "Presiding officer", SPK: "Speaker", "": "Not recorded" };
 const billParty = (p) => BILL_PARTY_LABELS[String(p || "").trim()] || String(p || "");
 
-function billDivisionHTML(d) {
+function billDivisionHTML(d, bill) {
   const ayes = Number(d.ayes) || 0, noes = Number(d.noes) || 0;
   const target = billDivisionHref(d);
-  const { head, note } = billQuestionParts(d.question);
+  const { head, note } = billQuestionParts(d, bill);
   const official = safeUrl(d.url);
   const stage = billStage(d.stage);
   // With no motion in the field there is no heading to write. The division's
@@ -6164,6 +6292,8 @@ function billDivisionHTML(d) {
   // name for it — and the record's prose follows as the note it is.
   const title = head || stage || "Division";
   const meta = [
+    // The stage always names itself here now: the heading is the question with
+    // the stage taken off it, so the two no longer say the same words twice.
     head && stage ? esc(stage) : "",
     billHouse(d.house) ? esc(billHouse(d.house)) : "",
     d.date ? esc(fmtDate(d.date)) : "",
@@ -6176,13 +6306,13 @@ function billDivisionHTML(d) {
     <p class="bill-division-out"><b>${esc(billOutcome(d.outcome) || "Outcome not recorded")}</b>
       <span>${ayes.toLocaleString()} ayes, ${noes.toLocaleString()} noes</span>${
       official ? `<a class="bill-division-src" href="${esc(official)}" rel="noopener" target="_blank">The count ↗︎</a>` : ""}</p>
-    ${note ? `<p class="bill-division-note">${esc(note)}</p>` : ""}
+    ${note ? `<p class="bill-division-note">${billNoteHTML(note)}</p>` : ""}
     ${billSplitHTML(d)}
   </li>`;
 }
 
 function billDivisionsHTML(bill) {
-  const { divisions: divs, collapsed } = billDedupeDivisions(bill.divisions);
+  const { divisions: divs, collapsed } = billDedupeDivisions(bill.divisions, bill);
   if (!divs.length) {
     return `<section class="bill-section"><h3 class="subject-section-title">Divisions</h3>
       <p class="status">No divisions recorded.</p>
@@ -6192,7 +6322,7 @@ function billDivisionsHTML(bill) {
   const head = divs.slice(0, 6), rest = divs.slice(6);
   return `<section class="bill-section">
     <h3 class="subject-section-title">Divisions</h3>
-    <ol class="bill-division-list" role="list" id="bill-divisions">${head.map(billDivisionHTML).join("")}</ol>
+    <ol class="bill-division-list" role="list" id="bill-divisions">${head.map((d) => billDivisionHTML(d, bill)).join("")}</ol>
     ${rest.length ? `<p class="dir-more-row"><button type="button" class="secondary" id="bill-divisions-more"
       data-rest="${esc(String(rest.length))}">Show more (${rest.length} more)</button></p>` : ""}
     <p class="fineprint">Ayes and noes are the division's own totals. Party is each member's recorded
@@ -6367,8 +6497,8 @@ async function openBill(key, manageFocus) {
     more.addEventListener("click", () => {
       const list = $("bill-divisions");
       const first = list.children.length;
-      const divs = billDedupeDivisions(bill.divisions).divisions.slice(6);
-      list.insertAdjacentHTML("beforeend", divs.map(billDivisionHTML).join(""));
+      const divs = billDedupeDivisions(bill.divisions, bill).divisions.slice(6);
+      list.insertAdjacentHTML("beforeend", divs.map((d) => billDivisionHTML(d, bill)).join(""));
       more.remove();
       list.children[first]?.querySelector("a, .bill-division-q")?.focus?.();
     });
@@ -6473,7 +6603,7 @@ async function renderPartyBillDivisions(label, sections, key) {
   for (const bill of files) {
     // Same collapse as the bill page: a division the source recorded twice is
     // one division, and listing it twice here would count it twice.
-    for (const d of billDedupeDivisions(bill.divisions).divisions) {
+    for (const d of billDedupeDivisions(bill.divisions, bill).divisions) {
       const hit = Object.entries(d.party_splits || {})
         .find(([party]) => samePartyLabel(party, label));
       if (!hit) continue;
@@ -6491,23 +6621,36 @@ async function renderPartyBillDivisions(label, sections, key) {
   }
   rows.sort((a, b) => String(b.d.date || "").localeCompare(String(a.d.date || "")));
   const max = Math.max(...rows.map((r) => Math.max(r.ayes, r.noes)), 1);
-  // Two divisions on one bill are two rows with the same name, stage and date;
-  // the question is the only thing that says what the party voted on twice.
-  const rowHTML = (r) => `<li class="party-bill">
-    <a class="source-title" href="${esc(billHash(r.bill.key))}">${esc(billName(r.bill))}</a>
+  /* A party often divides more than once on one bill, and loop 2 gave those
+     rows their questions to tell apart. What was left was the bill's name set
+     as a heading twice running. One bill is one entry: the name once, and
+     under it every division the party took on it. */
+  const groups = [];
+  for (const r of rows) {
+    const last = groups[groups.length - 1];
+    if (last && last.bill.key === r.bill.key) { last.rows.push(r); continue; }
+    groups.push({ bill: r.bill, rows: [r] });
+  }
+  const divHTML = (r) => `<li class="party-bill-div">
     <span class="result-meta">${[
       r.d.stage ? esc(billStage(r.d.stage)) : "", r.d.date ? esc(fmtDate(r.d.date)) : "",
       r.d.outcome ? `<b>${esc(billOutcome(r.d.outcome))}</b>` : "",
-    ].filter(Boolean).join(" · ")}</span>
-    ${billQuestionShort(r.d.question, r.bill)
-      ? `<span class="party-bill-q">${esc(billQuestionShort(r.d.question, r.bill))}</span>` : ""}
+    ].filter(Boolean).join("&nbsp;· ")}</span>
+    ${billQuestionShort(r.d, r.bill)
+      ? `<span class="party-bill-q">${esc(billQuestionShort(r.d, r.bill))}</span>` : ""}
+    <span class="bill-split-n party-bill-n">${r.ayes} for, ${r.noes} against</span>
     <span class="bill-split-bars party-bill-bars" aria-hidden="true">
       <span class="bill-split-bar-track"><i class="bill-bar-aye" style="width:${((r.ayes / max) * 100).toFixed(1)}%"></i></span>
       <span class="bill-split-bar-track"><i class="bill-bar-no" style="width:${((r.noes / max) * 100).toFixed(1)}%"></i></span>
     </span>
-    <span class="bill-split-n party-bill-n">${r.ayes} for, ${r.noes} against</span>
   </li>`;
-  const head = rows.slice(0, PARTY_BILLS_SHOW), rest = rows.slice(PARTY_BILLS_SHOW);
+  const rowHTML = (g) => `<li class="party-bill">
+    <a class="source-title" href="${esc(billHash(g.bill.key))}">${esc(billName(g.bill))}</a>
+    ${g.rows.length > 1
+      ? `<span class="party-bill-count">${g.rows.length} divisions</span>` : ""}
+    <ul class="party-bill-divs" role="list">${g.rows.map(divHTML).join("")}</ul>
+  </li>`;
+  const head = groups.slice(0, PARTY_BILLS_SHOW), rest = groups.slice(PARTY_BILLS_SHOW);
   slot.innerHTML = `
     <h3 class="subject-section-title">Bills they divided on</h3>
     <ul class="subject-list party-bill-list" role="list" id="party-bill-list">${head.map(rowHTML).join("")}</ul>
@@ -6540,11 +6683,14 @@ async function renderDocBillPanel(doc, slug) {
   const subject = doc.metadata?.bill_ref || doc.metadata?.topic || doc.metadata?.debate || titleSubject(doc);
   const entry = await billForTitle(subject);
   if (!entry || currentDocSlug !== slug) return;
-  // The speech's own headline is often the bill's title; printing it again
-  // directly beneath says nothing twice.
-  const headline = titleKey($("doc-title")?.textContent || "");
-  const repeats = Boolean(headline) &&
-    (headline === titleKey(entry.title) || headline === titleKey(billName(entry)));
+  // The speech's own header is often the bill's title; printing it again
+  // directly beneath says nothing twice. Under a named speaker the headline is
+  // the speaker and the bill's title is the subject line under it, so the
+  // guard has to read both — checking the headline alone caught nothing on
+  // exactly the pages where the repetition happens.
+  const above = [$("doc-title")?.textContent, $("doc-topic")?.textContent]
+    .map((t) => titleKey(t || "")).filter(Boolean);
+  const repeats = above.some((h) => h === titleKey(entry.title) || h === titleKey(billName(entry)));
   const line = `<p class="doc-bill-status">${esc(billStatusLine(entry))}</p>`;
   const link = `<p class="doc-bill-link"><a href="${esc(billHash(entry.key))}">Bill page</a></p>`;
   const head = `<div class="doc-brief-head">

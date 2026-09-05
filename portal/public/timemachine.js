@@ -1455,6 +1455,18 @@ export function mountTimeMachine(container, opts = {}) {
     }
   }
 
+  /* The register writes a private member's bill's sponsor into the portfolio
+     field in its own notation — "(s) WILKIE, Andrew, MP" — so printing that
+     field raw invents a department called "(s) BANDT, Adam, MP". The portal
+     learned this in loop 1; this module reads the same index and never did,
+     so a private member's bill reaching the year's eight would have said it.
+     A name is not a portfolio, and there is no room here to draw one: the
+     slot stays empty and the bill page names the member properly. */
+  function tidyPortfolio(value) {
+    const raw = String(value || '').trim()
+    return /^\(s\)/i.test(raw) ? '' : raw
+  }
+
   /* Bills of the year -----------------------------------------------------
      One read of the static register, then pure filtering: a bill belongs to a
      year if it was introduced in it, or if its passage finished in it. Both
@@ -1479,13 +1491,22 @@ export function mountTimeMachine(container, opts = {}) {
       })
     }
     if (!rows.length) { billsSec.hidden = true; return }
-    // A bill becoming law is the year's news; an introduction in February is
-    // not. Passage first, then introductions, each in the order it happened —
-    // so eight rows are eight things that happened, not the year's first eight.
+    /* Loop 1 asked for the year's news rather than its first February, and
+       putting the finished bills first only narrowed the window: taking the
+       head of 154 bills sorted by date gave 2001 eight bills from three weeks
+       in March, and 2015 eight bills from one day. Eight rows out of a year
+       have to be spread across it. The finished bills are preferred — passage
+       is the year's news, an introduction is not — and eight are taken at even
+       intervals through them, in the order they happened. */
     const weight = (r) => (r.note === 'Introduced' ? 1 : 0)
     rows.sort((a, c) => weight(a) - weight(c) || String(a.date).localeCompare(String(c.date)))
-    const shown = rows.slice(0, 8)
     const passed = rows.filter((r) => r.note !== 'Introduced').length
+    const pool = passed >= 8 ? rows.slice(0, passed) : rows
+    const take = Math.min(8, pool.length)
+    const shown = take === pool.length
+      ? pool.slice()
+      : Array.from({ length: take }, (_, i) => pool[Math.round((i * (pool.length - 1)) / (take - 1))])
+    shown.sort((a, c) => String(a.date).localeCompare(String(c.date)))
     const ol = el('ol', 'tm-bill-list')
     for (const r of shown) {
       const li = el('li', 'tm-bill')
@@ -1495,17 +1516,22 @@ export function mountTimeMachine(container, opts = {}) {
       const strong = el('b')
       strong.textContent = r.note
       meta.append(strong, document.createTextNode(` · ${fmtDate(r.date)}`))
-      if (r.b.portfolio) meta.append(document.createTextNode(` · ${r.b.portfolio}`))
+      const portfolio = tidyPortfolio(r.b.portfolio)
+      if (portfolio) meta.append(document.createTextNode(` · ${portfolio}`))
       li.append(a, meta)
       ol.appendChild(li)
     }
     billsEl.appendChild(ol)
     const fine = el('p', 'tm-fineprint')
     const more = rows.length - shown.length
+    // "8 are listed, the 154 that finished first" parses as if 154 were listed,
+    // and no longer describes what is chosen. Two short sentences instead.
     fine.textContent = `${fmtInt(rows.length)} bill${rows.length === 1 ? '' : 's'} in the register ` +
       `were introduced or finished their passage in ${year}` +
       (more > 0
-        ? `; ${fmtInt(shown.length)} are listed, the ${fmtInt(passed)} that finished first.`
+        ? `. ${fmtInt(shown.length)} are listed here, spread across the year` +
+          (passed >= shown.length ? `, from the ${fmtInt(passed)} that finished their passage in it` : '') +
+          '.'
         : '.') +
       ' Introduction and passage are separate dates, so a bill can appear in two years.'
     billsEl.appendChild(fine)

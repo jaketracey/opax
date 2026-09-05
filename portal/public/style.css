@@ -3584,3 +3584,71 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 /* The stage stands in as a division's name when the record left no motion;
    set it apart from a real question so the two are never confused. */
 .bill-division-unnamed .bill-division-q { font-style: normal; color: var(--ink-soft); }
+
+/* ---- loop 3 ------------------------------------------------------------- */
+
+/* A stage the register recorded on several sitting days is one entry with its
+   span; this says how many dates that entry stands for. */
+.bill-date-days { display: block; color: var(--ink-faint); font-size: 0.8125rem; }
+
+/* The figures belong on the party's own line. The grid always said so, but the
+   source order put the bars between a name and its numbers, so "0–22" landed
+   directly above the *next* party's name. Order fixed in the markup; at this
+   width every cell is placed by hand so nothing can drift again. */
+@media (min-width: 561px) {
+  .bill-split-party { grid-column: 1; grid-row: 1; }
+  .bill-split-n { grid-column: 3; grid-row: 1; }
+  .bill-split-bars { grid-column: 2; grid-row: 1; }
+}
+
+/* The record's own citations, live rather than a dangling "here". Quiet: a
+   note is not where a reader should be pulled out of the page. */
+.bill-division-note a {
+  color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line-strong);
+}
+.bill-division-note a:hover { color: var(--bronze-ink); border-color: var(--bronze-rule); }
+
+/* Loop 1 gave a row's facts their own line by making the box a flex container,
+   which made each fact a flex item: a long portfolio could not share the line
+   with the status, so the whole run of them dropped below it and the second
+   line opened on a separator. Normal flow wraps where the words do, and the
+   separators are tied to the word in front of them. */
+.bill-row-meta, .bill-division .result-meta { display: block; }
+
+/* The register's 44px floor reaches the button this work puts inside a
+   person's disclosure. It is the same shared class the loop 1 fix named, and
+   scoping that fix to #panel-bill left this one at 37.8px. */
+.bill-peek .action-btn { min-height: 44px; }
+
+/* ---- one bill, one entry on a party page -------------------------------- */
+/* A party divides on the same bill more than once, and loop 2 gave those rows
+   their questions to tell apart. What was left was the bill's name set as a
+   heading twice running. The name is written once; the divisions sit under it. */
+
+.party-bill { display: block; }
+.party-bill-count {
+  display: block; margin-top: 0.1rem; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-faint);
+}
+.party-bill-divs { list-style: none; margin: 0.4rem 0 0; padding: 0; }
+.party-bill-div {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 0.6rem;
+  margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--line);
+}
+.party-bill-divs > .party-bill-div:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+.party-bill-div .result-meta {
+  grid-column: 1 / -1; margin: 0; color: var(--ink-faint); font-size: 0.8125rem; display: block;
+}
+.party-bill-div .party-bill-q { grid-column: 1 / -1; margin-top: 0.15rem; }
+.party-bill-div .party-bill-n { grid-column: 1; margin-top: 0.4rem; align-self: center; }
+.party-bill-div .party-bill-bars { grid-column: 1 / -1; margin-top: 0.3rem; }
+
+@media (min-width: 561px) {
+  .party-bill-div { grid-template-columns: minmax(0, 1fr) 10.5rem; align-items: baseline; }
+  .party-bill-div .result-meta, .party-bill-div .party-bill-q { grid-column: 1; }
+  .party-bill-div .party-bill-bars { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; align-self: center; }
+  .party-bill-div .party-bill-n { grid-column: 2; grid-row: 3; margin-top: 0.3rem; text-align: right; }
+}
+
+/* The far end of a stage's span, on its own line: the date column is six
+   characters wide and a range set inline came apart at the dash. */
+.bill-date-to { display: block; }
