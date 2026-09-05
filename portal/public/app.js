@@ -10159,8 +10159,7 @@ function reportSourceRow(s, num) {
   if (s.speaker) {
     const face = document.createElement("span");
     face.className = "report-source-face";
-    face.setAttribute("aria-hidden", "true");
-    face.textContent = reportInitials(s.speaker);
+    face.setAttribute("aria-hidden", "true"); // blank circle until the portrait lands; never initials
     loadPhotoMap().then(() => {
       const url = photoUrlFor(s.speaker);
       if (url) face.innerHTML = `<img src="${esc(url)}" alt="" width="40" height="40" loading="lazy">`;
