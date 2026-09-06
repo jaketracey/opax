@@ -318,6 +318,10 @@ interface SearchResult {
   speaker: string | null
   party: string | null
   state: string | null
+  /** 'representatives' | 'senate' | 'senate_committee' | a state house; lets the app tell evidence from a speech. */
+  chamber: string | null
+  /** The members-table id the sync linked the speaker to; null for witnesses and unlinked names. */
+  person_id: number | null
   date: string | null
   url: string | null
   snippet: string
@@ -502,6 +506,8 @@ async function searchWindow(
       speaker: division ? null : (resource.origin?.collaborators?.[0] ?? null),
       party: label(resource, 'party'),
       state: label(resource, 'state'),
+      chamber: label(resource, 'chamber'),
+      person_id: typeof meta.person_id === 'number' ? meta.person_id : null,
       // Divisions carry their date on origin.created rather than in metadata.
       date: (meta.date as string) ?? (resource.origin as { created?: string } | undefined)?.created?.slice(0, 10) ?? null,
       url: resource.origin?.url || null, // official record, for exports/citations
@@ -660,6 +666,7 @@ function askPayload(answer: AskAnswer): { answer: string; citations: Record<stri
         speaker: r.origin?.collaborators?.[0] ?? null,
         party: label(r, 'party'),
         state: label(r, 'state'),
+        chamber: label(r, 'chamber'),
         date: (meta.date as string) ?? null,
         url: r.origin?.url || null, // official record, for exports/citations
         snippet: (citedText || bestText).slice(0, 600),
@@ -2989,6 +2996,9 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
     }
   }
   const speaker = r.speaker ?? 'Unknown speaker'
+  // A committee transcript's speaker may be a witness, named as the transcript
+  // names them (often surname only); their words are evidence, not a speech.
+  const committee = /committee/.test(String(r.labels.chamber ?? ''))
   const who = [r.labels.party, chamber].filter(Boolean).join(', ')
   const [photos, moneyData] = await Promise.all([loadPhotos(env).catch(() => null), loadMoney(env).catch(() => null)])
   const portraitId = r.speaker ? photoIdFor(photos, r.speaker) : null
@@ -2996,7 +3006,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
   const words = typeof r.metadata.word_count === 'number' ? `${num(r.metadata.word_count)} words` : 'a speech'
   const description = clip(
     r.summary?.trim() ||
-      `Speech by ${speaker}${who ? ` (${who})` : ''}${date ? `, ${longDate(date)}` : ''}: ${words} from the official ${r.labels.state === 'federal' ? 'federal' : (r.labels.state ?? '').toUpperCase()} parliamentary record, on OPAX.`,
+      `${committee ? 'Evidence given by' : 'Speech by'} ${speaker}${who ? ` (${who})` : ''}${date ? `, ${longDate(date)}` : ''}: ${words} from the official ${r.labels.state === 'federal' ? 'federal' : (r.labels.state ?? '').toUpperCase()} parliamentary record, on OPAX.`,
   )
   return {
     ...generic,

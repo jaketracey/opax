@@ -226,6 +226,24 @@ function partyChipHTML(party) {
 }
 
 const STATE_NAMES = { federal: "Federal", nsw: "NSW", vic: "VIC", sa: "SA", qld: "QLD" };
+
+/* Committee transcripts name witnesses as the transcript does, usually a
+   surname behind an honorific ("Ms Lopez"), and the sync links no member to
+   them. A speaker whose every indexed document is committee evidence and who
+   is on no roster is one of those, and the entry must not dress them as a
+   parliamentarian. */
+const isCommitteeChamber = (chamber) => /committee/.test(String(chamber || "").toLowerCase());
+function committeeHouse(chamber) {
+  const c = String(chamber || "").toLowerCase();
+  return c.startsWith("senate") ? "Senate" : c.startsWith("house") || c.startsWith("reps") ? "House" : c.startsWith("joint") ? "Joint" : "Parliamentary";
+}
+/** "Lopez — Environment and Communications Legislation Committee - ... 27/05/2026 Estimates …" -> the committee. */
+function committeeOf(r) {
+  const t = String(r?.title || "");
+  const after = t.includes(" — ") ? t.slice(t.indexOf(" — ") + 3) : t;
+  const m = /^(.+?committee)\b/i.exec(after);
+  return (m ? m[1] : after.split(/ - /)[0]).trim().slice(0, 90);
+}
 const PARLIAMENT_NAMES = {
   federal: "Federal", nsw: "NSW", vic: "Victoria", sa: "South Australia", qld: "Queensland",
 };
@@ -4241,6 +4259,12 @@ async function openSubject(kind, name, manageFocus) {
   const formerly = partyNow && spokeAs && !samePartyLabel(partyNow, spokeAs) ? spokeAs : null;
   const dates = speeches.map((r) => r.date).filter(Boolean).sort();
   const chambers = [...new Set(speeches.map((r) => STATE_NAMES[r.state] || r.state).filter(Boolean))];
+  const witness = !roster && speeches.length > 0 &&
+    speeches.every((r) => isCommitteeChamber(r.chamber) && r.person_id == null);
+  if (witness) {
+    renderCommitteeWitness(name, key, body, box, sections, speeches, dates);
+    return;
+  }
   subjectTag(body).innerHTML = [
     party ? partyChipHTML(party) : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
@@ -4306,7 +4330,44 @@ async function openSubject(kind, name, manageFocus) {
   refreshPersonJumps(sections);
 }
 
-async function renderPersonSpeeches(name, fallback, chambers, sections) {
+/* The entry for a committee witness: what the transcript calls them, the
+   committees they answered, the hearing dates, and their evidence. No party,
+   no seat, no profile searches on a surname: those would assert a person the
+   record does not name. */
+function renderCommitteeWitness(name, key, body, box, sections, speeches, dates) {
+  const houses = [...new Set(speeches.map((r) => committeeHouse(r.chamber)))];
+  const committees = [...new Set(speeches.map(committeeOf).filter(Boolean))];
+  const hearings = [...new Set(dates.map((d) => String(d).slice(0, 10)))];
+  subjectTag(body).innerHTML = `<span>Committee witness</span> · <span>${esc(houses.join(" and "))} ${houses.length > 1 ? "committees" : "committee"}</span>`;
+  box.innerHTML = infoboxHTML([
+    ["Type", "Committee witness"],
+    committees.length && ["Appeared before", committees.slice(0, 4).map(esc).join("<br>") + (committees.length > 4 ? `<br><span class="fineprint" style="display:inline">and ${committees.length - 4} more</span>` : "")],
+    hearings.length && ["Hearings indexed", hearings.length === 1
+      ? esc(fmtDate(hearings[0]))
+      : `${hearings.length}, ${esc(fmtDate(hearings[0]))} – ${esc(fmtDate(hearings[hearings.length - 1]))}`],
+  ], "", [
+    actionBtn("speeches", searchHash("", { speaker: name }), "View their evidence", { primary: true }),
+  ]);
+  box.insertAdjacentHTML("beforeend", `<p class="fineprint">Named as the transcript names them, usually a surname
+    behind an honorific. A witness answering a parliamentary committee, not a member of parliament;
+    the record here does not carry their full name or position.</p>`);
+  sections.insertAdjacentHTML("beforeend", `<div class="person-jumps-row"><nav class="person-jumps" aria-label="On this page"></nav></div>`);
+  sections.insertAdjacentHTML("beforeend", `
+    <form class="query-line subject-ask-form" id="subject-ask-form">
+      <label for="subject-ask-topic">Ask about their evidence</label>
+      <input id="subject-ask-topic" type="text" autocomplete="off" placeholder="Enter a topic…">
+      <button type="submit" class="secondary">Ask</button>
+    </form>`);
+  $("subject-ask-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const topic = $("subject-ask-topic").value.trim();
+    if (topic) goRoute(askHash(`What did ${name} say about ${topic}?`));
+  });
+  renderPersonTopics(name, sections).then(() => refreshPersonJumps(sections));
+  renderPersonSpeeches(name, speeches, [], sections, { evidence: true }).then(() => { refreshPersonJumps(sections); polishPersonSections(sections); });
+}
+
+async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {}) {
   const key = currentSubjectKey;
   const slot = document.createElement("section");
   slot.id = "person-speeches";
@@ -4323,20 +4384,21 @@ async function renderPersonSpeeches(name, fallback, chambers, sections) {
   if (currentSubjectKey !== key || !slot.isConnected) return;
   if (!newest.length) { slot.remove(); return; }
   const paint = (briefs) => {
-    slot.innerHTML = `<h3 class="subject-section-title">${latest ? "Latest indexed speeches" : "Indexed speeches"}</h3>
+    const noun = opts.evidence ? "evidence" : "speeches";
+    slot.innerHTML = `<h3 class="subject-section-title">${latest ? `Latest indexed ${noun}` : `Indexed ${noun}`}</h3>
       <ul class="speech-rows" role="list">${newest.map((r) => {
         const brief = typeof briefs[r.resource] === "string" ? briefs[r.resource].trim() : "";
         const text = brief || String(r.snippet || "").trim();
         const where = chambers.length > 1 && r.state ? ` · ${STATE_NAMES[r.state] || r.state}` : "";
         return `<li><a class="person-speech-link" href="/doc/${esc(r.slug)}">
           <time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "Undated")}${esc(where)}</time>
-          <span class="person-speech-body"><span class="speech-debate">${esc(titleSubject(r) || "Speech")}</span>
+          <span class="person-speech-body"><span class="speech-debate">${esc(titleSubject(r) || (opts.evidence ? "Evidence" : "Speech"))}</span>
             <span class="person-speech-kind">${brief ? "Machine brief" : "Passage"}</span>
             <span class="person-speech-text">${esc(text || "Open the speech to read the record.")}</span>
           </span></a></li>`;
       }).join("")}</ul>
       <p class="fineprint">${latest ? "Newest results within the indexed retrieval window." : "Newest retrieval is unavailable; showing a sample of indexed matches."} Machine briefs are automated summaries; passages are extracts from the record.</p>
-      <p class="person-more"><a href="${esc(searchHash("", { speaker: name }, 1, "newest"))}">View all their speeches →</a></p>`;
+      <p class="person-more"><a href="${esc(searchHash("", { speaker: name }, 1, "newest"))}">View all their ${noun} →</a></p>`;
   };
   paint({});
   refreshPersonJumps(sections);
@@ -8773,6 +8835,7 @@ function renderResults(results) {
       const meta = [
         r.speaker ? `<a href="${esc(subjectHash("person", r.speaker))}">${esc(r.speaker)}</a>` : "",
         r.party ? partyChipHTML(r.party) : "",
+        isCommitteeChamber(r.chamber) ? `${esc(committeeHouse(r.chamber))} committee evidence` : "",
         r.state ? esc(STATE_NAMES[r.state] || r.state) : "",
         r.date ? `<time datetime="${esc(r.date)}">${esc(fmtDate(r.date))}</time>` : "",
       ].filter(Boolean).join('<span class="search-meta-separator" aria-hidden="true"> · </span>');
@@ -9454,7 +9517,11 @@ async function openDocPage(slug, manageFocus) {
     // Ways into this speaker's wider record. External links are SEARCHES, so
     // a shared name shows candidates rather than asserting the wrong person.
     const speakerLinks = $("doc-speaker-links");
-    if (doc.speaker) {
+    const docWitness = isCommitteeChamber(doc.labels?.chamber) && doc.metadata?.person_id == null;
+    if (doc.speaker && docWitness) {
+      speakerLinks.innerHTML = `Committee witness, named as the transcript names them. <a href="${esc(subjectHash("person", doc.speaker))}">Their evidence on OPAX</a>`;
+      speakerLinks.hidden = false;
+    } else if (doc.speaker) {
       const q = encodeURIComponent(doc.speaker);
       const ext = (href, label) =>
         `<a href="${href}" rel="noopener" target="_blank">${label} ↗︎</a>`;
