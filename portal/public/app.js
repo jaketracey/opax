@@ -4979,7 +4979,7 @@ function renderDirectory(spec) {
           ${f.options.map(([v, l]) => `<option value="${esc(v)}"${state[f.key] === v ? " selected" : ""}>${esc(l)}</option>`).join("")}
         </select></label>`;
   body.innerHTML = `
-    <p class="kicker">${esc(spec.kicker || "Encyclopedia")}</p>
+    ${spec.kicker === null ? "" : `<p class="kicker">${esc(spec.kicker || "Encyclopedia")}</p>`}
     <div class="subject-head dir-head">
       <h2 id="subject-title" tabindex="-1">${esc(spec.title)}</h2>
       ${spec.lede ? `<p class="subject-tag"><span>${spec.lede}</span></p>` : ""}
@@ -6038,7 +6038,7 @@ async function openBillsIndex(params, manageFocus) {
   const withSummary = items.filter((b) => b.has_summary).length;
 
   renderDirectory({
-    kind: "bill", mount: "bill-body", kicker: "Bills", params,
+    kind: "bill", mount: "bill-body", kicker: null, params,
     title: "Bills",
     lede: withSummary
       ? `${items.length.toLocaleString()} bills from the federal record, ${
