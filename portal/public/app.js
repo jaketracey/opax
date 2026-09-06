@@ -4338,6 +4338,11 @@ function renderCommitteeWitness(name, key, body, box, sections, speeches, dates)
   const houses = [...new Set(speeches.map((r) => committeeHouse(r.chamber)))];
   const committees = [...new Set(speeches.map(committeeOf).filter(Boolean))];
   const hearings = [...new Set(dates.map((d) => String(d).slice(0, 10)))];
+  // The skeleton labelled them a parliamentarian before the record said otherwise.
+  const kicker = body.querySelector(".kicker");
+  if (kicker) kicker.textContent = "Committee witness";
+  setCrumbs([{ label: "Committee witnesses" }, { label: name }]);
+  document.title = `${name}, committee witness · OPAX`;
   subjectTag(body).innerHTML = `<span>Committee witness</span> · <span>${esc(houses.join(" and "))} ${houses.length > 1 ? "committees" : "committee"}</span>`;
   box.innerHTML = infoboxHTML([
     ["Type", "Committee witness"],
