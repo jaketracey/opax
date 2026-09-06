@@ -3859,6 +3859,13 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 }
 .bill-row-figures { margin: 0.25rem 0 0; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-faint); }
 
+/* ---- the newest bills on the front page ---------------------------------- */
+.front-bills .front-bill { padding-bottom: var(--row-gap); }
+.front-bill-sum { margin: 0.35rem 0 0; font: 400 0.9375rem/1.55 var(--sans); color: var(--ink); max-width: 66ch; }
+.front-bill-sum.front-bill-none { color: var(--ink-faint); }
+.front-bill-who { margin: 0.3rem 0 0; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-soft); max-width: 66ch; }
+.front-bill-who b { font-weight: 600; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.6875rem; margin-right: 0.35rem; }
+
 /* ---- the disclosure on a person's voting record ------------------------- */
 /* The row was a link to the record and stays one when nothing matches. Where
    the register does name the bill, the row becomes a 44px disclosure: three

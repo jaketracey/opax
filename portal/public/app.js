@@ -7418,6 +7418,51 @@ async function renderFrontDeclared() {
   } catch { /* stays hidden */ }
 }
 
+/* The newest bills before parliament, each with its machine summary: the
+   sentence that says what it does and the line that says who it touches. The
+   index only knows a bill HAS a summary, so the few files are fetched (they are
+   small and cached for the bill pages). A bill without a summary still earns
+   its place by being new; it says so instead of showing nothing. */
+async function renderFrontBills() {
+  try {
+    const idx = await loadBillsIndex();
+    const all = (idx?.bills || []).filter((b) => b.introduced);
+    if (!all.length) return;
+    all.sort((a, b) => String(b.introduced).localeCompare(String(a.introduced)));
+    const newest = all.slice(0, 8);
+    const picked = [...newest.filter((b) => b.has_summary), ...newest.filter((b) => !b.has_summary)].slice(0, 5)
+      .sort((a, b) => String(b.introduced).localeCompare(String(a.introduced)));
+    const files = await Promise.all(picked.map((b) => (b.has_summary ? loadBill(b.key) : Promise.resolve(null))));
+    const house = (b) => {
+      const h = String(b.originating_house || "").toLowerCase();
+      return h.includes("senate") ? "Senate" : (h.includes("rep") || h.includes("house")) ? "House" : "";
+    };
+    const items = picked.map((b, i) => {
+      const s = files[i]?.summary;
+      const sentences = (s?.sentences || []).filter(Boolean);
+      const lede = sentences.slice(0, 2).join(" ");
+      const figures = [
+        Number(b.divisions) ? `${b.divisions} division record${b.divisions === 1 ? "" : "s"}` : "",
+        Number(b.acts) ? "became law" : "",
+      ].filter(Boolean);
+      return `<li class="front-bill">
+        <a class="source-title bill-row-title" href="${esc(billHash(b.key))}">${esc(billName(b))}</a>
+        <span class="result-meta bill-row-meta">${[
+          `Introduced ${esc(fmtDate(b.introduced))}`,
+          house(b) ? esc(house(b)) : "",
+          b.sponsor_party ? partyChipHTML(billParty(b.sponsor_party)) : "",
+          b.status ? `<b class="bill-row-status">${esc(sentenceCase(b.status))}</b>` : "",
+        ].filter(Boolean).join("&nbsp;· ")}</span>
+        ${lede ? `<p class="front-bill-sum">${esc(lede)}</p>` : `<p class="front-bill-sum front-bill-none">No summary yet.</p>`}
+        ${s?.affected ? `<p class="front-bill-who"><b>Who it affects</b> ${esc(s.affected)}</p>` : ""}
+        ${figures.length ? `<p class="bill-row-figures">${figures.join(" · ")}</p>` : ""}
+      </li>`;
+    });
+    $("front-bills").innerHTML = items.join("");
+    $("mod-bills").hidden = false;
+  } catch { /* stays hidden */ }
+}
+
 function renderFrontPage() {
   setFrontPageHidden(false);
   renderFrontNumbers();
@@ -7425,7 +7470,7 @@ function renderFrontPage() {
   if (frontRendered) return;
   frontRendered = true;
   renderFrontNews();
-  onIdle(() => { mountFrontMaps(); renderFrontTopic(); renderFrontReports(); renderFrontAdded(); renderFrontDeclared(); });
+  onIdle(() => { mountFrontMaps(); renderFrontBills(); renderFrontTopic(); renderFrontReports(); renderFrontAdded(); renderFrontDeclared(); });
 }
 
 // --- the home maps ----------------------------------------------------------
