@@ -35,7 +35,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
 from parli.arag import AragConfig, AragError, KbClient, load_dotenv
-from parli.ingest.arag_sync import map_speech
+from parli.ingest.arag_sync import _texts, map_speech
 
 stop = False
 
@@ -53,9 +53,13 @@ def now_iso():
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def patch_one(kb: KbClient, row: sqlite3.Row) -> tuple[str, str | None]:
+def patch_one(kb: KbClient, row: sqlite3.Row, reason: str | None = None) -> tuple[str, str | None]:
     doc = map_speech(row)
     body = {k: doc[k] for k in ("title", "origin", "usermetadata", "extra")}
+    # A text repair (parli.ingest.text_hygiene) sends the cleaned body as well;
+    # everything else leaves the text alone.
+    if reason and reason.startswith("text:"):
+        body["texts"] = doc["texts"]
     slug = doc["slug"]
     backoff = 2.0
     for attempt in range(5):
@@ -100,8 +104,8 @@ def main() -> int:
     db.execute("PRAGMA busy_timeout = 600000")
     db.row_factory = sqlite3.Row
     statuses = ("pending", "failed") if args.retry_failed else ("pending",)
-    slugs = [r[0] for r in db.execute(
-        f"SELECT slug FROM ext_kb_patch_queue WHERE status IN ({','.join('?' for _ in statuses)}) ORDER BY slug", statuses)]
+    slugs = [(r[0], r[1]) for r in db.execute(
+        f"SELECT slug, reason FROM ext_kb_patch_queue WHERE status IN ({','.join('?' for _ in statuses)}) ORDER BY slug", statuses)]
     if args.limit:
         slugs = slugs[:args.limit]
     log(f"{len(slugs):,} slugs to patch with {args.threads} threads")
@@ -129,12 +133,13 @@ def main() -> int:
             except sqlite3.OperationalError:
                 time.sleep(10)
 
-    def work(slug: str):
+    def work(item):
+        slug, reason = item
         sid = int(slug.split("-", 1)[1])
         row = db_ro.execute("SELECT * FROM speeches WHERE speech_id = ?", (sid,)).fetchone()
         if row is None:
             return slug, "failed", "no such speech row"
-        status, err = patch_one(kb, row)
+        status, err = patch_one(kb, row, reason)
         return slug, status, err
 
     db_ro = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True, check_same_thread=False)
