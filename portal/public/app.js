@@ -6011,7 +6011,6 @@ async function openBillsIndex(params, manageFocus) {
   billView = "index";
   const body = $("bill-body");
   body.innerHTML = `
-    <p class="kicker">Bills</p>
     <div class="subject-head">
       <h2 id="subject-title" tabindex="-1">Bills</h2>
       <p class="subject-tag"><span id="bill-loader" class="subject-loader"></span></p>
