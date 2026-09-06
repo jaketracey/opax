@@ -61,7 +61,7 @@ def main() -> None:
         id INTEGER PRIMARY KEY AUTOINCREMENT, table_name TEXT NOT NULL, source TEXT NOT NULL,
         rows_loaded INTEGER, rows_deleted INTEGER, loaded_at TEXT NOT NULL, notes TEXT);
     """)
-    sql = "SELECT speech_id, text, topic, speaker_name, source FROM speeches WHERE source = ? AND text IS NOT NULL"
+    sql = "SELECT speech_id, text, topic, speaker_name, source, text_clean FROM speeches WHERE source = ? AND text IS NOT NULL"
     if args.limit:
         sql += f" LIMIT {int(args.limit)}"
     stats = Counter()
@@ -73,6 +73,11 @@ def main() -> None:
         if args.rule not in c.rules:
             continue
         stats["rule_fired"] += 1
+        # A row whose stored clean text already equals the cleaner's output is
+        # in the box as it should be; only a changed body is worth a patch.
+        if r["text_clean"] is not None and r["text_clean"] == c.text:
+            stats["already_clean"] += 1
+            continue
         updates.append((c.text, ",".join(c.rules), r["speech_id"]))
         if len(samples) < 6:
             i = 0
