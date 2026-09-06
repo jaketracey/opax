@@ -133,17 +133,27 @@ def main() -> int:
             except sqlite3.OperationalError:
                 time.sleep(10)
 
+    # One read-only connection per worker thread: a connection shared across
+    # threads fails mid-run with "bad parameter or other API misuse".
+    local = threading.local()
+
+    def reader() -> sqlite3.Connection:
+        conn = getattr(local, "db", None)
+        if conn is None:
+            conn = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
+            conn.execute("PRAGMA busy_timeout = 600000")
+            conn.row_factory = sqlite3.Row
+            local.db = conn
+        return conn
+
     def work(item):
         slug, reason = item
         sid = int(slug.split("-", 1)[1])
-        row = db_ro.execute("SELECT * FROM speeches WHERE speech_id = ?", (sid,)).fetchone()
+        row = reader().execute("SELECT * FROM speeches WHERE speech_id = ?", (sid,)).fetchone()
         if row is None:
             return slug, "failed", "no such speech row"
         status, err = patch_one(kb, row, reason)
         return slug, status, err
-
-    db_ro = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True, check_same_thread=False)
-    db_ro.row_factory = sqlite3.Row
 
     i = 0
     with ThreadPoolExecutor(max_workers=args.threads) as ex:
