@@ -322,6 +322,11 @@ interface SearchResult {
   chamber: string | null
   /** The members-table id the sync linked the speaker to; null for witnesses and unlinked names. */
   person_id: number | null
+  /** 'member' | 'witness' | 'chair' | 'unknown' on committee transcripts; null elsewhere. */
+  speaker_type: string | null
+  /** A witness's position and organisation from the hearing's attendance list. */
+  role: string | null
+  organisation: string | null
   date: string | null
   url: string | null
   snippet: string
@@ -508,6 +513,9 @@ async function searchWindow(
       state: label(resource, 'state'),
       chamber: label(resource, 'chamber'),
       person_id: typeof meta.person_id === 'number' ? meta.person_id : null,
+      speaker_type: label(resource, 'speaker_type'),
+      role: typeof meta.witness_position === 'string' ? meta.witness_position : null,
+      organisation: typeof meta.witness_organisation === 'string' ? meta.witness_organisation : null,
       // Divisions carry their date on origin.created rather than in metadata.
       date: (meta.date as string) ?? (resource.origin as { created?: string } | undefined)?.created?.slice(0, 10) ?? null,
       url: resource.origin?.url || null, // official record, for exports/citations
@@ -2998,7 +3006,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
   const speaker = r.speaker ?? 'Unknown speaker'
   // A committee transcript's speaker may be a witness, named as the transcript
   // names them (often surname only); their words are evidence, not a speech.
-  const committee = /committee/.test(String(r.labels.chamber ?? ''))
+  const committee = r.labels.speaker_type === 'witness' || /committee/.test(String(r.labels.chamber ?? ''))
   const who = [r.labels.party, chamber].filter(Boolean).join(', ')
   const [photos, moneyData] = await Promise.all([loadPhotos(env).catch(() => null), loadMoney(env).catch(() => null)])
   const portraitId = r.speaker ? photoIdFor(photos, r.speaker) : null

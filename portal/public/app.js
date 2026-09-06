@@ -4260,7 +4260,7 @@ async function openSubject(kind, name, manageFocus) {
   const dates = speeches.map((r) => r.date).filter(Boolean).sort();
   const chambers = [...new Set(speeches.map((r) => STATE_NAMES[r.state] || r.state).filter(Boolean))];
   const witness = !roster && speeches.length > 0 &&
-    speeches.every((r) => isCommitteeChamber(r.chamber) && r.person_id == null);
+    speeches.every((r) => r.speaker_type === "witness" || (isCommitteeChamber(r.chamber) && r.person_id == null));
   if (witness) {
     renderCommitteeWitness(name, key, body, box, sections, speeches, dates);
     return;
@@ -4343,9 +4343,16 @@ function renderCommitteeWitness(name, key, body, box, sections, speeches, dates)
   if (kicker) kicker.textContent = "Committee witness";
   setCrumbs([{ label: "Committee witnesses" }, { label: name }]);
   document.title = `${name}, committee witness · OPAX`;
-  subjectTag(body).innerHTML = `<span>Committee witness</span> · <span>${esc(houses.join(" and "))} ${houses.length > 1 ? "committees" : "committee"}</span>`;
+  // The newest transcript's attendance list is the best account of who they are.
+  const known = speeches.slice().sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).find((r) => r.role || r.organisation);
+  subjectTag(body).innerHTML = [
+    `<span>Committee witness</span>`,
+    known?.organisation ? `<span>${esc(known.organisation)}</span>` : `<span>${esc(houses.join(" and "))} ${houses.length > 1 ? "committees" : "committee"}</span>`,
+  ].join(" · ");
   box.innerHTML = infoboxHTML([
     ["Type", "Committee witness"],
+    known?.role && ["Position", esc(known.role)],
+    known?.organisation && ["Organisation", esc(known.organisation)],
     committees.length && ["Appeared before", committees.slice(0, 4).map(esc).join("<br>") + (committees.length > 4 ? `<br><span class="fineprint" style="display:inline">and ${committees.length - 4} more</span>` : "")],
     hearings.length && ["Hearings indexed", hearings.length === 1
       ? esc(fmtDate(hearings[0]))
@@ -4353,9 +4360,9 @@ function renderCommitteeWitness(name, key, body, box, sections, speeches, dates)
   ], "", [
     actionBtn("speeches", searchHash("", { speaker: name }), "View their evidence", { primary: true }),
   ]);
-  box.insertAdjacentHTML("beforeend", `<p class="fineprint">Named as the transcript names them, usually a surname
-    behind an honorific. A witness answering a parliamentary committee, not a member of parliament;
-    the record here does not carry their full name or position.</p>`);
+  box.insertAdjacentHTML("beforeend", `<p class="fineprint">${known
+    ? "Position and organisation as the hearing's attendance list recorded them on the day. A witness answering a parliamentary committee, not a member of parliament."
+    : "Named as the transcript names them, usually a surname behind an honorific. A witness answering a parliamentary committee, not a member of parliament; the record here does not carry their full name or position."}</p>`);
   sections.insertAdjacentHTML("beforeend", `<div class="person-jumps-row"><nav class="person-jumps" aria-label="On this page"></nav></div>`);
   sections.insertAdjacentHTML("beforeend", `
     <form class="query-line subject-ask-form" id="subject-ask-form">
@@ -9522,7 +9529,11 @@ async function openDocPage(slug, manageFocus) {
     // Ways into this speaker's wider record. External links are SEARCHES, so
     // a shared name shows candidates rather than asserting the wrong person.
     const speakerLinks = $("doc-speaker-links");
-    const docWitness = isCommitteeChamber(doc.labels?.chamber) && doc.metadata?.person_id == null;
+    const docWitness = doc.labels?.speaker_type === "witness" || (isCommitteeChamber(doc.labels?.chamber) && doc.metadata?.person_id == null);
+    if (docWitness && (doc.metadata?.witness_position || doc.metadata?.witness_organisation)) {
+      $("doc-meta").insertAdjacentHTML("afterbegin",
+        `${[doc.metadata.witness_position, doc.metadata.witness_organisation].filter(Boolean).map(esc).join(", ")} · `);
+    }
     if (doc.speaker && docWitness) {
       speakerLinks.innerHTML = `Committee witness, named as the transcript names them. <a href="${esc(subjectHash("person", doc.speaker))}">Their evidence on OPAX</a>`;
       speakerLinks.hidden = false;

@@ -179,6 +179,12 @@ def map_speech(row: sqlite3.Row) -> dict:
             row["text"], row["source"] or "", row["topic"], row["speaker_name"]
         )
     title_bits = [b for b in (speaker, row["topic"], date) if b]
+    # Committee transcripts (parli.ingest.committee_witnesses): who the speaker
+    # is at the table. A witness is never a member; the label lets the portal
+    # say so, and the position and organisation come from the attendance list.
+    speaker_type = _optional_column(row, "speaker_type")
+    witness_position = _optional_column(row, "witness_position")
+    witness_organisation = _optional_column(row, "witness_organisation")
     return {
         "slug": f"speech-{row['speech_id']}",
         "title": (" — ".join(title_bits) or f"Speech {row['speech_id']}")[:2000],
@@ -196,6 +202,7 @@ def map_speech(row: sqlite3.Row) -> dict:
                 ("party", party),
                 ("chamber", row["chamber"]),
                 ("decade", decade),
+                ("speaker_type", speaker_type),
             ])
         },
         "extra": {
@@ -206,6 +213,8 @@ def map_speech(row: sqlite3.Row) -> dict:
                 "electorate": row["electorate"],
                 "word_count": row["word_count"],
                 "date": date,
+                **({"witness_position": witness_position} if witness_position else {}),
+                **({"witness_organisation": witness_organisation} if witness_organisation else {}),
             }
         },
     }
