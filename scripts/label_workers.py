@@ -46,8 +46,7 @@ sys.path.insert(0, str(HERE))
 from arag_enrich import TOPICS  # noqa: E402  (slug, description, examples)
 
 TOPIC_SLUGS = [t[0] for t in TOPICS]
-DEFAULT_DB = Path(os.environ.get("LABEL_QUEUE_DB") or (
-    "/private/tmp/claude-501/-Users-jake-Projects-opax/c097728b-8dc8-4ab0-90d6-0b7645b85942/scratchpad/labels_queue.sqlite"))
+DEFAULT_DB = Path(os.environ.get("LABEL_QUEUE_DB") or Path.home() / ".cache" / "opax" / "labels_queue.sqlite")
 STOP_FILE = DEFAULT_DB.with_name("labels_stop")
 STALE_CLAIM_S = 45 * 60
 MAX_LABELS = 4
@@ -57,12 +56,19 @@ POOL = 4               # parallel requests per worker
 
 
 def env() -> dict[str, str]:
-    out: dict[str, str] = {}
-    for line in (ROOT / ".env").read_text().splitlines():
-        line = line.strip()
-        if "=" in line and not line.startswith("#"):
-            k, v = line.split("=", 1)
-            out[k] = v.strip().strip('"').strip("'")
+    out = {k: os.environ[k] for k in ("ARAG_ZONE", "ARAG_KB_ID", "ARAG_KB_TOKEN") if os.environ.get(k)}
+    out.setdefault("ARAG_ZONE", "aws-ap-southeast-2-1")
+    for path in (ROOT / ".env", ROOT / "portal" / ".dev.vars"):
+        if not path.exists():
+            continue
+        for line in path.read_text().splitlines():
+            line = line.strip()
+            if "=" in line and not line.startswith("#"):
+                k, v = line.split("=", 1)
+                out.setdefault(k, v.strip().strip('"').strip("'"))
+    missing = [k for k in ("ARAG_KB_ID", "ARAG_KB_TOKEN") if not out.get(k)]
+    if missing:
+        raise RuntimeError(f"Missing knowledge-box settings: {', '.join(missing)}")
     return out
 
 
@@ -104,6 +110,7 @@ class Kb:
 
 
 def db(path: Path = DEFAULT_DB) -> sqlite3.Connection:
+    path.parent.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(path, timeout=60)
     con.execute("PRAGMA journal_mode=WAL")
     con.execute("""CREATE TABLE IF NOT EXISTS queue (
@@ -248,8 +255,16 @@ def cmd_submit(a: argparse.Namespace) -> None:
         return
     labels: dict[str, list[str]] = json.load(open(a.labels))
     con = db()
-    rows = {r[0]: (r[1], r[2], r[3]) for r in con.execute(
-        "SELECT rid, slug, existing, status FROM queue WHERE rid IN (%s)" % ",".join("?" * len(labels)), list(labels))}
+    # Renew this worker's lease before any network writes. A slow Codex turn may
+    # have crossed the stale-claim boundary; rows reclaimed by another worker
+    # are excluded instead of being overwritten.
+    with con:
+        con.execute(
+            "UPDATE queue SET claimed_at=? WHERE worker=? AND status='claimed' AND rid IN (%s)" % ",".join("?" * len(labels)),
+            [time.time(), a.worker, *labels],
+        )
+    rows = {r[0]: (r[1], r[2], r[3], r[4], bool(r[5])) for r in con.execute(
+        "SELECT rid, slug, existing, status, worker, force FROM queue WHERE rid IN (%s)" % ",".join("?" * len(labels)), list(labels))}
     # A batch that calls more than half its speeches topicless was not read: the
     # fleet's honest rate is about one in five. Refuse it whole so the worker
     # rereads, rather than let empty verdicts retire rows from the queue.
@@ -263,7 +278,7 @@ def cmd_submit(a: argparse.Namespace) -> None:
     jobs: list[tuple[str, list[str], list[dict]]] = []
     bad = 0
     for rid, chosen in labels.items():
-        if rid not in rows or rows[rid][2] != "claimed":
+        if rid not in rows or rows[rid][2] != "claimed" or rows[rid][3] != a.worker:
             bad += 1
             continue
         clean = []
@@ -274,13 +289,20 @@ def cmd_submit(a: argparse.Namespace) -> None:
         clean = clean[:MAX_LABELS]
         existing = json.loads(rows[rid][1] or "[]")
         merged = [c for c in existing if c.get("labelset") != "topic"] + [{"labelset": "topic", "label": s} for s in clean]
-        jobs.append((rid, clean, merged))
+        jobs.append((rid, clean, merged, rows[rid][4]))
 
     def write(job):
-        rid, clean, merged = job
-        if clean:
+        rid, clean, merged, forced = job
+        with db() as lease:
+            owned = lease.execute(
+                "UPDATE queue SET claimed_at=? WHERE rid=? AND status='claimed' AND worker=?",
+                (time.time(), rid, a.worker),
+            ).rowcount
+        if not owned:
+            return rid, clean, False
+        if clean or forced:
             kb.patch_classifications(rid, merged)
-        return rid, clean
+        return rid, clean, True
 
     done, failed = 0, 0
     with ThreadPoolExecutor(max_workers=POOL) as pool:
@@ -289,12 +311,17 @@ def cmd_submit(a: argparse.Namespace) -> None:
             with con:
                 if isinstance(res, Exception):
                     failed += 1
-                    con.execute("UPDATE queue SET status='error', error=? WHERE rid=?", (str(res)[:200], rid))
+                    con.execute("UPDATE queue SET status='error', error=? WHERE rid=? AND status='claimed' AND worker=?", (str(res)[:200], rid, a.worker))
+                elif not res[2]:
+                    bad += 1
                 else:
-                    done += 1
-                    con.execute("UPDATE queue SET status='done', done_at=?, labels=? WHERE rid=?",
-                                (time.time(), json.dumps(job[1]), rid))
-                    con.execute("INSERT INTO log VALUES (?,?,?,?,?)", (time.time(), a.worker, rid, rows[rid][0], json.dumps(job[1])))
+                    changed = con.execute("UPDATE queue SET status='done', done_at=?, labels=? WHERE rid=? AND status='claimed' AND worker=?",
+                                          (time.time(), json.dumps(job[1]), rid, a.worker)).rowcount
+                    if changed:
+                        done += 1
+                        con.execute("INSERT INTO log VALUES (?,?,?,?,?)", (time.time(), a.worker, rid, rows[rid][0], json.dumps(job[1])))
+                    else:
+                        bad += 1
     print(f"submitted {done} (labelled {sum(1 for j in jobs if j[1])}, no topic {sum(1 for j in jobs if not j[1])}), failed {failed}, not claimed by you {bad}")
 
 
