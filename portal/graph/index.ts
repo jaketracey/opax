@@ -1419,8 +1419,12 @@ export async function mountMoneyMap(
         ? `${source}.${coverage} Public money is drawn the other way from donations and never summed with them; a donor ${contracts ? 'holding a contract' : 'receiving a grant'} is a fact, not a finding.`
         : 'Public money is drawn the other way from donations and never summed with them.'
       // The Discover page follows Commonwealth contracts; a state hub has no page of its own yet.
-      if (contracts && !raw.meta.jurisdiction) trigger(card, `${routeBase}/discover`, 'Follow the big contracts', false)
-      else trigger(card, `${routeBase}/explore?game=grants&jur=${encodeURIComponent(node.explorer ?? 'federal')}`,
+      if (contracts) {
+        if (!raw.meta.jurisdiction) {
+          trigger(card, `${routeBase}/discover`, 'Follow the big contracts', false)
+          trigger(card, `${routeBase}/subject/supplier`, 'Browse supplier profiles', true)
+        }
+      } else trigger(card, `${routeBase}/explore?game=grants&jur=${encodeURIComponent(node.explorer ?? 'federal')}`,
         'Open Who gets the grants', false)
     } else {
       listTitle.textContent = 'Top donors shown on the map'
