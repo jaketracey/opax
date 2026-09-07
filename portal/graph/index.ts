@@ -1916,19 +1916,15 @@ export async function mountMoneyMap(
     // Empty paths are deliberate: co-present nodes do not imply a connection.
     spotlightEdges = edges
     applyEmphasis()
-    if (withIds.length) {
-      reveal = runReveal(engine, { focusId: scene.focusId, withIds, edges }, {
-        spotlight: (on) => {
-          if (destroyed) return
-          spotlightEdges = on ? edges : null
-          spotlightFor = on ? scene.focusId : null
-          applyEmphasis()
-        },
-      })
-      if (engine.reducedMotion) { spotlightEdges = edges; applyEmphasis() }
-    } else {
-      engine.frameOn([scene.focusId], { fill: 0.4, padPx: 36, duration: engine.reducedMotion ? 0 : 650 })
-    }
+    // Guided steps travel from the current camera pose. The opening reveal
+    // deliberately snaps to a close-up, so it must not be reused here.
+    engine.frameOn([scene.focusId, ...withIds], {
+      fill: withIds.length ? 0.9 : 0.4,
+      theta: withIds.length ? engine.swingTheta(scene.focusId, withIds, engine.viewAngles.phi) ?? undefined : undefined,
+      padPx: 36,
+      duration: engine.reducedMotion ? 0 : 1200,
+      ease: t => t * t * (3 - 2 * t),
+    })
     return true
   }
 

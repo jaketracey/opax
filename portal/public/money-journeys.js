@@ -1,4 +1,4 @@
-import { buildMoneyJourneys } from './money-journeys-data.js?v=picker-1';
+import { buildMoneyJourneys } from './money-journeys-data.js?v=chart-1';
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const money = (value) => Number(value).toLocaleString('en-AU', { style: 'currency', currency: 'AUD', notation: 'compact', maximumFractionDigits: 1 });
@@ -13,7 +13,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let active = null, step = 0, playing = false, timer = null, destroyed = false, reason = '';
   const stopTimer = () => { if (timer !== null) clearTimeout(timer); timer = null; };
-  controls.innerHTML = journeys.length ? `<div class="journey-intro"><h2>Take a closer look.</h2><p>Choose a lens. Follow the connections in 3D.</p></div><div class="journey-lenses" role="group" aria-label="Guided money map journeys">${journeys.map((journey) => `<button type="button" data-journey="${esc(journey.id)}" aria-pressed="false"><span>${esc(journey.title)}</span><small>${esc(journey.description)}</small></button>`).join('')}</div>` : '';
+  controls.innerHTML = journeys.length ? `<div class="journey-lenses" role="group" aria-label="Guided money map journeys">${journeys.map((journey) => `<button type="button" data-journey="${esc(journey.id)}" aria-pressed="false"><span>${esc(journey.title)}</span><small>${esc(journey.description)}</small></button>`).join('')}</div>` : '';
 
   let disposePicker = () => {};
   function render() {
@@ -32,9 +32,12 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     }
     const current = active.steps[step];
     const metric = current.metric;
+    const breakdown = (current.breakdown || []).filter(row => Number.isFinite(row.value) && row.value > 0);
+    const maximum = Math.max(1, ...breakdown.map(row => row.value));
+    const chart = breakdown.length ? `<figure class="journey-connections"><figcaption>Recorded receipts by party</figcaption><ul>${breakdown.map(row => `<li><div class="journey-connection-label"><span>${esc(row.label)}</span><strong>${esc(money(row.value))}</strong></div><div class="journey-connection-track" aria-hidden="true"><span style="width:${row.value / maximum * 100}%"></span></div></li>`).join('')}</ul></figure>` : '';
     story.innerHTML = `${header}${chooser}
       <div class="journey-steps" role="group" aria-label="Journey steps">${active.steps.map((item, i) => `<button type="button" data-step="${i}" aria-label="Step ${i + 1}: ${esc(item.title)}"${i === step ? ' aria-current="step"' : ''}>${i + 1}</button>`).join('')}</div>
-      <div class="journey-narrative" aria-live="polite" aria-atomic="true"><p class="journey-step-label">${step + 1} of ${active.steps.length}</p><h3>${esc(current.title)}</h3><p>${esc(current.body)}</p>${metric && Number.isFinite(Number(metric.value)) ? `<div class="journey-metric"><strong>${esc(metric.format === 'currency' ? money(metric.value) : Number(metric.value).toLocaleString('en-AU'))}</strong><span>${esc(metric.label)}</span></div>` : ''}</div>
+      <div class="journey-narrative" aria-live="polite" aria-atomic="true"><h3>${esc(current.title)}</h3><p>${esc(current.body)}</p>${chart}${!chart && metric && Number.isFinite(Number(metric.value)) ? `<div class="journey-metric"><strong>${esc(metric.format === 'currency' ? money(metric.value) : Number(metric.value).toLocaleString('en-AU'))}</strong><span>${esc(metric.label)}</span></div>` : ''}</div>
       <div class="journey-source-links">${(current.links || []).filter((link) => safeLink(link.href)).map((link) => `<a href="${esc(link.href)}">${esc(link.label)} <span aria-hidden="true">↗</span></a>`).join('')}</div>
       <div class="journey-playback"><button type="button" data-action="previous" aria-label="Previous step"${step === 0 ? ' disabled' : ''}>←</button><button type="button" data-action="play"${reduced.matches ? ' disabled' : ''}>${playing ? 'Pause' : step === active.steps.length - 1 ? 'Replay journey' : reason ? 'Continue journey' : 'Play journey'}</button><button type="button" data-action="next" aria-label="Next step"${step === active.steps.length - 1 ? ' disabled' : ''}>→</button></div>
       <div class="journey-progress" aria-hidden="true">${playing ? '<span></span>' : ''}</div><p class="journey-help">${esc(reason || (reduced.matches ? 'Animation is off. Use the arrows to explore each step.' : playing ? 'The next view opens in 7 seconds. Touch the map to pause.' : 'Step through, or play the journey. Drag the map to explore.'))}</p>`;

@@ -4413,3 +4413,21 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .journey-picker-results::-webkit-scrollbar-thumb { background:#aab5bd; border-radius:999px; }
 .journey-picker-results::-webkit-scrollbar-thumb:hover { background:#778b9b; }
 .journey-picker-results::-webkit-scrollbar-button { display:none; }
+
+.journey-connections { margin:1.4rem 0 1rem; }
+.journey-connections figcaption { color:var(--ink-soft); font:500 .75rem/1.4 var(--sans); margin-bottom:1rem; }
+.journey-connections ul { list-style:none; margin:0; padding:0; }
+.journey-connections li + li { margin-top:1rem; }
+.journey-connection-label { display:flex; align-items:baseline; justify-content:space-between; gap:.6rem; margin-bottom:.4rem; color:var(--navy); font:400 .8rem/1.4 var(--sans); }
+.journey-connection-label strong { flex-shrink:0; font-weight:600; font-variant-numeric:tabular-nums; }
+.journey-connection-track { height:8px; background:#edf1f3; border-radius:3px; overflow:hidden; }
+.journey-connection-track > span { display:block; height:100%; background:#52758e; border-radius:3px; }
+
+.doc-reading-layout { display:grid; grid-template-columns:minmax(0,1fr); align-items:start; gap:1.5rem; }
+.doc-reading-layout > * { min-width:0; }
+#panel-doc .doc-reading-layout .doc-brief { margin:0; max-width:none; }
+@media (min-width:1000px) {
+  .doc-reading-layout:has(#doc-brief:not([hidden])) { grid-template-columns:minmax(0,1.6fr) minmax(280px,1fr); gap:clamp(2rem,4vw,4rem); }
+  .doc-reading-layout > #doc-brief { grid-column:2; grid-row:1; }
+  .doc-reading-layout > #doc-text { grid-column:1; grid-row:1; }
+}

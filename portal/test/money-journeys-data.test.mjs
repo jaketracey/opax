@@ -159,3 +159,11 @@ test('unknown, absent and ineligible selections never silently highlight another
     assert.ok(selected.every(j => j.steps.length === 0 && j.selection === ''));
   }
 });
+
+test('party comparison shows each visible connection amount rather than a combined total', () => {
+  const j = buildMoneyJourneys(fixture()).find(j => j.id === 'multiple-parties');
+  assert.equal(j.steps[3].metric, undefined);
+  assert.deepEqual(j.steps[3].breakdown, [{label:'Party A',value:90},{label:'Party B',value:30}]);
+  const other = buildChoices(fixture(), {'multiple-parties':'b'}).find(j => j.id === 'multiple-parties');
+  assert.deepEqual(other.steps[3].breakdown, [{label:'Party A',value:15},{label:'Party B',value:5}]);
+});
