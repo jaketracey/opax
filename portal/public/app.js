@@ -795,6 +795,11 @@ function focusEntry(id) {
 
 function showPanel(name) {
   if (name !== "discover") destroyDiscoveryMap();
+  if (name !== "money") {
+    moneyJourneys?.destroy(); moneyJourneys = null;
+    moneyMapLoading = null; moneyMapGeneration += 1;
+    moneyMapHandle?.setPaused(true);
+  } else moneyMapHandle?.setPaused(false);
   // Methods and the expense-category glossary live under the About menu, so its
   // trigger stays lit there; the drawer has exact links of its own.
   const headerName = name === "methods" || name === "expenses" ? "about" : name === "bill" ? "bills" : name;
@@ -1142,44 +1147,70 @@ function moneyFineprintHTML(jur, meta) {
 }
 
 let moneyMapHandle = null;
+let moneyMapGeneration = 0;
+let moneyJourneys = null;
+let moneyJourneyModule = null;
+let moneyJourneyData = null;
 let moneyMapJur = null;     // jurisdiction the mounted map shows
 let moneyMapLoading = null; // jurisdiction of the mount in flight
 let moneyMapIsolate = null; // industry cluster the route asked to isolate (/money?industry=)
 
-async function mountMoney(jurParam, industry) {
+function attachMoneyJourneys(params = new URLSearchParams()) {
+  if (!moneyMapHandle || !moneyJourneyModule || !moneyJourneyData) return;
+  moneyJourneys?.destroy();
+  moneyJourneys = moneyJourneyModule.mountMoneyJourneys($("money-journey-controls"), $("money-journey-story"), $("money-stage"), moneyJourneyData, moneyMapHandle, {
+    initialJourney: params.get("journey"), initialStep: params.get("step"),
+    onRoute(id, step) {
+      const next = new URLSearchParams(location.search);
+      if (id) { next.set("journey", id); next.set("step", String(step)); next.delete("industry"); }
+      else { next.delete("journey"); next.delete("step"); }
+      replaceRoute(`/money${next.size ? `?${next}` : ""}`);
+    },
+  });
+}
+async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   const jur = MONEY_JURISDICTIONS[jurParam] ? jurParam : "federal";
   renderMoneySwitch(jur);
   const isolate = industry || null;
   if (moneyMapHandle && moneyMapJur === jur) {
     // A legend choice made on the page is left alone; only the route's own
     // parameter coming or going moves the map.
-    if (isolate !== moneyMapIsolate) moneyMapHandle.isolate?.(isolate);
+    const changedIndustry = isolate !== moneyMapIsolate;
     moneyMapIsolate = isolate;
+    moneyMapHandle.setPaused(false);
+    if (!moneyJourneys) attachMoneyJourneys(params);
+    else moneyJourneys.setRoute(params.get("journey"), params.get("step"));
+    if (changedIndustry && !params.get("journey")) moneyMapHandle.isolate?.(isolate);
     return;
   }
   moneyMapIsolate = isolate;
   if (moneyMapLoading === jur) return;
   moneyMapLoading = jur;
+  const generation = ++moneyMapGeneration;
+  moneyJourneys?.destroy(); moneyJourneys = null;
   if (moneyMapHandle) { moneyMapHandle.destroy(); moneyMapHandle = null; moneyMapJur = null; }
   const root = $("money-map-root");
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data] = await Promise.all([import("/money-map.js?v=suppliers-1"), loadMoneyFile(jur)]);
-    if (moneyMapLoading !== jur) return; // switched again while loading
+    const [{ mountMoneyMap }, data, journeysModule] = await Promise.all([import("/money-map.js?v=journeys-2"), loadMoneyFile(jur), import("/money-journeys.js?v=journeys-2")]);
+    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
     root.textContent = "";
     const handle = await mountMoneyMap(root, cfg.file, {
+      onInteract: () => moneyJourneys?.pause("map"),
       askUrl: (industry) =>
         askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
     });
-    if (moneyMapLoading !== jur) { handle.destroy(); return; }
+    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) { handle.destroy(); return; }
     moneyMapHandle = handle;
     moneyMapJur = jur;
-    if (moneyMapIsolate) handle.isolate?.(moneyMapIsolate);
+    moneyJourneyModule = journeysModule; moneyJourneyData = data;
+    attachMoneyJourneys(params);
+    if (moneyMapIsolate && !params.get("journey")) handle.isolate?.(moneyMapIsolate);
   } catch (err) {
-    if (moneyMapLoading !== jur) return;
+    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return;
     root.textContent = "";
     const p = document.createElement("p");
     p.className = "status error";
@@ -1191,7 +1222,7 @@ async function mountMoney(jurParam, industry) {
     p.appendChild(a);
     root.appendChild(p);
   } finally {
-    if (moneyMapLoading === jur) moneyMapLoading = null;
+    if (moneyMapLoading === jur && generation === moneyMapGeneration) moneyMapLoading = null;
   }
 }
 
@@ -1432,7 +1463,7 @@ function route() {
     showPanel("money");
     document.title = TITLES.money;
     setCrumbs([{ label: "Money map" }]);
-    mountMoney(params.get("jur"), params.get("industry"));
+    mountMoney(params.get("jur"), params.get("industry"), params);
   } else if (view === "explore") {
     showPanel("explore");
     // A link into one module, and for the grants explorer into one recipient's

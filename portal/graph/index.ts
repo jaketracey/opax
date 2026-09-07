@@ -117,7 +117,17 @@ export type MoneyGraph = {
   edges: MoneyEdge[]
 }
 
+export type MoneyScene = {
+  focusId: string
+  withIds?: string[]
+  edges?: { source: string; target: string }[]
+  from?: number
+  to?: number
+}
+
 export type MoneyMapOptions = {
+  /** Reader input in the map or controls; scene presentation stays silent. */
+  onInteract?: () => void
   /** Builds the parliament ask-link for a donor's industry. */
   askUrl?: (industry: string) => string
   /**
@@ -162,6 +172,11 @@ export type MoneyMapOptions = {
 }
 
 export type MoneyMapHandle = {
+  presentScene(scene: MoneyScene): boolean
+  /** Restore the full nominal, unfiltered overview. */
+  clearScene(): void
+  /** Freeze camera choreography at its current frame, retaining the evidence. */
+  pauseScene(): void
   select(id: string | null): void
   /** Isolate one industry cluster (null shows everything); the legend follows. Silent. */
   isolate(group: string | null): void
@@ -574,7 +589,7 @@ export async function mountMoneyMap(
     fallback.textContent = 'The 3D money map needs WebGL, which this browser does not offer. ' +
       'The underlying data is available as JSON at ' + dataUrl
     const noop = () => undefined
-    return { select: noop, isolate: noop, fit: noop, setPaused: noop, destroy: () => fallback.remove() }
+    return { presentScene: () => false, clearScene: noop, pauseScene: noop, select: noop, isolate: noop, fit: noop, setPaused: noop, destroy: () => fallback.remove() }
   }
 
   const graph = buildGraph(raw)
@@ -605,6 +620,9 @@ export async function mountMoneyMap(
   let yearHi = yearMax
   let adjustForInflation = false
   let yearsInUrl = false
+  let syncScrubControls = () => {}
+  let scrubPending = 0
+  let destroyed = false
 
   // Full maps own these three query parameters. Mini maps are embedded in
   // donor/party/front-page routes, so their scrub remains local to the embed.
@@ -630,6 +648,8 @@ export async function mountMoneyMap(
   const syncUrlState = () => {
     if (!full || typeof location === 'undefined' || typeof history === 'undefined') return
     const url = new URL(location.href)
+    // Teardown can run after the host has navigated to another route.
+    if (!/^\/(?:money|map)\/?$/.test(url.pathname)) return
     if (yearsInUrl) {
       url.searchParams.set('from', String(yearLo))
       url.searchParams.set('to', String(yearHi))
@@ -822,11 +842,13 @@ export async function mountMoneyMap(
   let reveal: Reveal | null = null
   let spotlightEdges: MapEdge[] | null = null
   let spotlightFor: string | null = null
+  let guidedScene = false
   const applyEmphasis = () => {
     engine.setEmphasis({
       selectedId,
       pathEdges: spotlightEdges,
       pathFrom: spotlightEdges ? selectedId : null,
+      strictPath: guidedScene && spotlightEdges !== null,
     })
   }
   // The lit landing outlives the camera move, so something has to hand it
@@ -840,13 +862,27 @@ export async function mountMoneyMap(
     armedRelease = null
   }
   const cancelReveal = () => {
+    guidedScene = false
     disarmRelease()
     const running = reveal
     reveal = null
     running?.cancel()
+    if (spotlightEdges !== null) {
+      engine.stopViewMove()
+      spotlightEdges = null
+      spotlightFor = null
+      applyEmphasis()
+    }
   }
   // The reader's first press, drag, wheel notch or arrow key ends it.
   engine.onViewClaimed = () => cancelReveal()
+  const onReaderInput = (event: Event) => {
+    if (!event.isTrusted || destroyed) return
+    cancelReveal()
+    opts.onInteract?.()
+  }
+  const readerEvents = ['pointerdown', 'wheel', 'keydown', 'input', 'change', 'click'] as const
+  for (const type of readerEvents) container.addEventListener(type, onReaderInput, { capture: true, passive: true })
 
   const aspectBucket = () => {
     const rect = container.getBoundingClientRect()
@@ -860,6 +896,8 @@ export async function mountMoneyMap(
   // switches them off in the legend. Absent when the file has none.
   const hasGrants = raw.nodes.some((n) => n.kind === 'grantor')
   let grantsOn = hasGrants
+  let visibleSceneIds = new Set<string>()
+  let visibleSceneEdges: MapEdge[] = []
   const pushData = ({ keepFocus = false } = {}) => {
     // A scrub step, a filter or a re-layout is the reader driving: the
     // choreography gives way rather than animating over the top of it.
@@ -899,7 +937,7 @@ export async function mountMoneyMap(
       grants: grantsByNode,
       contracts: contractsByNode,
     }
-    const activeDonors = new Set(windowEdges.map((e) => e.source))
+    const activeDonors = new Set(windowEdges.flatMap((e) => [e.source, e.target]))
     const visibleNodes = windowNodes.filter((n) => {
       if (n.kind === 'grantor') return grantsOn
       if (n.group === 'parties') return true
@@ -920,6 +958,8 @@ export async function mountMoneyMap(
       aspect: aspectBucket(),
       centralGroup: 'parties',
     }
+    visibleSceneIds = visibleIds
+    visibleSceneEdges = visibleEdges
     engine.setData(data)
     // The fit signature deliberately excludes the year window: refitting the
     // camera on every scrub step would turn the timeline into a fairground
@@ -980,6 +1020,7 @@ export async function mountMoneyMap(
     // scene and drop the very selection the card is showing. Hold the layout
     // until the card closes and the host is its own size again.
     if (hostBase) return
+    if (reveal?.running) { reveal.remeasure(); return }
     const bucket = aspectBucket()
     if (bucket !== lastBucket) {
       lastBucket = bucket
@@ -1131,7 +1172,7 @@ export async function mountMoneyMap(
     hi.value = String(yearHi)
     const showYears = () => {
       years.textContent = yearLo === yearHi ? `${yearLo}` : `${yearLo} – ${yearHi}`
-      const span = yearMax - yearMin
+      const span = Math.max(1, yearMax - yearMin)
       fill.style.left = `${((yearLo - yearMin) / span) * 100}%`
       fill.style.right = `${((yearMax - yearHi) / span) * 100}%`
     }
@@ -1171,7 +1212,14 @@ export async function mountMoneyMap(
     })
     scrub.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !cpiPop.hidden) { closePop(); cpiInfo.focus() } })
 
-    let pending = 0
+    syncScrubControls = () => {
+      if (scrubPending) cancelAnimationFrame(scrubPending)
+      scrubPending = 0
+      lo.value = String(yearLo)
+      hi.value = String(yearHi)
+      cpiInput.checked = adjustForInflation
+      showYears()
+    }
     const applyScrub = () => {
       // The two thumbs may cross; the window is always the ordered pair.
       const a = Number(lo.value)
@@ -1181,9 +1229,10 @@ export async function mountMoneyMap(
       yearsInUrl = true
       showYears()
       syncUrlState()
-      if (pending) return
-      pending = requestAnimationFrame(() => {
-        pending = 0
+      if (scrubPending) return
+      scrubPending = requestAnimationFrame(() => {
+        scrubPending = 0
+        if (destroyed) return
         pushData({ keepFocus: true })
       })
     }
@@ -1827,6 +1876,81 @@ export async function mountMoneyMap(
     })
   }
 
+  /** Present only existing ids and observed endpoint pairs from the visible data. */
+  const resetSceneWindow = (scene?: MoneyScene) => {
+    cancelReveal()
+    selectedId = null
+    selectedEdge = null
+    card.hidden = true
+    card.innerHTML = ''
+    releaseHost()
+    const year = (value: number | undefined, fallback: number) =>
+      typeof value === 'number' && Number.isFinite(value)
+        ? Math.max(yearMin, Math.min(yearMax, Math.trunc(value))) : fallback
+    const from = year(scene?.from, yearMin)
+    const to = year(scene?.to, yearMax)
+    yearLo = Math.min(from, to)
+    yearHi = Math.max(from, to)
+    yearsInUrl = scene?.from !== undefined || scene?.to !== undefined
+    adjustForInflation = false
+    grantsOn = hasGrants
+    legend?.querySelector('.mm-grants-toggle')?.setAttribute('aria-pressed', String(grantsOn))
+    syncScrubControls()
+    syncUrlState()
+    applyIsolate(null)
+    engine.setInsets(chromeInsets())
+    words.select(null, card, view)
+    applyEmphasis()
+  }
+
+  const presentScene = (scene: MoneyScene): boolean => {
+    if (destroyed || !scene || !byId.has(scene.focusId)) return false
+    resetSceneWindow(scene)
+    if (!visibleSceneIds.has(scene.focusId)) return false
+    const requested = new Set((scene.edges ?? []).map((edge) => JSON.stringify([edge.source, edge.target])))
+    const edges = visibleSceneEdges.filter((edge) => requested.has(JSON.stringify([edge.source, edge.target])))
+    const withIds = [...new Set(scene.withIds ?? [])].filter((id) => id !== scene.focusId && visibleSceneIds.has(id))
+    selectedId = scene.focusId
+    guidedScene = true
+    spotlightFor = scene.focusId
+    // Empty paths are deliberate: co-present nodes do not imply a connection.
+    spotlightEdges = edges
+    applyEmphasis()
+    if (withIds.length) {
+      reveal = runReveal(engine, { focusId: scene.focusId, withIds, edges }, {
+        spotlight: (on) => {
+          if (destroyed) return
+          spotlightEdges = on ? edges : null
+          spotlightFor = on ? scene.focusId : null
+          applyEmphasis()
+        },
+      })
+      if (engine.reducedMotion) { spotlightEdges = edges; applyEmphasis() }
+    } else {
+      engine.frameOn([scene.focusId], { fill: 0.4, padPx: 36, duration: engine.reducedMotion ? 0 : 650 })
+    }
+    return true
+  }
+
+  const pauseScene = () => {
+    if (destroyed) return
+    const edges = spotlightEdges
+    const focus = spotlightFor
+    const strict = guidedScene
+    cancelReveal()
+    engine.stopViewMove()
+    spotlightEdges = edges
+    spotlightFor = focus
+    guidedScene = strict
+    applyEmphasis()
+  }
+
+  const clearScene = () => {
+    if (destroyed) return
+    resetSceneWindow()
+    engine.fit(!engine.reducedMotion)
+  }
+
   pushData()
 
   // The embed seed: mount already-selected with the camera on the node.
@@ -1837,11 +1961,17 @@ export async function mountMoneyMap(
   }
 
   return {
+    presentScene,
+    clearScene,
+    pauseScene,
     select: (id) => setSelection(id),
     isolate: (group) => applyIsolate(group),
     fit: (animate = true) => engine.fit(animate),
     setPaused: (paused) => engine.setPaused(paused),
     destroy: () => {
+      destroyed = true
+      if (scrubPending) cancelAnimationFrame(scrubPending)
+      for (const type of readerEvents) container.removeEventListener(type, onReaderInput, true)
       cancelReveal()
       container.removeEventListener('keydown', onKeyDown)
       resizeObserver.disconnect()

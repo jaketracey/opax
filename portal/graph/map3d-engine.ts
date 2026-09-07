@@ -134,6 +134,8 @@ export type EngineData = {
 }
 
 export type EngineEmphasis = {
+  /** Guided scenes name and strengthen only their explicit path. */
+  strictPath?: boolean
   selectedId: string | null
   pathEdges: MapEdge[] | null
   pathFrom: string | null
@@ -1392,7 +1394,7 @@ export class KnowledgeMapEngine {
   }
 
   private updateEmphasisSets() {
-    const { selectedId, pathEdges, pathFrom } = this.emphasis
+    const { selectedId, pathEdges, pathFrom, strictPath } = this.emphasis
     const focus = this.focusKey()
     if (focus) {
       const ids = new Set<string>([focus])
@@ -1410,6 +1412,8 @@ export class KnowledgeMapEngine {
     }
     if (pathEdges) {
       const ids = new Set<string>()
+      if (strictPath && selectedId) ids.add(selectedId)
+      if (strictPath && pathFrom) ids.add(pathFrom)
       for (const edge of pathEdges) {
         ids.add(edge.source)
         ids.add(edge.target)
@@ -1458,7 +1462,7 @@ export class KnowledgeMapEngine {
         (visual.edge.source === focus || visual.edge.target === focus)
       const dimmed = (pathKeys && !onPath) ||
         (focus !== null && !touchesFocus && !pathKeys)
-      const emphasised = onPath || touchesFocus
+      const emphasised = strictPath && pathKeys !== null ? onPath : onPath || touchesFocus
       visual.emphasised = emphasised
       // A tinted edge that nothing else is quietening comes forward with its
       // value, so the bronze reads even on the faint cross-cluster flows.
@@ -3410,7 +3414,7 @@ export class KnowledgeMapEngine {
     const cam = this.camera
     const halfTan = Math.tan(THREE.MathUtils.degToRad(FOV / 2))
     const focus = this.focusKey()
-    const { selectedId, pathFrom } = this.emphasis
+    const { selectedId, pathFrom, strictPath } = this.emphasis
     this.placedLabelBoxes.length = 0
     this.discCount = 0
 
@@ -3439,7 +3443,7 @@ export class KnowledgeMapEngine {
     const discCount = this.discCount
 
     const isEmphasised = (id: string) =>
-      id === focus || id === this.hoveredId || id === pathFrom || (this.pathNodeIds?.has(id) ?? false)
+      id === focus || (!strictPath && id === this.hoveredId) || id === pathFrom || (this.pathNodeIds?.has(id) ?? false)
     const show = (visual: NodeVisual, sx: number, y: number, opacity: number) =>
       this.wantLabel(visual.label, `translate(-50%, -100%) translate(${sx.toFixed(1)}px, ${y.toFixed(1)}px)`, opacity)
 
@@ -3527,7 +3531,7 @@ export class KnowledgeMapEngine {
       const lod = hub ? hub.lod : 0
       const inNeighbourhood = this.neighbourIds?.has(id) ?? false
       if (
-        lod > 0.35 || !disc.ok || disc.opacity < 0.2 ||
+        strictPath || lod > 0.35 || !disc.ok || disc.opacity < 0.2 ||
         (focus !== null && !inNeighbourhood) ||
         (!inNeighbourhood && kept >= budget)
       ) {
