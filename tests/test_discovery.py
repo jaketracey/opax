@@ -103,6 +103,58 @@ class DiscoveryTests(unittest.TestCase):
         result = build_discoveries(self.db)
         self.assertEqual(len(result["signals"]), 1)
         self.assertEqual(result["signals"][0]["entity"], "Alpha")
+        chart = result["signals"][0]["chart"]
+        self.assertEqual([p["name"] for p in chart["participants"]], ["Alpha", "Zed"])
+        self.assertEqual(chart["other_total"], 0)
+        self.assertEqual(chart["other_count"], 0)
+
+    def test_chart_top_five_and_remaining_suppliers_conserve_group_total(self):
+        self.db.executemany("INSERT INTO contracts VALUES (?, ?, ?, ?)", [
+            ("1", "Leader", "Agency", 50.25), ("2", "Beta", "Agency", 10.25),
+            ("3", "Alpha", "Agency", 10.25), ("4", "Delta", "Agency", 8.25),
+            ("5", "Echo", "Agency", 7.25), ("6", "Foxtrot", "Agency", 6.25),
+            ("7", "Golf", "Agency", 5.25), ("8", " leader ", "Agency", 2.25),
+            ("9", "", "Agency", 1000), ("10", "Rejected", "Agency", -1000),
+        ])
+        signal = build_discoveries(self.db)["signals"][0]
+        chart = signal["chart"]
+        self.assertEqual(chart["group_label"], "Agency")
+        self.assertEqual(chart["participant_count"], 7)
+        self.assertEqual(chart["record_count"], 8)
+        self.assertEqual(chart["participants"][0]["record_count"], 2)
+        self.assertEqual([p["name"] for p in chart["participants"]],
+                         ["Leader", "Alpha", "Beta", "Delta", "Echo"])
+        self.assertEqual(chart["other_count"], 2)
+        self.assertEqual(chart["other_total"], 11.5)
+        self.assertEqual(sum(p["value"] for p in chart["participants"]) + chart["other_total"],
+                         chart["group_total"])
+        self.assertEqual(chart["group_total"], 100)
+        self.assertEqual(chart["participants"][0]["share"], 52.5)
+        self.assertIsNone(chart["period"])
+
+    def test_chart_periods_exclude_invalid_dates_but_keep_amounts(self):
+        self.db.execute("ALTER TABLE contracts ADD COLUMN start_date TEXT")
+        self.db.executemany("INSERT INTO contracts VALUES (?, ?, ?, ?, ?)", [
+            ("1", "Alpha", "Agency", 10, "2024-02-29"),
+            ("2", "Alpha", "Agency", 10, "2025-07-01"),
+            ("3", "Beta", "Agency", 10, "2023-02-29"),
+            ("4", "Beta", "Agency", 10, "0899-12-28"),
+            ("5", "Beta", "Agency", 10, None),
+        ])
+        chart = build_discoveries(self.db)["signals"][0]["chart"]
+        self.assertEqual(chart["group_total"], 50)
+        self.assertEqual(chart["period"], {"kind": "contract_start_date", "from": "2024-02-29",
+                         "to": "2025-07-01", "undated_records": 1, "invalid_date_records": 2})
+
+    def test_chart_financial_years_are_not_transaction_dates(self):
+        self.db.execute("ALTER TABLE donations ADD COLUMN financial_year TEXT")
+        self.db.executemany("INSERT INTO donations VALUES (?, ?, ?, ?, ?)", [
+            (1, "Alpha", "Party", 10, "2022-2023"), (2, "Beta", "Party", 10, "2024-25"),
+            (3, "Beta", "Party", 10, "2023-27"), (4, "Beta", "Party", 10, None),
+        ])
+        chart = build_discoveries(self.db)["signals"][0]["chart"]
+        self.assertEqual(chart["period"], {"kind": "financial_year", "from": "2022-23",
+                         "to": "2024-25", "undated_records": 1, "invalid_date_records": 1})
 
     def test_evidence_labels_dates_and_safe_source_links(self):
         self.seed()
@@ -162,16 +214,20 @@ class ProductionExportTests(unittest.TestCase):
             (8, 'Electoral Commission', 'Branch A', 'Party A', 999999, '2024-25', 'other', 'aec_annual', 'direct'),
             (9, 'Party Vehicle', 'Branch A', 'Party A', 999999, '2024-25', 'party_internal', 'aec_annual', 'direct'),
             (10, 'ACME LTD', 'Branch A', 'Party A', 999999, '2024-25', 'retail', 'aec_annual', 'employer_payment'),
+            (11, 'Electoral Comission', 'Branch A', 'Party A', 537301, '2024-25', 'other', 'aec_annual', 'direct'),
+            (12, 'High Court of Australia', 'Branch A', 'Party A', 300187, '2024-25', 'individual', 'aec_annual', 'direct'),
         ]
         db.executemany('INSERT INTO donations VALUES (?,?,?,?,?,?,?,?,?)', rows)
         db.commit()
         before = db.total_changes
         result = _export_module.export_discovery(db)
         self.assertEqual(db.total_changes, before)
-        self.assertEqual(db.execute('SELECT COUNT(*) FROM donations').fetchone()[0], 10)
+        self.assertEqual(db.execute('SELECT COUNT(*) FROM donations').fetchone()[0], 12)
         self.assertEqual(result['coverage']['donations'], 2)
         self.assertEqual(result['coverage']['excluded_before_name_checks'], 5)
-        self.assertEqual(sum(result['coverage']['excluded_receipt_rows'].values()), 3)
+        self.assertEqual(sum(result['coverage']['excluded_receipt_rows'].values()), 5)
+        self.assertEqual(result['coverage']['excluded_receipt_rows']['public_funding'], 2)
+        self.assertEqual(result['coverage']['excluded_receipt_rows']['government_or_party_entity'], 2)
         overlap = next(s for s in result['signals'] if s['category'] == 'donor_contract_overlap')
         self.assertEqual(overlap['entity'], 'Acme Limited')
         self.assertIsNone(overlap['entity_url'])  # Resolved does not imply a published profile.

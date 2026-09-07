@@ -5,6 +5,9 @@ portable across SQLite and the project's PostgreSQL connection wrapper.
 """
 
 import hashlib
+from collections import defaultdict
+from datetime import date
+import re
 import sqlite3
 from urllib.parse import urlparse
 
@@ -145,14 +148,22 @@ def _concentration(db, table, group_column, name_column, category, limit):
                    ROW_NUMBER() OVER (PARTITION BY p.group_name ORDER BY p.total DESC, p.name) AS rank
             FROM participants p JOIN totals t ON p.group_name = t.group_name
         )
-        SELECT * FROM ranked WHERE rank = 1 AND group_records >= 2
-            AND total * 1.0 / group_total >= 0.25
-        ORDER BY total DESC, group_name LIMIT ?
+        , selected AS (
+            SELECT group_name, total AS leading_total FROM ranked
+            WHERE rank = 1 AND group_records >= 2 AND total * 1.0 / group_total >= 0.25
+            ORDER BY total DESC, group_name LIMIT ?
+        )
+        SELECT r.* FROM ranked r JOIN selected s ON s.group_name = r.group_name
+        WHERE r.rank <= 5 ORDER BY s.leading_total DESC, r.group_name, r.rank
     """, (limit,)).fetchall()
     signals = []
     donor = table == "donations"
     noun = "donor" if donor else "supplier"
-    for r in rows:
+    groups = defaultdict(list)
+    for row in rows:
+        groups[row["group_name"]].append(row)
+    for peers in groups.values():
+        r = peers[0]
         share = 100 * float(r["total"]) / float(r["group_total"])
         signals.append(_signal(
             category, r["display"], f"{r['group_display']}: {share:.0f}% from one {noun}" if donor else
@@ -171,7 +182,75 @@ def _concentration(db, table, group_column, name_column, category, limit):
         # The same donor/supplier can lead multiple distinct recipient/agency groups.
         signals[-1]["id"] = f"{category}:" + hashlib.sha256(
             f"{r['group_name']}:{r['name']}".encode()).hexdigest()[:16]
+        group_total = round(float(r["group_total"]), 2)
+        participants = [{"name": p["display"], "value": round(float(p["total"]), 2),
+                         "share": round(100 * float(p["total"]) / float(r["group_total"]), 2),
+                         "record_count": int(p["records"])} for p in peers]
+        other_total = round(group_total - sum(p["value"] for p in participants), 2)
+        signals[-1]["chart"] = {
+            "type": "concentration", "group_label": r["group_display"],
+            "group_total": group_total, "leading_name": r["display"],
+            "participant_label": noun, "participant_count": int(r["participants"]),
+            "record_count": int(r["group_records"]), "participants": participants,
+            "other_total": other_total,
+            "other_share": round(100 * other_total / group_total, 2),
+            "other_count": int(r["participants"]) - len(participants), "period": None,
+        }
+        signals[-1]["_period_group"] = r["group_name"]
     return signals
+
+
+def _enrich_chart_periods(db, signals, columns):
+    """Attach validated recorded spans without inferring transaction dates."""
+    for table, category, group_column, name_column, period_column, kind in (
+        ("donations", CATEGORIES[1], "recipient", "donor_name", "financial_year", "financial_year"),
+        ("contracts", CATEGORIES[2], "agency", "supplier_name", "start_date", "contract_start_date"),
+    ):
+        selected = {s["_period_group"]: s for s in signals if s["category"] == category}
+        if not selected or period_column not in columns[table]:
+            continue
+        rows = db.execute(
+            f"SELECT UPPER(TRIM({group_column})) AS group_name, {period_column} AS period, COUNT(*) AS records "
+            f"FROM {table} WHERE amount > 0 AND TRIM({name_column}) <> '' "
+            f"AND UPPER(TRIM({group_column})) IN ({', '.join('?' for _ in selected)}) "
+            f"GROUP BY UPPER(TRIM({group_column})), {period_column}", tuple(selected)
+        ).fetchall()
+        periods = {key: {"values": [], "undated": 0, "invalid": 0} for key in selected}
+        for row in rows:
+            raw = str(row["period"] or "").strip()
+            info = periods[row["group_name"]]
+            if not raw:
+                info["undated"] += row["records"]
+                continue
+            valid = False
+            if kind == "financial_year":
+                match = re.fullmatch(r"((?:19|20)\d{2})-(\d{2}|\d{4})", raw)
+                if match:
+                    start, end = int(match[1]), int(match[2])
+                    valid = (start + 1) % (100 if len(match[2]) == 2 else 10000) == end
+                    if valid:
+                        raw = f"{start}-{(start + 1) % 100:02d}"
+            else:
+                try:
+                    parsed = date.fromisoformat(raw)
+                    valid = 1900 <= parsed.year <= 2099
+                    raw = parsed.isoformat()
+                except ValueError:
+                    pass
+            if valid:
+                info["values"].append(raw)
+            else:
+                info["invalid"] += row["records"]
+        for key, signal in selected.items():
+            info = periods[key]
+            signal["chart"]["period"] = {
+                "kind": kind, "from": min(info["values"], default=None),
+                "to": max(info["values"], default=None),
+                "undated_records": int(info["undated"]),
+                "invalid_date_records": int(info["invalid"]),
+            }
+    for signal in signals:
+        signal.pop("_period_group", None)
 
 
 def build_discoveries(db, limit=30):
@@ -203,4 +282,5 @@ def build_discoveries(db, limit=30):
     # Round-robin avoids one high-volume family hiding other kinds of discovery.
     signals = [cards[i] for i in range(limit) for cards in families.values() if i < len(cards)][:limit]
     _enrich_evidence(db, signals, columns)
+    _enrich_chart_periods(db, signals, columns)
     return {"signals": signals, "coverage": coverage, "methodology": METHODOLOGY.copy()}

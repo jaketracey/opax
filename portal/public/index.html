@@ -58,7 +58,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=a04c8556a0">
+<link rel="stylesheet" href="/style.css?v=fe83b3c28b">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -701,28 +701,25 @@
 
     <section id="panel-discover" class="panel" hidden aria-labelledby="discover-title">
       <div class="discovery-intro">
-        <h1 id="discover-title" tabindex="-1">What deserves a closer look?</h1>
-        <p>Follow connections across recorded party receipts and government contracts. Explore patterns that a single search can miss, with the records and limitations behind each lead.</p>
-        <p class="discovery-caution">These are starting points for investigation. A shared name or a high share of recorded funding does not establish influence, favouritism or wrongdoing.</p>
+        <h1 id="discover-title" tabindex="-1">Follow the big contracts.</h1>
+        <p id="discover-intro-text">Pick an agency. See which companies take the biggest share.</p>
       </div>
-      <p id="discover-coverage" class="discovery-coverage" hidden></p>
+      <div id="discover-categories" class="discovery-tabs" role="group" aria-label="What to explore">
+        <button type="button" data-category="procurement_concentration" aria-pressed="true">Government contracts</button>
+        <button type="button" data-category="recipient_concentration" aria-pressed="false">Party funding</button>
+        <button type="button" data-category="donor_contract_overlap" aria-pressed="false">Companies in both</button>
+      </div>
       <div class="discovery-workspace">
-        <aside class="discovery-filters" aria-label="Filter investigation leads">
-          <fieldset id="discover-categories"><legend>Explore a pattern</legend>
-            <button type="button" data-category="" aria-pressed="true">All patterns</button>
-            <button type="button" data-category="donor_contract_overlap" aria-pressed="false">Party receipts &amp; suppliers</button>
-            <button type="button" data-category="recipient_concentration" aria-pressed="false">Receipt concentration</button>
-            <button type="button" data-category="procurement_concentration" aria-pressed="false">Supplier concentration</button>
-          </fieldset>
-          <label for="discover-query">Find a name or agency</label>
-          <input id="discover-query" type="search" placeholder="Search these leads" autocomplete="off">
-          <p class="fineprint">Filters apply to the leads in this export, rather than every record in the archive.</p>
+        <aside class="discovery-browser" aria-label="Choose a comparison">
+          <label id="discover-query-label" for="discover-query">Find an agency or company</label>
+          <input id="discover-query" type="search" placeholder="Search names" autocomplete="off">
+          <div class="discovery-list-controls"><p id="discover-count" role="status"></p><label class="visually-hidden" for="discover-sort">Sort comparisons</label><select id="discover-sort"><option value="value">Largest totals</option><option value="share">Biggest share</option></select></div>
+          <p id="discover-list-note" class="discovery-list-note"></p>
+          <div id="discover-results" aria-busy="false"></div>
         </aside>
-        <div><p id="discover-count" class="discovery-count" role="status"></p><div id="discover-results" aria-busy="false"></div></div>
+        <div id="discover-detail" class="discovery-detail"></div>
       </div>
-      <section id="discover-methodology" class="discovery-methodology" hidden aria-labelledby="discover-methodology-title">
-        <h2 id="discover-methodology-title">How leads are found</h2><div id="discover-methodology-body"></div>
-      </section>
+      <details id="discover-methodology" class="discovery-methodology"><summary>About these numbers</summary><div id="discover-methodology-body"></div></details>
     </section>
 
     <!-- ============================ EXPLORE ============================ -->
@@ -1278,6 +1275,6 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/app.js?v=abad6ab41e" defer></script>
+<script src="/app.js?v=0db98cd9fc" defer></script>
 </body>
 </html>
