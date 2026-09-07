@@ -4118,6 +4118,18 @@ async function renderPersonTopics(name, sections) {
 }
 
 async function openSubject(kind, name, manageFocus) {
+  // A bare surname with one holder in the speaker index ("Albanese"; a state
+  // stub the roster has since named, so "Picton" is Chris Picton): open the
+  // full name, so an old link or a typed surname lands on the person.
+  if (kind === "person" && !String(name).trim().includes(" ")) {
+    const holders = ((await loadSpeakersDir())?.bySurname.get(speakerKey(name)) || [])
+      .filter(([n]) => speakerKey(n) !== speakerKey(name));
+    if (holders.length === 1) {
+      replaceRoute(subjectHash("person", holders[0][0]));
+      route();   // crumbs, title and the entry all from the full name
+      return;
+    }
+  }
   let key = `${kind}:${name}`;
   if (currentSubjectKey === key) { if (manageFocus) $("subject-title")?.focus(); return; }
   currentSubjectKey = key;
@@ -4288,6 +4300,12 @@ async function openSubject(kind, name, manageFocus) {
   // A name the index holds nothing under and no roster names: say so, rather
   // than dress an unknown string as a parliamentarian with profile searches.
   if (!roster && speeches.length === 0) {
+    // A bare surname the index once carried ("Perrett") now lives under the
+    // member's full name: one holder of the surname and the old link goes
+    // straight there; several, and the reader picks.
+    const holders = String(name).trim().includes(" ") ? [] :
+      ((await loadSpeakersDir())?.bySurname.get(speakerKey(name)) || []).filter(([n]) => speakerKey(n) !== speakerKey(name));
+    if (currentSubjectKey !== key) return;
     const kicker = body.querySelector(".kicker");
     if (kicker) kicker.textContent = "Not in the record";
     document.title = `${name} · OPAX`;
@@ -4298,6 +4316,10 @@ async function openSubject(kind, name, manageFocus) {
       actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for this name", { primary: true }),
       actionBtn("entry", "/subject/person", "Browse parliamentarians"),
     ]);
+    if (holders.length) {
+      box.insertAdjacentHTML("beforeend", `<p class="fineprint">People in the record with this surname:</p>
+        <ul class="subject-list">${holders.map(([n, c]) => `<li><a href="${esc(subjectHash("person", n))}">${esc(n)}</a> <span class="meta">${c.toLocaleString()} speeches</span></li>`).join("")}</ul>`);
+    }
     box.insertAdjacentHTML("beforeend", `<p class="fineprint">The record names its speakers as the transcripts do,
       so a person may be indexed under a fuller or shorter form of this name. The search looks across every spelling.</p>`);
     return;
