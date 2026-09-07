@@ -557,6 +557,7 @@ once, then `PYTHONPATH=. .venv/bin/python -m parli.ingest.<module>`. Writers def
 | Lobbyists | `money_lobbyists` (all six, ~25 min; `--jurisdiction qld` alone for the contact log) | monthly |
 | Classification | `money_classify --report` after any donation load | with donations |
 | State money maps | `ssh desktop python3 - qld < scripts/export_state_money.py > portal/public/graph/money.qld.json` (and `vic`, `tas`); then from `portal/`: `node graph/smoke-test.mjs`. WA/ACT/NT refuse without `--gated` and must not land under `portal/public/` | after a state donation load |
+| Commonwealth contracts (money map hub, public-money inclusion) | desktop: `python3 -m parli.ingest.austender_full` (background, ~4 h, resumable) then `python3 -m parli.ingest.contract_suppliers --abr-dir ~/.cache/autoresearch/abr`; then the money map export above. docs/DATA-CONTRACTS.md | after a contracts fetch |
 | AEC extras | on desktop: `PYTHONPATH=. .venv/bin/python -m parli.ingest.money_aec_extras --refresh --db ~/.cache/autoresearch/parli.db` (~10 s; `--table debts` etc. for one), then `ssh desktop python3 - < scripts/export_aec_extras.py > portal/public/graph/aec-extras.json` | yearly, after the AEC's early-February release of annual returns; the bundle is one fetch |
 | Campaigner roster | `ssh desktop python3 - campaigners < scripts/export_aec_extras.py > portal/public/graph/campaigners.json` | with the AEC extras above; same tables, same load |
 

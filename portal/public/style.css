@@ -2487,6 +2487,9 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 /* The map's hint is a caption for the plate above it, not a lead-in to the
    ask row below, so it keeps a row's breath before whatever follows. */
 #subject-map-hint { margin-bottom: var(--space-5); }
+/* The donor page's "Where the money went" bars repeat the map card's split;
+   they stay only where the map is too small to carry its card. */
+@media (min-width: 900px) { #subject-map:not([hidden]) ~ #subject-sections .donor-flow-bars { display: none; } }
 #subject-sections .votes-col-kicker { margin-top: var(--sub-gap); }
 
 #report-positions:not(:empty), #report-moments:not(:empty) { margin-top: var(--section-gap); }

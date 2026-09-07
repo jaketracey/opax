@@ -234,6 +234,22 @@ GRANTOR = {
 }
 GRANTOR_COLOUR = "#2A7F76"
 
+# The contracts layer (parli.ingest.austender_full + parli.ingest.contract_suppliers):
+# a second public-money hub, under the grants layer's rules. Never summed with
+# donations; the node totals stay donations only.
+CONTRACTOR = {
+    "federal": {"id": "grantor:contracts", "label": "Commonwealth contracts", "source": "austender",
+                "note": ("AusTender contract notices (Department of Finance), CC BY 3.0 AU; a varied contract "
+                         "counts once, at its latest notice's value"),
+                "explorer": "contracts"},
+}
+CONTRACTOR_COLOUR = "#1F6E8C"
+# A donor below the donation cut-off still belongs on the map when the public
+# money it holds (contracts and grants together) is this large: the map shows
+# money between companies and government in both directions.
+PUBLIC_MONEY_FLOOR = 10_000_000
+PUBLIC_MONEY_EXTRA_CAP = 250
+
 
 def _file_key(rid: str) -> str:
     kind, _, rest = rid.partition(":")
@@ -351,6 +367,97 @@ def grants_nodes_edges(jur: str, per: dict, nodes: list) -> tuple[list, list, di
     return [grantor], edges, meta
 
 
+def fy_first_year(d: str | None) -> int | None:
+    """First year of the financial year a date falls in (2024-03-01 -> 2023).
+    AusTender carries a few impossible dates ("0899-12-28"); those count as undated
+    rather than stretching the map's year range back a millennium."""
+    if not d or len(d) < 7 or not d[:4].isdigit():
+        return None
+    y, m = int(d[:4]), int(d[5:7] or 1)
+    fy = y if m >= 7 else y - 1
+    return fy if 2000 <= fy <= 2035 else None
+
+
+def contracts_layer(db, jur: str, eid_to_node: dict) -> dict | None:
+    """{donor node id: aggregate} for the map's donors that hold Commonwealth contracts."""
+    cfg = CONTRACTOR.get(jur)
+    if not cfg:
+        return None
+    have = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name IN "
+                                     "('ext_contract_suppliers','ext_contract_supplier_keys','ext_contracts_current')")}
+    if len(have) < 3:
+        return None
+    sid_to_node = {}
+    for sid, eid in db.execute(
+            "SELECT supplier_id, donor_entity_id FROM ext_contract_suppliers WHERE donor_entity_id IS NOT NULL"):
+        node = eid_to_node.get(eid)
+        if node:
+            sid_to_node[sid] = node
+    if not sid_to_node:
+        return None
+    keys = {}
+    for kt, kv, sid in db.execute("SELECT key_type, key_value, supplier_id FROM ext_contract_supplier_keys"):
+        if sid in sid_to_node:
+            keys[(kt, kv)] = sid
+    per: dict = {}
+    for abn, name, amount, start, agency in db.execute(
+            "SELECT supplier_abn, supplier_name, amount, start_date, agency FROM ext_contracts_current"):
+        sid = (keys.get(("abn", abn)) if abn else None) or keys.get(("name", (name or "").strip()))
+        if not sid:
+            continue
+        node_id = sid_to_node[sid]
+        a = per.get(node_id)
+        if a is None:
+            a = per[node_id] = {"total": 0.0, "count": 0, **year_cells(),
+                                "agencies": defaultdict(float), "sids": defaultdict(float)}
+        v = float(amount or 0)
+        tally(a, fy_first_year(start), v)
+        a["agencies"][agency or ""] += v
+        a["sids"][sid] += v
+    if not per:
+        return None
+    for node_id, a in per.items():
+        a["rid"] = max(a["sids"].items(), key=lambda kv: kv[1])[0]
+        a["top"] = [[(p if len(p) <= 90 else p[:88].rstrip() + "…"), round(v)]
+                    for p, v in sorted(a["agencies"].items(), key=lambda kv: -kv[1])[:3] if p]
+    return per
+
+
+def contracts_nodes_edges(jur: str, per: dict, nodes: list, coverage: str = "") -> tuple[list, list, dict]:
+    """Attach `contracts` to each donor node it concerns; return (hub nodes, flow edges, meta)."""
+    cfg = CONTRACTOR[jur]
+    total = {"total": 0.0, "count": 0, **year_cells()}
+    edges = []
+    by_node = {n["id"]: n for n in nodes}
+    for node_id, a in sorted(per.items(), key=lambda kv: -kv[1]["total"]):
+        n = by_node.get(node_id)
+        if not n:
+            continue
+        n["contracts"] = {"total": round(a["total"]), "count": a["count"], **year_fields(a),
+                          "top": a["top"], "rid": a["rid"], "jur": cfg["explorer"]}
+        edges.append({"source": cfg["id"], "target": node_id, "total": round(a["total"]), "count": a["count"],
+                      **year_fields(a), "grant": True, "flow": "contracts"})
+        total["total"] += a["total"]
+        total["count"] += a["count"]
+        for y, (v, c) in a["byYear"].items():
+            total["byYear"][y][0] += v
+            total["byYear"][y][1] += c
+        total["undated"][0] += a["undated"][0]
+        total["undated"][1] += a["undated"][1]
+    hub = {"id": cfg["id"], "label": cfg["label"], "kind": "grantor", "industry": "public money",
+           "group": "parties", "colour": CONTRACTOR_COLOUR, "total": round(total["total"]),
+           "count": total["count"], **year_fields(total), "recipients": len(edges),
+           "explorer": cfg["explorer"], "flow": "contracts"}
+    meta = {"contracts_source": cfg["note"], "contracts_coverage": coverage, "donors_with_contracts": len(edges),
+            "contract_dollars_to_map_donors": round(total["total"]),
+            "contracts_note": ("Contract flows run from the Commonwealth contracts hub out to the donors on this "
+                               "map that the supplier register resolves to the same entity "
+                               "(parli.ingest.contract_suppliers: ABN, then name). Public money going the other "
+                               "way, never summed with donations; byYear keys are the first year of the "
+                               "financial year the contract started.")}
+    return [hub], edges, meta
+
+
 def main() -> None:
     db = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
     db.row_factory = sqlite3.Row
@@ -444,6 +551,33 @@ def main() -> None:
         picked.append(d)
         if len(picked) >= TOP_DONORS:
             break
+    # The second way in: a donor under the cut-off whose public money (contracts
+    # and grants resolved to the same entity) clears the floor. The map is about
+    # money between companies and government both ways, so Saab Australia
+    # ($357k given, $122m in contracts) belongs on it beside the big givers.
+    # Measured by the same layers that draw the flows, so a donor that comes in
+    # this way always carries the block that brought it (aggregate grant rows,
+    # which the layer skips, cannot let one in on their own).
+    all_eids = {d["eid"]: d["eid"] for d in ranked if d.get("eid")}
+    public: dict = defaultdict(float)
+    for layer in (grants_layer(db, "federal", all_eids) or {}, contracts_layer(db, "federal", all_eids) or {}):
+        for eid, a in layer.items():
+            public[eid] += a["total"]
+    on_map = {id(d) for d in picked}
+    extras = []
+    for d in ranked:
+        if id(d) in on_map or not d.get("eid"):
+            continue
+        if dominant_industry(d) == "government":
+            continue
+        pm = public.get(d["eid"], 0.0)
+        if pm >= PUBLIC_MONEY_FLOOR:
+            d["via"] = "public_money"
+            d["public_money"] = pm
+            extras.append(d)
+    extras.sort(key=lambda d: -d["public_money"])
+    extras = extras[:PUBLIC_MONEY_EXTRA_CAP]
+    picked.extend(extras)
 
     # Party aggregates over the FULL cleaned row set (not just top donors).
     party_totals = defaultdict(lambda: {"total": 0.0, "count": 0, **year_cells()})
@@ -494,6 +628,7 @@ def main() -> None:
             "total": round(d["total"]),
             "count": d["count"],
             **year_fields(d),
+            **({"via": "public_money", "publicMoney": round(d["public_money"])} if d.get("via") else {}),
             "aliases": others,
         })
         for party, p in sorted(d["parties"].items(), key=lambda kv: -kv[1]["total"]):
@@ -513,6 +648,17 @@ def main() -> None:
         g_nodes, g_edges, grants_meta = grants_nodes_edges("federal", per_grants, nodes)
         nodes.extend(g_nodes)
         edges.extend(g_edges)
+    contracts_meta = {}
+    per_contracts = contracts_layer(db, "federal", eid_to_node)
+    if per_contracts:
+        # What the notices cover so far: the fetch walks newest first and a
+        # partial load is honest about its span on the hub card.
+        lo, hi, days = db.execute("SELECT MIN(day), MAX(day), COUNT(*) FROM ext_contract_fetch_log").fetchone()
+        coverage = f"notices published {lo} to {hi}" if lo else ""
+        c_nodes, c_edges, contracts_meta = contracts_nodes_edges("federal", per_contracts, nodes, coverage)
+        nodes.extend(c_nodes)
+        edges.extend(c_edges)
+        contracts_meta["grantor_nodes"] = grants_meta.get("grantor_nodes", 0) + len(c_nodes)
 
     out = {
         "meta": {
@@ -523,7 +669,8 @@ def main() -> None:
                 "Donor->party flows from rows with a canonical party recipient; "
                 "amounts aggregated per (canonical donor entity, party) using "
                 "ext_donor_aliases, so every spelling of a donor counts once. Top "
-                f"{TOP_DONORS} donors by lifetime total shown."
+                f"{TOP_DONORS} donors by lifetime total shown, plus donors under that cut-off holding "
+                f"${PUBLIC_MONEY_FLOOR:,}+ in Commonwealth contracts and grants."
             ),
             "entity_resolution": (
                 "parli.ingest.donor_entities resolves each raw donor_name to an entity in "
@@ -557,9 +704,16 @@ def main() -> None:
             "rows_without_year": rows_without_year,
             "donors_unresolved": len(unresolved),
             "donor_nodes": len(picked),
+            "donor_nodes_by_total": len(picked) - len(extras),
+            "donors_via_public_money": len(extras),
+            "public_money_floor": PUBLIC_MONEY_FLOOR,
+            "public_money_note": (f"donors_via_public_money are under the top-{TOP_DONORS} donation cut-off but hold "
+                                  f"at least ${PUBLIC_MONEY_FLOOR:,} in Commonwealth contracts and grants resolved to "
+                                  "the same entity; node.via = 'public_money' and node.publicMoney say so."),
             "party_nodes": len(party_totals),
             "edge_count": len(edges),
             **grants_meta,
+            **contracts_meta,
             "party_totals_note": (
                 "Party node totals cover all cleaned rows except public funding, "
                 "unchanged by entity resolution."

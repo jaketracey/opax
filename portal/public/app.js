@@ -4180,7 +4180,9 @@ async function openSubject(kind, name, manageFocus) {
       subjectMentions(name, sections, "In parliament");
       return;
     }
-    const donors = moneyData.nodes.filter((n) => n.kind === node.kind);
+    // Rank runs over the donors the map picked by what they gave; a donor that
+    // is on the map for the public money it holds has no place in that order.
+    const donors = moneyData.nodes.filter((n) => n.kind === node.kind && !n.via);
     const rank = donors.sort((a, b) => (b.total || 0) - (a.total || 0)).findIndex((n) => n.id === node.id) + 1;
     const isParty = node.kind === "party";
     // The money data's spelling of the name is the entry's; the trail follows it.
@@ -4205,7 +4207,9 @@ async function openSubject(kind, name, manageFocus) {
       [isParty ? "Received (disclosed)" : "Given (disclosed)", `<b>${fmtMoney(node.total || 0)}</b>`],
       ["Donations counted", (node.count || 0).toLocaleString()],
       ["Active years", `${node.firstYear}–${node.lastYear}`],
-      ["Rank", `#${rank} of ${donors.length} ${isParty ? "parties" : "disclosed donors"}`],
+      node.via === "public_money"
+        ? ["On the map for", `${fmtMoney(node.publicMoney || 0)} in Commonwealth contracts and grants`]
+        : ["Rank", `#${rank} of ${donors.length} ${isParty ? "parties" : "disclosed donors"}`],
       !isParty && fitsInfoRow(fits, "by_entity", node.label),
       // The registers spell one donor many ways; the totals above cover them all.
       // A merged donor can carry dozens of spellings, so the row shows three and
@@ -4239,7 +4243,9 @@ async function openSubject(kind, name, manageFocus) {
       fmt: fmtMoney,
       heading: isParty ? "Where it came from" : "Where the money went",
       linkTo: (nm) => subjectHash(isParty ? "donor" : "party", nm),
-      className: isParty ? "party-flow-bars" : "",
+      // The donor's split is already on the map card beside it; on a wide screen the
+      // bar list under the map says it twice, so it shows only where the map is small.
+      className: isParty ? "party-flow-bars" : "donor-flow-bars",
       detail: isParty ? (nm) => industryLabel(moneyData.nodes.find((n) => n.kind === "donor" && n.label === nm)?.industry || "Industry not recorded") : null,
       partyDots: !isParty, // donor page rows are parties; party page rows are donors
     }));

@@ -23,7 +23,7 @@ import {
   type MapNode,
 } from './map-types.ts'
 import { type EngineData, KnowledgeMapEngine, webglAvailable } from './map3d-engine.ts'
-import { ACCENT, CLUSTER_COLOURS, clusterColour, GRANTOR_COLOUR, SURFACE } from './palette.ts'
+import { ACCENT, CLUSTER_COLOURS, clusterColour, CONTRACTOR_COLOUR, GRANTOR_COLOUR, SURFACE } from './palette.ts'
 import { type Reveal, runReveal } from './reveal.ts'
 import { mountWordsLayer } from './words.ts'
 import { cpiMultiplier } from './cpi.ts'
@@ -80,10 +80,18 @@ export type MoneyNode = {
   byYear?: Record<string, YearCell>
   undated?: YearCell
   grants?: GrantsBlock
+  /** Commonwealth contracts the donor holds, the same shape as grants. */
+  contracts?: GrantsBlock
   /** Grantor nodes: donors on this map they awarded to. */
   recipients?: number
-  /** Grantor nodes: the explorer jurisdiction ('federal' | 'qld'). */
+  /** Grantor nodes: the explorer jurisdiction ('federal' | 'qld'), or 'contracts'. */
   explorer?: string
+  /** Hub nodes: 'contracts' for the contracts hub; absent on the grants hub. */
+  flow?: string
+  /** 'public_money' when the donor is on the map for what it holds, not what it gave. */
+  via?: string
+  /** Contracts and grants dollars that brought a `via` donor onto the map. */
+  publicMoney?: number
 }
 
 export type MoneyEdge = {
@@ -97,6 +105,8 @@ export type MoneyEdge = {
   undated?: YearCell
   /** A grant flow: grantor -> donor, public money going the other way. */
   grant?: boolean
+  /** 'contracts' on a flow from the contracts hub. */
+  flow?: string
 }
 
 const isGrantEdge = (e: { source: string }) => e.source.startsWith('grantor:')
@@ -645,8 +655,10 @@ export async function mountMoneyMap(
     span: string | null
     /** Each donor's grants block, re-summed for the window. */
     grants: Map<string, GrantsBlock>
+    /** Each donor's contracts block, re-summed the same way. */
+    contracts: Map<string, GrantsBlock>
   }
-  let view: WindowView = { nodes: byId, edges: raw.edges, span: null, grants: new Map() }
+  let view: WindowView = { nodes: byId, edges: raw.edges, span: null, grants: new Map(), contracts: new Map() }
 
   // --- DOM scaffolding -------------------------------------------------
   const canvas = el('canvas', 'mm-canvas', container)
@@ -875,15 +887,17 @@ export async function mountMoneyMap(
       .filter(inWindow)
       .filter((e) => grantsOn || !isGrantEdge(e))
     const grantsByNode = new Map<string, GrantsBlock>()
+    const contractsByNode = new Map<string, GrantsBlock>()
     for (const n of raw.nodes) {
-      if (!n.grants) continue
-      grantsByNode.set(n.id, recalculated ? windowFigures(n.grants, yearLo, yearHi, adjustForInflation) : n.grants)
+      if (n.grants) grantsByNode.set(n.id, recalculated ? windowFigures(n.grants, yearLo, yearHi, adjustForInflation) : n.grants)
+      if (n.contracts) contractsByNode.set(n.id, recalculated ? windowFigures(n.contracts, yearLo, yearHi, adjustForInflation) : n.contracts)
     }
     view = {
       nodes: recalculated ? new Map(windowNodes.map((n) => [n.id, n])) : byId,
       edges: windowEdges,
       span: scrubbed ? yearSpan(yearLo, yearHi) : null,
       grants: grantsByNode,
+      contracts: contractsByNode,
     }
     const activeDonors = new Set(windowEdges.map((e) => e.source))
     const visibleNodes = windowNodes.filter((n) => {
@@ -1011,15 +1025,16 @@ export async function mountMoneyMap(
       chips.set(group, chip)
     }
     if (hasGrants) {
-      const grantor = raw.nodes.find((n) => n.kind === 'grantor')
+      const grantor = raw.nodes.find((n) => n.kind === 'grantor' && n.flow !== 'contracts') ?? raw.nodes.find((n) => n.kind === 'grantor')
       const toggle = el('button', 'mm-chip mm-grants-toggle', legend)
       toggle.type = 'button'
       toggle.setAttribute('aria-pressed', String(grantsOn))
-      toggle.title = 'Public money the donors on this map received, drawn as flows out from the grantor'
+      toggle.title = 'Public money the donors on this map received, grants and contracts, drawn as flows out from the hubs'
       const dot = el('span', 'mm-dot', toggle)
       dot.style.background = grantor?.colour ?? GRANTOR_COLOUR
       const name = el('span', '', toggle)
-      const n = typeof raw.meta.donors_with_grants === 'number' ? raw.meta.donors_with_grants : (grantor?.recipients ?? 0)
+      // Donors with either kind of public money, counted once.
+      const n = raw.nodes.filter((d) => d.kind === 'donor' && (d.grants || d.contracts)).length
       name.textContent = `Public money · ${n}`
       toggle.addEventListener('click', () => {
         grantsOn = !grantsOn
@@ -1290,7 +1305,9 @@ export async function mountMoneyMap(
       : node.kind === 'party'
         ? `received across ${node.count.toLocaleString()} receipts · ${span}`
         : node.kind === 'grantor'
-          ? `awarded to donors on this map across ${node.count.toLocaleString()} grants · ${span}`
+          ? (node.flow === 'contracts'
+            ? `held by donors on this map across ${node.count.toLocaleString()} contracts · ${span}`
+            : `awarded to donors on this map across ${node.count.toLocaleString()} grants · ${span}`)
           : `given across ${node.count.toLocaleString()} donations · ${span}`
     inflationFineprint(card)
 
@@ -1313,29 +1330,53 @@ export async function mountMoneyMap(
           () => setSelection(party.id, { user: true }),
         )
       }
-      if (node.grants && grantsOn) {
+      if ((node.grants || node.contracts) && grantsOn) {
         // Public money going the other way: shown beside the donations, never
         // summed with them. The figures follow the year window like the rest.
-        const g = view.grants.get(node.id) ?? node.grants
         const grantsTitle = el('div', 'mm-card-section', card)
         grantsTitle.textContent = 'Public money received'
         const glist = el('ul', 'mm-rows', card)
-        const grantor = raw.nodes.find((n) => n.kind === 'grantor')
-        if (g.count > 0) {
-          row(glist, grantor?.colour ?? GRANTOR_COLOUR, grantor?.label ?? 'Grants', g.total,
-            `${g.count.toLocaleString()} grant${g.count === 1 ? '' : 's'} · ${yearSpan(g.firstYear, g.lastYear)}`,
-            grantor ? () => setSelection(grantor.id, { user: true }) : null)
-          for (const [program, dollars] of (g.top ?? []).slice(0, 3)) {
-            row(glist, null, program, dollars, '', null)
+        const grantor = raw.nodes.find((n) => n.kind === 'grantor' && n.flow !== 'contracts')
+        const contractor = raw.nodes.find((n) => n.kind === 'grantor' && n.flow === 'contracts')
+        if (node.grants) {
+          const g = view.grants.get(node.id) ?? node.grants
+          if (g.count > 0) {
+            row(glist, grantor?.colour ?? GRANTOR_COLOUR, grantor?.label ?? 'Grants', g.total,
+              `${g.count.toLocaleString()} grant${g.count === 1 ? '' : 's'} · ${yearSpan(g.firstYear, g.lastYear)}`,
+              grantor ? () => setSelection(grantor.id, { user: true }) : null)
+            for (const [program, dollars] of (g.top ?? []).slice(0, 3)) {
+              row(glist, null, program, dollars, '', null)
+            }
+          } else {
+            const none = el('li', 'mm-row-note', glist)
+            none.textContent = view.span ? `no grants started in ${view.span}` : 'no grants'
           }
-        } else {
-          const none = el('li', 'mm-row-note', glist)
-          none.textContent = view.span ? `no grants started in ${view.span}` : 'no grants'
         }
-        if (node.grants.rid) {
+        if (node.contracts) {
+          const c = view.contracts.get(node.id) ?? node.contracts
+          if (c.count > 0) {
+            row(glist, contractor?.colour ?? CONTRACTOR_COLOUR, contractor?.label ?? 'Contracts', c.total,
+              `${c.count.toLocaleString()} contract${c.count === 1 ? '' : 's'} · ${yearSpan(c.firstYear, c.lastYear)}`,
+              contractor ? () => setSelection(contractor.id, { user: true }) : null)
+            for (const [agency, dollars] of (c.top ?? []).slice(0, 3)) {
+              row(glist, null, agency, dollars, '', null)
+            }
+          } else {
+            const none = el('li', 'mm-row-note', glist)
+            none.textContent = view.span ? `no contracts started in ${view.span}` : 'no contracts'
+          }
+        }
+        if (node.via === 'public_money') {
+          const why = el('p', 'mm-card-fine', card)
+          why.textContent = 'On the map for the public money it holds, not for the size of its donations.'
+        }
+        if (node.grants?.rid) {
           trigger(card,
             `${routeBase}/explore?game=grants&jur=${encodeURIComponent(node.grants.jur ?? 'federal')}&open=${encodeURIComponent(node.grants.rid)}`,
             'Open their grants file', true)
+        }
+        if (node.contracts) {
+          trigger(card, `${routeBase}/discover?q=${encodeURIComponent(shortName(node.label))}`, 'Find their contracts', true)
         }
       }
       if (!['individual', 'other', ''].includes(node.industry.toLowerCase())) {
@@ -1350,7 +1391,10 @@ export async function mountMoneyMap(
       if (node.id !== opts.subject) trigger(card, subjectUrl('donor', node.label), 'Full profile', true)
       explain(card, { kind: 'donor', from: node.label })
     } else if (node.kind === 'grantor') {
-      listTitle.textContent = 'Largest recipients among the donors on this map'
+      const contracts = node.flow === 'contracts'
+      listTitle.textContent = contracts
+        ? 'Largest contractors among the donors on this map'
+        : 'Largest recipients among the donors on this map'
       const outgoing = view.edges
         .filter((e) => e.source === node.id)
         .sort((a, b) => b.total - a.total)
@@ -1368,10 +1412,14 @@ export async function mountMoneyMap(
         )
       }
       const fine = el('p', 'mm-card-fine', card)
-      fine.textContent = typeof raw.meta.grants_source === 'string'
-        ? `${raw.meta.grants_source}. Public money is drawn the other way from donations and never summed with them; a donor receiving a grant is a fact, not a finding.`
+      const source = contracts ? raw.meta.contracts_source : raw.meta.grants_source
+      const coverage = contracts && typeof raw.meta.contracts_coverage === 'string' && raw.meta.contracts_coverage
+        ? ` ${raw.meta.contracts_coverage}.` : ''
+      fine.textContent = typeof source === 'string'
+        ? `${source}.${coverage} Public money is drawn the other way from donations and never summed with them; a donor ${contracts ? 'holding a contract' : 'receiving a grant'} is a fact, not a finding.`
         : 'Public money is drawn the other way from donations and never summed with them.'
-      trigger(card, `${routeBase}/explore?game=grants&jur=${encodeURIComponent(node.explorer ?? 'federal')}`,
+      if (contracts) trigger(card, `${routeBase}/discover`, 'Follow the big contracts', false)
+      else trigger(card, `${routeBase}/explore?game=grants&jur=${encodeURIComponent(node.explorer ?? 'federal')}`,
         'Open Who gets the grants', false)
     } else {
       listTitle.textContent = 'Top donors shown on the map'
