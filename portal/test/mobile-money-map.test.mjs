@@ -32,6 +32,46 @@ test('a graphics interruption retains the canvas and restores a fresh frame', ()
   assert.equal(state.lastFrame,123); assert.equal(state.renderDirty,true);
 });
 const adapter=read('index');
+test('phone opening zoom remains part of automatic fit instead of claiming the camera',()=>{
+  const start=adapter.indexOf('engine.fit(!firstFit, overviewScale())');
+  const block=adapter.slice(start,adapter.indexOf('// The open card follows',start));
+  assert.match(block,/engine\.fit\(!firstFit, overviewScale\(\)\)/);
+  assert.doesNotMatch(block,/engine\.zoomBy/);
+  assert.match(engine,/fit\(animate = true, scale = 1\)/);
+  assert.match(engine,/this\.fitDistance\(\) \/ this\.fitScale/);
+});
+test('automatic fit scale follows the current width after rotation',()=>{
+  const start=engine.indexOf('  private handleResize()');
+  const block=engine.slice(start,engine.indexOf('  private stepFades',start));
+  assert.match(block,/rect\.width <= 540 \? 1\.3 : 1/);
+  const resize=adapter.slice(adapter.indexOf('const resizeObserver ='),adapter.indexOf('resizeObserver.observe'));
+  assert.match(resize,/engine\.fit\(false, overviewScale\(\)\)/);
+});
+
+const focusStart=adapter.indexOf('  const focusSelection =');
+const focusEnd=adapter.indexOf('  /**\n   * Re-draw the open card',focusStart);
+const focusBlock=adapter.slice(focusStart,focusEnd);
+function selectedFocus(width,coarse=true) {
+  const calls=[];
+  const context={window:{matchMedia:()=>({matches:coarse})},container:{getBoundingClientRect:()=>({width})},visibleSceneEdges:[
+    {source:'a',target:'p1',total:20,weight:20},
+    {source:'hub',target:'a',total:100,weight:100},
+    {source:'a',target:'p2',total:60,weight:60},
+  ],engine:{reducedMotion:false,focusOn:(...args)=>calls.push(['focusOn',...args]),frameOn:(...args)=>calls.push(['frameOn',...args])}};
+  const focus=runInNewContext(`${transpile(focusBlock)}; focusSelection`,context);
+  focus('a');
+  return calls;
+}
+test('phone selection frames the subject with its strongest visible connections',()=>{
+  const calls=selectedFocus(390);
+  assert.equal(calls[0][0],'frameOn');
+  assert.deepEqual(Array.from(calls[0][1]),['a','hub','p2','p1']);
+  assert.equal(calls[0][2].duration,700);
+});
+test('desktop selection keeps the quiet focus nudge',()=>{
+  assert.deepEqual(selectedFocus(1200,false),[['focusOn','a',null]]);
+});
+
 const windowBlock=adapter.slice(adapter.indexOf('export function windowFigures'),adapter.indexOf('export function buildGraph',adapter.indexOf('export function windowFigures')));
 const fallback=read('connection-fallback').replace(/^import .*\n/gm,'').replaceAll('export function','function');
 const {connectionRows,mountConnectionFallback}=runInNewContext(`${transpile(windowBlock.replace('export ',''))}\n${transpile(fallback)}; ({connectionRows,mountConnectionFallback})`,{formatMoney:n=>`$${n}`,document:{createElement:tag=>element(tag)}});

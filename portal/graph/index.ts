@@ -527,12 +527,45 @@ const CSS = `
 @media (prefers-reduced-motion: reduce) {
   .rp-map3d-territory { transition: none; }
 }
+/* Tablets need the graph width more than they need desktop side rails. Keep
+   the controls as light overlays above the scene and open details as a sheet,
+   leaving one wide, coherent camera viewport. */
+@media (min-width: 721px) and (max-width: 1024px) {
+  .mm-legend { flex-direction: row; flex-wrap: nowrap; overflow-x: auto;
+    right: 12px; max-width: none; max-height: none; align-items: center; }
+  .mm-root[data-mm-chrome='full'] .mm-legend { max-height: none; }
+  .mm-legend-title { display: none; }
+  .mm-chip { white-space: nowrap; flex: none; }
+  .mm-find, .mm-hint { display: none; }
+  .mm-root[data-mm-chrome='full'] .mm-scrub {
+    top: 60px; bottom: auto; width: 270px;
+  }
+  .mm-card, .mm-root[data-mm-chrome='full'] .mm-card {
+    top: auto; right: 12px; left: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    width: auto; max-height: 48%;
+  }
+}
+@media (pointer: coarse) {
+  .rp-map3d-label { font-size: 12px; }
+  .rp-map3d-label[data-emphasised] {
+    padding: 2px 5px; border-radius: 4px;
+    background: rgba(250, 249, 246, 0.82);
+    font-size: 14px; text-shadow: none;
+  }
+  .rp-map3d-label[data-selected] { font-size: 15px; }
+  .rp-map3d-edge-label {
+    padding: 2px 6px; font-size: 12px;
+    background: rgba(250, 249, 246, 0.92);
+  }
+}
 @media (max-width: 720px) {
   .mm-legend { flex-direction: row; flex-wrap: nowrap; overflow-x: auto;
     max-width: calc(100% - 24px); max-height: none; align-items: center; }
   .mm-legend-title { display: none; }
   .mm-chip { white-space: nowrap; flex: none; }
-  .mm-card { top: auto; right: 8px; left: 8px; bottom: 8px; width: auto;
+  .mm-card { top: auto; right: 8px; left: 8px;
+    bottom: max(8px, env(safe-area-inset-bottom)); width: auto;
     max-height: 55%; }
   .mm-root[data-mm-chrome='full'] .mm-card { top: auto; max-height: 55%; }
   .mm-hint, .mm-find { display: none; }
@@ -559,7 +592,7 @@ const CSS = `
   .mm-root[data-mm-chrome='full'] .mm-cpi-info { display: flex; }
   /* The compact scrub is small enough to keep on a phone; it moves to the
      top left, which mini chrome leaves empty, clear of the card's sheet. */
-  .mm-scrub-mini { display: flex; top: 8px; left: 8px; bottom: auto; }
+  .mm-scrub-mini { display: flex; top: max(8px, env(safe-area-inset-top)); left: 8px; bottom: auto; }
 }
 `
 
@@ -920,6 +953,7 @@ export async function mountMoneyMap(
   let grantsOn = hasGrants
   let visibleSceneIds = new Set<string>()
   let visibleSceneEdges: MapEdge[] = []
+  const overviewScale = () => container.getBoundingClientRect().width <= 540 ? 1.3 : 1
   const pushData = ({ keepFocus = false } = {}) => {
     // A scrub step, a filter or a re-layout is the reader driving: the
     // choreography gives way rather than animating over the top of it.
@@ -992,12 +1026,10 @@ export async function mountMoneyMap(
       fitSig = sig
       // The fit lands in the space the chrome (and an open card) leaves free.
       engine.setInsets(measureInsets())
-      engine.fit(!firstFit)
-      // Start one zoom-button step closer on phones; explicit fit still
-      // offers the complete overview, and journeys retain their own framing.
-      if (firstFit && window.matchMedia('(max-width: 540px)').matches) {
-        engine.zoomBy(1.3)
-      }
+      // A phone starts one zoom-button step closer while the view remains
+      // automatic. Calling zoomBy here claimed the camera before its opening
+      // layout had settled, which could leave the scene outside the viewport.
+      engine.fit(!firstFit, overviewScale())
     }
     // The open card follows the window: re-drawn in place with the figures
     // the scene now shows, or closed when its subject left the window. The
@@ -1053,7 +1085,7 @@ export async function mountMoneyMap(
       lastBucket = bucket
       pushData()
     } else if (!engine.viewOwned) {
-      engine.fit(false)
+      engine.fit(false, overviewScale())
     }
   })
   resizeObserver.observe(container)
@@ -1749,6 +1781,30 @@ export async function mountMoneyMap(
   }
 
   /**
+   * A phone selection should show the connection it reveals, not merely prove
+   * that the tapped dot remains somewhere in frame. Desktop keeps the gentler
+   * focus nudge; coarse, narrow screens frame the subject with its strongest
+   * visible neighbours in the space above the detail sheet.
+   */
+  const focusSelection = (id: string) => {
+    const phone = window.matchMedia('(pointer: coarse)').matches &&
+      container.getBoundingClientRect().width <= 720
+    if (!phone) return engine.focusOn(id, null)
+    const neighbours = visibleSceneEdges
+      .filter((edge) => edge.source === id || edge.target === id)
+      .sort((a, b) => (b.total ?? b.weight) - (a.total ?? a.weight))
+      .map((edge) => edge.source === id ? edge.target : edge.source)
+      .filter((other, index, all) => other !== id && all.indexOf(other) === index)
+      .slice(0, 4)
+    return engine.frameOn([id, ...neighbours], {
+      fill: neighbours.length ? 0.88 : 0.58,
+      padPx: 24,
+      duration: engine.reducedMotion ? 0 : 700,
+      ease: t => t * t * (3 - 2 * t),
+    })
+  }
+
+  /**
    * Re-draw the open card from the current window, in place: the figures the
    * scene now shows, the reader's scroll position kept, and no focus change,
    * since a scrub step lands mid-drag on a thumb. A held flow is re-lit too,
@@ -1794,7 +1850,7 @@ export async function mountMoneyMap(
       engine.setInsets(chromeInsets())
       requestAnimationFrame(() => {
         if (reveal?.running) reveal.remeasure()
-        else if (selectedId) engine.focusOn(selectedId, null)
+        else if (selectedId) focusSelection(selectedId)
       })
     } else if (node) {
       renderCard(node)
@@ -1808,7 +1864,7 @@ export async function mountMoneyMap(
         // The reveal owns the camera while it runs; it only wants the
         // measured insets, which its close-up is re-solved against.
         if (reveal?.running) reveal.remeasure()
-        else if (selectedId) engine.focusOn(selectedId, null)
+        else if (selectedId) focusSelection(selectedId)
       })
       card.focus({ preventScroll: true })
     } else {
