@@ -176,7 +176,7 @@ async function mountFunding(root, links, life) {
   root.hidden = false;
   root.innerHTML = '<h3 class="subject-section-title">Also in the funding record</h3><p role="status">Opening the linked funding records…</p>';
   try {
-    const data = await json("/graph/money.json", life.signal);
+    const data = await json("/graph/money.json?v=suppliers-1", life.signal);
     if (!life.alive()) return;
     const ids = new Set(links.map((link) => link.id));
     const nodes = new Map((data.nodes || []).map((node) => [node.id, node]));
@@ -185,7 +185,8 @@ async function mountFunding(root, links, life) {
     const nodeCount = matchedNodes.reduce((sum, node) => sum + (Number(node.count) || 0), 0);
     const fromYears = matchedNodes.map((node) => Number(node.firstYear)).filter((year) => Number.isFinite(year) && year > 0);
     const toYears = matchedNodes.map((node) => Number(node.lastYear)).filter((year) => Number.isFinite(year) && year > 0);
-    const yearSpan = fromYears.length && toYears.length ? `${Math.min(...fromYears)}–${Math.max(...toYears)}` : "";
+    const firstYear = Math.min(...fromYears), lastYear = Math.max(...toYears);
+    const yearSpan = fromYears.length && toYears.length ? (firstYear === lastYear ? String(firstYear) : `${firstYear}–${lastYear}`) : "";
     const edges = (data.edges || []).filter((edge) => ids.has(edge.source) && nodes.get(edge.target)?.kind === "party");
     const grouped = new Map();
     for (const edge of edges) {
@@ -204,10 +205,10 @@ async function mountFunding(root, links, life) {
       slot.hidden = false;
       slot.innerHTML = '<p role="status">Opening the money map…</p>';
       try {
-        const { mountMoneyMap } = await import("/money-map.js");
+        const { mountMoneyMap } = await import("/money-map.js?v=suppliers-1");
         if (!life.alive()) return;
         slot.textContent = "";
-        const handle = await mountMoneyMap(slot, "/graph/money.json", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });
+        const handle = await mountMoneyMap(slot, "/graph/money.json?v=suppliers-1", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });
         if (!life.alive()) { handle.destroy(); return; }
         life.cleanup(() => handle.destroy());
         if (typeof IntersectionObserver !== "undefined") {

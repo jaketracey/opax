@@ -7,7 +7,7 @@ import { runInNewContext } from 'node:vm';
 // controlled loader. The small DOM below models the nodes this module touches.
 const source = readFileSync(new URL('../public/suppliers.js', import.meta.url), 'utf8')
   .replaceAll('export function ', 'function ')
-  .replace('import("/money-map.js")', 'loadMapModule()');
+  .replace('import("/money-map.js?v=suppliers-1")', 'loadMapModule()');
 const tick = () => new Promise((resolve) => setImmediate(resolve));
 const deferred = () => { let resolve; const promise = new Promise((r) => { resolve = r; }); return { promise, resolve }; };
 function node() {

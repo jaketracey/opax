@@ -960,10 +960,10 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js");
+    const { mountMoneyMap } = await import("/money-map.js?v=suppliers-1");
     if (!current()) return;
     root.textContent = "";
-    const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
+    const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
       askUrl: (industry) => askHash(`What has parliament said about ${industryLabel(industry)}?`) });
     if (!current()) { handle.destroy(); return; }
     discoveryMapHandle = handle;
@@ -1073,7 +1073,7 @@ const STATE_NOT_SUMMED =
   "State and federal returns are not summed: AEC returns already include state branch receipts.";
 
 const MONEY_JURISDICTIONS = {
-  federal: { label: "Federal", file: "/graph/money.json" },
+  federal: { label: "Federal", file: "/graph/money.json?v=suppliers-1" },
   qld: { label: "Queensland", file: "/graph/money.qld.json" },
   vic: { label: "Victoria", file: "/graph/money.vic.json" },
   tas: { label: "Tasmania", file: "/graph/money.tas.json" },
@@ -1165,7 +1165,7 @@ async function mountMoney(jurParam, industry) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data] = await Promise.all([import("/money-map.js"), loadMoneyFile(jur)]);
+    const [{ mountMoneyMap }, data] = await Promise.all([import("/money-map.js?v=suppliers-1"), loadMoneyFile(jur)]);
     if (moneyMapLoading !== jur) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1262,7 +1262,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=profiles-1");
+    const module = await import("/suppliers.js?v=profiles-2");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -2738,7 +2738,7 @@ addEventListener("hashchange", () => updateQuoteRail());
 let moneyData = null;
 let moneyDataPromise = null;
 function loadMoneyData() {
-  moneyDataPromise ??= fetch("/graph/money.json")
+  moneyDataPromise ??= fetch("/graph/money.json?v=suppliers-1")
     .then((r) => r.json()).then((d) => (moneyData = d)).catch(() => null);
   return moneyDataPromise;
 }
@@ -2814,7 +2814,7 @@ function renderMoneyPanel(ind) {
     </div>
     <p class="fineprint">${esc(AEC_NOTE)}
       <a href="/money">Explore on the money map</a> ·
-      <a href="/graph/money.json">Download the data</a></p>`;
+      <a href="/graph/money.json?v=suppliers-1">Download the data</a></p>`;
   // Blocks rise in sequence (kicker, each figure, each chart, the note); fresh
   // nodes on every render, so a second question replays it. Motion is CSS-side.
   box.querySelectorAll(":scope > :not(.tiles, .money-charts), :scope > .tiles > .tile, :scope > .money-charts > .chart").forEach((el, i) => {
@@ -3460,10 +3460,10 @@ async function mountSubjectMap(nodeId) {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js");
+    const { mountMoneyMap } = await import("/money-map.js?v=suppliers-1");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
-    const handle = await mountMoneyMap(el, "/graph/money.json", {
+    const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       focus: nodeId,
       subject: nodeId, // this page IS the profile: its own card offers no "Full profile"
       chrome: "mini",
@@ -4513,7 +4513,7 @@ async function openSubject(kind, name, manageFocus) {
             : `What has parliament said about ${industryLabel(node.industry)}?`),
         `Ask what parliament said about ${isParty ? "them" : (["individual", "other", ""].includes(String(node.industry || "").toLowerCase()) ? "this donor" : "this industry")}`),
       actionBtn("search", searchHash(`"${node.label}"`, {}), "Search mentions in the record"),
-      actionBtn("download", "/graph/money.json", "Download the data"),
+      actionBtn("download", "/graph/money.json?v=suppliers-1", "Download the data"),
     ]);
     sections.insertAdjacentHTML("beforeend", barList(flowRows, {
       fmt: fmtMoney,
@@ -8054,10 +8054,10 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=suppliers-1"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
-    const handle = await mod.mountMoneyMap(root, "/graph/money.json", {
+    const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
       askUrl: (industry) => askHash(`What has parliament said about ${industryLabel(industry)}?`),
       onSelect: (node) => {
@@ -11275,9 +11275,9 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js");
+    const { mountMoneyMap } = await import("/money-map.js?v=suppliers-1");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
-    const handle = await mountMoneyMap(el, "/graph/money.json", {
+    const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
       scrub: true, // the year window: watch the industry's money move
       askUrl: (industry) => askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
