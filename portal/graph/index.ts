@@ -27,6 +27,7 @@ import { ACCENT, CLUSTER_COLOURS, clusterColour, CONTRACTOR_COLOUR, GRANTOR_COLO
 import { type Reveal, runReveal } from './reveal.ts'
 import { mountWordsLayer } from './words.ts'
 import { cpiMultiplier } from './cpi.ts'
+import { mountConnectionFallback } from './connection-fallback.ts'
 
 // Re-exported so a Node smoke test can exercise the pure layout/data layer
 // without a DOM or a WebGL context.
@@ -315,7 +316,20 @@ const CSS = `
    room, short of whatever gap fitHostToCard reserved above it for chrome
    (a phone's scrub bar, relocated to the top) and a floor of visible map. */
 .mm-root.mm-grown .mm-card { max-height: calc(100% - var(--mm-grown-gap, 64px)); }
-.mm-canvas { display: block; width: 100%; height: 100%; cursor: grab;
+.mm-connections { position: absolute; inset: 0; overflow: auto; padding: 18px; overscroll-behavior: contain; }
+.mm-connections-title { font-weight: 600; margin: 0 0 4px; }
+.mm-connections-note { color: #66665d; font-size: 12px; margin: 0 0 16px; }
+.mm-connections ul { list-style: none; padding: 0; margin: 0; }
+.mm-connections li { margin: 0 0 22px; }
+.mm-connection-names { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.mm-connection-names button { flex: 1; min-width: 0; display: flex; gap: 6px; align-items: baseline; background: none; border: none; padding: 4px 0; font: inherit; color: inherit; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.mm-connection-names button:focus-visible { outline: 2px solid ${ACCENT}; outline-offset: 2px; }
+.mm-connection-names i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.mm-connection-bar { height: 6px; background: #e4e7e6; border-radius: 4px; overflow: hidden; margin-top: 6px; }
+.mm-connection-bar span { display: block; height: 100%; background: #53788c; }
+.mm-recovery { position: absolute; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; padding: 24px; background: ${SURFACE}; }
+.mm-recovery button { font: inherit; padding: 10px 14px; cursor: pointer; }
+.mm-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; cursor: grab;
   touch-action: none; user-select: none; -webkit-user-select: none; outline-offset: -3px; }
 .mm-canvas:focus-visible { outline: 2px solid ${ACCENT}; }
 .mm-labels { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
@@ -584,13 +598,7 @@ export async function mountMoneyMap(
   if (!response.ok) throw new Error(`money map data: HTTP ${response.status} for ${dataUrl}`)
   const raw = (await response.json()) as MoneyGraph
 
-  if (!webglAvailable()) {
-    const fallback = el('div', 'mm-fallback', container)
-    fallback.textContent = 'The 3D money map needs WebGL, which this browser does not offer. ' +
-      'The underlying data is available as JSON at ' + dataUrl
-    const noop = () => undefined
-    return { presentScene: () => false, clearScene: noop, pauseScene: noop, select: noop, isolate: noop, fit: noop, setPaused: noop, destroy: () => fallback.remove() }
-  }
+  if (!webglAvailable()) return mountConnectionFallback(container, raw, opts)
 
   const graph = buildGraph(raw)
   const byId = new Map(raw.nodes.map((n) => [n.id, n]))
@@ -821,18 +829,32 @@ export async function mountMoneyMap(
   let selectedEdge: MapEdge | null = null
   let activeGroup: string | null = null
 
-  const engine = new KnowledgeMapEngine(
-    canvas,
-    labels,
-    (id) => setSelection(id, { user: true }),
-    () => {
-      // A lost WebGL context leaves a frozen canvas with no way back.
-      canvas.replaceWith(Object.assign(document.createElement('div'), {
-        className: 'mm-fallback',
-        textContent: 'The 3D view lost its graphics context. Reload the page to restart it.',
-      }))
-    },
-  )
+  let recoveryNotice: HTMLDivElement | null = null
+  let engine: KnowledgeMapEngine
+  try {
+    engine = new KnowledgeMapEngine(
+      canvas,
+      labels,
+      (id) => setSelection(id, { user: true }),
+      () => {
+        if (recoveryNotice) return
+        recoveryNotice = el('div', 'mm-recovery', container)
+        recoveryNotice.setAttribute('role', 'status')
+        recoveryNotice.append('Reconnecting the map… ')
+        const retry = el('button', '', recoveryNotice)
+        retry.type = 'button'
+        retry.textContent = 'Reload map'
+        retry.addEventListener('click', () => location.reload())
+      },
+      () => {
+        recoveryNotice?.remove()
+        recoveryNotice = null
+      },
+    )
+  } catch {
+    container.replaceChildren()
+    return mountConnectionFallback(container, raw, opts)
+  }
   engine.onEdgePick = (edge) => setEdgeSelection(edge)
   const words = mountWordsLayer({ engine, raw, legend, routeBase })
 
@@ -1972,6 +1994,7 @@ export async function mountMoneyMap(
       container.removeEventListener('keydown', onKeyDown)
       resizeObserver.disconnect()
       engine.dispose()
+      recoveryNotice?.remove()
       for (const child of [canvas, labels, legend, card, zoom, hint, find, scrub]) {
         child?.remove()
       }
