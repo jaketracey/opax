@@ -396,7 +396,8 @@ def contracts_layer(db, jur: str, eid_to_node: dict) -> dict | None:
     if not sid_to_node:
         return None
     keys = {}
-    for kt, kv, sid in db.execute("SELECT key_type, key_value, supplier_id FROM ext_contract_supplier_keys"):
+    for kt, kv, sid in db.execute("SELECT key_type, key_value, supplier_id FROM ext_contract_supplier_keys "
+                                  "WHERE source = ?", (cfg["source"],)):
         if sid in sid_to_node:
             keys[(kt, kv)] = sid
     per: dict = {}

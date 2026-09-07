@@ -2,8 +2,9 @@
 parli.ingest.contract_suppliers -- who holds the Commonwealth's contracts, resolved to entities.
 
 Reads `ext_contracts` (parli.ingest.austender_full: every AusTender notice with
-the supplier's ABN) and writes three tables the money map and the grants-style
-"public money" layer read:
+the supplier's ABN) and, when it exists, `ext_state_contracts` (the state
+disclosure registers, parli.ingest.qld_contracts), and writes three tables the
+money maps' "public money" layer reads:
 
   ext_contracts_current   one row per contract: the latest notice in its
                           amendment lineage ("CN1234", "CN1234-A1", "CN1234-A2"
@@ -59,14 +60,15 @@ CREATE TABLE ext_contract_suppliers (
     supplier_id TEXT PRIMARY KEY, canonical_name TEXT NOT NULL, kind TEXT, abn TEXT, abn_method TEXT,
     abr_name TEXT, abr_status TEXT, abr_etype TEXT, abr_state TEXT, abr_postcode TEXT,
     donor_entity_id TEXT, donor_method TEXT, donor_confidence REAL, donor_matched_on TEXT,
-    total REAL NOT NULL, count INTEGER NOT NULL, first_year INTEGER, last_year INTEGER,
+    total REAL NOT NULL, count INTEGER NOT NULL, federal_total REAL NOT NULL, federal_count INTEGER NOT NULL,
+    qld_total REAL NOT NULL, qld_count INTEGER NOT NULL, first_year INTEGER, last_year INTEGER,
     agencies TEXT, alias_count INTEGER, aliases TEXT, source TEXT NOT NULL, ingested_at TEXT NOT NULL
 );
 CREATE INDEX ix_csup_donor ON ext_contract_suppliers (donor_entity_id);
 DROP TABLE IF EXISTS ext_contract_supplier_keys;
 CREATE TABLE ext_contract_supplier_keys (
-    key_type TEXT NOT NULL, key_value TEXT NOT NULL, supplier_id TEXT NOT NULL, rows INTEGER NOT NULL,
-    total REAL NOT NULL, ingested_at TEXT NOT NULL, PRIMARY KEY (key_type, key_value)
+    source TEXT NOT NULL, key_type TEXT NOT NULL, key_value TEXT NOT NULL, supplier_id TEXT NOT NULL,
+    rows INTEGER NOT NULL, total REAL NOT NULL, ingested_at TEXT NOT NULL, PRIMARY KEY (source, key_type, key_value)
 );
 CREATE TABLE IF NOT EXISTS ext_ingest_log (
     id INTEGER PRIMARY KEY AUTOINCREMENT, table_name TEXT NOT NULL, source TEXT NOT NULL,
@@ -85,7 +87,7 @@ def norm_name(s: str | None) -> str:
 
 class Sup:
     __slots__ = ("sid", "abn", "abn_method", "abr", "kind", "spellings", "total", "count", "years",
-                 "agencies", "donor", "keys")
+                 "agencies", "donor", "keys", "by_source")
 
     def __init__(self, sid: str):
         self.sid = sid
@@ -100,6 +102,7 @@ class Sup:
         self.agencies: Counter = Counter()
         self.donor = None
         self.keys: list = []
+        self.by_source: dict = defaultdict(lambda: [0.0, 0])
 
 
 def build_current(db: sqlite3.Connection) -> int:
@@ -153,14 +156,23 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
             s = sups[sid] = Sup(sid)
         return s
 
-    groups = db.execute(
+    # Federal notices, then the state disclosure registers (parli.ingest.qld_contracts),
+    # each group tagged with its source so the exporters can read one register at a time.
+    groups = [dict(r, source="austender") for r in db.execute(
         "SELECT supplier_abn, supplier_name, COUNT(*) n, SUM(amount) total, MIN(substr(start_date,1,4)) y0, "
-        "MAX(substr(start_date,1,4)) y1 FROM ext_contracts_current GROUP BY 1, 2").fetchall()
-    agency_rows = db.execute(
-        "SELECT supplier_abn, supplier_name, agency, SUM(amount) total FROM ext_contracts_current GROUP BY 1, 2, 3").fetchall()
+        "MAX(substr(start_date,1,4)) y1 FROM ext_contracts_current GROUP BY 1, 2")]
+    agency_rows = [dict(r, source="austender") for r in db.execute(
+        "SELECT supplier_abn, supplier_name, agency, SUM(amount) total FROM ext_contracts_current GROUP BY 1, 2, 3")]
+    has_state = db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='ext_state_contracts_current'").fetchone()
+    if has_state:
+        groups += [dict(r, source=r["jurisdiction"]) for r in db.execute(
+            "SELECT jurisdiction, supplier_abn, supplier_name, COUNT(*) n, SUM(amount) total, MIN(substr(award_date,1,4)) y0, "
+            "MAX(substr(award_date,1,4)) y1 FROM ext_state_contracts_current GROUP BY 1, 2, 3")]
+        agency_rows += [dict(r, source=r["jurisdiction"]) for r in db.execute(
+            "SELECT jurisdiction, supplier_abn, supplier_name, agency, SUM(amount) total FROM ext_state_contracts_current GROUP BY 1, 2, 3, 4")]
     agencies_by = defaultdict(Counter)
     for r in agency_rows:
-        agencies_by[(r["supplier_abn"], r["supplier_name"])][r["agency"] or ""] += r["total"] or 0
+        agencies_by[(r["source"], r["supplier_abn"], r["supplier_name"])][r["agency"] or ""] += r["total"] or 0
 
     matched = 0
     for g in groups:
@@ -195,14 +207,16 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
         s.spellings[raw] += n
         s.total += total
         s.count += n
+        s.by_source[g["source"]][0] += total
+        s.by_source[g["source"]][1] += n
         for y in (g["y0"], g["y1"]):
             if y and str(y).isdigit():
                 s.years.add(int(y))
-        s.agencies.update(agencies_by[(g["supplier_abn"], g["supplier_name"])])
+        s.agencies.update(agencies_by[(g["source"], g["supplier_abn"], g["supplier_name"])])
         if g["supplier_abn"]:
-            s.keys.append(("abn", abn or g["supplier_abn"], n, total))
-        s.keys.append(("name", raw, n, total))
-        stats["groups"] += 1
+            s.keys.append((g["source"], "abn", abn or g["supplier_abn"], n, total))
+        s.keys.append((g["source"], "name", raw, n, total))
+        stats["groups_" + g["source"]] += 1
     log(f"  {len(sups):,} suppliers; ABR matched {matched:,} unkeyed names ({time.time() - t0:.0f}s)")
 
     for s in sups.values():
@@ -268,11 +282,14 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
             abr.get("state"), abr.get("postcode"),
             s.donor[0] if s.donor else None, s.donor[1] if s.donor else None,
             s.donor[2] if s.donor else None, s.donor[3] if s.donor else None,
-            round(s.total, 2), s.count, years[0] if years else None, years[-1] if years else None,
+            round(s.total, 2), s.count,
+            round(s.by_source["austender"][0], 2), s.by_source["austender"][1],
+            round(s.by_source["qld"][0], 2), s.by_source["qld"][1],
+            years[0] if years else None, years[-1] if years else None,
             json.dumps(top_agencies, ensure_ascii=False), len(s.spellings),
             json.dumps(aliases, ensure_ascii=False), SOURCE, stamp))
-        for kt, kv, n, total in s.keys:
-            k = (kt, kv)
+        for src, kt, kv, n, total in s.keys:
+            k = (src, kt, kv)
             have = key_map.get(k)
             if have is None:
                 key_map[k] = [sid, n, total]
@@ -285,9 +302,9 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
                     key_map[k] = [sid, n, total]
     cur = db.cursor()
     cur.execute("BEGIN")
-    cur.executemany("INSERT INTO ext_contract_suppliers VALUES (" + ",".join("?" * 23) + ")", rows)
-    cur.executemany("INSERT INTO ext_contract_supplier_keys VALUES (?,?,?,?,?,?)",
-                    [(kt, kv, sid, n, round(total, 2), stamp) for (kt, kv), (sid, n, total) in key_map.items()])
+    cur.executemany("INSERT INTO ext_contract_suppliers VALUES (" + ",".join("?" * 27) + ")", rows)
+    cur.executemany("INSERT INTO ext_contract_supplier_keys VALUES (?,?,?,?,?,?,?)",
+                    [(src, kt, kv, sid, n, round(total, 2), stamp) for (src, kt, kv), (sid, n, total) in key_map.items()])
     cur.execute("INSERT INTO ext_ingest_log (table_name, source, rows_loaded, rows_deleted, loaded_at, notes) VALUES (?,?,?,?,?,?)",
                 ("ext_contract_suppliers", SOURCE, len(rows), 0, stamp, ", ".join(f"{k}={v}" for k, v in sorted(stats.items()))))
     cur.execute("COMMIT")
