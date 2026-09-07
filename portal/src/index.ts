@@ -13,6 +13,8 @@
  *  - exclude da-* fields from citations (enrichment output must not cite itself)
  */
 
+import { proxyPostHog } from './posthog'
+
 import { OG_FONT_FILES, OG_VERSION, homeCard, type OgCard } from './og'
 import { renderOgPng, type OgFont } from './og-render'
 
@@ -3534,6 +3536,7 @@ export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
     const isApi = url.pathname.startsWith('/api/')
+    if (url.pathname.startsWith('/ingest/')) return proxyPostHog(request)
     try {
       // The route table only matches GET, so a HEAD (curl -I, uptime probes)
       // used to fall through to the 404. Run it as a GET and drop the body.
