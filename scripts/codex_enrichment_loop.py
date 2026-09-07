@@ -62,7 +62,7 @@ def claim(kind: str, worker: str, size: int, batch: Path) -> tuple[list[dict], s
 def label_prompt(items: list[dict]) -> str:
     taxonomy = "\n".join(f"- {slug}: {description}" for slug, description, _ in TOPICS)
     return f"""Classify every Australian parliamentary speech below for OPAX.
-Choose zero to three topic slugs for every rid from the taxonomy, based on the actual speech text rather than its title. A topic must be a substantive subject of the speech: do not label incidental mentions, quoted remarks, passing examples, parliamentary insults or personal attacks. Be conservative and use [] for procedural, tribute, condolence, thin text, or any uncertain match. Return only the required JSON object. Do not call tools or external APIs.
+Choose zero to three topic slugs for every rid from the taxonomy, based on the actual speech text rather than its title. A topic must be a substantive subject of the speech: do not label incidental mentions, quoted remarks, passing examples, parliamentary insults or personal attacks. General economic projections do not qualify as tax-budget unless the speech substantively discusses taxation, a budget, deficits or fiscal policy. General employment figures do not qualify as unions-workplace unless the speech substantively discusses industrial relations, unions, wages, safety or employment conditions. Be conservative and use [] for procedural, tribute, condolence, thin text, or any uncertain match. Return only the required JSON object. Do not call tools or external APIs.
 
 TAXONOMY
 {taxonomy}
