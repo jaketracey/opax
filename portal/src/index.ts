@@ -14,6 +14,7 @@
  */
 
 import { proxyPostHog } from './posthog'
+import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
 
 import { OG_FONT_FILES, OG_VERSION, homeCard, type OgCard } from './og'
 import { renderOgPng, type OgFont } from './og-render'
@@ -841,6 +842,44 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const payload = askPayload(answer)
   store(payload)
   return withCacheStatus(json(payload), status, false)
+}
+
+// Narration is generated from server-loaded graph facts, never client-supplied amounts.
+async function apiJourneyStory(request: Request, input: Record<string, unknown>, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const files: Record<string,string> = {federal:'/graph/money.json',qld:'/graph/money.qld.json',vic:'/graph/money.vic.json',tas:'/graph/money.tas.json'}
+  const { jurisdiction, lens, focus } = input
+  if (typeof jurisdiction !== 'string' || !Object.hasOwn(files,jurisdiction) || typeof lens !== 'string' || typeof focus !== 'string' || focus.length > 500) return json({error:'Invalid journey'},400)
+  const graph = await assetJson<StoryGraph>(env,files[jurisdiction])
+  const context = journeyStoryContext(graph,lens,focus)
+  if (!context) return json({error:'Journey not available'},404)
+  const key = cacheRequest('journey-story',await sha256Hex(JSON.stringify({version:STORY_VERSION,context})))
+  const cached = await caches.default.match(key)
+  if (cached) return withCacheStatus(cached,'HIT',false)
+  const limited = await rateLimited(env.FOLLOWUPS_LIMITER,request)
+  if (limited) return limited
+  try {
+    const generate = async (query: string) => {
+      const response = await kbFetch(env,'/ask',{
+        body:{query,top_k:1,reranker:'noop',generative_model:'openai-compatible',max_tokens:4096,
+          prompt:{system:JOURNEY_STORY_SYSTEM,user:'{question}'}},
+        headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(30_000),
+      })
+      if (!response.ok) return null
+      const result = await response.json() as {answer?:string}
+      return typeof result.answer === 'string' ? result.answer : null
+    }
+    const prompt = journeyStoryPrompt(context)
+    const answer = await generate(prompt)
+    let steps = answer ? parseJourneyStory(answer,context) : null
+    if (!steps && answer) {
+      const repaired = await generate(`${prompt}\n\nYour previous draft failed validation. Rewrite it. Every number must exactly match a supplied number: no newly rounded amounts or calculated percentages. Say a comparison in words if its number is not supplied. Use receipts, never donations. Each step needs its own valid evidence IDs. Return only the required JSON. Previous draft:\n${answer.slice(0,8000)}`)
+      steps = repaired ? parseJourneyStory(repaired,context) : null
+    }
+    if (!steps) return json({error:'Story unavailable'},502)
+    const out = json({steps,generated:true,version:STORY_VERSION})
+    cacheStore(ctx,key,out,7*24*60*60)
+    return withCacheStatus(out,'MISS',false)
+  } catch { return json({error:'Story unavailable'},503) }
 }
 
 // --- streamed asks -----------------------------------------------------------
@@ -3409,7 +3448,7 @@ const NULL_BODY_STATUS = new Set([101, 204, 205, 304])
 // query's result set. Every other /api route is the caching work's to own, so
 // its Cache-Control is left exactly as the handler returned it — and even here
 // a handler that sets its own (the SSE stream does) wins.
-const NO_STORE_PATHS = new Set(['/api/ask', '/api/followups', '/api/search'])
+const NO_STORE_PATHS = new Set(['/api/journey-story', '/api/ask', '/api/followups', '/api/search'])
 
 function withSecurityHeaders(res: Response, url: URL): Response {
   const isApi = url.pathname.startsWith('/api/')
@@ -3568,6 +3607,11 @@ async function route(
         const bad = validateFilters((k) => body.value[k])
         if (bad) return json({ error: bad }, 400)
         return await apiAsk(replayPost(request, body.text), env, ctx)
+      }
+      if (url.pathname === '/api/journey-story' && request.method === 'POST') {
+        const body = await readJsonBody(request)
+        if (body instanceof Response) return body
+        return await apiJourneyStory(request,body.value,env,ctx)
       }
       if (url.pathname === '/api/followups' && request.method === 'POST') {
         const body = await readJsonBody(request)
