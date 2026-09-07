@@ -912,7 +912,7 @@ function discoveryChartHTML(chart) {
   if (chart.other_total > 0) rows.push({ name: `Other ${chart.other_count.toLocaleString("en-AU")} ${chart.participant_label === "supplier" ? "suppliers" : "contributors"}`, value: chart.other_total, share: chart.other_share, other: true });
   return `<div class="discovery-chart" role="group" aria-label="Share of recorded value">
     ${rows.map((row, index) => `<div class="discovery-chart-row${index === 0 ? " is-leader" : ""}${row.other ? " is-other" : ""}">
-      <div class="discovery-chart-label"><span>${esc(row.name)}</span><span><strong>${esc(discoveryMoney(row.value))}</strong> <span class="discovery-chart-share">${esc(discoveryPercent(row.share))}</span></span></div>
+      <div class="discovery-chart-label"><span>${chart.participant_label === "supplier" && !row.other ? `<a href="/subject/supplier/${encodeURIComponent(row.name)}">${esc(row.name)}</a>` : esc(row.name)}</span><span><strong>${esc(discoveryMoney(row.value))}</strong> <span class="discovery-chart-share">${esc(discoveryPercent(row.share))}</span></span></div>
       <div class="discovery-track" aria-hidden="true"><span style="width:${discoveryBarWidth(row.share)}%"></span></div>
     </div>`).join("")}</div>`;
 }
@@ -940,7 +940,7 @@ function discoveryDetailHTML(signal) {
       </div><p class="discovery-chart-note">Different money flows and reporting periods. A shared name doesn’t show that one led to the other.</p>`;
   }
   return `<article class="discovery-detail-card">${main}
-    <div class="discovery-actions"><a href="/search?q=${encodeURIComponent(signal.entity)}">Find mentions in parliament</a>${!contracts ? '<button type="button" id="discover-map-toggle" aria-expanded="false" aria-controls="discover-map-area">Explore connections on the money map</button>' : ""}</div>
+    <div class="discovery-actions">${signal.category !== "recipient_concentration" ? `<a href="/subject/supplier/${encodeURIComponent(signal.entity)}">Explore supplier profile</a>` : ""}<a href="/search?q=${encodeURIComponent(signal.entity)}">Find mentions in parliament</a>${!contracts ? '<button type="button" id="discover-map-toggle" aria-expanded="false" aria-controls="discover-map-area">Explore connections on the money map</button>' : ""}</div>
     ${!contracts ? '<div id="discover-map-area" hidden><p class="discovery-chart-note">Political funding connections from the money map. Its coverage differs from this comparison.</p><div id="discover-map-root" class="discovery-map"></div><a href="/money">Open the full money map</a></div>' : ""}
     ${discoveryEvidenceHTML(signal)}</article>`;
 }
@@ -1246,6 +1246,46 @@ function crumbLabel(s, max = 60) {
 }
 
 let firstRoute = true;
+let supplierPage = null;
+let supplierPageGeneration = 0;
+function destroySupplierPage() {
+  supplierPageGeneration += 1;
+  supplierPage?.destroy();
+  supplierPage = null;
+}
+async function openSupplierPage(name, params, manageFocus) {
+  const generation = supplierPageGeneration;
+  currentSubjectKey = `supplier:${name || "directory"}`;
+  destroySubjectMap();
+  activeDirectory = null;
+  const body = $("subject-body");
+  body.classList.remove("subject-person");
+  body.innerHTML = '<p role="status">Loading suppliers…</p>';
+  try {
+    const module = await import("/suppliers.js?v=profiles-1");
+    if (generation !== supplierPageGeneration) return;
+    const helpers = {
+      params,
+      onTitle(title) {
+        if (generation !== supplierPageGeneration) return;
+        document.title = `${title} · OPAX`;
+        if (manageFocus) $("subject-title")?.focus();
+      },
+      onCanonical(id, label) {
+        if (generation !== supplierPageGeneration) return;
+        replaceRoute(`/subject/supplier/${encodeURIComponent(id)}`);
+        setCrumbs([{ label: "Suppliers", href: "/subject/supplier" }, { label }]);
+      },
+      onMentions: (label, container) => subjectMentions(label, container, "In parliament"),
+    };
+    supplierPage = name
+      ? module.mountSupplierProfile(body, name, helpers)
+      : module.mountSupplierDirectory(body, helpers);
+  } catch {
+    if (generation === supplierPageGeneration) body.innerHTML = '<p role="alert">Supplier records could not be loaded. <a href="/subject/supplier">Try again</a>.</p>';
+  }
+}
+
 
 function rawFragment() {
   // location.hash is percent-DECODED in Firefox; parse from href so encoded
@@ -1301,9 +1341,14 @@ function route() {
   const view = segs[0] || "ask";
   const manageFocus = !firstRoute;
   firstRoute = false;
+  destroySupplierPage();
 
   if (view !== "subject") { destroySubjectMap(); currentSubjectKey = null; }
-  if (view === "subject" && segs[1] === "topic") {
+  if (view === "subject" && segs[1] === "supplier") {
+    showPanel("subject");
+    setCrumbs([{ label: "Suppliers", href: "/subject/supplier" }]);
+    openSupplierPage(segs[2] ? decodeURIComponent(segs[2]) : null, params, manageFocus);
+  } else if (view === "subject" && segs[1] === "topic") {
     showPanel("subject");
     document.title = TITLES.subject;
     if (segs[2]) {
@@ -4481,6 +4526,8 @@ async function openSubject(kind, name, manageFocus) {
       partyDots: !isParty, // donor page rows are parties; party page rows are donors
     }));
     if (!isParty) sections.insertAdjacentHTML("beforeend", donorBalanceHTML(flows));
+    if (!isParty && node.contracts) sections.insertAdjacentHTML("beforeend",
+      `<p class="fineprint"><a href="/subject/supplier?donor=${encodeURIComponent(node.id)}">Explore their supplier records →</a></p>`);
     sections.insertAdjacentHTML("beforeend",
       `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
     if (!isParty) renderDonorInterests(node.label, sections);
@@ -5303,7 +5350,7 @@ function topicIndexDescription(slug) {
 // DIR_CHUNK with a "Show more" button so 1,400 people stay instant.
 
 const DIRECTORY_KINDS = {
-  person: "Parliamentarians", party: "Parties", donor: "Donors",
+  person: "Parliamentarians", party: "Parties", donor: "Donors", supplier: "Suppliers",
   campaigner: "Campaigners & third parties",
 };
 const DIR_CHUNK = 60;
