@@ -993,6 +993,11 @@ export async function mountMoneyMap(
       // The fit lands in the space the chrome (and an open card) leaves free.
       engine.setInsets(measureInsets())
       engine.fit(!firstFit)
+      // Start one zoom-button step closer on phones; explicit fit still
+      // offers the complete overview, and journeys retain their own framing.
+      if (firstFit && window.matchMedia('(max-width: 540px)').matches) {
+        engine.zoomBy(1.3)
+      }
     }
     // The open card follows the window: re-drawn in place with the figures
     // the scene now shows, or closed when its subject left the window. The
