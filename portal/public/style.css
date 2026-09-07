@@ -2641,7 +2641,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-subject .topic-arc-entry { border: 0; padding: .5rem 0 0; }
 #panel-subject .topic-arc-entry::before { content: none; }
 #panel-subject .topic-arc-source { min-height: 44px; display: flex; align-items: center; font-size: 1.1rem; }
-#panel-subject .topic-arc-brief { padding: 0; background: none; font: 400 1rem/1.65 var(--serif); }
+#panel-subject .topic-arc-brief { padding: 0.1rem 0 0.1rem 0.85rem; background: none; font: 400 1rem/1.65 var(--serif); }
 #panel-subject .topic-arc-passage { font-size: 1rem; }
 #panel-subject .topic-arc .quiet-toggle button { min-height: 44px; }
 #panel-subject .topic-tide-label { white-space: normal; overflow: visible; text-overflow: clip; font-size: .8125rem; }
