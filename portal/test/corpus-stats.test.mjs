@@ -35,6 +35,7 @@ test("live corpus table names the new resource kind", () => {
 test("government releases are searchable and have public document pages", () => {
   assert.match(html, /<option value="press_release">Government transcripts and releases<\/option>/);
   assert.match(worker, /PRESS_SLUG_RE/);
+  assert.match(worker, /const KINDS = new Set\(\[[^\]]*'press_release'/);
   assert.match(worker, /kind: label\(resource, 'kind'\)/);
   assert.match(worker, /r\.labels\.kind === 'press_release'/);
 });
