@@ -1194,7 +1194,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule] = await Promise.all([import("/money-map.js?v=journeys-2"), loadMoneyFile(jur), import("/money-journeys.js?v=picker-1")]);
+    const [{ mountMoneyMap }, data, journeysModule] = await Promise.all([import("/money-map.js?v=journeys-2"), loadMoneyFile(jur), import("/money-journeys.js?v=picker-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
