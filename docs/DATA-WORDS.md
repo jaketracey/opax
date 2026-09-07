@@ -1,8 +1,8 @@
 # DATA-WORDS — what politicians said outside the chamber, and the documents they debated
 
-Status (2026-09-02): **acquisition verified per source; samples loaded into
-`ext_` tables on `desktop`; nothing pushed to the ARAG knowledge base.** The KB
-push is a separate, costed decision for Jake (§8). Fetchers:
+Status (2026-09-08): **acquisition verified per source; samples loaded into
+`ext_` tables; licence-clean press-release tranches can be audited and pushed
+with `parli.ingest.words_sync`.** Fetchers:
 `parli/ingest/words_press_releases.py` (press releases / transcripts),
 `parli/ingest/words_parlinfo.py` (ParlInfo: bills, EMs, digests, committee
 reports, press-release index; plus the Federal Register of Legislation Act
@@ -237,11 +237,25 @@ records and nothing from the state sets (all post-1997).
 | Other portfolio sites | new GovCMS HTML-listing fetcher for health.gov.au / minister.defence.gov.au / minister.dva.gov.au (the three whose listings answer 200) | ~5K pages | ~2 h | RSS gives only 20 items; JSON:API is closed on all but Treasury |
 | NSW ministry list join | scrape the NSW Parliament ministry list by date → resolve portfolio → minister | small | — | lifts NSW attribution from 16% to ~100% |
 
-## 8. The push — Jake's decision, not this branch's
+## 8. The push
 
-Nothing here writes to the KB. When approved, the sync is a small extension of
-`arag_sync.py`: iterate `ext_press_releases` through
-`words_press_releases.map_press_release` and `ext_parlinfo_docs` through
+`parli.ingest.words_sync` audits date, body length, official HTTPS provenance,
+CC BY licensing, control characters and duplicate bodies before pushing. It is
+dry-run by default, has the same 100-row safety cap as the main corpus sync, and
+never starts enrichment. Run a dry audit, then the reviewed tranche:
+
+```
+python3 -m parli.ingest.words_sync --db /path/to/parli.db --source pmtranscripts --since 2024-01-01 --limit 700 --full
+python3 -m parli.ingest.words_sync --db /path/to/parli.db --source pmtranscripts --since 2024-01-01 --limit 700 --full --apply
+```
+
+For a bounded run, pass the reported `next_after_rowid` back as
+`--after-rowid`; this advances through the source without replaying the first
+tranche. A complete `--full` run remains idempotent because resource slugs are
+stable.
+
+ParlInfo records remain outside this command. A future sync can iterate
+`ext_parlinfo_docs` through
 `words_parlinfo.map_parlinfo_doc` / `map_bill_version`, reusing the
 checkpointed, 429-aware loader. Recommended order by value per token:
 (1) PM Transcripts + Treasury (federal, CC BY, named speakers — plugs straight
