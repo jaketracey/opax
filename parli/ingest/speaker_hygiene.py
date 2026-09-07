@@ -1,7 +1,7 @@
 """
 parli.ingest.speaker_hygiene -- who a speech is attributed to, made honest.
 
-Three loops over `speeches`, each idempotent, each logged to
+Four loops over `speeches`, each idempotent, each logged to
 `ext_committee_relinks` (the same audit table the committee resolver writes)
 and queued for the knowledge box in `ext_kb_patch_queue`:
 
@@ -26,6 +26,15 @@ and queued for the knowledge box in `ext_kb_patch_queue`:
                 the name), or a whole sentence captured as the speaker (cleared).
                 An entity inside a real name is unescaped ("Joldi&#263;" ->
                 "Joldić").
+  committee_party
+                committee rows spoken by a member. The resolver links a senator
+                only on an exact full name, so a two-word surname from the
+                attendance list ("Nampijinpa Price") stayed unlinked: it links
+                when the name is the suffix of exactly one federal member's
+                full name. And the committee source records no party, so every
+                senator's evidence read as party-less: the member's canonical
+                party is written to party_canonical (the member's party today,
+                as the site's "formerly X" convention).
 
 Run on the box that holds parli.db, after parli.ingest.committee_witnesses:
 
@@ -227,6 +236,57 @@ def loop_junk(db, stats: Counter):
     return out
 
 
+def loop_committee_party(db, members: Members, stats: Counter):
+    """Committee rows spoken by a member. (a) The resolver names senators from the
+    attendance list but links only on an exact full name, so a senator known by a
+    two-word surname ("Nampijinpa Price") stays unlinked: link when the name is the
+    suffix of exactly one federal member's full name. (b) The committee source never
+    records a party, so every senator's evidence reads as party-less; carry the
+    member's canonical party into party_canonical.
+    -> [(speech_id, person_id, clean, party_canonical, reason, old_pid, old_clean)]"""
+    out = []
+    cols = {r[1] for r in db.execute("PRAGMA table_info(speeches)")}
+    if "speaker_type" not in cols:
+        return out
+    # (a) suffix index over federal members: "nampijinpa price" -> [Jacinta Nampijinpa Price]
+    suffixes: dict[str, list] = defaultdict(list)
+    for m in members.by_id.values():
+        if state_of(m["state"]) != "federal":
+            continue
+        toks = (m["full_name"] or "").split()
+        for i in range(1, len(toks)):
+            suffixes[" ".join(toks[i:]).lower()].append(m)
+    party_of = {r["person_id"]: (r["party_canonical"] or r["party"] or None)
+                for r in db.execute("SELECT person_id, party_canonical, party FROM members")}
+    rows = db.execute(
+        "SELECT speech_id, person_id, speaker_name_clean FROM speeches WHERE source LIKE 'committee%' "
+        "AND speaker_type = 'member' AND person_id IS NULL AND speaker_name_clean LIKE '% %'").fetchall()
+    for r in rows:
+        cands = suffixes.get(r["speaker_name_clean"].strip().lower(), [])
+        names = {m["full_name"] for m in cands}
+        if len(names) != 1:
+            stats["committee_link_ambiguous" if names else "committee_link_unmatched"] += 1
+            continue
+        m = cands[0]
+        out.append((r["speech_id"], m["person_id"], m["full_name"], party_of.get(m["person_id"]), "committee_link",
+                    r["person_id"], r["speaker_name_clean"]))
+        stats["committee_linked"] += 1
+    # (b) party from the member for every linked committee row that has none
+    rows = db.execute(
+        "SELECT s.speech_id, s.person_id, s.speaker_name_clean, m.party_canonical, m.party FROM speeches s "
+        "JOIN members m ON m.person_id = s.person_id WHERE s.source LIKE 'committee%' "
+        "AND COALESCE(s.party_canonical, '') = '' AND COALESCE(m.party_canonical, m.party, '') != '' "
+        + not_witness(db, "s.")).fetchall()
+    seen = {sid for sid, *_ in out}
+    for r in rows:
+        if r["speech_id"] in seen:
+            continue
+        out.append((r["speech_id"], r["person_id"], r["speaker_name_clean"], r["party_canonical"] or r["party"],
+                    "committee_party", r["person_id"], r["speaker_name_clean"]))
+        stats["committee_party_filled"] += 1
+    return out
+
+
 # ── apply ────────────────────────────────────────────────────────────────────
 
 RELINKS_DDL = """
@@ -248,7 +308,7 @@ CREATE TABLE IF NOT EXISTS ext_ingest_log (
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0], formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--db", default=os.path.expanduser("~/.cache/autoresearch/parli.db"))
-    ap.add_argument("--loops", default="jurisdiction,fullname,junk")
+    ap.add_argument("--loops", default="jurisdiction,fullname,junk,committee_party")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
     loops = [l.strip() for l in args.loops.split(",") if l.strip()]
@@ -278,14 +338,24 @@ def main() -> None:
     if "junk" in loops:
         for sid, pid, clean, reason, old_pid, old_clean, new_type in loop_junk(db, stats):
             changes[sid] = (pid, clean, reason, old_pid, old_clean, new_type)
-    stats["rows_changed"] = len(changes)
-    by_reason = Counter(v[2] for v in changes.values())
+    party_changes: dict[int, tuple] = {}   # speech_id -> (pid, clean, party_canonical, reason, old_pid, old_clean)
+    if "committee_party" in loops:
+        for sid, pid, clean, party, reason, old_pid, old_clean in loop_committee_party(db, members, stats):
+            if sid not in changes:
+                party_changes[sid] = (pid, clean, party, reason, old_pid, old_clean)
+    stats["rows_changed"] = len(changes) + len(party_changes)
+    by_reason = Counter(v[2] for v in changes.values()) + Counter(v[3] for v in party_changes.values())
     log("  " + ", ".join(f"{k}={v:,}" for k, v in sorted(stats.items())))
     log("  by reason: " + ", ".join(f"{k}={v:,}" for k, v in by_reason.most_common()))
     if args.dry_run:
         sample = list(changes.items())[:12]
         for sid, (pid, clean, reason, old_pid, old_clean, t) in sample:
             log(f"    {sid}: {old_pid!r}/{old_clean!r} -> {pid!r}/{clean!r} ({reason})")
+        for sid, (pid, clean, party, reason, old_pid, old_clean) in list(party_changes.items())[:8]:
+            log(f"    {sid}: {old_pid!r}/{old_clean!r} -> {pid!r}/{clean!r} party={party!r} ({reason})")
+        parties = Counter(v[2] for v in party_changes.values())
+        if parties:
+            log("    parties written: " + ", ".join(f"{k}={v:,}" for k, v in parties.most_common()))
         return
 
     stamp = now_iso()
@@ -303,11 +373,20 @@ def main() -> None:
         cur.execute("INSERT INTO ext_kb_patch_queue (slug, reason, status, queued_at) VALUES (?, ?, 'pending', ?) "
                     "ON CONFLICT(slug) DO UPDATE SET status = 'pending', reason = excluded.reason, queued_at = excluded.queued_at",
                     (f"speech-{sid}", reason, stamp))
+    for sid, (pid, clean, party, reason, old_pid, old_clean) in party_changes.items():
+        cur.execute("UPDATE speeches SET person_id = ?, speaker_name_clean = ?, party_canonical = ? WHERE speech_id = ?",
+                    (pid, clean, party, sid))
+        if reason == "committee_link":   # an attribution change; a party fill is not one
+            cur.execute("INSERT OR REPLACE INTO ext_committee_relinks VALUES (?,?,?,?,?,?,?,?)",
+                        (sid, old_pid, old_clean, clean, "member", None, reason, stamp))
+        cur.execute("INSERT INTO ext_kb_patch_queue (slug, reason, status, queued_at) VALUES (?, ?, 'pending', ?) "
+                    "ON CONFLICT(slug) DO UPDATE SET status = 'pending', reason = excluded.reason, queued_at = excluded.queued_at",
+                    (f"speech-{sid}", reason, stamp))
     cur.execute("INSERT INTO ext_ingest_log (table_name, source, rows_loaded, rows_deleted, loaded_at, notes) VALUES (?,?,?,?,?,?)",
-                ("speeches", SOURCE, len(changes), 0, stamp, ", ".join(f"{k}={v}" for k, v in sorted(stats.items()))))
+                ("speeches", SOURCE, len(changes) + len(party_changes), 0, stamp, ", ".join(f"{k}={v}" for k, v in sorted(stats.items()))))
     cur.execute("COMMIT")
     q = db.execute("SELECT COUNT(*) FROM ext_kb_patch_queue WHERE status = 'pending'").fetchone()[0]
-    log(f"  updated {len(changes):,} rows; {q:,} slugs pending for the knowledge box")
+    log(f"  updated {len(changes) + len(party_changes):,} rows; {q:,} slugs pending for the knowledge box")
 
 
 if __name__ == "__main__":

@@ -321,7 +321,8 @@ interface SearchResult {
   /** 'representatives' | 'senate' | 'senate_committee' | a state house; lets the app tell evidence from a speech. */
   chamber: string | null
   /** The members-table id the sync linked the speaker to; null for witnesses and unlinked names. */
-  person_id: number | null
+  // Corpus ids are text ('11009', 'vic_maryanne_thomas'); numeric ones arrive as numbers or strings.
+  person_id: number | string | null
   /** 'member' | 'witness' | 'chair' | 'unknown' on committee transcripts; null elsewhere. */
   speaker_type: string | null
   /** A witness's position and organisation from the hearing's attendance list. */
@@ -512,7 +513,7 @@ async function searchWindow(
       party: label(resource, 'party'),
       state: label(resource, 'state'),
       chamber: label(resource, 'chamber'),
-      person_id: typeof meta.person_id === 'number' ? meta.person_id : null,
+      person_id: typeof meta.person_id === 'number' || (typeof meta.person_id === 'string' && meta.person_id !== '') ? meta.person_id : null,
       speaker_type: label(resource, 'speaker_type'),
       role: typeof meta.witness_position === 'string' ? meta.witness_position : null,
       organisation: typeof meta.witness_organisation === 'string' ? meta.witness_organisation : null,

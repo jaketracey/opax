@@ -4417,12 +4417,12 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
     slot.innerHTML = `<h3 class="subject-section-title">${latest ? `Latest indexed ${noun}` : `Indexed ${noun}`}</h3>
       <ul class="speech-rows" role="list">${newest.map((r) => {
         const brief = typeof briefs[r.resource] === "string" ? briefs[r.resource].trim() : "";
-        const text = brief || String(r.snippet || "").trim();
+        const text = brief || cleanPassage(r.snippet);
         const where = chambers.length > 1 && r.state ? ` · ${STATE_NAMES[r.state] || r.state}` : "";
         return `<li><a class="person-speech-link" href="/doc/${esc(r.slug)}">
           <time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "Undated")}${esc(where)}</time>
           <span class="person-speech-body"><span class="speech-debate">${esc(titleSubject(r) || (opts.evidence ? "Evidence" : "Speech"))}</span>
-            <span class="person-speech-kind">${brief ? "Machine brief" : "Passage"}</span>
+            <span class="person-speech-kind">${brief ? "Machine brief" : "From the speech"}</span>
             <span class="person-speech-text">${esc(text || "Open the speech to read the record.")}</span>
           </span></a></li>`;
       }).join("")}</ul>
@@ -4575,20 +4575,102 @@ function topicTideHTML(data, slug, phrase) {
   </section>`;
 }
 
-function topicArcItemHTML(item, brief) {
+/* A passage as a reader should meet it. The index keeps each speech as the
+   record prints it, which opens with the reporter's banner ("Mr DAVID MEHAN
+   ( The Entrance ) ( 16:43 :38 ):", "Dr HUGH McDERMOTT ( Prospect )—") or,
+   on a committee transcript, the hearing's context block and the witness's
+   name ("[Legal and Constitutional … Police] Ms Barrett : Thank you"). None
+   of that is the speech. Display only; exports and citations quote the record. */
+function cleanPassage(text) {
+  let raw = String(text || "");
+  // A heading the source glued above the passage: "Gambling\n\nGambling is also…"
+  const head = /^\s*([^\n]{1,80}?)[ \t]*\n(?:[ \t]*\n)+/.exec(raw);
+  if (head && !/[.!?,;:]$/.test(head[1].trim()) && head[1].trim().split(/\s+/).length <= 8) raw = raw.slice(head[0].length);
+  let s = raw.replace(/\s+/g, " ").trim().replace(/^…\s*/, "");
+  s = s.replace(/^\[[^\]]{0,400}\]\s*/, "");
+  // The same block when the highlighter's window opens inside it:
+  // "PORTFOLIO Australian Communications and Media Authority] Given we know…"
+  s = s.replace(/^(?![^\]]*\.\s)[^\[\]]{0,300}\]\s*/, "");
+  // banner: honorific + name, one or more parentheticals, then a colon or dash
+  s = s.replace(/^(?:(?:the\s+)?hon\.?|mr|mrs|ms|miss|dr|prof\.?|professor|senator|madam|rev\.?)\s+[A-Za-z][A-Za-z'’.\-]*(?:\s+[A-Za-z][A-Za-z'’.\-]*){0,4}\s*(?:\([^)]{0,80}\)\s*)+(?:[:—–-]|\.-)\s*/i, "");
+  // banner: honorific + ALL-CAPS name, then a colon or dash
+  s = s.replace(/^(?:(?:the\s+)?hon\.?|mr|mrs|ms|miss|dr|prof\.?|senator|madam)\s+[A-Z][A-Z'’.\-]+(?:\s+[A-Z][A-Za-z'’.\-]+){0,4}\s*[:—–-]\s*/, "");
+  // committee turn: "Ms Barrett : " (a short name, then a colon)
+  s = s.replace(/^(?:mr|mrs|ms|miss|dr|prof\.?|senator|chair|the chair)\s+[A-Za-z][A-Za-z'’.\-]*(?:\s+[A-Za-z][A-Za-z'’.\-]*)?\s*:\s+/i, "");
+  s = s.replace(/^[:;,—–\-\s]+/, "");
+  return s;
+}
+
+/* "Legal and Constitutional Affairs Legislation Committee - Legal and … 28/05/2026
+   Estimates HOME AFFAIRS PORTFOLIO Australian Federal Police" -> the parts a
+   reader needs: that it was estimates, the committee, the department. */
+function committeeShortTitle(title) {
+  const t = String(title || "").replace(/\s+/g, " ").trim();
+  const m = /^(.+?committee)\b/i.exec(t);
+  if (!m) return t;
+  const committee = m[1].replace(/\s+Legislation Committee$/i, " Committee").replace(/\s+References Committee$/i, " References");
+  const est = /\bEstimates\b/i.test(t) ? "Estimates" : "";
+  const at = t.toLowerCase().lastIndexOf("portfolio");
+  const tail = at >= 0 ? t.slice(at + 9).trim() : "";
+  const dept = tail && tail.length < 120 && !/committee/i.test(tail) ? tail : "";
+  return [est, committee, dept].filter(Boolean).join(" · ");
+}
+
+// Debate headings that name a procedure rather than a subject.
+const GENERIC_DEBATE_RE = /^(?:bills?|constituency statements?|statements? by members|members'? statements?|private members'? (?:business|statements?)|community recognition statements?|adjournment(?: debate)?|matters? of public importance|questions?(?: without notice| on notice| time)?|answers to questions|ministerial statements?|motions?|committees?|documents?|business|statements?|second reading|consideration in detail|in committee|grievance debate|petitions?|notices?(?: of motion)?|condolences?|first speech|maiden speech|speech|debate|personal explanations?|take note of answers?|urgency motions?)$/i;
+
+function topicArcItemHTML(item, brief, showYear) {
   const date = String(item.date || "").slice(0, 10);
   const year = date.slice(0, 4) || "—";
-  const passage = String(item.snippet || "").trim() || "Open the speech to read the passage.";
-  return `<li class="topic-arc-item" data-arc-resource="${esc(item.resource || '')}">
-    <time class="topic-arc-year"${date ? ` datetime="${esc(date)}"` : ""}>${esc(year)}</time>
+  const committee = isCommitteeChamber(item.chamber);
+  const witness = item.speaker_type ? item.speaker_type === "witness" : (committee && item.person_id == null && !item.party);
+  // The debate heading is the title's subject. A procedural one ("Bills", "Adjournment")
+  // says nothing about the speech, so it rides on the byline instead of standing as a heading.
+  const subject = committee ? committeeShortTitle(titleSubject(item) || item.title) : titleSubject(item);
+  const generic = !committee && GENERIC_DEBATE_RE.test(subject.trim());
+  const heading = generic ? "" : subject;
+  const passage = cleanPassage(item.snippet);
+  const portrait = item.speaker && !witness ? photoUrlFor(item.speaker) : null;
+  const where = PARLIAMENT_NAMES[item.state] || STATE_NAMES[item.state] || item.state || "";
+  const role = witness ? [item.role, item.organisation].filter(Boolean).join(", ") : "";
+  return `<li class="topic-arc-item${showYear ? " topic-arc-item-first" : ""}" data-arc-resource="${esc(item.resource || '')}">
+    <time class="topic-arc-year"${date ? ` datetime="${esc(date)}"` : ""}${showYear ? "" : ' aria-hidden="true"'}>${showYear ? esc(year) : ""}</time>
     <div class="topic-arc-entry">
-      <a class="topic-arc-source" href="/doc/${encodeURIComponent(item.slug)}">${esc(displayTitle(item))}</a>
-      <span class="result-meta">${item.speaker ? `<a class="topic-arc-speaker" href="${esc(subjectHash('person', item.speaker))}">${item.party ? partyDotHTML(item.party) : ''}${esc(item.speaker)}</a>` : ''}${item.party ? `<span>${esc(item.party)}</span>` : ''}<span>${esc(PARLIAMENT_NAMES[item.state] || STATE_NAMES[item.state] || item.state || '')}${date ? ` · ${esc(fmtDate(date))}` : ''}</span></span>
+      <div class="topic-arc-who">
+        ${item.speaker ? `<a class="topic-arc-face" href="${esc(subjectHash('person', item.speaker))}" aria-hidden="true" tabindex="-1">${portrait ? `<img src="${esc(portrait)}" alt="" width="40" height="40" loading="lazy">` : ""}</a>` : `<span class="topic-arc-face topic-arc-face-none" aria-hidden="true"></span>`}
+        <span class="topic-arc-byline">
+          <span class="topic-arc-name">${item.speaker ? `<a href="${esc(subjectHash('person', item.speaker))}">${esc(item.speaker)}</a>` : "Speaker not named"}${item.party ? ` ${partyChipHTML(item.party)}` : ""}${witness ? ` <span class="topic-arc-witness">witness</span>` : ""}</span>
+          <span class="topic-arc-when">${role ? `${esc(role)} · ` : ""}${esc(where)}${committee ? " · committee" : ""}${date ? ` · <time datetime="${esc(date)}">${esc(fmtDate(date))}</time>` : ""}${generic ? ` · ${esc(subject.trim())}` : ""}</span>
+        </span>
+      </div>
+      ${heading ? `<a class="topic-arc-source" href="/doc/${encodeURIComponent(item.slug)}">${esc(heading)}</a>` : ""}
       ${brief
-        ? `<p class="topic-arc-brief">${esc(brief)}</p>`
-        : `<p class="topic-arc-passage"><span>Passage</span>${esc(passage)}</p>`}
+        ? `<p class="topic-arc-brief"><span class="topic-arc-tag">Machine brief</span>${esc(brief)}</p><a class="topic-arc-open" href="/doc/${encodeURIComponent(item.slug)}">Read the speech</a>`
+        : `<a class="topic-arc-passage" href="/doc/${encodeURIComponent(item.slug)}">${esc(passage || "Open the speech to read the passage.")}</a>`}
     </div>
   </li>`;
+}
+
+/* Who carried the debate in this window: parties by share of the matches,
+   the parliaments it ran in, and how many machine briefs are on hand. */
+function topicArcVoicesHTML(results, briefCount) {
+  const parties = new Map();
+  const parliaments = new Set();
+  let witnesses = 0;
+  for (const r of results) {
+    if (r.party) parties.set(r.party, (parties.get(r.party) || 0) + 1);
+    if (r.speaker_type === "witness") witnesses++;
+    if (r.state) parliaments.add(PARLIAMENT_NAMES[r.state] || STATE_NAMES[r.state] || r.state);
+  }
+  const top = [...parties.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4);
+  const chips = top.map(([party, n]) => `<span class="topic-arc-voice">${partyChipHTML(party)}<b>${Math.round(n / results.length * 100)}%</b></span>`).join("");
+  const bits = [
+    `<span>${results.length.toLocaleString()} labelled speeches in the window</span>`,
+    parliaments.size ? `<span>${esc([...parliaments].join(", "))}</span>` : "",
+    witnesses ? `<span>${witnesses} from committee witnesses</span>` : "",
+    briefCount ? `<span data-brief-count>${briefCount} with a machine brief</span>` : "",
+  ].filter(Boolean).join('<i aria-hidden="true">·</i>');
+  return `<div class="topic-arc-voices">${chips ? `<div class="topic-arc-voice-row" aria-label="Parties by share of these speeches">${chips}</div>` : ""}<p class="topic-arc-counts">${bits}</p></div>`;
 }
 
 async function renderTopicArc(slug, phrase, key, mount) {
@@ -4600,7 +4682,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
       kind: "speech", mode: "hybrid",
     }, 1, "newest");
     params.set("per", String(SEARCH_EXPORT_MAX));
-    const data = await api(`/api/search?${params}`);
+    const [data] = await Promise.all([api(`/api/search?${params}`), loadPhotoMap()]);
     if (!active()) return;
     const results = (data.results || []).filter((item) => item.slug);
     if (!results.length) {
@@ -4632,23 +4714,48 @@ async function renderTopicArc(slug, phrase, key, mount) {
             const brief = briefs[row.dataset.arcResource];
             const passage = row.querySelector('.topic-arc-passage');
             if (brief && passage) {
-              passage.className = 'topic-arc-brief';
-              passage.textContent = brief;
+              const p = document.createElement("p");
+              p.className = "topic-arc-brief";
+              p.innerHTML = `<span class="topic-arc-tag">Machine brief</span>`;
+              p.appendChild(document.createTextNode(brief));
+              const open = document.createElement("a");
+              open.className = "topic-arc-open";
+              open.href = passage.getAttribute("href");
+              open.textContent = "Read the speech";
+              passage.replaceWith(p, open);
             }
+          }
+          const counts = mount.querySelector('.topic-arc-counts');
+          if (counts) {
+            const n = results.filter((r) => briefs[r.resource]).length;
+            const have = counts.querySelector('[data-brief-count]');
+            if (have) have.textContent = `${n} with a machine brief`;
+            else if (n) counts.insertAdjacentHTML('beforeend', `<i aria-hidden="true">·</i><span data-brief-count>${n} with a machine brief</span>`);
           }
         }
       });
     };
+    const rowsHTML = (items, prevYear = null) => {
+      let last = prevYear;
+      return items.map((item) => {
+        const y = String(item.date || "").slice(0, 4) || "—";
+        const first = y !== last;
+        last = y;
+        return topicArcItemHTML(item, briefs[item.resource], first);
+      }).join("");
+    };
     const paint = () => {
       const items = sorted().slice(0, visible);
+      const briefCount = results.filter((r) => briefs[r.resource]).length;
       mount.innerHTML = `<div class="topic-arc-head">
         <h3 class="topic-arc-heading">The arc of this debate</h3>
         <div class="quiet-toggle" role="group" aria-label="Debate chronology">
           <button type="button" data-arc-order="newest" aria-pressed="${order === 'newest'}">Newest</button>
           <button type="button" data-arc-order="oldest" aria-pressed="${order === 'oldest'}">Oldest</button>
         </div></div>
-        <p class="fineprint">A window of ${results.length.toLocaleString()} labelled matches, ordered by date. Available machine briefs replace passages as they arrive.</p>
-        <ol class="topic-arc-list">${items.map((item) => topicArcItemHTML(item, briefs[item.resource])).join('')}</ol>
+        ${topicArcVoicesHTML(results, briefCount)}
+        <ol class="topic-arc-list">${rowsHTML(items)}</ol>
+        <p class="fineprint topic-arc-note">Machine briefs are automated summaries and stand in for the passage where one exists; passages are extracts from the record, opened by the title. The window is the search index's newest labelled matches, not the whole debate.</p>
         <div class="topic-arc-footer"><p class="fineprint" role="status">Showing ${items.length} of ${results.length} matches.</p>
         ${items.length < results.length ? `<button type="button" data-arc-more>Show ${Math.min(30, results.length - items.length)} more</button>` : ''}
         <a href="${esc(searchHash(phrase, { topic: slug }, 1, 'newest'))}">Search the full debate</a></div>`;
@@ -4665,7 +4772,8 @@ async function renderTopicArc(slug, phrase, key, mount) {
         const from = visible;
         visible += 30;
         const next = sorted().slice(from, visible);
-        mount.querySelector('.topic-arc-list').insertAdjacentHTML('beforeend', next.map((item) => topicArcItemHTML(item, briefs[item.resource])).join(''));
+        const prevYear = String(sorted()[from - 1]?.date || "").slice(0, 4) || "—";
+        mount.querySelector('.topic-arc-list').insertAdjacentHTML('beforeend', rowsHTML(next, prevYear));
         const count = Math.min(visible, results.length);
         mount.querySelector('[role="status"]').textContent = `Showing ${count} of ${results.length} matches.`;
         const button = mount.querySelector('[data-arc-more]');
@@ -8859,7 +8967,7 @@ function renderResults(results) {
       const brief = lastSearch.briefs[r.resource];
       const text = searchReadMode === "briefs" && brief
         ? `<p id="search-passage-${index}" class="search-result-text search-result-brief"><span class="search-passage-tag">Brief</span>${esc(brief)}</p>`
-        : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" ? `<span class="search-passage-tag">Passage · ${lastSearch.briefsLoading ? "checking for a brief…" : "no brief available"}</span>` : ""}${highlightHTML(r.snippet || "", lastSearch.query)}</p>`;
+        : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" ? `<span class="search-passage-tag">Passage · ${lastSearch.briefsLoading ? "checking for a brief…" : "no brief available"}</span>` : ""}${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>`;
       const title = r.speaker && r.title === `${r.speaker} — ${r.date}` ? `Speech by ${r.speaker}` : displayTitle(r);
       const meta = [
         r.speaker ? `<a href="${esc(subjectHash("person", r.speaker))}">${esc(r.speaker)}</a>` : "",

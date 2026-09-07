@@ -27,6 +27,16 @@ short texts, bad dates. Findings and what was done:
 | openaustralia's dropped space before a capitalised word ("theAustralian", "byMr Gray") | 30,144 of 66,136 rows | `text_hygiene --rule glued_capitalised_word` | Split only before honorifics and parliamentary nouns (`_GLUED_WORD_RE`), gated to that source; camel-cased names untouched |
 | `&#` sequences in committee clean text | 472 rows | `text_hygiene --rule numeric_html_entity` (dry run) | Nothing to write: every stored body already equals the cleaner's output; the sequences are not entities the cleaner should decode |
 
+## 2026-09-07 pass
+
+Found while redesigning the topic page's "arc of this debate", which shows one passage per speech.
+
+| Defect | Size | Loop | Fix |
+|---|---|---|---|
+| State hansard bodies in the knowledge box still opened with the reporter's banner ("Mr DAVID MEHAN ( The Entrance ) ( 16:43 :38 ):") because the `matching_speaker_banner` rule post-dated their push | NSW 39,726 rows; VIC 2; SA and QLD clean | `text_hygiene --rule matching_speaker_banner --force` per source | Re-cleaned and the text re-sent (`text:` reason); the portal also strips any banner it still sees, for display only |
+| A senator's committee evidence carried no party, and one senator was never linked: the committee source records no party, and the resolver links only on an exact full name ("Nampijinpa Price") | 123,257 rows without a party; 1,023 unlinked | `speaker_hygiene` committee_party | Member's canonical party written to `party_canonical`; a name that is the suffix of exactly one federal member's full name is linked |
+| The Worker dropped every `person_id` because the corpus stores ids as text and it accepted only numbers; the portal then took a linked senator for a witness | every speech | `portal/src/index.ts` | Text ids pass through; the portal trusts `speaker_type` whenever the record carries one |
+
 Left alone, on purpose:
 
 - `wragge_xml` (335K rows, 1901 to 2005): not in the knowledge box; its 12K leading-junk
@@ -56,6 +66,8 @@ PYTHONPATH=. python3 -m parli.ingest.committee_witnesses fetch   --db ~/.cache/a
 PYTHONPATH=. python3 -m parli.ingest.committee_witnesses resolve --db ~/.cache/autoresearch/parli.db
 PYTHONPATH=. python3 -m parli.ingest.speaker_hygiene --db ~/.cache/autoresearch/parli.db [--dry-run] [--loops jurisdiction,fullname,junk]
 PYTHONPATH=. python3 -m parli.ingest.text_hygiene --db ~/.cache/autoresearch/parli.db --source openaustralia --rule glued_capitalised_word [--dry-run]
+PYTHONPATH=. python3 -m parli.ingest.text_hygiene --db ~/.cache/autoresearch/parli.db --source nsw_hansard --rule matching_speaker_banner --force   # re-send text already clean in the db
+PYTHONPATH=. python3 -m parli.ingest.speaker_hygiene --db ~/.cache/autoresearch/parli.db --loops committee_party
 nohup env PYTHONPATH=. python3 scripts/arag_patch_speakers.py --env ~/opax/.env > /tmp/kb_patch.log 2>&1 & echo $! > /tmp/kb_patch.pid
 python3 - < scripts/export_speakers.py > /tmp/speakers.json     # then copy to portal/public/speakers.json
 ```

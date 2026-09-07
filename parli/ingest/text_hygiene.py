@@ -43,6 +43,9 @@ def main() -> None:
     ap.add_argument("--rule", required=True, help="only rows where this rule fired are written")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--limit", type=int, default=None)
+    ap.add_argument("--force", action="store_true",
+                    help="queue every row the rule fires on, even where text_clean already matches "
+                         "(the box may still hold the text from before the repair)")
     args = ap.parse_args()
 
     db = sqlite3.connect(args.db, timeout=600)
@@ -75,7 +78,7 @@ def main() -> None:
         stats["rule_fired"] += 1
         # A row whose stored clean text already equals the cleaner's output is
         # in the box as it should be; only a changed body is worth a patch.
-        if r["text_clean"] is not None and r["text_clean"] == c.text:
+        if r["text_clean"] is not None and r["text_clean"] == c.text and not args.force:
             stats["already_clean"] += 1
             continue
         updates.append((c.text, ",".join(c.rules), r["speech_id"]))
