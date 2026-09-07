@@ -31,7 +31,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "bill"];
+const PANELS = ["discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "bill"];
 // /bills is the bill panel's index; it has no panel of its own, so isRoute has
 // to be told the word is ours before the click handler will follow it.
 const PANEL_ALIASES = { bills: "bill" };
@@ -820,6 +820,7 @@ const TITLES = {
   ask: "OPAX: ask what Australian politicians actually said",
   chat: "Keep asking · OPAX",
   search: "Search the record · OPAX",
+  discover: "Discover overlooked patterns · OPAX",
   money: "Money map · OPAX",
   reports: "Reports · OPAX",
   doc: "From the record · OPAX",
@@ -833,6 +834,115 @@ const TITLES = {
   bill: "Bill · OPAX",
   bills: "Bills · OPAX",
 };
+
+// --- discoveries: a bounded, auditable export, never an allegation ----------
+const DISCOVERY_CATEGORIES = {
+  donor_contract_overlap: "Party receipts & suppliers",
+  recipient_concentration: "Receipt concentration",
+  procurement_concentration: "Supplier concentration",
+};
+let discoveryData = null;
+let discoveryRequest = null;
+let discoveryRenderId = 0;
+
+function discoveryMetric(metric) {
+  const value = Number(metric.value);
+  if (!Number.isFinite(value)) return "Not available";
+  if (metric.format === "currency") return value.toLocaleString("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 });
+  if (metric.format === "percent") return `${value.toLocaleString("en-AU", { maximumFractionDigits: 1 })}%`;
+  return value.toLocaleString("en-AU");
+}
+
+function discoveryLocalUrl(url) {
+  return typeof url === "string" && /^\/(?:subject|search)(?:\/|\?)/.test(url) ? url : null;
+}
+
+function discoveryFindingHTML(signal) {
+  const entityUrl = discoveryLocalUrl(signal.entity_url);
+  const exploreUrl = entityUrl || `/search?q=${encodeURIComponent(signal.entity || "")}`;
+  return `<article class="discovery-finding">
+    <p class="discovery-kind">${esc(DISCOVERY_CATEGORIES[signal.category] || signal.category)}<span>Investigation lead</span></p>
+    <h2>${esc(signal.title)}</h2><p class="discovery-summary">${esc(signal.summary)}</p>
+    <dl class="discovery-metrics">${(signal.metrics || []).map((metric) => `<div><dt>${esc(metric.label)}</dt><dd>${esc(discoveryMetric(metric))}</dd></div>`).join("")}</dl>
+    <a class="discovery-entity" href="${esc(exploreUrl)}">${entityUrl ? "Explore the donor profile for" : "Search the record for"} ${esc(signal.entity)}</a>
+    <details class="discovery-evidence"><summary>Review evidence and limitations (${(signal.evidence || []).length} ${(signal.evidence || []).length === 1 ? "record" : "records"})</summary>
+      <ul>${(signal.evidence || []).map((evidence) => {
+        const url = safeUrl(evidence.url);
+        return `<li>${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(evidence.label)}<span class="visually-hidden"> (opens in a new tab)</span></a>` : esc(evidence.label)}<small>${esc(evidence.table)} record ${esc(evidence.record_id)}</small></li>`;
+      }).join("")}</ul>
+      <h3>Before drawing a conclusion</h3><ul>${(signal.caveats || []).map((caveat) => `<li>${esc(caveat)}</li>`).join("")}</ul>
+    </details>
+  </article>`;
+}
+
+function filterDiscoveries() {
+  if (!discoveryData) return;
+  const category = $("discover-categories").querySelector('[aria-pressed="true"]')?.dataset.category || "";
+  const query = $("discover-query").value.trim().toLocaleLowerCase();
+  const signals = discoveryData.signals.filter((signal) => (!category || signal.category === category) &&
+    (!query || `${signal.entity} ${signal.title} ${signal.summary}`.toLocaleLowerCase().includes(query)));
+  $("discover-count").textContent = `${signals.length.toLocaleString()} ${signals.length === 1 ? "lead" : "leads"} shown from ${discoveryData.signals.length.toLocaleString()} in this export`;
+  $("discover-results").innerHTML = signals.length ? signals.map(discoveryFindingHTML).join("") :
+    `<div class="discovery-empty"><h2>No leads match this view</h2><p>${discoveryData.signals.length ? "Try another name or explore all patterns." : "The available records do not produce leads under these methods. Check the coverage and methodology below."}</p>${category || query ? '<button type="button" id="discover-clear">Clear filters</button>' : ""}</div>`;
+  $("discover-clear")?.addEventListener("click", () => goRoute("/discover"));
+}
+
+async function renderDiscoveryPage(params, manageFocus) {
+  const renderId = ++discoveryRenderId;
+  const category = Object.hasOwn(DISCOVERY_CATEGORIES, params.get("category")) ? params.get("category") : "";
+  for (const button of $("discover-categories").querySelectorAll("button")) button.setAttribute("aria-pressed", String(button.dataset.category === category));
+  $("discover-query").value = params.get("q") || "";
+  if (manageFocus) $("discover-title").focus({ preventScroll: true });
+  $("discover-results").setAttribute("aria-busy", "true");
+  $("discover-results").innerHTML = '<p class="status" role="status">Opening the discovery records…</p>';
+  $("discover-count").textContent = "";
+  try {
+    discoveryRequest ??= fetch("/discovery.json").then((response) => {
+      if (!response.ok) throw new Error("Discovery export unavailable");
+      return response.json();
+    }).then((data) => {
+      if (!Array.isArray(data.signals) || !data.coverage || !Array.isArray(data.methodology)) throw new Error("Invalid discovery export");
+      return data;
+    }).catch((error) => { discoveryRequest = null; throw error; });
+    const data = await discoveryRequest;
+    if (renderId !== discoveryRenderId || document.documentElement.dataset.panel !== "discover") return;
+    discoveryData = data;
+    const coverage = $("discover-coverage");
+    coverage.hidden = false;
+    coverage.innerHTML = `<span><strong>${Number(data.coverage.donations || 0).toLocaleString("en-AU")}</strong> party receipt records</span><span><strong>${Number(data.coverage.contracts || 0).toLocaleString("en-AU")}</strong> contract records</span><a href="#discover-methodology">How leads are found</a>`;
+    const unavailable = data.coverage.unavailable_categories || [];
+    const years = data.coverage.financial_year_from && data.coverage.financial_year_to
+      ? `Receipt years ${esc(data.coverage.financial_year_from)} to ${esc(data.coverage.financial_year_to)}.` : "";
+    const snapshot = data.coverage.snapshot_at || data.generated_at;
+    const snapshotNote = snapshot ? `Exported ${esc(fmtDate(String(snapshot).slice(0, 10)))}.` : "";
+    $("discover-methodology").hidden = false;
+    $("discover-methodology-body").innerHTML = `<p class="fineprint">${years} ${snapshotNote}</p><ul>${data.methodology.map((method) => `<li>${esc(method)}</li>`).join("")}</ul>${unavailable.length ? `<p>Patterns unavailable in this export: ${unavailable.map((item) => esc(DISCOVERY_CATEGORIES[item] || item)).join(", ")}.</p>` : ""}<p class="fineprint">Coverage describes the records available to Opax, not all Australian political funding or procurement. Source links may open a register or listing; use the record reference to locate the original entry.</p>`;
+    filterDiscoveries();
+  } catch {
+    if (renderId !== discoveryRenderId || document.documentElement.dataset.panel !== "discover") return;
+    $("discover-results").innerHTML = '<div class="discovery-empty" role="alert"><h2>Investigation leads could not be loaded</h2><p>The discovery export is unavailable. Try loading the records again.</p><button type="button" id="discover-retry">Try again</button></div>';
+    $("discover-retry").addEventListener("click", () => renderDiscoveryPage(parseHash().params, false));
+  } finally {
+    if (renderId === discoveryRenderId) $("discover-results").setAttribute("aria-busy", "false");
+  }
+}
+
+$("discover-categories").addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-category]");
+  if (!button) return;
+  const params = new URLSearchParams();
+  if (button.dataset.category) params.set("category", button.dataset.category);
+  if ($("discover-query").value.trim()) params.set("q", $("discover-query").value.trim());
+  goRoute(`/discover${params.size ? `?${params}` : ""}`);
+});
+$("discover-query").addEventListener("input", () => {
+  const category = $("discover-categories").querySelector('[aria-pressed="true"]')?.dataset.category;
+  const params = new URLSearchParams();
+  if (category) params.set("category", category);
+  if ($("discover-query").value.trim()) params.set("q", $("discover-query").value.trim());
+  replaceRoute(`/discover${params.size ? `?${params}` : ""}`);
+  filterDiscoveries();
+});
 
 // --- money map (lazy-loaded 3D bundle) --------------------------------------
 // One export per jurisdiction, all in the same node/edge shape, loaded one at
@@ -1138,6 +1248,11 @@ function route() {
     setCrumbs([{ label: "Search" }]);
     applySearchParams(params);
     focusEntry("search-input");
+  } else if (view === "discover") {
+    showPanel("discover");
+    document.title = TITLES.discover;
+    setCrumbs([{ label: "Discover" }]);
+    renderDiscoveryPage(params, manageFocus);
   } else if (view === "reports") {
     showPanel("reports");
     document.title = TITLES.reports;
@@ -11567,6 +11682,7 @@ const BOOT_META = {
 // Keeps the head's canonical/og:url on the current route after each route(),
 // and the title/description on the view now showing.
 const VIEW_DESCRIPTIONS = {
+  discover: "Explore overlaps and concentrations across recorded party receipts and government contracts, with evidence and limitations for every investigation lead.",
   search: "Search half a million Australian parliamentary speeches by keyword, speaker, party, state, topic and year.",
   money: "Disclosed political donations as territory you can spin: donors, parties and 28 years of returns.",
   reports: "Standing investigations pairing the money with the words, every claim cited to the record.",

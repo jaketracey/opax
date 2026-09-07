@@ -4132,3 +4132,52 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 }
 .stats-live-table thead + tbody + thead th { padding-top: 1.25rem; }
 .stats-live-table .stat-cell, .stats-live-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Discovery desk: source-led findings within the existing institutional palette. */
+.discovery-intro { max-width: 76ch; margin-bottom: var(--space-4); }
+.discovery-intro h1 { font: 700 clamp(1.8rem, 4vw, 2.7rem)/1.25 var(--serif); color: var(--navy); margin-bottom: 1rem; }
+.discovery-intro > p { line-height: 1.75; color: var(--ink-soft); }
+.discovery-intro .discovery-caution { border-left: 3px solid var(--bronze); padding-left: 1rem; font-size: .875rem; margin-top: 1.25rem; }
+.discovery-coverage { display: flex; flex-wrap: wrap; gap: .75rem 2rem; padding: 1rem 0; border-block: 1px solid var(--line); margin: 1.5rem 0 2rem; font-size: .875rem; }
+.discovery-coverage[hidden] { display: none; }
+.discovery-coverage a { margin-left: auto; }
+.discovery-workspace { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 2.5rem; }
+.discovery-filters fieldset { border: 0; padding: 0; margin: 0 0 1.75rem; }
+.discovery-filters legend, .discovery-filters label { display: block; font-weight: 700; font-size: .875rem; margin-bottom: .75rem; }
+.discovery-filters button { display: block; width: 100%; text-align: left; border: 1px solid transparent; padding: .8rem .75rem; margin: .2rem 0; background: transparent; color: var(--ink-soft); font: inherit; font-size: .875rem; cursor: pointer; }
+.discovery-filters button[aria-pressed="true"] { background: var(--navy); color: var(--on-navy); }
+.discovery-filters button:hover:not([aria-pressed="true"]) { background: var(--paper-sunken); }
+.discovery-filters input { width: 100%; min-width: 0; border: 1px solid var(--line-strong); padding: .75rem; background: var(--paper-raised); color: var(--ink); font: inherit; font-size: .875rem; }
+.discovery-filters .fineprint { margin-top: .75rem; }
+.discovery-count { font-size: .8125rem; color: var(--ink-faint); margin: 0 0 1rem; }
+.discovery-finding { border: 1px solid var(--line); border-top: 3px solid var(--navy); background: var(--paper-raised); padding: 1.5rem; margin-bottom: 1.5rem; }
+.discovery-kind { display: flex; gap: 1rem; justify-content: space-between; font-size: .75rem; color: var(--bronze-ink); margin: 0 0 1rem; }
+.discovery-kind span { color: var(--ink-faint); }
+.discovery-finding h2 { font: 700 clamp(1.15rem, 2.5vw, 1.5rem)/1.45 var(--serif); color: var(--navy); margin: 0 0 .85rem; overflow-wrap: anywhere; }
+.discovery-summary { color: var(--ink-soft); line-height: 1.75; font-size: .9375rem; max-width: 76ch; }
+.discovery-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 1.25rem; border-block: 1px solid var(--line); margin: 1.25rem 0; padding: 1rem 0; }
+.discovery-metrics dt { font-size: .75rem; color: var(--ink-soft); }
+.discovery-metrics dd { font-weight: 700; font-size: 1.25rem; margin: .4rem 0 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.discovery-entity { display: inline-block; font-size: .875rem; margin-bottom: 1rem; }
+.discovery-evidence { font-size: .875rem; line-height: 1.65; }
+.discovery-evidence summary { cursor: pointer; color: var(--bronze-ink); width: fit-content; }
+.discovery-evidence ul { padding-left: 1.2rem; margin: 1rem 0; }
+.discovery-evidence li { margin: .75rem 0; overflow-wrap: anywhere; }
+.discovery-evidence small { display: block; color: var(--ink-faint); }
+.discovery-evidence h3 { font: 700 .875rem var(--sans); margin-top: 1.5rem; }
+.discovery-empty { padding: 1.5rem; border: 1px solid var(--line); }
+.discovery-empty h2 { font: 700 1.125rem var(--serif); }
+.discovery-empty p { margin: 1rem 0; color: var(--ink-soft); }
+.discovery-empty button { background: var(--navy); color: var(--on-navy); padding: .7rem 1rem; cursor: pointer; border: 0; font: inherit; }
+.discovery-methodology { margin-top: 2.5rem; border-top: 1px solid var(--line); padding-top: 1.5rem; scroll-margin-top: 6rem; max-width: 85ch; }
+.discovery-methodology h2 { font: 700 1.35rem var(--serif); }
+.discovery-methodology ul { padding-left: 1.2rem; }
+.discovery-methodology li { margin: .85rem 0; font-size: .875rem; line-height: 1.75; color: var(--ink-soft); }
+#panel-discover :is(a, button, input, summary):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 4px; }
+@media (max-width: 760px) {
+  .discovery-workspace { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  .discovery-filters fieldset { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
+  .discovery-filters button { width: auto; border-color: var(--line); margin: 0; }
+  .discovery-finding { padding: 1rem; }
+  .discovery-coverage a { margin-left: 0; }
+}
