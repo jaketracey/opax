@@ -23,11 +23,15 @@ import time
 from urllib.parse import quote
 
 DEFAULT_DB = "/home/jake/.cache/autoresearch/parli.db"
-# Match the current federal money export's public/internal funding exclusions.
+# Match the current federal money export's public/internal funding exclusions,
+# including the observed source spelling "Electoral Comission" (one m).
 PUBLIC_FUNDING_RE = re.compile(
-    r"electoral commission|election funding|electoral office|"
+    r"electoral com{1,2}ission|election funding|electoral office|"
     r"tax(ation)?\s+(office|authority)|\bato\b|\baec\b|\becq\b|"
     r"department of|australian agency|commonwealth of australia|electoral comm\b", re.I)
+# Observed government receipt misclassified as individual in both source and
+# canonical entity register. Keep this correction bounded to the exact body.
+KNOWN_GOVERNMENT_NAMES = {"high court of australia"}
 PARTY_WORD_RE = re.compile(
     r"\blabor\b|\bliberal\b|\bliberals\b|\bgreens\b|\bnationals\b|"
     r"\bone nation\b|\bunited australia\b|\bkatter\b|\bfamily first\b|"
@@ -82,7 +86,9 @@ def export_discovery(source, limit=60):
         if not name or not math.isfinite(amount):
             excluded["blank_or_invalid"] += 1
             continue
-        if ent and ent["kind"] in {"government", "party_unit"}:
+        if ((ent and ent["kind"] in {"government", "party_unit"})
+                or name.casefold() in KNOWN_GOVERNMENT_NAMES
+                or canonical.casefold() in KNOWN_GOVERNMENT_NAMES):
             excluded["government_or_party_entity"] += 1
             continue
         if (PUBLIC_FUNDING_RE.search(name) or PUBLIC_FUNDING_RE.search(canonical)
@@ -146,6 +152,7 @@ def export_discovery(source, limit=60):
         "State, election and referendum disclosures are not added to annual federal receipts. Concentration includes all eligible classified and unclassified donors without a display-size floor.",
         "Amounts span all available reporting years. Annual receipts and contract awards are separate money flows and are never summed; matching names and periods do not establish causation or misconduct.",
         "Concentration requires at least two positive records and a largest-participant share of at least 25%. Cards alternate signal families and rank within each family by recorded value.",
+        "Concentration charts show the five largest named participants by recorded value; Other includes every remaining participant. Recorded date or financial-year spans exclude missing/invalid dates, counted separately, while their values remain in totals.",
         "Contracts reflect recorded award values, not expenditure, and are a partial corpus. Date errors and future start dates are possible; no timing inference is made.",
         "Source links open the official source register, not an individual receipt or notice. Evidence labels carry original reported names, row amounts and local source IDs; each is one example behind the aggregate.",
         "Reporting thresholds, incomplete coverage and duplicated/amended disclosures can affect totals. Absence of a signal is not evidence of absence.",

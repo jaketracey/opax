@@ -56,11 +56,11 @@
       "category": "recipient_concentration",
       "entity": "Mineralogy Pty Ltd",
       "title": "United Australia Party: 78% from one donor",
-      "summary": "Mineralogy Pty Ltd accounts for 78.0% of the positive recorded annual AEC party-receipt value for United Australia Party.",
+      "summary": "Mineralogy Pty Ltd accounts for 78.4% of the positive recorded annual AEC party-receipt value for United Australia Party.",
       "metrics": [
         {
           "label": "Largest donor share",
-          "value": 78.0,
+          "value": 78.41,
           "format": "percent"
         },
         {
@@ -70,17 +70,17 @@
         },
         {
           "label": "Total recorded value",
-          "value": 159813912.0,
+          "value": 158976424.0,
           "format": "currency"
         },
         {
           "label": "Distinct donors",
-          "value": 30.0,
+          "value": 28.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 975.0,
+          "value": 973.0,
           "format": "number"
         }
       ],
@@ -98,6 +98,57 @@
         "At least two positive records and a 25% share are required. A single reporting period is not imposed.",
         "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "United Australia Party",
+        "group_total": 158976424.0,
+        "leading_name": "Mineralogy Pty Ltd",
+        "participant_label": "donor",
+        "participant_count": 28,
+        "record_count": 973,
+        "participants": [
+          {
+            "name": "Mineralogy Pty Ltd",
+            "value": 124655455.0,
+            "share": 78.41,
+            "record_count": 230
+          },
+          {
+            "name": "Queensland Nickel Pty Ltd",
+            "value": 27037166.0,
+            "share": 17.01,
+            "record_count": 491
+          },
+          {
+            "name": "Palmer Coolum Resort Pty Ltd",
+            "value": 4834153.0,
+            "share": 3.04,
+            "record_count": 200
+          },
+          {
+            "name": "QN Resources Pty Ltd",
+            "value": 461624.0,
+            "share": 0.29,
+            "record_count": 3
+          },
+          {
+            "name": "Souther Cross Austereo",
+            "value": 266924.0,
+            "share": 0.17,
+            "record_count": 1
+          }
+        ],
+        "other_total": 1721102.0,
+        "other_share": 1.08,
+        "other_count": 23,
+        "period": {
+          "kind": "financial_year",
+          "from": "2007-08",
+          "to": "2024-25",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -146,6 +197,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Department of Home Affairs",
+        "group_total": 5713189812.32,
+        "leading_name": "SECURE JOURNEYS PTY LTD",
+        "participant_label": "supplier",
+        "participant_count": 522,
+        "record_count": 898,
+        "participants": [
+          {
+            "name": "SECURE JOURNEYS PTY LTD",
+            "value": 2343038544.0,
+            "share": 41.01,
+            "record_count": 1
+          },
+          {
+            "name": "CUSHMAN & WAKEFIELD PTY LTD",
+            "value": 1019223563.3,
+            "share": 17.84,
+            "record_count": 3
+          },
+          {
+            "name": "TEEKAY SHIPPING (AUSTRALIA) PTY LTD",
+            "value": 211577041.91,
+            "share": 3.7,
+            "record_count": 1
+          },
+          {
+            "name": "SKYTRADERS PTY LTD",
+            "value": 190795803.32,
+            "share": 3.34,
+            "record_count": 1
+          },
+          {
+            "name": "TOLL REMOTE LOGISTICS PTY LTD",
+            "value": 187441311.75,
+            "share": 3.28,
+            "record_count": 4
+          }
+        ],
+        "other_total": 1761113548.04,
+        "other_share": 30.83,
+        "other_count": 517,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2009-12-23",
+          "to": "2026-10-31",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -246,6 +348,57 @@
         "At least two positive records and a 25% share are required. A single reporting period is not imposed.",
         "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Family First",
+        "group_total": 8295517.0,
+        "leading_name": "B & B Day",
+        "participant_label": "donor",
+        "participant_count": 150,
+        "record_count": 237,
+        "participants": [
+          {
+            "name": "B & B Day",
+            "value": 3404175.0,
+            "share": 41.04,
+            "record_count": 14
+          },
+          {
+            "name": "Bob Day",
+            "value": 1709500.0,
+            "share": 20.61,
+            "record_count": 9
+          },
+          {
+            "name": "Families Australia",
+            "value": 555000.0,
+            "share": 6.69,
+            "record_count": 3
+          },
+          {
+            "name": "Ashley Fenn",
+            "value": 430665.0,
+            "share": 5.19,
+            "record_count": 2
+          },
+          {
+            "name": "Australian Gypsum Industries",
+            "value": 200000.0,
+            "share": 2.41,
+            "record_count": 2
+          }
+        ],
+        "other_total": 1996177.0,
+        "other_share": 24.06,
+        "other_count": 145,
+        "period": {
+          "kind": "financial_year",
+          "from": "2003-04",
+          "to": "2024-25",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -294,6 +447,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Department of Health, Disability and Ageing",
+        "group_total": 3799557851.84,
+        "leading_name": "API Services Australia Pty Ltd",
+        "participant_label": "supplier",
+        "participant_count": 170,
+        "record_count": 242,
+        "participants": [
+          {
+            "name": "API Services Australia Pty Ltd",
+            "value": 1192129400.0,
+            "share": 31.38,
+            "record_count": 2
+          },
+          {
+            "name": "GlaxoSmithKline Australia Pty Ltd",
+            "value": 718600000.0,
+            "share": 18.91,
+            "record_count": 2
+          },
+          {
+            "name": "SYMBION PTY LTD",
+            "value": 596460700.0,
+            "share": 15.7,
+            "record_count": 1
+          },
+          {
+            "name": "Accenture Australia Pty Ltd",
+            "value": 290752499.99,
+            "share": 7.65,
+            "record_count": 3
+          },
+          {
+            "name": "SANOFI-AVENTIS AUSTRALIA PTY LTD",
+            "value": 137100000.0,
+            "share": 3.61,
+            "record_count": 2
+          }
+        ],
+        "other_total": 864515251.85,
+        "other_share": 22.75,
+        "other_count": 165,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2020-02-19",
+          "to": "2026-08-19",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -394,6 +598,57 @@
         "At least two positive records and a 25% share are required. A single reporting period is not imposed.",
         "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Centre Alliance",
+        "group_total": 1244835.0,
+        "leading_name": "Climate 200 Pty Limited",
+        "participant_label": "donor",
+        "participant_count": 11,
+        "record_count": 17,
+        "participants": [
+          {
+            "name": "Climate 200 Pty Limited",
+            "value": 400000.0,
+            "share": 32.13,
+            "record_count": 3
+          },
+          {
+            "name": "Nick Xenophon",
+            "value": 250000.0,
+            "share": 20.08,
+            "record_count": 3
+          },
+          {
+            "name": "Wright Street Nominees Pty Ltd",
+            "value": 250000.0,
+            "share": 20.08,
+            "record_count": 1
+          },
+          {
+            "name": "Golden Lineage Pty Ltd",
+            "value": 200000.0,
+            "share": 16.07,
+            "record_count": 3
+          },
+          {
+            "name": "John Darley",
+            "value": 50000.0,
+            "share": 4.02,
+            "record_count": 1
+          }
+        ],
+        "other_total": 94835.0,
+        "other_share": 7.62,
+        "other_count": 6,
+        "period": {
+          "kind": "financial_year",
+          "from": "2013-14",
+          "to": "2022-23",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -442,6 +697,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Geoscience Australia",
+        "group_total": 1266845808.5,
+        "leading_name": "LOCKHEED MARTIN AUSTRALIA PTY LIMITED",
+        "participant_label": "supplier",
+        "participant_count": 111,
+        "record_count": 151,
+        "participants": [
+          {
+            "name": "LOCKHEED MARTIN AUSTRALIA PTY LIMITED",
+            "value": 1183000000.0,
+            "share": 93.38,
+            "record_count": 1
+          },
+          {
+            "name": "Ensign Australia Pty Ltd",
+            "value": 5400000.0,
+            "share": 0.43,
+            "record_count": 1
+          },
+          {
+            "name": "Geoplex Pty Ltd",
+            "value": 5052811.4,
+            "share": 0.4,
+            "record_count": 1
+          },
+          {
+            "name": "TERREX PTY LTD",
+            "value": 4770223.26,
+            "share": 0.38,
+            "record_count": 1
+          },
+          {
+            "name": "Department of Transport and Planning (VIC)",
+            "value": 3240000.0,
+            "share": 0.26,
+            "record_count": 1
+          }
+        ],
+        "other_total": 65382773.84,
+        "other_share": 5.16,
+        "other_count": 106,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2012-08-21",
+          "to": "2026-05-05",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -541,6 +847,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Department of Social Services",
+        "group_total": 1346031493.32,
+        "leading_name": "Wise Employment Ltd",
+        "participant_label": "supplier",
+        "participant_count": 219,
+        "record_count": 365,
+        "participants": [
+          {
+            "name": "Wise Employment Ltd",
+            "value": 375903562.05,
+            "share": 27.93,
+            "record_count": 1
+          },
+          {
+            "name": "The Trustee for the Salvation Army (Victoria) Property Trust",
+            "value": 134300238.54,
+            "share": 9.98,
+            "record_count": 1
+          },
+          {
+            "name": "AMES Australia",
+            "value": 105045402.61,
+            "share": 7.8,
+            "record_count": 1
+          },
+          {
+            "name": "The Personnel Group Ltd",
+            "value": 93210154.95,
+            "share": 6.92,
+            "record_count": 1
+          },
+          {
+            "name": "VERTO LTD",
+            "value": 92736083.55,
+            "share": 6.89,
+            "record_count": 1
+          }
+        ],
+        "other_total": 544836051.62,
+        "other_share": 40.48,
+        "other_count": 214,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2010-08-31",
+          "to": "2026-04-26",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -640,6 +997,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "National Blood Authority",
+        "group_total": 558715063.76,
+        "leading_name": "Roche Products Pty Ltd",
+        "participant_label": "supplier",
+        "participant_count": 28,
+        "record_count": 30,
+        "participants": [
+          {
+            "name": "Roche Products Pty Ltd",
+            "value": 317718916.9,
+            "share": 56.87,
+            "record_count": 1
+          },
+          {
+            "name": "Sanofi-Aventis Australia Pty Ltd",
+            "value": 81881219.2,
+            "share": 14.66,
+            "record_count": 1
+          },
+          {
+            "name": "CSL Behring (Australia) Pty Ltd",
+            "value": 73601832.7,
+            "share": 13.17,
+            "record_count": 1
+          },
+          {
+            "name": "Takeda Pharmaceuticals Australia Pty Ltd",
+            "value": 22323957.7,
+            "share": 4.0,
+            "record_count": 1
+          },
+          {
+            "name": "Shire Australia Pty Ltd",
+            "value": 18207413.07,
+            "share": 3.26,
+            "record_count": 1
+          }
+        ],
+        "other_total": 44981724.19,
+        "other_share": 8.05,
+        "other_count": 23,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2013-10-31",
+          "to": "2025-06-30",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -739,6 +1147,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Reserve Bank of Australia",
+        "group_total": 523753730.04,
+        "leading_name": "Built Pty Limited",
+        "participant_label": "supplier",
+        "participant_count": 27,
+        "record_count": 36,
+        "participants": [
+          {
+            "name": "Built Pty Limited",
+            "value": 300829838.0,
+            "share": 57.44,
+            "record_count": 1
+          },
+          {
+            "name": "Mirvac 8 Chifley Trust",
+            "value": 45804193.0,
+            "share": 8.75,
+            "record_count": 4
+          },
+          {
+            "name": "MSS Security Pty Limited",
+            "value": 29674935.0,
+            "share": 5.67,
+            "record_count": 1
+          },
+          {
+            "name": "NTT Australia",
+            "value": 28862663.47,
+            "share": 5.51,
+            "record_count": 2
+          },
+          {
+            "name": "Hitachi Vantara Australia Pty Limited",
+            "value": 14736679.1,
+            "share": 2.81,
+            "record_count": 2
+          }
+        ],
+        "other_total": 103845421.47,
+        "other_share": 19.83,
+        "other_count": 22,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2014-03-30",
+          "to": "2026-07-30",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -838,6 +1297,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Department of the Prime Minister and Cabinet",
+        "group_total": 289013750.66,
+        "leading_name": "JONES LANG LASALLE (ACT) PTY LIMITED",
+        "participant_label": "supplier",
+        "participant_count": 172,
+        "record_count": 228,
+        "participants": [
+          {
+            "name": "JONES LANG LASALLE (ACT) PTY LIMITED",
+            "value": 140207244.49,
+            "share": 48.51,
+            "record_count": 1
+          },
+          {
+            "name": "DATA#3 LIMITED",
+            "value": 16923742.69,
+            "share": 5.86,
+            "record_count": 2
+          },
+          {
+            "name": "WILSON PARKING AUSTRALIA",
+            "value": 13750000.0,
+            "share": 4.76,
+            "record_count": 1
+          },
+          {
+            "name": "WILSON SECURITY",
+            "value": 13750000.0,
+            "share": 4.76,
+            "record_count": 1
+          },
+          {
+            "name": "Australian National University",
+            "value": 9775000.0,
+            "share": 3.38,
+            "record_count": 1
+          }
+        ],
+        "other_total": 94607763.48,
+        "other_share": 32.73,
+        "other_count": 167,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2013-03-24",
+          "to": "2026-06-30",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -937,6 +1447,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "CSIRO",
+        "group_total": 500630418.29,
+        "leading_name": "SIMEC ZEN Energy Retail Pty Ltd",
+        "participant_label": "supplier",
+        "participant_count": 152,
+        "record_count": 187,
+        "participants": [
+          {
+            "name": "SIMEC ZEN Energy Retail Pty Ltd",
+            "value": 127211000.0,
+            "share": 25.41,
+            "record_count": 1
+          },
+          {
+            "name": "Data#3 Limited",
+            "value": 37263043.4,
+            "share": 7.44,
+            "record_count": 1
+          },
+          {
+            "name": "Aurecon Australasia Pty Ltd",
+            "value": 26965105.95,
+            "share": 5.39,
+            "record_count": 1
+          },
+          {
+            "name": "Metro North Hospital and Health Service",
+            "value": 16726749.0,
+            "share": 3.34,
+            "record_count": 1
+          },
+          {
+            "name": "Cirrus Networks (ACT) Pty Ltd",
+            "value": 14722788.18,
+            "share": 2.94,
+            "record_count": 5
+          }
+        ],
+        "other_total": 277741731.76,
+        "other_share": 55.48,
+        "other_count": 147,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2012-12-31",
+          "to": "2026-07-29",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -1036,6 +1597,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Australian Bureau of Statistics",
+        "group_total": 226991167.02,
+        "leading_name": "Evolve FM Pty Ltd",
+        "participant_label": "supplier",
+        "participant_count": 82,
+        "record_count": 92,
+        "participants": [
+          {
+            "name": "Evolve FM Pty Ltd",
+            "value": 127160000.0,
+            "share": 56.02,
+            "record_count": 2
+          },
+          {
+            "name": "Hines (Aus) Nominees Pty Ltd as Trustee for Hines Global REIT Bourke Trust",
+            "value": 19266385.98,
+            "share": 8.49,
+            "record_count": 1
+          },
+          {
+            "name": "Deakin University",
+            "value": 9858780.42,
+            "share": 4.34,
+            "record_count": 1
+          },
+          {
+            "name": "Forsta Australia Pty Ltd",
+            "value": 7679585.6,
+            "share": 3.38,
+            "record_count": 1
+          },
+          {
+            "name": "SAS Institute Australia Pty. Limited",
+            "value": 6145367.8,
+            "share": 2.71,
+            "record_count": 1
+          }
+        ],
+        "other_total": 56881047.22,
+        "other_share": 25.06,
+        "other_count": 77,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2011-07-24",
+          "to": "2026-07-20",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -1135,6 +1747,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Digital Transformation Agency",
+        "group_total": 165867099.51,
+        "leading_name": "Microsoft Services",
+        "participant_label": "supplier",
+        "participant_count": 85,
+        "record_count": 117,
+        "participants": [
+          {
+            "name": "Microsoft Services",
+            "value": 101739820.85,
+            "share": 61.34,
+            "record_count": 1
+          },
+          {
+            "name": "Telstra Australia",
+            "value": 9445748.5,
+            "share": 5.69,
+            "record_count": 2
+          },
+          {
+            "name": "Oracle Corporation Australia Pty Ltd",
+            "value": 7956850.0,
+            "share": 4.8,
+            "record_count": 1
+          },
+          {
+            "name": "KPMG",
+            "value": 5059164.3,
+            "share": 3.05,
+            "record_count": 5
+          },
+          {
+            "name": "The Trust Company (Australia) Limited",
+            "value": 4767690.16,
+            "share": 2.87,
+            "record_count": 1
+          }
+        ],
+        "other_total": 36897825.7,
+        "other_share": 22.25,
+        "other_count": 80,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2015-11-16",
+          "to": "2026-05-31",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -1234,6 +1897,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Austrade",
+        "group_total": 255231235.92,
+        "leading_name": "QANTAS AIRWAYS LIMITED",
+        "participant_label": "supplier",
+        "participant_count": 177,
+        "record_count": 253,
+        "participants": [
+          {
+            "name": "QANTAS AIRWAYS LIMITED",
+            "value": 100000000.0,
+            "share": 39.18,
+            "record_count": 1
+          },
+          {
+            "name": "JAPAN AIRLINES CO. LTD",
+            "value": 16429000.0,
+            "share": 6.44,
+            "record_count": 4
+          },
+          {
+            "name": "Air New Zealand Limited",
+            "value": 15853500.0,
+            "share": 6.21,
+            "record_count": 3
+          },
+          {
+            "name": "Department of Foreign Affairs and Trade",
+            "value": 9276086.71,
+            "share": 3.63,
+            "record_count": 9
+          },
+          {
+            "name": "DEXUS WHOLESALE MANAGEMENT LIMITED",
+            "value": 9241247.4,
+            "share": 3.62,
+            "record_count": 1
+          }
+        ],
+        "other_total": 104431401.81,
+        "other_share": 40.92,
+        "other_count": 172,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2010-06-17",
+          "to": "2026-06-18",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -1333,6 +2047,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Australian Electoral Commission",
+        "group_total": 343198169.32,
+        "leading_name": "Trace Consulting Group Pty Ltd",
+        "participant_label": "supplier",
+        "participant_count": 193,
+        "record_count": 263,
+        "participants": [
+          {
+            "name": "Trace Consulting Group Pty Ltd",
+            "value": 93280000.0,
+            "share": 27.18,
+            "record_count": 1
+          },
+          {
+            "name": "Fuji Xerox Businessforce Pty Ltd",
+            "value": 27000000.0,
+            "share": 7.87,
+            "record_count": 1
+          },
+          {
+            "name": "Ernst & Young",
+            "value": 23100665.91,
+            "share": 6.73,
+            "record_count": 2
+          },
+          {
+            "name": "Goulburn 048 Service Pty Ltd",
+            "value": 15221646.43,
+            "share": 4.44,
+            "record_count": 1
+          },
+          {
+            "name": "PERSOLKELLY AUSTRALIA PTY LTD",
+            "value": 11380459.01,
+            "share": 3.32,
+            "record_count": 4
+          }
+        ],
+        "other_total": 173215397.97,
+        "other_share": 50.47,
+        "other_count": 188,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2012-12-31",
+          "to": "2026-06-30",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -1432,6 +2197,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "National Archives of Australia",
+        "group_total": 97329653.19,
+        "leading_name": "Mitch Arch Pty Ltd",
+        "participant_label": "supplier",
+        "participant_count": 30,
+        "record_count": 34,
+        "participants": [
+          {
+            "name": "Mitch Arch Pty Ltd",
+            "value": 82170593.8,
+            "share": 84.43,
+            "record_count": 1
+          },
+          {
+            "name": "Chalfont Consulting Pty Ltd",
+            "value": 3400000.0,
+            "share": 3.49,
+            "record_count": 1
+          },
+          {
+            "name": "Grace Removals Group",
+            "value": 1870962.5,
+            "share": 1.92,
+            "record_count": 1
+          },
+          {
+            "name": "Colliers International (Victoria) Pty Limited",
+            "value": 1754883.0,
+            "share": 1.8,
+            "record_count": 1
+          },
+          {
+            "name": "Blackhawk Logistics",
+            "value": 1485865.9,
+            "share": 1.53,
+            "record_count": 2
+          }
+        ],
+        "other_total": 6647347.99,
+        "other_share": 6.83,
+        "other_count": 25,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2014-09-14",
+          "to": "2025-07-06",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -1531,6 +2347,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+        "group_total": 222599290.58,
+        "leading_name": "DATA#3 LTD",
+        "participant_label": "supplier",
+        "participant_count": 42,
+        "record_count": 43,
+        "participants": [
+          {
+            "name": "DATA#3 LTD",
+            "value": 78537784.26,
+            "share": 35.28,
+            "record_count": 2
+          },
+          {
+            "name": "INDIAN OCEAN OIL COMPANY",
+            "value": 72679695.17,
+            "share": 32.65,
+            "record_count": 1
+          },
+          {
+            "name": "TOLL REMOTE LOGISTICS PTY LTD",
+            "value": 19000000.0,
+            "share": 8.54,
+            "record_count": 1
+          },
+          {
+            "name": "CHARTAIR PTY LTD",
+            "value": 6506506.6,
+            "share": 2.92,
+            "record_count": 1
+          },
+          {
+            "name": "SCYNE ADVISORY PTY LTD",
+            "value": 5972482.0,
+            "share": 2.68,
+            "record_count": 1
+          }
+        ],
+        "other_total": 39902822.55,
+        "other_share": 17.93,
+        "other_count": 37,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2015-06-30",
+          "to": "2026-08-31",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -1630,6 +2497,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Department of Parliamentary Services",
+        "group_total": 245676294.25,
+        "leading_name": "Data#3 Limited",
+        "participant_label": "supplier",
+        "participant_count": 123,
+        "record_count": 183,
+        "participants": [
+          {
+            "name": "Data#3 Limited",
+            "value": 62781613.37,
+            "share": 25.55,
+            "record_count": 6
+          },
+          {
+            "name": "BAE Systems Australia Ltd",
+            "value": 22215762.77,
+            "share": 9.04,
+            "record_count": 2
+          },
+          {
+            "name": "ERM Power Retail Pty Ltd",
+            "value": 20608487.23,
+            "share": 8.39,
+            "record_count": 1
+          },
+          {
+            "name": "The Trustee for OPP West Block Trus",
+            "value": 19328570.0,
+            "share": 7.87,
+            "record_count": 1
+          },
+          {
+            "name": "Manteena Security Aust Pty Ltd",
+            "value": 16142894.4,
+            "share": 6.57,
+            "record_count": 3
+          }
+        ],
+        "other_total": 104598966.48,
+        "other_share": 42.58,
+        "other_count": 118,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2013-10-01",
+          "to": "2026-08-09",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -1729,6 +2647,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Director of National Parks",
+        "group_total": 94695951.93,
+        "leading_name": "Department of Climate Change, Energy, the Environment and Water",
+        "participant_label": "supplier",
+        "participant_count": 17,
+        "record_count": 19,
+        "participants": [
+          {
+            "name": "Department of Climate Change, Energy, the Environment and Water",
+            "value": 56909160.87,
+            "share": 60.1,
+            "record_count": 3
+          },
+          {
+            "name": "Northern Building and Property Services Pty Ltd",
+            "value": 12183285.9,
+            "share": 12.87,
+            "record_count": 1
+          },
+          {
+            "name": "McMahon Services Australia (NT) PTY LTD",
+            "value": 9279155.47,
+            "share": 9.8,
+            "record_count": 1
+          },
+          {
+            "name": "Acker Pty Ltd",
+            "value": 3998080.0,
+            "share": 4.22,
+            "record_count": 1
+          },
+          {
+            "name": "Comcover, Member Services",
+            "value": 1815658.65,
+            "share": 1.92,
+            "record_count": 1
+          }
+        ],
+        "other_total": 10510611.04,
+        "other_share": 11.1,
+        "other_count": 12,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2015-09-30",
+          "to": "2026-05-11",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -1828,6 +2797,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Australian Prudential Regulation Authority",
+        "group_total": 175259437.4,
+        "leading_name": "NTT AUSTRALIA PTY LTD (FORMERLY DIMENSION DATA AUSTRALIA PTY LTD)",
+        "participant_label": "supplier",
+        "participant_count": 89,
+        "record_count": 135,
+        "participants": [
+          {
+            "name": "NTT AUSTRALIA PTY LTD (FORMERLY DIMENSION DATA AUSTRALIA PTY LTD)",
+            "value": 55120431.89,
+            "share": 31.45,
+            "record_count": 4
+          },
+          {
+            "name": "DIMENSION DATA AUSTRALIA PTY LTD",
+            "value": 22851297.16,
+            "share": 13.04,
+            "record_count": 2
+          },
+          {
+            "name": "DATA#3 LIMITED",
+            "value": 14834458.89,
+            "share": 8.46,
+            "record_count": 3
+          },
+          {
+            "name": "MIRVAC REAL ESTATE PTY LTD",
+            "value": 11504270.24,
+            "share": 6.56,
+            "record_count": 1
+          },
+          {
+            "name": "Vizor Limited",
+            "value": 4204317.7,
+            "share": 2.4,
+            "record_count": 1
+          }
+        ],
+        "other_total": 66744661.52,
+        "other_share": 38.08,
+        "other_count": 84,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2009-10-23",
+          "to": "2026-07-27",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -1927,6 +2947,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Australian Centre for Disease Control",
+        "group_total": 125257483.06,
+        "leading_name": "National Aboriginal Community Contr Health Organisation (NACCHO)",
+        "participant_label": "supplier",
+        "participant_count": 17,
+        "record_count": 20,
+        "participants": [
+          {
+            "name": "National Aboriginal Community Contr Health Organisation (NACCHO)",
+            "value": 51982700.01,
+            "share": 41.5,
+            "record_count": 1
+          },
+          {
+            "name": "PROMOTING HEALTH4ALL PTY LTD",
+            "value": 17199999.0,
+            "share": 13.73,
+            "record_count": 1
+          },
+          {
+            "name": "UNIVERSITY OF NEW SOUTH WALES",
+            "value": 15606000.0,
+            "share": 12.46,
+            "record_count": 1
+          },
+          {
+            "name": "Monash University",
+            "value": 8184524.31,
+            "share": 6.53,
+            "record_count": 1
+          },
+          {
+            "name": "Australian Commission on Safety and Quality in Health Care",
+            "value": 4566207.0,
+            "share": 3.65,
+            "record_count": 1
+          }
+        ],
+        "other_total": 27718052.74,
+        "other_share": 22.13,
+        "other_count": 12,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2022-02-24",
+          "to": "2026-06-30",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -2026,6 +3097,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Australian Digital Health Agency",
+        "group_total": 125075050.76,
+        "leading_name": "ACCENTURE AUSTRALIA HOLDINGS PTY LT",
+        "participant_label": "supplier",
+        "participant_count": 61,
+        "record_count": 98,
+        "participants": [
+          {
+            "name": "ACCENTURE AUSTRALIA HOLDINGS PTY LT",
+            "value": 51720251.0,
+            "share": 41.35,
+            "record_count": 1
+          },
+          {
+            "name": "ORACLE CORPORATION AUSTRALIA PTY LI",
+            "value": 20730337.84,
+            "share": 16.57,
+            "record_count": 1
+          },
+          {
+            "name": "Dynatrace Asia Pacific Pty",
+            "value": 8935053.69,
+            "share": 7.14,
+            "record_count": 1
+          },
+          {
+            "name": "Amazon Web Services Australia Pty Ltd",
+            "value": 7000000.0,
+            "share": 5.6,
+            "record_count": 1
+          },
+          {
+            "name": "ServiceNow Australia Pty Ltd",
+            "value": 2916023.75,
+            "share": 2.33,
+            "record_count": 1
+          }
+        ],
+        "other_total": 33773384.48,
+        "other_share": 27.0,
+        "other_count": 56,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2017-12-20",
+          "to": "2026-05-19",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -2125,6 +3247,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Federal Court of Australia",
+        "group_total": 174819441.51,
+        "leading_name": "MSS Security Pty Ltd",
+        "participant_label": "supplier",
+        "participant_count": 42,
+        "record_count": 65,
+        "participants": [
+          {
+            "name": "MSS Security Pty Ltd",
+            "value": 51022723.97,
+            "share": 29.19,
+            "record_count": 1
+          },
+          {
+            "name": "TERRACE TOWER PTY LTD",
+            "value": 35485743.0,
+            "share": 20.3,
+            "record_count": 1
+          },
+          {
+            "name": "JONES LANG LASALLE (ACT) PTY LIMITED",
+            "value": 14191323.28,
+            "share": 8.12,
+            "record_count": 1
+          },
+          {
+            "name": "BUILT PTY LIMITED",
+            "value": 11044978.0,
+            "share": 6.32,
+            "record_count": 1
+          },
+          {
+            "name": "SG FLEET Australia Pty Ltd",
+            "value": 9366465.76,
+            "share": 5.36,
+            "record_count": 5
+          }
+        ],
+        "other_total": 53708207.5,
+        "other_share": 30.72,
+        "other_count": 37,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2012-06-30",
+          "to": "2026-05-03",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -2224,6 +3397,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "High Speed Rail Authority",
+        "group_total": 84036045.6,
+        "leading_name": "WSP Australia pty Limited",
+        "participant_label": "supplier",
+        "participant_count": 9,
+        "record_count": 9,
+        "participants": [
+          {
+            "name": "WSP Australia pty Limited",
+            "value": 47585221.53,
+            "share": 56.62,
+            "record_count": 1
+          },
+          {
+            "name": "Bellgrove Advisory Pty Ltd",
+            "value": 18010682.0,
+            "share": 21.43,
+            "record_count": 1
+          },
+          {
+            "name": "J A T SERVICES PTY LTD JAT SERVICES",
+            "value": 7358182.0,
+            "share": 8.76,
+            "record_count": 1
+          },
+          {
+            "name": "ARUP AUSTRALIA PROJECTS PTY LIMITED",
+            "value": 4946042.2,
+            "share": 5.89,
+            "record_count": 1
+          },
+          {
+            "name": "VEITCH LISTER CONSULTING PTY LTD",
+            "value": 2973305.44,
+            "share": 3.54,
+            "record_count": 1
+          }
+        ],
+        "other_total": 3162612.43,
+        "other_share": 3.76,
+        "other_count": 4,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2024-05-26",
+          "to": "2026-06-30",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -2323,6 +3547,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Australian Nuclear Science and Technology Organisation",
+        "group_total": 96964236.23,
+        "leading_name": "Areva NC",
+        "participant_label": "supplier",
+        "participant_count": 21,
+        "record_count": 21,
+        "participants": [
+          {
+            "name": "Areva NC",
+            "value": 46000000.0,
+            "share": 47.44,
+            "record_count": 1
+          },
+          {
+            "name": "Isotope Technologies Dresden GmbH",
+            "value": 11057840.0,
+            "share": 11.4,
+            "record_count": 1
+          },
+          {
+            "name": "Wipro Technologies Australia P/L",
+            "value": 7156402.0,
+            "share": 7.38,
+            "record_count": 1
+          },
+          {
+            "name": "Power System Australia Pty Ltd",
+            "value": 6339750.0,
+            "share": 6.54,
+            "record_count": 1
+          },
+          {
+            "name": "Nepean Engineering and Innovation Pty Ltd",
+            "value": 4115150.0,
+            "share": 4.24,
+            "record_count": 1
+          }
+        ],
+        "other_total": 22295094.23,
+        "other_share": 22.99,
+        "other_count": 16,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2016-02-03",
+          "to": "2026-08-23",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -2422,6 +3697,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "National Indigenous Australians Agency",
+        "group_total": 96899659.67,
+        "leading_name": "Vopak Terminal Darwin Pty Ltd",
+        "participant_label": "supplier",
+        "participant_count": 61,
+        "record_count": 77,
+        "participants": [
+          {
+            "name": "Vopak Terminal Darwin Pty Ltd",
+            "value": 45635451.28,
+            "share": 47.1,
+            "record_count": 1
+          },
+          {
+            "name": "INDIGENOUS DEFENCE AND INFRASTRUCTURE CONSORTIUM PTY LTD",
+            "value": 11594250.0,
+            "share": 11.97,
+            "record_count": 2
+          },
+          {
+            "name": "Power Back Pty Ltd",
+            "value": 10927498.36,
+            "share": 11.28,
+            "record_count": 1
+          },
+          {
+            "name": "Australian Private Networks Pty Ltd",
+            "value": 4760478.15,
+            "share": 4.91,
+            "record_count": 1
+          },
+          {
+            "name": "Ninti One Limited",
+            "value": 2987437.73,
+            "share": 3.08,
+            "record_count": 2
+          }
+        ],
+        "other_total": 20994544.15,
+        "other_share": 21.67,
+        "other_count": 56,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2008-12-03",
+          "to": "2026-06-09",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -2521,6 +3847,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Administrative Review Tribunal",
+        "group_total": 103074877.05,
+        "leading_name": "Deka Australia One GmbH",
+        "participant_label": "supplier",
+        "participant_count": 18,
+        "record_count": 19,
+        "participants": [
+          {
+            "name": "Deka Australia One GmbH",
+            "value": 41440515.97,
+            "share": 40.2,
+            "record_count": 1
+          },
+          {
+            "name": "AM 166 Creek Street Investment Unit Trust",
+            "value": 29330182.4,
+            "share": 28.46,
+            "record_count": 2
+          },
+          {
+            "name": "360 Capital Investment Management Ltd",
+            "value": 18231802.8,
+            "share": 17.69,
+            "record_count": 1
+          },
+          {
+            "name": "Comcare",
+            "value": 2179065.9,
+            "share": 2.11,
+            "record_count": 1
+          },
+          {
+            "name": "LEXIS-NEXIS",
+            "value": 2021118.19,
+            "share": 1.96,
+            "record_count": 1
+          }
+        ],
+        "other_total": 9872191.79,
+        "other_share": 9.58,
+        "other_count": 13,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2016-12-31",
+          "to": "2026-06-30",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -2620,6 +3997,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Australian Transport Safety Bureau",
+        "group_total": 43946699.2,
+        "leading_name": "Fugro Survey Pty Ltd",
+        "participant_label": "supplier",
+        "participant_count": 7,
+        "record_count": 7,
+        "participants": [
+          {
+            "name": "Fugro Survey Pty Ltd",
+            "value": 38916597.5,
+            "share": 88.55,
+            "record_count": 1
+          },
+          {
+            "name": "628BSM Pty Ltd",
+            "value": 4000000.0,
+            "share": 9.1,
+            "record_count": 1
+          },
+          {
+            "name": "Coffey International Development Pty Ltd",
+            "value": 317482.0,
+            "share": 0.72,
+            "record_count": 1
+          },
+          {
+            "name": "KPMG",
+            "value": 240000.0,
+            "share": 0.55,
+            "record_count": 1
+          },
+          {
+            "name": "Salsa Digital Pty Ltd",
+            "value": 192619.7,
+            "share": 0.44,
+            "record_count": 1
+          }
+        ],
+        "other_total": 280000.0,
+        "other_share": 0.64,
+        "other_count": 2,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2013-09-16",
+          "to": "2026-05-31",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -2719,6 +4147,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Fair Work Commission",
+        "group_total": 61388910.71,
+        "leading_name": "Terrace Tower Pty Ltd",
+        "participant_label": "supplier",
+        "participant_count": 26,
+        "record_count": 56,
+        "participants": [
+          {
+            "name": "Terrace Tower Pty Ltd",
+            "value": 28209459.0,
+            "share": 45.95,
+            "record_count": 2
+          },
+          {
+            "name": "MERRILL CORPORATION AUSTRALIA PTY LTD",
+            "value": 6078843.32,
+            "share": 9.9,
+            "record_count": 1
+          },
+          {
+            "name": "DATA# 3 LIMITED",
+            "value": 4646627.24,
+            "share": 7.57,
+            "record_count": 4
+          },
+          {
+            "name": "HUDSON GLOBAL RESOURCES (AUST) PTY LTD",
+            "value": 4604457.36,
+            "share": 7.5,
+            "record_count": 22
+          },
+          {
+            "name": "CENTURIA PROPERTY FUNDS LIMITED",
+            "value": 4307664.0,
+            "share": 7.02,
+            "record_count": 1
+          }
+        ],
+        "other_total": 13541859.79,
+        "other_share": 22.06,
+        "other_count": 21,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2014-08-27",
+          "to": "2026-06-30",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -2818,6 +4297,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Australian Competition and Consumer Commission",
+        "group_total": 80590181.72,
+        "leading_name": "Data #3 Limited",
+        "participant_label": "supplier",
+        "participant_count": 63,
+        "record_count": 135,
+        "participants": [
+          {
+            "name": "Data #3 Limited",
+            "value": 24616935.76,
+            "share": 30.55,
+            "record_count": 2
+          },
+          {
+            "name": "Johnson Winter and Slattery Lawyers",
+            "value": 9328419.0,
+            "share": 11.58,
+            "record_count": 14
+          },
+          {
+            "name": "SamKnows Limited",
+            "value": 6495000.0,
+            "share": 8.06,
+            "record_count": 1
+          },
+          {
+            "name": "AUSTRALIAN GOVERNMENT SOLICITOR",
+            "value": 4974822.9,
+            "share": 6.17,
+            "record_count": 22
+          },
+          {
+            "name": "Datacom Systems (AU) Pty Ltd",
+            "value": 4158942.7,
+            "share": 5.16,
+            "record_count": 2
+          }
+        ],
+        "other_total": 31016061.36,
+        "other_share": 38.49,
+        "other_count": 58,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2013-02-28",
+          "to": "2026-06-30",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -2917,6 +4447,57 @@
         "This share describes available records only; missing disclosures can materially change it.",
         "At least two positive records and a 25% share are required. A single reporting period is not imposed."
       ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Tourism Australia",
+        "group_total": 56852927.35,
+        "leading_name": "Lendlease (Circular Quay) Pty Ltd as trustee for the Lendlease (Circular Quay) Trust",
+        "participant_label": "supplier",
+        "participant_count": 20,
+        "record_count": 21,
+        "participants": [
+          {
+            "name": "Lendlease (Circular Quay) Pty Ltd as trustee for the Lendlease (Circular Quay) Trust",
+            "value": 24144598.0,
+            "share": 42.47,
+            "record_count": 1
+          },
+          {
+            "name": "Expertise Events Pty Ltd",
+            "value": 5538935.0,
+            "share": 9.74,
+            "record_count": 1
+          },
+          {
+            "name": "Sitecore Australia Pty Ltd",
+            "value": 3294250.33,
+            "share": 5.79,
+            "record_count": 1
+          },
+          {
+            "name": "Shanghai Wanning Cultural and Creative Industry Development Co. Ltd",
+            "value": 2820597.0,
+            "share": 4.96,
+            "record_count": 1
+          },
+          {
+            "name": "Data#3 Limited",
+            "value": 2621561.94,
+            "share": 4.61,
+            "record_count": 1
+          }
+        ],
+        "other_total": 18432985.08,
+        "other_share": 32.42,
+        "other_count": 15,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2014-12-09",
+          "to": "2026-06-30",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
       "entity_url": null
     },
     {
@@ -2972,7 +4553,7 @@
     }
   ],
   "coverage": {
-    "donations": 92646,
+    "donations": 92642,
     "contracts": 18042,
     "available_categories": [
       "donor_contract_overlap",
@@ -2985,15 +4566,15 @@
     "eligible_annual_party_receipt_rows": 100482,
     "excluded_before_name_checks": 98751,
     "excluded_receipt_rows": {
-      "government_or_party_entity": 6535,
-      "public_funding": 413,
+      "government_or_party_entity": 6536,
+      "public_funding": 416,
       "party_internal": 888
     },
     "excluded_contract_rows": 0,
     "financial_year_from": "1998-99",
     "financial_year_to": "2024-25",
     "receipt_scope": "AEC annual returns to canonical parties, direct classification only",
-    "snapshot_at": "2026-09-07T03:53:49.750621+00:00"
+    "snapshot_at": "2026-09-07T04:07:09.692940+00:00"
   },
   "methodology": [
     "This snapshot uses annual AEC party-receipt records with a canonical party recipient and ingestion classification direct. These are disclosed receipts, not a verified gifts-only dataset.",
@@ -3002,10 +4583,11 @@
     "State, election and referendum disclosures are not added to annual federal receipts. Concentration includes all eligible classified and unclassified donors without a display-size floor.",
     "Amounts span all available reporting years. Annual receipts and contract awards are separate money flows and are never summed; matching names and periods do not establish causation or misconduct.",
     "Concentration requires at least two positive records and a largest-participant share of at least 25%. Cards alternate signal families and rank within each family by recorded value.",
+    "Concentration charts show the five largest named participants by recorded value; Other includes every remaining participant. Recorded date or financial-year spans exclude missing/invalid dates, counted separately, while their values remain in totals.",
     "Contracts reflect recorded award values, not expenditure, and are a partial corpus. Date errors and future start dates are possible; no timing inference is made.",
     "Source links open the official source register, not an individual receipt or notice. Evidence labels carry original reported names, row amounts and local source IDs; each is one example behind the aggregate.",
     "Reporting thresholds, incomplete coverage and duplicated/amended disclosures can affect totals. Absence of a signal is not evidence of absence."
   ],
-  "generated_at": "2026-09-07T03:53:49.750621+00:00",
-  "export_seconds": 2.174
+  "generated_at": "2026-09-07T04:07:09.692940+00:00",
+  "export_seconds": 1.88
 }

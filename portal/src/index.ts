@@ -2073,7 +2073,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   discover: {
     title: 'Discover patterns · OPAX',
-    description: 'Follow evidence behind donor and contract overlaps, concentrated political funding and government supplier concentrations. Investigation leads with source records and coverage limits.',
+    description: 'See which companies take the biggest share of government contracts. Compare suppliers with simple charts, explore political funding connections and check the source records.',
   },
   chat: {
     title: 'Keep asking · OPAX',

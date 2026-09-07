@@ -35,3 +35,25 @@ use the obsolete Next.js/EC2 deployment configuration from earlier checkouts.
 
 The old disconnect engine is not part of the current live portal; its historical
 score table is not used by these leads and does not need recomputation for release.
+
+## Visual comparison view
+
+Discover opens on government suppliers. Select an agency to compare its top five
+suppliers and the remainder on a common percentage scale. Sort by total value or
+largest share, or search for an agency or its leading supplier. The selected
+comparison and filters are preserved in the URL. On phones, the chooser scrolls
+horizontally and selecting a comparison brings its chart into view.
+
+Party funding and cross-source name overlaps are secondary views. Funding charts
+use the same top-five-plus-remainder calculation; overlap amounts remain separate
+money flows. An optional money-map embed matches an exact donor name from the
+map's own selected set, explains its different coverage, and destroys its render
+resources when closed or when the selection changes.
+
+The chart-enabled export contains 31 concentration charts. It excludes the observed
+misspelling `Electoral Comission` and the misclassified `High Court of Australia`
+receipt, bringing eligible receipt rows to 92,642. This export does not change the
+source database or existing money-map data. Chart periods refer to contract start
+dates or full financial years; their totals include any undated records.
+
+Frontend behavior tests: `node --test portal/test/discovery.test.mjs`.
