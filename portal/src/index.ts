@@ -2061,7 +2061,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   money: {
     title: 'Money map · OPAX',
-    description: 'Disclosed political donations as territory you can spin: 250 donors, 11 parties and 28 years of AEC returns, with Queensland and Victorian registers.',
+    description: 'Explore political funding and public money in 3D. Guided journeys follow contracts, shared party connections, industries and changes over time, with federal and state records.',
     query: true,
   },
   reports: {
