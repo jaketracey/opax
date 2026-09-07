@@ -82,12 +82,12 @@ test('journeys are opt-in and deep links bound their requested step without star
   assert.equal(linked.scenes.at(-1).focusId, 'node:1'); assert.equal(linked.routes.length, 0);
 });
 
-test('play advances once per interval, never steals focus and stops at the last step', () => {
+test('play starts the next scene immediately, then advances on the interval without stealing focus', () => {
   const h = setup(); h.choose(); h.click('play');
   assert.equal(h.routes.length, 2, 'choose and play each update the route once');
   assert.equal(h.timers.size, 1); assert.equal([...h.timers.values()][0].ms, 7000);
   const focusCount = h.focus.length;
-  h.tick(); assert.equal(h.scenes.at(-1).focusId, 'node:1'); assert.equal(h.timers.size, 1);
+  assert.equal(h.scenes.at(-1).focusId, 'node:1', 'no initial seven-second wait');
   h.tick(); assert.equal(h.scenes.at(-1).focusId, 'node:2'); assert.equal(h.timers.size, 0);
   assert.equal(h.focus.length, focusCount);
   assert.match(h.story.innerHTML, /Replay journey/);
@@ -98,7 +98,7 @@ test('pause and manual navigation cancel playback, retaining keyboard control fo
   const h = setup(); h.choose(); h.click('play'); h.click('play');
   assert.equal(h.timers.size, 0);
   h.click('play'); h.click('next');
-  assert.equal(h.scenes.at(-1).focusId, 'node:1'); assert.equal(h.timers.size, 0);
+  assert.equal(h.scenes.at(-1).focusId, 'node:2'); assert.equal(h.timers.size, 0);
   assert.equal(h.focus.at(-1).dataset.action, 'next');
   const target = h.story.querySelector('[data-step="0"]');
   h.story.emit('click', { target });
@@ -116,7 +116,7 @@ test('hidden tab, offscreen map and reduced motion pause without auto-resuming',
   h.observers[0].callback([{ isIntersecting: true }]); assert.equal(h.timers.size, 0);
   h.click('play'); h.media.matches = true; h.media.emit('change'); assert.equal(h.timers.size, 0);
   assert.equal(h.story.querySelector('[data-action="play"]').disabled, true);
-  h.click('next'); assert.equal(h.scenes.at(-1).focusId, 'node:1');
+  h.click('next'); assert.equal(h.scenes.at(-1).focusId, 'node:2');
   h.media.matches = false; h.media.emit('change'); assert.equal(h.timers.size, 0);
 });
 
@@ -157,7 +157,7 @@ test('story text is escaped and unsafe outgoing links are dropped', () => {
 
 
 test('touching the map pauses at the current scene and Continue returns to that scene', () => {
-  const h = setup(); h.choose(); h.click('play'); h.tick();
+  const h = setup(); h.choose(); h.click('play');
   const sceneCount = h.scenes.length;
   h.handle.pause('map');
   assert.equal(h.timers.size, 0); assert.equal(h.pauses(), 1);
