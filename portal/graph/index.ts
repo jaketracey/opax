@@ -1375,8 +1375,8 @@ export async function mountMoneyMap(
             `${routeBase}/explore?game=grants&jur=${encodeURIComponent(node.grants.jur ?? 'federal')}&open=${encodeURIComponent(node.grants.rid)}`,
             'Open their grants file', true)
         }
-        if (node.contracts) {
-          trigger(card, `${routeBase}/discover?q=${encodeURIComponent(shortName(node.label))}`, 'Find their contracts', true)
+        if (node.contracts && !raw.meta.jurisdiction) {
+          trigger(card, `${routeBase}/subject/supplier?donor=${encodeURIComponent(node.id)}`, 'Explore supplier records', true)
         }
       }
       if (!['individual', 'other', ''].includes(node.industry.toLowerCase())) {

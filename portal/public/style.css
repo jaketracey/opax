@@ -4225,3 +4225,83 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
  .discovery-flows > div { padding:.8rem; }
  .discovery-map { height:350px; }
 }
+
+/* Supplier dossiers: procurement charts and source records, scoped to the lazy module. */
+.supplier-page { min-width: 0; }
+.supplier-page .subject-head h2 { color: var(--navy); overflow-wrap: anywhere; }
+.supplier-lede { max-width: 76ch; color: var(--ink-soft); line-height: 1.75; }
+.supplier-controls { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; padding: 1rem; margin: 1.5rem 0 1rem; border: 1px solid var(--line); background: var(--paper-raised); }
+.supplier-controls label { display: grid; gap: .5rem; font-size: .8125rem; font-weight: 700; flex: 1; min-width: min(100%, 180px); }
+.supplier-controls input, .supplier-controls select { min-width: 0; width: 100%; padding: .7rem; border: 1px solid var(--line-strong); background: var(--paper-raised); color: var(--ink); font: 400 .875rem var(--sans); }
+.supplier-result-count, .supplier-contract-count { color: var(--ink-faint); font-size: .8125rem; margin: 1rem 0; }
+.supplier-directory-row { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem .3rem; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+.supplier-directory-row:hover { background: var(--paper-sunken); }
+.supplier-directory-row > span { min-width: 0; }
+.supplier-directory-row strong { display: block; color: var(--navy); font-size: .9375rem; overflow-wrap: anywhere; }
+.supplier-directory-row small { display: block; color: var(--ink-soft); font-size: .75rem; line-height: 1.6; margin-top: .3rem; }
+.supplier-directory-value { text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.supplier-button { margin-top: 1rem; padding: .75rem 1rem; background: var(--navy); color: var(--on-navy); border: 0; font: 600 .875rem var(--sans); cursor: pointer; }
+.supplier-totals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; border-block: 1px solid var(--line); padding: 1.25rem 0; margin: 1.5rem 0 2rem; }
+.supplier-totals dt { color: var(--ink-soft); font-size: .8125rem; }
+.supplier-totals dd { font: 700 clamp(1.4rem, 3vw, 2.2rem) var(--serif); color: var(--navy); margin: .6rem 0 0; font-variant-numeric: tabular-nums; }
+.supplier-profile-grid { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 2.5rem; align-items: start; }
+.supplier-profile-main { min-width: 0; }
+.supplier-section { margin-bottom: 2.5rem; }
+.supplier-section-note { color: var(--ink-soft); font-size: .8125rem; line-height: 1.6; margin: .5rem 0 1.2rem; }
+.supplier-bars { list-style: none; padding: 0; margin: 0; }
+.supplier-bars li { margin: 1rem 0; }
+.supplier-bars li > div { display: flex; gap: 1rem; justify-content: space-between; font-size: .8125rem; line-height: 1.5; margin-bottom: .4rem; }
+.supplier-bars strong { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.supplier-bars svg { display: block; width: 100%; height: 8px; }
+.supplier-bars small { display: block; color: var(--ink-faint); font-size: .75rem; margin-top: .3rem; }
+.supplier-bar-track { fill: var(--paper-sunken); }
+.supplier-bar-fill { fill: var(--bronze); }
+.supplier-year-chart svg { width: 100%; display: block; overflow: visible; }
+.supplier-year-chart text { font: 12px var(--sans); fill: var(--ink-soft); }
+.supplier-chart-baseline { stroke: var(--line-strong); stroke-width: 1; }
+.supplier-chart-data { margin-top: .75rem; font-size: .8125rem; }
+.supplier-page summary { cursor: pointer; }
+.supplier-chart-data table { width: 100%; margin-top: 1rem; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.supplier-chart-data :is(th, td) { padding: .5rem; border-bottom: 1px solid var(--line); text-align: right; }
+.supplier-chart-data :is(th, td):first-child { text-align: left; }
+.supplier-chart-data caption { text-align: left; color: var(--ink-soft); padding-bottom: .75rem; }
+.supplier-contract { border-top: 1px solid var(--line); padding: 1rem 0; }
+.supplier-contract summary { display: flex; justify-content: space-between; gap: 1rem; font-size: .875rem; }
+.supplier-contract summary::before { content: "+"; flex-shrink: 0; color: var(--bronze-ink); font-weight: 700; }
+.supplier-contract[open] summary::before { content: "−"; }
+.supplier-contract summary span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.supplier-contract summary small { display: block; color: var(--ink-soft); font-size: .75rem; margin-top: .4rem; line-height: 1.6; }
+.supplier-contract summary b { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.supplier-contract dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .5rem 1rem; font-size: .8125rem; margin: 1.25rem 0; }
+.supplier-contract dt { color: var(--ink-soft); }
+.supplier-contract dd { margin: 0; overflow-wrap: anywhere; }
+.supplier-contract > a { font-size: .8125rem; }
+.supplier-context { border-top: 3px solid var(--bronze); background: var(--paper-raised); padding: 1.1rem; border-inline: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.supplier-context section + section { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.supplier-context h3 { font: 700 1rem var(--serif); color: var(--navy); margin: 0 0 1rem; }
+.supplier-context :is(p, li, a, details, dl) { font-size: .8125rem; line-height: 1.65; overflow-wrap: anywhere; }
+.supplier-context ul { padding-left: 1rem; }
+.supplier-context li { margin: .6rem 0; }
+.supplier-context small { display: block; color: var(--ink-faint); }
+.supplier-context .fineprint { margin: .7rem 0 1rem; font-size: .75rem; }
+.supplier-directory-link { display: block; margin-top: 1rem; }
+.supplier-identity dt { color: var(--ink-soft); }
+.supplier-identity dd { margin: .25rem 0 .75rem; }
+.supplier-empty { padding: 1.5rem; border: 1px solid var(--line); }
+.supplier-page :is(a, button, input, select, summary):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 4px; }
+@media (max-width: 850px) { .supplier-profile-grid { grid-template-columns: minmax(0, 1fr); } .supplier-context { max-width: none; } }
+@media (max-width: 540px) {
+  .supplier-directory-row { flex-direction: column; gap: .5rem; }
+  .supplier-directory-value { text-align: left; }
+  .supplier-totals { gap: .5rem; }
+  .supplier-totals dt { font-size: .75rem; }
+  .supplier-contract summary { flex-wrap: wrap; }
+  .supplier-contract summary b { width: 100%; padding-left: 1.5rem; }
+  .supplier-bars li > div { flex-wrap: wrap; gap: .25rem; }
+}
+.supplier-money-map { height: 360px; margin-top: 1rem; position: relative; border: 1px solid var(--line); overflow: hidden; }
+.supplier-money-map[hidden] { display: none; }
+.supplier-money-map > p { padding: 1rem; }
+.supplier-context > section > details > summary { font: 700 1rem var(--serif); color: var(--navy); }
+.supplier-section > .subject-section-title { margin: 0 0 .75rem; }
+.supplier-contract-description { font-size: .875rem; line-height: 1.7; color: var(--ink-soft); margin: 1rem 0; overflow-wrap: anywhere; }
