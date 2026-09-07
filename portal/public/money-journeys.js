@@ -1,4 +1,4 @@
-import { buildMoneyJourneys } from './money-journeys-data.js?v=chart-1';
+import { buildMoneyJourneys } from './money-journeys-data.js?v=chart-2';
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const money = (value) => Number(value).toLocaleString('en-AU', { style: 'currency', currency: 'AUD', notation: 'compact', maximumFractionDigits: 1 });
@@ -34,7 +34,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     const metric = current.metric;
     const breakdown = (current.breakdown || []).filter(row => Number.isFinite(row.value) && row.value > 0);
     const maximum = Math.max(1, ...breakdown.map(row => row.value));
-    const chart = breakdown.length ? `<figure class="journey-connections"><figcaption>Recorded receipts by party</figcaption><ul>${breakdown.map(row => `<li><div class="journey-connection-label"><span>${esc(row.label)}</span><strong>${esc(money(row.value))}</strong></div><div class="journey-connection-track" aria-hidden="true"><span style="width:${row.value / maximum * 100}%"></span></div></li>`).join('')}</ul></figure>` : '';
+    const chart = breakdown.length ? `<figure class="journey-connections"><figcaption>Recorded receipts by party</figcaption><ul>${breakdown.map(row => `<li><div class="journey-connection-label"><a class="journey-party-link" href="/subject/party/${esc(encodeURIComponent(row.label))}"><i aria-hidden="true" style="background:${/^#[0-9a-f]{6}$/i.test(row.colour) ? row.colour : '#778b9b'}"></i><span>${esc(row.label)}</span></a><strong>${esc(money(row.value))}</strong></div><div class="journey-connection-track" aria-hidden="true"><span style="width:${row.value / maximum * 100}%"></span></div></li>`).join('')}</ul></figure>` : '';
     story.innerHTML = `${header}${chooser}
       <div class="journey-steps" role="group" aria-label="Journey steps">${active.steps.map((item, i) => `<button type="button" data-step="${i}" aria-label="Step ${i + 1}: ${esc(item.title)}"${i === step ? ' aria-current="step"' : ''}>${i + 1}</button>`).join('')}</div>
       <div class="journey-narrative" aria-live="polite" aria-atomic="true"><h3>${esc(current.title)}</h3><p>${esc(current.body)}</p>${chart}${!chart && metric && Number.isFinite(Number(metric.value)) ? `<div class="journey-metric"><strong>${esc(metric.format === 'currency' ? money(metric.value) : Number(metric.value).toLocaleString('en-AU'))}</strong><span>${esc(metric.label)}</span></div>` : ''}</div>
@@ -164,7 +164,8 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
         if (playing) { pause(); break; }
         if (!active?.steps.length || reduced.matches || document.hidden) break;
         if (step === active.steps.length - 1) step = 0;
-        playing = true; reason = ''; render(); present(); schedule(); options.onRoute?.(active.id, step, active.selection || ''); break;
+        else if (step === 0 && !reason) step = 1;
+        playing = step < active.steps.length - 1; reason = ''; render(); present(); schedule(); options.onRoute?.(active.id, step, active.selection || ''); break;
     }
     // Keep keyboard focus on its control after the story's content changes.
     const selector = button.dataset.step !== undefined ? `[data-step="${button.dataset.step}"]` : `[data-action="${button.dataset.action}"]`;

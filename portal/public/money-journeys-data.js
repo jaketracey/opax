@@ -97,7 +97,7 @@ function multiplePartiesJourney(view, requested) {
       { title: `Start with ${donor.label}`, body: `Its funding reaches several parties. Start with the ${shown.length} largest connections shown here.`, metric: metric('Parties linked in this record', all.length, 'number'), scene: scene(donor.id, shown.map(e => e.target), shown), links: [donorLink(donor)] },
       { title: `Its largest link: ${view.nodes.get(first.target).label}`, body: 'This is its largest recorded party connection across the years covered by the map.', metric: metric('Recorded receipts', first.total), scene: scene(first.target, [donor.id], [first]) },
       { title: `There is also ${view.nodes.get(second.target).label}`, body: 'The next-largest connection leads somewhere else. A single headline total would miss this part of the picture.', metric: metric('Recorded receipts', second.total), scene: scene(second.target, [donor.id], [second]) },
-      { title: 'Put the destinations side by side', body: `Compare the ${shown.length} largest connections. Smaller or undisclosed receipts may be missing from the map.`, breakdown: shown.map(edge => ({ label: view.nodes.get(edge.target).label, value: edge.total })), scene: scene(donor.id, shown.map(e => e.target), shown), links: [donorLink(donor)] },
+      { title: 'Put the destinations side by side', body: `Compare the ${shown.length} largest connections. Smaller or undisclosed receipts may be missing from the map.`, breakdown: shown.map(edge => ({ label: view.nodes.get(edge.target).label, value: edge.total, colour: view.nodes.get(edge.target).colour || "#778b9b" })), scene: scene(donor.id, shown.map(e => e.target), shown), links: [donorLink(donor)] },
     ],
   };
 }
