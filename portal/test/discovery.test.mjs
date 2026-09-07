@@ -9,7 +9,7 @@ const end = app.indexOf('// --- money map (lazy-loaded', start);
 assert.ok(start >= 0 && end > start);
 // Substitute only the module loader: production rendering and async lifecycle
 // execute unchanged, without requiring WebGL in Node.
-const code = app.slice(start, end).replace('import("/money-map.js")', 'loadMapModule()');
+const code = app.slice(start, end).replace('import("/money-map.js?v=suppliers-1")', 'loadMapModule()');
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const deferred = () => { let resolve; const promise = new Promise((r) => { resolve = r; }); return { promise, resolve }; };
 
