@@ -1,6 +1,11 @@
 {
-  "version": "2026-09-04",
-  "expected_resources": 609630,
+  "version": "2026-09-08",
+  "expected_resources": 617090,
+  "expected_resources_breakdown": {
+    "live_index_before_this_refresh": 611333,
+    "prime_minister_transcripts_and_releases": 613,
+    "nsw_ministerial_releases": 5144
+  },
   "collected_speeches": 595763,
   "sources": [
     {
@@ -44,12 +49,22 @@
       "coverage": "1998–2026"
     },
     {
+      "name": "Prime Minister transcripts and releases (PM&C)",
+      "docs": 613,
+      "coverage": "2025–2026"
+    },
+    {
+      "name": "NSW Government ministerial releases",
+      "docs": 5144,
+      "coverage": "2024–2026"
+    },
+    {
       "name": "AEC donations (27+ industries classified)",
       "docs": 199233,
       "coverage": "1998–2026"
     }
   ],
-  "inclusion": "Speeches from 1993-03-13 (the election that seated the longest-serving current federal MP), at least 200 characters, deduplicated across overlapping sources, procedural rows removed (division roll-calls, chair interjections, day indexes).",
+  "inclusion": "Speeches from 1993-03-13 (the election that seated the longest-serving current federal MP), at least 200 characters, deduplicated across overlapping sources, procedural rows removed (division roll-calls, chair interjections, day indexes). External statements require an official source URL, a valid date, an open licence, at least 200 characters and a unique body.",
   "models": {
     "embeddings": "multilingual-2024-05-06",
     "generation": "gemini-2.5-flash-lite"

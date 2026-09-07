@@ -9,7 +9,8 @@ const end = app.indexOf('// --- money map (lazy-loaded', start);
 assert.ok(start >= 0 && end > start);
 // Substitute only the module loader: production rendering and async lifecycle
 // execute unchanged, without requiring WebGL in Node.
-const code = app.slice(start, end).replace('import("/money-map.js")', 'loadMapModule()');
+const code = app.slice(start, end).replace(/import\("\/money-map\.js(?:\?[^"]*)?"\)/g, 'loadMapModule()');
+assert.ok(code.includes('loadMapModule()'), 'the map module loader is intercepted');
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const deferred = () => { let resolve; const promise = new Promise((r) => { resolve = r; }); return { promise, resolve }; };
 
@@ -134,7 +135,7 @@ test('closing during donor lookup prevents a late map mount', async () => {
   assert.equal(h.element('discover-map-toggle').attributes['aria-expanded'], 'false');
 });
 
-test('late map handles are destroyed after selection or route invalidates the mount', async () => {
+test('late map handles are destroyed after selection or route invalidates the mount', { timeout: 1000 }, async () => {
   const mounted = deferred(); const entered = deferred(); let destroyed = 0; let focus;
   const h = harness({ money: { nodes: [{ id: 'acme-id', kind: 'donor', label: ' ACME ' }] },
     mount: async (_root, _url, options) => { focus = options.focus; entered.resolve(); return mounted.promise; } });

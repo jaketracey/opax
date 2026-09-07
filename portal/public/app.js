@@ -91,6 +91,8 @@ function titleDateForms(value) {
 function titleSubject(rec) {
   const parts = String(rec?.title ?? "").trim().split(/(\s+—\s+)/);
   if (rec?.speaker && titleKey(parts[0]) === titleKey(rec.speaker)) parts.splice(0, 2);
+  else if (rec?.labels?.kind === "press_release" && rec?.metadata?.role &&
+      titleKey(parts[0]) === titleKey(rec.metadata.role)) parts.splice(0, 2);
   const dates = titleDateForms(rec?.date ?? rec?.metadata?.date);
   if (parts.length && dates.includes(titleKey(parts[parts.length - 1]))) parts.splice(-2);
   return parts.join("").trim();
@@ -795,6 +797,11 @@ function focusEntry(id) {
 
 function showPanel(name) {
   if (name !== "discover") destroyDiscoveryMap();
+  if (name !== "money") {
+    moneyJourneys?.destroy(); moneyJourneys = null;
+    moneyMapLoading = null; moneyMapGeneration += 1;
+    moneyMapHandle?.setPaused(true);
+  } else moneyMapHandle?.setPaused(false);
   // Methods and the expense-category glossary live under the About menu, so its
   // trigger stays lit there; the drawer has exact links of its own.
   const headerName = name === "methods" || name === "expenses" ? "about" : name === "bill" ? "bills" : name;
@@ -912,7 +919,7 @@ function discoveryChartHTML(chart) {
   if (chart.other_total > 0) rows.push({ name: `Other ${chart.other_count.toLocaleString("en-AU")} ${chart.participant_label === "supplier" ? "suppliers" : "contributors"}`, value: chart.other_total, share: chart.other_share, other: true });
   return `<div class="discovery-chart" role="group" aria-label="Share of recorded value">
     ${rows.map((row, index) => `<div class="discovery-chart-row${index === 0 ? " is-leader" : ""}${row.other ? " is-other" : ""}">
-      <div class="discovery-chart-label"><span>${esc(row.name)}</span><span><strong>${esc(discoveryMoney(row.value))}</strong> <span class="discovery-chart-share">${esc(discoveryPercent(row.share))}</span></span></div>
+      <div class="discovery-chart-label"><span>${chart.participant_label === "supplier" && !row.other ? `<a href="/subject/supplier/${encodeURIComponent(row.name)}">${esc(row.name)}</a>` : esc(row.name)}</span><span><strong>${esc(discoveryMoney(row.value))}</strong> <span class="discovery-chart-share">${esc(discoveryPercent(row.share))}</span></span></div>
       <div class="discovery-track" aria-hidden="true"><span style="width:${discoveryBarWidth(row.share)}%"></span></div>
     </div>`).join("")}</div>`;
 }
@@ -940,7 +947,7 @@ function discoveryDetailHTML(signal) {
       </div><p class="discovery-chart-note">Different money flows and reporting periods. A shared name doesn’t show that one led to the other.</p>`;
   }
   return `<article class="discovery-detail-card">${main}
-    <div class="discovery-actions"><a href="/search?q=${encodeURIComponent(signal.entity)}">Find mentions in parliament</a>${!contracts ? '<button type="button" id="discover-map-toggle" aria-expanded="false" aria-controls="discover-map-area">Explore connections on the money map</button>' : ""}</div>
+    <div class="discovery-actions">${signal.category !== "recipient_concentration" ? `<a href="/subject/supplier/${encodeURIComponent(signal.entity)}">Explore supplier profile</a>` : ""}<a href="/search?q=${encodeURIComponent(signal.entity)}">Find mentions in parliament</a>${!contracts ? '<button type="button" id="discover-map-toggle" aria-expanded="false" aria-controls="discover-map-area">Explore connections on the money map</button>' : ""}</div>
     ${!contracts ? '<div id="discover-map-area" hidden><p class="discovery-chart-note">Political funding connections from the money map. Its coverage differs from this comparison.</p><div id="discover-map-root" class="discovery-map"></div><a href="/money">Open the full money map</a></div>' : ""}
     ${discoveryEvidenceHTML(signal)}</article>`;
 }
@@ -960,10 +967,10 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js");
+    const { mountMoneyMap } = await import("/money-map.js?v=touch-focus-2");
     if (!current()) return;
     root.textContent = "";
-    const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
+    const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
       askUrl: (industry) => askHash(`What has parliament said about ${industryLabel(industry)}?`) });
     if (!current()) { handle.destroy(); return; }
     discoveryMapHandle = handle;
@@ -1073,7 +1080,7 @@ const STATE_NOT_SUMMED =
   "State and federal returns are not summed: AEC returns already include state branch receipts.";
 
 const MONEY_JURISDICTIONS = {
-  federal: { label: "Federal", file: "/graph/money.json" },
+  federal: { label: "Federal", file: "/graph/money.json?v=suppliers-1" },
   qld: { label: "Queensland", file: "/graph/money.qld.json" },
   vic: { label: "Victoria", file: "/graph/money.vic.json" },
   tas: { label: "Tasmania", file: "/graph/money.tas.json" },
@@ -1142,44 +1149,76 @@ function moneyFineprintHTML(jur, meta) {
 }
 
 let moneyMapHandle = null;
+let moneyMapGeneration = 0;
+let moneyJourneys = null;
+let moneyJourneyModule = null;
+let moneyJourneyData = null;
 let moneyMapJur = null;     // jurisdiction the mounted map shows
 let moneyMapLoading = null; // jurisdiction of the mount in flight
 let moneyMapIsolate = null; // industry cluster the route asked to isolate (/money?industry=)
 
-async function mountMoney(jurParam, industry) {
+function attachMoneyJourneys(params = new URLSearchParams()) {
+  if (!moneyMapHandle || !moneyJourneyModule || !moneyJourneyData) return;
+  moneyJourneys?.destroy();
+  moneyJourneys = moneyJourneyModule.mountMoneyJourneys($("money-journey-controls"), $("money-journey-story"), $("money-stage"), moneyJourneyData, moneyMapHandle, {
+    async loadStory(lens, focus, signal) {
+      const response = await fetch('/api/journey-story', {method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({jurisdiction:moneyMapJur || 'federal',lens,focus}),signal});
+      if (!response.ok) throw new Error('Story unavailable');
+      return response.json();
+    },
+    initialJourney: params.get("journey"), initialStep: params.get("step"), initialFocus: params.get("focus"),
+    onRoute(id, step, focus) {
+      const next = new URLSearchParams(location.search);
+      if (id) { next.set("journey", id); next.set("step", String(step)); next.delete("industry"); }
+      else { next.delete("journey"); next.delete("step"); }
+      if (id && focus) next.set("focus", focus); else next.delete("focus");
+      replaceRoute(`/money${next.size ? `?${next}` : ""}`);
+    },
+  });
+}
+async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   const jur = MONEY_JURISDICTIONS[jurParam] ? jurParam : "federal";
   renderMoneySwitch(jur);
   const isolate = industry || null;
   if (moneyMapHandle && moneyMapJur === jur) {
     // A legend choice made on the page is left alone; only the route's own
     // parameter coming or going moves the map.
-    if (isolate !== moneyMapIsolate) moneyMapHandle.isolate?.(isolate);
+    const changedIndustry = isolate !== moneyMapIsolate;
     moneyMapIsolate = isolate;
+    moneyMapHandle.setPaused(false);
+    if (!moneyJourneys) attachMoneyJourneys(params);
+    else moneyJourneys.setRoute(params.get("journey"), params.get("step"), params.get("focus"));
+    if (changedIndustry && !params.get("journey")) moneyMapHandle.isolate?.(isolate);
     return;
   }
   moneyMapIsolate = isolate;
   if (moneyMapLoading === jur) return;
   moneyMapLoading = jur;
+  const generation = ++moneyMapGeneration;
+  moneyJourneys?.destroy(); moneyJourneys = null;
   if (moneyMapHandle) { moneyMapHandle.destroy(); moneyMapHandle = null; moneyMapJur = null; }
   const root = $("money-map-root");
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data] = await Promise.all([import("/money-map.js"), loadMoneyFile(jur)]);
-    if (moneyMapLoading !== jur) return; // switched again while loading
+    const [{ mountMoneyMap }, data, journeysModule] = await Promise.all([import("/money-map.js?v=touch-focus-2"), loadMoneyFile(jur), import("/money-journeys.js?v=story-1")]);
+    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
     root.textContent = "";
     const handle = await mountMoneyMap(root, cfg.file, {
+      onInteract: () => moneyJourneys?.pause("map"),
       askUrl: (industry) =>
         askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
     });
-    if (moneyMapLoading !== jur) { handle.destroy(); return; }
+    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) { handle.destroy(); return; }
     moneyMapHandle = handle;
     moneyMapJur = jur;
-    if (moneyMapIsolate) handle.isolate?.(moneyMapIsolate);
+    moneyJourneyModule = journeysModule; moneyJourneyData = data;
+    attachMoneyJourneys(params);
+    if (moneyMapIsolate && !params.get("journey")) handle.isolate?.(moneyMapIsolate);
   } catch (err) {
-    if (moneyMapLoading !== jur) return;
+    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return;
     root.textContent = "";
     const p = document.createElement("p");
     p.className = "status error";
@@ -1191,7 +1230,7 @@ async function mountMoney(jurParam, industry) {
     p.appendChild(a);
     root.appendChild(p);
   } finally {
-    if (moneyMapLoading === jur) moneyMapLoading = null;
+    if (moneyMapLoading === jur && generation === moneyMapGeneration) moneyMapLoading = null;
   }
 }
 
@@ -1246,6 +1285,46 @@ function crumbLabel(s, max = 60) {
 }
 
 let firstRoute = true;
+let supplierPage = null;
+let supplierPageGeneration = 0;
+function destroySupplierPage() {
+  supplierPageGeneration += 1;
+  supplierPage?.destroy();
+  supplierPage = null;
+}
+async function openSupplierPage(name, params, manageFocus) {
+  const generation = supplierPageGeneration;
+  currentSubjectKey = `supplier:${name || "directory"}`;
+  destroySubjectMap();
+  activeDirectory = null;
+  const body = $("subject-body");
+  body.classList.remove("subject-person");
+  body.innerHTML = '<p role="status">Loading suppliers…</p>';
+  try {
+    const module = await import("/suppliers.js?v=profiles-2");
+    if (generation !== supplierPageGeneration) return;
+    const helpers = {
+      params,
+      onTitle(title) {
+        if (generation !== supplierPageGeneration) return;
+        document.title = `${title} · OPAX`;
+        if (manageFocus) $("subject-title")?.focus();
+      },
+      onCanonical(id, label) {
+        if (generation !== supplierPageGeneration) return;
+        replaceRoute(`/subject/supplier/${encodeURIComponent(id)}`);
+        setCrumbs([{ label: "Suppliers", href: "/subject/supplier" }, { label }]);
+      },
+      onMentions: (label, container) => subjectMentions(label, container, "In parliament"),
+    };
+    supplierPage = name
+      ? module.mountSupplierProfile(body, name, helpers)
+      : module.mountSupplierDirectory(body, helpers);
+  } catch {
+    if (generation === supplierPageGeneration) body.innerHTML = '<p role="alert">Supplier records could not be loaded. <a href="/subject/supplier">Try again</a>.</p>';
+  }
+}
+
 
 function rawFragment() {
   // location.hash is percent-DECODED in Firefox; parse from href so encoded
@@ -1301,9 +1380,14 @@ function route() {
   const view = segs[0] || "ask";
   const manageFocus = !firstRoute;
   firstRoute = false;
+  destroySupplierPage();
 
   if (view !== "subject") { destroySubjectMap(); currentSubjectKey = null; }
-  if (view === "subject" && segs[1] === "topic") {
+  if (view === "subject" && segs[1] === "supplier") {
+    showPanel("subject");
+    setCrumbs([{ label: "Suppliers", href: "/subject/supplier" }]);
+    openSupplierPage(segs[2] ? decodeURIComponent(segs[2]) : null, params, manageFocus);
+  } else if (view === "subject" && segs[1] === "topic") {
     showPanel("subject");
     document.title = TITLES.subject;
     if (segs[2]) {
@@ -1387,7 +1471,7 @@ function route() {
     showPanel("money");
     document.title = TITLES.money;
     setCrumbs([{ label: "Money map" }]);
-    mountMoney(params.get("jur"), params.get("industry"));
+    mountMoney(params.get("jur"), params.get("industry"), params);
   } else if (view === "explore") {
     showPanel("explore");
     // A link into one module, and for the grants explorer into one recipient's
@@ -2693,7 +2777,7 @@ addEventListener("hashchange", () => updateQuoteRail());
 let moneyData = null;
 let moneyDataPromise = null;
 function loadMoneyData() {
-  moneyDataPromise ??= fetch("/graph/money.json")
+  moneyDataPromise ??= fetch("/graph/money.json?v=suppliers-1")
     .then((r) => r.json()).then((d) => (moneyData = d)).catch(() => null);
   return moneyDataPromise;
 }
@@ -2769,7 +2853,7 @@ function renderMoneyPanel(ind) {
     </div>
     <p class="fineprint">${esc(AEC_NOTE)}
       <a href="/money">Explore on the money map</a> ·
-      <a href="/graph/money.json">Download the data</a></p>`;
+      <a href="/graph/money.json?v=suppliers-1">Download the data</a></p>`;
   // Blocks rise in sequence (kicker, each figure, each chart, the note); fresh
   // nodes on every render, so a second question replays it. Motion is CSS-side.
   box.querySelectorAll(":scope > :not(.tiles, .money-charts), :scope > .tiles > .tile, :scope > .money-charts > .chart").forEach((el, i) => {
@@ -3415,10 +3499,10 @@ async function mountSubjectMap(nodeId) {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js");
+    const { mountMoneyMap } = await import("/money-map.js?v=touch-focus-2");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
-    const handle = await mountMoneyMap(el, "/graph/money.json", {
+    const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       focus: nodeId,
       subject: nodeId, // this page IS the profile: its own card offers no "Full profile"
       chrome: "mini",
@@ -4468,7 +4552,7 @@ async function openSubject(kind, name, manageFocus) {
             : `What has parliament said about ${industryLabel(node.industry)}?`),
         `Ask what parliament said about ${isParty ? "them" : (["individual", "other", ""].includes(String(node.industry || "").toLowerCase()) ? "this donor" : "this industry")}`),
       actionBtn("search", searchHash(`"${node.label}"`, {}), "Search mentions in the record"),
-      actionBtn("download", "/graph/money.json", "Download the data"),
+      actionBtn("download", "/graph/money.json?v=suppliers-1", "Download the data"),
     ]);
     sections.insertAdjacentHTML("beforeend", barList(flowRows, {
       fmt: fmtMoney,
@@ -4481,6 +4565,8 @@ async function openSubject(kind, name, manageFocus) {
       partyDots: !isParty, // donor page rows are parties; party page rows are donors
     }));
     if (!isParty) sections.insertAdjacentHTML("beforeend", donorBalanceHTML(flows));
+    if (!isParty && node.contracts) sections.insertAdjacentHTML("beforeend",
+      `<p class="fineprint"><a href="/subject/supplier?donor=${encodeURIComponent(node.id)}">Explore their supplier records →</a></p>`);
     sections.insertAdjacentHTML("beforeend",
       `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
     if (!isParty) renderDonorInterests(node.label, sections);
@@ -5303,7 +5389,7 @@ function topicIndexDescription(slug) {
 // DIR_CHUNK with a "Show more" button so 1,400 people stay instant.
 
 const DIRECTORY_KINDS = {
-  person: "Parliamentarians", party: "Parties", donor: "Donors",
+  person: "Parliamentarians", party: "Parties", donor: "Donors", supplier: "Suppliers",
   campaigner: "Campaigners & third parties",
 };
 const DIR_CHUNK = 60;
@@ -7715,8 +7801,8 @@ async function renderFrontTopic() {
       <a href="/reports">All reports</a></p>`;
     $("mod-mw").hidden = false;
 
-    // Encyclopedia rail: the loudest voices across every report, today's
-    // topic leading. Needs the other reports too, so it fills in on its own.
+    // Encyclopedia rail: a daily shuffled selection across every report.
+    // Needs the other reports too, so it fills in on its own.
     renderFrontEncy(dayIdx, report, don).catch(() => { /* module stays hidden */ });
 
   } catch { /* modules stay hidden */ }
@@ -7741,11 +7827,22 @@ async function renderFrontReports() {
   } catch { /* The other front-page modules remain available. */ }
 }
 
-// The encyclopedia slider: one card per report's top speaker (today's topic
-// first, then the daily rotation order), deduped, filled from the second and
-// later ranks up to eight. Speakers without a portrait are skipped. Votes come
-// from the static export; a person missing from it simply has no vote block.
-// Today's top donor closes the row so the AEC half of the fineprint holds.
+// Stable daily shuffle, shared by all readers using Melbourne's calendar day.
+function dailyEncyShuffle(items, key, date = new Date()) {
+  const day = new Intl.DateTimeFormat('en-CA', { timeZone: 'Australia/Melbourne', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+  let seed = 2166136261;
+  for (const char of `ency:${day}`) seed = Math.imul(seed ^ char.charCodeAt(0), 16777619) >>> 0;
+  const shuffled = [...items].sort((a, b) => key(a).localeCompare(key(b), 'en'));
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    const j = Math.floor(seed / 4294967296 * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+// Sample the full portrait-backed report speaker pool each day, keeping richer
+// voting cards first. The donor card rotates through the available donor pool.
 async function renderFrontEncy(dayIdx, todayReport, don) {
   const n = reportsIndex.length;
   const order = reportsIndex.map((_, i) => reportsIndex[(dayIdx + i) % n]);
@@ -7762,10 +7859,10 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
   }));
   const seen = new Set();
   const pool = [];
-  for (let rank = 0; pool.length < 24 && ranked.some((r) => r.speakers[rank]); rank++) {
+  for (let rank = 0; ranked.some((r) => r.speakers[rank]); rank++) {
     for (const r of ranked) {
       const row = r.speakers[rank];
-      if (!row || seen.has(row[0]) || pool.length >= 24) continue;
+      if (!row || seen.has(row[0])) continue;
       seen.add(row[0]);
       pool.push({ name: row[0], count: row[1], topic: r.topic });
     }
@@ -7773,7 +7870,8 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
   // Cards with a voting record first: they carry the bill lists that give the
   // rail its shape, and a card with only a sentence would stand mostly empty.
   const fullCard = (p) => { const v = votesFor(p.name); return Boolean(v?.for?.length || v?.against?.length); };
-  const picks = [...pool.filter(fullCard), ...pool.filter((p) => !fullCard(p))].slice(0, 8);
+  const dailyPool = dailyEncyShuffle(pool, p => p.name);
+  const picks = [...dailyPool.filter(fullCard), ...dailyPool.filter((p) => !fullCard(p))].slice(0, 8);
 
   const voteList = (label, rows) => rows?.length ? `
     <div class="ency-votes-col">
@@ -7807,7 +7905,7 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
     </article>`;
   });
 
-  const topDonor = don?.top_donors?.[0];
+  const topDonor = dailyEncyShuffle(don?.top_donors || [], row => row[0])[0];
   if (topDonor) {
     const node = findMoneyNode("donor", topDonor[0]);
     cards.push(`<article class="report-card ency-card">
@@ -8007,10 +8105,10 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=touch-focus-2"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
-    const handle = await mod.mountMoneyMap(root, "/graph/money.json", {
+    const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
       askUrl: (industry) => askHash(`What has parliament said about ${industryLabel(industry)}?`),
       onSelect: (node) => {
@@ -8980,7 +9078,8 @@ function searchQueryParams(q, f, page, sort) {
 // renderer, and a per-page clear function behind each cross.
 
 const FILTER_KIND_LABELS = {
-  speech: "Speeches", news: "News", division: "Divisions", all: "Everything",
+  speech: "Speeches", news: "News", division: "Divisions",
+  press_release: "Government transcripts and releases", all: "Everything",
 };
 const FILTER_MODE_LABELS = { hybrid: "Hybrid", semantic: "Semantic", keyword: "Keyword" };
 
@@ -9883,7 +9982,6 @@ async function openDocPage(slug, manageFocus) {
   $("doc-brief").hidden = true;
   $("doc-bill").hidden = true;
   $("doc-bill").replaceChildren();
-  $("doc-record-head").hidden = true;
   $("doc-caveat").hidden = true;
   $("doc-cite-panel").hidden = true;
   $("doc-cite").setAttribute("aria-expanded", "false");
@@ -9897,6 +9995,7 @@ async function openDocPage(slug, manageFocus) {
     const doc = await api(`/api/resource/${encodeURIComponent(slug)}`);
     if (currentDocSlug !== slug) return; // user navigated away while fetching
     currentDoc = doc;
+    const isGovernmentRelease = doc.labels?.kind === "press_release";
     setStatus($("doc-status"), "");
     // The headline is the speaker; the title repeats what the byline says, so
     // it only stands in when no speaker is attached, and then as its subject.
@@ -9932,7 +10031,9 @@ async function openDocPage(slug, manageFocus) {
       : CHAMBER_NAMES[String(doc.labels?.chamber || "").toLowerCase()];
     const state = doc.labels?.state;
     const stateName = state ? (STATE_NAMES[state] || state) : null;
-    const house = chamber
+    const house = isGovernmentRelease
+      ? (state === "federal" ? "Australian Government" : state ? `${stateName} Government` : "Government release")
+      : chamber
       ? (state && state !== "federal" ? `${chamber}, ${stateName}` : chamber)
       : (state ? (state === "federal" ? "Federal Parliament" : `Parliament of ${stateName}`) : null);
     const origin = safeUrl(doc.url);
@@ -9978,12 +10079,15 @@ async function openDocPage(slug, manageFocus) {
     if (doc.summary) {
       $("doc-brief-text").textContent = doc.summary;
       $("doc-brief").hidden = false;
-      // Only worth naming when something else stands above it.
-      $("doc-record-head").hidden = false;
     }
     renderDocBillPanel(doc, slug);
     renderDocText(doc);
-    $("doc-ask").href = askHash(`What has parliament said about ${topic || doc.title}?`);
+    $("doc-ask").href = askHash(
+      isGovernmentRelease
+        ? `What does the record say about ${topic || doc.title}?`
+        : `What has parliament said about ${topic || doc.title}?`,
+      isGovernmentRelease ? "all" : undefined,
+    );
     $("doc-actions").hidden = false;
     $("doc-profile").hidden = !doc.speaker;
     $("doc-more").hidden = !doc.speaker;
@@ -11247,9 +11351,9 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js");
+    const { mountMoneyMap } = await import("/money-map.js?v=touch-focus-2");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
-    const handle = await mountMoneyMap(el, "/graph/money.json", {
+    const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
       scrub: true, // the year window: watch the industry's money move
       askUrl: (industry) => askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
@@ -11674,7 +11778,7 @@ const STATS_PARLIAMENTS = [
   ["federal", "Federal Parliament"], ["nsw", "NSW Parliament"], ["vic", "Victorian Parliament"],
   ["qld", "Queensland Parliament"], ["sa", "South Australian Parliament"],
 ];
-const STATS_KINDS = [["speech", "Speeches"], ["division", "Recorded divisions"], ["bill", "Bills"], ["legal", "Legislation"], ["news", "News"]];
+const STATS_KINDS = [["speech", "Speeches"], ["division", "Recorded divisions"], ["bill", "Bills"], ["press_release", "Government transcripts and releases"], ["legal", "Legislation"], ["news", "News"]];
 
 /** One hero tile per key; the figure element is kept so a live update counts on in place. */
 function renderStatsHero() {

@@ -36,7 +36,7 @@
   <script type="module">
     // The bundle is loaded lazily on purpose - this is the pattern the main
     // portal page will use when the user opens the map.
-    const { mountMoneyMap } = await import('/money-map.js')
+    const { mountMoneyMap } = await import('/money-map.js?v=mobile-1')
     const container = document.getElementById('map')
     try {
       document.getElementById('status')?.remove()

@@ -14,6 +14,7 @@
  */
 
 import { proxyPostHog } from './posthog'
+import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
 
 import { OG_FONT_FILES, OG_VERSION, homeCard, type OgCard } from './og'
 import { renderOgPng, type OgFont } from './og-render'
@@ -34,10 +35,12 @@ interface FindResource {
 }
 
 const SLUG_RE = /^(speech|legal|news)-(\d+)$/
+const PRESS_SLUG_RE = /^press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+$/
 // Division records (parli.ingest.votes_ingest) carry composite ids:
 // division-nsw-la-2025-12-22-3, division-federal-senate-10113. Public too.
 const DIVISION_SLUG_RE = /^division-[a-z0-9-]+$/
-const isPublicSlug = (slug: string): boolean => SLUG_RE.test(slug) || DIVISION_SLUG_RE.test(slug)
+const isPublicSlug = (slug: string): boolean =>
+  SLUG_RE.test(slug) || DIVISION_SLUG_RE.test(slug) || PRESS_SLUG_RE.test(slug)
 
 /**
  * Build a /find//ask filter_expression from the portal's filter vocabulary.
@@ -505,7 +508,7 @@ async function searchWindow(
     const windowed = (start > 0 ? '…' : '') + bestText.slice(start, start + 600)
     const division = DIVISION_SLUG_RE.test(slug)
     return {
-      kind: m?.[1] ?? (division ? 'division' : 'unknown'),
+      kind: label(resource, 'kind') ?? m?.[1] ?? (division ? 'division' : 'unknown'),
       id: m ? Number(m[2]) : null,
       slug,
       resource: rid,
@@ -846,6 +849,44 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const payload = askPayload(answer)
   store(payload)
   return withCacheStatus(json(payload), status, false)
+}
+
+// Narration is generated from server-loaded graph facts, never client-supplied amounts.
+async function apiJourneyStory(request: Request, input: Record<string, unknown>, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const files: Record<string,string> = {federal:'/graph/money.json',qld:'/graph/money.qld.json',vic:'/graph/money.vic.json',tas:'/graph/money.tas.json'}
+  const { jurisdiction, lens, focus } = input
+  if (typeof jurisdiction !== 'string' || !Object.hasOwn(files,jurisdiction) || typeof lens !== 'string' || typeof focus !== 'string' || focus.length > 500) return json({error:'Invalid journey'},400)
+  const graph = await assetJson<StoryGraph>(env,files[jurisdiction])
+  const context = journeyStoryContext(graph,lens,focus)
+  if (!context) return json({error:'Journey not available'},404)
+  const key = cacheRequest('journey-story',await sha256Hex(JSON.stringify({version:STORY_VERSION,context})))
+  const cached = await caches.default.match(key)
+  if (cached) return withCacheStatus(cached,'HIT',false)
+  const limited = await rateLimited(env.FOLLOWUPS_LIMITER,request)
+  if (limited) return limited
+  try {
+    const generate = async (query: string) => {
+      const response = await kbFetch(env,'/ask',{
+        body:{query,top_k:1,reranker:'noop',generative_model:'openai-compatible',max_tokens:4096,
+          prompt:{system:JOURNEY_STORY_SYSTEM,user:'{question}'}},
+        headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(30_000),
+      })
+      if (!response.ok) return null
+      const result = await response.json() as {answer?:string}
+      return typeof result.answer === 'string' ? result.answer : null
+    }
+    const prompt = journeyStoryPrompt(context)
+    const answer = await generate(prompt)
+    let steps = answer ? parseJourneyStory(answer,context) : null
+    if (!steps && answer) {
+      const repaired = await generate(`${prompt}\n\nYour previous draft failed validation. Rewrite it. Every number must exactly match a supplied number: no newly rounded amounts or calculated percentages. Say a comparison in words if its number is not supplied. Use receipts, never donations. Each step needs its own valid evidence IDs. Return only the required JSON. Previous draft:\n${answer.slice(0,8000)}`)
+      steps = repaired ? parseJourneyStory(repaired,context) : null
+    }
+    if (!steps) return json({error:'Story unavailable'},502)
+    const out = json({steps,generated:true,version:STORY_VERSION})
+    cacheStore(ctx,key,out,7*24*60*60)
+    return withCacheStatus(out,'MISS',false)
+  } catch { return json({error:'Story unavailable'},503) }
 }
 
 // --- streamed asks -----------------------------------------------------------
@@ -1596,7 +1637,7 @@ async function apiRecent(env: Env): Promise<Response> {
     resources?: Record<string, { slug?: string; title?: string; created?: string }>
   }
   const items = Object.values(data.resources ?? {})
-    .filter((r) => SLUG_RE.test(r.slug ?? ''))
+    .filter((r) => isPublicSlug(r.slug ?? ''))
     .map((r) => ({ slug: r.slug, title: r.title ?? r.slug, indexed: r.created ?? null }))
     .slice(0, 12)
   const out = json({ items })
@@ -2040,14 +2081,15 @@ const CHAMBER_NAMES: Record<string, string> = {
   assembly: 'Legislative Assembly', council: 'Legislative Council',
 }
 // The /subject/<dir> directories. app.js keeps its own copy for the client-side
-// router and the crumb labels; the two lists have to name the same four kinds.
+// router and the crumb labels; the two lists have to name the same kinds.
 const DIRECTORY_KINDS: Record<string, string> = {
   person: 'Parliamentarians',
   party: 'Parties',
   donor: 'Donors',
+  supplier: 'Government suppliers',
   campaigner: 'Campaigners & third parties',
 }
-type DirectoryKind = 'person' | 'party' | 'donor' | 'campaigner'
+type DirectoryKind = 'person' | 'party' | 'donor' | 'campaigner' | 'supplier'
 const isDirectoryKind = (s: string): s is DirectoryKind => s in DIRECTORY_KINDS
 
 // Static pages: title as app.js TITLES sets it, blurb from the masthead menus.
@@ -2065,7 +2107,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   money: {
     title: 'Money map · OPAX',
-    description: 'Disclosed political donations as territory you can spin: 250 donors, 11 parties and 28 years of AEC returns, with Queensland and Victorian registers.',
+    description: 'Explore political funding and public money in 3D. Guided journeys follow contracts, shared party connections, industries and changes over time, with federal and state records.',
     query: true,
   },
   reports: {
@@ -2144,6 +2186,7 @@ interface PageMeta {
 // never list a page this function would refuse.
 const SUBJECT_NAME_MAX = 120
 const CAMPAIGNER_NAME_MAX = 200
+const SUPPLIER_NAME_MAX = 500
 // A bill key is jurisdiction plus source identity, lowercase and hyphenated.
 const BILL_KEY_MAX = 64
 const BILL_KEY_RE = /^[a-z][a-z0-9-]*$/
@@ -2176,7 +2219,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
     const dir = dec[1]
     if (isDirectoryKind(dir)) {
       if (segs.length === 2) return { kind: 'index', dir }
-      const max = dir === 'campaigner' ? CAMPAIGNER_NAME_MAX : SUBJECT_NAME_MAX
+      const max = dir === 'campaigner' ? CAMPAIGNER_NAME_MAX : dir === 'supplier' ? SUPPLIER_NAME_MAX : SUBJECT_NAME_MAX
       if (segs.length === 3 && dec[2].trim() && dec[2].length <= max) {
         return { kind: 'subject', dir, name: dec[2].trim() }
       }
@@ -2422,6 +2465,50 @@ function loadCampaigners(env: Env): Promise<CampaignersData> {
   return campaignersMemo
 }
 
+interface SupplierRow {
+  id: string
+  name: string
+  abn?: string | null
+  aliases?: string[]
+  lookup_names?: string[]
+  total: number
+  count: number
+  agency_count: number
+  first_year?: number | null
+  last_year?: number | null
+}
+interface SuppliersData {
+  generated: string
+  suppliers: SupplierRow[]
+  byId: Map<string, SupplierRow>
+  byName: Map<string, SupplierRow | null>
+}
+const supplierNameKey = (name: string): string => name.trim().toLowerCase()
+let suppliersMemo: Promise<SuppliersData> | null = null
+function loadSuppliers(env: Env): Promise<SuppliersData> {
+  suppliersMemo ??= assetJson<{ meta?: { generated_at?: string; generated?: string }; suppliers: SupplierRow[] }>(env, '/suppliers.json')
+    .then((raw) => {
+      if (!Array.isArray(raw.suppliers)) throw new Error('Invalid supplier index')
+      const byId = new Map<string, SupplierRow>()
+      const byName = new Map<string, SupplierRow | null>()
+      for (const supplier of raw.suppliers) {
+        if (!supplier || !/^s-[a-f0-9]{20}$/.test(supplier.id) || typeof supplier.name !== 'string' || !supplier.name.trim()
+            || !Number.isFinite(supplier.total) || !Number.isFinite(supplier.count) || !Number.isFinite(supplier.agency_count)) throw new Error('Invalid supplier entry')
+        if (byId.has(supplier.id)) throw new Error('Duplicate supplier identity')
+        byId.set(supplier.id, supplier)
+        for (const spelling of [supplier.name, ...(supplier.aliases ?? []), ...(supplier.lookup_names ?? [])]) {
+          if (typeof spelling !== 'string' || !spelling.trim()) continue
+          const key = supplierNameKey(spelling)
+          // Same name with different ABNs is ambiguous, not an entity merge.
+          if (!byName.has(key)) byName.set(key, supplier)
+          else if (byName.get(key)?.id !== supplier.id) byName.set(key, null)
+        }
+      }
+      return { generated: raw.meta?.generated_at ?? raw.meta?.generated ?? '', suppliers: raw.suppliers, byId, byName }
+    }).catch((error) => { suppliersMemo = null; throw error })
+  return suppliersMemo
+}
+
 let billsMemo: Promise<BillsData> | null = null
 /**
  * The bill index, keyed. Only /bill/<key> reads it, and only for a title and a
@@ -2536,7 +2623,7 @@ const yearSpan = (a: string, b: string): string => (a && b && a !== b ? `${a} to
 
 const indexLinks = (): string =>
   `<p><a href="/subject/person">Parliamentarians</a> · <a href="/subject/party">Parties</a> · ` +
-  `<a href="/subject/donor">Donors</a> · <a href="/subject/campaigner">Campaigners</a> · ` +
+  `<a href="/subject/donor">Donors</a> · <a href="/subject/supplier">Government suppliers</a> · <a href="/subject/campaigner">Campaigners</a> · ` +
   `<a href="/subject/topic">Topics</a></p>`
 
 function prerenderBlock(heading: string, sentence: string, kicker: string): string {
@@ -2634,6 +2721,10 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         description = clip(`Every parliamentarian in the OPAX record${people ? `: ${num(people.people.length)} speakers` : ''} since 1993, searchable by name, party and parliament, each with their speeches.`)
       } else if (route.dir === 'party') {
         description = 'Australian political parties in the record: speeches, members and disclosed receipts, party by party, from Hansard and electoral commission returns.'
+      } else if (route.dir === 'supplier') {
+        const suppliers = await loadSuppliers(env).catch(() => null)
+        if (!suppliers) return base({ title: 'Government suppliers · OPAX', description: 'The supplier index is temporarily unavailable. Please try again.', status: 503 })
+        description = clip(`Explore ${num(suppliers.suppliers.length)} suppliers in the recorded Commonwealth contracts: award values, purchasing agencies and source notices. Values are not expenditure.`)
       } else if (route.dir === 'campaigner') {
         const camp = await loadCampaigners(env).catch(() => null)
         // Sized to survive the 158-character clip with the count in place.
@@ -2684,6 +2775,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
     case 'subject':
       if (route.dir === 'person') return personMeta(route.name, url, env)
       if (route.dir === 'campaigner') return campaignerMeta(route.name, url, env)
+      if (route.dir === 'supplier') return supplierMeta(route.name, url, env)
       return moneySubjectMeta(route.dir, route.name, url, env)
 
     case 'doc':
@@ -2820,6 +2912,41 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
       portraitId,
       credit,
     },
+  }
+}
+
+async function supplierMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
+  const data = await loadSuppliers(env).catch(() => null)
+  const supplier = data?.byId.get(name) ?? data?.byName.get(supplierNameKey(name)) ?? null
+  if (!supplier && data?.byName.has(supplierNameKey(name))) {
+    const candidates = data.suppliers.filter((entry) => [entry.name, ...(entry.aliases ?? []), ...(entry.lookup_names ?? [])]
+      .some((alias) => supplierNameKey(alias) === supplierNameKey(name)))
+    const description = 'More than one government supplier uses this name. Check the ABN and choose the matching contract profile.'
+    const links = candidates.map((entry) => `<li><a href="/subject/supplier/${encodeURIComponent(entry.id)}">${escHtml(entry.name)}</a> · ${entry.abn ? `ABN ${escHtml(entry.abn)}` : 'No ABN recorded'}</li>`).join('')
+    return { title: 'Choose a supplier · OPAX', description, canonical: canonicalFor(url, false),
+      ogType: 'website', status: 200, jsonLd: null, card: null,
+      prerender: `<section id="prerender" class="wrap"><h1>Choose a supplier</h1><p>${description}</p><ul>${links}</ul>${indexLinks()}</section>` }
+  }
+  if (!supplier) {
+    return {
+      title: data ? 'Supplier not found · OPAX' : 'Supplier temporarily unavailable · OPAX',
+      description: data ? 'This supplier is not in the current OPAX contract index. Browse the government supplier directory.' : 'The supplier index could not be loaded. Please try again.',
+      canonical: canonicalFor(url, false), ogType: 'website', status: data ? 404 : 503,
+      jsonLd: null, prerender: null, card: null,
+    }
+  }
+  const canonical = `${SITE_ORIGIN}/subject/supplier/${encodeURIComponent(supplier.id)}`
+  const span = years(supplier.first_year, supplier.last_year)
+  const facts = `${supplier.name}: ${money(supplier.total)} in recorded Commonwealth contract award values across ${num(supplier.count)} contracts and ${num(supplier.agency_count)} agencies${span ? `, ${span}` : ''}.`
+  const description = withTail(facts, 'Explore purchasing agencies and source notices.')
+  return {
+    title: `${clip(supplier.name, 90)} · Government supplier · OPAX`, description, canonical,
+    ogType: 'profile', status: 200,
+    jsonLd: { '@context': 'https://schema.org', '@type': 'ProfilePage', name: supplier.name, url: canonical, description,
+      mainEntity: { '@type': 'Thing', name: supplier.name, ...(supplier.abn ? { identifier: { '@type': 'PropertyValue', propertyID: 'ABN', value: supplier.abn } } : {}) } },
+    prerender: prerenderBlock(supplier.name, `${facts} Award values are not expenditure. Coverage is limited to the available notices.`, 'Government supplier'),
+    card: { kicker: 'Government supplier', title: supplier.name,
+      lines: [`${money(supplier.total)} in recorded award values`, `${num(supplier.count)} contracts · ${num(supplier.agency_count)} agencies`, 'Recorded awards, not expenditure.'] },
   }
 }
 
@@ -3012,6 +3139,40 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
         italic: true,
         title: motion,
         lines: [`${outcome || 'Division'}${tally}. Who voted which way.`],
+      },
+    }
+  }
+  if (r.labels.kind === 'press_release' || PRESS_SLUG_RE.test(slug)) {
+    const source = r.labels.source === 'pmtranscripts'
+      ? 'Prime Minister transcripts'
+      : r.labels.source === 'nsw' ? 'NSW Government ministerial releases' : 'Government releases'
+    const parts = r.title.split(' — ')
+    const storedHeadline = typeof r.metadata.headline === 'string' ? r.metadata.headline.trim() : ''
+    const hasAttributionPrefix = Boolean(r.speaker || (typeof r.metadata.role === 'string' && r.metadata.role))
+    const headline = storedHeadline ||
+      (parts.length >= 3 ? parts.slice(hasAttributionPrefix ? 1 : 0, -1).join(' — ') : r.title)
+    const description = clip(
+      r.summary?.trim() ||
+        `${headline}${r.speaker ? `, issued by ${r.speaker}` : ''}${date ? ` on ${longDate(date)}` : ''}. Official source text indexed by OPAX.`,
+    )
+    return {
+      ...generic,
+      title: `${headline} · OPAX`,
+      description,
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline,
+        description,
+        url: canonical,
+        ...(date ? { datePublished: date } : {}),
+        ...(r.speaker ? { author: { '@type': 'Person', name: r.speaker } } : {}),
+        publisher,
+      },
+      card: {
+        kicker: `${source}${when}`,
+        title: headline,
+        lines: [[r.speaker, r.metadata.role].filter(Boolean).join(' · '), 'Read the official source text on OPAX.'],
       },
     }
   }
@@ -3219,13 +3380,14 @@ function robotsTxt(): Response {
 /** Every indexable page, rebuilt from the data files and cached a day. */
 async function sitemapXml(env: Env): Promise<Response> {
   return cachedJson('/sitemap.xml', async () => {
-    const [people, moneyData, reports, campaigners] = await Promise.all([
+    const [people, moneyData, reports, campaigners, suppliers] = await Promise.all([
       loadPeople(env),
       loadMoney(env),
       loadReports(env),
       // The only optional one. A campaigners.json the exporter has not written
       // yet must cost the sitemap its campaigner rows, not the whole sitemap.
       loadCampaigners(env).catch(() => null),
+      loadSuppliers(env).catch(() => null),
     ])
     const rows: string[] = []
     const add = (path: string, lastmod?: string) => {
@@ -3237,7 +3399,7 @@ async function sitemapXml(env: Env): Promise<Response> {
     for (const r of reports.reports) add(`/reports/${r.slug}`, r.updated)
     add('/subject/topic')
     for (const slug of Object.keys(TOPIC_NAMES)) add(`/subject/topic/${slug}`)
-    for (const dir of ['person', 'party', 'donor', 'campaigner']) add(`/subject/${dir}`)
+    for (const dir of ['person', 'party', 'donor', 'campaigner', 'supplier']) add(`/subject/${dir}`)
     // Parties: every label the money data or the people data knows.
     const partyLabels = new Map<string, string>()
     for (const n of moneyData.parties.values()) partyLabels.set(foldName(n.label), n.label)
@@ -3253,6 +3415,9 @@ async function sitemapXml(env: Env): Promise<Response> {
         if (c.name.length > CAMPAIGNER_NAME_MAX) continue
         add(`/subject/campaigner/${encodeURIComponent(c.name)}`, campaigners.generated)
       }
+    }
+    if (suppliers) {
+      for (const supplier of suppliers.suppliers) add(`/subject/supplier/${encodeURIComponent(supplier.id)}`, suppliers.generated)
     }
     const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${rows.join('\n')}\n</urlset>\n`
     return new Response(xml, { headers: { 'content-type': 'application/xml; charset=utf-8' } })
@@ -3324,7 +3489,7 @@ const NULL_BODY_STATUS = new Set([101, 204, 205, 304])
 // query's result set. Every other /api route is the caching work's to own, so
 // its Cache-Control is left exactly as the handler returned it — and even here
 // a handler that sets its own (the SSE stream does) wins.
-const NO_STORE_PATHS = new Set(['/api/ask', '/api/followups', '/api/search'])
+const NO_STORE_PATHS = new Set(['/api/journey-story', '/api/ask', '/api/followups', '/api/search'])
 
 function withSecurityHeaders(res: Response, url: URL): Response {
   const isApi = url.pathname.startsWith('/api/')
@@ -3350,7 +3515,7 @@ const MAX_PARTY_CHARS = 64
 const MIN_YEAR = 1900
 const MAX_YEAR = 2100
 
-const KINDS = new Set(['speech', 'legal', 'news', 'division', 'bill', 'all'])
+const KINDS = new Set(['speech', 'legal', 'news', 'division', 'bill', 'press_release', 'all'])
 const STATES = new Set(['federal', 'nsw', 'vic', 'sa', 'qld'])
 const MODES = new Set(['hybrid', 'semantic', 'keyword'])
 // Party labels are the KB's own facet values (served by /api/parties) and grow
@@ -3483,6 +3648,11 @@ async function route(
         const bad = validateFilters((k) => body.value[k])
         if (bad) return json({ error: bad }, 400)
         return await apiAsk(replayPost(request, body.text), env, ctx)
+      }
+      if (url.pathname === '/api/journey-story' && request.method === 'POST') {
+        const body = await readJsonBody(request)
+        if (body instanceof Response) return body
+        return await apiJourneyStory(request,body.value,env,ctx)
       }
       if (url.pathname === '/api/followups' && request.method === 'POST') {
         const body = await readJsonBody(request)

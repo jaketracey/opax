@@ -27,6 +27,7 @@ import { ACCENT, CLUSTER_COLOURS, clusterColour, CONTRACTOR_COLOUR, GRANTOR_COLO
 import { type Reveal, runReveal } from './reveal.ts'
 import { mountWordsLayer } from './words.ts'
 import { cpiMultiplier } from './cpi.ts'
+import { mountConnectionFallback } from './connection-fallback.ts'
 
 // Re-exported so a Node smoke test can exercise the pure layout/data layer
 // without a DOM or a WebGL context.
@@ -117,7 +118,17 @@ export type MoneyGraph = {
   edges: MoneyEdge[]
 }
 
+export type MoneyScene = {
+  focusId: string
+  withIds?: string[]
+  edges?: { source: string; target: string }[]
+  from?: number
+  to?: number
+}
+
 export type MoneyMapOptions = {
+  /** Reader input in the map or controls; scene presentation stays silent. */
+  onInteract?: () => void
   /** Builds the parliament ask-link for a donor's industry. */
   askUrl?: (industry: string) => string
   /**
@@ -162,6 +173,11 @@ export type MoneyMapOptions = {
 }
 
 export type MoneyMapHandle = {
+  presentScene(scene: MoneyScene): boolean
+  /** Restore the full nominal, unfiltered overview. */
+  clearScene(): void
+  /** Freeze camera choreography at its current frame, retaining the evidence. */
+  pauseScene(): void
   select(id: string | null): void
   /** Isolate one industry cluster (null shows everything); the legend follows. Silent. */
   isolate(group: string | null): void
@@ -300,7 +316,20 @@ const CSS = `
    room, short of whatever gap fitHostToCard reserved above it for chrome
    (a phone's scrub bar, relocated to the top) and a floor of visible map. */
 .mm-root.mm-grown .mm-card { max-height: calc(100% - var(--mm-grown-gap, 64px)); }
-.mm-canvas { display: block; width: 100%; height: 100%; cursor: grab;
+.mm-connections { position: absolute; inset: 0; overflow: auto; padding: 18px; overscroll-behavior: contain; }
+.mm-connections-title { font-weight: 600; margin: 0 0 4px; }
+.mm-connections-note { color: #66665d; font-size: 12px; margin: 0 0 16px; }
+.mm-connections ul { list-style: none; padding: 0; margin: 0; }
+.mm-connections li { margin: 0 0 22px; }
+.mm-connection-names { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.mm-connection-names button { flex: 1; min-width: 0; display: flex; gap: 6px; align-items: baseline; background: none; border: none; padding: 4px 0; font: inherit; color: inherit; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.mm-connection-names button:focus-visible { outline: 2px solid ${ACCENT}; outline-offset: 2px; }
+.mm-connection-names i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.mm-connection-bar { height: 6px; background: #e4e7e6; border-radius: 4px; overflow: hidden; margin-top: 6px; }
+.mm-connection-bar span { display: block; height: 100%; background: #53788c; }
+.mm-recovery { position: absolute; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; padding: 24px; background: ${SURFACE}; }
+.mm-recovery button { font: inherit; padding: 10px 14px; cursor: pointer; }
+.mm-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; cursor: grab;
   touch-action: none; user-select: none; -webkit-user-select: none; outline-offset: -3px; }
 .mm-canvas:focus-visible { outline: 2px solid ${ACCENT}; }
 .mm-labels { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
@@ -498,12 +527,45 @@ const CSS = `
 @media (prefers-reduced-motion: reduce) {
   .rp-map3d-territory { transition: none; }
 }
+/* Tablets need the graph width more than they need desktop side rails. Keep
+   the controls as light overlays above the scene and open details as a sheet,
+   leaving one wide, coherent camera viewport. */
+@media (min-width: 721px) and (max-width: 1024px) {
+  .mm-legend { flex-direction: row; flex-wrap: nowrap; overflow-x: auto;
+    right: 12px; max-width: none; max-height: none; align-items: center; }
+  .mm-root[data-mm-chrome='full'] .mm-legend { max-height: none; }
+  .mm-legend-title { display: none; }
+  .mm-chip { white-space: nowrap; flex: none; }
+  .mm-find, .mm-hint { display: none; }
+  .mm-root[data-mm-chrome='full'] .mm-scrub {
+    top: 60px; bottom: auto; width: 270px;
+  }
+  .mm-card, .mm-root[data-mm-chrome='full'] .mm-card {
+    top: auto; right: 12px; left: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    width: auto; max-height: 48%;
+  }
+}
+@media (pointer: coarse) {
+  .rp-map3d-label { font-size: 12px; }
+  .rp-map3d-label[data-emphasised] {
+    padding: 2px 5px; border-radius: 4px;
+    background: rgba(250, 249, 246, 0.82);
+    font-size: 14px; text-shadow: none;
+  }
+  .rp-map3d-label[data-selected] { font-size: 15px; }
+  .rp-map3d-edge-label {
+    padding: 2px 6px; font-size: 12px;
+    background: rgba(250, 249, 246, 0.92);
+  }
+}
 @media (max-width: 720px) {
   .mm-legend { flex-direction: row; flex-wrap: nowrap; overflow-x: auto;
     max-width: calc(100% - 24px); max-height: none; align-items: center; }
   .mm-legend-title { display: none; }
   .mm-chip { white-space: nowrap; flex: none; }
-  .mm-card { top: auto; right: 8px; left: 8px; bottom: 8px; width: auto;
+  .mm-card { top: auto; right: 8px; left: 8px;
+    bottom: max(8px, env(safe-area-inset-bottom)); width: auto;
     max-height: 55%; }
   .mm-root[data-mm-chrome='full'] .mm-card { top: auto; max-height: 55%; }
   .mm-hint, .mm-find { display: none; }
@@ -530,7 +592,7 @@ const CSS = `
   .mm-root[data-mm-chrome='full'] .mm-cpi-info { display: flex; }
   /* The compact scrub is small enough to keep on a phone; it moves to the
      top left, which mini chrome leaves empty, clear of the card's sheet. */
-  .mm-scrub-mini { display: flex; top: 8px; left: 8px; bottom: auto; }
+  .mm-scrub-mini { display: flex; top: max(8px, env(safe-area-inset-top)); left: 8px; bottom: auto; }
 }
 `
 
@@ -569,13 +631,7 @@ export async function mountMoneyMap(
   if (!response.ok) throw new Error(`money map data: HTTP ${response.status} for ${dataUrl}`)
   const raw = (await response.json()) as MoneyGraph
 
-  if (!webglAvailable()) {
-    const fallback = el('div', 'mm-fallback', container)
-    fallback.textContent = 'The 3D money map needs WebGL, which this browser does not offer. ' +
-      'The underlying data is available as JSON at ' + dataUrl
-    const noop = () => undefined
-    return { select: noop, isolate: noop, fit: noop, setPaused: noop, destroy: () => fallback.remove() }
-  }
+  if (!webglAvailable()) return mountConnectionFallback(container, raw, opts)
 
   const graph = buildGraph(raw)
   const byId = new Map(raw.nodes.map((n) => [n.id, n]))
@@ -605,6 +661,9 @@ export async function mountMoneyMap(
   let yearHi = yearMax
   let adjustForInflation = false
   let yearsInUrl = false
+  let syncScrubControls = () => {}
+  let scrubPending = 0
+  let destroyed = false
 
   // Full maps own these three query parameters. Mini maps are embedded in
   // donor/party/front-page routes, so their scrub remains local to the embed.
@@ -630,6 +689,8 @@ export async function mountMoneyMap(
   const syncUrlState = () => {
     if (!full || typeof location === 'undefined' || typeof history === 'undefined') return
     const url = new URL(location.href)
+    // Teardown can run after the host has navigated to another route.
+    if (!/^\/(?:money|map)\/?$/.test(url.pathname)) return
     if (yearsInUrl) {
       url.searchParams.set('from', String(yearLo))
       url.searchParams.set('to', String(yearHi))
@@ -801,18 +862,32 @@ export async function mountMoneyMap(
   let selectedEdge: MapEdge | null = null
   let activeGroup: string | null = null
 
-  const engine = new KnowledgeMapEngine(
-    canvas,
-    labels,
-    (id) => setSelection(id, { user: true }),
-    () => {
-      // A lost WebGL context leaves a frozen canvas with no way back.
-      canvas.replaceWith(Object.assign(document.createElement('div'), {
-        className: 'mm-fallback',
-        textContent: 'The 3D view lost its graphics context. Reload the page to restart it.',
-      }))
-    },
-  )
+  let recoveryNotice: HTMLDivElement | null = null
+  let engine: KnowledgeMapEngine
+  try {
+    engine = new KnowledgeMapEngine(
+      canvas,
+      labels,
+      (id) => setSelection(id, { user: true }),
+      () => {
+        if (recoveryNotice) return
+        recoveryNotice = el('div', 'mm-recovery', container)
+        recoveryNotice.setAttribute('role', 'status')
+        recoveryNotice.append('Reconnecting the map… ')
+        const retry = el('button', '', recoveryNotice)
+        retry.type = 'button'
+        retry.textContent = 'Reload map'
+        retry.addEventListener('click', () => location.reload())
+      },
+      () => {
+        recoveryNotice?.remove()
+        recoveryNotice = null
+      },
+    )
+  } catch {
+    container.replaceChildren()
+    return mountConnectionFallback(container, raw, opts)
+  }
   engine.onEdgePick = (edge) => setEdgeSelection(edge)
   const words = mountWordsLayer({ engine, raw, legend, routeBase })
 
@@ -822,11 +897,13 @@ export async function mountMoneyMap(
   let reveal: Reveal | null = null
   let spotlightEdges: MapEdge[] | null = null
   let spotlightFor: string | null = null
+  let guidedScene = false
   const applyEmphasis = () => {
     engine.setEmphasis({
       selectedId,
       pathEdges: spotlightEdges,
       pathFrom: spotlightEdges ? selectedId : null,
+      strictPath: guidedScene && spotlightEdges !== null,
     })
   }
   // The lit landing outlives the camera move, so something has to hand it
@@ -840,13 +917,27 @@ export async function mountMoneyMap(
     armedRelease = null
   }
   const cancelReveal = () => {
+    guidedScene = false
     disarmRelease()
     const running = reveal
     reveal = null
     running?.cancel()
+    if (spotlightEdges !== null) {
+      engine.stopViewMove()
+      spotlightEdges = null
+      spotlightFor = null
+      applyEmphasis()
+    }
   }
   // The reader's first press, drag, wheel notch or arrow key ends it.
   engine.onViewClaimed = () => cancelReveal()
+  const onReaderInput = (event: Event) => {
+    if (!event.isTrusted || destroyed) return
+    cancelReveal()
+    opts.onInteract?.()
+  }
+  const readerEvents = ['pointerdown', 'wheel', 'keydown', 'input', 'change', 'click'] as const
+  for (const type of readerEvents) container.addEventListener(type, onReaderInput, { capture: true, passive: true })
 
   const aspectBucket = () => {
     const rect = container.getBoundingClientRect()
@@ -860,6 +951,9 @@ export async function mountMoneyMap(
   // switches them off in the legend. Absent when the file has none.
   const hasGrants = raw.nodes.some((n) => n.kind === 'grantor')
   let grantsOn = hasGrants
+  let visibleSceneIds = new Set<string>()
+  let visibleSceneEdges: MapEdge[] = []
+  const overviewScale = () => container.getBoundingClientRect().width <= 540 ? 1.3 : 1
   const pushData = ({ keepFocus = false } = {}) => {
     // A scrub step, a filter or a re-layout is the reader driving: the
     // choreography gives way rather than animating over the top of it.
@@ -899,7 +993,7 @@ export async function mountMoneyMap(
       grants: grantsByNode,
       contracts: contractsByNode,
     }
-    const activeDonors = new Set(windowEdges.map((e) => e.source))
+    const activeDonors = new Set(windowEdges.flatMap((e) => [e.source, e.target]))
     const visibleNodes = windowNodes.filter((n) => {
       if (n.kind === 'grantor') return grantsOn
       if (n.group === 'parties') return true
@@ -920,6 +1014,8 @@ export async function mountMoneyMap(
       aspect: aspectBucket(),
       centralGroup: 'parties',
     }
+    visibleSceneIds = visibleIds
+    visibleSceneEdges = visibleEdges
     engine.setData(data)
     // The fit signature deliberately excludes the year window: refitting the
     // camera on every scrub step would turn the timeline into a fairground
@@ -930,7 +1026,10 @@ export async function mountMoneyMap(
       fitSig = sig
       // The fit lands in the space the chrome (and an open card) leaves free.
       engine.setInsets(measureInsets())
-      engine.fit(!firstFit)
+      // A phone starts one zoom-button step closer while the view remains
+      // automatic. Calling zoomBy here claimed the camera before its opening
+      // layout had settled, which could leave the scene outside the viewport.
+      engine.fit(!firstFit, overviewScale())
     }
     // The open card follows the window: re-drawn in place with the figures
     // the scene now shows, or closed when its subject left the window. The
@@ -980,12 +1079,13 @@ export async function mountMoneyMap(
     // scene and drop the very selection the card is showing. Hold the layout
     // until the card closes and the host is its own size again.
     if (hostBase) return
+    if (reveal?.running) { reveal.remeasure(); return }
     const bucket = aspectBucket()
     if (bucket !== lastBucket) {
       lastBucket = bucket
       pushData()
     } else if (!engine.viewOwned) {
-      engine.fit(false)
+      engine.fit(false, overviewScale())
     }
   })
   resizeObserver.observe(container)
@@ -1131,7 +1231,7 @@ export async function mountMoneyMap(
     hi.value = String(yearHi)
     const showYears = () => {
       years.textContent = yearLo === yearHi ? `${yearLo}` : `${yearLo} – ${yearHi}`
-      const span = yearMax - yearMin
+      const span = Math.max(1, yearMax - yearMin)
       fill.style.left = `${((yearLo - yearMin) / span) * 100}%`
       fill.style.right = `${((yearMax - yearHi) / span) * 100}%`
     }
@@ -1171,7 +1271,14 @@ export async function mountMoneyMap(
     })
     scrub.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !cpiPop.hidden) { closePop(); cpiInfo.focus() } })
 
-    let pending = 0
+    syncScrubControls = () => {
+      if (scrubPending) cancelAnimationFrame(scrubPending)
+      scrubPending = 0
+      lo.value = String(yearLo)
+      hi.value = String(yearHi)
+      cpiInput.checked = adjustForInflation
+      showYears()
+    }
     const applyScrub = () => {
       // The two thumbs may cross; the window is always the ordered pair.
       const a = Number(lo.value)
@@ -1181,9 +1288,10 @@ export async function mountMoneyMap(
       yearsInUrl = true
       showYears()
       syncUrlState()
-      if (pending) return
-      pending = requestAnimationFrame(() => {
-        pending = 0
+      if (scrubPending) return
+      scrubPending = requestAnimationFrame(() => {
+        scrubPending = 0
+        if (destroyed) return
         pushData({ keepFocus: true })
       })
     }
@@ -1375,8 +1483,8 @@ export async function mountMoneyMap(
             `${routeBase}/explore?game=grants&jur=${encodeURIComponent(node.grants.jur ?? 'federal')}&open=${encodeURIComponent(node.grants.rid)}`,
             'Open their grants file', true)
         }
-        if (node.contracts) {
-          trigger(card, `${routeBase}/discover?q=${encodeURIComponent(shortName(node.label))}`, 'Find their contracts', true)
+        if (node.contracts && !raw.meta.jurisdiction) {
+          trigger(card, `${routeBase}/subject/supplier?donor=${encodeURIComponent(node.id)}`, 'Explore supplier records', true)
         }
       }
       if (!['individual', 'other', ''].includes(node.industry.toLowerCase())) {
@@ -1419,8 +1527,12 @@ export async function mountMoneyMap(
         ? `${source}.${coverage} Public money is drawn the other way from donations and never summed with them; a donor ${contracts ? 'holding a contract' : 'receiving a grant'} is a fact, not a finding.`
         : 'Public money is drawn the other way from donations and never summed with them.'
       // The Discover page follows Commonwealth contracts; a state hub has no page of its own yet.
-      if (contracts && !raw.meta.jurisdiction) trigger(card, `${routeBase}/discover`, 'Follow the big contracts', false)
-      else trigger(card, `${routeBase}/explore?game=grants&jur=${encodeURIComponent(node.explorer ?? 'federal')}`,
+      if (contracts) {
+        if (!raw.meta.jurisdiction) {
+          trigger(card, `${routeBase}/discover`, 'Follow the big contracts', false)
+          trigger(card, `${routeBase}/subject/supplier`, 'Browse supplier profiles', true)
+        }
+      } else trigger(card, `${routeBase}/explore?game=grants&jur=${encodeURIComponent(node.explorer ?? 'federal')}`,
         'Open Who gets the grants', false)
     } else {
       listTitle.textContent = 'Top donors shown on the map'
@@ -1669,6 +1781,30 @@ export async function mountMoneyMap(
   }
 
   /**
+   * A phone selection should show the connection it reveals, not merely prove
+   * that the tapped dot remains somewhere in frame. Desktop keeps the gentler
+   * focus nudge; coarse, narrow screens frame the subject with its strongest
+   * visible neighbours in the space above the detail sheet.
+   */
+  const focusSelection = (id: string) => {
+    const phone = window.matchMedia('(pointer: coarse)').matches &&
+      container.getBoundingClientRect().width <= 720
+    if (!phone) return engine.focusOn(id, null)
+    const neighbours = visibleSceneEdges
+      .filter((edge) => edge.source === id || edge.target === id)
+      .sort((a, b) => (b.total ?? b.weight) - (a.total ?? a.weight))
+      .map((edge) => edge.source === id ? edge.target : edge.source)
+      .filter((other, index, all) => other !== id && all.indexOf(other) === index)
+      .slice(0, 4)
+    return engine.frameOn([id, ...neighbours], {
+      fill: neighbours.length ? 0.88 : 0.58,
+      padPx: 24,
+      duration: engine.reducedMotion ? 0 : 700,
+      ease: t => t * t * (3 - 2 * t),
+    })
+  }
+
+  /**
    * Re-draw the open card from the current window, in place: the figures the
    * scene now shows, the reader's scroll position kept, and no focus change,
    * since a scrub step lands mid-drag on a thumb. A held flow is re-lit too,
@@ -1714,7 +1850,7 @@ export async function mountMoneyMap(
       engine.setInsets(chromeInsets())
       requestAnimationFrame(() => {
         if (reveal?.running) reveal.remeasure()
-        else if (selectedId) engine.focusOn(selectedId, null)
+        else if (selectedId) focusSelection(selectedId)
       })
     } else if (node) {
       renderCard(node)
@@ -1728,7 +1864,7 @@ export async function mountMoneyMap(
         // The reveal owns the camera while it runs; it only wants the
         // measured insets, which its close-up is re-solved against.
         if (reveal?.running) reveal.remeasure()
-        else if (selectedId) engine.focusOn(selectedId, null)
+        else if (selectedId) focusSelection(selectedId)
       })
       card.focus({ preventScroll: true })
     } else {
@@ -1823,6 +1959,77 @@ export async function mountMoneyMap(
     })
   }
 
+  /** Present only existing ids and observed endpoint pairs from the visible data. */
+  const resetSceneWindow = (scene?: MoneyScene) => {
+    cancelReveal()
+    selectedId = null
+    selectedEdge = null
+    card.hidden = true
+    card.innerHTML = ''
+    releaseHost()
+    const year = (value: number | undefined, fallback: number) =>
+      typeof value === 'number' && Number.isFinite(value)
+        ? Math.max(yearMin, Math.min(yearMax, Math.trunc(value))) : fallback
+    const from = year(scene?.from, yearMin)
+    const to = year(scene?.to, yearMax)
+    yearLo = Math.min(from, to)
+    yearHi = Math.max(from, to)
+    yearsInUrl = scene?.from !== undefined || scene?.to !== undefined
+    adjustForInflation = false
+    grantsOn = hasGrants
+    legend?.querySelector('.mm-grants-toggle')?.setAttribute('aria-pressed', String(grantsOn))
+    syncScrubControls()
+    syncUrlState()
+    applyIsolate(null)
+    engine.setInsets(chromeInsets())
+    words.select(null, card, view)
+    applyEmphasis()
+  }
+
+  const presentScene = (scene: MoneyScene): boolean => {
+    if (destroyed || !scene || !byId.has(scene.focusId)) return false
+    resetSceneWindow(scene)
+    if (!visibleSceneIds.has(scene.focusId)) return false
+    const requested = new Set((scene.edges ?? []).map((edge) => JSON.stringify([edge.source, edge.target])))
+    const edges = visibleSceneEdges.filter((edge) => requested.has(JSON.stringify([edge.source, edge.target])))
+    const withIds = [...new Set(scene.withIds ?? [])].filter((id) => id !== scene.focusId && visibleSceneIds.has(id))
+    selectedId = scene.focusId
+    guidedScene = true
+    spotlightFor = scene.focusId
+    // Empty paths are deliberate: co-present nodes do not imply a connection.
+    spotlightEdges = edges
+    applyEmphasis()
+    // Guided steps travel from the current camera pose. The opening reveal
+    // deliberately snaps to a close-up, so it must not be reused here.
+    engine.frameOn([scene.focusId, ...withIds], {
+      fill: withIds.length ? 0.9 : 0.4,
+      theta: withIds.length ? engine.swingTheta(scene.focusId, withIds, engine.viewAngles.phi) ?? undefined : undefined,
+      padPx: 36,
+      duration: engine.reducedMotion ? 0 : 1200,
+      ease: t => t * t * (3 - 2 * t),
+    })
+    return true
+  }
+
+  const pauseScene = () => {
+    if (destroyed) return
+    const edges = spotlightEdges
+    const focus = spotlightFor
+    const strict = guidedScene
+    cancelReveal()
+    engine.stopViewMove()
+    spotlightEdges = edges
+    spotlightFor = focus
+    guidedScene = strict
+    applyEmphasis()
+  }
+
+  const clearScene = () => {
+    if (destroyed) return
+    resetSceneWindow()
+    engine.fit(!engine.reducedMotion)
+  }
+
   pushData()
 
   // The embed seed: mount already-selected with the camera on the node.
@@ -1833,15 +2040,22 @@ export async function mountMoneyMap(
   }
 
   return {
+    presentScene,
+    clearScene,
+    pauseScene,
     select: (id) => setSelection(id),
     isolate: (group) => applyIsolate(group),
     fit: (animate = true) => engine.fit(animate),
     setPaused: (paused) => engine.setPaused(paused),
     destroy: () => {
+      destroyed = true
+      if (scrubPending) cancelAnimationFrame(scrubPending)
+      for (const type of readerEvents) container.removeEventListener(type, onReaderInput, true)
       cancelReveal()
       container.removeEventListener('keydown', onKeyDown)
       resizeObserver.disconnect()
       engine.dispose()
+      recoveryNotice?.remove()
       for (const child of [canvas, labels, legend, card, zoom, hint, find, scrub]) {
         child?.remove()
       }
