@@ -99,7 +99,14 @@
    own render takes over; without JavaScript the block stays readable. */
 .spa-ready #prerender { display: none; }
 #prerender { padding-bottom: 1.5rem; }
-html { scroll-padding-top: calc(var(--header-h) + 0.5rem); }
+html {
+  scroll-padding-top: calc(var(--header-h) + 0.5rem);
+  /* iOS Safari otherwise inflates text after rotating to landscape while the
+     profile controls keep their existing columns, producing oversized jump
+     links, buttons and fields like the broken person-page view. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 
 body {
   margin: 0;
