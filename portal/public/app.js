@@ -8155,7 +8155,26 @@ function foldHero(folded) {
   heroFoldTimer = setTimeout(() => hero.classList.add("hero-folded"), 900);
 }
 
+// "How many donors have an OAM?" is a register question: the speeches cannot
+// count donors, and once read "donor" as blood donor. The registers can, so
+// the note under the answer says where.
+const REGISTER_COUNT_RE = /\b(how many|how much|count|number of|total|sum of|largest|biggest|top \d+|most)\b/i;
+const REGISTER_SUBJECT_RE = /\b(donor|donors|donation|donations|donated|gave|giving|contributor|contribution|grant|grants|contract|contracts|tender|tenders|supplier|suppliers)\b/i;
+function renderRegisterNote(question) {
+  const el = $("ask-register-note");
+  if (!el) return;
+  const q = String(question || "");
+  const on = REGISTER_COUNT_RE.test(q) && REGISTER_SUBJECT_RE.test(q);
+  el.hidden = !on;
+  if (!on) return;
+  const contracts = /\b(grant|grants|contract|contracts|tender|tenders|supplier|suppliers)\b/i.test(q);
+  el.innerHTML = contracts
+    ? `Counts and totals of public money are not in the speeches. The registers on this site hold them: <a href="/explore?game=grants">who gets the grants</a>, the <a href="/discover">contracts</a>, and the <a href="/money">money map</a>.`
+    : `Counts and totals of donors are not in the speeches. The registers on this site hold them: <a href="/subject/donor">the donors directory</a> (searchable by name), <a href="/explore?game=ledger">the ledger</a> of every disclosed flow, and the <a href="/money">money map</a>.`;
+}
+
 async function runAsk(question) {
+  renderRegisterNote(question);
   if (askAbort) askAbort.abort();
   const myAbort = new AbortController();
   askAbort = myAbort;

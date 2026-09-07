@@ -247,8 +247,8 @@ CONTRACTOR_COLOUR = "#1F6E8C"
 # A donor below the donation cut-off still belongs on the map when the public
 # money it holds (contracts and grants together) is this large: the map shows
 # money between companies and government in both directions.
-PUBLIC_MONEY_FLOOR = 10_000_000
-PUBLIC_MONEY_EXTRA_CAP = 250
+PUBLIC_MONEY_FLOOR = 50_000_000
+PUBLIC_MONEY_EXTRA_CAP = 150
 
 
 def _file_key(rid: str) -> str:
@@ -402,7 +402,7 @@ def contracts_layer(db, jur: str, eid_to_node: dict) -> dict | None:
             keys[(kt, kv)] = sid
     per: dict = {}
     for abn, name, amount, start, agency in db.execute(
-            "SELECT supplier_abn, supplier_name, amount, start_date, agency FROM ext_contracts_current"):
+            "SELECT supplier_abn, supplier_name, amount, start_date, agency FROM ext_contracts_current WHERE suspect = 0"):
         sid = (keys.get(("abn", abn)) if abn else None) or keys.get(("name", (name or "").strip()))
         if not sid:
             continue

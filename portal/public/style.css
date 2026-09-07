@@ -734,6 +734,13 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
   background: none; border: none; cursor: pointer; padding: 2px 3px;
   font: 700 0.75rem/1 var(--sans); color: var(--bronze-ink);
 }
+/* The register note under an answer: a question the speeches cannot count. */
+.ask-register-note {
+  margin: var(--space-3) 0 0; padding: var(--space-3) var(--space-4);
+  border-left: 2px solid var(--bronze); background: var(--paper-sunken);
+  font: 400 0.9375rem/1.55 var(--sans); color: var(--ink);
+}
+.ask-register-note a { color: var(--bronze-ink); }
 .answer-stamp { color: var(--ink-faint); font-size: 0.75rem; margin: 0.8rem 0 0; }
 .action-row { display: flex; flex-wrap: wrap; gap: 0.5rem 0.7rem; margin: 0.6rem 0 0; font-size: 0.875rem; }
 

@@ -32,6 +32,13 @@ no ABNs. AusTender publishes roughly 250 notices a working day.
 | `ext_contract_supplier_keys` | same | (source, abn or name) -> supplier_id, for the exporters |
 | `ext_state_contracts`, `ext_state_contract_files` | `parli.ingest.qld_contracts` | Queensland's contract disclosure rows and the files they came from |
 
+A handful of notices carry values no contract can be (a $123B recruitment
+contract, a $121B legal one, a $39B engineering one). `contract_suppliers` flags
+a notice of $5B or more that is also ten times everything else its supplier ever
+held (`ext_contracts_current.suspect = 1`) and leaves it out of the totals and
+the map; nothing is deleted, and a real mega-contract (Boeing, the FMS account,
+Telstra) passes because the supplier's history is of the same order.
+
 Supplier resolution climbs the same ladder as grants (`parli.ingest.grant_recipients`):
 the ABN against `ext_donor_entities.abn`, then the exact and rule-normalised
 names, then any registered name of the ABN in the ABN Bulk Extract. Individuals,
@@ -40,8 +47,10 @@ undisclosed and government suppliers are never linked.
 ## On the money map (`scripts/export_money_graph.py`)
 
 - **A second way onto the map.** After the top 250 donors by lifetime receipts,
-  any donor entity holding at least `PUBLIC_MONEY_FLOOR` ($10m) in contracts and
-  grants resolved to the same entity joins, up to `PUBLIC_MONEY_EXTRA_CAP` (250).
+  any donor entity holding at least `PUBLIC_MONEY_FLOOR` ($50m) in contracts and
+  grants resolved to the same entity joins, largest first, up to
+  `PUBLIC_MONEY_EXTRA_CAP` (150): with the full AusTender history 204 entities
+  clear $50m, so the cap binds and the map carries 400 donors rather than 250.
   Those nodes carry `via: "public_money"` and `publicMoney`; the card says so.
   `meta.donor_nodes_by_total` is the old 250, `meta.donors_via_public_money` the rest.
 - **A contracts hub.** `grantor:contracts` ("Commonwealth contracts", kind

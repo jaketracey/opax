@@ -39,6 +39,8 @@ from parli.ingest import grant_recipients as gr
 from parli.ingest.abr_match import INDEX_NAME, Index, match_entity
 
 SOURCE = "contract_suppliers"
+SUSPECT_FLOOR = 5_000_000_000
+SUSPECT_RATIO = 10
 DEFAULT_DB = "/home/jake/.cache/autoresearch/parli.db"
 DEFAULT_ABR = "~/.cache/autoresearch/abr"
 
@@ -49,7 +51,7 @@ CREATE TABLE ext_contracts_current (
     supplier_name TEXT, supplier_abn TEXT, supplier_region TEXT, supplier_country TEXT,
     agency TEXT, agency_abn TEXT, title TEXT, description TEXT, unspsc TEXT, amount REAL,
     original_amount REAL, start_date TEXT, end_date TEXT, procurement_method TEXT,
-    procurement_method_details TEXT, atm_id TEXT
+    procurement_method_details TEXT, atm_id TEXT, suspect INTEGER NOT NULL DEFAULT 0
 );
 CREATE INDEX ix_ccur_abn ON ext_contracts_current (supplier_abn);
 CREATE INDEX ix_ccur_supplier ON ext_contracts_current (supplier_name);
@@ -124,11 +126,20 @@ def build_current(db: sqlite3.Connection) -> int:
     if cur is not None:
         out.append(cur)
     db.executemany(
-        "INSERT INTO ext_contracts_current VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        "INSERT INTO ext_contracts_current VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0)",
         [(c["base"], c["cn_id"], c["notices"], c["published"], c["first_published"], c["supplier_name"],
           c["supplier_abn"], c["supplier_region"], c["supplier_country"], c["agency"], c["agency_abn"], c["title"],
           c["description"], c["unspsc"], c["amount"], c["original_amount"], c["start_date"], c["end_date"],
           c["procurement_method"], c["procurement_method_details"], c["atm_id"]) for c in out])
+    # AusTender carries a few keyed-in values that no contract can be: a $123B
+    # recruitment contract, a $121B legal one. A notice of SUSPECT_FLOOR or more
+    # that is also SUSPECT_RATIO times everything else its supplier ever held is
+    # flagged and left out of the totals and the map, never deleted.
+    db.execute("""
+        UPDATE ext_contracts_current SET suspect = 1 WHERE amount >= ? AND amount > ? * (
+            SELECT COALESCE(SUM(o.amount), 0) FROM ext_contracts_current o
+            WHERE COALESCE(o.supplier_abn, o.supplier_name) = COALESCE(ext_contracts_current.supplier_abn, ext_contracts_current.supplier_name)
+              AND o.base_cn != ext_contracts_current.base_cn)""", (SUSPECT_FLOOR, SUSPECT_RATIO))
     return len(out)
 
 
@@ -158,11 +169,12 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
 
     # Federal notices, then the state disclosure registers (parli.ingest.qld_contracts),
     # each group tagged with its source so the exporters can read one register at a time.
+    stats["suspect_notices"] = db.execute("SELECT COUNT(*) FROM ext_contracts_current WHERE suspect = 1").fetchone()[0]
     groups = [dict(r, source="austender") for r in db.execute(
         "SELECT supplier_abn, supplier_name, COUNT(*) n, SUM(amount) total, MIN(substr(start_date,1,4)) y0, "
-        "MAX(substr(start_date,1,4)) y1 FROM ext_contracts_current GROUP BY 1, 2")]
+        "MAX(substr(start_date,1,4)) y1 FROM ext_contracts_current WHERE suspect = 0 GROUP BY 1, 2")]
     agency_rows = [dict(r, source="austender") for r in db.execute(
-        "SELECT supplier_abn, supplier_name, agency, SUM(amount) total FROM ext_contracts_current GROUP BY 1, 2, 3")]
+        "SELECT supplier_abn, supplier_name, agency, SUM(amount) total FROM ext_contracts_current WHERE suspect = 0 GROUP BY 1, 2, 3")]
     has_state = db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='ext_state_contracts_current'").fetchone()
     if has_state:
         groups += [dict(r, source=r["jurisdiction"]) for r in db.execute(

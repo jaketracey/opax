@@ -188,7 +188,7 @@ card opens the Discover page and states the notices' coverage span
 (`meta.contracts_coverage`), which matters while a fetch is still running.
 
 A donor under the top-250 donation cut-off joins the map when the layers
-resolve at least `meta.public_money_floor` ($10m) of contracts and grants to
+resolve at least `meta.public_money_floor` ($50m) of contracts and grants to
 it (`node.via = 'public_money'`, `node.publicMoney`); the card says so, and the
 donor page shows that figure instead of a rank. The smoke test asserts every
 such node carries the block that brought it.

@@ -632,6 +632,11 @@ function buildAskBody(input: AskInput): Record<string, unknown> {
       'Ignore passages that are off-topic; answer from the ones that apply even if only a few do or they address it only in part. If some passages mention the subject only briefly, report what they say and note that the record is limited. ' +
       'Begin with the answer itself. Never open with a preamble such as "Based on the provided context", "According to the passages" or "The context shows": the reader knows the answer comes from the record. ' +
       'Do not explain how the passages are numbered, ordered or provided. ' +
+      // "Donor" on this site is a political donor. Asked to count blood donors
+      // the model once listed OAM recipients it found in the passages; asked
+      // to count political donors it cannot, and should say where that lives.
+      'On this site "donor", "donation" and "gave" mean money disclosed to electoral commissions by political donors, not blood or organ donation, unless the question says otherwise. ' +
+      'Speeches cannot count or total donors, donations, grants or contracts: if the question asks for such a figure, say in one sentence that the disclosed registers on this site (the ledger and the money map) hold it, then report what the speeches themselves say about the subject. ' +
       'Only if NO passage mentions the subject at all, reply exactly: The record retrieved for this question does not discuss it.',
   }
   return body
