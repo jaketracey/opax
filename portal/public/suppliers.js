@@ -185,7 +185,8 @@ async function mountFunding(root, links, life) {
     const nodeCount = matchedNodes.reduce((sum, node) => sum + (Number(node.count) || 0), 0);
     const fromYears = matchedNodes.map((node) => Number(node.firstYear)).filter((year) => Number.isFinite(year) && year > 0);
     const toYears = matchedNodes.map((node) => Number(node.lastYear)).filter((year) => Number.isFinite(year) && year > 0);
-    const yearSpan = fromYears.length && toYears.length ? `${Math.min(...fromYears)}–${Math.max(...toYears)}` : "";
+    const firstYear = Math.min(...fromYears), lastYear = Math.max(...toYears);
+    const yearSpan = fromYears.length && toYears.length ? (firstYear === lastYear ? String(firstYear) : `${firstYear}–${lastYear}`) : "";
     const edges = (data.edges || []).filter((edge) => ids.has(edge.source) && nodes.get(edge.target)?.kind === "party");
     const grouped = new Map();
     for (const edge of edges) {
