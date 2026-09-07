@@ -1,6 +1,6 @@
 # Guided money map journeys
 
-`/money` offers opt-in 3D journeys. Choose a lens, step manually or start seven-second playback. `/money?journey=public-money&step=0` opens a particular step; `jur=qld`, `vic`, or `tas` selects a jurisdiction. Shared links never start playback automatically.
+`/money` offers opt-in 3D journeys. Choose a lens and then a subject from its alphabetical dropdown; no subject is preselected. Step manually or start seven-second playback. `/money?journey=public-money&step=0` opens the recipient picker; adding `focus` preserves the selected subject and `step` in shared links; `jur=qld`, `vic`, or `tas` selects a jurisdiction. Shared links never start playback automatically.
 
 `portal/public/money-journeys-data.js` derives four lenses from the selected published graph:
 
@@ -9,7 +9,7 @@
 - Industry: up to three companies sharing an industry label, with their largest party links. A common label does not imply coordination.
 - Time: equal-length windows calculated from actual `byYear` cells. Only dated receipts in each window contribute; this is not a comparison of spending or influence.
 
-Candidates are deterministic. Broken references, nonfinite values, duplicate endpoint pairs and missing prerequisites are excluded. Jurisdictions without an eligible public-money relationship omit that lens. These are views of the map's selected records, not complete supplier or industry coverage.
+Dropdowns offer eligible recipients, organisations or industries from the current graph. Public-money choices represent aggregate contract or grant recipients, not individual contract notices. Changing a choice pauses playback and restarts at step one; opening the picker also pauses playback without replacing the native control. Invalid selections return to the neutral picker. Candidates are deterministic. Broken references, nonfinite values, duplicate endpoint pairs and missing prerequisites are excluded. Jurisdictions without an eligible public-money relationship omit that lens. These are views of the map's selected records, not complete supplier or industry coverage.
 
 `money-journeys.js` owns narratives, manual controls, timers and URL steps. `MoneyMapHandle.presentScene` receives exact node IDs and observed endpoint pairs, sets the time window, resets inflation adjustment to nominal amounts and frames those connections. Unrelated nodes remain as quiet spatial context. The normal map controls return when the journey ends.
 

@@ -1,7 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { buildMoneyJourneys } from '../public/money-journeys-data.js';
+import { buildMoneyJourneys as buildChoices } from '../public/money-journeys-data.js';
+const buildMoneyJourneys = data => {
+  const choices = buildChoices(data);
+  return buildChoices(data, Object.fromEntries(choices.map(j => [j.id, j.choices[0]?.value])));
+};
 
 function fixture() {
   return {
@@ -77,8 +81,8 @@ test('missing public layers omit that journey; grants and state datasets degrade
   data.edges.push({source:'hub',target:'a',total:500,grant:true});
   data.meta={jurisdiction:'qld'};
   const j=buildMoneyJourneys(data).find(j=>j.id==='public-money');
-  assert.match(j.title,/grant/);
-  assert.ok(j.steps.every(s=>(s.links||[]).every(l=>!l.href.startsWith('/suppliers'))));
+  assert.match(j.steps[0].title,/grants/);
+  assert.ok(j.steps.every(s=>(s.links||[]).every(l=>!l.href.startsWith('/subject/supplier'))));
 });
 
 test('partial input, invalid references and missing year cells do not invent stories', () => {
@@ -117,5 +121,41 @@ test('every published federal and state journey references only real exported no
     validateScenes(data,journeys);
     assert.ok(journeys.length>=1,file);
     assert.deepEqual(buildMoneyJourneys({...data,nodes:[...data.nodes].reverse(),edges:[...data.edges].reverse()}),journeys,'Order-independent '+file);
+  }
+});
+
+
+test('every lens starts without a selected identity and exposes alphabetically sorted eligible choices', () => {
+  const journeys = buildChoices(fixture());
+  assert.equal(journeys.length, 4);
+  for (const j of journeys) {
+    assert.equal(j.selection, ''); assert.deepEqual(j.steps, []);
+    assert.ok(j.choices.length > 0);
+    assert.deepEqual(j.choices.map(c => c.label), [...j.choices.map(c => c.label)].sort((a,b) => a.localeCompare(b,'en')));
+    assert.ok(!j.description.includes('Alpha'));
+  }
+});
+
+test('choosing another recipient, organisation or industry rebuilds only matching scenes and figures', () => {
+  const data = fixture();
+  data.edges.push({source:'hub',target:'b',total:250,grant:true,flow:'contracts'});
+  let choices = buildChoices(data);
+  const publicChoice = choices.find(j => j.id === 'public-money').choices.find(c => c.label.startsWith('Beta'));
+  const selected = buildChoices(data, {'public-money':publicChoice.value, 'multiple-parties':'b', 'over-time':'b', industry:'tech'});
+  const pub = selected.find(j => j.id === 'public-money');
+  assert.equal(pub.steps[0].metric.value, 250);
+  assert.deepEqual(pub.steps[0].scene.withIds, ['b']);
+  assert.equal(pub.steps[2].metric.value, 20);
+  assert.equal(selected.find(j => j.id === 'multiple-parties').steps[0].scene.focusId, 'b');
+  assert.equal(selected.find(j => j.id === 'over-time').steps[0].scene.focusId, 'b');
+  assert.equal(selected.find(j => j.id === 'over-time').steps[0].metric.value, 13);
+  assert.equal(selected.find(j => j.id === 'industry').selection, 'tech');
+  validateScenes(data, selected);
+});
+
+test('unknown, absent and ineligible selections never silently highlight another organisation', () => {
+  for (const requested of ['missing', 'person', 'party-donor', '']) {
+    const selected = buildChoices(fixture(), Object.fromEntries(['public-money','multiple-parties','industry','over-time'].map(id => [id,requested])));
+    assert.ok(selected.every(j => j.steps.length === 0 && j.selection === ''));
   }
 });
