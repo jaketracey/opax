@@ -124,7 +124,7 @@ def load_industries() -> list[dict]:
         sys.exit("could not find the cluster list in portal/graph/palette.ts")
     return [
         {"question": f"What has parliament said about {g}?", "kind": "speech", "source": f"industry:{g}"}
-        for g in groups if g not in SKIP_INDUSTRIES
+        for g in groups if g not in INDUSTRY_NO_ASK
     ]
 
 SOURCES = {
