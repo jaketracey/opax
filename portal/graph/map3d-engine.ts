@@ -436,7 +436,12 @@ function buildLaterals(edges: MapEdge[]): number[] {
 export function webglAvailable(): boolean {
   try {
     const canvas = document.createElement('canvas')
-    return Boolean(canvas.getContext('webgl2') ?? canvas.getContext('webgl'))
+    // Three requires WebGL 2. Release the probe immediately: mobile Safari
+    // has a small context budget, shared with the other maps on this page.
+    const context = canvas.getContext('webgl2')
+    if (!context) return false
+    context.getExtension('WEBGL_lose_context')?.loseContext()
+    return true
   } catch {
     return false
   }
@@ -562,6 +567,8 @@ export class KnowledgeMapEngine {
   private reduced: boolean
   private reducedQuery: MediaQueryList | null = null
   private onContextLost: ((event: Event) => void) | null = null
+  private onContextRestored: (() => void) | null = null
+  private contextLost = false
 
   private onReducedChange = (event: MediaQueryListEvent) => {
     this.reduced = event.matches
@@ -606,19 +613,11 @@ export class KnowledgeMapEngine {
     labelLayer: HTMLDivElement,
     onSelect: (id: string | null) => void,
     onContextLost?: () => void,
+    onContextRestored?: () => void,
   ) {
     this.canvas = canvas
     this.labelLayer = labelLayer
     this.onSelect = onSelect
-    // A lost context would otherwise freeze the canvas with no way back;
-    // the shell swaps in the 2D map instead.
-    if (onContextLost) {
-      this.onContextLost = (event: Event) => {
-        event.preventDefault()
-        onContextLost()
-      }
-      canvas.addEventListener('webglcontextlost', this.onContextLost)
-    }
     // Live, not a snapshot: a reader who turns reduced motion on mid-session
     // gets it honoured immediately, not at the next remount.
     this.reducedQuery = typeof globalThis.matchMedia === 'function'
@@ -627,10 +626,27 @@ export class KnowledgeMapEngine {
     this.reduced = this.reducedQuery?.matches ?? false
     this.edgeUniforms.uReduced.value = this.reduced ? 1 : 0
     this.idleSpin = !this.reduced
-    this.reducedQuery?.addEventListener('change', this.onReducedChange)
 
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false })
-    this.renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio || 1, 2))
+    const touchDevice = globalThis.matchMedia?.('(pointer: coarse)').matches ?? false
+    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: !touchDevice, alpha: false })
+    this.renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio || 1, touchDevice ? 1.5 : 2))
+    this.reducedQuery?.addEventListener('change', this.onReducedChange)
+    // Register after Three's own listeners so its GL state is rebuilt first.
+    // Keep the original canvas attached; replacing it prevents recovery.
+    this.onContextLost = (event: Event) => {
+      event.preventDefault()
+      this.contextLost = true
+      onContextLost?.()
+    }
+    this.onContextRestored = () => {
+      this.contextLost = false
+      this.handleResize()
+      this.lastFrame = performance.now()
+      this.renderDirty = true
+      onContextRestored?.()
+    }
+    canvas.addEventListener('webglcontextlost', this.onContextLost)
+    canvas.addEventListener('webglcontextrestored', this.onContextRestored)
     this.edgeMaterial = new THREE.ShaderMaterial({
       uniforms: this.edgeUniforms,
       vertexShader: EDGE_VERTEX_SHADER,
@@ -2759,6 +2775,7 @@ export class KnowledgeMapEngine {
   private frame = (now: number) => {
     if (this.disposed || this.paused) return
     this.frameHandle = requestAnimationFrame(this.frame)
+    if (this.contextLost) return
     const dt = Math.min(64, now - this.lastFrame)
     this.lastFrame = now
     this.frameCount += 1
@@ -3660,6 +3677,7 @@ export class KnowledgeMapEngine {
     if (this.frameHandle !== null) cancelAnimationFrame(this.frameHandle)
     this.unbindPointerHandlers()
     if (this.onContextLost) this.canvas.removeEventListener('webglcontextlost', this.onContextLost)
+    if (this.onContextRestored) this.canvas.removeEventListener('webglcontextrestored', this.onContextRestored)
     this.reducedQuery?.removeEventListener('change', this.onReducedChange)
     this.resizeObserver.disconnect()
     this.clearScene()
@@ -3674,5 +3692,6 @@ export class KnowledgeMapEngine {
     this.selectionRingMaterial.dispose()
     this.traceRingMaterial.dispose()
     this.renderer.dispose()
+    this.renderer.forceContextLoss()
   }
 }
