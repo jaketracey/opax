@@ -4405,3 +4405,11 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .journey-picker-option small { flex-shrink:0; font-size:.65rem; color:var(--ink-soft); background:var(--paper); border:1px solid var(--line); border-radius:3px; padding:.1rem .3rem; }
 .journey-picker-count { margin:.45rem .5rem .1rem; color:var(--ink-soft); font:400 .7rem/1.4 var(--sans); }
 .journey-picker button:focus-visible,.journey-picker input:focus-visible { outline:2px solid var(--gold); outline-offset:1px; }
+
+/* Quiet scroll chrome for the searchable journey list. */
+.journey-picker-results { scrollbar-width:thin; scrollbar-color:#aab5bd transparent; }
+.journey-picker-results::-webkit-scrollbar { width:6px; }
+.journey-picker-results::-webkit-scrollbar-track { background:transparent; }
+.journey-picker-results::-webkit-scrollbar-thumb { background:#aab5bd; border-radius:999px; }
+.journey-picker-results::-webkit-scrollbar-thumb:hover { background:#778b9b; }
+.journey-picker-results::-webkit-scrollbar-button { display:none; }
