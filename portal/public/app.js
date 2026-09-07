@@ -4265,6 +4265,23 @@ async function openSubject(kind, name, manageFocus) {
     renderCommitteeWitness(name, key, body, box, sections, speeches, dates);
     return;
   }
+  // A name the index holds nothing under and no roster names: say so, rather
+  // than dress an unknown string as a parliamentarian with profile searches.
+  if (!roster && speeches.length === 0) {
+    const kicker = body.querySelector(".kicker");
+    if (kicker) kicker.textContent = "Not in the record";
+    document.title = `${name} · OPAX`;
+    subjectTag(body).innerHTML = `<span>No indexed speeches under this name</span>`;
+    box.innerHTML = infoboxHTML([
+      ["Type", "Name not found"],
+    ], "", [
+      actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for this name", { primary: true }),
+      actionBtn("entry", "/subject/person", "Browse parliamentarians"),
+    ]);
+    box.insertAdjacentHTML("beforeend", `<p class="fineprint">The record names its speakers as the transcripts do,
+      so a person may be indexed under a fuller or shorter form of this name. The search looks across every spelling.</p>`);
+    return;
+  }
   subjectTag(body).innerHTML = [
     party ? partyChipHTML(party) : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
