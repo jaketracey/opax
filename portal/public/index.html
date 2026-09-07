@@ -58,7 +58,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=b0738a9d49">
+<link rel="stylesheet" href="/style.css?v=148e1e449c">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -80,6 +80,7 @@
         <li class="nav-item"><a class="nav-link" data-panel="ask" href="/">Ask</a></li>
         <li class="nav-item"><a class="nav-link" data-panel="search" href="/search">Search</a></li>
         <li class="nav-item"><a class="nav-link" data-panel="money" href="/money">Money map</a></li>
+        <li class="nav-item"><a class="nav-link" data-panel="discover" href="/discover">Discover</a></li>
         <li class="nav-item"><a class="nav-link" data-panel="bills" href="/bills">Bills</a></li>
         <li class="nav-item has-menu">
           <button type="button" class="nav-link" data-panel="reports" aria-expanded="false" aria-controls="menu-reports">Reports<svg class="nav-caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -200,6 +201,7 @@
       <summary class="drawer-section">Explore</summary>
       <ul class="drawer-list">
         <li><a class="drawer-link" data-panel="bills" href="/bills">Bills</a></li>
+        <li><a class="drawer-link" data-panel="discover" href="/discover">Discover patterns</a></li>
         <li><a class="drawer-link" data-panel="explore" href="/explore">Explore</a></li>
         <li><a class="drawer-sub" href="/explore" data-game="tm">Time machine</a></li>
         <li><a class="drawer-sub" href="/explore" data-game="tide">The tide</a></li>
@@ -695,6 +697,29 @@
       <h3 class="subject-section-title doc-record-head" id="doc-record-head" hidden>The speech itself</h3>
       <div id="doc-text" class="doc-text"></div>
       <p class="fineprint" id="doc-caveat" hidden></p>
+    </section>
+
+    <section id="panel-discover" class="panel" hidden aria-labelledby="discover-title">
+      <div class="discovery-intro">
+        <h1 id="discover-title" tabindex="-1">Follow the big contracts.</h1>
+        <p id="discover-intro-text">Pick an agency. See which companies take the biggest share.</p>
+      </div>
+      <div id="discover-categories" class="discovery-tabs" role="group" aria-label="What to explore">
+        <button type="button" data-category="procurement_concentration" aria-pressed="true">Government contracts</button>
+        <button type="button" data-category="recipient_concentration" aria-pressed="false">Party funding</button>
+        <button type="button" data-category="donor_contract_overlap" aria-pressed="false">Companies in both</button>
+      </div>
+      <div class="discovery-workspace">
+        <aside class="discovery-browser" aria-label="Choose a comparison">
+          <label id="discover-query-label" for="discover-query">Find an agency or company</label>
+          <input id="discover-query" type="search" placeholder="Search names" autocomplete="off">
+          <div class="discovery-list-controls"><p id="discover-count" role="status"></p><label class="visually-hidden" for="discover-sort">Sort comparisons</label><select id="discover-sort"><option value="value">Largest totals</option><option value="share">Biggest share</option></select></div>
+          <p id="discover-list-note" class="discovery-list-note"></p>
+          <div id="discover-results" aria-busy="false"></div>
+        </aside>
+        <div id="discover-detail" class="discovery-detail"></div>
+      </div>
+      <details id="discover-methodology" class="discovery-methodology"><summary>About these numbers</summary><div id="discover-methodology-body"></div></details>
     </section>
 
     <!-- ============================ EXPLORE ============================ -->
@@ -1250,6 +1275,6 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/app.js?v=93c9d26bff" defer></script>
+<script src="/app.js?v=5ad9ed3153" defer></script>
 </body>
 </html>

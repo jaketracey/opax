@@ -31,7 +31,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "bill"];
+const PANELS = ["discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "bill"];
 // /bills is the bill panel's index; it has no panel of its own, so isRoute has
 // to be told the word is ours before the click handler will follow it.
 const PANEL_ALIASES = { bills: "bill" };
@@ -794,6 +794,7 @@ function focusEntry(id) {
 }
 
 function showPanel(name) {
+  if (name !== "discover") destroyDiscoveryMap();
   // Methods and the expense-category glossary live under the About menu, so its
   // trigger stays lit there; the drawer has exact links of its own.
   const headerName = name === "methods" || name === "expenses" ? "about" : name === "bill" ? "bills" : name;
@@ -820,6 +821,7 @@ const TITLES = {
   ask: "OPAX: ask what Australian politicians actually said",
   chat: "Keep asking · OPAX",
   search: "Search the record · OPAX",
+  discover: "Discover overlooked patterns · OPAX",
   money: "Money map · OPAX",
   reports: "Reports · OPAX",
   doc: "From the record · OPAX",
@@ -833,6 +835,230 @@ const TITLES = {
   bill: "Bill · OPAX",
   bills: "Bills · OPAX",
 };
+
+// --- discovery: choose an agency, see where the recorded money goes ----------
+const DISCOVERY_CATEGORIES = {
+  procurement_concentration: "Government contracts",
+  recipient_concentration: "Party funding",
+  donor_contract_overlap: "Companies in both",
+};
+const DISCOVERY_DEFAULT = "procurement_concentration";
+let discoveryData = null;
+let discoveryRequest = null;
+let discoveryRenderId = 0;
+let discoverySelected = null;
+let discoveryVisible = 8;
+let discoveryMapHandle = null;
+let discoveryMapObserver = null;
+let discoveryMapGeneration = 0;
+
+function discoveryMoney(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return "Unavailable";
+  const amount = Math.abs(n);
+  const unit = amount >= 1e9 ? [1e9, "bn"] : amount >= 1e6 ? [1e6, "m"] : amount >= 1e3 ? [1e3, "k"] : [1, ""];
+  return `$${(n / unit[0]).toLocaleString("en-AU", { maximumFractionDigits: unit[0] === 1 ? 0 : 1 })}${unit[1]}`;
+}
+function discoveryPercent(value) {
+  return `${Number(value).toLocaleString("en-AU", { maximumFractionDigits: 1 })}%`;
+}
+function discoveryValue(signal, label) {
+  return Number(signal.metrics?.find((metric) => metric.label === label)?.value || 0);
+}
+function discoveryCategory() {
+  return $("discover-categories").querySelector('[aria-pressed="true"]')?.dataset.category || DISCOVERY_DEFAULT;
+}
+function discoveryName(signal) {
+  return signal.chart?.group_label || signal.entity;
+}
+function discoveryShare(signal) {
+  return Number(signal.chart?.participants?.[0]?.share || 0);
+}
+function discoveryTotal(signal) {
+  return Number(signal.chart?.group_total || discoveryValue(signal, "Recorded contract value"));
+}
+function discoveryBarWidth(value) {
+  return Math.max(0, Math.min(100, Number(value) || 0));
+}
+function destroyDiscoveryMap() {
+  discoveryMapGeneration++;
+  discoveryMapObserver?.disconnect();
+  discoveryMapObserver = null;
+  discoveryMapHandle?.destroy();
+  discoveryMapHandle = null;
+}
+function discoveryUrl() {
+  const params = new URLSearchParams();
+  const category = discoveryCategory();
+  if (category !== DISCOVERY_DEFAULT) params.set("category", category);
+  const q = $("discover-query").value.trim();
+  if (q) params.set("q", q);
+  if ($("discover-sort").value === "share") params.set("sort", "share");
+  if (discoverySelected) params.set("item", discoverySelected);
+  return `/discover${params.size ? `?${params}` : ""}`;
+}
+function discoveryEvidenceHTML(signal) {
+  return `<details class="discovery-evidence"><summary>See the records</summary>
+    <p>Examples behind this comparison. Links open the source register.</p>
+    <ul>${(signal.evidence || []).map((evidence) => {
+      const url = safeUrl(evidence.url);
+      return `<li>${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(evidence.label)}<span class="visually-hidden"> (opens in a new tab)</span></a>` : esc(evidence.label)}</li>`;
+    }).join("")}</ul><p>${esc(signal.summary)}</p>
+    <ul>${(signal.caveats || []).map((text) => `<li>${esc(text)}</li>`).join("")}</ul>
+  </details>`;
+}
+function discoveryChartHTML(chart) {
+  const rows = [...chart.participants];
+  if (chart.other_total > 0) rows.push({ name: `Other ${chart.other_count.toLocaleString("en-AU")} ${chart.participant_label === "supplier" ? "suppliers" : "contributors"}`, value: chart.other_total, share: chart.other_share, other: true });
+  return `<div class="discovery-chart" role="group" aria-label="Share of recorded value">
+    ${rows.map((row, index) => `<div class="discovery-chart-row${index === 0 ? " is-leader" : ""}${row.other ? " is-other" : ""}">
+      <div class="discovery-chart-label"><span>${esc(row.name)}</span><span><strong>${esc(discoveryMoney(row.value))}</strong> <span class="discovery-chart-share">${esc(discoveryPercent(row.share))}</span></span></div>
+      <div class="discovery-track" aria-hidden="true"><span style="width:${discoveryBarWidth(row.share)}%"></span></div>
+    </div>`).join("")}</div>`;
+}
+function discoveryDetailHTML(signal) {
+  const chart = signal.chart;
+  const contracts = signal.category === DISCOVERY_DEFAULT;
+  let main;
+  if (chart) {
+    const lead = chart.participants[0];
+    const years = chart.period?.from && chart.period?.to
+      ? chart.period.kind === "financial_year" ? `FY ${chart.period.from} to ${chart.period.to}` : `Contract start years ${String(chart.period.from).slice(0, 4)}–${String(chart.period.to).slice(0, 4)}` : "All available years";
+    const missingDates = Number(chart.period?.undated_records || 0) + Number(chart.period?.invalid_date_records || 0);
+    main = `<h2 id="discover-detail-title" tabindex="-1">${esc(chart.group_label)}</h2>
+      <p class="discovery-takeaway"><strong>${esc(discoveryPercent(lead.share))}</strong> ${contracts ? "of recorded contract value went to" : "of recorded receipts came from"} <b>${esc(lead.name)}</b>.</p>
+      <div class="discovery-chart-heading"><h3>${contracts ? "Who got the contracts?" : "Where did the funding come from?"}</h3><span>${esc(discoveryMoney(chart.group_total))} total</span></div>
+      ${discoveryChartHTML(chart)}
+      <p class="discovery-chart-note">${chart.record_count.toLocaleString("en-AU")} ${contracts ? "contracts" : "receipts"} · ${esc(years)}. ${contracts ? "Recorded contract values, not the agency’s whole budget." : "Party receipts include more than gifts."}${missingDates ? ` ${missingDates.toLocaleString("en-AU")} records have no valid date.` : ""}</p>`;
+  } else {
+    main = `<h2 id="discover-detail-title" tabindex="-1">${esc(signal.entity)}</h2>
+      <p class="discovery-takeaway">This name appears in both sets of records.</p>
+      <div class="discovery-flows" role="group" aria-label="Separate recorded money flows">
+        <div><span>Party receipts</span><strong>${esc(discoveryMoney(discoveryValue(signal, "Recorded party receipts")))}</strong><small>${discoveryValue(signal, "Party receipt records").toLocaleString("en-AU")} records</small></div>
+        <span class="discovery-flow-join" aria-hidden="true">&amp;</span>
+        <div><span>Government contracts</span><strong>${esc(discoveryMoney(discoveryValue(signal, "Recorded contract value")))}</strong><small>${discoveryValue(signal, "Contract records").toLocaleString("en-AU")} records</small></div>
+      </div><p class="discovery-chart-note">Different money flows and reporting periods. A shared name doesn’t show that one led to the other.</p>`;
+  }
+  return `<article class="discovery-detail-card">${main}
+    <div class="discovery-actions"><a href="/search?q=${encodeURIComponent(signal.entity)}">Find mentions in parliament</a>${!contracts ? '<button type="button" id="discover-map-toggle" aria-expanded="false" aria-controls="discover-map-area">Explore connections on the money map</button>' : ""}</div>
+    ${!contracts ? '<div id="discover-map-area" hidden><p class="discovery-chart-note">Political funding connections from the money map. Its coverage differs from this comparison.</p><div id="discover-map-root" class="discovery-map"></div><a href="/money">Open the full money map</a></div>' : ""}
+    ${discoveryEvidenceHTML(signal)}</article>`;
+}
+async function mountDiscoveryMap(signal) {
+  const area = $("discover-map-area");
+  const button = $("discover-map-toggle");
+  if (!area.hidden) { area.hidden = true; button.setAttribute("aria-expanded", "false"); destroyDiscoveryMap(); return; }
+  area.hidden = false;
+  button.setAttribute("aria-expanded", "true");
+  const root = $("discover-map-root");
+  destroyDiscoveryMap();
+  const generation = discoveryMapGeneration;
+  const current = () => generation === discoveryMapGeneration && root.isConnected && document.documentElement.dataset.panel === "discover";
+  root.innerHTML = '<p role="status">Opening the money map…</p>';
+  try {
+    const data = await loadMoneyData();
+    if (!current()) return;
+    const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
+    if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
+    const { mountMoneyMap } = await import("/money-map.js");
+    if (!current()) return;
+    root.textContent = "";
+    const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
+      askUrl: (industry) => askHash(`What has parliament said about ${industryLabel(industry)}?`) });
+    if (!current()) { handle.destroy(); return; }
+    discoveryMapHandle = handle;
+    if ("IntersectionObserver" in window) {
+      discoveryMapObserver = new IntersectionObserver((entries) => handle.setPaused(!entries[entries.length - 1].isIntersecting));
+      discoveryMapObserver.observe(root);
+    }
+  } catch {
+    if (current()) root.innerHTML = '<p class="status">The map couldn’t open here. Try the full money map below.</p>';
+  }
+}
+function selectDiscovery(signal, focus = false) {
+  destroyDiscoveryMap();
+  discoverySelected = signal.id;
+  for (const button of $("discover-results").querySelectorAll("[data-discovery-id]")) button.setAttribute("aria-pressed", String(button.dataset.discoveryId === signal.id));
+  $("discover-detail").innerHTML = discoveryDetailHTML(signal);
+  $("discover-map-toggle")?.addEventListener("click", () => mountDiscoveryMap(signal));
+  replaceRoute(discoveryUrl());
+  if (focus) {
+    const title = $("discover-detail-title");
+    title?.focus({ preventScroll: true });
+    if (matchMedia("(max-width: 700px)").matches) title?.scrollIntoView({ block: "start", behavior: "instant" });
+  }
+}
+function filterDiscoveries() {
+  if (!discoveryData) return;
+  destroyDiscoveryMap();
+  const category = discoveryCategory();
+  const query = $("discover-query").value.trim().toLocaleLowerCase();
+  const signals = discoveryData.signals.filter((signal) => signal.category === category &&
+    (!query || `${signal.entity} ${discoveryName(signal)}`.toLocaleLowerCase().includes(query)));
+  signals.sort((a, b) => ($("discover-sort").value === "share" ? discoveryShare(b) - discoveryShare(a) : discoveryTotal(b) - discoveryTotal(a)) || discoveryName(a).localeCompare(discoveryName(b)));
+  $("discover-count").textContent = `${signals.length} ${category === DISCOVERY_DEFAULT ? "agencies" : category === "recipient_concentration" ? "parties" : "companies"}`;
+  $("discover-sort").disabled = category === "donor_contract_overlap";
+  const selected = signals.find((signal) => signal.id === discoverySelected) || signals[0];
+  if (selected) discoveryVisible = Math.max(discoveryVisible, signals.indexOf(selected) + 1);
+  $("discover-results").innerHTML = signals.length ? signals.slice(0, discoveryVisible).map((signal) => `<button type="button" class="discovery-choice" data-discovery-id="${esc(signal.id)}" aria-pressed="${signal.id === selected?.id}" aria-controls="discover-detail">
+    <span class="discovery-choice-name">${esc(discoveryName(signal))}</span>
+    <span class="discovery-choice-measure">${signal.chart ? `<span class="discovery-mini-track" aria-hidden="true"><i style="width:${discoveryBarWidth(discoveryShare(signal))}%"></i></span><strong>${esc(discoveryPercent(discoveryShare(signal)))}</strong>` : `<span>${esc(discoveryMoney(discoveryTotal(signal)))} in contracts</span>`}</span>
+  </button>`).join("") + (signals.length > discoveryVisible ? '<button type="button" id="discover-more" class="discovery-more">Show more</button>' : "") : '<div class="discovery-empty"><p>No matches. Try another name.</p><button type="button" id="discover-clear">Clear search</button></div>';
+  $("discover-list-note").textContent = category === "donor_contract_overlap" ? "Companies found in both datasets." : `Bars show the biggest ${category === DISCOVERY_DEFAULT ? "supplier’s" : "contributor’s"} share.`;
+  $("discover-more")?.addEventListener("click", () => { const firstNew = discoveryVisible; discoveryVisible += 8; filterDiscoveries(); $("discover-results").querySelectorAll("[data-discovery-id]")[firstNew]?.focus(); });
+  $("discover-clear")?.addEventListener("click", () => { $("discover-query").value = ""; filterDiscoveries(); replaceRoute(discoveryUrl()); });
+  if (selected) selectDiscovery(selected);
+  else { discoverySelected = null; $("discover-detail").innerHTML = '<p class="discovery-detail-empty">Choose another name to see the comparison.</p>'; }
+}
+async function renderDiscoveryPage(params, manageFocus) {
+  const renderId = ++discoveryRenderId;
+  const category = Object.hasOwn(DISCOVERY_CATEGORIES, params.get("category")) ? params.get("category") : DISCOVERY_DEFAULT;
+  destroyDiscoveryMap();
+  discoverySelected = params.get("item");
+  discoveryVisible = 8;
+  for (const button of $("discover-categories").querySelectorAll("button")) button.setAttribute("aria-pressed", String(button.dataset.category === category));
+  $("discover-query").value = params.get("q") || "";
+  $("discover-sort").value = params.get("sort") === "share" ? "share" : "value";
+  $("discover-title").textContent = category === DISCOVERY_DEFAULT ? "Follow the big contracts." : category === "recipient_concentration" ? "Where does party funding come from?" : "A name in both records.";
+  $("discover-intro-text").textContent = category === DISCOVERY_DEFAULT ? "Pick an agency. See which companies take the biggest share." : category === "recipient_concentration" ? "Choose a party to see who provides its largest share of recorded funding." : "Explore companies that appear in both party receipts and government contracts.";
+  $("discover-query-label").textContent = category === DISCOVERY_DEFAULT ? "Find an agency or company" : category === "recipient_concentration" ? "Find a party or contributor" : "Find a company";
+  if (manageFocus) $("discover-title").focus({ preventScroll: true });
+  $("discover-results").setAttribute("aria-busy", "true");
+  $("discover-results").innerHTML = '<p role="status">Loading comparisons…</p>';
+  $("discover-detail").innerHTML = "";
+  try {
+    discoveryRequest ??= fetch("/discovery.json?view=visual-1").then((response) => {
+      if (!response.ok) throw new Error("Discovery unavailable");
+      return response.json();
+    }).then((data) => {
+      if (!Array.isArray(data.signals) || !data.coverage || !Array.isArray(data.methodology)) throw new Error("Invalid discovery data");
+      return data;
+    }).catch((error) => { discoveryRequest = null; throw error; });
+    const data = await discoveryRequest;
+    if (renderId !== discoveryRenderId || document.documentElement.dataset.panel !== "discover") return;
+    discoveryData = data;
+    const snapshot = data.coverage.snapshot_at || data.generated_at;
+    $("discover-methodology-body").innerHTML = `<p>A concentration is a reason to look closer, not proof of wrongdoing. This page covers ${Number(data.coverage.contracts).toLocaleString("en-AU")} contracts and ${Number(data.coverage.donations).toLocaleString("en-AU")} party receipts.${snapshot ? ` Updated ${esc(fmtDate(String(snapshot).slice(0, 10)))}.` : ""}</p><ul>${data.methodology.map((method) => `<li>${esc(method)}</li>`).join("")}</ul>`;
+    filterDiscoveries();
+  } catch {
+    if (renderId !== discoveryRenderId || document.documentElement.dataset.panel !== "discover") return;
+    $("discover-results").innerHTML = '<div role="alert"><p>We couldn’t load the comparisons.</p><button type="button" id="discover-retry">Try again</button></div>';
+    $("discover-retry").addEventListener("click", () => renderDiscoveryPage(parseHash().params, false));
+  } finally {
+    if (renderId === discoveryRenderId) $("discover-results").setAttribute("aria-busy", "false");
+  }
+}
+$("discover-categories").addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-category]");
+  if (button) goRoute(`/discover?category=${encodeURIComponent(button.dataset.category)}`);
+});
+$("discover-results").addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-discovery-id]");
+  const signal = discoveryData?.signals.find((item) => item.id === button?.dataset.discoveryId);
+  if (signal) selectDiscovery(signal, true);
+});
+$("discover-query").addEventListener("input", () => { discoveryVisible = 8; filterDiscoveries(); replaceRoute(discoveryUrl()); });
+$("discover-sort").addEventListener("change", () => { discoverySelected = null; discoveryVisible = 8; filterDiscoveries(); });
 
 // --- money map (lazy-loaded 3D bundle) --------------------------------------
 // One export per jurisdiction, all in the same node/edge shape, loaded one at
@@ -1138,6 +1364,11 @@ function route() {
     setCrumbs([{ label: "Search" }]);
     applySearchParams(params);
     focusEntry("search-input");
+  } else if (view === "discover") {
+    showPanel("discover");
+    document.title = TITLES.discover;
+    setCrumbs([{ label: "Discover" }]);
+    renderDiscoveryPage(params, manageFocus);
   } else if (view === "reports") {
     showPanel("reports");
     document.title = TITLES.reports;
@@ -11573,6 +11804,7 @@ const BOOT_META = {
 // Keeps the head's canonical/og:url on the current route after each route(),
 // and the title/description on the view now showing.
 const VIEW_DESCRIPTIONS = {
+  discover: "Explore overlaps and concentrations across recorded party receipts and government contracts, with evidence and limitations for every investigation lead.",
   search: "Search half a million Australian parliamentary speeches by keyword, speaker, party, state, topic and year.",
   money: "Disclosed political donations as territory you can spin: donors, parties and 28 years of returns.",
   reports: "Standing investigations pairing the money with the words, every claim cited to the record.",
