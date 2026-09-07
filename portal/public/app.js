@@ -5,6 +5,11 @@
 
 const $ = (id) => document.getElementById(id);
 
+// Categories and counts only: never pass questions, answers or error messages.
+function trackOutcome(event, properties = {}) {
+  try { dispatchEvent(new CustomEvent("opax:analytics", { detail: { event, properties } })); } catch { /* optional */ }
+}
+
 // --- shared state -----------------------------------------------------------
 
 let corpusManifest = null; // /corpus.json
@@ -452,6 +457,20 @@ async function readAskStream(body, signal, on) {
  * path retries inside the Worker, so its payload is taken as it comes.
  */
 async function askRecord(body, signal, on = {}) {
+  const started = performance.now();
+  const from_section = location.pathname.split("/")[1] || "home";
+  trackOutcome("opax_ask_started", { from_section });
+  try {
+    const data = await askRecordRequest(body, signal, on);
+    trackOutcome("opax_ask_completed", { from_section, duration_ms: Math.round(performance.now() - started), source_count: data.sources?.length || 0, has_answer: !!data.answer?.trim() });
+    return data;
+  } catch (err) {
+    trackOutcome("opax_ask_failed", { from_section, duration_ms: Math.round(performance.now() - started), cancelled: err.name === "AbortError" });
+    throw err;
+  }
+}
+
+async function askRecordRequest(body, signal, on = {}) {
   try {
     return await readAskStream(body, signal, on);
   } catch (err) {
@@ -747,6 +766,7 @@ function offerExport(rows, context, baseName) {
   if (!rows.length) return;
   const choice = (window.prompt(
     "Export format (type csv, bibtex or ris):", "csv") || "").trim().toLowerCase();
+  if (["csv", "bibtex", "bib", "ris"].includes(choice)) trackOutcome("opax_export", { format: choice === "bib" ? "bibtex" : choice, row_count: rows.length });
   if (choice === "csv") {
     download(`${baseName}.csv`, "text/csv;charset=utf-8", sourcesCSV(rows, context));
   } else if (choice === "bibtex" || choice === "bib") {
@@ -9378,6 +9398,8 @@ async function runSearch(page = 1) {
   // first is worth a new answer: the rail asks once per search, not per page.
   const fresh = key !== lastSearch.key;
   const mySeq = ++searchSeq;
+  const analyticsStarted = performance.now();
+  trackOutcome("opax_search_started", { page, filter_count: Object.values(f).filter(Boolean).length });
   if (fresh) {
     searchAnswerWanted = !!q;
     $("search-answer").hidden = true;
@@ -9406,6 +9428,7 @@ async function runSearch(page = 1) {
     const data = await api(`/api/search?${searchQueryParams(q, f, page, sort)}`);
     if (mySeq !== searchSeq) return; // a newer search owns the results now
     const results = data.results || [];
+    trackOutcome("opax_search_completed", { page, result_count: results.length, total_count: data.total ?? results.length, duration_ms: Math.round(performance.now() - analyticsStarted) });
     lastSearch = {
       key, query: q, filters: f, sort, results,
       page: data.page || 1,
@@ -9456,6 +9479,7 @@ async function runSearch(page = 1) {
     }
   } catch (err) {
     if (mySeq !== searchSeq) return;
+    trackOutcome("opax_search_failed", { page, duration_ms: Math.round(performance.now() - analyticsStarted) });
     hideLoader("search-wombat");
     $("search-status").classList.remove("visually-hidden");
     setStatus($("search-status"), String(err.message || err), true);
