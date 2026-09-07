@@ -29,7 +29,8 @@ no ABNs. AusTender publishes roughly 250 notices a working day.
 | `ext_contract_fetch_log` | same | one row per day fetched, so a rerun resumes; the last two days are always refetched |
 | `ext_contracts_current` | `parli.ingest.contract_suppliers` | one row per contract: the latest notice in its lineage, `original_amount` from the first |
 | `ext_contract_suppliers` | same | one row per supplier (ABN, else ABR-matched name, else name) with the ABR legal name and a `donor_entity_id` link |
-| `ext_contract_supplier_keys` | same | (abn or name) -> supplier_id, for the exporter |
+| `ext_contract_supplier_keys` | same | (source, abn or name) -> supplier_id, for the exporters |
+| `ext_state_contracts`, `ext_state_contract_files` | `parli.ingest.qld_contracts` | Queensland's contract disclosure rows and the files they came from |
 
 Supplier resolution climbs the same ladder as grants (`parli.ingest.grant_recipients`):
 the ABN against `ext_donor_entities.abn`, then the exact and rule-normalised
@@ -60,17 +61,45 @@ hub card to "Follow the big contracts". `graph/smoke-test.mjs` checks both hubs.
 ```
 # desktop, background, ~4 h for 2007 to today; resumable
 cd ~/opax-sync && nohup env PYTHONPATH=. python3 -m parli.ingest.austender_full --db ~/.cache/autoresearch/parli.db > /tmp/austender.log 2>&1 &
-# then, and after every fetch
+# Queensland's disclosure files (~15 min, cached)
+PYTHONPATH=. ~/opax/.venv/bin/python -m parli.ingest.qld_contracts --db ~/.cache/autoresearch/parli.db
+# then, and after every fetch or state load
 PYTHONPATH=. python3 -m parli.ingest.contract_suppliers --db ~/.cache/autoresearch/parli.db --abr-dir ~/.cache/autoresearch/abr
 # from the Mac
 ssh desktop python3 - < scripts/export_money_graph.py > portal/public/graph/money.json
+ssh desktop python3 - qld < scripts/export_state_money.py > portal/public/graph/money.qld.json
 cd portal && node graph/smoke-test.mjs && npm run build:graph
 ```
 
+## Queensland
+
+`parli.ingest.qld_contracts` catalogues every data.qld.gov.au dataset whose
+title or tags say "contract disclosure" (about 370 datasets, 926 CSV/XLSX/XLS
+files, one per agency and financial year, contracts of $10,000 and over) and
+writes `ext_state_contracts` (jurisdiction `qld`), mapping the drifting headers
+by their words (supplier, ABN where published, agency, description, award
+date, value, variation, procurement method, reference). Files are cached under
+`~/.cache/autoresearch/qld_contracts`; `ext_state_contract_files` records each
+file's header, row count and status, so an unmapped file is visible. Run it
+with the desktop's `~/opax/.venv/bin/python` (openpyxl for the spreadsheets).
+
+A variation row in these registers restates the contract's whole value (Queensland
+Rail's $10.4B service contract appears on every variation), so
+`ext_state_contracts_current` keeps one row per contract: rows sharing an agency and
+reference number fold to the largest value, and rows without a reference fold by
+agency, supplier and description when any of them is a variation (976,659 rows
+became 930,171 contracts and the summed value fell from $378B to $245B).
+Everything downstream reads the folded table.
+
+`contract_suppliers` folds the state rows in beside the federal ones (per-source
+totals `federal_*` and `qld_*`; keys carry a `source`), and
+`scripts/export_state_money.py` draws a "Queensland contracts" hub on the
+Queensland map exactly as the federal exporter draws the Commonwealth one.
+
 ## Not yet
 
-State contract award registers (NSW eTendering, Queensland contract
-disclosure, Buying for Victoria, SA Tenders and Contracts) would give the state
-money maps a contracts hub the same way. The discovery page's "companies in
-both" still matches by name against the old `contracts` table; it can move to
-`ext_contract_suppliers` and match by ABN.
+NSW (buy.nsw.gov.au refuses plain fetches; needs a browser or Firecrawl),
+Victoria (Buying for Victoria disclosures) and SA (Tenders and Contracts) would
+give those maps a contracts hub the same way. The discovery page's "companies
+in both" still matches by name against the old `contracts` table; it can move
+to `ext_contract_suppliers` and match by ABN.
