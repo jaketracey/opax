@@ -1,4 +1,4 @@
-import { buildMoneyJourneys } from './money-journeys-data.js?v=selectors-1';
+import { buildMoneyJourneys } from './money-journeys-data.js?v=picker-1';
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const money = (value) => Number(value).toLocaleString('en-AU', { style: 'currency', currency: 'AUD', notation: 'compact', maximumFractionDigits: 1 });
@@ -15,7 +15,9 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
   const stopTimer = () => { if (timer !== null) clearTimeout(timer); timer = null; };
   controls.innerHTML = journeys.length ? `<div class="journey-intro"><h2>Take a closer look.</h2><p>Choose a lens. Follow the connections in 3D.</p></div><div class="journey-lenses" role="group" aria-label="Guided money map journeys">${journeys.map((journey) => `<button type="button" data-journey="${esc(journey.id)}" aria-pressed="false"><span>${esc(journey.title)}</span><small>${esc(journey.description)}</small></button>`).join('')}</div>` : '';
 
+  let disposePicker = () => {};
   function render() {
+    disposePicker();
     if (destroyed) return;
     for (const button of controls.querySelectorAll('[data-journey]')) button.setAttribute('aria-pressed', String(button.dataset.journey === active?.id));
     story.hidden = !active;
@@ -25,6 +27,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     const chooser = active.choices ? `<div class="journey-selector"><label for="journey-focus">${esc(active.selectorLabel || 'Focus')}</label><select id="journey-focus" data-focus="true" aria-label="${esc(active.selectorLabel || 'Focus')}"><option value="">Choose ${active.selectorLabel === 'Industry' ? 'an industry' : active.selectorLabel === 'Recipient' ? 'a recipient' : 'an organisation'}…</option>${active.choices.map(choice => `<option value="${esc(choice.value)}"${choice.value === active.selection ? ' selected' : ''}>${esc(choice.label)}</option>`).join('')}</select></div>` : '';
     if (!active.steps.length) {
       story.innerHTML = `${header}${chooser}<div class="journey-choice-empty"><h3>Where would you like to start?</h3><p>Choose from the dropdown to build your journey.</p><p class="journey-help">${esc(active.id === 'public-money' ? 'Recipients with both public-money and party-funding connections in this map.' : active.id === 'over-time' ? 'Organisations with dated receipts in both comparison windows.' : 'Choices reflect the connections available in this map.')}</p></div>`;
+      enhancePicker();
       return;
     }
     const current = active.steps[step];
@@ -35,6 +38,71 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
       <div class="journey-source-links">${(current.links || []).filter((link) => safeLink(link.href)).map((link) => `<a href="${esc(link.href)}">${esc(link.label)} <span aria-hidden="true">↗</span></a>`).join('')}</div>
       <div class="journey-playback"><button type="button" data-action="previous" aria-label="Previous step"${step === 0 ? ' disabled' : ''}>←</button><button type="button" data-action="play"${reduced.matches ? ' disabled' : ''}>${playing ? 'Pause' : step === active.steps.length - 1 ? 'Replay journey' : reason ? 'Continue journey' : 'Play journey'}</button><button type="button" data-action="next" aria-label="Next step"${step === active.steps.length - 1 ? ' disabled' : ''}>→</button></div>
       <div class="journey-progress" aria-hidden="true">${playing ? '<span></span>' : ''}</div><p class="journey-help">${esc(reason || (reduced.matches ? 'Animation is off. Use the arrows to explore each step.' : playing ? 'The next view opens in 7 seconds. Touch the map to pause.' : 'Step through, or play the journey. Drag the map to explore.'))}</p>`;
+    enhancePicker();
+  }
+
+  function enhancePicker() {
+    const select = story.querySelector('[data-focus]');
+    if (!select?.options) return;
+    const choices = active.choices;
+    const names = choices.map(c => {
+      const name = c.label.replace(/ — Commonwealth (contracts|grants)$/, '');
+      return active.id === 'industry' ? name.replace(/\b\w/g, letter => letter.toUpperCase()) : name;
+    });
+    const detail = c => {
+      const i = choices.indexOf(c);
+      return names.filter(n => n === names[i]).length > 1 ? (/contracts$/.test(c.label) ? 'Contracts' : /grants$/.test(c.label) ? 'Grants' : '') : '';
+    };
+    const selected = choices.find(c => c.value === active.selection);
+    const label = selected ? names[choices.indexOf(selected)] : select.options[0].textContent;
+    select.hidden = true;
+    select.insertAdjacentHTML('afterend', `<div class="journey-picker"><button type="button" class="journey-picker-trigger" aria-haspopup="dialog" aria-expanded="false" aria-label="${esc(active.selectorLabel)}: ${esc(label)}"><span>${esc(label)}</span><span aria-hidden="true">⌄</span></button><div class="journey-picker-panel" role="dialog" aria-label="Choose ${esc(active.selectorLabel.toLowerCase())}" hidden><input type="search" class="journey-picker-search" aria-label="Search ${esc(active.selectorLabel.toLowerCase())}" placeholder="Search…" autocomplete="off"><div class="journey-picker-results"></div><p class="journey-picker-count" role="status"></p></div></div>`);
+    const root = story.querySelector('.journey-picker');
+    const trigger = root.querySelector('button');
+    const panel = root.querySelector('.journey-picker-panel');
+    const input = root.querySelector('input');
+    const results = root.querySelector('.journey-picker-results');
+    const count = root.querySelector('.journey-picker-count');
+    story.querySelector('label[for="journey-focus"]')?.setAttribute('for', 'journey-picker-trigger');
+    trigger.id = 'journey-picker-trigger';
+    const close = (focus = false) => { panel.hidden = true; trigger.setAttribute('aria-expanded', 'false'); if (focus) trigger.focus(); };
+    const filter = () => {
+      const query = input.value.trim().toLocaleLowerCase();
+      const matches = choices.filter((c, i) => `${names[i]} ${detail(c)}`.toLocaleLowerCase().includes(query));
+      results.innerHTML = matches.map(c => `<button type="button" data-choice="${esc(c.value)}" class="journey-picker-option"${c.value === active.selection ? ' aria-current="true"' : ''}><span>${esc(names[choices.indexOf(c)])}</span>${detail(c) ? `<small>${detail(c)}</small>` : ''}</button>`).join('');
+      count.textContent = matches.length ? `${matches.length} ${matches.length === 1 ? 'result' : 'results'}` : 'No matches. Try another name.';
+    };
+    root.addEventListener('click', event => {
+      event.stopPropagation();
+      const option = event.target.closest('[data-choice]');
+      if (option) {
+        select.value = option.dataset.choice;
+        onFocus({ target: select });
+        story.querySelector('.journey-picker-trigger')?.focus({ preventScroll: true });
+      } else if (event.target.closest('.journey-picker-trigger')) {
+        if (!panel.hidden) { close(); return; }
+        onPickerOpen({ target: select });
+        input.value = ''; filter(); panel.hidden = false; trigger.setAttribute('aria-expanded', 'true'); input.focus();
+      }
+    });
+    input.addEventListener('input', filter);
+    root.addEventListener('keydown', event => {
+      if (panel.hidden) return;
+      event.stopPropagation();
+      if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close(true); }
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault(); event.stopPropagation();
+        const items = [...results.querySelectorAll('button')];
+        const index = items.indexOf(document.activeElement);
+        const next = event.key === 'ArrowDown' ? index + 1 : index < 0 ? items.length - 1 : index - 1;
+        (items[next] || input).focus();
+      }
+      if (event.key === 'Enter' && event.target === input) { event.preventDefault(); results.querySelector('button')?.click(); }
+    });
+    const outside = event => { if (!root.contains(event.target)) close(); };
+    document.addEventListener('pointerdown', outside);
+    document.addEventListener('focusin', outside);
+    disposePicker = () => { document.removeEventListener('pointerdown', outside); document.removeEventListener('focusin', outside); };
   }
 
   function present() {
@@ -151,7 +219,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     },
     destroy() {
       if (destroyed) return;
-      destroyed = true; stopTimer(); observer?.disconnect();
+      destroyed = true; disposePicker(); stopTimer(); observer?.disconnect();
       controls.removeEventListener('click', onLens); story.removeEventListener('click', onAction); story.removeEventListener('change', onFocus); story.removeEventListener('focusin', onPickerOpen); story.removeEventListener('pointerdown', onPickerOpen); story.removeEventListener('keydown', onKey);
       document.removeEventListener('visibilitychange', visibility); reduced.removeEventListener('change', motion);
       if (active) map.clearScene();
