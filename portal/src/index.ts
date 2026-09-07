@@ -3510,7 +3510,7 @@ const MAX_PARTY_CHARS = 64
 const MIN_YEAR = 1900
 const MAX_YEAR = 2100
 
-const KINDS = new Set(['speech', 'legal', 'news', 'division', 'bill', 'all'])
+const KINDS = new Set(['speech', 'legal', 'news', 'division', 'bill', 'press_release', 'all'])
 const STATES = new Set(['federal', 'nsw', 'vic', 'sa', 'qld'])
 const MODES = new Set(['hybrid', 'semantic', 'keyword'])
 // Party labels are the KB's own facet values (served by /api/parties) and grow
