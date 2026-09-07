@@ -4497,3 +4497,96 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 #discover-results::-webkit-scrollbar, #panel-search .search-year-chart::-webkit-scrollbar { height: 6px; }
 #discover-results::-webkit-scrollbar-track, #panel-search .search-year-chart::-webkit-scrollbar-track { background: transparent; }
 #discover-results::-webkit-scrollbar-thumb, #panel-search .search-year-chart::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; }
+
+/* ==== refinement loop: quieter indexes and reference pages ============== */
+
+/* Report cards read as one set: dates settle to a common baseline even when
+   the description above is a line longer. The safe min() also lets the grid
+   shrink cleanly below its nominal card width. */
+.report-cards { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: var(--space-4); }
+.report-card { display: flex; flex-direction: column; padding: var(--space-4) var(--space-5); }
+.report-card .card-meta { margin-top: auto; padding-top: var(--space-3); }
+
+/* Ask suggestions use the same responsive rule. At 320px, a fixed 320px
+   minimum plus the page gutters could widen the document. */
+.suggest-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: var(--space-4); }
+.suggest-card { padding: var(--space-5); }
+
+/* Reference pages predate the shared rhythm scale. Bring their headings,
+   prose and lists onto the same steps used by entries and reports. */
+#panel-about h2, #panel-methods h2, #panel-expenses h2 {
+  margin: 0 0 var(--space-3);
+}
+#panel-about h2:not(:first-child) { margin-top: var(--space-6); }
+#panel-methods h3, #panel-expenses h3 { margin: var(--space-6) 0 var(--space-2); }
+#panel-about p, #panel-methods p, #panel-expenses p { margin-block: var(--space-3); line-height: 1.7; }
+.about-list { margin-block: var(--space-4); }
+.about-list li { margin-block: var(--space-3); line-height: 1.65; }
+.defs { margin-top: var(--space-4); }
+.defs dt { padding-top: var(--space-4); }
+.defs dd { padding-bottom: var(--space-4); }
+
+/* Data tables keep their own scroll area and use the same quiet thumb as the
+   charts, instead of making the whole page move sideways. */
+.table-scroll { max-width: 100%; overscroll-behavior-inline: contain; scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+.table-scroll::-webkit-scrollbar { height: 6px; }
+.table-scroll::-webkit-scrollbar-track { background: transparent; }
+.table-scroll::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; }
+
+@media (max-width: 700px) {
+  /* Suggestions remain quick choices on a phone. A horizontal strip takes
+     one row, preserves 44px targets and leaves the record visible below. */
+  #panel-search .search-chips {
+    flex-direction: row; align-items: stretch; overflow-x: auto;
+    padding-bottom: var(--space-2); scroll-padding-inline: 0;
+  }
+  #panel-search .search-chips .chip {
+    width: auto; min-height: 44px; padding: var(--space-3) var(--space-4);
+    border-radius: 999px; white-space: nowrap;
+  }
+  #panel-search .search-chips { scrollbar-width: none; }
+  #panel-search .search-chips::-webkit-scrollbar { display: none; }
+
+  .report-card { min-height: 0; padding: var(--space-4); }
+  .report-card .card-glyph { margin-bottom: var(--space-3); }
+  .report-card .card-title { margin-bottom: var(--space-2); }
+  .suggest-card { padding: var(--space-4); }
+
+  /* Two compact figures make the corpus overview scannable without turning
+     each number into a full-screen row. */
+  .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5) var(--space-4); }
+  .stat-grid .stat-figure { font-size: 1.75rem; }
+
+  footer { line-height: 1.6; }
+  .footer-lines { padding-top: var(--space-4); }
+}
+
+@media (max-width: 540px) {
+  /* A labelled select gets a row of its own at phone widths. This avoids
+     clipped option text across Bills, Parliamentarians, Parties and Donors. */
+  .dir-controls { padding: var(--space-3); gap: var(--space-3); }
+  .dir-field { flex: 1 1 100%; width: 100%; }
+  .dir-field select { width: 100%; max-width: none; min-width: 0; }
+  .dir-checks { gap: 0 var(--space-4); }
+
+  /* Keep the portrait/name relationship, then let figures use the full line
+     below rather than squeezing beside a long office or party label. */
+  .dir-list li.dir-row:not(.dir-row-plain) .dir-figs {
+    grid-column: 1 / -1; justify-content: flex-start; text-align: left;
+  }
+  .dir-list li.dir-row { column-gap: var(--space-4); row-gap: var(--space-3); }
+  .dir-list li.dir-row .dir-figs { margin-top: 0; }
+  .dir-portrait, .dir-mono { width: 60px; height: 60px; }
+
+  /* Date, portrait and declaration form a readable two-column card on the
+     register ledger; the date no longer consumes a permanent left column. */
+  .declared-row { grid-template-columns: 48px minmax(0, 1fr); gap: var(--space-2) var(--space-3); }
+  .declared-row > time { grid-column: 2; grid-row: 1; }
+  .declared-portrait { grid-column: 1; grid-row: 1 / span 2; }
+  .declared-entry { grid-column: 2; grid-row: 2; }
+  .declared-source-link { margin-left: 0; }
+}
+
+@media (max-width: 360px) {
+  .stat-grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
+}
