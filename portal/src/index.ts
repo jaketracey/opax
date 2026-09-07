@@ -35,10 +35,12 @@ interface FindResource {
 }
 
 const SLUG_RE = /^(speech|legal|news)-(\d+)$/
+const PRESS_SLUG_RE = /^press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+$/
 // Division records (parli.ingest.votes_ingest) carry composite ids:
 // division-nsw-la-2025-12-22-3, division-federal-senate-10113. Public too.
 const DIVISION_SLUG_RE = /^division-[a-z0-9-]+$/
-const isPublicSlug = (slug: string): boolean => SLUG_RE.test(slug) || DIVISION_SLUG_RE.test(slug)
+const isPublicSlug = (slug: string): boolean =>
+  SLUG_RE.test(slug) || DIVISION_SLUG_RE.test(slug) || PRESS_SLUG_RE.test(slug)
 
 /**
  * Build a /find//ask filter_expression from the portal's filter vocabulary.
@@ -506,7 +508,7 @@ async function searchWindow(
     const windowed = (start > 0 ? '…' : '') + bestText.slice(start, start + 600)
     const division = DIVISION_SLUG_RE.test(slug)
     return {
-      kind: m?.[1] ?? (division ? 'division' : 'unknown'),
+      kind: label(resource, 'kind') ?? m?.[1] ?? (division ? 'division' : 'unknown'),
       id: m ? Number(m[2]) : null,
       slug,
       resource: rid,
@@ -1630,7 +1632,7 @@ async function apiRecent(env: Env): Promise<Response> {
     resources?: Record<string, { slug?: string; title?: string; created?: string }>
   }
   const items = Object.values(data.resources ?? {})
-    .filter((r) => SLUG_RE.test(r.slug ?? ''))
+    .filter((r) => isPublicSlug(r.slug ?? ''))
     .map((r) => ({ slug: r.slug, title: r.title ?? r.slug, indexed: r.created ?? null }))
     .slice(0, 12)
   const out = json({ items })
@@ -3132,6 +3134,40 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
         italic: true,
         title: motion,
         lines: [`${outcome || 'Division'}${tally}. Who voted which way.`],
+      },
+    }
+  }
+  if (r.labels.kind === 'press_release' || PRESS_SLUG_RE.test(slug)) {
+    const source = r.labels.source === 'pmtranscripts'
+      ? 'Prime Minister transcripts'
+      : r.labels.source === 'nsw' ? 'NSW Government ministerial releases' : 'Government releases'
+    const parts = r.title.split(' — ')
+    const storedHeadline = typeof r.metadata.headline === 'string' ? r.metadata.headline.trim() : ''
+    const hasAttributionPrefix = Boolean(r.speaker || (typeof r.metadata.role === 'string' && r.metadata.role))
+    const headline = storedHeadline ||
+      (parts.length >= 3 ? parts.slice(hasAttributionPrefix ? 1 : 0, -1).join(' — ') : r.title)
+    const description = clip(
+      r.summary?.trim() ||
+        `${headline}${r.speaker ? `, issued by ${r.speaker}` : ''}${date ? ` on ${longDate(date)}` : ''}. Official source text indexed by OPAX.`,
+    )
+    return {
+      ...generic,
+      title: `${headline} · OPAX`,
+      description,
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline,
+        description,
+        url: canonical,
+        ...(date ? { datePublished: date } : {}),
+        ...(r.speaker ? { author: { '@type': 'Person', name: r.speaker } } : {}),
+        publisher,
+      },
+      card: {
+        kicker: `${source}${when}`,
+        title: headline,
+        lines: [[r.speaker, r.metadata.role].filter(Boolean).join(' · '), 'Read the official source text on OPAX.'],
       },
     }
   }

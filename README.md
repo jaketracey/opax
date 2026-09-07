@@ -91,6 +91,7 @@ Environment variables are documented in `.env.example`. Never commit `.env` or `
 | Federal Hansard (House via Zenodo, Senate and recent House via OpenAustralia) | speeches since 1998 |
 | Senate committee hearings | transcripts |
 | NSW, Victorian, SA and Queensland parliaments | Hansard speeches |
+| PM&C and NSW Government | Prime Minister transcripts and ministerial releases |
 | TheyVoteForYou and state Hansard | recorded divisions, per-member voting records |
 | AEC, ECQ and VEC disclosures | donations, classified across 27 industries |
 | IPEA | parliamentary expenses |

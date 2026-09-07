@@ -91,6 +91,8 @@ function titleDateForms(value) {
 function titleSubject(rec) {
   const parts = String(rec?.title ?? "").trim().split(/(\s+—\s+)/);
   if (rec?.speaker && titleKey(parts[0]) === titleKey(rec.speaker)) parts.splice(0, 2);
+  else if (rec?.labels?.kind === "press_release" && rec?.metadata?.role &&
+      titleKey(parts[0]) === titleKey(rec.metadata.role)) parts.splice(0, 2);
   const dates = titleDateForms(rec?.date ?? rec?.metadata?.date);
   if (parts.length && dates.includes(titleKey(parts[parts.length - 1]))) parts.splice(-2);
   return parts.join("").trim();
@@ -9057,7 +9059,8 @@ function searchQueryParams(q, f, page, sort) {
 // renderer, and a per-page clear function behind each cross.
 
 const FILTER_KIND_LABELS = {
-  speech: "Speeches", news: "News", division: "Divisions", all: "Everything",
+  speech: "Speeches", news: "News", division: "Divisions",
+  press_release: "Government transcripts and releases", all: "Everything",
 };
 const FILTER_MODE_LABELS = { hybrid: "Hybrid", semantic: "Semantic", keyword: "Keyword" };
 
@@ -9973,6 +9976,7 @@ async function openDocPage(slug, manageFocus) {
     const doc = await api(`/api/resource/${encodeURIComponent(slug)}`);
     if (currentDocSlug !== slug) return; // user navigated away while fetching
     currentDoc = doc;
+    const isGovernmentRelease = doc.labels?.kind === "press_release";
     setStatus($("doc-status"), "");
     // The headline is the speaker; the title repeats what the byline says, so
     // it only stands in when no speaker is attached, and then as its subject.
@@ -10008,7 +10012,9 @@ async function openDocPage(slug, manageFocus) {
       : CHAMBER_NAMES[String(doc.labels?.chamber || "").toLowerCase()];
     const state = doc.labels?.state;
     const stateName = state ? (STATE_NAMES[state] || state) : null;
-    const house = chamber
+    const house = isGovernmentRelease
+      ? (state === "federal" ? "Australian Government" : state ? `${stateName} Government` : "Government release")
+      : chamber
       ? (state && state !== "federal" ? `${chamber}, ${stateName}` : chamber)
       : (state ? (state === "federal" ? "Federal Parliament" : `Parliament of ${stateName}`) : null);
     const origin = safeUrl(doc.url);
@@ -10057,7 +10063,12 @@ async function openDocPage(slug, manageFocus) {
     }
     renderDocBillPanel(doc, slug);
     renderDocText(doc);
-    $("doc-ask").href = askHash(`What has parliament said about ${topic || doc.title}?`);
+    $("doc-ask").href = askHash(
+      isGovernmentRelease
+        ? `What does the record say about ${topic || doc.title}?`
+        : `What has parliament said about ${topic || doc.title}?`,
+      isGovernmentRelease ? "all" : undefined,
+    );
     $("doc-actions").hidden = false;
     $("doc-profile").hidden = !doc.speaker;
     $("doc-more").hidden = !doc.speaker;
@@ -11748,7 +11759,7 @@ const STATS_PARLIAMENTS = [
   ["federal", "Federal Parliament"], ["nsw", "NSW Parliament"], ["vic", "Victorian Parliament"],
   ["qld", "Queensland Parliament"], ["sa", "South Australian Parliament"],
 ];
-const STATS_KINDS = [["speech", "Speeches"], ["division", "Recorded divisions"], ["bill", "Bills"], ["legal", "Legislation"], ["news", "News"]];
+const STATS_KINDS = [["speech", "Speeches"], ["division", "Recorded divisions"], ["bill", "Bills"], ["press_release", "Government transcripts and releases"], ["legal", "Legislation"], ["news", "News"]];
 
 /** One hero tile per key; the figure element is kept so a live update counts on in place. */
 function renderStatsHero() {
