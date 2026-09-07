@@ -7794,8 +7794,8 @@ async function renderFrontTopic() {
       <a href="/reports">All reports</a></p>`;
     $("mod-mw").hidden = false;
 
-    // Encyclopedia rail: the loudest voices across every report, today's
-    // topic leading. Needs the other reports too, so it fills in on its own.
+    // Encyclopedia rail: a daily shuffled selection across every report.
+    // Needs the other reports too, so it fills in on its own.
     renderFrontEncy(dayIdx, report, don).catch(() => { /* module stays hidden */ });
 
   } catch { /* modules stay hidden */ }
@@ -7820,11 +7820,22 @@ async function renderFrontReports() {
   } catch { /* The other front-page modules remain available. */ }
 }
 
-// The encyclopedia slider: one card per report's top speaker (today's topic
-// first, then the daily rotation order), deduped, filled from the second and
-// later ranks up to eight. Speakers without a portrait are skipped. Votes come
-// from the static export; a person missing from it simply has no vote block.
-// Today's top donor closes the row so the AEC half of the fineprint holds.
+// Stable daily shuffle, shared by all readers using Melbourne's calendar day.
+function dailyEncyShuffle(items, key, date = new Date()) {
+  const day = new Intl.DateTimeFormat('en-CA', { timeZone: 'Australia/Melbourne', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+  let seed = 2166136261;
+  for (const char of `ency:${day}`) seed = Math.imul(seed ^ char.charCodeAt(0), 16777619) >>> 0;
+  const shuffled = [...items].sort((a, b) => key(a).localeCompare(key(b), 'en'));
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    const j = Math.floor(seed / 4294967296 * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+// Sample the full portrait-backed report speaker pool each day, keeping richer
+// voting cards first. The donor card rotates through the available donor pool.
 async function renderFrontEncy(dayIdx, todayReport, don) {
   const n = reportsIndex.length;
   const order = reportsIndex.map((_, i) => reportsIndex[(dayIdx + i) % n]);
@@ -7841,10 +7852,10 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
   }));
   const seen = new Set();
   const pool = [];
-  for (let rank = 0; pool.length < 24 && ranked.some((r) => r.speakers[rank]); rank++) {
+  for (let rank = 0; ranked.some((r) => r.speakers[rank]); rank++) {
     for (const r of ranked) {
       const row = r.speakers[rank];
-      if (!row || seen.has(row[0]) || pool.length >= 24) continue;
+      if (!row || seen.has(row[0])) continue;
       seen.add(row[0]);
       pool.push({ name: row[0], count: row[1], topic: r.topic });
     }
@@ -7852,7 +7863,8 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
   // Cards with a voting record first: they carry the bill lists that give the
   // rail its shape, and a card with only a sentence would stand mostly empty.
   const fullCard = (p) => { const v = votesFor(p.name); return Boolean(v?.for?.length || v?.against?.length); };
-  const picks = [...pool.filter(fullCard), ...pool.filter((p) => !fullCard(p))].slice(0, 8);
+  const dailyPool = dailyEncyShuffle(pool, p => p.name);
+  const picks = [...dailyPool.filter(fullCard), ...dailyPool.filter((p) => !fullCard(p))].slice(0, 8);
 
   const voteList = (label, rows) => rows?.length ? `
     <div class="ency-votes-col">
@@ -7886,7 +7898,7 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
     </article>`;
   });
 
-  const topDonor = don?.top_donors?.[0];
+  const topDonor = dailyEncyShuffle(don?.top_donors || [], row => row[0])[0];
   if (topDonor) {
     const node = findMoneyNode("donor", topDonor[0]);
     cards.push(`<article class="report-card ency-card">
