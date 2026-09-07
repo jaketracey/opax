@@ -2071,6 +2071,10 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     title: 'Explore · OPAX',
     description: 'Play with the parliamentary record: the time machine, the record quiz, the donations ledger, who gets the grants and the money map.',
   },
+  discover: {
+    title: 'Discover patterns · OPAX',
+    description: 'Follow evidence behind donor and contract overlaps, concentrated political funding and government supplier concentrations. Investigation leads with source records and coverage limits.',
+  },
   chat: {
     title: 'Keep asking · OPAX',
     description: 'Follow-up questions on an answer from the Australian parliamentary record, each reply cited to the speeches it draws on.',
@@ -3224,7 +3228,7 @@ async function sitemapXml(env: Env): Promise<Response> {
       rows.push(`<url><loc>${escXml(`${SITE_ORIGIN}${path}`)}</loc>${mod}</url>`)
     }
     add('/')
-    for (const page of ['search', 'money', 'reports', 'explore', 'about', 'methods', 'stats', 'expenses']) add(`/${page}`)
+    for (const page of ['search', 'money', 'reports', 'explore', 'discover', 'about', 'methods', 'stats', 'expenses']) add(`/${page}`)
     for (const r of reports.reports) add(`/reports/${r.slug}`, r.updated)
     add('/subject/topic')
     for (const slug of Object.keys(TOPIC_NAMES)) add(`/subject/topic/${slug}`)
