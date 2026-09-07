@@ -578,6 +578,8 @@ export class KnowledgeMapEngine {
   }
   private viewOwnedFlag = false
   private focusOwnedFlag = false
+  /** Automatic overview scale. Phones can start closer without claiming the view. */
+  private fitScale = 1
   private fitDist = 420
   /**
    * The closest a framing move has taken the view. The reader's dolly floor is
@@ -1718,17 +1720,18 @@ export class KnowledgeMapEngine {
       .addScaledVector(this.offsetUp, oy * wpp)
   }
 
-  fit(animate = true) {
+  fit(animate = true, scale = 1) {
     // Asking for the whole map ends an opening choreography as surely as a drag.
     this.onViewClaimed?.()
     this.tween = null
     this.viewOwnedFlag = false
     this.focusOwnedFlag = false
+    this.fitScale = Math.max(1, Math.min(1.8, scale))
     this.releaseDives()
     if (this.nodeVisuals.size === 0) return
     this.updateWorldBounds()
     this.updateCamera()
-    const dist = this.fitDistance()
+    const dist = this.fitDistance() / this.fitScale
     this.fitDist = dist
     const target = this.offsetTarget(this.fitCentre, dist).clone()
     const to: View = {
@@ -2723,7 +2726,9 @@ export class KnowledgeMapEngine {
     this.renderer.setSize(rect.width, rect.height, false)
     this.camera.aspect = rect.width / rect.height
     this.camera.updateProjectionMatrix()
-    if (!this.viewOwnedFlag && this.nodeVisuals.size > 0) this.fit(false)
+    if (!this.viewOwnedFlag && this.nodeVisuals.size > 0) {
+      this.fit(false, rect.width <= 540 ? 1.3 : 1)
+    }
     this.renderDirty = true
   }
 
@@ -2812,7 +2817,7 @@ export class KnowledgeMapEngine {
         // under a panel. The change is a few percent over a whole swing.
         if (!this.viewOwnedFlag) {
           this.updateCamera()
-          const dist = this.fitDistance()
+          const dist = this.fitDistance() / this.fitScale
           this.fitDist = dist
           this.view.dist = dist
           this.distGoal = dist
