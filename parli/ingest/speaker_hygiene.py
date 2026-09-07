@@ -1,7 +1,7 @@
 """
 parli.ingest.speaker_hygiene -- who a speech is attributed to, made honest.
 
-Four loops over `speeches`, each idempotent, each logged to
+Five loops over `speeches`, each idempotent, each logged to
 `ext_committee_relinks` (the same audit table the committee resolver writes)
 and queued for the knowledge box in `ext_kb_patch_queue`:
 
@@ -26,6 +26,11 @@ and queued for the knowledge box in `ext_kb_patch_queue`:
                 the name), or a whole sentence captured as the speaker (cleared).
                 An entity inside a real name is unescaped ("Joldi&#263;" ->
                 "Joldić").
+  role_stub     rows filed under a role stub ("The DEPUTY SPEAKER") whose
+                speaker string names the member in the chair: "The DEPUTY
+                SPEAKER (Mr Mitchell)" was a person called "Mitchell". Relinked
+                to the member of that parliament and chamber with the surname
+                who served on the day; initials break a tie.
   committee_party
                 committee rows spoken by a member. The resolver links a senator
                 only on an exact full name, so a two-word surname from the
@@ -287,6 +292,54 @@ def loop_committee_party(db, members: Members, stats: Counter):
     return out
 
 
+ROLE_STUB_RE = re.compile(r"speaker|president|chair", re.I)
+
+
+def loop_role_stub(db, members: Members, stats: Counter):
+    """Rows filed under a role stub ("The DEPUTY SPEAKER") whose speaker string
+    names the person in the chair: "The DEPUTY SPEAKER (Mr Mitchell)" was linked
+    to the role and shown as a person called "Mitchell". Relink to the member of
+    that parliament and chamber whose surname it is and who served on the day;
+    initials ("Ms AE Burke", "Hon. BC Scott") break a tie on the first name.
+    -> [(speech_id, new_person_id, new_clean, reason, old_pid, old_clean)]"""
+    out = []
+    stubs = [r["person_id"] for r in db.execute("SELECT person_id, full_name FROM members WHERE NOT (person_id GLOB '[0-9]*')")
+             if ROLE_STUB_RE.search(r["full_name"] or "")]
+    if not stubs:
+        return out
+    served: dict[tuple, list] = defaultdict(list)   # (state, chamber, surname) -> members with dates
+    for m in db.execute("SELECT person_id, first_name, last_name, full_name, state, chamber, entered_house, left_house FROM members "
+                        "WHERE full_name LIKE '% %'"):
+        sur = (m["last_name"] or m["full_name"].split()[-1]).lower()
+        served[(state_of(m["state"]), m["chamber"], re.sub(r"[^a-z]", "", sur))].append(dict(m))
+    ph = ",".join("?" for _ in stubs)
+    rows = db.execute(f"SELECT speech_id, person_id, state, chamber, date, speaker_name_clean FROM speeches "
+                      f"WHERE person_id IN ({ph}) AND speaker_name_clean IS NOT NULL AND source != 'wragge_xml'", stubs).fetchall()
+    for r in rows:
+        toks = (r["speaker_name_clean"] or "").split()
+        if not toks or ROLE_STUB_RE.search(r["speaker_name_clean"]):
+            stats["role_stub_not_a_name"] += 1
+            continue
+        sur = re.sub(r"[^a-z]", "", toks[-1].lower())
+        initials = "".join(t.lower() for t in toks[:-1] if len(t) <= 3 and t.isalpha())
+        chamber = r["chamber"] if r["chamber"] in ("representatives", "senate") else r["chamber"]
+        cands = [m for m in served.get((state_of(r["state"]), chamber, sur), [])
+                 if (not m["entered_house"] or not r["date"] or m["entered_house"] <= r["date"])
+                 and (not m["left_house"] or not r["date"] or m["left_house"] >= r["date"])]
+        # a first name or initial in the string must agree with the member's
+        if initials:
+            cands = [m for m in cands if (m["first_name"] or m["full_name"])[:1].lower() == initials[:1]]
+        elif len(toks) > 1:
+            cands = [m for m in cands if (m["first_name"] or m["full_name"].split()[0]).lower() == toks[0].lower()]
+        if len({m["person_id"] for m in cands}) != 1:
+            stats["role_stub_ambiguous" if cands else "role_stub_unmatched"] += 1
+            continue
+        m = cands[0]
+        out.append((r["speech_id"], m["person_id"], m["full_name"], "role_stub_relink", r["person_id"], r["speaker_name_clean"]))
+        stats["role_stub_relinked"] += 1
+    return out
+
+
 # ── apply ────────────────────────────────────────────────────────────────────
 
 RELINKS_DDL = """
@@ -308,7 +361,7 @@ CREATE TABLE IF NOT EXISTS ext_ingest_log (
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0], formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--db", default=os.path.expanduser("~/.cache/autoresearch/parli.db"))
-    ap.add_argument("--loops", default="jurisdiction,fullname,junk,committee_party")
+    ap.add_argument("--loops", default="jurisdiction,fullname,junk,committee_party,role_stub")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
     loops = [l.strip() for l in args.loops.split(",") if l.strip()]
@@ -338,6 +391,10 @@ def main() -> None:
     if "junk" in loops:
         for sid, pid, clean, reason, old_pid, old_clean, new_type in loop_junk(db, stats):
             changes[sid] = (pid, clean, reason, old_pid, old_clean, new_type)
+    if "role_stub" in loops:
+        for sid, pid, clean, reason, old_pid, old_clean in loop_role_stub(db, members, stats):
+            if sid not in changes:
+                changes[sid] = (pid, clean, reason, old_pid, old_clean, None)
     party_changes: dict[int, tuple] = {}   # speech_id -> (pid, clean, party_canonical, reason, old_pid, old_clean)
     if "committee_party" in loops:
         for sid, pid, clean, party, reason, old_pid, old_clean in loop_committee_party(db, members, stats):

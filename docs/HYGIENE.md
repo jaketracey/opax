@@ -36,6 +36,8 @@ Found while redesigning the topic page's "arc of this debate", which shows one p
 | State hansard bodies in the knowledge box still opened with the reporter's banner ("Mr DAVID MEHAN ( The Entrance ) ( 16:43 :38 ):") because the `matching_speaker_banner` rule post-dated their push | NSW 39,726 rows; VIC 2; SA and QLD clean | `text_hygiene --rule matching_speaker_banner --force` per source | Re-cleaned and the text re-sent (`text:` reason); the portal also strips any banner it still sees, for display only |
 | A senator's committee evidence carried no party, and one senator was never linked: the committee source records no party, and the resolver links only on an exact full name ("Nampijinpa Price") | 123,257 rows without a party; 1,023 unlinked | `speaker_hygiene` committee_party | Member's canonical party written to `party_canonical`; a name that is the suffix of exactly one federal member's full name is linked |
 | The Worker dropped every `person_id` because the corpus stores ids as text and it accepted only numbers; the portal then took a linked senator for a witness | every speech | `portal/src/index.ts` | Text ids pass through; the portal trusts `speaker_type` whenever the record carries one |
+| A person called "Perrett": the Queensland, SA and Victorian hansards name a member by surname alone ("Mr PERRETT", "The Hon. K.J. MAHER"), so the loader made a surname-only stub per name and the site showed 586 people with no first name | 349 stubs with speeches; 31,009 speeches in the box | `state_rosters` (docs below) | Wikidata's roster of each chamber: 260 stubs named (74,051 speeches), 21 shouting names recased ("Bev McARTHUR"), 73 fragment stubs from split NSW lines ("KINGHAM", "SON") cleared (494 rows); 8 left where Wikidata has no term (Sarah Game, the 2024 Queensland intake, Jeremy Buckingham's current seat) |
+| The member in the chair filed under the role: "The DEPUTY SPEAKER (Mr Mitchell)" was linked to `wragge_the_deputy_speaker` and shown as a person called "Mitchell" | 6,056 rows on role stubs with a name | `speaker_hygiene` role_stub | Relinked to the member of that parliament and chamber with the surname who served on the day, initials or first name agreeing (2,348 rows); the rest stay on the role |
 
 Left alone, on purpose:
 
@@ -68,6 +70,9 @@ PYTHONPATH=. python3 -m parli.ingest.speaker_hygiene --db ~/.cache/autoresearch/
 PYTHONPATH=. python3 -m parli.ingest.text_hygiene --db ~/.cache/autoresearch/parli.db --source openaustralia --rule glued_capitalised_word [--dry-run]
 PYTHONPATH=. python3 -m parli.ingest.text_hygiene --db ~/.cache/autoresearch/parli.db --source nsw_hansard --rule matching_speaker_banner --force   # re-send text already clean in the db
 PYTHONPATH=. python3 -m parli.ingest.speaker_hygiene --db ~/.cache/autoresearch/parli.db --loops committee_party
+PYTHONPATH=. python3 -m parli.ingest.state_rosters fetch   --db ~/.cache/autoresearch/parli.db   # Wikidata, ~40 s
+PYTHONPATH=. python3 -m parli.ingest.state_rosters resolve --db ~/.cache/autoresearch/parli.db [--dry-run]
+PYTHONPATH=. python3 -m parli.ingest.speaker_hygiene --db ~/.cache/autoresearch/parli.db --loops role_stub,junk   # after resolve, so the chair's stubs have full names
 nohup env PYTHONPATH=. python3 scripts/arag_patch_speakers.py --env ~/opax/.env > /tmp/kb_patch.log 2>&1 & echo $! > /tmp/kb_patch.pid
 python3 - < scripts/export_speakers.py > /tmp/speakers.json     # then copy to portal/public/speakers.json
 ```
@@ -79,6 +84,20 @@ again (it is resumable and skips what is done). When the queue is drained: bump
 `CACHE_EPOCH` in `portal/wrangler.jsonc`, `npm run deploy`, warm the cache from
 Australia. `link_speakers` must never be re-run over committee rows without
 `committee_witnesses resolve` after it.
+
+## State rosters
+
+`parli.ingest.state_rosters` holds one SPARQL query per state chamber (position held,
+P39, with term dates, district, party, gender, birth year; living members whose term
+ended in 2010 or later) in `ext_state_roster`. `resolve` matches each surname-only stub
+to its chamber's roster, falling back to the whole state for a member who moved between
+the houses: surname (whole tokens only, so a fragment matches nobody), a term overlapping
+the stub's speeches, then the stub's electorate, the initials in the raw string, and the
+honorific's gender. One survivor names the stub; the stub's id is kept because the site
+addresses people by name. The old bare-surname URL (`/subject/person/Perrett`) redirects
+in the portal to the one holder of that surname in speakers.json, or lists the holders.
+What Wikidata lacks (a member elected in 2024 without a P39 statement) stays a surname
+until the roster is supplemented from the parliament's own member list.
 
 ## Probe
 
