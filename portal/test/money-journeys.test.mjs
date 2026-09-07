@@ -55,7 +55,7 @@ function setup({ reduced = false, journeys = defaultJourneys(), build, options =
   let timerId = 0; const timers = new Map(); const timerHistory = new Map(); const observers = [];
   const scenes = []; const routes = []; let clears = 0; let pauses = 0;
   const map = { presentScene(scene) { scenes.push(scene); return available; }, clearScene() { clears++; }, pauseScene() { pauses++; } };
-  const context = { buildMoneyJourneys: build || (() => journeys), matchMedia: () => media, document,
+  const context = { AbortController, buildMoneyJourneys: build || (() => journeys), matchMedia: () => media, document,
     setTimeout(fn, ms) { const id = ++timerId; timers.set(id, { fn, ms }); timerHistory.set(id, fn); return id; },
     clearTimeout(id) { timers.delete(id); },
     IntersectionObserver: class { constructor(callback) { this.callback = callback; this.disconnected = false; observers.push(this); } observe() {} disconnect() { this.disconnected = true; } },
@@ -212,4 +212,34 @@ test('opening the native selector pauses playback without replacing the focused 
   assert.equal(h.timers.size,0);
   assert.equal(h.story.querySelector('[data-focus]'),target);
   assert.ok(h.pauses()>0);
+});
+
+test('generated narration follows the selected subject and cannot change its scene', async () => {
+  const requests=[];
+  const h=setup({build:selectableJourneys,options:{loadStory:(id,focus,signal)=>new Promise(resolve=>requests.push({focus,signal,resolve}))}});
+  h.choose();pick(h,'a');assert.equal(requests.length,1);
+  pick(h,'b');assert.equal(requests[0].signal.aborted,true);
+  const text=label=>({steps:[0,1,2].map(i=>({title:`${label} story ${i}`,body:`Specific story for ${label}`}))});
+  requests[0].resolve(text('wrong'));requests[1].resolve(text('Beta'));
+  await new Promise(resolve=>setImmediate(resolve));
+  h.click('next');assert.match(h.story.innerHTML,/Beta story 1/);assert.doesNotMatch(h.story.innerHTML,/wrong story/);
+  assert.equal(h.scenes.at(-1).focusId,'b:1');
+  h.handle.destroy();
+});
+
+test('story failures retain the data guide and destruction aborts pending narration', async () => {
+  const requests=[];
+  const h=setup({build:selectableJourneys,options:{loadStory:(id,focus,signal)=>new Promise((resolve,reject)=>requests.push({signal,reject}))}});
+  h.choose();pick(h,'a');requests[0].reject(new Error('unavailable'));
+  await new Promise(resolve=>setImmediate(resolve));h.click('next');
+  assert.match(h.story.innerHTML,/a step 1/);assert.match(h.story.innerHTML,/written story is unavailable/);
+  pick(h,'b');h.handle.destroy();assert.equal(requests[1].signal.aborted,true);
+});
+
+test('returning to a subject before its cancelled request settles keeps the new request cancellable', async () => {
+ const requests=[];
+ const h=setup({build:selectableJourneys,options:{loadStory:(id,focus,signal)=>new Promise(resolve=>requests.push({signal,resolve}))}});
+ h.choose();pick(h,'a');pick(h,'b');pick(h,'a');
+ requests[0].resolve({steps:[]});await new Promise(resolve=>setImmediate(resolve));
+ h.handle.destroy();assert.equal(requests[2].signal.aborted,true);
 });

@@ -22,3 +22,9 @@ Validation commands:
 - `npm --prefix portal run check`
 
 Browser checks cover desktop/mobile layout, lens selection, animation, interruption, year changes and shared URLs. The map and journey module URLs carry release revisions in `app.js`; update them with subsequent module releases. Deploy through `npm run deploy` from `portal/` to refresh stamped assets.
+
+## Generated stories
+
+Selecting a subject requests `/api/journey-story` with only the jurisdiction, lens and focus ID. The Worker rebuilds the journey from its own published graph assets and supplies scene-specific facts, exact amounts, displayed-link shares and dated windows to the existing knowledge-box `openai-compatible` model. This uses the same `@preset/opax` DeepSeek V4 Flash configuration as main requests (verified as `deepseek/deepseek-v4-flash-0731`). No client-supplied amounts or prose enter the prompt.
+
+One request writes the whole sequence; the model only supplies titles and body text. Graph scenes, amounts, links and charts remain deterministic. Output must have the expected step count, valid evidence IDs for each scene, bounded plain text and numbers present in the supplied context. These checks constrain output but do not independently prove every qualitative interpretation. A rejected draft gets one repair attempt with the same model. Failures keep the factual guide and show an unavailable status. Requests use the existing follow-up rate limiter; valid stories cache for seven days with keys covering the evidence and prompt version. Selecting another subject or leaving the journey aborts the browser request, and late responses cannot replace the current subject's story. A small AI-written label distinguishes generated text from the record.

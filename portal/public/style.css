@@ -4435,3 +4435,5 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .journey-party-link i { display:inline-block; flex:0 0 8px; width:8px; height:8px; border-radius:50%; align-self:center; }
 .journey-party-link:hover { text-decoration-color:currentColor; }
 .journey-party-link:focus-visible { outline:2px solid var(--gold); outline-offset:3px; border-radius:2px; }
+.journey-story-status { margin:.8rem 0 0; font:400 .7rem/1.45 var(--sans); color:var(--ink-soft); }
+.journey-story-status:empty { display:none; }

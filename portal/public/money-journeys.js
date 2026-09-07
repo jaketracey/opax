@@ -1,4 +1,4 @@
-import { buildMoneyJourneys } from './money-journeys-data.js?v=chart-2';
+import { buildMoneyJourneys } from './money-journeys-data.js?v=story-1';
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const money = (value) => Number(value).toLocaleString('en-AU', { style: 'currency', currency: 'AUD', notation: 'compact', maximumFractionDigits: 1 });
@@ -15,6 +15,38 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
   const stopTimer = () => { if (timer !== null) clearTimeout(timer); timer = null; };
   controls.innerHTML = journeys.length ? `<div class="journey-lenses" role="group" aria-label="Guided money map journeys">${journeys.map((journey) => `<button type="button" data-journey="${esc(journey.id)}" aria-pressed="false"><span>${esc(journey.title)}</span><small>${esc(journey.description)}</small></button>`).join('')}</div>` : '';
 
+  const stories = new Map();
+  let pendingStory = null;
+  const storyKey = () => active?.selection ? `${active.id}:${active.selection}` : '';
+  const narration = () => stories.get(storyKey())?.steps?.[step];
+  const storyStatus = () => !active?.steps.length || !options.loadStory ? '' : stories.get(storyKey())?.steps ? 'AI-written guide · Based on these map records' : stories.get(storyKey())?.error ? 'Showing the map guide. The written story is unavailable.' : 'Finding the story in these records…';
+  function loadStory() {
+    if (!options.loadStory || !active?.steps.length) return;
+    const key = storyKey();
+    if (stories.has(key) || pendingStory?.key === key) return;
+    pendingStory?.controller.abort();
+    const expectedSteps = active.steps.length;
+    const controller = new AbortController();
+    pendingStory = {key,controller};
+    Promise.resolve(options.loadStory(active.id,active.selection,controller.signal)).then(result => {
+      if (destroyed || controller.signal.aborted) return;
+      if (!Array.isArray(result?.steps) || result.steps.length !== expectedSteps || result.steps.some(s=>typeof s.title!=='string' || typeof s.body!=='string')) throw new Error('Invalid story');
+      stories.set(key,result);
+      if (storyKey() === key) {
+        const current = narration();
+        const heading = story.querySelector('.journey-narrative h3');
+        const body = story.querySelector('.journey-narrative > p');
+        if (heading && current) heading.textContent = current.title;
+        if (body && current) body.textContent = current.body;
+        const status = story.querySelector('.journey-story-status');
+        if (status) status.textContent = storyStatus();
+      }
+    }).catch(() => {
+      if (destroyed || controller.signal.aborted) return;
+      stories.set(key,{error:true});
+      if (storyKey() === key) { const status=story.querySelector('.journey-story-status'); if(status) status.textContent=storyStatus(); }
+    }).finally(() => { if(pendingStory?.controller===controller) pendingStory=null; });
+  }
   let disposePicker = () => {};
   function render() {
     disposePicker();
@@ -30,7 +62,8 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
       enhancePicker();
       return;
     }
-    const current = active.steps[step];
+    const generated = narration();
+    const current = { ...active.steps[step], ...(generated ? {title:generated.title,body:generated.body} : {}) };
     const metric = current.metric;
     const breakdown = (current.breakdown || []).filter(row => Number.isFinite(row.value) && row.value > 0);
     const maximum = Math.max(1, ...breakdown.map(row => row.value));
@@ -38,7 +71,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     story.innerHTML = `${header}${chooser}
       <div class="journey-steps" role="group" aria-label="Journey steps">${active.steps.map((item, i) => `<button type="button" data-step="${i}" aria-label="Step ${i + 1}: ${esc(item.title)}"${i === step ? ' aria-current="step"' : ''}>${i + 1}</button>`).join('')}</div>
       <div class="journey-narrative" aria-live="polite" aria-atomic="true"><h3>${esc(current.title)}</h3><p>${esc(current.body)}</p>${chart}${!chart && metric && Number.isFinite(Number(metric.value)) ? `<div class="journey-metric"><strong>${esc(metric.format === 'currency' ? money(metric.value) : Number(metric.value).toLocaleString('en-AU'))}</strong><span>${esc(metric.label)}</span></div>` : ''}</div>
-      <div class="journey-source-links">${(current.links || []).filter((link) => safeLink(link.href)).map((link) => `<a href="${esc(link.href)}">${esc(link.label)} <span aria-hidden="true">↗</span></a>`).join('')}</div>
+      <p class="journey-story-status" role="status">${esc(storyStatus())}</p><div class="journey-source-links">${(current.links || []).filter((link) => safeLink(link.href)).map((link) => `<a href="${esc(link.href)}">${esc(link.label)} <span aria-hidden="true">↗</span></a>`).join('')}</div>
       <div class="journey-playback"><button type="button" data-action="previous" aria-label="Previous step"${step === 0 ? ' disabled' : ''}>←</button><button type="button" data-action="play"${reduced.matches ? ' disabled' : ''}>${playing ? 'Pause' : step === active.steps.length - 1 ? 'Replay journey' : reason ? 'Continue journey' : 'Play journey'}</button><button type="button" data-action="next" aria-label="Next step"${step === active.steps.length - 1 ? ' disabled' : ''}>→</button></div>
       <div class="journey-progress" aria-hidden="true">${playing ? '<span></span>' : ''}</div><p class="journey-help">${esc(reason || (reduced.matches ? 'Animation is off. Use the arrows to explore each step.' : playing ? 'The next view opens in 7 seconds. Touch the map to pause.' : 'Step through, or play the journey. Drag the map to explore.'))}</p>`;
     enhancePicker();
@@ -138,11 +171,11 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     stopTimer(); playing = false; reason = ''; active = journey;
     step = Math.max(0, Math.min(journey.steps.length - 1, Math.trunc(Number(requestedStep)) || 0));
     render();
-    if (active.steps.length) present(); else map.clearScene();
+    if (active.steps.length) { present(); loadStory(); } else { pendingStory?.controller.abort(); pendingStory=null; map.clearScene(); }
     if (announce) options.onRoute?.(active.id, step, active.selection || '');
   }
   function exit() {
-    stopTimer(); playing = false; active = null; reason = ''; render(); map.clearScene(); options.onRoute?.(null, 0, '');
+    pendingStory?.controller.abort(); pendingStory=null; stopTimer(); playing = false; active = null; reason = ''; render(); map.clearScene(); options.onRoute?.(null, 0, '');
   }
   function move(next) {
     if (!active || next < 0 || next >= active.steps.length) return;
@@ -219,11 +252,11 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
       if (id === active?.id && Number(requestedStep) === step && (active.selection || '') === (focus || '')) return;
       if (id) { selections[id] = focus || ''; journeys = buildMoneyJourneys(data, selections); }
       if (id) choose(id, requestedStep, false);
-      else if (active) { stopTimer(); playing = false; active = null; render(); map.clearScene(); }
+      else if (active) { pendingStory?.controller.abort(); pendingStory=null; stopTimer(); playing = false; active = null; render(); map.clearScene(); }
     },
     destroy() {
       if (destroyed) return;
-      destroyed = true; disposePicker(); stopTimer(); observer?.disconnect();
+      destroyed = true; pendingStory?.controller.abort(); pendingStory=null; disposePicker(); stopTimer(); observer?.disconnect();
       controls.removeEventListener('click', onLens); story.removeEventListener('click', onAction); story.removeEventListener('change', onFocus); story.removeEventListener('focusin', onPickerOpen); story.removeEventListener('pointerdown', onPickerOpen); story.removeEventListener('keydown', onKey);
       document.removeEventListener('visibilitychange', visibility); reduced.removeEventListener('change', motion);
       if (active) map.clearScene();

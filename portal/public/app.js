@@ -1159,6 +1159,11 @@ function attachMoneyJourneys(params = new URLSearchParams()) {
   if (!moneyMapHandle || !moneyJourneyModule || !moneyJourneyData) return;
   moneyJourneys?.destroy();
   moneyJourneys = moneyJourneyModule.mountMoneyJourneys($("money-journey-controls"), $("money-journey-story"), $("money-stage"), moneyJourneyData, moneyMapHandle, {
+    async loadStory(lens, focus, signal) {
+      const response = await fetch('/api/journey-story', {method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({jurisdiction:moneyMapJur || 'federal',lens,focus}),signal});
+      if (!response.ok) throw new Error('Story unavailable');
+      return response.json();
+    },
     initialJourney: params.get("journey"), initialStep: params.get("step"), initialFocus: params.get("focus"),
     onRoute(id, step, focus) {
       const next = new URLSearchParams(location.search);
@@ -1194,7 +1199,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule] = await Promise.all([import("/money-map.js?v=journeys-3"), loadMoneyFile(jur), import("/money-journeys.js?v=chart-2")]);
+    const [{ mountMoneyMap }, data, journeysModule] = await Promise.all([import("/money-map.js?v=journeys-3"), loadMoneyFile(jur), import("/money-journeys.js?v=story-1")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
