@@ -39,9 +39,13 @@ ten a second, resumable; pid and log at `/tmp/kb_patch.pid`, `/tmp/kb_patch.log`
 `arag_sync.map_speech` now emits the `speaker_type` classification and
 `witness_position` / `witness_organisation` metadata, so future pushes match.
 
-Measured 2026-09-06 (dry run before the all-fragment fetch): 87,935 witness rows, 75,966
-matched from the first fragment alone; 124,546 senator rows, 115,517 renamed to full
-names; 12,119 unlinked from members and 16,076 from stubs.
+Measured 2026-09-06, final: 11,592 people from 101 hearings' attendance blocks (2 hearings
+carry none); 87,935 witness rows, 85,825 matched (98%), 2,110 left with the transcript's
+surname (Mr Kean, Mr Cook, Ms Wooldridge lead); 124,546 senator rows, 115,517 renamed to
+full names; 12,119 unlinked from members and 16,076 from stubs. The knowledge-box patch
+job (with the speaker and text hygiene loops queued behind it) sent 103,313 resources
+overnight with 0 failures; 165,729 queued slugs were never in the box (short exchanges
+under the sync's 200-character floor, deduped copies). CACHE_EPOCH bumped 2026-09-07.
 
 ## On the portal
 

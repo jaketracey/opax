@@ -40,6 +40,11 @@ Left alone, on purpose:
 - "Greensamendment"-style joins (capital followed by a glued lowercase word): no safe
   rule; the reverse of the fixed case.
 
+Outcome: 269,042 slugs queued across all loops; the patch job sent 103,313 (0 failed) in
+6.3 hours at 12 a second; 165,729 were not in the box. speakers.json rebuilt (2,445 names,
+1,163 added, 781 removed). CACHE_EPOCH bumped to 2026-09-07-witnesses-hygiene and the
+cache warmed.
+
 ## Runbook
 
 All on the desktop box after `rsync -a --exclude __pycache__ parli/ desktop:~/opax-sync/parli/`
