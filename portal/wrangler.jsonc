@@ -11,7 +11,7 @@
     "binding": "ASSETS",
     // API routes must reach the Worker even though assets exist; so must the
     // share images, which are drawn on request (src/og-render.ts).
-    "run_worker_first": ["/api/*", "/og/*"]
+    "run_worker_first": ["/api/*", "/og/*", "/ingest/*"]
   },
 
   "observability": {
