@@ -1194,7 +1194,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule] = await Promise.all([import("/money-map.js?v=journeys-2"), loadMoneyFile(jur), import("/money-journeys.js?v=picker-2")]);
+    const [{ mountMoneyMap }, data, journeysModule] = await Promise.all([import("/money-map.js?v=journeys-3"), loadMoneyFile(jur), import("/money-journeys.js?v=chart-1")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -9955,7 +9955,6 @@ async function openDocPage(slug, manageFocus) {
   $("doc-brief").hidden = true;
   $("doc-bill").hidden = true;
   $("doc-bill").replaceChildren();
-  $("doc-record-head").hidden = true;
   $("doc-caveat").hidden = true;
   $("doc-cite-panel").hidden = true;
   $("doc-cite").setAttribute("aria-expanded", "false");
@@ -10050,8 +10049,6 @@ async function openDocPage(slug, manageFocus) {
     if (doc.summary) {
       $("doc-brief-text").textContent = doc.summary;
       $("doc-brief").hidden = false;
-      // Only worth naming when something else stands above it.
-      $("doc-record-head").hidden = false;
     }
     renderDocBillPanel(doc, slug);
     renderDocText(doc);
