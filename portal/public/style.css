@@ -4381,3 +4381,13 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 #money-stage.has-journey .mm-scrub { display: none; }
 #money-stage.has-journey .rp-map3d-label { max-width: 210px; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 700px) { #money-stage.has-journey .rp-map3d-label { max-width: 160px; } }
+
+/* A guided lens starts with the reader's choice, not an editorial example. */
+.journey-selector { margin: .8rem 0 1rem; min-width: 0; }
+.journey-selector label { display: block; margin-bottom: .4rem; color: var(--ink-soft); font: 600 .75rem/1.4 var(--sans); }
+.journey-selector select { width: 100%; min-width: 0; min-height: 42px; padding: .6rem 1.7rem .6rem .65rem; border: 1px solid var(--line-strong); border-radius: 3px; background: var(--paper); color: var(--navy); font: 500 .8rem/1.4 var(--sans); text-overflow: ellipsis; }
+.journey-selector select:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.journey-choice-empty h3 { margin: 1rem 0 .7rem; font: 700 1.45rem/1.25 var(--serif); color: var(--navy); }
+.journey-choice-empty > p { font-size: .85rem; line-height: 1.6; }
+.journey-choice-empty .journey-help { margin-top: 1.2rem; font-size: .75rem; }
+@media (max-width: 700px) { .journey-selector { margin-top: 0; padding-right: 1.9rem; } .journey-choice-empty h3 { font-size: 1.2rem; } }

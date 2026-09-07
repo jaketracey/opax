@@ -40,7 +40,14 @@ function dataView(data) {
   return { nodes, edges: clean, companies, giving, outgoing, jurisdiction: data?.meta?.jurisdiction || 'federal' };
 }
 
-function publicMoneyJourney(view) {
+function selection(candidates, requested, value, label, selectorLabel) {
+  return {
+    choices: candidates.map(item => ({ value: value(item), label: label(item) }))
+      .sort((a, b) => a.label.localeCompare(b.label, 'en') || a.value.localeCompare(b.value, 'en')),
+    selected: candidates.find(item => value(item) === requested), selectorLabel,
+  };
+}
+function publicMoneyJourney(view, requested) {
   const companyIds = new Set(view.companies.map(n => n.id));
   const incoming = view.edges.filter(e => view.nodes.get(e.source).kind === 'grantor'
     && companyIds.has(e.target) && view.outgoing.get(e.target)?.length
@@ -48,8 +55,13 @@ function publicMoneyJourney(view) {
   const isContract = edge => edge.flow === 'contracts' || view.nodes.get(edge.source).flow === 'contracts';
   incoming.sort((a, b) => Number(isContract(b)) - Number(isContract(a))
     || b.total - a.total || a.key.localeCompare(b.key, 'en'));
-  const edge = incoming[0];
-  if (!edge) return null;
+  if (!incoming.length) return null;
+  const pick = selection(incoming, requested, e => e.key,
+    e => `${view.nodes.get(e.target).label} — ${view.nodes.get(e.source).label}`, 'Recipient');
+  const base = { id: 'public-money', title: 'Contracts & grants', description: 'Choose a recipient. Follow the money in and out.',
+    choices: pick.choices, selectorLabel: pick.selectorLabel, selection: pick.selected?.key || '', steps: [] };
+  const edge = pick.selected;
+  if (!edge) return base;
   const donor = view.nodes.get(edge.target), hub = view.nodes.get(edge.source);
   const contracts = edge.flow === 'contracts' || hub.flow === 'contracts';
   const noun = contracts ? 'contract awards' : 'grant awards';
@@ -58,8 +70,7 @@ function publicMoneyJourney(view) {
   const links = [donorLink(donor)];
   if (contracts && view.jurisdiction === 'federal') links.push({ label: 'Explore its supplier profiles', href: `/subject/supplier?donor=${encodeURIComponent(donor.id)}` });
   return {
-    id: 'public-money', title: contracts ? 'Follow a contract' : 'Follow a grant',
-    description: 'Public money in. Party funding out.',
+    ...base,
     steps: [
       { title: `Start at ${hub.label}`, body: `Follow the line to ${donor.label}. It shows recorded ${noun}, not payments.`, metric: metric(`Recorded ${noun}`, edge.total), scene: scene(hub.id, [donor.id], [edge]) },
       { title: `Meet ${donor.label}`, body: 'This organisation also appears in the funding record. Open its profile to inspect the connection and supporting records.', scene: scene(donor.id, [hub.id], [edge]), links },
@@ -69,16 +80,19 @@ function publicMoneyJourney(view) {
   };
 }
 
-function multiplePartiesJourney(view) {
+function multiplePartiesJourney(view, requested) {
   const candidates = view.companies.filter(n => view.outgoing.get(n.id).length >= 2);
   candidates.sort((a, b) => view.outgoing.get(b.id).length - view.outgoing.get(a.id).length
     || amount(view.outgoing.get(b.id)) - amount(view.outgoing.get(a.id)) || compareId(a, b));
-  const donor = candidates[0];
-  if (!donor) return null;
+  if (!candidates.length) return null;
+  const pick = selection(candidates, requested, n => n.id, n => n.label, 'Organisation');
+  const base = { id: 'multiple-parties', title: 'More than one party', description: 'Choose an organisation and compare its connections.',
+    choices: pick.choices, selectorLabel: pick.selectorLabel, selection: pick.selected?.id || '', steps: [] };
+  const donor = pick.selected;
+  if (!donor) return base;
   const all = view.outgoing.get(donor.id), shown = all.slice(0, 4), first = shown[0], second = shown[1];
   return {
-    id: 'multiple-parties', title: 'More than one party',
-    description: 'Look beyond a company’s biggest connection.',
+    ...base,
     steps: [
       { title: `Start with ${donor.label}`, body: `Its funding reaches several parties. Start with the ${shown.length} largest connections shown here.`, metric: metric('Parties linked in this record', all.length, 'number'), scene: scene(donor.id, shown.map(e => e.target), shown), links: [donorLink(donor)] },
       { title: `Its largest link: ${view.nodes.get(first.target).label}`, body: 'This is its largest recorded party connection across the years covered by the map.', metric: metric('Recorded receipts', first.total), scene: scene(first.target, [donor.id], [first]) },
@@ -88,7 +102,7 @@ function multiplePartiesJourney(view) {
   };
 }
 
-function industryJourney(view) {
+function industryJourney(view, requested) {
   const groups = new Map();
   for (const donor of view.companies) {
     if (!view.outgoing.get(donor.id).length) continue;
@@ -98,15 +112,18 @@ function industryJourney(view) {
   const candidates = [...groups.entries()].filter(([, ns]) => ns.length >= 2)
     .map(([industry, ns]) => ({ industry, nodes: ns.sort((a, b) => amount(view.outgoing.get(b.id)) - amount(view.outgoing.get(a.id)) || compareId(a, b)).slice(0, 3) }));
   candidates.sort((a, b) => b.nodes.reduce((s, n) => s + amount(view.outgoing.get(n.id)), 0) - a.nodes.reduce((s, n) => s + amount(view.outgoing.get(n.id)), 0) || a.industry.localeCompare(b.industry, 'en'));
-  const group = candidates[0];
-  if (!group) return null;
+  if (!candidates.length) return null;
+  const pick = selection(candidates, requested, g => g.industry, g => g.industry.replaceAll('_', ' '), 'Industry');
+  const base = { id: 'industry', title: 'Explore an industry', description: 'A shared industry. Different connections.',
+    choices: pick.choices, selectorLabel: pick.selectorLabel, selection: pick.selected?.industry || '', steps: [] };
+  const group = pick.selected;
+  if (!group) return base;
   const selected = group.nodes, first = selected[0], second = selected[1];
   const edges = selected.flatMap(n => view.outgoing.get(n.id).slice(0, 3));
   const parties = unique(edges.map(e => e.target));
   const industry = group.industry.replaceAll('_', ' ');
   return {
-    id: 'industry', title: `Explore ${industry}`,
-    description: 'A shared industry. Different connections.',
+    ...base,
     steps: [
       { title: `${selected.length} organisations in ${industry}`, body: 'Look at their party connections together, then zoom in on each organisation. Sharing an industry does not mean they act together.', scene: scene(first.id, [...selected.map(n => n.id), ...parties], edges) },
       { title: `First, ${first.label}`, body: 'Follow its largest party connections. Notice which destinations stand out.', scene: scene(first.id, view.outgoing.get(first.id).slice(0, 3).map(e => e.target), view.outgoing.get(first.id).slice(0, 3)), links: [donorLink(first)] },
@@ -126,7 +143,7 @@ function yearValue(edge, from, to) {
   return total;
 }
 
-function timeJourney(view) {
+function timeJourney(view, requested) {
   const years = unique(view.giving.flatMap(e => Object.entries(e.byYear || {})
     .filter(([key, cell]) => /^(19|20)\d{2}$/.test(key) && Array.isArray(cell) && finite(cell[0]) && cell[0] > 0)
     .map(([key]) => Number(key)))).sort((a, b) => a - b);
@@ -139,15 +156,19 @@ function timeJourney(view) {
     return { node, edges, before: edges.reduce((s, e) => s + yearValue(e, earlier.from, earlier.to), 0), after: edges.reduce((s, e) => s + yearValue(e, later.from, later.to), 0) };
   }).filter(c => c.before > 0 && c.after > 0);
   candidates.sort((a, b) => Math.abs(b.after - b.before) - Math.abs(a.after - a.before) || compareId(a.node, b.node));
-  const item = candidates[0];
-  if (!item) return null;
+  if (!candidates.length) return null;
+  const pick = selection(candidates, requested, c => c.node.id, c => c.node.label, 'Organisation');
+  const base = { id: 'over-time', title: 'Turn back the clock', description: `Choose an organisation. Compare equal ${width}-year windows.`,
+    choices: pick.choices, selectorLabel: pick.selectorLabel, selection: pick.selected?.node.id || '', steps: [] };
+  const item = pick.selected;
+  if (!item) return base;
   const { node } = item;
   const beforeEdges = item.edges.filter(e => yearValue(e, earlier.from, earlier.to) > 0);
   const afterEdges = item.edges.filter(e => yearValue(e, later.from, later.to) > 0);
   const all = item.edges.filter(e => beforeEdges.includes(e) || afterEdges.includes(e));
   const label = window => window.from === window.to ? String(window.from) : `${window.from}–${window.to}`;
   return {
-    id: 'over-time', title: 'Turn back the clock', description: `Compare two equal ${width}-year windows for ${node.label}.`,
+    ...base,
     steps: [
       { title: `Earlier: ${label(earlier)}`, body: `${node.label}, in the earlier window. Years mark the start of a financial year, or the year of an election return.`, metric: metric('Receipts in this window', item.before), scene: scene(node.id, beforeEdges.map(e => e.target), beforeEdges, earlier) },
       { title: `Later: ${label(later)}`, body: 'Watch the same organisation in a later window of equal length. Only receipts dated within this window count.', metric: metric('Receipts in this window', item.after), scene: scene(node.id, afterEdges.map(e => e.target), afterEdges, later) },
@@ -156,8 +177,8 @@ function timeJourney(view) {
   };
 }
 
-export function buildMoneyJourneys(data) {
+export function buildMoneyJourneys(data, selections = {}) {
   const view = dataView(data);
   if (!view.companies.length) return [];
-  return [publicMoneyJourney(view), multiplePartiesJourney(view), industryJourney(view), timeJourney(view)].filter(Boolean);
+  return [publicMoneyJourney(view, selections['public-money']), multiplePartiesJourney(view, selections['multiple-parties']), industryJourney(view, selections.industry), timeJourney(view, selections['over-time'])].filter(Boolean);
 }

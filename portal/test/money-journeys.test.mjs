@@ -24,13 +24,13 @@ function element(focusLog) {
     get: () => html,
     set(value) {
       html = value;
-      children = [...value.matchAll(/<button\b([^>]*)>/g)].map((match) => {
+      children = [...value.matchAll(/<(button|select)\b([^>]*)>/g)].map((match) => {
         const dataset = {}; const attributes = {};
-        for (const attr of match[1].matchAll(/([\w-]+)="([^"]*)"/g)) {
+        for (const attr of match[2].matchAll(/([\w-]+)="([^"]*)"/g)) {
           attributes[attr[1]] = attr[2];
           if (attr[1].startsWith('data-')) dataset[attr[1].slice(5)] = attr[2];
         }
-        const button = { tagName: 'BUTTON', dataset, attributes, disabled: /\sdisabled(?:\s|$)/.test(match[1]),
+        const button = { tagName: match[1].toUpperCase(), id: attributes.id, value: '', dataset, attributes, disabled: /\sdisabled(?:\s|$)/.test(match[2]),
           setAttribute(name, val) { attributes[name] = val; },
           focus() { focusLog.push(button); },
           closest(selector) { return selector === 'button' || selector === '[data-journey]' && 'journey' in dataset ? button : null; },
@@ -49,13 +49,13 @@ function element(focusLog) {
   return el;
 }
 const defaultJourneys = () => [{ id: 'funding', title: 'Funding', description: 'Follow recorded receipts', steps: [0, 1, 2].map((n) => ({ title: `View ${n + 1}`, body: `Record ${n + 1}`, scene: { focusId: `node:${n}` }, links: [] })) }];
-function setup({ reduced = false, journeys = defaultJourneys(), options = {}, available = true } = {}) {
+function setup({ reduced = false, journeys = defaultJourneys(), build, options = {}, available = true } = {}) {
   const focus = []; const controls = element(focus); const story = element(focus); const stage = element(focus);
   const media = emitter({ matches: reduced }); const document = emitter({ hidden: false });
   let timerId = 0; const timers = new Map(); const timerHistory = new Map(); const observers = [];
   const scenes = []; const routes = []; let clears = 0; let pauses = 0;
   const map = { presentScene(scene) { scenes.push(scene); return available; }, clearScene() { clears++; }, pauseScene() { pauses++; } };
-  const context = { buildMoneyJourneys: () => journeys, matchMedia: () => media, document,
+  const context = { buildMoneyJourneys: build || (() => journeys), matchMedia: () => media, document,
     setTimeout(fn, ms) { const id = ++timerId; timers.set(id, { fn, ms }); timerHistory.set(id, fn); return id; },
     clearTimeout(id) { timers.delete(id); },
     IntersectionObserver: class { constructor(callback) { this.callback = callback; this.disconnected = false; observers.push(this); } observe() {} disconnect() { this.disconnected = true; } },
@@ -166,4 +166,50 @@ test('touching the map pauses at the current scene and Continue returns to that 
   h.click('play');
   assert.equal(h.scenes.at(-1).focusId, 'node:1');
   assert.equal(h.timers.size, 1);
+});
+
+
+function selectableJourneys(data, selections = {}) {
+  const selected = ['a','b'].includes(selections.funding) ? selections.funding : '';
+  return [{ id:'funding',title:'Funding',description:'Choose a company',selectorLabel:'Organisation',selection:selected,
+    choices:[{value:'a',label:'Alpha'},{value:'b',label:'Beta'}],
+    steps:selected ? [0,1,2].map(i=>({title:`${selected} step ${i}`,body:'Recorded connections',scene:{focusId:`${selected}:${i}`}})) : [] }];
+}
+function pick(h, value) {
+  const target = h.story.querySelector('[data-focus]'); assert.ok(target); target.value=value;
+  h.story.emit('change',{target});
+}
+
+test('a lens opens a neutral dropdown and selecting a subject starts its matching journey', () => {
+  const h = setup({build:selectableJourneys}); h.choose();
+  assert.equal(h.scenes.length,0); assert.equal(h.timers.size,0);
+  assert.match(h.story.innerHTML,/Where would you like to start/);
+  pick(h,'b');
+  assert.equal(h.scenes.at(-1).focusId,'b:0');
+  assert.equal(h.routes.at(-1)[2],'b');
+  assert.equal(h.focus.at(-1).id,'journey-focus');
+  h.click('play'); h.tick();
+  pick(h,'a');
+  assert.equal(h.timers.size,0); assert.equal(h.scenes.at(-1).focusId,'a:0');
+  assert.equal(h.routes.at(-1)[1],0); assert.equal(h.routes.at(-1)[2],'a');
+});
+
+test('shared selections restore the right subject and step; invalid selections stay neutral', () => {
+  const h = setup({build:selectableJourneys,options:{initialJourney:'funding',initialFocus:'b',initialStep:2}});
+  assert.equal(h.scenes.at(-1).focusId,'b:2'); assert.equal(h.timers.size,0);
+  h.handle.setRoute('funding',1,'a'); assert.equal(h.scenes.at(-1).focusId,'a:1');
+  const before=h.scenes.length;
+  h.handle.setRoute('funding',2,'not-in-graph');
+  assert.equal(h.scenes.length,before); assert.match(h.story.innerHTML,/Where would you like to start/);
+  assert.equal(h.story.querySelector('[data-action="play"]'),null);
+});
+
+
+test('opening the native selector pauses playback without replacing the focused control', () => {
+  const h=setup({build:selectableJourneys});h.choose();pick(h,'a');h.click('play');
+  const target=h.story.querySelector('[data-focus]');
+  h.story.emit('focusin',{target});
+  assert.equal(h.timers.size,0);
+  assert.equal(h.story.querySelector('[data-focus]'),target);
+  assert.ok(h.pauses()>0);
 });

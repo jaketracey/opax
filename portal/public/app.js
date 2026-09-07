@@ -1159,11 +1159,12 @@ function attachMoneyJourneys(params = new URLSearchParams()) {
   if (!moneyMapHandle || !moneyJourneyModule || !moneyJourneyData) return;
   moneyJourneys?.destroy();
   moneyJourneys = moneyJourneyModule.mountMoneyJourneys($("money-journey-controls"), $("money-journey-story"), $("money-stage"), moneyJourneyData, moneyMapHandle, {
-    initialJourney: params.get("journey"), initialStep: params.get("step"),
-    onRoute(id, step) {
+    initialJourney: params.get("journey"), initialStep: params.get("step"), initialFocus: params.get("focus"),
+    onRoute(id, step, focus) {
       const next = new URLSearchParams(location.search);
       if (id) { next.set("journey", id); next.set("step", String(step)); next.delete("industry"); }
       else { next.delete("journey"); next.delete("step"); }
+      if (id && focus) next.set("focus", focus); else next.delete("focus");
       replaceRoute(`/money${next.size ? `?${next}` : ""}`);
     },
   });
@@ -1179,7 +1180,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
     moneyMapIsolate = isolate;
     moneyMapHandle.setPaused(false);
     if (!moneyJourneys) attachMoneyJourneys(params);
-    else moneyJourneys.setRoute(params.get("journey"), params.get("step"));
+    else moneyJourneys.setRoute(params.get("journey"), params.get("step"), params.get("focus"));
     if (changedIndustry && !params.get("journey")) moneyMapHandle.isolate?.(isolate);
     return;
   }
@@ -1193,7 +1194,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule] = await Promise.all([import("/money-map.js?v=journeys-2"), loadMoneyFile(jur), import("/money-journeys.js?v=journeys-2")]);
+    const [{ mountMoneyMap }, data, journeysModule] = await Promise.all([import("/money-map.js?v=journeys-2"), loadMoneyFile(jur), import("/money-journeys.js?v=selectors-1")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
