@@ -4750,3 +4750,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 
 #panel-subject .topic-arc-open.action-btn { display:inline-flex; width:fit-content; min-height:44px; margin-top:.75rem; text-decoration:none; font:600 .8125rem/1.3 var(--sans); color:var(--navy); background:var(--paper); }
 #panel-subject .topic-arc-open.action-btn:hover { border-color:var(--navy); background:var(--bronze-wash); }
+
+.dir-main .result-meta .dir-party-link { display:inline-flex; align-items:center; white-space:nowrap; text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:.2em; }
+.dir-main .result-meta .dir-party-link:hover { text-decoration-color:currentColor; }

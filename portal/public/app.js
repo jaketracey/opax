@@ -6062,7 +6062,7 @@ async function buildDonorsDirectory() {
     const shownParties = d._partyList.slice(0, 3);
     const more = d._partyList.length - shownParties.length;
     const partiesHTML = shownParties.length
-      ? `<span class="dir-parties">to ${shownParties.map((p) => `${anyPartyDotHTML(p, colours)}${esc(p)}`).join(", ")}${more > 0 ? ` and ${more} more` : ""}</span>`
+      ? `<span class="dir-parties">to ${shownParties.map((p) => `<a class="dir-party-link" href="${esc(subjectHash("party", p))}">${anyPartyDotHTML(p, colours)}${esc(p)}</a>`).join(", ")}${more > 0 ? ` and ${more} more` : ""}</span>`
       : "";
     const marks = [
       d._lobbyists ? `<span class="dir-mark" title="${esc(`${d._lobbyists} registered lobbying firm${d._lobbyists === 1 ? "" : "s"}`)}">lobbyists</span>` : "",
