@@ -117,3 +117,16 @@ test('follow-ups preserve generation history but bypass the failing implicit ret
  assert.equal(body.chat_history.length,2);assert.equal(body.chat_history_relevance_threshold,1);assert.equal(body.rephrase,false);
  assert.equal(worker.buildAskBody({question:'What about housing?'}).chat_history_relevance_threshold,undefined);
 });
+
+test('anti-corruption answers require evidence identifying the relevant institution',()=>{
+ const body=worker.buildAskBody({question:'Who argued against a federal anti-corruption commission?'});
+ assert.match(body.prompt.user,/explicitly identifies a corruption or integrity body/);
+ assert.match(JSON.stringify(body.filter_expression),/"prop":"keyword","word":"corruption"/);
+ assert.ok(!worker.buildAskBody({question:'What did the Productivity Commission recommend?'}).prompt.user.includes('For this question, use a passage'));
+});
+
+test('institution catalog evidence excludes unrelated commissioners',async()=>{
+ const found=await records.retrieveAskRecords({question:'Who argued against a federal anti-corruption commission, and on what grounds?'},assets);
+ assert.ok(found.records.length>0);
+ assert.ok(found.records.every(r=>/corruption|integrity|NACC/i.test(r.title+' '+r.snippet)));
+});

@@ -31,6 +31,8 @@ export function recordQuery(input: RecordQuestion): string {
   return [...new Set(terms)].slice(0, 12).join(' ')
 }
 
+export const integrityQuestion = (question: string) => /\b(?:anti[- ]corruption|integrity) commission\b/i.test(question)
+
 export interface AskRecords { records: CatalogRecord[]; coverage: string; total: number }
 export async function retrieveAskRecords(input: RecordQuestion, assets: Fetcher): Promise<AskRecords> {
   const empty = { records: [], coverage: '', total: 0 }
@@ -47,6 +49,7 @@ export async function retrieveAskRecords(input: RecordQuestion, assets: Fetcher)
   const records: CatalogRecord[] = []
   const counts = new Map<string, number>()
   for (const r of found.results) {
+    if (integrityQuestion(input.question || '') && !/\b(?:corruption|integrity|NACC)\b/i.test(r.title + ' ' + r.snippet)) continue
     // Overlapping date filters do not recalculate profile/connection totals.
     // Do not hand the model an out-of-window aggregate to mistake for a subtotal.
     const span = r.dateLabel?.match(/^(\d{4})(?:[–-](\d{4}))?$/)
