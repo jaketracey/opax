@@ -112,6 +112,15 @@ for (const [group, centre] of centres) {
   assert.ok(dist > parties.r, `${group} ring sits outside the party blob (${dist.toFixed(0)})`)
 }
 
+// Public-money sources have a separate territory, with no parties in its count.
+assert.equal(graph.groupStyles.get('parties').count, raw.nodes.filter(n => n.kind === 'party').length)
+assert.equal(graph.groupStyles.get('public money').count, raw.nodes.filter(n => n.kind === 'grantor').length)
+for (const aspect of [0.8, 1.2, 1.9]) {
+  const layout = clusterCentres3D(ordered, aspect, 'parties')
+  const source = layout.get('public money'), centre = layout.get('parties')
+  assert.ok(Math.hypot(source.x, source.y, source.z) > source.r + centre.r, `public money clears parties at aspect ${aspect}`)
+}
+
 // The force simulation settles to finite, spread-out positions.
 const sim = new ForceSim3D({
   nodes: graph.nodes.map((n) => ({
@@ -136,7 +145,7 @@ assert.ok(spread > 200, `layout spread out (max radius ${spread.toFixed(0)})`)
 assert.equal(formatMoney(1_234_567), '$1.2m')
 assert.equal(formatMoney(45_600), '$46k')
 
-// The grants layer: a grantor at the centre, grant flows out to donors that the
+// The grants layer: separate public-money sources, grant flows out to donors that the
 // grant register resolves to the same entity, each donor carrying its own
 // grants block that re-sums like every other figure.
 {
@@ -149,7 +158,7 @@ assert.equal(formatMoney(45_600), '$46k')
   assert.equal(grantEdges.length, raw.meta.donors_with_grants ?? 0, 'one grant flow per donor with grants')
   assert.equal(contractEdges.length, raw.meta.donors_with_contracts ?? 0, 'one contract flow per donor with contracts')
   for (const g of grantors) {
-    assert.equal(g.group, 'parties', 'grantor sits at the centre')
+    assert.equal(graph.nodes.find((n) => n.id === g.id).group, 'public money', 'grantor uses its own public money territory')
     assert.ok(g.colour, 'grantor carries its colour')
   }
   const donorIds = new Set(raw.nodes.filter((n) => n.kind === 'donor').map((n) => n.id))
