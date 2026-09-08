@@ -17,7 +17,7 @@ import { ASK_PIPELINE_VERSION, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, Footno
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, type AskScope } from './ask-scope'
 import { proxyPostHog } from './posthog'
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
-import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, type AskRecords } from './ask-records'
+import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, integrityQuestion, type AskRecords } from './ask-records'
 import { SEARCH_SORTS, compareSearchResults } from './search-sort'
 import { tokens as catalogTokens } from './catalog-query.mjs'
 import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
@@ -694,6 +694,12 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
   }
   const filters = filterExpression({ kind: kind ?? 'all', speaker, party, state, chamber, topic, from, to })
   if (filters) body.filter_expression = filters
+  if (integrityQuestion(question || '')) {
+    body.filter_expression = { field: { and: [
+      ...(filters?.field ? [filters.field] : []),
+      { or: ['corruption', 'integrity', 'NACC'].map(word => ({ prop: 'keyword', word })) },
+    ] } }
+  }
 
   // Every ask owns its prompt. The platform default's fallback line ("Not
   // enough data to answer this.") fires on any mixed context even after
@@ -709,6 +715,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
     user:
       `${provenance}Passages from the record:\n{context}\n\n` +
       'Question: {question}\n\n' +
+      (integrityQuestion(question || '') ? 'For this question, use a passage about an institution only if it explicitly identifies a corruption or integrity body. A generic national commissioner, frontline services, or service agencies without that identification does not establish a position on a federal anti-corruption commission. Omit that material entirely, even if it appears in the retrieved context. ' : '') +
       (party ? `This retrieval is restricted to records indexed under ${party}. A combined debate can still contain other parties' speakers. Unless the passages explicitly establish the speaker's affiliation, frame the answer as evidence in records indexed under ${party}, not as verified statements by ${party} MPs. Do not present a passage explicitly speaking for a different party as this group's position. ` : '') +
       'Instructions: If the question contains a follow-up, answer the latest follow-up; the earlier user question only supplies its subject. Answer from whichever passages address the question, quoting or closely paraphrasing them. ' +
       'When the question names a particular institution, commission, bill or policy, exclude passages about other institutions sharing generic words such as commission or reform. For example, a not-for-profit regulator or another national commissioner is not evidence about a federal anti-corruption commission. ' +

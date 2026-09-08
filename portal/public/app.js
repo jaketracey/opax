@@ -8379,6 +8379,18 @@ function renderRegisterNote(question) {
     : `Counts and totals of donors are not in the speeches. The registers on this site hold them: <a href="/subject/donor">the donors directory</a> (searchable by name), <a href="/explore?game=ledger">the ledger</a> of every disclosed flow, and the <a href="/money">money map</a>.`;
 }
 
+// Automatic name recognition is a speech request; explicit filter choices
+// keep their selected record type (for example a person's financial records).
+function askRequestBody(question, kind, filters, automaticSpeaker) {
+  const body = { question, kind };
+  for (const [key, value] of Object.entries(filters)) if (value) body[key] = value;
+  if (!body.speaker && automaticSpeaker) {
+    body.speaker = automaticSpeaker;
+    body.kind = "speech";
+  }
+  return body;
+}
+
 async function runAsk(question) {
   renderRegisterNote(question);
   if (askAbort) askAbort.abort();
@@ -8429,18 +8441,11 @@ async function runAsk(question) {
       const canon = await resolveSpeaker(aSpeaker.value);
       if (canon) { aSpeaker.value = canon; renderAskFilterChips(); }
     } else if (speakerFilter) {
-      // A lone surname must resolve to be usable as a filter; an unresolved
-      // full name still passes through as typed.
-      speakerFilter = (await resolveSpeaker(speakerFilter)) ||
-        (speakerFilter.includes(" ") ? speakerFilter : null);
+      // Automatic filters require a resolved corpus name. Unresolved names
+      // remain in the question for the server to handle without a guessed filter.
+      speakerFilter = await resolveSpeaker(speakerFilter);
     }
-    const askBody = JSON.stringify((() => {
-      const f = askFilters();
-      if (!f.speaker && speakerFilter) f.speaker = speakerFilter;
-      const body = { question, kind: askKind() };
-      for (const [k, v] of Object.entries(f)) if (v) body[k] = v;
-      return body;
-    })());
+    const askBody = JSON.stringify(askRequestBody(question, askKind(), askFilters(), speakerFilter));
     // The answer streams into the page as it is written; the wombat leaves
     // on the first words. Sources, stamp and rail wait for the final payload.
     const live = streamRenderer($("ask-answer"), () => askAbort === myAbort);

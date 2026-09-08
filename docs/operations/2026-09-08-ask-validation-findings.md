@@ -17,7 +17,7 @@ The evidence audit fetched all 263 distinct original documents cited by the base
 | `followup-independent` | Follow-up returned unrelated health/education passages despite housing context | Keep a contextual retrieval query and disable the provider's failing implicit history rewrite with `chat_history_relevance_threshold: 1`; preserve history for answer generation |
 | `voice` | Introduction dates were presented as dates bills passed | Label bill dates explicitly as introduction dates; keep current status separate |
 | `contract-flow` | Generic words crowded out specific contract notices | Remove question scaffolding such as government/awarded from catalog query terms |
-| `icac` | Included unrelated commissions in an anti-corruption answer | Require the specific institution requested, not generic word matches |
+| `icac` | Included unrelated commissions in an anti-corruption answer | Require corruption/integrity terms in document fields and catalog evidence; instructions alone did not eliminate this error |
 | `timor`, `independent-typo`, `republic` | Altered quotations or quotations linked to a different cited record | Require exact quoted wording; check long quotations against original cited text, retry once with default citations, and return clearly labelled evidence excerpts if recovery still fails |
 
 Explicit filters take precedence. Names mentioned as the object of a speech, party comparisons, ambiguous year references and nonpolitical uses of independence do not become restrictive subject filters. Inferred filters are visible with the answer. The Ask cache version changes so old answers are not replayed.
