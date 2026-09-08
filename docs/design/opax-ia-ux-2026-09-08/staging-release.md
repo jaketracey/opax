@@ -14,6 +14,11 @@ The user approved implementation and asked for the 3D map to be a central resear
 - Ledger now includes donor-to-party receipt edges only. Public awards are excluded from its receipt totals and exports.
 - Removed repetitive introductory copy after screenshot feedback. The homepage no longer repeats “Ask a question. Follow the money. Read the record.” beneath its heading. The map section heading and descriptive subheading were also removed entirely.
 
+- Homepage industry chips are always visible. The map button sits beside the guided journeys on desktop and fills its row on mobile. Removed the homepage map fineprint and news feed, including its request.
+- State map is always visible above Today's numbers, without disclosure controls or coverage copy.
+- Registers of interests uses a single serif page heading, with matching breadcrumb and document title.
+- Party speech lists use consistent row spacing and tighter title, metadata and excerpt grouping.
+
 ## Staging deployment
 
 `npm run deploy:staging` in `portal/` builds graph and analytics, stamps cache-sensitive assets and deploys `opax-portal-staging`. Its custom domain is `staging.opax.com.au`; the same Worker is also available at `opax-portal-staging.noicework.workers.dev` while DNS caches expire.
@@ -26,6 +31,7 @@ Staging serves this branch's static assets. A Cloudflare service binding routes 
 - Live HTTPS 200 on the staging custom hostname using its public DNS address, with certificate validation enabled; `/api/search` returns real results; robots.txt disallows crawling.
 - Browser: desktop 3D rendering, receipt + organisation + party filters, matching records, shared URL restoration after reload, public-money journey recipient selection, generated narrative and animated playback.
 - Mobile 390px: navigation parity, map controls, political-receipts table, no document horizontal overflow.
+- Mobile graph canvas appeared blank in the QA browser on both the unchanged production site and staging; desktop rendering is confirmed, mobile canvas rendering is not.
 - A separate graph TypeScript check reports eight existing strict-index errors in unchanged `graph/explain.ts`. The new map adapter introduces no reported type errors; the esbuild graph build succeeds.
 
 ## Review boundaries

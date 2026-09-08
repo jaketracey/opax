@@ -839,7 +839,7 @@ const TITLES = {
   reports: "Reports · OPAX",
   doc: "From the record · OPAX",
   subject: "OPAX encyclopedia",
-  declared: "Just declared · OPAX",
+  declared: "Registers of interests · OPAX",
   explore: "Explore · OPAX",
   about: "About · OPAX",
   methods: "Methods · OPAX",
@@ -1478,7 +1478,7 @@ function route() {
   } else if (view === "declared") {
     showPanel("declared");
     document.title = TITLES.declared;
-    setCrumbs([{ label: "Just declared" }]);
+    setCrumbs([{ label: "Registers of interests" }]);
     renderDeclaredPage(params, manageFocus);
   } else if (view === "doc" && segs[1]) {
     showPanel("doc");
@@ -3288,7 +3288,7 @@ async function renderDeclaredPage(params, manageFocus) {
   bucketSelect.onchange = navigate;
   partySelect.onchange = navigate;
   $("declared-filters").onsubmit = (event) => event.preventDefault();
-  if (manageFocus) $("panel-declared").querySelector("h2")?.focus?.({ preventScroll: true });
+  if (manageFocus) $("panel-declared").querySelector("h1")?.focus?.({ preventScroll: true });
 }
 
 // Declared interests on person pages: the registers of members' interests
@@ -7739,50 +7739,6 @@ function newsTopicSlug(headline) {
   return bestHits > 0 ? best : null;
 }
 
-async function renderFrontNews() {
-  const holder = $("front-news");
-  try {
-    const data = await api("/api/news");
-    const items = (data.items || []).filter((i) => safeUrl(i.url)).slice(0, 18);
-    if (!items.length) { $("mod-news").hidden = true; return; }
-    const srcName = { ABC: "ABC News", Guardian: "The Guardian" };
-    holder.innerHTML = `<ol class="news-list" role="list">${items.map((i, index) => {
-      // Search the subject rather than the headline.
-      // A headline that matches no topic gets no pivots. The old fallback took
-      // two words off the article's keyword string, which asked the record
-      // about phrases like "populist one" and retrieved nothing.
-      const slug = frontNewsTopic(i.title);
-      const subject = slug ? TOPICS[slug] : "";
-      const pivots = subject ? `<a class="news-record-chip" href="${esc(searchHash(subject, { topic: slug }))}">${esc(subject)} in the record <span aria-hidden="true">→</span></a>` : "";
-      const when = relTime(i.published);
-      return `<li${index >= 6 ? ' class="front-news-extra" hidden' : ""}>
-        <a class="news-headline" href="${esc(safeUrl(i.url))}" rel="noopener" target="_blank">${esc(i.title)}</a>
-        <span class="news-meta"><span class="news-source">${esc(srcName[i.source] || i.source || "")}</span>${when ? ` · ${esc(when)}` : ""}</span>
-        ${pivots}</li>`;
-    }).join("")}</ol>${items.length > 6 ? `<button type="button" class="action-btn" id="front-news-more" aria-expanded="false" aria-controls="front-news-list">More headlines (${items.length - 6})</button>` : ""}`;
-    holder.querySelector("ol").id = "front-news-list";
-    const more = $("front-news-more");
-    if (more) more.onclick = () => {
-      const expanded = more.getAttribute("aria-expanded") !== "true";
-      holder.querySelectorAll(".front-news-extra").forEach((row) => { row.hidden = !expanded; });
-      more.setAttribute("aria-expanded", String(expanded));
-      more.textContent = expanded ? "Fewer headlines" : `More headlines (${items.length - 6})`;
-    };
-  } catch {
-    $("mod-news").hidden = true;
-  }
-}
-
-function frontNewsTopic(headline) {
-  const fallback = newsTopicSlug(headline);
-  // Keep overseas coverage overseas; otherwise explicit subject phrases
-  // outrank incidental party names and words such as "budget".
-  if (fallback === "foreign-affairs") return fallback;
-  if (/\b(house prices?|home loans?|housing|mortgages?|rents?|renters?|negative gearing)\b/i.test(headline)) return "housing";
-  if (/\b(tobacco|vaping)\b/i.test(headline)) return "hospitality-alcohol";
-  return fallback;
-}
-
 function renderFrontNumbers() {
   const holder = $("front-numbers");
   const aec = (corpusManifest?.sources || []).find((x) => x.name.startsWith("AEC donations"));
@@ -8120,7 +8076,6 @@ function renderFrontPage() {
   resetFrontMap();
   if (frontRendered) return;
   frontRendered = true;
-  renderFrontNews();
   onIdle(() => { mountFrontMaps(); renderFrontBills(); renderFrontTopic(); renderFrontReports(); renderFrontAdded(); renderFrontDeclared(); });
 }
 

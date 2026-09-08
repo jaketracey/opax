@@ -2157,6 +2157,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .declared-match { margin: 0.1rem 0 0; color: var(--ink-soft); font-size: 0.8125rem; line-height: 1.5; }
 .declared-match .result-meta { margin-left: 0.2rem; }
 #panel-declared { max-width: 920px; }
+#panel-declared > h1 { font: 700 clamp(2rem, 4vw, 3rem)/1.2 var(--serif); margin: 0 0 1rem; }
 #panel-declared .dir-controls { margin-top: var(--space-4); }
 .declared-source { margin-top: var(--space-5); }
 .declared-week { margin-top: var(--space-5); }
@@ -3023,7 +3024,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-subject .party-mentions .snippet,
 #panel-subject .party-mention-brief { font: 400 1rem/1.7 var(--serif); color: var(--ink); }
 #panel-subject .party-mentions .snippet { display: block; -webkit-line-clamp: unset; overflow: visible; }
-#panel-subject .party-mentions .source-title { font: 700 1rem/1.5 var(--serif); display: inline-flex; align-items: center; min-height: 44px; }
+#panel-subject .party-mentions .source-title { font: 700 1rem/1.4 var(--serif); display: block; margin: 0; padding: 0; min-height: 24px; }
 #panel-subject .party-mentions .result-meta { font: 400 0.8125rem/1.7 var(--sans); }
 #panel-subject .party-brief-label { display: block; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-soft); margin-bottom: 0.3rem; }
 #panel-subject .party-member-counts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.25rem 1rem; }
@@ -3043,11 +3044,15 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-subject .party-receipts .receipts-tiles a,
 #subject-party-debts .fineprint a,
 #subject-party-debts .subject-list .source-title,
-#panel-subject .party-mentions .fineprint a,
-#panel-subject .party-mentions .result-meta a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
-#panel-subject .party-mentions .result-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0 0.35rem; }
-#panel-subject .party-mentions .subject-list li { padding: 0.8rem 0; }
+#panel-subject .party-mentions .fineprint a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+#panel-subject .party-mentions .result-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0 0.35rem; margin: .25rem 0 0; line-height: 1.5; }
+#panel-subject .party-mentions .result-meta a { display: inline-flex; align-items: center; min-height: 24px; min-width: 24px; }
+#panel-subject .party-mentions .subject-list li { padding: 1.25rem 0; }
+#panel-subject .party-mentions .subject-list li:first-child { padding-top: 0; }
+#panel-subject .party-mentions .subject-section-title { margin-bottom: 1rem; }
 #panel-subject .party-mentions p { max-width: 68ch; }
+#panel-subject .party-mentions .snippet,
+#panel-subject .party-mentions .party-mention-brief { margin: .625rem 0 0; line-height: 1.55; }
 #subject-party-debts .fineprint { font-family: var(--serif); }
 #subject-party-debts .party-benefits { margin: 1rem 0 0; }
 #subject-party-debts > .chart figcaption { font: 700 1rem/1.5 var(--serif); text-transform: none; letter-spacing: normal; }
@@ -3112,16 +3117,6 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #front-statemap .sm-tip-meta { font-size: 0.8125rem; line-height: 1.5; }
 #front-statemap .sm-tip-name { font-family: var(--serif); font-size: 1rem; }
 
-#front-news .news-list li { padding: 1rem 0; }
-#front-news .news-headline { display: flex; align-items: center; min-height: 44px; font: 600 1.0625rem/1.5 var(--serif); }
-#front-news .news-meta { margin-top: 0.4rem; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-soft); }
-#front-news .news-source { font: inherit; text-transform: none; letter-spacing: 0; }
-#front-news .news-record-chip {
-  display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px; margin-top: 0.5rem;
-  padding: 0.45rem 0.75rem; border: 1px solid var(--line); border-radius: 999px;
-  font: 600 0.8125rem/1.4 var(--sans); color: var(--bronze-ink); text-decoration: none;
-}
-#front-news-more { min-height: 44px; margin-top: 0.75rem; }
 #front-declared .front-declared-day > h3 {
   margin: 1.25rem 0 0; padding: 0.5rem 0; border-bottom: 1px solid var(--line-strong);
   color: var(--ink-soft); font: 500 0.875rem/1.5 var(--sans);
@@ -3161,7 +3156,6 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #front-map-root .mm-card-sub, #front-map-root .mm-card-fine { font-size: 0.8125rem; line-height: 1.5; color: var(--ink-soft); }
 @media (max-width: 700px) {
   #front-reports .report-card { flex-basis: 270px; }
-  #front-news .news-record-chip { max-width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
   #front-page *, #front-map * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
@@ -4620,10 +4614,10 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .home-tasks span { color: var(--ink-soft); font-size: .85rem; }
 .home-map-stage { position: relative; margin: 1rem 0; }
 .home-map-stage #front-map-root { width: 100%; height: clamp(430px,55vw,630px); min-height: 430px; }
-.home-map-invite { display: flex; gap: 1.3rem; align-items: center; flex-wrap: wrap; padding: 1rem 0; border-top: 1px solid var(--line); }
+.home-map-invite { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.3rem; align-items: center; padding: 1rem 0; border-top: 1px solid var(--line); }
+.home-map-journeys { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1.3rem; }
 .home-map-invite span { color: var(--ink-soft); font-size: .8rem; }
 .home-map-invite a { font-size: .85rem; color: var(--bronze-ink); }
-.home-parliaments summary { cursor: pointer; color: var(--navy); padding: .75rem 0; font-size: .9rem; }
 .home-parliaments #front-statemap { max-width: 600px; height: 330px; margin: auto; }
 .home-map-industries.map-chips { margin-top: .75rem; }
 .drawer-primary { padding: 1rem; border-bottom: 1px solid var(--line); font-size: 1.05rem; font-weight: 650; }
@@ -4654,7 +4648,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 @media (max-width: 700px) {
   .home-tasks { grid-template-columns: repeat(2,1fr); gap: 1rem; margin: 1.5rem 0; }
   .home-map-stage #front-map-root { height: 430px; min-height: 430px; }
-  .home-map-invite { display: grid; gap: .7rem; }
+  .home-map-invite { grid-template-columns: minmax(0, 1fr); gap: .7rem; }
   .home-map-invite a { padding: .25rem 0; min-height: 40px; }
   .research-controls { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .research-controls label:first-child { grid-column: 1 / -1; }
@@ -4665,7 +4659,8 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 }
 @media (prefers-reduced-motion: reduce) { .home-map-stage *, .research-records * { scroll-behavior: auto; } }
 
-.home-map-tools { display: flex; justify-content: flex-end; }
+.home-map-invite .home-map-open { margin-left: auto; color: white; text-decoration: none; flex-shrink: 0; }
+@media(max-width:700px) { .home-map-invite .home-map-open { width: 100%; justify-content: center; margin-left: 0; } }
 
 /* The map leads. Research controls are opened only when needed. */
 #panel-money .money-heading h1 { font-size: 1.6rem; margin: .25rem 0 1rem; }

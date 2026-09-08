@@ -58,7 +58,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=b9c4ce3026">
+<link rel="stylesheet" href="/style.css?v=8e9b107f0b">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -356,18 +356,11 @@
         <a href="/bills"><strong>Understand a bill</strong><span>What changes and where it stands.</span></a>
       </nav>
       <section class="front-map" id="front-map" aria-label="Explore the money in three dimensions">
-        <div class="home-map-tools"><a class="action-btn action-gold" href="/money">Open the research map</a></div>
-        <div class="home-map-stage"><div id="front-map-root" class="front-map-root"><p class="status">Loading the money map…</p></div><div class="home-map-invite"><span>Start a guided journey</span><a href="/money?journey=public-money">Public awards & party receipts</a><a href="/money?journey=multiple-parties">Giving to more than one party</a><a href="/money?journey=over-time">How receipts change over time</a></div></div>
+        <div class="home-map-stage"><div id="front-map-root" class="front-map-root"><p class="status">Loading the money map…</p></div><div class="home-map-invite"><div class="home-map-journeys"><span>Start a guided journey</span><a href="/money?journey=public-money">Public awards & party receipts</a><a href="/money?journey=multiple-parties">Giving to more than one party</a><a href="/money?journey=over-time">How receipts change over time</a></div><a class="action-btn action-gold home-map-open" href="/money">Open the research map</a></div></div>
         <nav class="map-chips home-map-industries" id="front-map-chips" aria-label="Industries on the money map"></nav>
-        <p class="fineprint">Connections reflect the selected public records. Contract and grant values are separate from political receipts; a connection does not establish influence or wrongdoing. <a href="/methods">Sources and methods</a></p>
-        <details class="home-parliaments"><summary>Browse the parliamentary record by state</summary><div id="front-statemap" class="front-map-root"><p class="status">Loading the map…</p></div><p class="fineprint">Speech and money coverage differ by parliament. <a href="/stats">See available sources and years</a>.</p></details>
       </section>
       <div class="front-grid" id="front-page">
         <div class="front-main">
-        <section class="front-mod" aria-labelledby="h-news" id="mod-news">
-          <h2 class="subject-section-title" id="h-news">In the news right now</h2>
-          <div id="front-news"><p class="status">Fetching today's headlines…</p></div>
-        </section>
 <section class="front-mod" aria-labelledby="h-bills" id="mod-bills" hidden>
           <h2 class="subject-section-title" id="h-bills">Latest bills</h2>
           <ul class="subject-list front-bills" id="front-bills" role="list"></ul>
@@ -398,6 +391,9 @@
         </section>
         </div>
         <aside class="front-rail">
+        <section class="front-mod home-parliaments" aria-label="Parliamentary record by state">
+          <div id="front-statemap" class="front-map-root"><p class="status">Loading the map…</p></div>
+        </section>
         <section class="front-mod" aria-labelledby="h-numbers">
           <h2 class="subject-section-title" id="h-numbers">Today's numbers</h2>
           <div class="tiles tiles-compact" id="front-numbers"></div>
@@ -914,8 +910,7 @@
 
     <!-- =========================== DECLARED =========================== -->
     <section id="panel-declared" class="panel" hidden aria-label="Recent alterations to registers of interests">
-      <p class="kicker">Registers of interests</p>
-      <h2>Just declared</h2>
+      <h1 tabindex="-1">Registers of interests</h1>
       <p class="lede">The newest additions and deletions recorded in parliamentarians' registers of interests, in their own words.</p>
       <form id="declared-filters" class="dir-controls" aria-label="Filter recent declarations">
         <span class="dir-field">
@@ -1277,6 +1272,6 @@
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
 <script src="/navigation.js?v=fc4550a5c0" defer></script>
-<script src="/app.js?v=3f44864764" defer></script>
+<script src="/app.js?v=3efcbf5bdd" defer></script>
 </body>
 </html>
