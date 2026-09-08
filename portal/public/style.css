@@ -4769,3 +4769,8 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .declared-pagination button:disabled { opacity: .45; cursor: default; }
 
 .agency-directory-page .supplier-directory-row strong { font-size: 1.0625rem; line-height: 1.45; }
+
+/* Keep the compact question field clear on phones and tablets. */
+@media (max-width: 1100px), (pointer: coarse) {
+  #ask-input::placeholder { opacity: 0; }
+}
