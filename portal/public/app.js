@@ -879,7 +879,7 @@ function discoveryValue(signal, label) {
   return Number(signal.metrics?.find((metric) => metric.label === label)?.value || 0);
 }
 function discoveryCategory() {
-  return $("discover-categories").querySelector('[aria-pressed="true"]')?.dataset.category || DISCOVERY_DEFAULT;
+  return $("discover-categories").value || DISCOVERY_DEFAULT;
 }
 function discoveryName(signal) {
   return signal.chart?.group_label || signal.entity;
@@ -1029,13 +1029,11 @@ async function renderDiscoveryPage(params, manageFocus) {
   destroyDiscoveryMap();
   discoverySelected = params.get("item");
   discoveryVisible = 8;
-  for (const button of $("discover-categories").querySelectorAll("button")) button.setAttribute("aria-pressed", String(button.dataset.category === category));
+  $("discover-categories").value = category;
   $("discover-query").value = params.get("q") || "";
   $("discover-sort").value = params.get("sort") === "share" ? "share" : "value";
-  $("discover-title").textContent = category === DISCOVERY_DEFAULT ? "Follow the big contracts." : category === "recipient_concentration" ? "Where does party funding come from?" : "A name in both records.";
-  $("discover-intro-text").textContent = category === DISCOVERY_DEFAULT ? "Pick an agency. See which companies take the biggest share." : category === "recipient_concentration" ? "Choose a party to see who provides its largest share of recorded funding." : "Explore companies that appear in both party receipts and government contracts.";
   $("discover-query-label").textContent = category === DISCOVERY_DEFAULT ? "Find an agency or company" : category === "recipient_concentration" ? "Find a party or contributor" : "Find a company";
-  if (manageFocus) $("discover-title").focus({ preventScroll: true });
+  if (manageFocus) $("discover-categories").focus({ preventScroll: true });
   $("discover-results").setAttribute("aria-busy", "true");
   $("discover-results").innerHTML = '<p role="status">Loading comparisons…</p>';
   $("discover-detail").innerHTML = "";
@@ -1061,9 +1059,8 @@ async function renderDiscoveryPage(params, manageFocus) {
     if (renderId === discoveryRenderId) $("discover-results").setAttribute("aria-busy", "false");
   }
 }
-$("discover-categories").addEventListener("click", (event) => {
-  const button = event.target.closest("button[data-category]");
-  if (button) goRoute(`/discover?category=${encodeURIComponent(button.dataset.category)}`);
+$("discover-categories").addEventListener("change", () => {
+  goRoute(`/discover?category=${encodeURIComponent(discoveryCategory())}`);
 });
 $("discover-results").addEventListener("click", (event) => {
   const button = event.target.closest("button[data-discovery-id]");
@@ -1160,7 +1157,6 @@ async function openMoneyRecords(kind, params) {
   moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
   const grants = kind === 'grants';
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
-  $('money-records-description').textContent = grants ? 'Explore grant awards and the organisations receiving them. Open a recipient to inspect its records.' : 'Disclosed payments to political parties in the selected map. Public contracts and grants are excluded; a receipt is not necessarily a gift.';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     const mod = await import(grants ? '/grants.js?v=ia-ux-20260908-2' : '/ledger.js?v=ia-ux-20260908-2');
@@ -1502,7 +1498,7 @@ function route() {
   } else if (view === "discover") {
     showPanel("discover");
     document.title = TITLES.discover;
-    setCrumbs([{ label: "Discover" }]);
+    setCrumbs([{ label: "Money", href: "/money" }, { label: "Government contracts" }]);
     renderDiscoveryPage(params, manageFocus);
   } else if (view === "reports") {
     showPanel("reports");

@@ -27,11 +27,6 @@ function harness({ money = { nodes: [] }, mount = async () => ({ destroy() {}, s
     });
     return elements.get(id);
   };
-  const categories = ['procurement_concentration', 'recipient_concentration', 'donor_contract_overlap'].map((category) => {
-    const button = element(category); button.dataset.category = category; return button;
-  });
-  element('discover-categories').querySelectorAll = () => categories;
-  element('discover-categories').querySelector = () => categories.find((b) => b.attributes['aria-pressed'] === 'true') || null;
   element('discover-map-area').hidden = true;
   element('discover-sort').value = 'value';
   const document = { documentElement: { dataset: { panel: 'discover' } } };
@@ -46,7 +41,7 @@ function harness({ money = { nodes: [] }, mount = async () => ({ destroy() {}, s
     fetch: async () => ({ ok: true, json: async () => ({ signals: [], coverage: {}, methodology: [] }) }),
   };
   runInNewContext(code, context);
-  return { context, element, categories, routes, eval: (expression) => runInNewContext(expression, context) };
+  return { context, element, routes, eval: (expression) => runInNewContext(expression, context) };
 }
 
 function concentration(overrides = {}) {
@@ -108,7 +103,7 @@ test('default selection emphasizes government contracts and chooses largest tota
   const high = concentration({ id: 'high' }); high.chart.group_label = 'Largest Agency';
   h.context.fetch = async () => ({ ok: true, json: async () => ({ signals: [low, overlap(), high], coverage: {}, methodology: [] }) });
   await h.context.renderDiscoveryPage(new URLSearchParams(), false);
-  assert.equal(h.categories[0].attributes['aria-pressed'], 'true');
+  assert.equal(h.element('discover-categories').value, 'procurement_concentration');
   assert.equal(h.eval('discoverySelected'), 'high');
   assert.match(h.element('discover-detail').innerHTML, /Largest Agency/);
   assert.equal(h.element('discover-count').textContent, '2 agencies');
