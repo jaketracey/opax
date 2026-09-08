@@ -94,3 +94,20 @@ class ExportCoverageTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'incomplete'):
                 export(str(path/'source.sqlite'),str(path/'e.sqlite'),str(path/'public'))
             self.assertFalse((path/'public').exists())
+
+class IdentityDecisionTest(unittest.TestCase):
+    def test_full_name_with_validated_abn_can_resolve(self):
+        from review_evidence_identities import decide
+        candidate={'name':'Acme Holdings Pty Ltd'};target={'name':'Acme Holdings Pty Ltd','abn':'51824753556'}
+        original=[{'source_name':'Acme Holdings Pty Ltd','source_abn':None,'method':'source_identity'}]
+        supported=[{'source_name':'Acme Holdings Pty Ltd','source_abn':'51824753556','method':'validated_source_abn'}]
+        self.assertEqual(decide(candidate,target,original,supported)[0],'accepted')
+        self.assertEqual(decide(candidate,target,original,supported,{'51824753556','other'})[0],'unresolved')
+        original[0]['source_abn']='12345678901'
+        self.assertEqual(decide(candidate,target,original,supported)[0],'unresolved')
+
+    def test_similar_name_and_generic_phrase_remain_unresolved(self):
+        from review_evidence_identities import decide
+        source=[{'source_name':'Acme','source_abn':None,'method':'source_identity'}]
+        target=[{'source_name':'Acme Holdings','source_abn':'51824753556','method':'validated_source_abn'}]
+        self.assertEqual(decide({'name':'Acme'},{'name':'Acme Holdings','abn':'51824753556'},source,target)[0],'unresolved')

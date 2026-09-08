@@ -4789,3 +4789,14 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .connection-choice span {display:block;margin-top:.4rem;font-size:.875rem}
 #connection-detail {min-width:0;scroll-margin-top:1rem}
 @media(max-width:700px){.connections-layout{grid-template-columns:minmax(0,1fr)}#connection-list{max-height:20rem;overflow:auto}.connections-page h1{font-size:2rem}}
+.evidence-years meter::-webkit-meter-optimum-value {background:#52768c}
+.evidence-years meter::-moz-meter-bar {background:#52768c}
+.evidence-fields {display:grid;gap:.8rem;margin:1.25rem 0}
+.evidence-fields>div {display:grid;grid-template-columns:minmax(7rem,1fr) minmax(0,3fr);gap:1rem}
+.evidence-fields dt {font-size:.875rem;color:#60665c}
+.evidence-fields dd {margin:0;overflow-wrap:anywhere}
+.evidence-locations pre {max-width:100%;overflow:auto;white-space:pre-wrap;font-size:.8rem}
+@media(max-width:540px){.evidence-fields>div{grid-template-columns:minmax(0,1fr);gap:.2rem}}
+.supplier-contract .evidence-fields {grid-template-columns:minmax(0,1fr);font-size:1rem}
+.evidence-fields>div {min-width:0}
+.evidence-years svg {display:block;width:100%;height:.6rem}

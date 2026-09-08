@@ -28,3 +28,11 @@ def publishable_alias(quote,name):
     # canonical names and their corporate-suffix variants; review others.
     qcore=set(q)-SUFFIXES-{'the'}; ncore=set(n)-SUFFIXES-{'the'}
     return bool(qcore-NOISE) and qcore==ncore
+
+
+def publishable_programme(quote,name):
+    # Programme names are often generic phrases. Require a complete name with
+    # a programme marker before treating prose as a named-programme mention.
+    q=words(quote);n=words(name)
+    markers={'program','programme','scheme','initiative','fund','allowance','scholarships','strategy','grants'}
+    return q==n and len(q)>=3 and bool(set(q)&markers)

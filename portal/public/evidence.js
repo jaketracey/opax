@@ -12,17 +12,31 @@ async function read(url, signal) {
   if (!response.ok) throw new Error('Connection records unavailable');
   return response.json();
 }
+function displayDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ''))) return value || 'Date not recorded';
+  const date=new Date(value+'T00:00:00');
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
+}
+function sourceContent(row) {
+  const fields=row.details?.source_fields;
+  if (!fields) return `<blockquote>${esc(row.text)}</blockquote>`;
+  const values=[['Recipient',fields.recipient],['Recorded amount',fields.amount==null?null:Number(fields.amount).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0})],['Program',fields.program],['Agency',fields.agency],['Recorded place',[fields.suburb,fields.state?.toUpperCase(),fields.postcode].filter(Boolean).join(', ')]];
+  return `<dl class="evidence-fields">${values.filter(([,value])=>value).map(([label,value])=>`<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl>`;
+}
 export function evidenceHTML(entry) {
-  const years=Object.entries(entry.years || {}).sort(([a],[b])=>a.localeCompare(b));
+  const years=Object.entries(entry.years || {}).filter(([year])=>/^\d{4}$/.test(year)).sort(([a],[b])=>a.localeCompare(b));
   const max=Math.max(1,...years.map(([,n])=>n));
   const recent=years.slice(-12);
   return `<h3 class="subject-section-title">Across the record</h3>
-    <p>${Number(entry.records).toLocaleString('en-AU')} records mention this ${entry.kind==='program'?'program':entry.kind==='electorate'?'electorate':'organisation'} by a matching recorded name.</p>
-    ${recent.length>1?`<div class="evidence-years" aria-label="Records by year">${recent.map(([year,n])=>`<div><span>${esc(year)}</span><meter min="0" max="${max}" value="${n}" aria-label="${esc(year)}: ${n} records">${n}</meter><strong>${Number(n).toLocaleString('en-AU')}</strong></div>`).join('')}</div>`:''}
-    <div class="evidence-excerpts">${(entry.excerpts || []).slice(0,6).map(row=>`<details class="supplier-contract evidence-excerpt"><summary><span><strong>${esc(row.source_kind)}</strong><small>${esc(row.date || 'Date not recorded')}</small></span></summary><blockquote>${esc(row.text)}</blockquote>${safeURL(row.source_url)?`<a href="${esc(safeURL(row.source_url))}" target="_blank" rel="noopener noreferrer">Open the source</a>`:`<a href="/search?kind=speech&q=${encodeURIComponent('"'+row.matched_text+'"')}">Search the indexed speeches</a>`}<details class="evidence-provenance"><summary>Why this connection appears</summary><p>Matching name: <strong>${esc(row.matched_text)}</strong></p><p>Record ${esc(row.source_id)} · Exact recorded name · Text positions ${Number(row.start)}–${Number(row.end)}</p></details></details>`).join('')}</div>
+    <p>${Number(entry.records).toLocaleString('en-AU')} records connected to this ${entry.kind==='program'?'program':entry.kind==='electorate'?'electorate':entry.kind==='place'?'place':'organisation'}.</p>
+    ${recent.length>1?`<div class="evidence-years" aria-label="Records by year">${recent.map(([year,n])=>`<div><span>${esc(year)}</span><svg viewBox="0 0 100 5" preserveAspectRatio="none" aria-hidden="true"><rect width="100" height="5" rx="2" fill="#e8edef"/><rect width="${(n/max*100).toFixed(2)}" height="5" rx="2" fill="#52768c"/></svg><strong>${Number(n).toLocaleString('en-AU')}</strong></div>`).join('')}</div>`:''}
+    ${entry.years?.Undated?`<p class="fineprint">${Number(entry.years.Undated).toLocaleString('en-AU')} records have no recorded start date.</p>`:''}
+    <div class="evidence-excerpts">${(entry.excerpts || []).slice(0,6).map(row=>`<details class="supplier-contract evidence-excerpt"><summary><span><strong>${esc(row.details?.source_fields?.recipient ? 'Grant to '+row.details.source_fields.recipient : row.source_kind)}</strong><small>${esc(displayDate(row.date))}</small></span></summary>${sourceContent(row)}${safeURL(row.source_url)?`<a href="${esc(safeURL(row.source_url))}" target="_blank" rel="noopener noreferrer">Open the source</a>`:`<a href="/search?kind=speech&q=${encodeURIComponent('"'+row.matched_text+'"')}">Search the indexed speeches</a>`}<details class="evidence-provenance"><summary>Why this connection appears</summary>${row.source_table==='government_grants'?`<p>${row.predicate==='grant_program'?'Program named in the grant record.':'Location recorded with the grant.'} ${esc(row.details?.allocation_note || '')}</p><p>Record ${esc(row.source_id)}${row.details?.candidate_electorates>1?' · This postcode crosses electorate boundaries.':''}</p>`:`<p>Matching name: <strong>${esc(row.matched_text)}</strong></p><p>Record ${esc(row.source_id)} · Exact recorded name · Text positions ${Number(row.start)}–${Number(row.end)}</p>`}</details></details>`).join('')}</div>
     ${(entry.locations || []).length?`<details class="evidence-locations"><summary>Places in the records</summary><ul>${entry.locations.map(place=>`<li><strong>${esc(place.name)}</strong> · ${esc(place.relationship)} ${esc(place.fields?.postcode)}<small>${place.details?.candidate_electorates>1?'This postcode crosses electorate boundaries.':'Postcode overlap; the precise address has not been located.'}</small></li>`).join('')}</ul></details>`:''}
+    ${(entry.representatives || []).length?`<details class="evidence-locations"><summary>Speakers recorded for this electorate</summary><ul>${entry.representatives.slice(0,15).map(person=>`<li><a href="/subject/person/${encodeURIComponent(person.name)}">${esc(person.name)}</a><small>${Number(person.records).toLocaleString('en-AU')} speeches carrying this electorate in their source fields · ${esc(person.first_date)} to ${esc(person.last_date)}</small></li>`).join('')}</ul><p class="fineprint">Speech metadata, not a list of current officeholders or verified terms of office.</p></details>`:''}
+    ${(entry.identity_links || []).length?`<details class="evidence-locations"><summary>How the identities connect</summary><ul>${entry.identity_links.map(link=>`<li>${esc(link.name)} · ABN ${esc(link.abn)}<small>Exact full name matched to a source identity with a validated ABN.</small><details><summary>Source records</summary><pre>${esc(JSON.stringify({source:link.source_records,matched:link.matching_records},null,2))}</pre></details></li>`).join('')}</ul></details>`:''}
     <p><a href="/connections.html?entity=${encodeURIComponent(entry.id || '')}">Explore connections, programs and places</a></p>
-    <p class="fineprint">A mention shows that a name appears in a record. It does not establish influence. These excerpts cover collected records, including some not yet in search.</p>`;
+    <p class="fineprint">Connections come from recorded names and locations. They do not establish influence. Coverage includes some records not yet in search.</p>`;
 }
 export async function mountEvidence(root, identity, options={}) {
   const lookup=identity.abn ? 'abn:'+String(identity.abn).replace(/\s/g,'') : nameKey(identity.name);
@@ -46,7 +60,8 @@ export async function mountEvidence(root, identity, options={}) {
     root.hidden=false;
     return true;
   } catch(error) {
-    if (error.name!=='AbortError') root.hidden=true;
+    root.hidden=true;
+    if (error.name!=='AbortError') throw error;
     return false;
   }
 }
