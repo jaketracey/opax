@@ -1045,6 +1045,7 @@ export class KnowledgeMapEngine {
           depthWrite: false,
         })
         material.color.set(style.colour)
+        const cat = material.color
         const mesh = new THREE.Mesh(this.territoryGeo, material)
         mesh.raycast = () => undefined
         mesh.renderOrder = -2
