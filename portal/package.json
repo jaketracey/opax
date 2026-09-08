@@ -14,7 +14,8 @@
     "check": "wrangler types && tsc --noEmit && node ../scripts/stamp_assets.mjs --check",
     "build:analytics": "node analytics/build.mjs",
     "deploy:staging": "npm run build:search && npm run build:graph && npm run build:analytics && node ../scripts/stamp_assets.mjs && wrangler deploy --env staging",
-    "build:search": "node ../scripts/build_search_catalog.mjs"
+    "build:search": "node ../scripts/build_search_catalog.mjs",
+    "test:community": "node --test test/community.test.mjs"
   },
   "devDependencies": {
     "@types/three": "^0.185.4",
@@ -25,9 +26,11 @@
     "wrangler": "^4.0.0"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "@resvg/resvg-wasm": "^2.6.2",
     "posthog-js": "^1.427.2",
     "satori": "^0.12.2",
-    "yoga-wasm-web": "^0.3.3"
+    "yoga-wasm-web": "^0.3.3",
+    "zod": "^4.5.4"
   }
 }

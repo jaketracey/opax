@@ -11,8 +11,11 @@
     "binding": "ASSETS",
     // API routes must reach the Worker even though assets exist; so must the
     // share images, which are drawn on request (src/og-render.ts).
-    "run_worker_first": ["/api/*", "/og/*", "/ingest/*"]
+    "run_worker_first": ["/api/*", "/og/*", "/ingest/*", "/mcp"]
   },
+
+  "d1_databases": [{"binding":"COMMUNITY_DB","database_name":"opax-community","database_id":"ea0ca399-189f-4fc0-83f8-66a41204a180","migrations_dir":"migrations"}],
+  "send_email": [{"name":"COMMUNITY_EMAIL"}],
 
   "observability": {
     "enabled": true,
@@ -32,6 +35,9 @@
   //   npx wrangler secret put ARAG_KB_TOKEN
   //   npx wrangler secret put ARAG_KB_ID
   "vars": {
+    "COMMUNITY_ORIGIN": "https://opax.com.au",
+    "COMMUNITY_EMAIL_FROM": "hello@login.opax.com.au",
+    "COMMUNITY_ENABLED": "true",
     "ARAG_ZONE": "aws-ap-southeast-2-1",
     // Folded into every response-cache key (/api/ask 7 days, /api/search,
     // /api/resource, /api/followups). Bump it whenever the corpus changes
@@ -63,10 +69,12 @@
   "env": {
     "staging": {
       "name": "opax-portal-staging",
+      "d1_databases": [{"binding":"COMMUNITY_DB","database_name":"opax-community-staging","database_id":"033d5775-4443-4757-a984-326f2914ac7f","migrations_dir":"migrations"}],
+      "send_email": [{"name":"COMMUNITY_EMAIL"}],
       "workers_dev": true,
       "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
       "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
-      "vars": { "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-08-ask-full-record" },
+      "vars": { "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-08-ask-full-record" },
       "ratelimits": [],
       "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": ["/*"] }
     }

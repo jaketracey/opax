@@ -24,6 +24,7 @@
       ['/reports/media', 'Media ownership', 'Press, platforms and ownership.'],
     ] },
     { id: 'about', label: 'About', children: [
+      ['/community', 'Community', 'Share reading lists and explore the record together.'],
       ['/about', 'About Opax', 'Independent, open-source parliamentary research.'],
       ['/methods', 'Methods & how to cite', 'Sources, limitations and citation formats.'],
       ['/stats', 'Sources & coverage', 'What is available in the record.'],

@@ -15,6 +15,8 @@
 
 import { ASK_PIPELINE_VERSION, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, type AskScope } from './ask-scope'
+import { communityRoute } from './community'
+import { communityMcp } from './community-mcp'
 import { proxyPostHog } from './posthog'
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
 import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, integrityQuestion, type AskRecords } from './ask-records'
@@ -3744,6 +3746,8 @@ function withSecurityHeaders(res: Response, url: URL): Response {
   const out = new Response(NULL_BODY_STATUS.has(res.status) ? null : res.body, res)
   for (const [k, v] of Object.entries(BASE_SECURITY_HEADERS)) out.headers.set(k, v)
   out.headers.set('content-security-policy', isApi ? CSP_API : CSP_PAGE)
+  if (url.pathname.startsWith('/api/community/') || url.pathname === '/mcp') { out.headers.set('cache-control', 'no-store'); out.headers.set('referrer-policy', 'no-referrer') }
+  if (url.pathname === '/community' || url.pathname === '/community.html') out.headers.set('referrer-policy', 'no-referrer')
   if (NO_STORE_PATHS.has(url.pathname) && !out.headers.has('cache-control')) {
     out.headers.set('cache-control', 'no-store')
   }
@@ -3961,6 +3965,15 @@ export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
     const isApi = url.pathname.startsWith('/api/')
+    const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
+    if (url.pathname.startsWith('/api/community/')) return communityResponse(await communityRoute(request, env))
+    if (url.pathname === '/mcp') return communityResponse(await communityMcp(request, env, async path => {
+      const target = new URL(path, env.COMMUNITY_ORIGIN)
+      const local = new Request(target, { headers: { 'cf-connecting-ip': request.headers.get('cf-connecting-ip') || 'mcp' } })
+      if (target.pathname === '/api/search-all') return apiUnifiedSearch(local, target, env, ctx)
+      if (env.STAGING_API) return env.STAGING_API.fetch(local)
+      return route(local, target, env, ctx)
+    }))
     if (url.pathname === '/api/search-all' && request.method === 'GET') {
       try {
         const response = withSecurityHeaders(await apiUnifiedSearch(request, url, env, ctx), url)
