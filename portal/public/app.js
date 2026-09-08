@@ -2463,8 +2463,7 @@ function wireAskCitations(container, sources) {
 
 function sourceItem(s, num, passage = false) {
   const li = document.createElement("li");
-  const btn = document.createElement("button");
-  btn.type = "button";
+  const btn = document.createElement("a");
   btn.className = "link source-title";
   // A record titled only "Speaker — 2013-03-19" has no debate name to show:
   // the row leads with the speaker in words and the byline carries the rest,
@@ -2473,7 +2472,8 @@ function sourceItem(s, num, passage = false) {
   const nameOnly = !subject && s.speaker;
   btn.textContent = subject || String(s.title || s.slug || "");
   if (nameOnly) li.classList.add("source-name-only");
-  btn.addEventListener("click", () => { const href = searchResultHref(s); if (href.startsWith("/")) goRoute(href); else location.assign(href); });
+  const target = new URL(searchResultHref(s), location.origin);
+  if (target.protocol === "https:" || (target.protocol === "http:" && target.origin === location.origin)) btn.href = target.href;
   if (num) {
     const numEl = document.createElement("span");
     numEl.className = "source-num";
