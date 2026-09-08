@@ -26,6 +26,11 @@ class SpeechTextHygieneTests(unittest.TestCase):
         text = "The link says View the PC OA website in the navigation."
         self.assertEqual(clean_speech_text(text, "openaustralia"), text)
 
+    def test_website_footer_attached_to_truncated_source(self):
+        self.assert_rule("openaustralia_website_footer",
+            "The GoverView the PC OA website\n\nView the PC OA website",
+            "The Gover", source="openaustralia")
+
     def test_matching_broken_timestamp_banner_real_donato_1286344(self):
         before = (
             "Mr PHILIP DONATO ( Orange ) ( 22:2 5 :05 ): Few issues debated "
