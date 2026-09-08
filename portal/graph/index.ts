@@ -430,6 +430,22 @@ const CSS = `
   white-space: nowrap; }
 .mm-row-amt { font-weight: 600; white-space: nowrap; }
 .mm-row-years { font-size: 11px; color: #8a8578; white-space: nowrap; }
+.mm-award-group { margin: 12px 0 0; padding: 0 0 0 12px; border-left: 3px solid var(--mm-award-colour, #29877e); }
+.mm-award-group + .mm-award-group { margin-top: 18px; }
+.mm-award-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.mm-card .mm-award-title { margin: 0; font-family: inherit; font-size: 12px; font-weight: 600; line-height: 1.4; min-width: 0; }
+.mm-award-category { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0;
+  border: 0; background: none; text-align: left; font: inherit; color: #142a43; cursor: pointer; }
+.mm-award-category:hover { text-decoration: underline; text-underline-offset: 3px; }
+.mm-award-category:focus-visible { outline: 2px solid #8a5a12; outline-offset: 3px; }
+.mm-award-arrow { color: #8a5a12; font-size: 18px; }
+.mm-award-total { flex: none; font-size: 16px; color: #26251f; font-variant-numeric: tabular-nums; }
+.mm-award-meta { margin: 0 0 10px; font-size: 11px; line-height: 1.4; color: #605e54; }
+.mm-award-projects { list-style: none; margin: 0; padding: 0; }
+.mm-award-project { display: flex; align-items: baseline; gap: 12px; padding: 9px 0; border-top: 1px solid #e4e1d8;
+  font-size: 12px; line-height: 1.5; color: #4a4942; }
+.mm-award-project-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.mm-award-project-amount { flex: none; font-weight: 600; font-variant-numeric: tabular-nums; }
 .mm-ask { display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: 100%; min-height: 44px;
   margin-top: 12px; padding: 8px 12px; border: 0; border-radius: 9px;
   background: #142a43; color: #ffffff; font-size: 13px; font-weight: 600;
@@ -1350,6 +1366,39 @@ export async function mountMoneyMap(
     }
   }
 
+  /** Public funding is grouped by record category, with projects nested below. */
+  const awardGroup = (parent: HTMLElement, label: string, colour: string, block: GrantsBlock,
+    noun: string, onClick: (() => void) | null) => {
+    const group = el('section', 'mm-award-group', parent)
+    group.style.setProperty('--mm-award-colour', colour)
+    const heading = el('div', 'mm-award-heading', group)
+    const title = el('h3', 'mm-award-title', heading)
+    if (onClick) {
+      const button = el('button', 'mm-award-category', title)
+      button.type = 'button'
+      button.textContent = label
+      button.title = `Explore ${label.toLowerCase()} on the map`
+      button.addEventListener('click', onClick)
+      const arrow = el('span', 'mm-award-arrow', button)
+      arrow.textContent = '›'
+      arrow.setAttribute('aria-hidden', 'true')
+    } else title.textContent = label
+    el('strong', 'mm-award-total', heading).textContent = formatMoney(block.total)
+    el('p', 'mm-award-meta', group).textContent = `${block.count.toLocaleString()} ${noun}${block.count === 1 ? '' : 's'} · ${yearSpan(block.firstYear, block.lastYear)}`
+    const entries = (block.top ?? []).slice(0, 3)
+    if (entries.length) {
+      const projects = el('ul', 'mm-award-projects', group)
+      for (const [name, amount] of entries) {
+        const item = el('li', 'mm-award-project', projects)
+        el('span', 'mm-award-project-name', item).textContent = name
+        // A single project already shares the category total directly above it.
+        if (entries.length > 1 || amount !== block.total) {
+          el('span', 'mm-award-project-amount', item).textContent = formatMoney(amount)
+        }
+      }
+    }
+  }
+
   /** A question-trigger or profile link on a card. */
   const trigger = (parent: HTMLElement, href: string, label: string, quiet = false, external = false) => {
     const a = el('a', quiet ? 'mm-ask mm-ask-quiet' : 'mm-ask', parent)
@@ -1476,34 +1525,26 @@ export async function mountMoneyMap(
         // summed with them. The figures follow the year window like the rest.
         const grantsTitle = el('div', 'mm-card-section', card)
         grantsTitle.textContent = 'Public money received'
-        const glist = el('ul', 'mm-rows', card)
+        const glist = el('div', 'mm-award-groups', card)
         const grantor = raw.nodes.find((n) => n.kind === 'grantor' && n.flow !== 'contracts')
         const contractor = raw.nodes.find((n) => n.kind === 'grantor' && n.flow === 'contracts')
         if (node.grants) {
           const g = view.grants.get(node.id) ?? node.grants
           if (g.count > 0) {
-            row(glist, grantor?.colour ?? GRANTOR_COLOUR, grantor?.label ?? 'Grants', g.total,
-              `${g.count.toLocaleString()} grant${g.count === 1 ? '' : 's'} · ${yearSpan(g.firstYear, g.lastYear)}`,
+            awardGroup(glist, grantor?.label ?? 'Grants', grantor?.colour ?? GRANTOR_COLOUR, g, 'grant',
               grantor ? () => setSelection(grantor.id, { user: true }) : null)
-            for (const [program, dollars] of (g.top ?? []).slice(0, 3)) {
-              row(glist, null, program, dollars, '', null)
-            }
           } else {
-            const none = el('li', 'mm-row-note', glist)
+            const none = el('p', 'mm-row-note', glist)
             none.textContent = view.span ? `no grants started in ${view.span}` : 'no grants'
           }
         }
         if (node.contracts) {
           const c = view.contracts.get(node.id) ?? node.contracts
           if (c.count > 0) {
-            row(glist, contractor?.colour ?? CONTRACTOR_COLOUR, contractor?.label ?? 'Contracts', c.total,
-              `${c.count.toLocaleString()} contract${c.count === 1 ? '' : 's'} · ${yearSpan(c.firstYear, c.lastYear)}`,
+            awardGroup(glist, contractor?.label ?? 'Contracts', contractor?.colour ?? CONTRACTOR_COLOUR, c, 'contract',
               contractor ? () => setSelection(contractor.id, { user: true }) : null)
-            for (const [agency, dollars] of (c.top ?? []).slice(0, 3)) {
-              row(glist, null, agency, dollars, '', null)
-            }
           } else {
-            const none = el('li', 'mm-row-note', glist)
+            const none = el('p', 'mm-row-note', glist)
             none.textContent = view.span ? `no contracts started in ${view.span}` : 'no contracts'
           }
         }
