@@ -37,7 +37,9 @@ export function matchesCatalogFilters(meta: Meta, params: URLSearchParams): bool
   if(params.get('to') && (!from || from>Number(params.get('to'))))return false
   return true
 }
-export async function searchCatalog(url: URL, assets: Fetcher) {
+// Ask uses union matching and a per-kind window so contracts cannot crowd out
+// receipts or interests. The public search keeps its exact AND semantics.
+export async function searchCatalog(url: URL, assets: Fetcher, options: { anyTerms?: boolean; perKind?: number } = {}) {
   const terms=tokens(url.searchParams.get('q'))
   if(terms.length>16)throw new Error('Use up to 16 search words')
   const manifest=await asset<Manifest>(assets,'/search-catalog/manifest.json',true)
@@ -58,24 +60,28 @@ export async function searchCatalog(url: URL, assets: Fetcher) {
       const posting=partition[key]
       for(let n=0;n<posting.length;n+=2){
         const id=posting[n]
-        if(scores && !scores[id])continue
+        if(scores && !options.anyTerms && !scores[id])continue
         if(!hits[id])count++
         hits[id]=Math.max(hits[id],posting[n+1]*(key===term?1:0.65))
       }
     }
-    if(scores)for(let id=0;id<hits.length;id++)if(hits[id])hits[id]+=scores[id]
+    if(scores)for(let id=0;id<hits.length;id++)if(options.anyTerms || hits[id])hits[id]+=scores[id]
     scores=hits
-    if(!count)break
+    if(!count && !options.anyTerms)break
   }
   // Keep only the best 200 IDs in a min-heap. Broad words must not allocate
   // hundreds of thousands of Map entries or result objects per request.
   const compare=(a:number,b:number)=>(scores![a]-scores![b])||b-a
-  const heap:number[]=[]
+  const heaps=new Map<string,number[]>()
+  const limit=options.perKind ?? 200
   let total=0
   if(scores)for(let id=0;id<scores.length;id++){
     if(!scores[id]||!matchesCatalogFilters(meta[id],url.searchParams))continue
     total++
-    if(heap.length<200){
+    const group=options.perKind ? meta[id][0] : 'all'
+    if(!heaps.has(group))heaps.set(group,[])
+    const heap=heaps.get(group)!
+    if(heap.length<limit){
       heap.push(id);let child=heap.length-1
       while(child>0){const parent=(child-1)>>1;if(compare(heap[child],heap[parent])>=0)break;[heap[child],heap[parent]]=[heap[parent],heap[child]];child=parent}
     } else if(compare(id,heap[0])>0){
@@ -83,7 +89,7 @@ export async function searchCatalog(url: URL, assets: Fetcher) {
       while(true){let child=parent*2+1;if(child>=heap.length)break;if(child+1<heap.length&&compare(heap[child+1],heap[child])<0)child++;if(compare(heap[parent],heap[child])<=0)break;[heap[parent],heap[child]]=[heap[child],heap[parent]];parent=child}
     }
   }
-  const matches=heap.sort((a,b)=>compare(b,a)).map(id=>[id,scores![id]])
+  const matches=[...heaps.values()].flat().sort((a,b)=>compare(b,a)).map(id=>[id,scores![id]])
   const selected=matches.slice(0,200), shards=new Map<number,CatalogRecord[]>()
   const shardIds=[...new Set(selected.map(([id])=>Math.floor(id/manifest.recordShardSize)))]
   // Bound concurrent asset reads, including the 200-row export request.

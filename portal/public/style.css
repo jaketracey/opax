@@ -827,7 +827,7 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 #ask-money > .kicker { margin-top: 0; }
 /* The money answer is a data spread, not prose: it runs the full column and
    the charts stretch with it, two abreast where there is room. */
-#ask-money .tiles { margin: 1.5rem 0 0.4rem; }
+#ask-money .tiles { margin: 1.5rem 0 2rem; }
 #ask-money .chart { margin-top: 1.6rem; max-width: none; }
 @media (min-width: 1000px) {
   #ask-money .money-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; align-items: start; }

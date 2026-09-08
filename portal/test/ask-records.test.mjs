@@ -1,0 +1,87 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {runInNewContext} from 'node:vm';
+import {build} from 'esbuild';
+import ts from 'typescript';
+
+const bundle=await build({entryPoints:[new URL('../src/ask-records.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
+const records=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
+const assets={fetch:async req=>new Response(await readFile(new URL('../public'+new URL(req.url).pathname,import.meta.url)))};
+const parsed=ts.createSourceFile('index.ts',await readFile(new URL('../src/index.ts',import.meta.url),'utf8'),ts.ScriptTarget.Latest,true);
+const names=new Set(['buildAskBody','askPayload','askCacheInput','filterExpression','canonicalSpeaker','TOPIC_SLUGS','label','calibrate']);
+const code=parsed.statements.filter(n=>ts.isFunctionDeclaration(n)?names.has(n.name?.text):ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>names.has(d.name.getText(parsed)))).map(n=>n.getText(parsed)).join('\n');
+const worker={...records};
+runInNewContext(ts.transpile(code),worker);
+const plain=value=>JSON.parse(JSON.stringify(value));
+
+test('natural questions find funding and public records, with explicit speech scope respected',async()=>{
+ const question='Who takes gambling money, and what do they say about pokies?';
+ assert.equal(records.recordQuery({question}),'gambling');
+ const found=await records.retrieveAskRecords({question},assets);
+ assert.ok(found.records.some(r=>r.kind==='receipt' && /Tabcorp.*Liberal/.test(r.title)));
+ assert.ok(found.records.some(r=>r.kind==='donor'));
+ assert.ok(found.records.some(r=>r.kind==='bill'));
+ assert.ok(found.records.some(r=>r.kind==='grant'));
+ assert.ok(found.records.length<=48);
+ assert.ok(found.records.every(r=>r.kind!=='news'));
+ assert.equal((await records.retrieveAskRecords({question,kind:'speech'},assets)).records.length,0);
+});
+
+test('entity questions do not fill the answer with unrelated partial name matches',async()=>{
+ const found=await records.retrieveAskRecords({question:'What interests has Anthony Albanese declared?'},assets);
+ assert.ok(found.records.some(r=>r.kind==='interest'));
+ assert.ok(found.records.filter(r=>r.kind==='person' || r.kind==='interest' || r.kind==='expense').every(r=>/Anthony Albanese/.test(r.title)));
+ assert.ok(!found.records.some(r=>r.kind==='donor' || r.kind==='receipt'));
+ const contracts=await records.retrieveAskRecords({question:'What contracts has Woodside Energy received?'},assets);
+ assert.ok(contracts.records.some(r=>r.kind==='contract' && /7,260,000/.test(r.snippet)));
+ assert.ok(contracts.records.every(r=>!/Defence Families/.test(r.title)));
+});
+
+test('follow-ups use the prior question, never ungrounded model claims',()=>{
+ assert.equal(records.recordQuery({question:'And Labor?',context:[{author:'question',text:'Who takes gambling money?'},{author:'answer',text:'InventedIndustries takes it.'}]}),'labor gambling');
+});
+
+test('party and date filters are honoured without relabelling lifetime totals',async()=>{
+ const found=await records.retrieveAskRecords({question:'Tabcorp',party:'Labor'},assets);
+ assert.ok(found.records.some(r=>r.kind==='receipt'));
+ assert.ok(found.records.every(r=>!r.title.includes('→ Liberal')));
+ const dated=await records.retrieveAskRecords({question:'Tabcorp',from:'2024',to:'2024'},assets);
+ assert.ok(dated.records.every(r=>!/^1998/.test(r.dateLabel||'')));
+ const person=await records.retrieveAskRecords({question:'gambling',speaker:'Andrew Wilkie'},assets);
+ assert.ok(person.records.every(r=>r.kind!=='receipt'), 'party receipts cannot silently bypass an individual filter');
+});
+
+test('Ask defaults to all documents and includes structured evidence without unsafe speaker attribution',()=>{
+ const evidence={records:[{kind:'receipt',title:'Company → Party',snippet:'$123 over 2020–2024.',href:'/money?type=receipts',dateLabel:'2020–2024',source:'AEC'}],coverage:'Partial published record',total:1};
+ const body=worker.buildAskBody({question:'Who received it?'},evidence);
+ const filters=JSON.stringify(body.filter_expression);
+ assert.ok(!filters.includes('"label":"speech"'));
+ assert.match(filters, /"not":\{"prop":"label","labelset":"kind","label":"news"\}/);
+ assert.equal(body.extra_context.length,1);
+ assert.equal(JSON.parse(body.extra_context[0]).period,'2020–2024');
+ assert.match(body.prompt.system,/NOT proof that any individual politician/);
+ assert.match(body.prompt.system,/never use it as a subtotal/i);
+ assert.equal(body.rag_strategies,undefined);
+ const speech=worker.buildAskBody({question:'What did he say?',kind:'speech',speaker:'Andrew Wilkie'});
+ assert.match(JSON.stringify(speech.filter_expression),/"label":"speech"/);
+ assert.match(speech.prompt.user,/These records are indexed under Andrew Wilkie/);
+ assert.ok(!worker.buildAskBody({question:'What did he do?',speaker:'Andrew Wilkie'}).prompt.user.includes('Every passage is from a speech'));
+ assert.equal(worker.askCacheInput({question:'Same'},'v'),worker.askCacheInput({question:'Same',kind:'all'},'v'));
+ assert.notEqual(worker.askCacheInput({question:'Same'},'v'),worker.askCacheInput({question:'Same',kind:'speech'},'v'));
+});
+
+test('external citation offsets and document citations share one source payload with working destinations',()=>{
+ const rows=[{kind:'receipt',title:'Company → Party',snippet:'$123',href:'/money?type=receipts',slug:'catalog-1'},
+ {kind:'donor',title:'Uncited company',snippet:'$456',href:'/subject/donor/Other',slug:'catalog-2'}];
+ const citations={USER_CONTEXT_0:[[0,12]],'rid/t/body/0-20':[[13,25]]};
+ const payload=worker.askPayload({answer:'Party received funding.',citations,retrieval_results:{resources:{rid:{slug:'bill-c1234',title:'A bill'},news:{slug:'news-1'}}}},{records:rows,coverage:'',total:2});
+ assert.deepEqual(plain(payload.citations),citations);
+ assert.equal(payload.sources.length,3);
+ assert.equal(payload.sources[0].resource,'USER_CONTEXT_0');
+ assert.equal(payload.sources[0].cited,true);
+ assert.equal(payload.sources[0].href,'/money?type=receipts');
+ assert.equal(payload.sources[1].cited,false);
+ assert.equal(payload.sources[2].href,'/bill/c1234');
+ assert.equal(payload.sources[2].cited,true);
+});

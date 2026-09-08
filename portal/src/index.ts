@@ -15,6 +15,7 @@
 
 import { proxyPostHog } from './posthog'
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
+import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, type AskRecords } from './ask-records'
 import { SEARCH_SORTS, compareSearchResults } from './search-sort'
 import { tokens as catalogTokens } from './catalog-query.mjs'
 import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
@@ -90,7 +91,7 @@ function filterExpression(f: {
   from?: string | null
   to?: string | null
 }): Record<string, unknown> | null {
-  const clauses: Record<string, unknown>[] = []
+  const clauses: Record<string, unknown>[] = [{ not: { prop: 'label', labelset: 'kind', label: 'news' } }]
   if (f.kind && f.kind !== 'all') {
     clauses.push({ prop: 'label', labelset: 'kind', label: f.kind })
   }
@@ -527,7 +528,7 @@ async function searchWindow(
   }
 
   const results = Object.entries(found.resources ?? {})
-    .filter(([, r]) => !(r.slug ?? '').startsWith('da-')) // enrichment output never surfaces as a result
+    .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? '')) // enrichment output never surfaces as a result
     .map(([rid, resource]) => {
     const slug = resource.slug ?? ''
     const m = SLUG_RE.exec(slug)
@@ -632,7 +633,7 @@ const healthyRetrieval = (a: AskAnswer): boolean =>
   Object.keys(a.retrieval_results?.resources ?? {}).length >= 5
 
 /** The platform /ask body for a portal question: filters, context turns, prompt. */
-function buildAskBody(input: AskInput): Record<string, unknown> {
+function buildAskBody(input: AskInput, records: AskRecords = { records: [], coverage: '', total: 0 }): Record<string, unknown> {
   const { question, kind, speaker, party, state, topic, from, to, context } = input
   const body: Record<string, unknown> = {
     query: question,
@@ -640,6 +641,9 @@ function buildAskBody(input: AskInput): Record<string, unknown> {
     top_k: 20,
     reranker: 'predict',
     show: ['basic', 'origin', 'extra'],
+    // Do not extend passages with the record's speaker metadata: some imported
+    // debates contain several speakers under one index name.
+    extra_context: recordContext(records.records),
   }
   // Prior conversation turns from the chat view. The platform's /ask context
   // author enum is NUCLIA | USER (422 otherwise) — prior answers go in as
@@ -655,8 +659,8 @@ function buildAskBody(input: AskInput): Record<string, unknown> {
   // prompt below that turn is worse than useless (measured 2026-09-04 on
   // "hospitality", 1998-2006, 20/20 passages on topic: the prompt alone
   // answered every time, the prompt plus the turn refused every time).
-  const provenance = speaker?.trim()
-    ? `Every passage is from a speech delivered by ${speaker.trim()} in an Australian parliament; first-person passages are their own words. `
+  const provenance = speaker?.trim() && kind === 'speech'
+    ? `These records are indexed under ${speaker.trim()} in an Australian parliament. Some debate records contain multiple speakers; the index name alone does not establish who said a particular passage. `
     : ''
   if (Array.isArray(context) && context.length > 0) {
     turns.push(
@@ -670,7 +674,7 @@ function buildAskBody(input: AskInput): Record<string, unknown> {
     )
   }
   if (turns.length > 0) body.context = turns
-  const filters = filterExpression({ kind: kind ?? 'speech', speaker, party, state, topic, from, to })
+  const filters = filterExpression({ kind: kind ?? 'all', speaker, party, state, topic, from, to })
   if (filters) body.filter_expression = filters
 
   // Every ask owns its prompt. The platform default's fallback line ("Not
@@ -683,9 +687,9 @@ function buildAskBody(input: AskInput): Record<string, unknown> {
   // the substance.
   body.prompt = {
     system:
-      'You are OPAX, a research assistant over the Australian parliamentary record. You answer strictly from the passages provided, citing them. You never invent facts.',
+      'You are OPAX, a research assistant over Australian parliamentary and public financial records. You answer strictly from the passages provided, citing them. You never invent facts. ' + RECORD_GROUNDING,
     user:
-      `${provenance}Passages from the record (a speech is the named speaker's own words; first-person text is theirs):\n{context}\n\n` +
+      `${provenance}Passages from the record:\n{context}\n\n` +
       'Question: {question}\n\n' +
       'Instructions: Answer from whichever passages address the question, quoting or closely paraphrasing them. ' +
       'Ignore passages that are off-topic; answer from the ones that apply even if only a few do or they address it only in part. If some passages mention the subject only briefly, report what they say and note that the record is limited. ' +
@@ -695,14 +699,14 @@ function buildAskBody(input: AskInput): Record<string, unknown> {
       // the model once listed OAM recipients it found in the passages; asked
       // to count political donors it cannot, and should say where that lives.
       'On this site "donor", "donation" and "gave" mean money disclosed to electoral commissions by political donors, not blood or organ donation, unless the question says otherwise. ' +
-      'Speeches cannot count or total donors, donations, grants or contracts: if the question asks for such a figure, say in one sentence that the disclosed registers on this site (the ledger and the money map) hold it, then report what the speeches themselves say about the subject. ' +
+      (records.coverage ? `Published-record coverage: ${records.coverage} ` : '') +
       'Only if NO passage mentions the subject at all, reply exactly: The record retrieved for this question does not discuss it.',
   }
   return body
 }
 
 /** The portal's answer payload: the same shape from the sync and streamed paths. */
-function askPayload(answer: AskAnswer): { answer: string; citations: Record<string, unknown>; sources: unknown[] } {
+function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }): { answer: string; citations: Record<string, unknown>; sources: unknown[] } {
   // Citation keys are ARAG paragraph ids ("<rid>/f/<field>/..."); the leading
   // segment is the resource id. Platform-format knowledge stays HERE — the
   // frontend just reads the `cited` flag.
@@ -711,7 +715,7 @@ function askPayload(answer: AskAnswer): { answer: string; citations: Record<stri
   )
   const citedParas = new Set(Object.keys(answer.citations ?? {}))
   const sources = Object.entries(answer.retrieval_results?.resources ?? {})
-    .filter(([, r]) => !(r.slug ?? '').startsWith('da-'))
+    .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? ''))
     .map(([rid, r]) => {
       const meta = r.extra?.metadata ?? {}
       // The passage to quote beside the answer: prefer the paragraph the
@@ -738,6 +742,8 @@ function askPayload(answer: AskAnswer): { answer: string; citations: Record<stri
         resource: rid,
         slug: r.slug ?? '',
         title: r.title ?? r.slug ?? rid,
+        href: (r.slug ?? '').startsWith('bill-') ? `/bill/${(r.slug ?? '').slice(5)}` : `/doc/${r.slug ?? ''}`,
+        kind: label(r, 'kind'),
         speaker: r.origin?.collaborators?.[0] ?? null,
         party: label(r, 'party'),
         state: label(r, 'state'),
@@ -752,7 +758,7 @@ function askPayload(answer: AskAnswer): { answer: string; citations: Record<stri
   return {
     answer: answer.answer ?? '',
     citations: answer.citations ?? {},
-    sources,
+    sources: [...recordSources(records.records, answer.citations ?? {}), ...sources],
   }
 }
 
@@ -770,7 +776,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
   if (Array.isArray(input.context) && input.context.length > 0) return null
   const str = (s: string | undefined): string => (s ?? '').trim().replace(/\s+/g, ' ')
   const yr = (s: string | undefined): string => (/^\d{4}$/.test(str(s)) ? str(s) : '')
-  const kind = input.kind ?? 'speech'
+  const kind = input.kind ?? 'all'
   const topic = str(input.topic)
   return JSON.stringify({
     epoch,
@@ -878,11 +884,14 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const limited = await rateLimited(env.ASK_LIMITER, request)
   if (limited) return limited
 
-  const body = buildAskBody(input)
+  let records: AskRecords
+  try { records = await retrieveAskRecords(input, env.ASSETS) }
+  catch { return json({ error: 'Public-record search is temporarily unavailable. Please try again.' }, 503) }
+  const body = buildAskBody(input, records)
   const store = (payload: AskPayload): void => {
     if (cacheKey && cacheableAnswer(payload)) cacheStore(ctx, cacheKey, json(payload), ASK_CACHE_TTL)
   }
-  if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status })
+  if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status, records })
 
   const askOnce = async (b: Record<string, unknown>, timeoutMs: number): Promise<AskAnswer | Response> => {
     try {
@@ -902,7 +911,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     const again = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
     if (!(again instanceof Response) && !isRefusal(again)) answer = again
   }
-  const payload = askPayload(answer)
+  const payload = askPayload(answer, records)
   store(payload)
   return withCacheStatus(json(payload), status, false)
 }
@@ -1112,7 +1121,7 @@ function apiAskStream(
   body: Record<string, unknown>,
   env: Env,
   ctx: ExecutionContext,
-  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus },
+  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus; records: AskRecords },
 ): Response {
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
   const writer = writable.getWriter()
@@ -1155,7 +1164,7 @@ function apiAskStream(
           const again = await streamAskOnce(env, body, send, upstream.signal)
           if (!isRefusal(again)) result = again
         }
-        const payload = askPayload(result)
+        const payload = askPayload(result, opts.records)
         await send('done', payload)
         // Cached from the `done` payload — the same bytes the reader got —
         // even when the reader left early (the answer was paid for).
