@@ -153,7 +153,8 @@ as before (retried no sooner than a minute later).
 Public money going the other way. `scripts/export_money_graph.py` (and the
 state export for Queensland) adds one **grantor** node per file
 (`grantor:federal` "Commonwealth grants", `grantor:qld` "Queensland grants";
-`kind: 'grantor'`, `group: 'parties'` so it sits at the centre, teal
+`kind: 'grantor'`; legacy exports use `group: 'parties'`, which the adapter maps
+to a separate `public money` territory away from the party centre; teal
 `GRANTOR_COLOUR`) and one **grant flow** per donor on the map that the grant
 register resolves to the same entity (`parli.ingest.grant_recipients`: ABN,
 then unique name), `grantor -> donor`, marked `grant: true`, with `byYear`
@@ -170,6 +171,8 @@ of money are never summed.
   (the grantor row, top programs, and "Open their grants file", which deep
   links to `/explore?game=grants&jur=<jur>&open=<rid>`); a grant flow has its
   own card. Grantor nodes get no words block.
+- Public-money sources remain individual nodes at every zoom level, so grants
+  and contracts are never combined into a single total.
 - Semantic zoom: flows INTO a folded cluster from outside it (the grantor's)
   fold into one aggregated flow per source, drawn in the source's hue, the
   mirror of the donor->party hub flows.

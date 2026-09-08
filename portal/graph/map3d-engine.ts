@@ -1080,7 +1080,8 @@ export class KnowledgeMapEngine {
         for (const member of members) member.territory = territory
         this.territories.push(territory)
 
-        if (data.collapseGroups === false || group === data.centralGroup || count < HUB_MIN_MEMBERS) continue
+        // Public sources stay distinct: grants and contracts must never fold into one summed hub.
+        if (data.collapseGroups === false || group === data.centralGroup || members.some((member) => member.node.kind === 'grantor') || count < HUB_MIN_MEMBERS) continue
 
         const hubMaterial = new THREE.MeshStandardMaterial({
           roughness: 0.42,

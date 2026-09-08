@@ -206,7 +206,7 @@ function yearSpan(first: number | null, last: number | null): string {
 const toMapNode = (n: MoneyNode): MapNode => ({
   id: n.id,
   label: n.label,
-  group: n.group,
+  group: n.kind === 'grantor' ? 'public money' : n.group,
   weight: n.total / WEIGHT_SCALE,
   kind: n.kind,
   industry: n.industry,
@@ -282,8 +282,9 @@ export function buildGraph(raw: MoneyGraph): {
   let slot = 0
   for (const group of CLUSTER_COLOURS.keys()) slots.set(group, slot++)
 
+  const nodes = raw.nodes.map(toMapNode)
   const counts = new Map<string, number>()
-  for (const node of raw.nodes) counts.set(node.group, (counts.get(node.group) ?? 0) + 1)
+  for (const node of nodes) counts.set(node.group, (counts.get(node.group) ?? 0) + 1)
 
   const groupStyles = new Map<string, GroupStyle>()
   for (const [group, count] of counts) {
@@ -297,7 +298,6 @@ export function buildGraph(raw: MoneyGraph): {
     })
   }
 
-  const nodes = raw.nodes.map(toMapNode)
   const edges = raw.edges.map(toMapEdge)
   return { nodes, edges, groupStyles, degrees: buildDegrees(edges) }
 }
@@ -1132,7 +1132,7 @@ export async function mountMoneyMap(
   // --- Legend / filter -------------------------------------------------
   const chips = new Map<string, HTMLButtonElement>()
   const applyIsolate = (group: string | null) => {
-    activeGroup = group !== null && group !== 'parties' && graph.groupStyles.has(group) ? group : null
+    activeGroup = group !== null && group !== 'parties' && group !== 'public money' && graph.groupStyles.has(group) ? group : null
     for (const [g, c] of chips) {
       c.setAttribute('aria-pressed', String(g === activeGroup))
       if (activeGroup !== null && g !== activeGroup) c.setAttribute('data-dimmed', '')
@@ -1143,7 +1143,7 @@ export async function mountMoneyMap(
   }
   if (legend) {
     const legendGroups = [...CLUSTER_COLOURS.keys()].filter(
-      (group) => group !== 'parties' && graph.groupStyles.has(group),
+      (group) => group !== 'parties' && group !== 'public money' && graph.groupStyles.has(group),
     )
     for (const group of legendGroups) {
       const chip = el('button', 'mm-chip', legend)
