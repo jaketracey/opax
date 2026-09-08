@@ -4822,7 +4822,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .money-workspace-toolbar #money-jur select,
   .money-workspace-toolbar > .journey-menu > summary,
   .money-workspace-toolbar .research-filters > summary,
-  .money-workspace-toolbar [data-records] {box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:.4rem;width:100%;min-height:48px;margin:0;padding:.7rem .8rem;font:600 .875rem/1.3 var(--sans);border:1px solid var(--line-strong);border-radius:5px;background:var(--paper-raised);color:var(--navy);text-align:left}
+  .money-workspace-toolbar [data-records] {box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:.4rem;width:100%;min-height:48px;margin:0;padding:.7rem .8rem;font:600 .875rem/1.3 var(--sans);border:1px solid var(--line-strong);border-radius:5px;background-color:var(--paper-raised);color:var(--navy);text-align:left}
   .money-workspace-toolbar #money-jur select {height:100%}
   .money-workspace-toolbar summary::after {margin:0;flex-shrink:0}
   .money-workspace-toolbar details[open] > summary,
