@@ -69,8 +69,7 @@ export async function searchCatalog(url: URL, assets: Fetcher) {
   }
   // Keep only the best 200 IDs in a min-heap. Broad words must not allocate
   // hundreds of thousands of Map entries or result objects per request.
-  const newest=url.searchParams.get('sort')==='newest'
-  const compare=(a:number,b:number)=>(newest?(meta[a][2]-meta[b][2]):0)||(scores![a]-scores![b])||b-a
+  const compare=(a:number,b:number)=>(scores![a]-scores![b])||b-a
   const heap:number[]=[]
   let total=0
   if(scores)for(let id=0;id<scores.length;id++){

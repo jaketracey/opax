@@ -60,3 +60,10 @@ test('leaving during an agency fetch cannot overwrite the next route', async () 
   const root=node(); const handle=c.mountAgencyProfile(root,id); handle.destroy(); root.innerHTML='Next page';
   resolve(ok({agencies:[entry]})); await tick(); assert.equal(signal.aborted,true); assert.equal(root.innerHTML,'Next page');
 });
+test('supplier sorting covers values, contract counts and names without mutating the source',()=>{
+ const c=harness(async()=>ok({}));
+ const rows=[{id:'b',name:'Beta',total:10,count:8},{id:'a',name:'Alpha',total:90,count:2},{id:'c',name:'Gamma',total:30,count:4}];
+ const expected={value_desc:'acb',value_asc:'bca',count_desc:'bca',count_asc:'acb',name_asc:'abc',name_desc:'cba'};
+ for(const [sort,order] of Object.entries(expected)) assert.equal(c.sortAgencySuppliers(rows,sort).map(r=>r.id).join(''),order);
+ assert.equal(rows.map(r=>r.id).join(''),'bac');
+});

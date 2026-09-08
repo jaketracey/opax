@@ -1357,7 +1357,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=search-all-2");
+    const module = await import("/suppliers.js?v=austender-1");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -1391,10 +1391,11 @@ async function openAgencyPage(name, params, manageFocus) {
   body.classList.remove("subject-person");
   body.innerHTML = '<p role="status">Loading agencies…</p>';
   try {
-    const module = await import("/agencies.js?v=search-all-1");
+    const module = await import("/agencies.js?v=austender-1");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
+      mountSort: (root, onChange) => mountSearchSort(root, onChange, "Sort suppliers"),
       onTitle(title) {
         if (generation !== supplierPageGeneration) return;
         document.title = `${title} · OPAX`;
@@ -3290,6 +3291,23 @@ function declaredLedgerHTML(items, partyByName) {
     </section>`).join("")}</div>`;
 }
 
+function declaredPage(items, partyByName, { category = "", party = "", person = "", q = "", page = 1 } = {}) {
+  const normalise = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const terms = normalise(q).trim().split(/\s+/).filter(Boolean);
+  const matches = items.filter((item) => {
+    const itemParty = partyByName.get(String(item.name || "").toLowerCase()) || "";
+    if (category && item.bucket !== category || party && itemParty !== party || person && normalise(item.name) !== normalise(person)) return false;
+    const text = normalise([item.name, item.description, itemParty, item.kind, item.date,
+      DECLARED_BUCKET_LABELS[item.bucket] || item.bucket, item.jurisdiction, item.chamber,
+      ...(item.ties || []).map((tie) => tie.organisation)].join(" "));
+    return terms.every((term) => text.includes(term));
+  });
+  const pages = Math.max(1, Math.ceil(matches.length / 20));
+  const requested = Number(page);
+  const current = Math.min(pages, Math.max(1, Number.isFinite(requested) ? Math.floor(requested) : 1));
+  return { items: matches.slice((current - 1) * 20, current * 20), page: current, pages };
+}
+
 async function renderDeclaredPage(params, manageFocus) {
   const root = $("declared-list");
   root.innerHTML = `<p class="status">Opening the register ledger…</p>`;
@@ -3303,6 +3321,9 @@ async function renderDeclaredPage(params, manageFocus) {
   const bucket = params.get("category") || "";
   const party = params.get("party") || "";
   const person = params.get("person") || "";
+  const query = params.get("q") || "";
+  const searchInput = $("declared-query");
+  searchInput.value = query;
   const bucketSelect = $("declared-bucket");
   const partySelect = $("declared-party");
   const buckets = [...new Set(items.map((x) => x.bucket).filter(Boolean))]
@@ -3312,25 +3333,35 @@ async function renderDeclaredPage(params, manageFocus) {
   partySelect.innerHTML = `<option value="">all parties</option>${parties.map((p) => `<option value="${esc(p)}">${esc(p)}</option>`).join("")}`;
   bucketSelect.value = buckets.includes(bucket) ? bucket : "";
   partySelect.value = parties.includes(party) ? party : "";
-  const filtered = items.filter((item) => (!bucketSelect.value || item.bucket === bucketSelect.value) &&
-    (!partySelect.value || partyByName.get(String(item.name || "").toLowerCase()) === partySelect.value) &&
-    (!person || String(item.name || "").toLowerCase() === person.toLowerCase()));
-  const reg = "https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results/Registers_of_Interests";
-  $("declared-summary").innerHTML = `${person ? `For <a href="${esc(subjectHash("person", person))}">${esc(person)}</a> · ` : ""}` +
-    `<a href="${reg}" rel="noopener" target="_blank"><b>${filtered.length.toLocaleString()}</b> of the newest ${items.length.toLocaleString()} alterations shown` +
-    (Number(data.meta?.available) > items.length ? ` (${Number(data.meta.available).toLocaleString()} dated alterations in the source export)` : "") + `</a>` +
-    `${person ? ` · <a href="/declared">view everyone</a>` : ""}`;
-  root.innerHTML = filtered.length ? declaredLedgerHTML(filtered, partyByName) : `<p class="status">No alterations match these filters.</p>`;
+  const result = declaredPage(items, partyByName, {
+    category: bucketSelect.value, party: partySelect.value, person, q: query, page: params.get("page") || 1,
+  });
+  $("declared-summary").hidden = !person;
+  $("declared-summary").innerHTML = person ? `For <a href="${esc(subjectHash("person", person))}">${esc(person)}</a> · <a href="/declared">View everyone</a>` : "";
+  const pageHref = (page) => {
+    const next = new URLSearchParams(params);
+    if (page > 1) next.set("page", String(page)); else next.delete("page");
+    return `/declared${next.size ? `?${next}` : ""}`;
+  };
+  const pager = (label) => `<nav class="declared-pagination" aria-label="${label}">
+    ${result.page > 1 ? `<a class="action-btn" href="${esc(pageHref(result.page - 1))}">Previous</a>` : `<button class="action-btn" disabled>Previous</button>`}
+    <span aria-live="polite">Page ${result.page} of ${result.pages}</span>
+    ${result.page < result.pages ? `<a class="action-btn" href="${esc(pageHref(result.page + 1))}">Next</a>` : `<button class="action-btn" disabled>Next</button>`}
+  </nav>`;
+  $("declared-pagination").innerHTML = result.items.length ? pager("Declarations pages") : "";
+  root.innerHTML = result.items.length ? declaredLedgerHTML(result.items, partyByName) + pager("Declarations pages, bottom") : `<p class="status" role="status">No alterations match these filters.</p>`;
   const navigate = () => {
     const next = new URLSearchParams();
     if (bucketSelect.value) next.set("category", bucketSelect.value);
     if (partySelect.value) next.set("party", partySelect.value);
     if (person) next.set("person", person);
+    if (searchInput.value.trim()) next.set("q", searchInput.value.trim());
     goRoute(`/declared${next.size ? `?${next}` : ""}`);
   };
   bucketSelect.onchange = navigate;
   partySelect.onchange = navigate;
-  $("declared-filters").onsubmit = (event) => event.preventDefault();
+  $("declared-filters").onsubmit = (event) => { event.preventDefault(); navigate(); };
+  searchInput.onsearch = () => { if (!searchInput.value) navigate(); };
   if (manageFocus) $("panel-declared").querySelector("h1")?.focus?.({ preventScroll: true });
 }
 
@@ -5127,7 +5158,7 @@ function topicArcItemHTML(item, brief, showYear) {
       </div>
       ${heading ? `<a class="topic-arc-source" href="/doc/${encodeURIComponent(item.slug)}">${esc(heading)}</a>` : ""}
       ${brief
-        ? `<p class="topic-arc-brief"><span class="topic-arc-tag">Machine brief</span>${esc(brief)}</p><a class="topic-arc-open" href="/doc/${encodeURIComponent(item.slug)}">Read the speech</a>`
+        ? `<p class="topic-arc-brief"><span class="topic-arc-tag">Machine brief</span>${esc(brief)}</p><a class="topic-arc-open action-btn" href="/doc/${encodeURIComponent(item.slug)}">Read the speech</a>`
         : `<a class="topic-arc-passage" href="/doc/${encodeURIComponent(item.slug)}">${esc(passage || "Open the speech to read the passage.")}</a>`}
     </div>
   </li>`;
@@ -5201,7 +5232,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
               p.innerHTML = `<span class="topic-arc-tag">Machine brief</span>`;
               p.appendChild(document.createTextNode(brief));
               const open = document.createElement("a");
-              open.className = "topic-arc-open";
+              open.className = "topic-arc-open action-btn";
               open.href = passage.getAttribute("href");
               open.textContent = "Read the speech";
               passage.replaceWith(p, open);
@@ -6061,7 +6092,7 @@ async function buildDonorsDirectory() {
     const shownParties = d._partyList.slice(0, 3);
     const more = d._partyList.length - shownParties.length;
     const partiesHTML = shownParties.length
-      ? `<span class="dir-parties">to ${shownParties.map((p) => `${anyPartyDotHTML(p, colours)}${esc(p)}`).join(", ")}${more > 0 ? ` and ${more} more` : ""}</span>`
+      ? `<span class="dir-parties"><span>to</span>${shownParties.map((p) => `<a class="dir-party-link" href="${esc(subjectHash("party", p))}">${anyPartyDotHTML(p, colours)}${esc(p)}</a>`).join("")}${more > 0 ? `<span>and ${more} more</span>` : ""}</span>`
       : "";
     const marks = [
       d._lobbyists ? `<span class="dir-mark" title="${esc(`${d._lobbyists} registered lobbying firm${d._lobbyists === 1 ? "" : "s"}`)}">lobbyists</span>` : "",
@@ -9019,6 +9050,73 @@ function fillMeter(boxId, textId, barId) {
 
 // --- search / workbench -----------------------------------------------------
 
+function mountSearchSort(root, onChange, label = "Sort matches") {
+  const input = root.querySelector('input');
+  const trigger = root.querySelector('[aria-haspopup]');
+  const menu = root.querySelector('[role="menu"]');
+  const options = [...menu.querySelectorAll('[role="menuitemradio"]')];
+  function close(restoreFocus = false) {
+    menu.hidden = true;
+    trigger.setAttribute('aria-expanded', 'false');
+    if (restoreFocus) trigger.focus();
+  }
+  function set(value) {
+    const selected = options.find(option => option.dataset.value === value) || options[0];
+    input.value = selected.dataset.value;
+    trigger.querySelector('.search-sort-label').textContent = selected.querySelector('strong').textContent;
+    trigger.setAttribute('aria-label', `${label}: ${selected.querySelector('strong').textContent}`);
+    for (const option of options) option.setAttribute('aria-checked', String(option === selected));
+    close();
+  }
+  function open(last = false) {
+    menu.hidden = false;
+    const box = trigger.getBoundingClientRect();
+    const below = document.documentElement.clientHeight - box.bottom;
+    const above = box.top;
+    const upward = below < 300 && above > below;
+    menu.classList.toggle('opens-up', upward);
+    menu.style.maxHeight = `${Math.max(100, Math.min(480, (upward ? above : below) - 20))}px`;
+    const alignLeft = box.right < menu.getBoundingClientRect().width + 16;
+    menu.style.left = alignLeft ? '0' : '';
+    menu.style.right = alignLeft ? 'auto' : '';
+    trigger.setAttribute('aria-expanded', 'true');
+    (last ? options.at(-1) : options.find(option => option.dataset.value === input.value) || options[0]).focus();
+  }
+  trigger.addEventListener('click', () => menu.hidden ? open() : close());
+  trigger.addEventListener('keydown', event => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); open(event.key === 'ArrowUp'); }
+  });
+  for (const option of options) option.addEventListener('click', () => {
+    const changed = input.value !== option.dataset.value;
+    set(option.dataset.value); trigger.focus();
+    if (changed) onChange();
+  });
+  menu.addEventListener('keydown', event => {
+    const index = options.indexOf(document.activeElement);
+    let next;
+    if (event.key === 'ArrowDown') next = (index + 1) % options.length;
+    if (event.key === 'ArrowUp') next = (index - 1 + options.length) % options.length;
+    if (event.key === 'Home') next = 0;
+    if (event.key === 'End') next = options.length - 1;
+    if (next !== undefined) { event.preventDefault(); options[next].focus(); }
+    if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close(true); }
+    if (event.key === 'Tab') close(true);
+    if (event.key.length === 1 && /[a-z]/i.test(event.key)) {
+      const ordered = [...options.slice(index + 1), ...options.slice(0, index + 1)];
+      const match = ordered.find(option => option.querySelector('strong').textContent.toLowerCase().startsWith(event.key.toLowerCase()));
+      if (match) { event.preventDefault(); match.focus(); }
+    }
+  });
+  const outside = event => { if (!root.contains(event.target)) close(); };
+  document.addEventListener('pointerdown', outside);
+  root.addEventListener('focusout', event => { if (!root.contains(event.relatedTarget)) close(); });
+  set(input.value);
+  return { set, close, destroy() { close(); document.removeEventListener('pointerdown', outside); } };
+}
+const searchSortPicker = mountSearchSort($("search-sort-picker"), () => {
+  $("search-sort").dispatchEvent(new Event("change"));
+});
+
 const DOCUMENT_SEARCH_KINDS = new Set(["all", "speech", "division", "press_release", "legal", "news"]);
 function syncSearchDatasetControls() {
   const mode = $("search-mode");
@@ -9160,6 +9258,13 @@ const FILTER_KIND_LABELS = {
   interest: "Declared interest", expense: "Parliamentary expenses", access: "Meeting or lobbying register",
   campaigner: "Campaigner or associated entity", report: "Research report",
 };
+function recordTypeHref(kind) {
+  const roots = { person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/discover', grant:'/money/grants', bill:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports' };
+  return roots[kind] || '/search?' + new URLSearchParams({kind});
+}
+function recordTypeLink(kind) {
+  return `<a class="search-record-kind" href="${esc(recordTypeHref(kind))}">${esc(FILTER_KIND_LABELS[kind] || kind)}</a>`;
+}
 const FILTER_MODE_LABELS = { hybrid: "Hybrid", semantic: "Semantic", keyword: "Keyword" };
 
 /**
@@ -9321,7 +9426,7 @@ function applySearchParams(params) {
   $("search-mode").value = params.get("mode") || "hybrid";
   if (!$("search-kind").value) $("search-kind").value = "all";
   if (!$("search-mode").value) $("search-mode").value = "hybrid";
-  $("search-sort").value = params.get("sort") === "newest" ? "newest" : "relevance";
+  searchSortPicker.set(params.get("sort") || "relevance");
   syncSearchDatasetControls();
   renderFilterChips();
   if ($("search-input").value.trim() || $("f-speaker").value.trim()) {
@@ -9445,7 +9550,7 @@ function renderResults(results) {
       const li = document.createElement("li");
       if (r.href) {
         li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(r.title)}</a></h3>
-          <div class="result-meta"><span class="search-record-kind">${esc(FILTER_KIND_LABELS[r.kind] || r.kind)}</span>${r.source ? ` · ${esc(r.source)}` : ""}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}</div>
+          <div class="result-meta">${recordTypeLink(r.kind)}${r.source ? ` · ${esc(r.source)}` : ""}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}</div>
           <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(r.snippet, lastSearch.query)}</p>
           <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>`;
         return li;
@@ -9464,7 +9569,7 @@ function renderResults(results) {
       ].filter(Boolean).join('<span class="search-meta-separator" aria-hidden="true"> · </span>');
       const topics = [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => typeof t === "string" && t.trim()))];
       li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="/doc/${encodeURIComponent(r.slug)}">${esc(title)}</a></h3>
-        <div class="result-meta"><span class="search-record-kind">${esc(FILTER_KIND_LABELS[r.kind] || r.kind)}</span>${meta ? ` · ${meta}` : ""}</div>${text}
+        <div class="result-meta">${recordTypeLink(r.kind)}${meta ? ` · ${meta}` : ""}</div>${text}
         <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>
         ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a href="${esc(subjectHash("topic", topic))}">${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
       return li;

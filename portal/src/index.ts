@@ -15,6 +15,7 @@
 
 import { proxyPostHog } from './posthog'
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
+import { SEARCH_SORTS, compareSearchResults } from './search-sort'
 import { tokens as catalogTokens } from './catalog-query.mjs'
 import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
 
@@ -351,7 +352,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
     Math.max(1, Math.floor(Number(url.searchParams.get('per') ?? SEARCH_PER_DEFAULT)) || SEARCH_PER_DEFAULT),
     SEARCH_PER_MAX,
   )
-  const sort = url.searchParams.get('sort') === 'newest' ? 'newest' : 'relevance'
+  const sort = url.searchParams.get('sort') || 'relevance'
   // Legacy callers (the person page, the time machine) pin their own depth and
   // never page; a pager asks for the full window so the count it prints is real.
   const topK = Math.min(
@@ -397,12 +398,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
     cacheStore(ctx, windowKey, json(win), SEARCH_WINDOW_CACHE_TTL)
   }
 
-  const ordered =
-    sort === 'newest'
-      ? [...win.results].sort(
-          (a, b) => String(b.date || '').localeCompare(String(a.date || '')) || b.score - a.score,
-        )
-      : win.results
+  const ordered = [...win.results].sort((a, b) => compareSearchResults(a, b, sort))
   const pageCount = Math.max(1, Math.ceil(ordered.length / per))
   const clamped = Math.min(page, pageCount)
   const rows = ordered.slice((clamped - 1) * per, clamped * per)
@@ -448,6 +444,7 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   const docUrl = new URL(url)
   docUrl.pathname = '/api/search'
   docUrl.searchParams.set('kind', selected)
+  docUrl.searchParams.set('sort', 'relevance')
   docUrl.searchParams.set('page', '1')
   docUrl.searchParams.set('per', '200')
   const tasks = await Promise.allSettled([
@@ -471,9 +468,11 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
     ...(catalog?.results || []).map((r, i) => ({ ...r, score: 1 / (10 + i), sort_date: r.date || r.sort_date || '' })),
     ...(documents?.results || []).map((r, i) => ({ ...r, score: 1 / (10.5 + i), sort_date: r.date || '' })),
   ]
-  const sort = url.searchParams.get('sort') === 'newest' ? 'newest' : 'relevance'
-  combined.sort((a, b) => (sort === 'newest' ? b.sort_date.localeCompare(a.sort_date) : 0) || b.score - a.score || a.slug.localeCompare(b.slug))
-  const rows = combined.slice(0, 200)
+  const sort = url.searchParams.get('sort') || 'relevance'
+  // Select the same relevance window before sorting, so changing order never
+  // replaces matches or changes the count between pages.
+  combined.sort((a, b) => compareSearchResults(a, b, 'relevance'))
+  const rows = combined.slice(0, 200).sort((a, b) => compareSearchResults(a, b, sort))
   const per = Math.min(200, Number(url.searchParams.get('per') || 20))
   const pageCount = Math.max(1, Math.ceil(rows.length / per))
   const page = Math.min(pageCount, Number(url.searchParams.get('page') || 1))
@@ -3676,7 +3675,7 @@ function validateSearchQuery(url: URL): Response | null {
     if (!/^\d{1,4}$/.test(raw) || Number(raw) < 1) return json({ error: `${k} must be a whole number` }, 400)
   }
   const sort = url.searchParams.get('sort')
-  if (sort && sort !== 'relevance' && sort !== 'newest') return json({ error: 'unknown sort' }, 400)
+  if (sort && !SEARCH_SORTS.has(sort)) return json({ error: 'unknown sort' }, 400)
   const err = validateFilters((k) => url.searchParams.get(k))
   return err ? json({ error: err }, 400) : null
 }
