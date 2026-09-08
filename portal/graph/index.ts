@@ -1570,7 +1570,7 @@ export async function mountMoneyMap(
       trigger(card,
         `/search?q=${encodeURIComponent(`"${shortName(node.label)}"`)}`,
         `What was said about ${shortName(node.label)}?`, true)
-      const evidenceButton = el('button', 'mm-card-trigger', card)
+      const evidenceButton = el('button', 'mm-ask mm-ask-quiet', card)
       evidenceButton.type = 'button'
       evidenceButton.textContent = 'See mentions in the source records'
       const evidenceSlot = el('section', 'mm-evidence', card)
