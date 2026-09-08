@@ -19,6 +19,13 @@ class SpeechTextHygieneTests(unittest.TestCase):
         rerun = clean_speech_text_with_rules(result.text, **record)
         self.assertEqual(rerun.text, result.text)
 
+    def test_openaustralia_website_footer(self):
+        self.assert_rule("openaustralia_website_footer",
+            "Question agreed to.\n\nView the PC OA website",
+            "Question agreed to.", source="openaustralia")
+        text = "The link says View the PC OA website in the navigation."
+        self.assertEqual(clean_speech_text(text, "openaustralia"), text)
+
     def test_matching_broken_timestamp_banner_real_donato_1286344(self):
         before = (
             "Mr PHILIP DONATO ( Orange ) ( 22:2 5 :05 ): Few issues debated "

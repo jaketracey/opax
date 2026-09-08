@@ -59,7 +59,9 @@ def patch_one(kb: KbClient, row: sqlite3.Row, reason: str | None = None) -> tupl
     # A text repair (parli.ingest.text_hygiene) sends the cleaned body as well;
     # everything else leaves the text alone.
     if reason and reason.startswith("text:"):
-        body["texts"] = doc["texts"]
+        # Text repairs must preserve labels and other enrichment written since
+        # the source database was last synced.
+        body = {"texts": doc["texts"]}
     slug = doc["slug"]
     backoff = 2.0
     for attempt in range(5):
