@@ -1195,7 +1195,7 @@ function attachMoneyJourneys(params = new URLSearchParams()) {
     initialJourney: params.get("journey"), initialStep: params.get("step"), initialFocus: params.get("focus"),
     onRoute(id, step, focus) {
       $('money-journey-picker').open = false;
-      if (id) { $('money-map-root').classList.remove('show-key'); $('money-map-root').querySelector('.mm-key-toggle')?.setAttribute('aria-expanded', 'false'); }
+      if (id) { $('money-map-root').classList.remove('show-key'); const key = $('money-map-root').querySelector('.mm-key-toggle'); if (key) { key.setAttribute('aria-expanded', 'false'); key.textContent = 'Map key'; } const legend = $('money-map-root').querySelector('.mm-legend'); if (legend) legend.inert = true; }
       const next = new URLSearchParams(location.search);
       if (id) { next.set("journey", id); next.set("step", String(step)); next.delete("industry"); }
       else { next.delete("journey"); next.delete("step"); }
@@ -1235,7 +1235,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=profile-primary-1"), loadMoneyFile(jur), import("/money-journeys.js?v=official-ia-ux-20260908-2"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=profile-primary-1"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1266,7 +1266,19 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
       const key = document.createElement('button');
       key.type = 'button'; key.className = 'mm-key-toggle'; key.textContent = 'Map key';
       key.setAttribute('aria-expanded', 'false'); key.setAttribute('aria-controls', legend.id);
-      key.addEventListener('click', () => key.setAttribute('aria-expanded', String(root.classList.toggle('show-key'))));
+      legend.inert = true;
+      const toggleKey = (open) => {
+        root.classList.toggle('show-key', open);
+        legend.inert = !open;
+        key.setAttribute('aria-expanded', String(open));
+        key.textContent = open ? 'Close key ×' : 'Map key';
+      };
+      key.addEventListener('click', () => { toggleKey(!root.classList.contains('show-key')); key.focus({preventScroll:true}); });
+      root.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && root.classList.contains('show-key')) {
+          event.preventDefault(); toggleKey(false); key.focus({preventScroll:true});
+        }
+      });
       root.append(key);
     }
     moneyMapJur = jur;

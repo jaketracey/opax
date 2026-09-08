@@ -108,13 +108,38 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
       results.innerHTML = matches.map(c => `<button type="button" data-choice="${esc(c.value)}" class="journey-picker-option"${c.value === active.selection ? ' aria-current="true"' : ''}><span>${esc(names[choices.indexOf(c)])}</span>${detail(c) ? `<small>${detail(c)}</small>` : ''}</button>`).join('');
       count.textContent = matches.length ? `${matches.length} ${matches.length === 1 ? 'result' : 'results'}` : 'No matches. Try another name.';
     };
+    // Commit touch choices before Safari moves focus and dismisses the panel.
+    // A scrolling gesture must never select the option under the finger.
+    const commitChoice = option => {
+      select.value = option.dataset.choice;
+      onFocus({ target: select });
+      story.querySelector('.journey-picker-trigger')?.focus({ preventScroll: true });
+    };
+    let touchChoice = null;
+    root.addEventListener('touchstart', event => {
+      const option = event.target.closest('[data-choice]');
+      const touch = event.touches[0];
+      touchChoice = option && event.touches.length === 1 ? {option,x:touch.clientX,y:touch.clientY} : null;
+    }, {passive:true});
+    root.addEventListener('touchmove', event => {
+      const touch = event.touches[0];
+      if (touchChoice && (!touch || Math.hypot(touch.clientX-touchChoice.x,touch.clientY-touchChoice.y)>10)) touchChoice=null;
+    }, {passive:true});
+    root.addEventListener('touchcancel', () => { touchChoice=null; });
+    root.addEventListener('touchend', event => {
+      const choice=touchChoice; touchChoice=null;
+      if (!choice || !event.cancelable) return;
+      event.preventDefault();
+      commitChoice(choice.option);
+    }, {passive:false});
+    root.addEventListener('mousedown', event => {
+      if (event.target.closest('[data-choice]')) event.preventDefault();
+    });
     root.addEventListener('click', event => {
       event.stopPropagation();
       const option = event.target.closest('[data-choice]');
       if (option) {
-        select.value = option.dataset.choice;
-        onFocus({ target: select });
-        story.querySelector('.journey-picker-trigger')?.focus({ preventScroll: true });
+        commitChoice(option);
       } else if (event.target.closest('.journey-picker-trigger')) {
         if (!panel.hidden) { close(); return; }
         onPickerOpen({ target: select });
@@ -159,7 +184,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     }, STEP_MS);
   }
   function pause(why = '') {
-    if (destroyed || !active) return;
+    if (destroyed || !active || (!playing && !why)) return;
     playing = false; stopTimer(); map.pauseScene?.();
     reason = why === 'map' ? 'Map paused for you to explore. Continue to return to this step.' : '';
     render();

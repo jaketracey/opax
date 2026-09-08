@@ -4679,9 +4679,13 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .money-source-details { margin: 1rem 0; }
 .money-source-details > summary { cursor: pointer; color: var(--ink-soft); font-size: .8rem; }
 .money-source-details #money-fineprint { margin-top: .7rem; }
-#money-map-root .mm-legend, #money-map-root .mm-find { display: none; }
-#money-map-root.show-key .mm-legend { display: flex; top: 56px; max-height: calc(100% - 200px); }
-.mm-key-toggle { position: absolute; top: 12px; left: 12px; z-index: 5; background: var(--paper-raised); border: 1px solid var(--line); color: var(--navy); border-radius: 4px; padding: .6rem .8rem; font: 600 .75rem var(--sans); cursor: pointer; }
+#money-map-root .mm-find { display: none; }
+#money-map-root .mm-legend { display:flex; top:64px; left:12px; right:auto; bottom:auto; width:min(280px, calc(100% - 24px)); max-height:calc(100% - 88px); box-sizing:border-box; flex-direction:column; align-items:stretch; overflow:auto; z-index:12; background:var(--paper-raised); box-shadow:0 12px 32px #142a4330; visibility:hidden; opacity:0; transform:translateX(-18px); pointer-events:none; transition:transform 260ms cubic-bezier(.2,.8,.2,1),opacity 180ms ease,visibility 260ms; }
+#money-map-root .mm-legend-title{display:block;padding:.5rem .5rem .7rem}
+#money-map-root .mm-legend .mm-chip{min-height:44px;flex-shrink:0;text-align:left;white-space:normal}
+#money-map-root.show-key .mm-legend { visibility:visible; opacity:1; transform:translateX(0); pointer-events:auto; }
+@media(prefers-reduced-motion:reduce){#money-map-root .mm-legend{transition:none;transform:none}}
+.mm-key-toggle { min-height:44px; position: absolute; top: 12px; left: 12px; z-index: 5; background: var(--paper-raised); border: 1px solid var(--line); color: var(--navy); border-radius: 4px; padding: .6rem .8rem; font: 600 .75rem var(--sans); cursor: pointer; }
 .money-stage.has-journey .mm-key-toggle { display: none; }
 #panel-money .journey-choice-empty { padding-top: 1rem; }
 #panel-money .journey-story { padding: 1rem; }
