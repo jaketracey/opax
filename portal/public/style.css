@@ -4452,7 +4452,11 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 #panel-doc .doc-reading-layout .doc-brief { margin:0; max-width:none; }
 @media (min-width:1000px) {
   .doc-reading-layout:has(#doc-brief:not([hidden])) { grid-template-columns:minmax(0,1.6fr) minmax(280px,1fr); gap:clamp(2rem,4vw,4rem); }
-  .doc-reading-layout > #doc-brief { grid-column:2; grid-row:1; }
+  .doc-reading-layout > #doc-brief {
+    grid-column:2; grid-row:1; position:sticky;
+    top:calc(var(--header-h) + 1.5rem);
+    max-height:calc(100dvh - var(--header-h) - 3rem); overflow-y:auto;
+  }
   .doc-reading-layout > #doc-text { grid-column:1; grid-row:1; }
 }
 .journey-party-link { display:inline-flex; align-items:baseline; gap:.45rem; color:inherit; text-decoration:underline; text-decoration-color:var(--line-strong); text-underline-offset:3px; }
