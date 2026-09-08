@@ -10,7 +10,7 @@ The catalog indexes the JSON datasets published in `portal/public`, not the comp
 
 Catalog search intersects normalized query terms, including a prefix match on the last term. It searches titles, aliases, identifiers and descriptions. Type, jurisdiction, party, speaker, topic and year filters intersect; an explicit filter excludes records without matching metadata. Year filters use published reporting periods for aggregates and exclude undated records. Catalog-only searches use keyword mode.
 
-Both sources return at most 200 candidates. Reciprocal rank combines their independently ranked results; their native scores are not comparable. The response provides a maximum 200-result window, paginated or exported with `per=200`. `truncated` and visible warnings disclose retrieval limits or an unavailable source. Results can still display if one source fails. A total source failure returns 503.
+Both sources return at most 200 candidates. Reciprocal rank combines their independently ranked results; their native scores are not comparable. The response provides a maximum 200-result relevance window, paginated or exported with `per=200`. Relevance, newest, oldest, title A–Z, title Z–A and record-type sorting reorder that same window before pagination; changing sort never replaces the matches. Undated records sort last in both date directions. `truncated` and visible warnings disclose retrieval limits or an unavailable source. Results can still display if one source fails. A total source failure returns 503.
 
 ## Rebuilding and release
 

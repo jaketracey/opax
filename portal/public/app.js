@@ -9019,6 +9019,72 @@ function fillMeter(boxId, textId, barId) {
 
 // --- search / workbench -----------------------------------------------------
 
+function mountSearchSort(root, onChange) {
+  const input = root.querySelector('input');
+  const trigger = root.querySelector('[aria-haspopup]');
+  const menu = root.querySelector('[role="menu"]');
+  const options = [...menu.querySelectorAll('[role="menuitemradio"]')];
+  function close(restoreFocus = false) {
+    menu.hidden = true;
+    trigger.setAttribute('aria-expanded', 'false');
+    if (restoreFocus) trigger.focus();
+  }
+  function set(value) {
+    const selected = options.find(option => option.dataset.value === value) || options[0];
+    input.value = selected.dataset.value;
+    trigger.querySelector('.search-sort-label').textContent = selected.querySelector('strong').textContent;
+    trigger.setAttribute('aria-label', `Sort matches: ${selected.querySelector('strong').textContent}`);
+    for (const option of options) option.setAttribute('aria-checked', String(option === selected));
+    close();
+  }
+  function open(last = false) {
+    menu.hidden = false;
+    const box = trigger.getBoundingClientRect();
+    const below = document.documentElement.clientHeight - box.bottom;
+    const above = box.top;
+    const upward = below < 300 && above > below;
+    menu.classList.toggle('opens-up', upward);
+    menu.style.maxHeight = `${Math.max(100, Math.min(480, (upward ? above : below) - 20))}px`;
+    const alignLeft = box.right < menu.getBoundingClientRect().width + 16;
+    menu.style.left = alignLeft ? '0' : '';
+    menu.style.right = alignLeft ? 'auto' : '';
+    trigger.setAttribute('aria-expanded', 'true');
+    (last ? options.at(-1) : options.find(option => option.dataset.value === input.value) || options[0]).focus();
+  }
+  trigger.addEventListener('click', () => menu.hidden ? open() : close());
+  trigger.addEventListener('keydown', event => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); open(event.key === 'ArrowUp'); }
+  });
+  for (const option of options) option.addEventListener('click', () => {
+    const changed = input.value !== option.dataset.value;
+    set(option.dataset.value); trigger.focus();
+    if (changed) onChange();
+  });
+  menu.addEventListener('keydown', event => {
+    const index = options.indexOf(document.activeElement);
+    let next;
+    if (event.key === 'ArrowDown') next = (index + 1) % options.length;
+    if (event.key === 'ArrowUp') next = (index - 1 + options.length) % options.length;
+    if (event.key === 'Home') next = 0;
+    if (event.key === 'End') next = options.length - 1;
+    if (next !== undefined) { event.preventDefault(); options[next].focus(); }
+    if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close(true); }
+    if (event.key === 'Tab') close(true);
+    if (event.key.length === 1 && /[a-z]/i.test(event.key)) {
+      const ordered = [...options.slice(index + 1), ...options.slice(0, index + 1)];
+      const match = ordered.find(option => option.querySelector('strong').textContent.toLowerCase().startsWith(event.key.toLowerCase()));
+      if (match) { event.preventDefault(); match.focus(); }
+    }
+  });
+  document.addEventListener('pointerdown', event => { if (!root.contains(event.target)) close(); });
+  root.addEventListener('focusout', event => { if (!root.contains(event.relatedTarget)) close(); });
+  set(input.value);
+  return { set, close };
+}
+const searchSortPicker = mountSearchSort($("search-sort-picker"), () => {
+  $("search-sort").dispatchEvent(new Event("change"));
+});
+
 const DOCUMENT_SEARCH_KINDS = new Set(["all", "speech", "division", "press_release", "legal", "news"]);
 function syncSearchDatasetControls() {
   const mode = $("search-mode");
@@ -9321,7 +9387,7 @@ function applySearchParams(params) {
   $("search-mode").value = params.get("mode") || "hybrid";
   if (!$("search-kind").value) $("search-kind").value = "all";
   if (!$("search-mode").value) $("search-mode").value = "hybrid";
-  $("search-sort").value = params.get("sort") === "newest" ? "newest" : "relevance";
+  searchSortPicker.set(params.get("sort") || "relevance");
   syncSearchDatasetControls();
   renderFilterChips();
   if ($("search-input").value.trim() || $("f-speaker").value.trim()) {

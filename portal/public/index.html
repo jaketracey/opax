@@ -58,7 +58,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=f525e997a5">
+<link rel="stylesheet" href="/style.css?v=bb3843b0da">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -564,11 +564,21 @@
             </div>
             <span id="search-brief-status" class="search-brief-status" aria-live="polite"></span>
           </div>
-          <label for="search-sort" class="visually-hidden">Sort every retrieved match</label>
-          <select id="search-sort" title="Sorts every page of the retrieved matches, not just this one.">
-            <option value="relevance">Relevance</option>
-            <option value="newest">Newest first</option>
-          </select>
+          <div id="search-sort-picker" class="search-sort-picker">
+            <input id="search-sort" type="hidden" value="relevance">
+            <button type="button" class="action-btn search-sort-trigger" aria-haspopup="menu" aria-expanded="false" aria-controls="search-sort-menu" aria-label="Sort matches: Relevance">
+              <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 5h14M3 10h10M3 15h6"/></svg><span class="search-sort-label">Relevance</span><svg class="search-sort-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg>
+            </button>
+            <div id="search-sort-menu" class="search-sort-menu" role="menu" aria-label="Sort matches" aria-describedby="search-sort-note" hidden>
+              <button type="button" role="menuitemradio" aria-checked="true" data-value="relevance" tabindex="-1"><span><strong>Relevance</strong><small>Closest matches to your search</small></span><span class="search-sort-check" aria-hidden="true">✓</span></button>
+              <button type="button" role="menuitemradio" aria-checked="false" data-value="newest" tabindex="-1"><span><strong>Newest first</strong><small>Most recent dated records</small></span><span class="search-sort-check" aria-hidden="true">✓</span></button>
+              <button type="button" role="menuitemradio" aria-checked="false" data-value="oldest" tabindex="-1"><span><strong>Oldest first</strong><small>Earliest dated records</small></span><span class="search-sort-check" aria-hidden="true">✓</span></button>
+              <button type="button" role="menuitemradio" aria-checked="false" data-value="title_asc" tabindex="-1"><span><strong>Title A–Z</strong><small>Alphabetical by title or name</small></span><span class="search-sort-check" aria-hidden="true">✓</span></button>
+              <button type="button" role="menuitemradio" aria-checked="false" data-value="title_desc" tabindex="-1"><span><strong>Title Z–A</strong><small>Reverse alphabetical order</small></span><span class="search-sort-check" aria-hidden="true">✓</span></button>
+              <button type="button" role="menuitemradio" aria-checked="false" data-value="type" tabindex="-1"><span><strong>Record type</strong><small>Group the different datasets</small></span><span class="search-sort-check" aria-hidden="true">✓</span></button>
+              <p id="search-sort-note">Applies across all pages of retrieved matches.</p>
+            </div>
+          </div>
           <button type="button" class="action-btn" id="search-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 13.6l-1.7 1.7a2.85 2.85 0 0 1-4-4l2.5-2.5a2.85 2.85 0 0 1 4 0"/><path d="M10.8 6.4l1.7-1.7a2.85 2.85 0 0 1 4 4L14 11.2a2.85 2.85 0 0 1-4 0"/></svg><span>Copy link</span></button>
           <button type="button" class="action-btn" id="search-export"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Export <span class="btn-detail">(CSV / BibTeX / RIS)</span></span></button>
         </span>
@@ -1287,6 +1297,6 @@
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
 <script src="/navigation.js?v=3630ab9726" defer></script>
-<script src="/app.js?v=5798bc9588" defer></script>
+<script src="/app.js?v=20dd67d86e" defer></script>
 </body>
 </html>
