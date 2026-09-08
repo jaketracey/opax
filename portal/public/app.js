@@ -1391,7 +1391,7 @@ async function openAgencyPage(name, params, manageFocus) {
   body.classList.remove("subject-person");
   body.innerHTML = '<p role="status">Loading agencies…</p>';
   try {
-    const module = await import("/agencies.js?v=sort-1");
+    const module = await import("/agencies.js?v=sort-2");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -5128,7 +5128,7 @@ function topicArcItemHTML(item, brief, showYear) {
       </div>
       ${heading ? `<a class="topic-arc-source" href="/doc/${encodeURIComponent(item.slug)}">${esc(heading)}</a>` : ""}
       ${brief
-        ? `<p class="topic-arc-brief"><span class="topic-arc-tag">Machine brief</span>${esc(brief)}</p><a class="topic-arc-open" href="/doc/${encodeURIComponent(item.slug)}">Read the speech</a>`
+        ? `<p class="topic-arc-brief"><span class="topic-arc-tag">Machine brief</span>${esc(brief)}</p><a class="topic-arc-open action-btn" href="/doc/${encodeURIComponent(item.slug)}">Read the speech</a>`
         : `<a class="topic-arc-passage" href="/doc/${encodeURIComponent(item.slug)}">${esc(passage || "Open the speech to read the passage.")}</a>`}
     </div>
   </li>`;
@@ -5202,7 +5202,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
               p.innerHTML = `<span class="topic-arc-tag">Machine brief</span>`;
               p.appendChild(document.createTextNode(brief));
               const open = document.createElement("a");
-              open.className = "topic-arc-open";
+              open.className = "topic-arc-open action-btn";
               open.href = passage.getAttribute("href");
               open.textContent = "Read the speech";
               passage.replaceWith(p, open);

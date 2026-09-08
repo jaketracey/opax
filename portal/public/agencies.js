@@ -122,7 +122,7 @@ function renderProfile(root, profile, meta, helpers, life) {
   function suppliers() {
     const q = supplierQuery.value.trim().toLocaleLowerCase();
     const rows = sortAgencySuppliers(profile.suppliers.filter(s => `${s.name} ${s.abn || ''}`.toLocaleLowerCase().includes(q)), supplierSort.value);
-    root.querySelector('.agency-supplier-count').textContent = `${number(rows.length)} suppliers${q ? ' matching this filter' : ', largest recorded value first'}`;
+    root.querySelector('.agency-supplier-count').textContent = `${number(rows.length)} suppliers${q ? ' matching this filter' : ''}`;
     root.querySelector('.agency-suppliers').innerHTML = rows.length ? rows.slice(0,suppliersVisible).map(s => `<div class="supplier-directory-row"><span><a href="${supplierUrl(s.id)}"><strong>${esc(s.name)}</strong></a><small>${s.abn ? `ABN ${esc(s.abn)}` : 'No ABN recorded'}</small>${s.donor_links.length ? `<small>${s.donor_links.filter(l => /^\/subject\/donor\//.test(l.url)).map(l => `<a href="${esc(l.url)}">Recorded donor profile</a>`).join(' · ')}</small>` : ''}</span><span class="supplier-directory-value"><strong>${money(s.total)}</strong><small>${number(s.count)} ${s.count === 1 ? 'contract' : 'contracts'}</small></span></div>`).join('') : '<p>No suppliers match this filter.</p>';
     const more = root.querySelector('.agency-suppliers-more'); more.innerHTML = rows.length > suppliersVisible ? '<button type="button" class="supplier-button">Show more suppliers</button>' : '';
     more.querySelector('button')?.addEventListener('click', () => { const first = suppliersVisible; suppliersVisible += 20; suppliers(); root.querySelectorAll('.agency-suppliers .supplier-directory-row')[first]?.querySelector('a')?.focus(); });
