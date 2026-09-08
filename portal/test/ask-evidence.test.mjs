@@ -9,8 +9,8 @@ const {normaliseFootnotes,FootnoteStream}=exports;
 const index=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const extract=(a,b)=>index.slice(index.indexOf(a),index.indexOf(b,index.indexOf(a)));
 let streamBody;
-const api=runInNewContext(transpile([extract('function buildAskBody(','/** The portal'),extract('function askPayload(','type AskPayload'),extract('function askCacheInput(','/** Worth keeping'),extract('class RefusalGate','/** streamAskOnce under')].join('\n'))+';({buildAskBody,askPayload,askCacheInput,streamAskOnce})',{
- ...exports, recordContext:rows=>rows.map(r=>JSON.stringify(r)), recordSources:(rows,c)=>rows.map((r,i)=>({...r,resource:`USER_CONTEXT_${i}`,cited:Object.hasOwn(c,`USER_CONTEXT_${i}`)})), RECORD_GROUNDING:'', filterExpression:f=>({field:f}),calibrate:s=>s,label:()=>null,canonicalSpeaker:s=>s,TOPIC_SLUGS:new Set(['housing']),REFUSAL_PREFIXES:['not enough data'],TextDecoder,Date,ragBase:()=> 'https://example.test',fetch:async()=>new Response(streamBody)
+const api=runInNewContext(transpile([extract('function buildAskBody(','/** The portal'),extract('function askPayload(','type AskPayload'),extract('function hasUnsupportedQuotes(', '/**\n * The canonical form of an ask'),extract('function askCacheInput(','/** Worth keeping'),extract('class RefusalGate','/** streamAskOnce under')].join('\n'))+';({buildAskBody,askPayload,askCacheInput,streamAskOnce,hasUnsupportedQuotes,evidenceOnlyAnswer})',{
+ ...exports, askRetrievalQuery: input=>input.question, recordContext:rows=>rows.map(r=>JSON.stringify(r)), recordSources:(rows,c)=>rows.map((r,i)=>({...r,resource:`USER_CONTEXT_${i}`,cited:Object.hasOwn(c,`USER_CONTEXT_${i}`)})), RECORD_GROUNDING:'', filterExpression:f=>({field:f}),calibrate:s=>s,label:()=>null,canonicalSpeaker:s=>s,TOPIC_SLUGS:new Set(['housing']),REFUSAL_PREFIXES:['not enough data'],TextDecoder,Date,ragBase:()=> 'https://example.test',fetch:async()=>new Response(streamBody)
 });
 const id='r1/t/transcript/0-50',neighbour='r1/t/transcript/50-100',generated='r1/t/da-summary/0-50';
 const fixture=()=>({answer:'😀 A fact[^1]. Another fact[^2].\n\n[^1]: block-AA\n[^2]: block-AB',citation_footnote_to_context:{'block-AA':id,'block-AB':neighbour},retrieval_results:{resources:{r1:{slug:'speech-1',title:'Speech',fields:{'t/transcript':{paragraphs:{[id]:{text:'Original passage',score:0.8,score_type:'RERANKER'}}}}}}},augmented_context:{paragraphs:{[neighbour]:{id:neighbour,text:'Surrounding original passage'}}}});
@@ -31,3 +31,30 @@ test('legacy fallback removes footnote instructions but retains scope and contex
 test('footnotes can cite only server-supplied financial records',()=>{const f=fixture();f.answer='Disclosed funding[^1]. Unknown[^2].';f.citation_footnote_to_context={'1':'USER_CONTEXT_0','2':'USER_CONTEXT_99'};const p=api.askPayload(f,{records:[{title:'Disclosed receipt'}],coverage:'',total:1});assert.ok(p.citations.USER_CONTEXT_0);assert.equal(p.citations.USER_CONTEXT_99,undefined);assert.equal(p.sources[0].cited,true)});
 
 test('provider-added metadata is not displayed as a source quotation',()=>{const f=fixture();f.answer='A fact[^2].\n[^2]: block-AB';f.augmented_context.paragraphs[neighbour].text='Original neighbouring passage.\n\nDOCUMENT CLASSIFICATION LABELS:\n - speech (kind)';assert.equal(api.askPayload(f).sources[0].snippet,'Original neighbouring passage.')});
+
+
+test('literal quote validation permits formatting and ellipses but detects altered words',()=>{
+ const evidence=['A large property portfolio is not something that should be set against a salary.'];
+ assert.equal(exports.unsupportedQuotes('The passage says "should be set against a salary".',evidence).length,0);
+ assert.equal(exports.unsupportedQuotes('The passage says "should not be set against a salary".',evidence).length,1);
+ assert.equal(exports.unsupportedQuotes('It says "A large property portfolio ... should be set against a salary".',evidence).length,0);
+ assert.equal(exports.unsupportedQuotes('It says "should be set against a salary ... A large property portfolio".',evidence).length,1);
+});
+
+test('quotations in uncited documents cannot validate a cited answer',()=>{
+ const quote='A long source quotation with enough words to be checked.';
+ const raw=fixture();raw.answer=`The passage says "${quote}".`;raw.citation_footnote_to_context={};raw.citations={[id]:[[0,raw.answer.length]]};
+ raw.retrieval_results.resources.other={slug:'speech-2',fields:{body:{paragraphs:{'other/t/body/0-100':{text:quote,score:1}}}}};
+ let p=api.askPayload(raw);assert.equal(api.hasUnsupportedQuotes(p,raw),true);
+ raw.retrieval_results.resources.r1.fields['t/transcript'].paragraphs[id].text=quote;
+ p=api.askPayload(raw);assert.equal(api.hasUnsupportedQuotes(p,raw),false);
+});
+
+test('failed quote recovery replaces prose with original passages and valid citations',()=>{
+ const raw=fixture();const p=api.askPayload(raw);const safe=api.evidenceOnlyAnswer(p);
+ assert.equal(safe.answer_status,'evidence_only');
+ assert.match(safe.answer,/could not verify/);assert.match(safe.answer,/Original passage/);
+ assert.ok(!safe.answer.includes('A fact'));
+ for(const spans of Object.values(safe.citations))for(const [start,end] of spans){assert.ok(start>=0);assert.ok(end<=Array.from(safe.answer).length)}
+ assert.ok(safe.sources.some(s=>s.cited));
+});

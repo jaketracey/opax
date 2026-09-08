@@ -8517,9 +8517,14 @@ async function runAsk(question) {
       retry.addEventListener("click", () => runAsk(question));
       $("ask-answer").replaceChildren(p, retry);
     }
+    const inferredScope = [data.scope?.speaker, data.scope?.party,
+      STATE_NAMES[data.scope?.state] || data.scope?.state,
+      data.scope?.chamber === "senate" ? "Senate" : data.scope?.chamber,
+      data.scope?.from || data.scope?.to ? `${data.scope.from || "…"}–${data.scope.to || "…"}` : "",
+    ].filter(Boolean).join(" · ");
     $("ask-stamp").textContent =
       `Viewed ${fmtDate(localISODate())}` +
-      (data.scope?.party ? ` · Records indexed under ${data.scope.party}` : "") +
+      (inferredScope ? ` · Records indexed under ${inferredScope}` : "") +
       (corpusVersion() !== "unversioned" ? ` · corpus v${corpusVersion()}` : "") +
       ((askFilterSummary(askFilters()) || (speakerFilter ? speakerFilter : ""))
         ? ` · filtered: ${askFilterSummary(askFilters()) || `${speakerFilter}'s speeches`}` : "");
