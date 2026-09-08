@@ -1594,6 +1594,7 @@ function route() {
     setCrumbs([{ label: "About", href: "/about" }, { label: "Methods & how to cite" }]);
   } else if (view === "stats") {
     showPanel("stats");
+    renderEvidenceStats();
     document.title = TITLES.stats;
     setCrumbs([{ label: "About", href: "/about" }, { label: "Corpus stats" }]);
   } else if (view === "expenses") {
@@ -12006,6 +12007,21 @@ function countUpWhenVisible(el, value) {
 }
 
 // --- the stats page: manifest figures first, the live index over them -------
+async function renderEvidenceStats() {
+  const slot = $("stats-connections");
+  if (!slot || slot.dataset.loaded) return;
+  try {
+    const [module, response] = await Promise.all([import('/evidence.js'), fetch('/evidence/stats.json')]);
+    if (!response.ok) return;
+    const meta = await response.json();
+    const html = module.evidenceStatsHTML(meta);
+    if (!html) return;
+    slot.innerHTML = html;
+    slot.hidden = false;
+    slot.dataset.loaded = 'true';
+  } catch { /* The live index figures remain usable if the optional dataset is unavailable. */ }
+}
+
 const STATS_PARLIAMENTS = [
   ["federal", "Federal Parliament"], ["nsw", "NSW Parliament"], ["vic", "Victorian Parliament"],
   ["qld", "Queensland Parliament"], ["sa", "South Australian Parliament"],

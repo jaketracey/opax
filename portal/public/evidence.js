@@ -20,8 +20,8 @@ function displayDate(value) {
 function sourceContent(row) {
   const fields=row.details?.source_fields;
   if (!fields) return `<blockquote>${esc(row.text)}</blockquote>`;
-  const values=[['Recipient',fields.recipient],['Recorded amount',fields.amount==null?null:Number(fields.amount).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0})],['Program',fields.program],['Agency',fields.agency],['Recorded place',[fields.suburb,fields.state?.toUpperCase(),fields.postcode].filter(Boolean).join(', ')]];
-  return `<dl class="evidence-fields">${values.filter(([,value])=>value).map(([label,value])=>`<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl>`;
+  const values=[['Recipient',fields.recipient,'recipient'],['Recorded amount',fields.amount==null?null:Number(fields.amount).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0})],['Program',fields.program,'program'],['Agency',fields.agency],['Recorded place',[fields.suburb,fields.state?.toUpperCase(),fields.postcode].filter(Boolean).join(', '),'place']];
+  return `<dl class="evidence-fields">${values.filter(([,value])=>value).map(([label,value,field])=>`<div><dt>${esc(label)}</dt><dd>${/^[a-f0-9]{24}$/.test(row.links?.[field] || '')?`<a href="/connections.html?entity=${row.links[field]}">${esc(value)}</a>`:esc(value)}</dd></div>`).join('')}</dl>`;
 }
 export function evidenceHTML(entry) {
   const years=Object.entries(entry.years || {}).filter(([year])=>/^\d{4}$/.test(year)).sort(([a],[b])=>a.localeCompare(b));
@@ -64,4 +64,11 @@ export async function mountEvidence(root, identity, options={}) {
     if (error.name!=='AbortError') throw error;
     return false;
   }
+}
+
+export function evidenceStatsHTML(meta) {
+  if (!meta?.complete) return '';
+  const number=value=>Number(value||0).toLocaleString('en-AU');
+  const checked=Object.values(meta.source_records||{}).reduce((sum,value)=>sum+Number(value),0);
+  return `<h2>Connections in the collected records</h2><div class="stat-grid"><span><span class="stat-figure">${number(checked)}</span><span class="stat-label">source records checked</span></span><span><span class="stat-figure">${number(meta.published_record_matches)}</span><span class="stat-label">connections to source records</span></span><span><span class="stat-figure">${number(meta.entities_with_connections)}</span><span class="stat-label">organisations, programs and places</span></span><span><span class="stat-figure">${number(meta.identity_decisions?.accepted)}</span><span class="stat-label">reviewed identity matches</span></span></div><p>One record can connect to several entries. This dataset includes collected material that is not yet searchable in the live index.</p><p><a href="/connections.html">Explore the connections</a></p><details><summary>Coverage and matching</summary><ul><li>${number(meta.source_records?.speeches)} speech records</li><li>${number(meta.source_records?.ext_press_releases)} official releases</li><li>${number(meta.source_records?.government_grants)} grant records</li></ul><p>Names are matched conservatively. Shared postcodes retain all overlapping electorates. Unresolved identities are held for review.</p><p><a href="/evidence/stats.json">Download coverage figures</a> · <a href="/evidence/identity-links.json">Download identity matches</a></p></details>`;
 }

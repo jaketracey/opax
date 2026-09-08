@@ -111,3 +111,31 @@ class IdentityDecisionTest(unittest.TestCase):
         source=[{'source_name':'Acme','source_abn':None,'method':'source_identity'}]
         target=[{'source_name':'Acme Holdings','source_abn':'51824753556','method':'validated_source_abn'}]
         self.assertEqual(decide({'name':'Acme'},{'name':'Acme Holdings','abn':'51824753556'},source,target)[0],'unresolved')
+
+
+class ReviewedAliasQualityTest(unittest.TestCase):
+    def test_reviewed_incidental_phrases_are_withheld(self):
+        for phrase,name in [('Order in','Order-in Pty Ltd'),('mineral resources','Mineral Resources Limited'),('department of immigration and','Department of Immigration and'),('organisation for economic co-operation','Organisation for Economic Co-operation')]:
+            self.assertFalse(publishable_alias(phrase,name),phrase)
+
+    def test_complete_legal_name_remains_eligible(self):
+        self.assertTrue(publishable_alias('Mineral Resources Limited','Mineral Resources Limited'))
+        self.assertTrue(publishable_alias('Department of Foreign Affairs and Trade','Department of Foreign Affairs and Trade'))
+
+
+class ExportSpanPreferenceTest(unittest.TestCase):
+    def test_complete_mention_survives_earlier_incidental_phrase(self):
+        import json
+        from export_evidence_layers import export,key
+        with tempfile.TemporaryDirectory() as d:
+            path=Path(d);source=sqlite3.connect(path/'source.sqlite')
+            source.executescript('CREATE TABLE speeches(id); INSERT INTO speeches VALUES(1); CREATE TABLE ext_press_releases(id);')
+            source.close();db=m.setup(str(path/'e.sqlite'))
+            db.execute("INSERT INTO entities VALUES ('org:1','organisation','Mineral Resources Limited',NULL)")
+            for quote,start in [('mineral resources',0),('Mineral Resources Limited',40)]:
+                m.add_evidence(db,'speech:1','mentions','org:1','speeches','1',quote,'unique_exact_alias',.98,start=start,end=start+len(quote))
+            db.commit();db.close()
+            export(str(path/'source.sqlite'),str(path/'e.sqlite'),str(path/'public'),allow_incomplete=True)
+            identity=key('org:1');entry=json.loads((path/'public'/f'{identity[:2]}.json').read_text())['entries'][identity]
+            self.assertEqual(entry['records'],1)
+            self.assertEqual(entry['excerpts'][0]['matched_text'],'Mineral Resources Limited')

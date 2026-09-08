@@ -30,5 +30,6 @@ query.addEventListener('input',render);kind.addEventListener('change',render);
 try{
  const response=await fetch('/evidence/index.json');if(!response.ok)throw new Error();
  const data=await response.json();entries=(data.entities||[]).sort((a,b)=>b.records-a.records || a.name.localeCompare(b.name));
+ const params=new URLSearchParams(location.search);query.value=params.get('q') || '';kind.value=params.get('kind') || '';
  render();const initial=entries.find(e=>e.id===new URLSearchParams(location.search).get('entity'));if(initial)open(initial);
 }catch{status.textContent='Connection records are unavailable. Please try again later.';}

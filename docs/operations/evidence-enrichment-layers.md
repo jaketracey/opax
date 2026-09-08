@@ -48,3 +48,12 @@ Next: verify PID 918738 and extraction progress; inspect a broader sample throug
 - 12 Python tests and 15 UI/router tests pass. Fixed the eight pre-existing graph array-index type errors by documenting/asserting the existing construction invariants; the full graph TypeScript check now passes. Rebuild map bundles after subsequent evidence module changes.
 
 Still required: complete both scans; full data export with latest gates; review larger filtered output and recovered identity samples; validate source excerpts/offsets, location boundaries and new links; finish release gating/updated corpus statistics; ship and verify profiles, Money Map cards, connections directory and data in production. Full goal remains active.
+
+
+## Publication review and source audit
+
+Two bounded semantic reviews checked the top 300 organisation entries (900 excerpts) in `evidence-review-20260908-b`. Seventy-seven ambiguous bare phrases are withheld by publication gates; complete legal names remain eligible. Findings and source examples are in `alias-quality-review.json` and `alias-quality-review-second.json`. Export now prefers a publishable complete name before deduplicating entity/record matches, so an earlier incidental phrase cannot hide a later valid mention. Fifteen Python tests pass, including that regression.
+
+The first preview source audit verified 38,999 excerpts and 69 postcode links. The larger partial snapshot verified 85,885 excerpts and 9,760 postcode links without errors. These are previews, not publication totals. `scripts/audit_evidence_export.py` checks every exported excerpt against source fields/text positions and hashes, totals and directory/shard identity sets. Final export must pass it again.
+
+Additional mentions scan has finished; primary scan has passed 1.30m speeches as of 09:21 UTC. Baseline production Worker before this release is `c63368c1-d817-4022-85ae-fc3be6c6fdda`. No release made yet. Source stats UI separates collected corpus enrichment from live searchable coverage.

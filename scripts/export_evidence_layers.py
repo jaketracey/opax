@@ -7,7 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 import sqlite3
-from evidence_quality import publishable_alias,publishable_programme
+from evidence_quality import publishable_alias,publishable_programme,words
 
 
 def key(entity):
@@ -76,9 +76,9 @@ def export(source_path,evidence_path,output,allow_incomplete=False,decisions_pat
             'years':{},'source_kinds':{},'matched_records':0}
     print('Entity counts collected',flush=True)
     # Register-derived addresses can be useful even without a text mention.
-    addresses=db.execute("""SELECT i.entity_id,e.*,n.name AS place FROM main.evidence e
+    addresses=db.execute("""SELECT coalesce(r.target,i.entity_id) AS entity_id,e.*,n.name AS place FROM main.evidence e
         JOIN identities i ON e.subject=i.source_table||':'||i.source_id
-        JOIN main.entities n ON n.id=e.object WHERE e.predicate='registered_address_overlaps'
+        JOIN main.entities n ON n.id=e.object LEFT JOIN redirects r ON r.subject=i.entity_id WHERE e.predicate='registered_address_overlaps'
         AND i.method != 'conflicting_source_names'""")
     for r in addresses:
         if r['entity_id'] in entries:
@@ -101,8 +101,17 @@ def export(source_path,evidence_path,output,allow_incomplete=False,decisions_pat
     print('Identity and address links collected',flush=True)
     # Exact record excerpts are selected once per entity/record and capped in
     # the preview. The totals above always describe the complete extraction.
+    # A record can contain both an incidental short phrase and a complete
+    # legal name. Prefer a publishable span before deduplicating the record.
+    def eligible_span(entity,quote,predicate):
+        row=entity_rows.get(entity)
+        if not row:return 0
+        if row['kind']=='organisation':return int(publishable_alias(quote,row['name']))
+        if row['kind']=='program' and predicate=='mentions':return int(publishable_programme(quote,row['name']))
+        return 1
+    db.create_function('eligible_span',3,eligible_span)
     query="""WITH selected AS (
-        SELECT *,row_number() OVER (PARTITION BY object,subject ORDER BY start,id) AS within_record
+        SELECT *,row_number() OVER (PARTITION BY object,subject ORDER BY eligible_span(object,quote,predicate) DESC,start,id) AS within_record
         FROM all_evidence WHERE predicate IN ('mentions','mentions_electorate','grant_postcode_overlaps','recorded_place','grant_program'))
         SELECT * FROM selected WHERE within_record=1 ORDER BY json_extract(details,'$.date') DESC,id"""
     rejected=0
@@ -138,6 +147,23 @@ def export(source_path,evidence_path,output,allow_incomplete=False,decisions_pat
         lookup[r['alias']].add(key(r['entity_id']))
         if r['entity_id'] in entries: eligible_aliases.add(r['alias'])
     lookup={name:ids for name,ids in lookup.items() if name in eligible_aliases}
+    by_public={key(entity):entry for entity,entry in entries.items()}
+    for entry in entries.values():
+        for excerpt in entry['excerpts']:
+            fields=excerpt.get('details',{}).get('source_fields',{})
+            links={}
+            if fields.get('program'):
+                candidate=key('program:'+hashlib.sha256(' '.join(words(fields['program'])).encode()).hexdigest()[:20])
+                if candidate in by_public:links['program']=candidate
+            if fields.get('suburb') and fields.get('state'):
+                candidate=key('place:'+str(fields['state']).casefold()+':'+str(fields['suburb']).strip().casefold())
+                if candidate in by_public:links['place']=candidate
+            if fields.get('recipient'):
+                matches=lookup.get(' '.join(words(fields['recipient'])),set())
+                if len(matches)==1:
+                    candidate=next(iter(matches));recipient=by_public.get(candidate)
+                    if recipient and publishable_alias(fields['recipient'],recipient['name']):links['recipient']=candidate
+            if links:excerpt['links']=links
     shards=defaultdict(dict)
     directory=[]
     for entity,entry in entries.items():
@@ -162,6 +188,7 @@ def export(source_path,evidence_path,output,allow_incomplete=False,decisions_pat
     for shard,values in lookups.items():
         (out/'lookup'/(shard+'.json')).write_text(json.dumps(values,ensure_ascii=False,separators=(',',':')))
     (out/'index.json').write_text(json.dumps({'meta':meta,'entities':directory},ensure_ascii=False,separators=(',',':')))
+    (out/'identity-links.json').write_text(json.dumps({'method':'Exact full recorded names matched to source identities with validated ABNs; source registers are unchanged.','links':[dict(r) | {'evidence':json.loads(r['evidence'])} for r in db.execute('SELECT * FROM redirects')]},ensure_ascii=False,separators=(',',':')))
     (out/'stats.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps(meta,indent=2))
 
