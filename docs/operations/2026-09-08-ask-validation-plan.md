@@ -6,7 +6,7 @@ Exercise realistic public questions against the deployed Ask endpoint, review re
 
 ## Coverage
 
-- Everyday topics: housing, health, schools, climate, banks, gambling, immigration, integrity, Indigenous affairs, tax, telecommunications, foreign affairs and media.
+- Everyday topics: housing, health, climate, banks, gambling, immigration, integrity, Indigenous affairs, tax, telecommunications, foreign affairs and media.
 - Scope: named parliamentarians, parties, comparisons, explicit filters, natural-language dates and jurisdictions, misspellings and conversation follow-ups.
 - Public money: disclosed receipts, individual versus party recipients, year-specific totals, contract awards and unsupported causation.
 - Controls: nonexistent people and subjects, false premises, prompt injection.

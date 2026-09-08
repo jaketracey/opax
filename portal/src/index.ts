@@ -711,6 +711,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
       'Question: {question}\n\n' +
       (party ? `This retrieval is restricted to records indexed under ${party}. A combined debate can still contain other parties' speakers. Unless the passages explicitly establish the speaker's affiliation, frame the answer as evidence in records indexed under ${party}, not as verified statements by ${party} MPs. Do not present a passage explicitly speaking for a different party as this group's position. ` : '') +
       'Instructions: If the question contains a follow-up, answer the latest follow-up; the earlier user question only supplies its subject. Answer from whichever passages address the question, quoting or closely paraphrasing them. ' +
+      'When the question names a particular institution, commission, bill or policy, exclude passages about other institutions sharing generic words such as commission or reform. For example, a not-for-profit regulator or another national commissioner is not evidence about a federal anti-corruption commission. ' +
       'Ignore passages that are off-topic; answer from the ones that apply even if only a few do or they address it only in part. If some passages mention the subject only briefly, report what they say and note that the record is limited. ' +
       'Begin with the answer itself. Never open with a preamble such as "Based on the provided context", "According to the passages" or "The context shows": the reader knows the answer comes from the record. ' +
       FOOTNOTE_INSTRUCTIONS +
