@@ -74,3 +74,12 @@
 /chunks/*
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+
+/community
+  Cache-Control: public, max-age=0, must-revalidate
+  ! Referrer-Policy
+  Referrer-Policy: no-referrer
+/community.html
+  Cache-Control: public, max-age=0, must-revalidate
+  ! Referrer-Policy
+  Referrer-Policy: no-referrer
