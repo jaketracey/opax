@@ -11,7 +11,9 @@ const assets={fetch:async req=>new Response(await readFile(new URL('../public'+n
 const parsed=ts.createSourceFile('index.ts',await readFile(new URL('../src/index.ts',import.meta.url),'utf8'),ts.ScriptTarget.Latest,true);
 const names=new Set(['buildAskBody','askPayload','askCacheInput','filterExpression','canonicalSpeaker','TOPIC_SLUGS','label','calibrate']);
 const code=parsed.statements.filter(n=>ts.isFunctionDeclaration(n)?names.has(n.name?.text):ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>names.has(d.name.getText(parsed)))).map(n=>n.getText(parsed)).join('\n');
-const worker={...records};
+const evidenceBundle=await build({entryPoints:[new URL('../src/ask-evidence.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
+const evidenceHelpers=await import('data:text/javascript;base64,'+Buffer.from(evidenceBundle.outputFiles[0].text).toString('base64'));
+const worker={...records,...evidenceHelpers};
 runInNewContext(ts.transpile(code),worker);
 const plain=value=>JSON.parse(JSON.stringify(value));
 
@@ -62,7 +64,7 @@ test('Ask defaults to all documents and includes structured evidence without uns
  assert.equal(JSON.parse(body.extra_context[0]).period,'2020–2024');
  assert.match(body.prompt.system,/NOT proof that any individual politician/);
  assert.match(body.prompt.system,/never use it as a subtotal/i);
- assert.equal(body.rag_strategies,undefined);
+ assert.deepEqual(plain(body.rag_strategies),[{name:'neighbouring_paragraphs',before:1,after:1},{name:'metadata_extension',types:['classification_labels']}]);
  const speech=worker.buildAskBody({question:'What did he say?',kind:'speech',speaker:'Andrew Wilkie'});
  assert.match(JSON.stringify(speech.filter_expression),/"label":"speech"/);
  assert.match(speech.prompt.user,/These records are indexed under Andrew Wilkie/);
@@ -75,7 +77,7 @@ test('external citation offsets and document citations share one source payload 
  const rows=[{kind:'receipt',title:'Company → Party',snippet:'$123',href:'/money?type=receipts',slug:'catalog-1'},
  {kind:'donor',title:'Uncited company',snippet:'$456',href:'/subject/donor/Other',slug:'catalog-2'}];
  const citations={USER_CONTEXT_0:[[0,12]],'rid/t/body/0-20':[[13,25]]};
- const payload=worker.askPayload({answer:'Party received funding.',citations,retrieval_results:{resources:{rid:{slug:'bill-c1234',title:'A bill'},news:{slug:'news-1'}}}},{records:rows,coverage:'',total:2});
+ const payload=worker.askPayload({answer:'Party received funding.',citations,retrieval_results:{resources:{rid:{slug:'bill-c1234',title:'A bill',fields:{'t/body':{paragraphs:{'rid/t/body/0-20':{text:'Original bill text',score:0.8,score_type:'RERANKER'}}}}},news:{slug:'news-1'}}}},{records:rows,coverage:'',total:2});
  assert.deepEqual(plain(payload.citations),citations);
  assert.equal(payload.sources.length,3);
  assert.equal(payload.sources[0].resource,'USER_CONTEXT_0');

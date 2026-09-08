@@ -13,6 +13,7 @@
  *  - exclude da-* fields from citations (enrichment output must not cite itself)
  */
 
+import { ASK_PIPELINE_VERSION, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, FootnoteStream, normaliseFootnotes, originalContext, type AugmentedContext } from './ask-evidence'
 import { proxyPostHog } from './posthog'
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
 import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, type AskRecords } from './ask-records'
@@ -612,6 +613,9 @@ interface AskInput {
 type AskAnswer = {
   answer?: string
   citations?: Record<string, unknown>
+  citation_footnote_to_context?: Record<string, string>
+  footnote_to_context?: Record<string, string>
+  augmented_context?: AugmentedContext
   retrieval_results?: { resources?: Record<string, FindResource> }
 }
 
@@ -637,15 +641,18 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
   const { question, kind, speaker, party, state, topic, from, to, context } = input
   const body: Record<string, unknown> = {
     query: question,
-    citations: true, // NEVER combine with answer_json_schema — platform bug
+    citations: 'llm_footnotes', // NEVER combine citations with answer_json_schema
     top_k: 20,
     reranker: 'predict',
     show: ['basic', 'origin', 'extra'],
-    // Do not extend passages with the record's speaker metadata: some imported
-    // debates contain several speakers under one index name.
     extra_context: recordContext(records.records),
+    rag_strategies: [
+      { name: 'neighbouring_paragraphs', before: 1, after: 1 },
+      // Index speaker metadata is unsafe for debates containing several speakers.
+      { name: 'metadata_extension', types: ['classification_labels'] },
+    ],
   }
-  // Prior conversation turns from the chat view. The platform's /ask context
+  // Prior conversation turns from the chat view. The platform's /ask chat_history
   // author enum is NUCLIA | USER (422 otherwise) — prior answers go in as
   // NUCLIA. The platform validates at 24 turns; clip text defensively too.
   const turns: { author: string; text: string }[] = []
@@ -673,7 +680,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
         })),
     )
   }
-  if (turns.length > 0) body.context = turns
+  if (turns.length > 0) body.chat_history = turns
   const filters = filterExpression({ kind: kind ?? 'all', speaker, party, state, topic, from, to })
   if (filters) body.filter_expression = filters
 
@@ -694,7 +701,8 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
       'Instructions: Answer from whichever passages address the question, quoting or closely paraphrasing them. ' +
       'Ignore passages that are off-topic; answer from the ones that apply even if only a few do or they address it only in part. If some passages mention the subject only briefly, report what they say and note that the record is limited. ' +
       'Begin with the answer itself. Never open with a preamble such as "Based on the provided context", "According to the passages" or "The context shows": the reader knows the answer comes from the record. ' +
-      'Do not explain how the passages are numbered, ordered or provided. ' +
+      FOOTNOTE_INSTRUCTIONS +
+      'Use source metadata for attribution, not as evidence of a claim. Do not explain how the passages are numbered, ordered or provided. ' +
       // "Donor" on this site is a political donor. Asked to count blood donors
       // the model once listed OAM recipients it found in the passages; asked
       // to count political donors it cannot, and should say where that lives.
@@ -707,15 +715,39 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
 
 /** The portal's answer payload: the same shape from the sync and streamed paths. */
 function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }): { answer: string; citations: Record<string, unknown>; sources: unknown[] } {
+  const resources = Object.fromEntries(Object.entries(answer.retrieval_results?.resources ?? {})
+    .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? '')))
+  const knownContexts = new Set<string>(records.records.map((_, i) => `USER_CONTEXT_${i}`))
+  for (const resource of Object.values(resources)) {
+    for (const field of Object.values(resource.fields ?? {})) {
+      for (const id of Object.keys(field.paragraphs ?? {})) {
+        if (originalContext(id)) knownContexts.add(id)
+      }
+    }
+  }
+  const augmented = {
+    ...answer.augmented_context?.paragraphs,
+    ...answer.augmented_context?.fields,
+  }
+  for (const [id, block] of Object.entries(augmented)) {
+    if (resources[id.split('/')[0]] && originalContext(id) && typeof block.text === 'string') knownContexts.add(id)
+  }
+  const footnotes = answer.citation_footnote_to_context ?? answer.footnote_to_context
+  const normalised = (footnotes && Object.keys(footnotes).length > 0) || /\[\^|\[\d+\]:\s*block-/.test(answer.answer ?? '')
+    ? normaliseFootnotes(answer.answer ?? '', footnotes ?? {}, knownContexts)
+    : { answer: answer.answer ?? '', citations: Object.fromEntries(
+        Object.entries(answer.citations ?? {}).filter(([id]) => knownContexts.has(id)),
+      ) }
+  // Both citation modes now use offsets into the clean answer (Unicode code points).
+  const citations = normalised.citations
   // Citation keys are ARAG paragraph ids ("<rid>/f/<field>/..."); the leading
   // segment is the resource id. Platform-format knowledge stays HERE — the
   // frontend just reads the `cited` flag.
   const citedIds = new Set(
-    Object.keys(answer.citations ?? {}).map((k) => k.split('/')[0]),
+    Object.keys(citations).map((k) => k.split('/')[0]),
   )
-  const citedParas = new Set(Object.keys(answer.citations ?? {}))
-  const sources = Object.entries(answer.retrieval_results?.resources ?? {})
-    .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? ''))
+  const citedParas = new Set(Object.keys(citations))
+  const sources = Object.entries(resources)
     .map(([rid, r]) => {
       const meta = r.extra?.metadata ?? {}
       // The passage to quote beside the answer: prefer the paragraph the
@@ -727,6 +759,7 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
       let citedScore = -1
       for (const field of Object.values(r.fields ?? {})) {
         for (const [pid, para] of Object.entries(field.paragraphs ?? {})) {
+          if (!originalContext(pid)) continue
           const cal = calibrate(para.score, para.score_type)
           if (cal > bestScore) {
             bestScore = cal
@@ -737,6 +770,10 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
             citedText = para.text
           }
         }
+      }
+      // Neighbouring paragraphs may be cited without being a retrieval hit.
+      for (const [id, block] of Object.entries(augmented)) {
+        if (id.split('/')[0] === rid && citedParas.has(id) && !citedText && typeof block.text === 'string') citedText = block.text
       }
       return {
         resource: rid,
@@ -756,9 +793,9 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
     })
 
   return {
-    answer: answer.answer ?? '',
-    citations: answer.citations ?? {},
-    sources: [...recordSources(records.records, answer.citations ?? {}), ...sources],
+    answer: normalised.answer,
+    citations,
+    sources: [...recordSources(records.records, citations), ...sources],
   }
 }
 
@@ -780,6 +817,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
   const topic = str(input.topic)
   return JSON.stringify({
     epoch,
+    pipeline: ASK_PIPELINE_VERSION,
     question: str(input.question).toLowerCase(),
     kind: kind && kind !== 'all' ? kind : 'all',
     speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',
@@ -911,7 +949,11 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     const again = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
     if (!(again instanceof Response) && !isRefusal(again)) answer = again
   }
-  const payload = askPayload(answer, records)
+  let payload = askPayload(answer, records)
+  if (!isRefusal(answer) && payload.sources.length && !Object.keys(payload.citations).length) {
+    const fallback = await askOnce(legacyCitationsAsk(body), ASK_SYNC_TIMEOUT_MS)
+    if (!(fallback instanceof Response) && !isRefusal(fallback)) payload = askPayload(fallback, records)
+  }
   store(payload)
   return withCacheStatus(json(payload), status, false)
 }
@@ -1014,6 +1056,9 @@ async function streamAskOnce(
   let answer = ''
   let citations: Record<string, unknown> = {}
   let resources: Record<string, FindResource> | undefined
+  let footnotes: Record<string, string> | undefined
+  let augmented: AugmentedContext | undefined
+  const footnoteStream = new FootnoteStream()
   let failure: string | null = null
   let words = 0
   let lastStatusAt = 0
@@ -1033,7 +1078,7 @@ async function streamAskOnce(
         const text = typeof item.text === 'string' ? item.text : ''
         if (!text) return // reasoning-phase placeholder
         answer += text
-        const out = gate.push(text)
+        const out = gate.push(body.citations === 'llm_footnotes' ? footnoteStream.push(text) : text)
         if (out) await send('delta', { text: out })
         return
       }
@@ -1051,6 +1096,12 @@ async function streamAskOnce(
       }
       case 'retrieval':
         resources = (item.results as { resources?: Record<string, FindResource> } | undefined)?.resources
+        return
+      case 'footnote_citations':
+        footnotes = (item.footnote_to_context as Record<string, string> | undefined) ?? {}
+        return
+      case 'augmented_context':
+        augmented = item.augmented as AugmentedContext | undefined
         return
       case 'citations':
         citations = (item.citations as Record<string, unknown> | undefined) ?? {}
@@ -1088,7 +1139,9 @@ async function streamAskOnce(
   if (buffer.trim()) await handle(buffer.trim())
 
   if (failure && !answer.trim()) throw new Error(`ask failed (${failure})`)
-  return { answer, citations, retrieval_results: { resources } }
+  const tail = gate.push(footnoteStream.push('', true))
+  if (tail) await send('delta', { text: tail })
+  return { answer, citations, citation_footnote_to_context: footnotes, augmented_context: augmented, retrieval_results: { resources } }
 }
 
 /** streamAskOnce under a stall timer: no item at all within stallMs aborts the attempt. */
@@ -1164,7 +1217,16 @@ function apiAskStream(
           const again = await streamAskOnce(env, body, send, upstream.signal)
           if (!isRefusal(again)) result = again
         }
-        const payload = askPayload(result, opts.records)
+        let payload = askPayload(result, opts.records)
+        if (!clientGone && !isRefusal(result) && payload.sources.length && !Object.keys(payload.citations).length) {
+          await send('retry', { reason: 'citations' })
+          try {
+            const fallback = await streamAskGuarded(env, legacyCitationsAsk(body), send, upstream.signal, ASK_STALL_MS)
+            if (!isRefusal(fallback)) payload = askPayload(fallback, opts.records)
+          } catch {
+            // Keep the completed answer as retrieved-only if citation recovery fails.
+          }
+        }
         await send('done', payload)
         // Cached from the `done` payload — the same bytes the reader got —
         // even when the reader left early (the answer was paid for).
