@@ -1570,6 +1570,30 @@ export async function mountMoneyMap(
       trigger(card,
         `/search?q=${encodeURIComponent(`"${shortName(node.label)}"`)}`,
         `What was said about ${shortName(node.label)}?`, true)
+      const evidenceButton = el('button', 'mm-card-trigger', card)
+      evidenceButton.type = 'button'
+      evidenceButton.textContent = 'See mentions in the source records'
+      const evidenceSlot = el('section', 'mm-evidence', card)
+      evidenceSlot.hidden = true
+      evidenceButton.addEventListener('click', async () => {
+        evidenceButton.disabled = true
+        evidenceButton.textContent = 'Finding source excerpts…'
+        try {
+          const { mountEvidence } = await import('../public/evidence.js')
+          const found = await mountEvidence(evidenceSlot, { name: node.label }, {
+            compact: true, alive: () => !destroyed && selectedId === node.id && evidenceSlot.isConnected,
+          })
+          if (!destroyed && selectedId === node.id && evidenceSlot.isConnected) {
+            evidenceButton.hidden = found
+            if (!found) evidenceButton.textContent = 'No verified excerpts available yet'
+          }
+        } catch {
+          if (evidenceSlot.isConnected) {
+            evidenceButton.textContent = 'Try loading source excerpts again'
+            evidenceButton.disabled = false
+          }
+        }
+      })
       explain(card, { kind: 'donor', from: node.label })
       if (node.id !== opts.subject) trigger(card, subjectUrl('donor', node.label), 'Full profile')
     } else if (node.kind === 'grantor') {
