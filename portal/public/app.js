@@ -1357,7 +1357,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=search-all-2");
+    const module = await import("/suppliers.js?v=austender-1");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -1391,7 +1391,7 @@ async function openAgencyPage(name, params, manageFocus) {
   body.classList.remove("subject-person");
   body.innerHTML = '<p role="status">Loading agencies…</p>';
   try {
-    const module = await import("/agencies.js?v=sort-2");
+    const module = await import("/agencies.js?v=austender-1");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,

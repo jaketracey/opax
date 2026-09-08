@@ -1,4 +1,4 @@
-import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart } from './suppliers.js?v=search-all-2';
+import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart } from './suppliers.js?v=austender-1';
 import { procurementGraph } from './procurement-data.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = value => (Number(value) || 0).toLocaleString('en-AU');
