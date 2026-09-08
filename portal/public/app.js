@@ -8179,11 +8179,6 @@ async function mountFrontMap() {
 
     });
     frontMapHandle = handle;
-    const reset = $("front-map-reset");
-    if (reset) {
-      reset.hidden = false;
-      reset.onclick = () => { handle.select(null); handle.fit?.(true); };
-    }
     frontMapObserver = new IntersectionObserver((entries) => handle.setPaused?.(!entries[entries.length - 1].isIntersecting));
     frontMapObserver.observe(root);
     renderFrontMapChips(mod, data);
