@@ -13,7 +13,9 @@ const names=new Set(['buildAskBody','askPayload','askCacheInput','filterExpressi
 const code=parsed.statements.filter(n=>ts.isFunctionDeclaration(n)?names.has(n.name?.text):ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>names.has(d.name.getText(parsed)))).map(n=>n.getText(parsed)).join('\n');
 const evidenceBundle=await build({entryPoints:[new URL('../src/ask-evidence.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
 const evidenceHelpers=await import('data:text/javascript;base64,'+Buffer.from(evidenceBundle.outputFiles[0].text).toString('base64'));
-const worker={...records,...evidenceHelpers};
+const scopeBundle=await build({entryPoints:[new URL('../src/ask-scope.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
+const scopeHelpers=await import('data:text/javascript;base64,'+Buffer.from(scopeBundle.outputFiles[0].text).toString('base64'));
+const worker={...records,...evidenceHelpers,...scopeHelpers};
 runInNewContext(ts.transpile(code),worker);
 const plain=value=>JSON.parse(JSON.stringify(value));
 
@@ -86,4 +88,32 @@ test('external citation offsets and document citations share one source payload 
  assert.equal(payload.sources[1].cited,false);
  assert.equal(payload.sources[2].href,'/bill/c1234');
  assert.equal(payload.sources[2].cited,true);
+});
+
+
+test('bill dates describe introduction, never passage or assent',()=>{
+ const row=JSON.parse(records.recordContext([{kind:'bill',title:'Voice 2023',snippet:'passed',date:'2023-03-30'}])[0]);
+ assert.equal(row.period,'2023-03-30');
+ assert.match(row.date_meaning,/Introduction date, not passage or assent/);
+ assert.match(worker.buildAskBody({question:'When did it pass?'}).prompt.system,/only give a passage or assent date when separately documented/);
+});
+
+test('referential funding questions retain the donor in catalog retrieval',()=>{
+ const query=records.recordQuery({question:'And which parties received it?',context:[{author:'question',text:'Which parties received funding from Woodside?'},{author:'answer',text:'Imaginary Mining'}]});
+ assert.match(query,/woodside/);
+ assert.ok(!query.includes('imaginary'));
+});
+
+test('Senate asks filter chamber and cache it independently',()=>{
+ const body=worker.buildAskBody({question:'What did the Senate say?',kind:'speech',chamber:'senate',state:'federal'});
+ assert.match(JSON.stringify(body.filter_expression),/"labelset":"chamber","label":"senate"/);
+ assert.notEqual(worker.askCacheInput({question:'Q',chamber:'senate'},'v'),worker.askCacheInput({question:'Q'},'v'));
+});
+
+test('follow-ups preserve generation history but bypass the failing implicit retrieval rewrite',()=>{
+ const context=[{author:'question',text:'What did independent MPs say about negative gearing?'},{author:'answer',text:'They discussed reform.'}];
+ const body=worker.buildAskBody({question:'And what about housing supply?',context});
+ assert.match(body.query,/negative gearing/);assert.match(body.query,/housing supply/);
+ assert.equal(body.chat_history.length,2);assert.equal(body.chat_history_relevance_threshold,1);assert.equal(body.rephrase,false);
+ assert.equal(worker.buildAskBody({question:'What about housing?'}).chat_history_relevance_threshold,undefined);
 });

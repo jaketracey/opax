@@ -4,7 +4,7 @@ export type AugmentedContext = {
   fields?: Record<string, { id?: string; text?: string; parent?: string }>
 }
 
-export const ASK_PIPELINE_VERSION = '2026-09-08-footnotes-context-scope-v3'
+export const ASK_PIPELINE_VERSION = '2026-09-08-footnotes-context-regression-v5'
 
 export const FOOTNOTE_INSTRUCTIONS = 'Cite factual claims with Markdown footnotes, for example [^1]. After the answer, define EVERY reference on its own line using an exact block identifier from the provided context, for example [^1]: block-AA. Do not use that example identifier unless it is present in the context. Never invent an identifier or use paragraph order as a citation. '
 
@@ -112,4 +112,24 @@ export class FootnoteStream {
     }
     return out
   }
+}
+
+/** Literal quotation check, not a factual entailment score. */
+export function unsupportedQuotes(answer: string, evidence: string[]): string[] {
+  const fold = (text: string) => text.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '')
+  const texts = evidence.map(fold)
+  const quotes = [...answer.matchAll(/["“]([^"”\n]*)["”]/g)].map(m => m[1])
+    .filter(q => q.length >= 30 && q.trim().split(/\s+/).length >= 6)
+  return quotes.filter(quote => {
+    const parts = quote.split(/\.{3}|…/).map(fold).filter(Boolean)
+    return !texts.some(text => {
+      let offset = 0
+      return parts.every(part => {
+        const at = text.indexOf(part, offset)
+        if (at < 0) return false
+        offset = at + part.length
+        return true
+      })
+    })
+  })
 }

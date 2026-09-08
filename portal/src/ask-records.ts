@@ -3,7 +3,7 @@ import { tokens } from './catalog-query.mjs'
 
 export interface RecordQuestion {
   question?: string; kind?: string; speaker?: string; party?: string
-  state?: string; topic?: string; from?: string; to?: string
+  state?: string; chamber?: string; topic?: string; from?: string; to?: string
   context?: { author?: string; text?: string }[]
 }
 
@@ -11,7 +11,7 @@ export interface RecordQuestion {
 // These are retrieval hints only: the original question still goes to the model.
 const QUESTION_WORDS = new Set(('who whom whose which what when where why how do does did can could would should will ' +
   'we you i they them their these those this that there here us me about say says said saying tell show find ' +
-  'get gets got take takes taking taken give gives gave given receive receives received receiving ' +
+  'it its and then government awarded awards award get gets got take takes taking taken give gives gave given receive receives received receiving ' +
   'have had been being not any all most much many more some recent latest please pls also ' +
   'politician politicians company companies organisation organisations money funding fund funds donation donations ' +
   'donor donors receipt receipts contract contracts grant grants spend spending spent political party parties interest interests declared declare record records summary summaries').split(' ').flatMap(w => tokens(w)))
@@ -22,8 +22,8 @@ export function recordQuery(input: RecordQuestion): string {
   const question = input.question || ''
   let terms: string[] = subject(question)
   // A short follow-up inherits the last user question, never model prose.
-  if (terms.length < 2 && input.context?.length) {
-    const previous = [...input.context].reverse().find(t => t.author !== 'answer' && t.text)
+  if ((terms.length < 2 || /^(?:and|what about|how about)\b/i.test(question.trim())) && Array.isArray(input.context) && input.context.length) {
+    const previous = [...input.context].reverse().find(t => t.author === 'question' && t.text)
     terms = [...terms, ...subject(previous?.text || '')]
   }
   if (!terms.length) terms = tokens(question).filter((t: string) => /^(donation|donor|receipt|contract|grant|expense|interest|bill)$/.test(t))
@@ -34,7 +34,7 @@ export function recordQuery(input: RecordQuestion): string {
 export interface AskRecords { records: CatalogRecord[]; coverage: string; total: number }
 export async function retrieveAskRecords(input: RecordQuestion, assets: Fetcher): Promise<AskRecords> {
   const empty = { records: [], coverage: '', total: 0 }
-  if (input.kind && input.kind !== 'all') return empty
+  if ((input.kind && input.kind !== 'all') || input.chamber) return empty
   const q = recordQuery(input)
   if (!q) return empty
   const params = new URLSearchParams({ q, kind: 'all' })
@@ -64,7 +64,9 @@ export async function retrieveAskRecords(input: RecordQuestion, assets: Fetcher)
 export function recordContext(records: CatalogRecord[]): string[] {
   return records.map(r => JSON.stringify({
     kind: r.kind, title: r.title, record: r.snippet.slice(0, 1800),
-    period: r.dateLabel || r.date || 'Not recorded', source: r.source,
+    period: r.dateLabel || r.date || 'Not recorded',
+    ...(r.kind === 'bill' ? { date_meaning: 'Introduction date, not passage or assent date. Status is current register status, not status on this date.' } : {}),
+    source: r.source,
     destination: r.href, official_url: r.url, record_id: r.record_id,
   }))
 }
@@ -89,5 +91,6 @@ export const RECORD_GROUNDING =
   'Do not sum overlapping profiles, connections and individual notices, or combine state and federal disclosure totals. ' +
   'An aggregate covers only its stated period; never use it as a subtotal for a different requested year or window. Use explicitly matching dated records or say that the requested subtotal is not established. ' +
   'If the retrieved records cannot establish a requested count or total, say so briefly and answer the parts they support. ' +
+  'For bill register records, the date is the introduction date. A passed status does not mean it passed on that date; only give a passage or assent date when separately documented. ' +
   'Give dates only when explicitly supplied; omit an unknown date rather than guessing it. Some debate records combine multiple speakers under the first speaker\'s index name. The title or metadata alone therefore cannot establish who said a passage. Name a speaker only when the passage itself explicitly identifies whose words they are; otherwise describe it as a debate passage with its date. Never label all speakers as funding recipients. ' +
   'Keep the answer focused: normally give up to four financial examples with their own citations and up to three relevant debate passages, unless the question asks for more. Do not dump every retrieved record. '

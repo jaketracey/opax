@@ -13,8 +13,8 @@
  *  - exclude da-* fields from citations (enrichment output must not cite itself)
  */
 
-import { ASK_PIPELINE_VERSION, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, FootnoteStream, normaliseFootnotes, originalContext, type AugmentedContext } from './ask-evidence'
-import { resolveAskScope } from './ask-scope'
+import { ASK_PIPELINE_VERSION, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
+import { resolveAskScope, needsAskPeople, askRetrievalQuery, type AskScope } from './ask-scope'
 import { proxyPostHog } from './posthog'
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
 import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, type AskRecords } from './ask-records'
@@ -89,6 +89,7 @@ function filterExpression(f: {
   speaker?: string | null
   party?: string | null
   state?: string | null
+  chamber?: string | null
   topic?: string | null
   from?: string | null
   to?: string | null
@@ -98,6 +99,7 @@ function filterExpression(f: {
     clauses.push({ prop: 'label', labelset: 'kind', label: f.kind })
   }
   if (f.party) clauses.push({ prop: 'label', labelset: 'party', label: f.party })
+  if (f.chamber) clauses.push({ prop: 'label', labelset: 'chamber', label: f.chamber })
   if (f.state) clauses.push({ prop: 'label', labelset: 'state', label: f.state })
   if (f.topic && TOPIC_SLUGS.has(f.topic)) {
     clauses.push({ prop: 'label', labelset: 'topic', label: f.topic })
@@ -604,6 +606,7 @@ interface AskInput {
   kind?: string
   speaker?: string
   party?: string
+  chamber?: string
   state?: string
   topic?: string
   from?: string
@@ -639,9 +642,9 @@ const healthyRetrieval = (a: AskAnswer): boolean =>
 
 /** The platform /ask body for a portal question: filters, context turns, prompt. */
 function buildAskBody(input: AskInput, records: AskRecords = { records: [], coverage: '', total: 0 }): Record<string, unknown> {
-  const { question, kind, speaker, party, state, topic, from, to, context } = input
+  const { question, kind, speaker, party, state, chamber, topic, from, to, context } = input
   const body: Record<string, unknown> = {
-    query: question,
+    query: askRetrievalQuery(input),
     citations: 'llm_footnotes', // NEVER combine citations with answer_json_schema
     top_k: 20,
     reranker: 'predict',
@@ -681,8 +684,15 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
         })),
     )
   }
-  if (turns.length > 0) body.chat_history = turns
-  const filters = filterExpression({ kind: kind ?? 'all', speaker, party, state, topic, from, to })
+  if (turns.length > 0) {
+    body.chat_history = turns
+    // We already supply a contextual retrieval query. The provider's implicit
+    // history rewrite lost the subject in live follow-up checks (2026-09-08).
+    // Keep history for generation, but search the explicit query unchanged.
+    body.chat_history_relevance_threshold = 1
+    body.rephrase = false
+  }
+  const filters = filterExpression({ kind: kind ?? 'all', speaker, party, state, chamber, topic, from, to })
   if (filters) body.filter_expression = filters
 
   // Every ask owns its prompt. The platform default's fallback line ("Not
@@ -700,10 +710,12 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
       `${provenance}Passages from the record:\n{context}\n\n` +
       'Question: {question}\n\n' +
       (party ? `This retrieval is restricted to records indexed under ${party}. A combined debate can still contain other parties' speakers. Unless the passages explicitly establish the speaker's affiliation, frame the answer as evidence in records indexed under ${party}, not as verified statements by ${party} MPs. Do not present a passage explicitly speaking for a different party as this group's position. ` : '') +
-      'Instructions: Answer from whichever passages address the question, quoting or closely paraphrasing them. ' +
+      'Instructions: If the question contains a follow-up, answer the latest follow-up; the earlier user question only supplies its subject. Answer from whichever passages address the question, quoting or closely paraphrasing them. ' +
+      'When the question names a particular institution, commission, bill or policy, exclude passages about other institutions sharing generic words such as commission or reform. For example, a not-for-profit regulator or another national commissioner is not evidence about a federal anti-corruption commission. ' +
       'Ignore passages that are off-topic; answer from the ones that apply even if only a few do or they address it only in part. If some passages mention the subject only briefly, report what they say and note that the record is limited. ' +
       'Begin with the answer itself. Never open with a preamble such as "Based on the provided context", "According to the passages" or "The context shows": the reader knows the answer comes from the record. ' +
       FOOTNOTE_INSTRUCTIONS +
+      'Quotation marks mean verbatim source wording. Never put a paraphrase, changed verb or compressed sentence in quotation marks; use an unquoted paraphrase instead. Attach each citation to the exact passage supporting that claim, not another passage on the same topic. ' +
       'Party labels identify the indexing scope of a record, not the affiliation of every speaker in a combined debate. Do not call an unnamed speaker an Independent, Labor, Liberal or other party MP merely from the record label. When attribution is not explicit in the passage, describe it as a passage in records indexed under that group. ' +
       'Do not explain how the passages are numbered, ordered or provided. ' +
       // "Donor" on this site is a political donor. Asked to count blood donors
@@ -712,13 +724,14 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
       'On this site "donor", "donation" and "gave" mean money disclosed to electoral commissions by political donors, not blood or organ donation, unless the question says otherwise. ' +
       (records.coverage ? `Published-record coverage: ${records.coverage} ` : '') +
       'A ranked retrieval is not an exhaustive search of parliament. Never claim a person or group made no statements merely because none appeared in these results. If the requested group is absent, say the retrieved selection does not establish its position. ' +
+      'Distinguish what was said during a requested period from later recollections about that period. Do not present a later retrospective account as a contemporaneous statement. Keep the answer to about 300 words unless more detail is requested. ' +
       'Only if NO passage mentions the subject at all, reply exactly: The record retrieved for this question does not discuss it.',
   }
   return body
 }
 
 /** The portal's answer payload: the same shape from the sync and streamed paths. */
-function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: { party: string; kind?: string }): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: { party: string; kind?: string } } {
+function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: AskScope): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: AskScope; answer_status?: string } {
   const resources = Object.fromEntries(Object.entries(answer.retrieval_results?.resources ?? {})
     .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? '')))
   const knownContexts = new Set<string>(records.records.map((_, i) => `USER_CONTEXT_${i}`))
@@ -807,6 +820,49 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
 
 type AskPayload = ReturnType<typeof askPayload>
 
+/** Verify quotes against original cited resources, not model metadata. */
+function hasUnsupportedQuotes(payload: AskPayload, raw: AskAnswer): boolean {
+  const cited = new Set(Object.keys(payload.citations).map(id => id.split('/')[0]))
+  const text = new Map<string, string[]>()
+  const add = (id: string, value: string) => {
+    if (!cited.has(id.split('/')[0]) || !originalContext(id)) return
+    const rid = id.split('/')[0]
+    const parts = text.get(rid) ?? []
+    parts.push(value.replace(/\n+DOCUMENT CLASSIFICATION LABELS:[\s\S]*$/, ''))
+    text.set(rid, parts)
+  }
+  for (const resource of Object.values(raw.retrieval_results?.resources ?? {})) {
+    for (const field of Object.values(resource.fields ?? {})) {
+      for (const [id, paragraph] of Object.entries(field.paragraphs ?? {})) add(id, paragraph.text)
+    }
+  }
+  for (const [id, block] of Object.entries({ ...raw.augmented_context?.paragraphs, ...raw.augmented_context?.fields })) {
+    if (typeof block.text === 'string') add(id, block.text)
+  }
+  for (const source of payload.sources as { resource: string; snippet?: string }[]) {
+    if (source.resource.startsWith('USER_CONTEXT_') && source.snippet) add(source.resource, source.snippet)
+  }
+  return unsupportedQuotes(payload.answer, [...text.values()].map(parts => parts.join('\n'))).length > 0
+}
+
+/** If a bounded retry still invents quotations, return the record itself. */
+function evidenceOnlyAnswer(payload: AskPayload): AskPayload {
+  type Source = { resource: string; snippet?: string; cited?: boolean }
+  const sources = payload.sources as Source[]
+  const selected = sources.filter(s => s.cited && s.snippet).slice(0, 3)
+  let answer = 'I could not verify the quotations in the generated answer. These retrieved passages may help; they are not a complete answer to your question.'
+  const citations: Record<string, number[][]> = {}
+  for (const source of selected) {
+    answer += `\n\n${source.snippet}`
+    const end = Array.from(answer).length
+    const id = Object.keys(payload.citations).find(key => key.split('/')[0] === source.resource)
+    if (id) citations[id] = [[end - 1, end]]
+  }
+  const used = new Set(Object.keys(citations).map(id => id.split('/')[0]))
+  return { ...payload, answer, citations, answer_status: 'evidence_only',
+    sources: sources.map(s => ({ ...s, cited: used.has(s.resource) })) }
+}
+
 /**
  * The canonical form of an ask, or null when it must not be cached (chat
  * history present). Mirrors what buildAskBody/filterExpression actually act
@@ -829,6 +885,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
     speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',
     party: str(input.party),
     state: str(input.state),
+    chamber: str(input.chamber),
     topic: TOPIC_SLUGS.has(topic) ? topic : '',
     from: yr(input.from),
     to: yr(input.to),
@@ -836,7 +893,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
     // non-empty filter value, including ones filterExpression then discards
     // (an unknown topic, a "from" that is not a year). Two asks that differ
     // only there get different prompts, so the flag has to be in the key.
-    filtered: [input.speaker, input.party, input.state, input.topic, input.from, input.to].some(
+    filtered: [input.speaker, input.party, input.state, input.chamber, input.topic, input.from, input.to].some(
       (v) => (v ?? '').trim().length > 0,
     ),
   })
@@ -844,7 +901,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
 
 /** Worth keeping for a week: a real answer with at least one cited source. */
 const cacheableAnswer = (p: AskPayload): boolean =>
-  !isRefusal({ answer: p.answer }) && p.sources.some((s) => (s as { cited?: boolean }).cited === true)
+  p.answer_status !== 'evidence_only' && !isRefusal({ answer: p.answer }) && p.sources.some((s) => (s as { cited?: boolean }).cited === true)
 
 /** Cut on word boundaries into pieces of about `size` characters; pieces concatenate to the input exactly. */
 function chunkText(text: string, size: number): string[] {
@@ -909,7 +966,12 @@ function replayCachedAsk(hit: Response, ctx: ExecutionContext): Response {
 
 async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const rawInput = ((await request.json().catch(() => ({}))) ?? {}) as AskInput
-  const { input, scope } = resolveAskScope(rawInput)
+  let people: { name: string }[] = []
+  if (needsAskPeople(rawInput)) {
+    try { people = (await loadPeople(env)).people }
+    catch { return json({ error: 'The parliamentarian index is temporarily unavailable. Please try again.' }, 503) }
+  }
+  const { input, scope } = resolveAskScope(rawInput, people)
   if (!input.question?.trim()) return json({ error: 'question is required' }, 400)
 
   const url = new URL(request.url)
@@ -957,10 +1019,11 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     if (!(again instanceof Response) && !isRefusal(again)) answer = again
   }
   let payload = askPayload(answer, records, scope)
-  if (!isRefusal(answer) && payload.sources.length && !Object.keys(payload.citations).length) {
+  if (!isRefusal(answer) && payload.sources.length && (!Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, answer))) {
     const fallback = await askOnce(legacyCitationsAsk(body), ASK_SYNC_TIMEOUT_MS)
-    if (!(fallback instanceof Response) && !isRefusal(fallback)) payload = askPayload(fallback, records, scope)
+    if (!(fallback instanceof Response) && !isRefusal(fallback)) { answer = fallback; payload = askPayload(fallback, records, scope) }
   }
+  if (hasUnsupportedQuotes(payload, answer)) payload = evidenceOnlyAnswer(payload)
   store(payload)
   return withCacheStatus(json(payload), status, false)
 }
@@ -1181,7 +1244,7 @@ function apiAskStream(
   body: Record<string, unknown>,
   env: Env,
   ctx: ExecutionContext,
-  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus; records: AskRecords; scope?: { party: string; kind?: string } },
+  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus; records: AskRecords; scope?: AskScope },
 ): Response {
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
   const writer = writable.getWriter()
@@ -1225,15 +1288,16 @@ function apiAskStream(
           if (!isRefusal(again)) result = again
         }
         let payload = askPayload(result, opts.records, opts.scope)
-        if (!clientGone && !isRefusal(result) && payload.sources.length && !Object.keys(payload.citations).length) {
+        if (!clientGone && !isRefusal(result) && payload.sources.length && (!Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, result))) {
           await send('retry', { reason: 'citations' })
           try {
             const fallback = await streamAskGuarded(env, legacyCitationsAsk(body), send, upstream.signal, ASK_STALL_MS)
-            if (!isRefusal(fallback)) payload = askPayload(fallback, opts.records, opts.scope)
+            if (!isRefusal(fallback)) { result = fallback; payload = askPayload(fallback, opts.records, opts.scope) }
           } catch {
-            // Keep the completed answer as retrieved-only if citation recovery fails.
+            // The final quotation check below falls back to evidence if recovery fails.
           }
         }
+        if (hasUnsupportedQuotes(payload, result)) payload = evidenceOnlyAnswer(payload)
         await send('done', payload)
         // Cached from the `done` payload — the same bytes the reader got —
         // even when the reader left early (the answer was paid for).
