@@ -73,10 +73,10 @@ SPEECHES
 
 
 def summary_prompt(items: list[dict]) -> str:
-    return f"""Write a brief for every Australian parliamentary speech below for OPAX.
-Each value must be one compact sentence, normally 25 to 75 words (a short question or procedural record may use 8 to 24 words), neutrally stating what was argued, announced, asked, answered, or moved. Use only that rid's supplied text and never carry a speaker, claim, or figure across records. Do not name or infer the speaker from the title: start directly with an action such as 'Asked', 'Argued', 'Moved', 'Reported', or 'Paid tribute'. When several speakers appear, describe the proceeding neutrally; for questions and answers use 'Asked whether ...; the minister said ...'. Write years in full: do not shorten 2026 to 2027 into 2026-27. Preserve the source's tense and status exactly, especially 'will announce' versus 'announced'. Preserve at most three useful concrete positions, figures, bill names, people, or places. Use neutral verbs and include only directly supported claims. Never start with 'In this speech', 'This speech', or 'The speaker says'. Summarise rather than quote, use plain ASCII punctuation, stay below 600 characters, and return only the required JSON object. Do not call tools or external APIs.
+    return f"""Write a brief for every Australian public record below for OPAX. Each item identifies its kind; it may be a parliamentary speech or an official government transcript or release.
+Each value must be one compact sentence, normally 25 to 75 words (a short question or procedural record may use 8 to 24 words), neutrally stating what was argued, announced, asked, answered, moved, or reported. Use only that rid's supplied text and never carry a speaker, claim, or figure across records. Do not name or infer the speaker from the title: start directly with an action such as 'Asked', 'Argued', 'Announced', 'Moved', 'Reported', or 'Paid tribute'. When several speakers appear, describe the proceeding neutrally; for questions and answers use 'Asked whether ...; the minister said ...'. Write years in full: do not shorten 2026 to 2027 into 2026-27. Preserve the source's tense and status exactly, especially 'will announce' versus 'announced'. Preserve at most three useful concrete positions, figures, bill names, people, organisations, programs, or places. Use neutral verbs and include only directly supported claims. Never start with 'In this speech', 'This speech', 'This release', or 'The speaker says'. Summarise rather than quote, use plain ASCII punctuation, stay below 600 characters, and return only the required JSON object. Do not call tools or external APIs.
 
-SPEECHES
+RECORDS
 {json.dumps(items, ensure_ascii=False, separators=(',', ':'))}
 """
 

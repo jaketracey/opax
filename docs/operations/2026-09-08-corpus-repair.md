@@ -19,7 +19,9 @@ Portal `CACHE_EPOCH` was advanced to `2026-09-08-footer-cleanup`. The document r
 
 ## Enrichment
 
-The active queues remain on the Mac at `~/.cache/opax/{labels,summaries}_queue.sqlite`. Four launch agents run from `/private/tmp/opax-codex-enrichment`: two label workers and two summary workers. Models and concurrency were preserved. The summary runner now accepts concise short-question briefs, asks for full years, and logs validation failures. Source-number checks remain active. Both summary workers resumed successful submissions; live sampled labels and briefs matched saved results.
+The active queues remain on the Mac at `~/.cache/opax/{labels,summaries}_queue.sqlite`, with government-record briefs in `~/.cache/opax/release_summaries_queue.sqlite`. Four launch agents run from `/private/tmp/opax-codex-enrichment`: two speech-topic workers, one speech-summary worker and one government-release-summary worker. The summary runner accepts concise short-question briefs, asks for full years, identifies each record kind and logs validation failures. Source-number checks remain active. Live sampled speech and release briefs matched their saved source text.
+
+All four processes share a filesystem write lock for knowledge-box PATCHes and honour the platform's reported retry time. Model work remains parallel; only the short publication step is serialised. This prevents ingestion backpressure from turning valid completed batches into permanent queue errors.
 
 At the operational check there were roughly 77,000 label reviews and 575,000 summaries remaining. They are not complete. Short-term throughput is not a completion guarantee.
 
