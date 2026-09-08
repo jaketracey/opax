@@ -787,7 +787,8 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
         chamber: label(r, 'chamber'),
         date: (meta.date as string) ?? null,
         url: r.origin?.url || null, // official record, for exports/citations
-        snippet: (citedText || bestText).slice(0, 600),
+        // Metadata extension is model context, not part of the quoted record.
+        snippet: (citedText || bestText).replace(/\n+DOCUMENT CLASSIFICATION LABELS:[\s\S]*$/, '').trim().slice(0, 600),
         cited: citedIds.has(rid),
       }
     })
