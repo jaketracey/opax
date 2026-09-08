@@ -10,3 +10,18 @@
 @media(max-width:700px){.community-header{flex-wrap:wrap;gap:.5rem;padding:.8rem 1.25rem}.community-header nav{gap:1rem;justify-content:space-between;width:100%}.community-header nav a{font-size:.8rem}.community-hero,.community-columns,.community-account-grid{grid-template-columns:minmax(0,1fr);gap:1.5rem}.community-hero{padding-bottom:2rem;margin-bottom:2rem}.community-note,.community-card{padding:1.25rem}.community-actions .community-button{flex:1}.community-site h1{max-width:20ch}.community-subnav{gap:.75rem;font-size:.875rem}.community-form button{width:100%}.community-inline-actions{gap:.5rem}}
 
 .community-button.btn-loading:disabled{opacity:.9;cursor:wait}.community-button .btn-spinner{flex-shrink:0}#community-message:focus{outline:none}
+
+/* Community masthead: a compact companion to the main Opax identity. */
+.community-header{display:grid;grid-template-columns:auto 1fr auto;column-gap:2rem;row-gap:.75rem}
+.community-brand{min-height:44px;font-size:1.6rem;gap:.65rem;white-space:nowrap}.community-mark{color:var(--bronze-bright);flex-shrink:0}
+.community-header nav{justify-self:end;gap:1.5rem}.community-header nav a{gap:.35rem}
+#community-account-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:.4rem .8rem;border:1px solid #ffffff40;border-radius:4px;color:white;text-decoration:none;font:600 .875rem/1.3 var(--sans);white-space:nowrap}
+#community-account-link:hover{background:#ffffff12}.community-header a:focus-visible{outline:2px solid var(--bronze-bright);outline-offset:4px}
+@media(max-width:700px){
+ .community-header{grid-template-columns:minmax(0,1fr) auto;padding:.75rem 1.25rem .35rem;column-gap:.6rem;row-gap:.5rem}
+ .community-brand{font-size:1.3rem;gap:.5rem}.community-mark{width:40px;height:40px}
+ #community-account-link{grid-column:2;grid-row:1;font-size:.8rem;padding:.35rem .6rem}
+ .community-header nav{grid-column:1/-1;grid-row:2;justify-self:stretch;justify-content:flex-start;gap:1.5rem;border-top:1px solid #ffffff20;padding-top:.2rem}
+ .community-header nav a{font-size:.85rem;min-height:44px}
+}
+@media(max-width:350px){.community-header{padding-inline:1rem}.community-brand{font-size:1.15rem}.community-mark{width:34px;height:34px}}
