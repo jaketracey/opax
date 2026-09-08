@@ -27,6 +27,7 @@ function harness(rows = [supplier()], loader) {
     assetJson: async (_env, path) => { assert.equal(path, '/suppliers.json'); requests++; return loader ? loader() : { meta: { generated_at: '2026-09-07T00:00:00Z' }, suppliers: rows }; },
     cachedJson: async (_key, fn) => fn(),
     loadPeople: async () => ({ people: [] }), loadMoney: async () => ({ parties: new Map(), donors: new Map() }),
+    loadAgencies: async () => null,
     loadReports: async () => ({ reports: [] }), loadCampaigners: async () => null,
   };
   runInNewContext(code, context);

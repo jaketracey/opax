@@ -71,7 +71,8 @@ export type MoneyNode = {
   id: string
   label: string
   /** 'grantor' is the central node public money flows out of. */
-  kind: 'donor' | 'party' | 'grantor'
+  kind: 'donor' | 'party' | 'grantor' | 'agency' | 'supplier'
+  profileUrl?: string
   industry: string
   group: string
   colour?: string
@@ -625,15 +626,18 @@ function el<K extends keyof HTMLElementTagNameMap>(
 
 export async function mountMoneyMap(
   container: HTMLElement,
-  dataUrl: string,
+  dataUrl: string | MoneyGraph,
   opts: MoneyMapOptions = {},
 ): Promise<MoneyMapHandle> {
   injectStyles()
   container.classList.add('mm-root')
 
-  const response = await fetch(dataUrl)
-  if (!response.ok) throw new Error(`money map data: HTTP ${response.status} for ${dataUrl}`)
-  const raw = (await response.json()) as MoneyGraph
+  let raw: MoneyGraph
+  if (typeof dataUrl === 'string') {
+    const response = await fetch(dataUrl)
+    if (!response.ok) throw new Error(`money map data: HTTP ${response.status} for ${dataUrl}`)
+    raw = await response.json() as MoneyGraph
+  } else raw = dataUrl
 
   if (!webglAvailable()) return mountConnectionFallback(container, raw, opts)
 
@@ -1020,7 +1024,8 @@ export async function mountMoneyMap(
       measure: 'resources',
       layout: 'grouped',
       aspect: aspectBucket(),
-      centralGroup: 'parties',
+      centralGroup: raw.meta.procurement ? 'agencies' : 'parties',
+      collapseGroups: !raw.meta.procurement,
     }
     visibleSceneIds = visibleIds
     visibleSceneEdges = visibleEdges
@@ -1402,6 +1407,21 @@ export async function mountMoneyMap(
     close.setAttribute('aria-label', 'Close details')
     close.addEventListener('click', () => setSelection(null, { user: true }))
 
+    if (node.kind === 'agency' || node.kind === 'supplier') {
+      el('h2', '', card).textContent = node.label
+      el('span', 'mm-card-tag', card).textContent = node.kind === 'agency' ? 'Government agency' : 'Government supplier'
+      el('div', 'mm-card-total', card).textContent = formatMoney(node.total)
+      el('p', 'mm-card-sub', card).textContent = `${node.count.toLocaleString()} recorded contracts${node.id === opts.subject ? '' : ' in this relationship'}`
+      el('div', 'mm-card-section', card).textContent = node.kind === 'agency' ? 'Contracts awarded to' : 'Contracts awarded by'
+      const list = el('ul', 'mm-rows', card)
+      for (const edge of view.edges.filter(e => e.source === node.id || e.target === node.id).sort((a, b) => b.total - a.total)) {
+        const other = view.nodes.get(edge.source === node.id ? edge.target : edge.source)
+        if (other) row(list, other.colour ?? null, other.label, edge.total, `${edge.count.toLocaleString()} contracts`, () => setSelection(other.id, { user: true }))
+      }
+      if (node.profileUrl && /^\/subject\/(agency|supplier)\//.test(node.profileUrl)) trigger(card, node.profileUrl, 'Full profile', true)
+      el('p', 'mm-card-fine', card).textContent = 'Recorded contract commitments, not verified payments. The map shows the largest relationships; the profile lists all available records.'
+      return
+    }
     const title = el('h2', '', card)
     title.textContent = node.label
     const tag = el('span', 'mm-card-tag', card)
@@ -1681,6 +1701,22 @@ export async function mountMoneyMap(
       return
     }
     const from = view.nodes.get(edge.source)
+    if (from?.kind === 'agency') {
+      const to = view.nodes.get(edge.target)
+      if (!to) return
+      card.replaceChildren()
+      const close = el('button', 'mm-card-close', card)
+      close.type = 'button'; close.textContent = '✕'; close.setAttribute('aria-label', 'Close details')
+      close.addEventListener('click', () => setEdgeSelection(null))
+      el('h2', '', card).textContent = `${from.label} → ${to.label}`
+      el('span', 'mm-card-tag', card).textContent = 'Contracts awarded'
+      el('div', 'mm-card-total', card).textContent = formatMoney(edge.total ?? 0)
+      el('p', 'mm-card-sub', card).textContent = `${(edge.count ?? 0).toLocaleString()} recorded contracts`
+      const list = el('ul', 'mm-rows', card)
+      for (const node of [from, to]) row(list, node.colour ?? null, node.label, edge.total ?? 0, '', () => setSelection(node.id, { user: true }))
+      el('p', 'mm-card-fine', card).textContent = 'Contract commitments, not verified payments. Open either profile for the source records.'
+      return
+    }
     if (from?.kind === 'grantor') {
       renderGrantFlowCard(edge, from)
       return
@@ -1933,7 +1969,7 @@ export async function mountMoneyMap(
   const strongestFlows = (id: string) => {
     const node = view.nodes.get(id)
     if (!node) return null
-    const incoming = node.kind === 'party'
+    const incoming = node.kind === 'party' || node.kind === 'supplier'
     const flows = view.edges
       .filter((e) => (incoming ? e.target : e.source) === id)
       .sort((a, b) => b.total - a.total)
