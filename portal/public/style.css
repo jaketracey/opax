@@ -4753,3 +4753,5 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 
 .dir-main .result-meta .dir-party-link { display:inline-flex; align-items:center; white-space:nowrap; text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:.2em; }
 .dir-main .result-meta .dir-party-link:hover { text-decoration-color:currentColor; }
+
+.dir-main .dir-parties { display:inline-flex; flex-wrap:wrap; align-items:center; column-gap:.65rem; row-gap:.2rem; }
