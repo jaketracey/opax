@@ -4659,6 +4659,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 #money-research { display: contents; }
 .money-workspace-toolbar select, .money-workspace-toolbar > details > summary, .research-filters > summary, .money-workspace-toolbar > .action-btn { font: 600 .85rem/1.3 var(--sans); min-height: 42px; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); color: var(--navy); padding: .65rem .85rem; }
 .money-workspace-toolbar select { padding-right: 2rem; }
+.money-workspace-toolbar #money-jur select {appearance:none;padding-right:2rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23142A43' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .8rem center}
 .money-workspace-toolbar summary { cursor: pointer; list-style: none; }
 .money-workspace-toolbar summary::-webkit-details-marker { display: none; }
 .money-workspace-toolbar summary::after { content: '⌄'; margin-left: .7rem; }
@@ -4807,3 +4808,31 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .connections-page select {appearance:none;padding-right:2rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23142A43' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center}
 .connection-choice {font:400 1rem/1.5 var(--sans)}
 #connection-detail .subject-section-title {margin-top:1.5rem}
+
+/* Keep map actions aligned and distinguish controls from related destinations. */
+.money-workspace-toolbar [data-records] {min-height:42px}
+.money-related-links {display:flex;align-items:center;flex-wrap:wrap;gap:.5rem 1.25rem;margin-left:auto;font:500 .8rem/1.4 var(--sans)}
+.money-related-links a {display:flex;align-items:center;min-height:44px;color:var(--navy);text-underline-offset:.2em;text-decoration-color:var(--bronze-rule)}
+@media (max-width: 800px) {
+  .money-area-nav {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:4px;margin-bottom:1rem;border:1px solid var(--line);border-radius:8px;background:var(--paper-sunken)}
+  .money-area-nav a {display:flex;align-items:center;justify-content:center;min-height:48px;padding:.5rem;text-align:center;font:500 .875rem/1.3 var(--sans);border:0;border-radius:5px}
+  .money-area-nav a[aria-current] {border:0;background:var(--navy);color:var(--on-navy);font-weight:650}
+  .money-workspace-toolbar {display:grid;align-items:stretch;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;margin:0 0 .75rem}
+  .money-workspace-toolbar :is(#money-jur,.journey-menu,.research-filters) {min-width:0}
+  .money-workspace-toolbar #money-jur select,
+  .money-workspace-toolbar > .journey-menu > summary,
+  .money-workspace-toolbar .research-filters > summary,
+  .money-workspace-toolbar [data-records] {box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:.4rem;width:100%;min-height:48px;margin:0;padding:.7rem .8rem;font:600 .875rem/1.3 var(--sans);border:1px solid var(--line-strong);border-radius:5px;background:var(--paper-raised);color:var(--navy);text-align:left}
+  .money-workspace-toolbar #money-jur select {height:100%}
+  .money-workspace-toolbar summary::after {margin:0;flex-shrink:0}
+  .money-workspace-toolbar details[open] > summary,
+  .money-workspace-toolbar [data-records][aria-expanded="true"] {background:var(--navy);color:var(--on-navy);border-color:var(--navy)}
+  .money-related-links {grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;margin:0;font-size:.8125rem}
+  .money-related-links a {justify-content:center;text-align:center;padding:.35rem;min-height:44px}
+  .money-workspace-toolbar :is(.research-filter-panel,#money-journey-controls) {box-sizing:border-box;max-height: min(65vh,32rem);max-height:min(65dvh,32rem);overflow-y:auto;overscroll-behavior:contain}
+}
+
+@media (min-width:600px) and (max-width:800px) {
+  .money-area-nav,.money-workspace-toolbar {grid-template-columns:repeat(4,minmax(0,1fr))}
+  .money-related-links {display:flex;justify-content:flex-end;gap:1.5rem}
+}
