@@ -1,12 +1,12 @@
 {
   "version": "2026-09-08",
-  "expected_resources": 618368,
+  "expected_resources": 618373,
   "expected_resources_breakdown": {
     "live_index_before_refresh": 617126,
     "removed_news_articles": -36,
     "new_nsw_ministerial_releases": 6,
     "new_prime_minister_statements": 1,
-    "previously_unindexed_bill_records": 1271
+    "previously_unindexed_bill_records": 1276
   },
   "collected_speeches": 595763,
   "sources": [
