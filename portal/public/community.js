@@ -6,7 +6,21 @@ const params=()=>new URLSearchParams(location.search);
 let signInToken=new URLSearchParams(location.hash.slice(1)).get('token'),state={},revision=0;
 if(signInToken)history.replaceState(null,'','/community?view=signin');
 async function api(path,method='GET',data){const r=await fetch('/api/community/'+path,{method,credentials:'same-origin',headers:data?{'content-type':'application/json'}:{},body:data?JSON.stringify(data):undefined});let body;try{body=await r.json()}catch{throw new Error('Opax could not be reached. Please try again.')}if(!r.ok)throw new Error(body.error||'This action could not be completed.');return body}
-function notice(text){message.textContent=text;message.scrollIntoView({block:'nearest',behavior:'auto'})}
+function notice(text){
+ message.textContent=text;
+ message.setAttribute('tabindex','-1');
+ message.focus({preventScroll:true});
+ window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+}
+function loadingButton(button,kind){
+ const original=button.innerHTML;
+ const label={signin:'Sending link…',consume:'Signing in…',profile:'Saving…',thread:'Posting…',reply:'Posting…',key:'Creating token…'}[kind]||'Saving…';
+ button.disabled=true;
+ button.setAttribute('aria-busy','true');
+ button.classList.add('btn-loading');
+ button.innerHTML='<span class="btn-spinner" aria-hidden="true"></span>'+label;
+ return ()=>{if(button.isConnected){button.innerHTML=original;button.disabled=false;button.removeAttribute('aria-busy');button.classList.remove('btn-loading')}};
+}
 async function refresh(){state=await api('status');document.querySelector('#community-account-link').textContent=state.member?'Your account':'Sign in'}
 function go(view,extra=''){history.pushState(null,'',link(view,extra));message.textContent='';render();document.querySelector('#community-main').focus({preventScroll:true});window.scrollTo(0,0)}
 function accountNav(){return `<nav class="community-subnav" aria-label="Your community"><a href="${link('account')}">Your account</a><a href="${link('lists')}">Reading lists</a><a href="${link('tools')}">Connected tools</a></nav>`}
@@ -31,7 +45,7 @@ async function render(){const version=++revision,view=params().get('view')||'hom
 function contentActions(item,kind){return state.member?`<div class="community-inline-actions"><button data-action="report" data-id="${item.id}">Report</button>${state.member.id===item.member_id||state.member.role==='moderator'?`<button data-action="remove-content" data-kind="${kind}" data-id="${item.id}">Remove</button>`:''}</div>`:''}
 function listForm(l){return `<form class="community-form" data-form="${l?'edit-list':'list'}" ${l?`data-id="${l.id}"`:''}><label>Title<input name="title" required minlength="2" maxlength="120" value="${esc(l?.title||'')}"></label><label>Description<textarea name="description" maxlength="500">${esc(l?.description||'')}</textarea></label><label class="check-label"><input type="checkbox" name="public" ${l?.public?'checked':''}>Make this list public</label><small>Private by default. Shared lists appear on your community profile.</small><button class="community-button">${l?'Save settings':'Create list'}</button></form>`}
 function normalisePath(value){if(!value)return '';const url=new URL(value,location.origin);if(url.origin!==location.origin&&url.origin!=='https://opax.com.au')throw new Error('Use an Opax link.');return url.pathname+url.search+url.hash}
-root.addEventListener('submit',async event=>{event.preventDefault();const form=event.target;if(!(form instanceof HTMLFormElement))return;const button=form.querySelector('button');button.disabled=true;const d=Object.fromEntries(new FormData(form));try{switch(form.dataset.form){
+root.addEventListener('submit',async event=>{event.preventDefault();const form=event.target;if(!(form instanceof HTMLFormElement))return;const button=form.querySelector('button');if(button.disabled)return;const stopLoading=loadingButton(button,form.dataset.form);const d=Object.fromEntries(new FormData(form));try{switch(form.dataset.form){
 case 'signin':await api('auth/request','POST',{email:d.email});notice('Check your email. Your sign-in link expires in 15 minutes.');break;
 case 'consume':await api('auth/consume','POST',{token:signInToken});signInToken=null;await refresh();go('account');break;
 case 'profile':await api('profile','PATCH',d);await refresh();notice('Your profile is saved.');break;
@@ -41,7 +55,7 @@ case 'list':{const r=await api('lists','POST',{...d,public:form.elements.public.
 case 'edit-list':await api('lists/'+form.dataset.id,'PATCH',{...d,public:form.elements.public.checked});await render();notice('List settings saved.');break;
 case 'add-item':await api('lists/'+form.dataset.id+'/items','POST',{...d,path:normalisePath(d.path)});await render();notice('Saved to your list.');break;
 case 'key':{const r=await api('keys','POST',d);await render();const slot=document.querySelector('#new-access-token');slot.hidden=false;slot.textContent='Copy this token now. It will not be shown again.\n\n'+r.token+'\n\nUse it in the Authorization header as: Bearer '+r.token;slot.scrollIntoView({block:'nearest'});break}
-}}catch(e){notice(e.message)}finally{if(button.isConnected)button.disabled=false}});
+}}catch(e){notice(e.message)}finally{stopLoading()}});
 root.addEventListener('click',async event=>{const button=event.target.closest('[data-action]');if(!button)return;button.disabled=true;try{switch(button.dataset.action){
 case 'logout':case 'logout-all':await api('auth/logout','POST',{everywhere:button.dataset.action==='logout-all'});await refresh();go('signin');break;
 case 'remove-content':if(confirm('Remove this '+button.dataset.kind+' from the community?')){await api((button.dataset.kind==='thread'?'threads/':'replies/')+button.dataset.id,'DELETE');if(button.dataset.kind==='thread'&&params().get('view')!=='moderation')go('home');else await render()}break;
