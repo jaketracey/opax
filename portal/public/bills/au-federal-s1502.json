@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-08-20",
+  "sentences": [
+   "This bill would remove the age-based exemption that currently keeps many employees under eighteen outside compulsory employer superannuation.",
+   "Young employees would no longer have to work more than thirty hours in a week to overcome that exemption.",
+   "The changes would commence on the day after Royal Assent."
+  ],
+  "changes": [
+   "Removes the power to exclude under-eighteen employees, their work or their earnings through the relevant regulations.",
+   "Repeals the regulation exempting under-eighteen employees who work thirty hours or less a week.",
+   "Applies the change from the day after assent rather than introducing a staged commencement."
+  ],
+  "affected": "Employees under eighteen and employers responsible for their superannuation contributions are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.379144+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

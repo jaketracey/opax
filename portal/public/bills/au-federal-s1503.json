@@ -41,7 +41,29 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-08-20",
+  "sentences": [
+   "This bill would add court-ordered exclusion from Australia for people who voluntarily supported listed terrorist organisations overseas and pose an unacceptable risk.",
+   "It would also tighten terrorism bail requirements and expand powers over Australian travel documents.",
+   "A further offence would address unauthorised assistance for certain terrorism-linked people to enter Australia, and the declared-area offences would be extended."
+  ],
+  "changes": [
+   "Allows the Federal Court to make exclusion orders lasting up to two years only where no less restrictive protection would suffice, with rights to seek variation or revocation.",
+   "Allows return-permit obligations to pause while an application is prepared, normally for up to ninety days unless court proceedings begin.",
+   "Requires terrorism bail decisions to prioritise community safety and assess unacceptable terrorism risk.",
+   "Adds specified terrorism and exclusion-order grounds for refusing, suspending or cancelling travel documents.",
+   "Creates an entry-facilitation offence with exceptions for Commonwealth action and specified ministerial permission.",
+   "Extends the declared-area provisions to 7 September 2030."
+  ],
+  "affected": "People subject to terrorism-related proceedings or exclusion measures, their representatives, courts and security and passport authorities are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.379198+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

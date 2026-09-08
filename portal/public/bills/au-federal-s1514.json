@@ -41,7 +41,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-09-08",
+  "sentences": [
+   "This bill would change how candidates are selected for specified diplomatic postings.",
+   "Former federal, state and territory parliamentarians would be barred from those postings for ten years after leaving parliament.",
+   "It would introduce independent selection committees and additional approval requirements for candidates with significant political affiliations."
+  ],
+  "changes": [
+   "Applies a ten-year restriction to former parliamentarians seeking the covered diplomatic roles.",
+   "Establishes expert selection committees to recommend suitable candidates for those postings.",
+   "Requires an independent committee recommendation under the ordinary appointment process.",
+   "Requires endorsement by both houses to use the deadlock fallback for a candidate with a significant political affiliation."
+  ],
+  "affected": "Candidates for the specified diplomatic posts, selection committee members and the government making appointments are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.378725+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []
