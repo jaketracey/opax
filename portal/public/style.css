@@ -4689,3 +4689,11 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .research-filter-panel { max-height: 65vh; overflow-y: auto; }
   .research-filter-panel .research-controls { grid-template-columns: 1fr 1fr; }
 }
+
+/* Agency records share the supplier profile's measured type and spacing. */
+.supplier-bars li > div > a { color: var(--ink); text-decoration-color: var(--line); text-underline-offset: .2em; }
+.supplier-bars li > div > a:hover { color: var(--accent); }
+.agency-map, .supplier-agency-map { height: clamp(360px, 55vh, 580px); }
+.agency-suppliers .supplier-directory-row > span:first-child { min-width: 0; }
+.agency-suppliers a { overflow-wrap: anywhere; }
+.supplier-totals dd { overflow-wrap: anywhere; }

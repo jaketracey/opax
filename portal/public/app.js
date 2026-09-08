@@ -973,7 +973,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=ia-ux-20260908-2");
+    const { mountMoneyMap } = await import("/money-map.js?v=agency-2");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1226,7 +1226,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=ia-ux-20260908-2"), loadMoneyFile(jur), import("/money-journeys.js?v=ia-ux-20260908-2"), import("/map-research.js?v=ia-ux-20260908-2"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=agency-2"), loadMoneyFile(jur), import("/money-journeys.js?v=ia-ux-20260908-2"), import("/map-research.js?v=ia-ux-20260908-2"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1348,7 +1348,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=profiles-2");
+    const module = await import("/suppliers.js?v=profiles-4");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -1369,6 +1369,40 @@ async function openSupplierPage(name, params, manageFocus) {
       : module.mountSupplierDirectory(body, helpers);
   } catch {
     if (generation === supplierPageGeneration) body.innerHTML = '<p role="alert">Supplier records could not be loaded. <a href="/subject/supplier">Try again</a>.</p>';
+  }
+}
+
+
+async function openAgencyPage(name, params, manageFocus) {
+  const generation = supplierPageGeneration;
+  currentSubjectKey = `agency:${name || "directory"}`;
+  destroySubjectMap();
+  activeDirectory = null;
+  const body = $("subject-body");
+  body.classList.remove("subject-person");
+  body.innerHTML = '<p role="status">Loading agencies…</p>';
+  try {
+    const module = await import("/agencies.js?v=agency-2");
+    if (generation !== supplierPageGeneration) return;
+    const helpers = {
+      params,
+      onTitle(title) {
+        if (generation !== supplierPageGeneration) return;
+        document.title = `${title} · OPAX`;
+        if (manageFocus) $("subject-title")?.focus();
+      },
+      onCanonical(id, label) {
+        if (generation !== supplierPageGeneration) return;
+        replaceRoute(`/subject/agency/${encodeURIComponent(id)}`);
+        setCrumbs([{ label: "Agencies", href: "/subject/agency" }, { label }]);
+      },
+      onMentions: (label, container) => subjectMentions(label, container, "In parliament"),
+    };
+    supplierPage = name
+      ? module.mountAgencyProfile(body, name, helpers)
+      : module.mountAgencyDirectory(body, helpers);
+  } catch {
+    if (generation === supplierPageGeneration) body.innerHTML = '<p role="alert">Agency records could not be loaded. <a href="/subject/agency">Try again</a>.</p>';
   }
 }
 
@@ -1434,6 +1468,10 @@ function route() {
     showPanel("subject");
     setCrumbs([{ label: "Suppliers", href: "/subject/supplier" }]);
     openSupplierPage(segs[2] ? decodeURIComponent(segs[2]) : null, params, manageFocus);
+  } else if (view === "subject" && segs[1] === "agency") {
+    showPanel("subject");
+    setCrumbs([{ label: "Agencies", href: "/subject/agency" }]);
+    openAgencyPage(segs[2] ? decodeURIComponent(segs[2]) : null, params, manageFocus);
   } else if (view === "subject" && segs[1] === "topic") {
     showPanel("subject");
     document.title = TITLES.subject;
@@ -3569,7 +3607,7 @@ async function mountSubjectMap(nodeId) {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=ia-ux-20260908-2");
+    const { mountMoneyMap } = await import("/money-map.js?v=agency-2");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
@@ -5459,7 +5497,7 @@ function topicIndexDescription(slug) {
 // DIR_CHUNK with a "Show more" button so 1,400 people stay instant.
 
 const DIRECTORY_KINDS = {
-  person: "Parliamentarians", party: "Parties", donor: "Donors", supplier: "Suppliers",
+  person: "Parliamentarians", party: "Parties", donor: "Donors", supplier: "Suppliers", agency: "Agencies",
   campaigner: "Campaigners & third parties",
 };
 const DIR_CHUNK = 60;
@@ -8131,7 +8169,7 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=ia-ux-20260908-2"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=agency-2"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
     const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
@@ -11377,7 +11415,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=ia-ux-20260908-2");
+    const { mountMoneyMap } = await import("/money-map.js?v=agency-2");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",

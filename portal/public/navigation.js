@@ -7,6 +7,7 @@
       ['/subject/person', 'Parliamentarians', 'Speeches, recorded votes and declared interests.'],
       ['/subject/party', 'Parties', 'Members, debate and disclosed receipts.'],
       ['/subject/donor', 'Donors', 'The people and organisations in disclosure records.'],
+      ['/subject/agency', 'Agencies', 'Government contract awards and the companies receiving them.'],
       ['/subject/supplier', 'Suppliers', 'Government contracts and the organisations receiving them.'],
       ['/subject/campaigner', 'Campaigners & third parties', 'Organisations spending on politics.'],
       ['/declared', 'Declared interests', 'Recent changes in public registers.'],

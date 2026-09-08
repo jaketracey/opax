@@ -285,6 +285,8 @@ def main():
         print(json.dumps(result, ensure_ascii=False, allow_nan=False, separators=(',', ':')))
     else:
         write_export(result, args.output)
+        from export_agencies import export_agencies
+        export_agencies(args.output)
         print(json.dumps(result['index']['meta'], indent=2))
 
 
