@@ -58,7 +58,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=871bc81d03">
+<link rel="stylesheet" href="/style.css?v=68b0e680d3">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -452,12 +452,12 @@
     </section>
 
     <section id="panel-search" class="panel" hidden aria-label="Search the record">
-      <h1 class="visually-hidden">Search the parliamentary record</h1>
+      <h1 class="visually-hidden">Search all public records</h1>
       <nav class="entry-modes" aria-label="Research mode"><a href="/ask" data-entry-mode="ask">Ask a question</a><a href="/search" aria-current="page">Find records</a></nav>
       <form id="search-form" class="search-grid">
         <div class="query-line">
           <label for="search-input" class="visually-hidden">Find source records</label>
-          <textarea id="search-input" class="grow-field" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false" placeholder="Search words, a speaker or a bill name…"></textarea>
+          <textarea id="search-input" class="grow-field" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false" placeholder="Search people, organisations, money, bills or words…"></textarea>
           <button type="submit" class="primary">Search</button>
           <div class="ask-options-wrap">
           <button type="button" class="action-btn" id="search-options-btn" aria-expanded="false" aria-controls="search-options-pop" aria-label="Search filters" title="Filters">
@@ -487,12 +487,12 @@
                 </select>
               </span>
               <span class="filter-item">
-                <label for="f-state">Parliament</label>
+                <label for="f-state">Jurisdiction</label>
                 <select id="f-state">
                   <option value="">any</option>
                   <option value="federal">Federal</option><option value="nsw">NSW</option>
                   <option value="vic">VIC</option><option value="sa">SA</option>
-                  <option value="qld">QLD</option>
+                  <option value="qld">QLD</option><option value="tas">TAS</option><option value="wa">WA</option><option value="nt">NT</option><option value="act">ACT</option>
                 </select>
               </span>
               <span class="filter-item">
@@ -505,14 +505,24 @@
               <span class="filter-item">
                 <label for="search-kind">Record type</label>
                 <select id="search-kind">
-                  <option value="speech">Speeches</option>
-                  <!-- News was removed from the knowledge box: a journalist's
-                       account is not the record, and answers drawn from it read
-                       as though parliament had said it. "legal" returns once a
-                       legal corpus is loaded (cost-gated; see MIGRATION-ARAG.md). -->
+                  <option value="all">All records</option>
+                  <option value="person">People</option>
+                  <option value="party">Political parties</option>
+                  <option value="donor">Donors</option>
+                  <option value="receipt">Political receipts</option>
+                  <option value="supplier">Suppliers</option>
+                  <option value="agency">Government agencies</option>
+                  <option value="contract">Government contracts</option>
+                  <option value="grant">Grants</option>
+                  <option value="interest">Declared interests</option>
+                  <option value="expense">Parliamentary expenses</option>
+                  <option value="access">Meetings and lobbying registers</option>
+                  <option value="campaigner">Campaigners and associated entities</option>
+                  <option value="bill">Bills</option>
+                  <option value="speech">Speeches and hearings</option>
                   <option value="division">Divisions (recorded votes)</option>
                   <option value="press_release">Government transcripts and releases</option>
-                  <option value="all">Everything</option>
+                  <option value="report">Research reports</option>
                 </select>
               </span>
               <span class="filter-item">
@@ -537,6 +547,7 @@
 
       <nav id="search-chips" class="chip-row search-chips" aria-label="Example searches" hidden></nav>
       <div id="search-status" class="status" role="status"></div>
+      <details id="search-coverage" class="fineprint" hidden><summary>Search coverage</summary><p></p></details>
       <div id="search-wombat" hidden></div>
       <div class="search-results-grid">
       <div class="search-results-main">
@@ -1276,6 +1287,6 @@
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
 <script src="/navigation.js?v=3630ab9726" defer></script>
-<script src="/app.js?v=b37cb90020" defer></script>
+<script src="/app.js?v=dd3d854f27" defer></script>
 </body>
 </html>

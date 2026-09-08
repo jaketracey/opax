@@ -4692,6 +4692,9 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .research-filter-panel .research-controls { grid-template-columns: 1fr 1fr; }
 }
 
+#panel-search .search-record-kind { font-weight: 650; color: var(--navy); }
+#search-coverage { margin: .5rem 0 1rem; }
+#search-coverage summary { cursor: pointer; }
 /* Agency records share the supplier profile's measured type and spacing. */
 .supplier-bars li > div > a { color: var(--ink); text-decoration-color: var(--line); text-underline-offset: .2em; }
 .supplier-bars li > div > a:hover { color: var(--accent); }
