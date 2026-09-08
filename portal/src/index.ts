@@ -14,6 +14,8 @@
  */
 
 import { proxyPostHog } from './posthog'
+import { CATALOG_KINDS, searchCatalog } from './catalog-search'
+import { tokens as catalogTokens } from './catalog-query.mjs'
 import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
 
 import { OG_FONT_FILES, OG_VERSION, homeCard, type OgCard } from './og'
@@ -427,6 +429,61 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   })
   cacheStore(ctx, pageKey, out, SEARCH_CACHE_TTL)
   return withCacheStatus(out, bypass ? 'BYPASS' : 'MISS')
+}
+
+/** Unified public search. Existing /api/search callers retain document-only semantics. */
+async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const selected = url.searchParams.get('kind') || 'all'
+  if ((selected === 'all' || CATALOG_KINDS.has(selected)) && catalogTokens(url.searchParams.get('q')).length > 16) return json({ error: 'Use up to 16 search words, or narrow the record type to documents.' }, 400)
+  const check = new URL(url)
+  if (CATALOG_KINDS.has(selected)) check.searchParams.set('kind', 'speech')
+  const extendedStates = new Set(['tas', 'wa', 'nt', 'act'])
+  if (extendedStates.has(check.searchParams.get('state') || '')) check.searchParams.delete('state')
+  const bad = validateSearchQuery(check)
+  if (bad) return bad
+  const limited = await rateLimited(env.SEARCH_LIMITER, request)
+  if (limited) return limited
+  const localWanted = selected === 'all' || CATALOG_KINDS.has(selected)
+  const documentsWanted = !CATALOG_KINDS.has(selected) && !extendedStates.has(url.searchParams.get('state') || '')
+  const docUrl = new URL(url)
+  docUrl.pathname = '/api/search'
+  docUrl.searchParams.set('kind', selected)
+  docUrl.searchParams.set('page', '1')
+  docUrl.searchParams.set('per', '200')
+  const tasks = await Promise.allSettled([
+    localWanted ? searchCatalog(url, env.ASSETS) : Promise.resolve(null),
+    documentsWanted ? (async () => {
+      const req = new Request(docUrl, request)
+      const response = env.STAGING_API ? await env.STAGING_API.fetch(req) : await apiSearch(req, docUrl, env, ctx)
+      if (!response.ok) throw new Error('Document search unavailable')
+      return await response.json() as { results: SearchResult[]; truncated: boolean }
+    })() : Promise.resolve(null),
+  ])
+  const catalog = tasks[0].status === 'fulfilled' ? tasks[0].value : null
+  const documents = tasks[1].status === 'fulfilled' ? tasks[1].value : null
+  const warnings: string[] = []
+  if (tasks[0].status === 'rejected') warnings.push('Financial and register search is temporarily unavailable. These results only cover documents.')
+  if (tasks[1].status === 'rejected') warnings.push('Document search is temporarily unavailable. These results only cover the other published records.')
+  if (!catalog && !documents && warnings.length) return json({ error: 'Search is temporarily unavailable. Please try again.' }, 503)
+  // Reciprocal ranks combine lexical records with semantic document retrieval;
+  // their native scores are different scales and must never be compared.
+  const combined = [
+    ...(catalog?.results || []).map((r, i) => ({ ...r, score: 1 / (10 + i), sort_date: r.date || r.sort_date || '' })),
+    ...(documents?.results || []).map((r, i) => ({ ...r, score: 1 / (10.5 + i), sort_date: r.date || '' })),
+  ]
+  const sort = url.searchParams.get('sort') === 'newest' ? 'newest' : 'relevance'
+  combined.sort((a, b) => (sort === 'newest' ? b.sort_date.localeCompare(a.sort_date) : 0) || b.score - a.score || a.slug.localeCompare(b.slug))
+  const rows = combined.slice(0, 200)
+  const per = Math.min(200, Number(url.searchParams.get('per') || 20))
+  const pageCount = Math.max(1, Math.ceil(rows.length / per))
+  const page = Math.min(pageCount, Number(url.searchParams.get('page') || 1))
+  const years: Record<string, number> = {}
+  for (const row of rows) { const y = row.date?.slice(0, 4) || ''; if (/^\d{4}$/.test(y)) years[y] = (years[y] || 0) + 1 }
+  return json({ query: url.searchParams.get('q'), kind: selected, sort, page, per_page: per, page_count: pageCount,
+    results: rows.slice((page - 1) * per, page * per), count: rows.slice((page - 1) * per, page * per).length,
+    total: rows.length, truncated: !!(catalog?.truncated || documents?.truncated || combined.length > 200 || warnings.length),
+    years, warnings, catalog_matches: catalog?.total || 0, coverage: catalog?.coverage, index_version: catalog?.version,
+  })
 }
 
 /** One /find at `topK` depth, deduped to documents and ranked by score. */
@@ -3492,7 +3549,7 @@ const NULL_BODY_STATUS = new Set([101, 204, 205, 304])
 // query's result set. Every other /api route is the caching work's to own, so
 // its Cache-Control is left exactly as the handler returned it — and even here
 // a handler that sets its own (the SSE stream does) wins.
-const NO_STORE_PATHS = new Set(['/api/journey-story', '/api/ask', '/api/followups', '/api/search'])
+const NO_STORE_PATHS = new Set(['/api/journey-story', '/api/ask', '/api/followups', '/api/search', '/api/search-all'])
 
 function withSecurityHeaders(res: Response, url: URL): Response {
   const isApi = url.pathname.startsWith('/api/')
@@ -3718,6 +3775,15 @@ export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
     const isApi = url.pathname.startsWith('/api/')
+    if (url.pathname === '/api/search-all' && request.method === 'GET') {
+      try {
+        const response = withSecurityHeaders(await apiUnifiedSearch(request, url, env, ctx), url)
+        if (env.STAGING_API) response.headers.set('x-robots-tag', 'noindex, nofollow')
+        return response
+      } catch {
+        return withSecurityHeaders(json({ error: 'Search is temporarily unavailable. Please try again.' }, 503), url)
+      }
+    }
     // Staging serves this branch's assets and reuses only the existing public API.
     // It needs no copied KB credentials and every preview response is noindex.
     if (env.STAGING_API) {

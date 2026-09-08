@@ -4689,3 +4689,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .research-filter-panel { max-height: 65vh; overflow-y: auto; }
   .research-filter-panel .research-controls { grid-template-columns: 1fr 1fr; }
 }
+
+#panel-search .search-record-kind { font-weight: 650; color: var(--navy); }
+#search-coverage { margin: .5rem 0 1rem; }
+#search-coverage summary { cursor: pointer; }

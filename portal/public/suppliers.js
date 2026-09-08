@@ -116,7 +116,7 @@ function renderProfile(root, profile, meta, helpers, life) {
     <dl class="supplier-totals"><div><dt>Recorded contract value</dt><dd title="${currency(profile.total)}">${compact(profile.total)}</dd></div><div><dt>Contracts</dt><dd>${number(profile.count)}</dd></div><div><dt>Agencies</dt><dd>${number(agencies.length)}</dd></div></dl>
     <div class="supplier-profile-grid"><div class="supplier-profile-main">${agencyChart(agencies, Number(profile.total))}${yearChart(years, profile.undated)}<section class="supplier-section supplier-funding" hidden></section><section class="supplier-section supplier-mentions"></section>
       <section class="supplier-section"><h3 class="subject-section-title">The contract record</h3><div class="supplier-controls"><label>Filter contracts<input type="search" name="contract-query" placeholder="Title, agency or reference" autocomplete="off"></label></div><p class="supplier-contract-count" role="status"></p><div class="supplier-contract-list"></div><div class="supplier-contract-more"></div></section>
-    </div><aside class="supplier-context"><section><h3>Follow the connections</h3>${donorLinks.length ? `<p>Also in the recorded party funding data:</p><ul>${donorLinks.map((link) => `<li><a href="${esc(donorUrl(link.url))}">${esc(link.name)}</a>${link.method ? `<small>${esc(identityMethod(link.method))}</small>` : ""}</li>`).join("")}</ul><p class="fineprint">An identity link connects records. It does not establish that funding influenced a contract award.</p>` : '<p>No link to an available donor profile is recorded for this supplier.</p>'}<a href="/search?q=${encodeURIComponent(`"${profile.name}"`)}">Find mentions in parliament</a><p class="fineprint">Search results may refer to other organisations with similar names.</p><a class="supplier-directory-link" href="/subject/supplier">Browse all suppliers</a></section>
+    </div><aside class="supplier-context"><section><h3>Follow the connections</h3>${donorLinks.length ? `<p>Also in the recorded party funding data:</p><ul>${donorLinks.map((link) => `<li><a href="${esc(donorUrl(link.url))}">${esc(link.name)}</a>${link.method ? `<small>${esc(identityMethod(link.method))}</small>` : ""}</li>`).join("")}</ul><p class="fineprint">An identity link connects records. It does not establish that funding influenced a contract award.</p>` : '<p>No link to an available donor profile is recorded for this supplier.</p>'}<a href="/search?kind=speech&q=${encodeURIComponent(`"${profile.name}"`)}">Find mentions in parliament</a><p class="fineprint">Search results may refer to other organisations with similar names.</p><a class="supplier-directory-link" href="/subject/supplier">Browse all suppliers</a></section>
       <section><details><summary>Identity and coverage</summary><dl class="supplier-identity">${sourceUrl(profile.identity?.abn_url) ? `<dt>Business register</dt><dd><a href="${esc(sourceUrl(profile.identity.abn_url))}" target="_blank" rel="noopener noreferrer">Check the ABN record</a></dd>` : ""}${profile.identity?.legal_name ? `<dt>Legal name</dt><dd>${esc(profile.identity.legal_name)}</dd>` : ""}${profile.identity?.method ? `<dt>Records grouped by</dt><dd>${esc(identityMethod(profile.identity.method))}</dd>` : ""}${profile.identity?.status ? `<dt>ABN status</dt><dd>${esc(profile.identity.status === "ACT" ? "Active" : profile.identity.status === "CAN" ? "Cancelled" : profile.identity.status)}</dd>` : ""}</dl>${(profile.aliases || []).length > 1 ? `<details><summary>Names in the source records</summary><ul>${profile.aliases.map((name) => `<li>${esc(name)}</li>`).join("")}</ul></details>` : ""}<ul class="supplier-caveats">${(profile.caveats || []).map((caveat) => `<li>${esc(caveat)}</li>`).join("")}</ul>${coverageHTML(meta)}</details></section>
     </aside></div></div>`;
   helpers.onCanonical?.(profile.id, profile.name);
@@ -126,6 +126,7 @@ function renderProfile(root, profile, meta, helpers, life) {
   const contracts = [...(profile.contracts || [])].sort((a, b) => String(b.start_date || "").localeCompare(String(a.start_date || "")) || Number(b.amount) - Number(a.amount));
   let visible = 15;
   const query = root.querySelector('input[name="contract-query"]');
+  query.value = helpers.params?.get("contract") || "";
   function renderContracts() {
     const term = query.value.trim().toLocaleLowerCase();
     const filtered = contracts.filter((contract) => !term || `${contract.title} ${contract.agency} ${contract.id}`.toLocaleLowerCase().includes(term));
@@ -137,6 +138,10 @@ function renderProfile(root, profile, meta, helpers, life) {
   }
   query.addEventListener("input", () => { visible = 15; renderContracts(); });
   renderContracts();
+  if (query.value) {
+    const selected = root.querySelector(".supplier-contract");
+    if (selected) { selected.open = true; selected.querySelector("summary")?.focus(); selected.scrollIntoView({block:"center"}); }
+  }
 }
 
 export function mountSupplierProfile(root, idOrName, helpers = {}) {
