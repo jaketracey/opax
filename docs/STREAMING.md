@@ -268,3 +268,15 @@ enforces the real thing.
 `portal/wrangler.jsonc` and deploy, and every cached answer, search, resource
 and follow-up is orphaned at once (the old entries simply age out). Bump it
 whenever the corpus changes — see the invariant in `MIGRATION-ARAG.md`.
+
+### Current Progress footnotes (8 September 2026)
+
+Ask now requests `citations: "llm_footnotes"` and retains `footnote_citations`
+plus `augmented_context` items from NDJSON. The Worker resolves provider block
+mappings to known original evidence, removes reference syntax from prose and
+returns the existing clean-answer/citation-range payload. Streaming deltas hide
+incomplete footnote syntax; the final `done` contains verified ranges. The
+`retry` event can also carry `reason: "citations"` when beta generation omitted
+its mapping and Opax retries once with legacy citations. See the
+[feature review](operations/2026-09-08-progress-rag-features.md) for live format
+findings, compatibility details and the broader release inventory.
