@@ -113,7 +113,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-08-26",
+  "sentences": [
+   "This bill would adapt tax and administrative law to operate the proposed news-media bargaining charge.",
+   "It would establish tax-return, assessment, payment and interest arrangements alongside the separate bills imposing and defining the charge.",
+   "It would also provide objection procedures and permit specified information sharing for the journalism payment scheme."
+  ],
+  "changes": [
+   "Requires charge returns and supports assessment and collection by the tax authority.",
+   "Sets payment deadlines and applies interest rules to unpaid or under-assessed amounts.",
+   "Makes service-group members jointly liable for specified unpaid amounts, with an exception where Australian law prohibits that liability.",
+   "Gives an entity sixty days to object to a relevant assessment.",
+   "Permits protected tax information to be shared with the department administering journalism payments for that purpose.",
+   "Prevents deductions for the charge itself while allowing eligible costs of managing the related tax obligations."
+  ],
+  "affected": "Liable digital platform groups, tax administrators and officials administering journalism payments are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.379528+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10721",

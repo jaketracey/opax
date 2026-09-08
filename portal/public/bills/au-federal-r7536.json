@@ -41,7 +41,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-09-07",
+  "sentences": [
+   "This bill would set mandatory safeguards for significant automated administrative action by Commonwealth government bodies.",
+   "Agencies would have to assess risks, explain automated decisions to affected people and maintain human accountability, with stronger controls for high-risk uses.",
+   "The framework would regulate automation authorised by other laws rather than grant a new power to automate decisions."
+  ],
+  "changes": [
+   "Prohibits unlawful automation and generally prevents automation of discretionary judgements, subject to specified exceptions.",
+   "Requires risk assessments before covered administrative action is automated.",
+   "Requires notice and meaningful explanations when a person is affected by an automated decision.",
+   "Requires human override capability for high-risk automation and preserves avenues for reviewing decisions.",
+   "Creates a public register of systems and gives the Commonwealth Ombudsman review and audit functions."
+  ],
+  "affected": "People affected by significant Commonwealth decisions, government agencies and relevant officials or contractors are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.378907+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

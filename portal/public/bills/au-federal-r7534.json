@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-08-26",
+  "sentences": [
+   "This bill would charge licensed online wagering providers a levy to fund regulation of wagering advertising.",
+   "The Australian Communications and Media Authority would recover specified costs of the advertising restrictions and opt-out register created by companion legislation.",
+   "Total levy collections would be limited to eligible regulatory costs rather than used to raise additional revenue."
+  ],
+  "changes": [
+   "Makes providers that operated during all or part of a levy period liable for that period’s levy.",
+   "Lets the regulator set the calculation method by legislative instrument after consulting the minister.",
+   "Limits total collections to eligible register and advertising-regulation costs.",
+   "Allows upfront register costs to be recovered across several periods, with no more than the full amount recovered."
+  ],
+  "affected": "Licensed interactive wagering providers and the communications regulator are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.379045+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10701",

@@ -39,7 +39,7 @@
     // answers built on the old record are never served again. Any string;
     // the convention is the date of the corpus change. See docs/STREAMING.md
     // "Caching" and the MIGRATION-ARAG.md invariants.
-    "CACHE_EPOCH": "2026-09-08-official-corpus"
+    "CACHE_EPOCH": "2026-09-08-recent-bill-summaries"
   },
 
   // Workers Rate Limiting bindings (wrangler >= 4.36 top-level `ratelimits`;
@@ -66,7 +66,7 @@
       "workers_dev": true,
       "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
       "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
-      "vars": { "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-08-official-corpus" },
+      "vars": { "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-08-recent-bill-summaries" },
       "ratelimits": [],
       "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": ["/*"] }
     }

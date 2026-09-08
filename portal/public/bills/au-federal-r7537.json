@@ -41,7 +41,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-09-07",
+  "sentences": [
+   "This bill would require providers of covered advanced AI systems to maintain ways to restrict, suspend or shut them down.",
+   "It would introduce incident reporting and ministerial emergency directions when serious harm is threatened.",
+   "It would also pause new AI data centres and major expansions until Parliament legislates the required safeguards and expressly ends the moratorium."
+  ],
+  "changes": [
+   "Requires technical controls that allow covered AI systems to be restricted or stopped.",
+   "Requires critical incidents to be reported and permits emergency directions, subject to reasons, reconsideration and parliamentary reporting.",
+   "Prohibits construction of new AI data centres and major expansions while the moratorium operates.",
+   "Makes ending the moratorium depend on legislation addressing farmland, water, utility prices, environmental and health protection, community consent and AI safety oversight.",
+   "Applies monitoring, investigation and civil enforcement mechanisms to the framework."
+  ],
+  "affected": "Providers of covered AI technologies, data-centre developers, regulators and communities affected by proposed facilities are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.378831+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

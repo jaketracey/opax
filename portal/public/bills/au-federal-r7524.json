@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-08-26",
+  "sentences": [
+   "This bill would impose the charge that forms part of the proposed news-media bargaining incentive.",
+   "It would set a rate of 2.5 per cent on relevant Australian digital advertising revenue determined under the companion administration bill.",
+   "The companion framework would determine who is liable and how qualifying support for news businesses reduces the amount payable."
+  ],
+  "changes": [
+   "Provides the legal imposition of the news media bargaining charge.",
+   "Sets its rate at 2.5 per cent of the relevant revenue base.",
+   "Links commencement to the administration bill and does not commence if that bill does not commence."
+  ],
+  "affected": "Digital platform groups brought within the companion liability rules, and the tax authority administering the charge, are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.379367+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10721",
