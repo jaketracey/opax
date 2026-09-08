@@ -31,7 +31,7 @@ Webhook URL: `/api/community/billing/webhook`. Subscribe to checkout completion,
 
 ## Verification on 8 September 2026
 
-- Fourteen automated tests pass using real handlers, the migration schema, SQLite and the official Stripe/MCP SDKs. External calls use isolated fixtures. Coverage includes single-use links, expiration, sessions, origins, rate limiting, privacy/ownership, moderation, supporter gating/revocation, webhook signatures, duplicate/stale events, checkout retry recovery and free-account availability during a Stripe outage.
+- Fifteen automated tests pass using real handlers, the migration schema, SQLite and the official Stripe/MCP SDKs. External calls use isolated fixtures. Coverage includes single-use links, expiration, sessions, origins, rate limiting, privacy/ownership, moderation, supporter gating/revocation, webhook signatures, duplicate/stale events, checkout retry recovery, record citations, bounded MCP responses and free-account availability during a Stripe outage.
 - Chromium and WebKit passed the full local sign-in, profile, reading-list and discussion flows at 390, 768 and 1280 pixels, with no page errors or horizontal overflow.
 - TypeScript checks pass.
 - The desktop Stripe default profile authenticates to account `acct_1T1JiVQ4VFeV4av2` (business profile Noice, charges enabled). The saved profile display label is Ignite. User confirmation that this is the receiving account remains pending. Do not copy the temporary CLI login key into production.
@@ -40,6 +40,8 @@ Webhook URL: `/api/community/billing/webhook`. Subscribe to checkout completion,
 
 ## Remaining release gates
 
-Confirm the receiving Stripe account and contribution amount; obtain durable service credentials; activate and verify email sending; perform real email delivery and Stripe test-mode checkout/cancellation; verify webhook entitlements and a real MCP client; assign moderation ownership; add community navigation on the public site; apply production migration; enable and verify production. Local fixtures do not prove these external gates.
+Confirm the receiving Stripe account and contribution amount; obtain durable service credentials; activate and verify email sending; perform real email delivery and Stripe test-mode checkout/cancellation; verify webhook entitlements and a real MCP client; assign moderation ownership; apply production migration; enable and verify production. Local fixtures do not prove these external gates.
 
 The initial disabled staging preview was deployed and verified at `https://staging.opax.com.au/community`; its account status endpoint reports `enabled:false` and no configured contribution. Staging migration state reports no pending migrations. Preview content is explicitly marked as not yet open for sign-in or contributions.
+
+Community and Support Opax links are included in the shared About navigation on desktop and mobile. Reading lists accept the existing `/doc/` record URLs, and MCP search/read results provide explicit absolute Opax citations. The record and search API shapes were checked against live public responses.
