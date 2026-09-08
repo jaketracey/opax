@@ -28,6 +28,7 @@ collide. Everything is resumable; nothing is ever deleted from the box.
 from __future__ import annotations
 
 import argparse
+import fcntl
 import json
 import os
 import random
@@ -52,7 +53,8 @@ STALE_CLAIM_S = 45 * 60
 MAX_LABELS = 4
 TEXT_HEAD, TEXT_TAIL = 1800, 400
 PACE_S = 0.25          # seconds between a worker's requests (sixteen Opus workers sit under the box's ceiling)
-POOL = 4               # parallel requests per worker
+POOL = 1               # four workers share the box; serialize each worker's writes under sustained ingestion backpressure
+WRITE_LOCK = DEFAULT_DB.with_name("kb_write.lock")
 
 
 def env() -> dict[str, str]:
@@ -80,27 +82,43 @@ class Kb:
 
     def call(self, method: str, path: str, body: dict | None = None, tries: int = 9) -> dict:
         data = None if body is None else json.dumps(body).encode()
-        time.sleep(PACE_S)  # many workers share one account: keep each one's requests spaced
-        for attempt in range(tries):
-            req = urllib.request.Request(self.base + path, data=data, headers=self.headers, method=method)
-            try:
-                with urllib.request.urlopen(req, timeout=90) as r:
-                    raw = r.read()
-                    return json.loads(raw) if raw else {}
-            except urllib.error.HTTPError as err:
-                if err.code in (429, 500, 502, 503, 504) and attempt < tries - 1:
-                    # A 429 is the box asking the whole fleet to slow down: wait it out
-                    # (up to about two minutes across the retries) rather than drop the
-                    # row and have another worker read and label it again.
-                    time.sleep(min(20, 1.5 * (2 ** attempt)) + random.random() * 2)
-                    continue
-                raise RuntimeError(f"{method} {path} -> {err.code}: {err.read()[:200]!r}") from None
-            except (urllib.error.URLError, TimeoutError) as err:
-                if attempt < tries - 1:
-                    time.sleep(1.5 * (2 ** attempt))
-                    continue
-                raise RuntimeError(f"{method} {path} -> {err}") from None
-        raise RuntimeError("unreachable")
+        # The box limits pending ingestion messages, not model work. Coordinate
+        # PATCH bursts across all four local worker processes so a healthy model
+        # batch waits instead of leaving its rows in an error state.
+        write_lock = open(WRITE_LOCK, "a+") if method == "PATCH" else None
+        if write_lock:
+            fcntl.flock(write_lock, fcntl.LOCK_EX)
+        try:
+            time.sleep(PACE_S)
+            for attempt in range(tries):
+                req = urllib.request.Request(self.base + path, data=data, headers=self.headers, method=method)
+                try:
+                    with urllib.request.urlopen(req, timeout=90) as r:
+                        raw = r.read()
+                        return json.loads(raw) if raw else {}
+                except urllib.error.HTTPError as err:
+                    raw = err.read()
+                    if err.code in (429, 500, 502, 503, 504) and attempt < tries - 1:
+                        delay = min(20, 1.5 * (2 ** attempt))
+                        if err.code == 429:
+                            try:
+                                retry_at = float((json.loads(raw).get("detail") or {}).get("try_after") or 0)
+                                delay = max(delay, min(300, retry_at - time.time()))
+                            except (TypeError, ValueError, json.JSONDecodeError):
+                                pass
+                        time.sleep(max(0, delay) + random.random() * 2)
+                        continue
+                    raise RuntimeError(f"{method} {path} -> {err.code}: {raw[:200]!r}") from None
+                except (urllib.error.URLError, TimeoutError) as err:
+                    if attempt < tries - 1:
+                        time.sleep(1.5 * (2 ** attempt))
+                        continue
+                    raise RuntimeError(f"{method} {path} -> {err}") from None
+            raise RuntimeError("unreachable")
+        finally:
+            if write_lock:
+                fcntl.flock(write_lock, fcntl.LOCK_UN)
+                write_lock.close()
 
     def resource(self, rid: str) -> dict:
         return self.call("GET", f"/resource/{rid}?show=basic&show=values")

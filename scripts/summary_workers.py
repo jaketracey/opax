@@ -150,11 +150,12 @@ def fetch_item(kb: Kb, rid: str) -> dict:
             body = candidate
     existing = (((texts.get(FIELD) or {}).get("value") or {}).get("body") or "").strip()
     cls = (d.get("usermetadata") or {}).get("classifications") or []
-    tags = {c.get("labelset"): c.get("label") for c in cls if c.get("labelset") in ("state", "party", "chamber")}
+    tags = {c.get("labelset"): c.get("label") for c in cls if c.get("labelset") in ("kind", "state", "party", "chamber")}
     return {
         "rid": rid,
         "slug": d.get("slug"),
         "title": d.get("title") or "",
+        "kind": tags.get("kind") or "speech",
         "state": tags.get("state"),
         "party": tags.get("party"),
         "words": len(body.split()),
