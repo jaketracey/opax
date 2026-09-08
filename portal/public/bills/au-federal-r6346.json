@@ -229,8 +229,8 @@
     }
    },
    "party_coverage": {
-    "member": 10,
-    "earliest": 22,
+    "member": 4,
+    "earliest": 28,
     "dated": 25
    },
    "paired": 0,
@@ -284,9 +284,9 @@
     }
    },
    "party_coverage": {
-    "member": 11,
+    "member": 5,
     "dated": 25,
-    "earliest": 23
+    "earliest": 29
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2019-08-01/10"

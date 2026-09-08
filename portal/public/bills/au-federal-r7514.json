@@ -12,7 +12,7 @@
  "sponsor_person_id": null,
  "portfolio": "Treasury",
  "status": "before_parliament",
- "status_as_of": "2026-08-20",
+ "status_as_of": "2026-09-07",
  "key_dates": [
   {
    "stage": "introduced",
@@ -55,6 +55,36 @@
    "date": "2026-08-20",
    "house": "representatives",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7514%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7514%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7514%22"
   }
  ],
  "sources": [
@@ -67,6 +97,12 @@
   {
    "kind": "em_supp",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7514_ems_c709e05f-b620-43a7-a4a2-e8c3cdc5550f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7514_ems_7f7b0445-fa20-4400-847b-e94718aa94e4%22",
    "document_date": null,
    "licence": "CC BY-NC-ND 4.0"
   },

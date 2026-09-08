@@ -1,10 +1,12 @@
 {
   "version": "2026-09-08",
-  "expected_resources": 617090,
+  "expected_resources": 618368,
   "expected_resources_breakdown": {
-    "live_index_before_this_refresh": 611333,
-    "prime_minister_transcripts_and_releases": 613,
-    "nsw_ministerial_releases": 5144
+    "live_index_before_refresh": 617126,
+    "removed_news_articles": -36,
+    "new_nsw_ministerial_releases": 6,
+    "new_prime_minister_statements": 1,
+    "previously_unindexed_bill_records": 1271
   },
   "collected_speeches": 595763,
   "sources": [
@@ -50,12 +52,12 @@
     },
     {
       "name": "Prime Minister transcripts and releases (PM&C)",
-      "docs": 613,
+      "docs": 614,
       "coverage": "2025–2026"
     },
     {
       "name": "NSW Government ministerial releases",
-      "docs": 5144,
+      "docs": 5150,
       "coverage": "2024–2026"
     },
     {
@@ -64,7 +66,7 @@
       "coverage": "1998–2026"
     }
   ],
-  "inclusion": "Speeches from 1993-03-13 (the election that seated the longest-serving current federal MP), at least 200 characters, deduplicated across overlapping sources, procedural rows removed (division roll-calls, chair interjections, day indexes). External statements require an official source URL, a valid date, an open licence, at least 200 characters and a unique body.",
+  "inclusion": "Speeches from 1993-03-13 (the election that seated the longest-serving current federal MP), at least 200 characters, deduplicated across overlapping sources, procedural rows removed (division roll-calls, chair interjections, day indexes). External statements require an official source URL, a valid date, an open licence, at least 200 characters and a unique body. News articles are excluded from ingestion and retrieval; headline links are external only.",
   "models": {
     "embeddings": "multilingual-2024-05-06",
     "generation": "gemini-2.5-flash-lite"
@@ -74,5 +76,17 @@
     "Member biographical linkage is unreliable for 151 members (~35K speeches); OPAX makes no members-derived biographical claims.",
     "AEC donation disclosure: amounts under the indexed threshold are not reported; donation totals are a floor, not a ceiling.",
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
-  ]
+  ],
+  "refresh": {
+    "checked_at": "2026-09-08",
+    "news_resources": 0,
+    "bills_registry": 2974,
+    "current_parliament_bills": 281,
+    "latest_bill_introduced": "2026-09-07",
+    "latest_nsw_release": "2026-09-08",
+    "source_limitations": [
+      "SA Hansard refresh blocked by source HTTP 403; stored coverage ends 2024-11-12.",
+      "OpenAustralia has not yet supplied the 7-8 September sitting records; stored federal Hansard ends 2026-08-20."
+    ]
+  }
 }

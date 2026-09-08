@@ -515,9 +515,9 @@
     }
    },
    "party_coverage": {
-    "member": 12,
+    "member": 6,
     "dated": 18,
-    "earliest": 20
+    "earliest": 26
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2021-11-24/3"
@@ -562,8 +562,8 @@
     }
    },
    "party_coverage": {
-    "member": 8,
-    "earliest": 17,
+    "member": 5,
+    "earliest": 20,
     "dated": 16
    },
    "paired": 0,
@@ -609,8 +609,8 @@
     }
    },
    "party_coverage": {
-    "member": 9,
-    "earliest": 17,
+    "member": 5,
+    "earliest": 21,
     "dated": 15
    },
    "paired": 0,
@@ -656,8 +656,8 @@
     }
    },
    "party_coverage": {
-    "member": 9,
-    "earliest": 17,
+    "member": 5,
+    "earliest": 21,
     "dated": 15
    },
    "paired": 0,
@@ -699,8 +699,8 @@
     }
    },
    "party_coverage": {
-    "member": 8,
-    "earliest": 17,
+    "member": 4,
+    "earliest": 21,
     "dated": 15
    },
    "paired": 0,
@@ -746,8 +746,8 @@
     }
    },
    "party_coverage": {
-    "member": 9,
-    "earliest": 17,
+    "member": 5,
+    "earliest": 21,
     "dated": 14
    },
    "paired": 0,
@@ -793,8 +793,8 @@
     }
    },
    "party_coverage": {
-    "member": 9,
-    "earliest": 17,
+    "member": 5,
+    "earliest": 21,
     "dated": 14
    },
    "paired": 0,
@@ -836,8 +836,8 @@
     }
    },
    "party_coverage": {
-    "member": 8,
-    "earliest": 17,
+    "member": 4,
+    "earliest": 21,
     "dated": 14
    },
    "paired": 0,

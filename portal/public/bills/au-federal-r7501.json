@@ -12,7 +12,7 @@
  "sponsor_person_id": null,
  "portfolio": "Education",
  "status": "before_parliament",
- "status_as_of": "2026-08-20",
+ "status_as_of": "2026-09-07",
  "key_dates": [
   {
    "stage": "introduced",
@@ -67,6 +67,18 @@
    "date": "2026-08-20",
    "house": "representatives",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7501%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7501%22"
   }
  ],
  "sources": [
@@ -85,6 +97,12 @@
   {
    "kind": "em_supp",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7501_ems_bac186c9-f784-4ca9-bbc9-00ad0a1cc281%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7501_ems_08784c50-1813-4314-a87e-646f1af01d0b%22",
    "document_date": null,
    "licence": "CC BY-NC-ND 4.0"
   },

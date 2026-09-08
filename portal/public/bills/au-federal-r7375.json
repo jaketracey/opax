@@ -270,11 +270,7 @@
     },
     "Liberal": {
      "ayes": 0,
-     "noes": 17
-    },
-    "Nationals": {
-     "ayes": 0,
-     "noes": 1
+     "noes": 18
     },
     "One Nation": {
      "ayes": 0,
@@ -286,8 +282,7 @@
     }
    },
    "party_coverage": {
-    "dated": 51,
-    "member": 7
+    "dated": 58
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/13"
@@ -320,11 +315,7 @@
     },
     "Liberal": {
      "ayes": 0,
-     "noes": 17
-    },
-    "Nationals": {
-     "ayes": 0,
-     "noes": 1
+     "noes": 18
     },
     "One Nation": {
      "ayes": 0,
@@ -336,8 +327,7 @@
     }
    },
    "party_coverage": {
-    "dated": 50,
-    "member": 7
+    "dated": 57
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/14"
@@ -378,8 +368,7 @@
     }
    },
    "party_coverage": {
-    "dated": 40,
-    "member": 5
+    "dated": 45
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/15"
@@ -420,8 +409,7 @@
     }
    },
    "party_coverage": {
-    "dated": 39,
-    "member": 5
+    "dated": 44
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/16"
@@ -457,11 +445,7 @@
      "noes": 21
     },
     "Liberal": {
-     "ayes": 17,
-     "noes": 0
-    },
-    "Nationals": {
-     "ayes": 1,
+     "ayes": 18,
      "noes": 0
     },
     "One Nation": {
@@ -474,8 +458,7 @@
     }
    },
    "party_coverage": {
-    "dated": 50,
-    "member": 7
+    "dated": 57
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/17"
@@ -516,8 +499,7 @@
     }
    },
    "party_coverage": {
-    "dated": 39,
-    "member": 5
+    "dated": 44
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/18"

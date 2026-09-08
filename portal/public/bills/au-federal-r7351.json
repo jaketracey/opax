@@ -184,12 +184,16 @@
    "noes": 31,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Greens": {
      "ayes": 10,
      "noes": 0
     },
     "Independent": {
-     "ayes": 1,
+     "ayes": 0,
      "noes": 1
     },
     "Labor": {
@@ -198,11 +202,7 @@
     },
     "Liberal": {
      "ayes": 0,
-     "noes": 2
-    },
-    "Nationals": {
-     "ayes": 0,
-     "noes": 1
+     "noes": 3
     },
     "One Nation": {
      "ayes": 0,
@@ -210,8 +210,7 @@
     }
    },
    "party_coverage": {
-    "dated": 37,
-    "member": 5
+    "dated": 42
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-04/16"

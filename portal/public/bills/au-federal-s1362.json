@@ -114,9 +114,8 @@
     }
    },
    "party_coverage": {
-    "earliest": 1,
-    "dated": 31,
-    "member": 4
+    "earliest": 5,
+    "dated": 31
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-08/1"

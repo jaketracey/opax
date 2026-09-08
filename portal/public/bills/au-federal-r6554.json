@@ -232,9 +232,9 @@
     }
    },
    "party_coverage": {
-    "earliest": 18,
+    "earliest": 25,
     "dated": 19,
-    "member": 11
+    "member": 4
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-10/5"
@@ -287,8 +287,8 @@
     }
    },
    "party_coverage": {
-    "member": 9,
-    "earliest": 21,
+    "member": 4,
+    "earliest": 26,
     "dated": 20
    },
    "paired": 0,
@@ -342,8 +342,8 @@
     }
    },
    "party_coverage": {
-    "member": 7,
-    "earliest": 20,
+    "member": 3,
+    "earliest": 24,
     "dated": 18
    },
    "paired": 0,

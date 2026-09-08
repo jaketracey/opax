@@ -1235,7 +1235,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=agency-2"), loadMoneyFile(jur), import("/money-journeys.js?v=ia-ux-20260908-2"), import("/map-research.js?v=ia-ux-20260908-2"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=agency-2"), loadMoneyFile(jur), import("/money-journeys.js?v=official-ia-ux-20260908-2"), import("/map-research.js?v=ia-ux-20260908-2"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -6626,8 +6626,6 @@ function billRowHTML(b) {
     Number(b.divisions) ? `${b.divisions} division record${b.divisions === 1 ? "" : "s"}` : "",
     Number(b.speeches) ? `${b.speeches} speech${b.speeches === 1 ? "" : "es"}` : "",
     Number(b.acts) ? "became law" : "",
-    // Absence is the norm here, so only a summary that exists is worth a word.
-    b.has_summary ? "summary" : "",
   ].filter(Boolean);
   return `<li>
     <a class="source-title bill-row-title" href="${esc(billHash(b.key))}">${esc(billName(b))}</a>
@@ -6716,16 +6714,11 @@ async function openBillsIndex(params, manageFocus) {
   const parliaments = [...new Set(items.map((b) => b.parliament).filter((p) => p != null))]
     .sort((a, b) => b - a);
   const countBy = (get, value) => items.filter((b) => get(b) === value).length;
-  const withSummary = items.filter((b) => b.has_summary).length;
 
   renderDirectory({
     kind: "bill", mount: "bill-body", kicker: null, params,
     title: "Bills",
-    lede: withSummary
-      ? `${items.length.toLocaleString()} bills from the federal record, ${
-        withSummary.toLocaleString()} with a summary. Each one opens its dates, its divisions and what was said about it.`
-      : `${items.length.toLocaleString()} bills from the federal record. Each one opens its dates, its divisions
-         and what was said about it. Summaries are still being written, so no bill carries one yet.`,
+    lede: `${items.length.toLocaleString()} bills from the federal record. Each one opens its dates, its divisions and what was said about it.`,
     items,
     name: billName,
     text: (b) => [b.title, b.short_title, b.sponsor, b.portfolio, b.status, b._year].filter(Boolean).join(" "),
@@ -6741,7 +6734,6 @@ async function openBillsIndex(params, manageFocus) {
       { key: "year", label: "Year", any: "All years",
         options: years.map((y) => countOpt(y, y, countBy((b) => b._year, y))),
         test: (b, v) => b._year === v },
-      { key: "summary", label: "With a summary", check: true, test: (b) => Boolean(b.has_summary) },
       { key: "divided", label: "Divided on", check: true, test: (b) => Number(b.divisions) > 0 },
     ],
     sorts: [
@@ -9010,7 +9002,7 @@ function fillMeter(boxId, textId, barId) {
   if (!$(boxId)) return;
   const indexed = liveStats.resources ?? 0;
   // NOTE: /api/stats counts every KB resource. corpus.json's expected_resources
-  // covers speeches+news only — it MUST be raised when the legal push is
+  // covers the official record only — it MUST be raised when the legal push is
   // approved, or this meter will hide while speeches are still incomplete.
   const expected = corpusManifest.expected_resources || 0;
   if (!expected) return;
@@ -9161,7 +9153,7 @@ function searchQueryParams(q, f, page, sort) {
 // renderer, and a per-page clear function behind each cross.
 
 const FILTER_KIND_LABELS = {
-  speech: "Speeches", news: "News", division: "Divisions",
+  speech: "Speeches", division: "Divisions",
   press_release: "Government transcripts and releases", all: "All records",
   person: "Person", party: "Political party", donor: "Donor", receipt: "Political receipts",
   agency: "Government agency", supplier: "Supplier", contract: "Government contract", grant: "Grant", bill: "Bill",
@@ -11880,7 +11872,7 @@ const STATS_PARLIAMENTS = [
   ["federal", "Federal Parliament"], ["nsw", "NSW Parliament"], ["vic", "Victorian Parliament"],
   ["qld", "Queensland Parliament"], ["sa", "South Australian Parliament"],
 ];
-const STATS_KINDS = [["speech", "Speeches"], ["division", "Recorded divisions"], ["bill", "Bills"], ["press_release", "Government transcripts and releases"], ["legal", "Legislation"], ["news", "News"]];
+const STATS_KINDS = [["speech", "Speeches"], ["division", "Recorded divisions"], ["bill", "Bills"], ["press_release", "Government transcripts and releases"], ["legal", "Legislation"]];
 
 /** One hero tile per key; the figure element is kept so a live update counts on in place. */
 function renderStatsHero() {

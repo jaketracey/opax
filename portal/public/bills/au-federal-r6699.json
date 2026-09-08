@@ -335,9 +335,9 @@
     }
    },
    "party_coverage": {
-    "member": 11,
+    "member": 5,
     "dated": 21,
-    "earliest": 20
+    "earliest": 26
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/34"
@@ -382,8 +382,8 @@
     }
    },
    "party_coverage": {
-    "member": 14,
-    "earliest": 20,
+    "member": 5,
+    "earliest": 29,
     "dated": 18
    },
    "paired": 0,

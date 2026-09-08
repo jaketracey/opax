@@ -199,8 +199,8 @@
    },
    "party_coverage": {
     "dated": 30,
-    "member": 12,
-    "earliest": 5
+    "earliest": 9,
+    "member": 8
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-09/1"
@@ -261,9 +261,9 @@
     }
    },
    "party_coverage": {
-    "member": 13,
+    "member": 9,
     "dated": 29,
-    "earliest": 5
+    "earliest": 9
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-09/4"
@@ -324,9 +324,9 @@
     }
    },
    "party_coverage": {
-    "member": 13,
+    "member": 9,
     "dated": 28,
-    "earliest": 5
+    "earliest": 9
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-09/5"

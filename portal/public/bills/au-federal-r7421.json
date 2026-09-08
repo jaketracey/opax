@@ -254,6 +254,10 @@
    "noes": 34,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Country Liberal Party": {
      "ayes": 1,
      "noes": 0
@@ -263,7 +267,7 @@
      "noes": 10
     },
     "Independent": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 1
     },
     "LNP": {
@@ -275,7 +279,7 @@
      "noes": 23
     },
     "Liberal": {
-     "ayes": 15,
+     "ayes": 16,
      "noes": 0
     },
     "Nationals": {
@@ -287,13 +291,12 @@
      "noes": 0
     },
     "United Australia Party": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     }
    },
    "party_coverage": {
-    "dated": 52,
-    "member": 10
+    "dated": 62
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/1"
@@ -308,6 +311,10 @@
    "noes": 33,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Country Liberal Party": {
      "ayes": 1,
      "noes": 0
@@ -317,7 +324,7 @@
      "noes": 10
     },
     "Independent": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 0
     },
     "LNP": {
@@ -329,7 +336,7 @@
      "noes": 23
     },
     "Liberal": {
-     "ayes": 15,
+     "ayes": 16,
      "noes": 0
     },
     "Nationals": {
@@ -341,13 +348,12 @@
      "noes": 0
     },
     "United Australia Party": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     }
    },
    "party_coverage": {
-    "dated": 53,
-    "member": 9
+    "dated": 62
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/2"
@@ -362,6 +368,10 @@
    "noes": 26,
    "outcome": "affirmative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Country Liberal Party": {
      "ayes": 0,
      "noes": 1
@@ -371,7 +381,7 @@
      "noes": 0
     },
     "Independent": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 0
     },
     "LNP": {
@@ -384,7 +394,7 @@
     },
     "Liberal": {
      "ayes": 0,
-     "noes": 15
+     "noes": 16
     },
     "Nationals": {
      "ayes": 0,
@@ -396,12 +406,11 @@
     },
     "United Australia Party": {
      "ayes": 0,
-     "noes": 2
+     "noes": 1
     }
    },
    "party_coverage": {
-    "dated": 55,
-    "member": 9
+    "dated": 64
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/3"
@@ -416,6 +425,10 @@
    "noes": 36,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Country Liberal Party": {
      "ayes": 1,
      "noes": 0
@@ -425,7 +438,7 @@
      "noes": 10
     },
     "Independent": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 1
     },
     "LNP": {
@@ -437,7 +450,7 @@
      "noes": 25
     },
     "Liberal": {
-     "ayes": 15,
+     "ayes": 16,
      "noes": 0
     },
     "Nationals": {
@@ -449,13 +462,12 @@
      "noes": 0
     },
     "United Australia Party": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     }
    },
    "party_coverage": {
-    "dated": 55,
-    "member": 9
+    "dated": 64
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/4"
@@ -470,6 +482,10 @@
    "noes": 33,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Country Liberal Party": {
      "ayes": 1,
      "noes": 0
@@ -479,7 +495,7 @@
      "noes": 10
     },
     "Independent": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 0
     },
     "LNP": {
@@ -491,7 +507,7 @@
      "noes": 23
     },
     "Liberal": {
-     "ayes": 15,
+     "ayes": 16,
      "noes": 0
     },
     "Nationals": {
@@ -503,13 +519,12 @@
      "noes": 0
     },
     "United Australia Party": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     }
    },
    "party_coverage": {
-    "dated": 53,
-    "member": 9
+    "dated": 62
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/5"
@@ -524,6 +539,10 @@
    "noes": 33,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Country Liberal Party": {
      "ayes": 1,
      "noes": 0
@@ -533,7 +552,7 @@
      "noes": 10
     },
     "Independent": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 0
     },
     "LNP": {
@@ -545,7 +564,7 @@
      "noes": 23
     },
     "Liberal": {
-     "ayes": 15,
+     "ayes": 16,
      "noes": 0
     },
     "Nationals": {
@@ -557,13 +576,12 @@
      "noes": 0
     },
     "United Australia Party": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     }
    },
    "party_coverage": {
-    "dated": 53,
-    "member": 9
+    "dated": 62
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/6"
@@ -578,6 +596,10 @@
    "noes": 26,
    "outcome": "affirmative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Country Liberal Party": {
      "ayes": 0,
      "noes": 1
@@ -587,7 +609,7 @@
      "noes": 0
     },
     "Independent": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 0
     },
     "LNP": {
@@ -600,7 +622,7 @@
     },
     "Liberal": {
      "ayes": 0,
-     "noes": 15
+     "noes": 16
     },
     "Nationals": {
      "ayes": 0,
@@ -612,12 +634,11 @@
     },
     "United Australia Party": {
      "ayes": 0,
-     "noes": 2
+     "noes": 1
     }
    },
    "party_coverage": {
-    "dated": 55,
-    "member": 9
+    "dated": 64
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/7"
@@ -632,6 +653,10 @@
    "noes": 31,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Country Liberal Party": {
      "ayes": 1,
      "noes": 0
@@ -641,7 +666,7 @@
      "noes": 9
     },
     "Independent": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     },
     "JLN": {
@@ -649,7 +674,7 @@
      "noes": 0
     },
     "LNP": {
-     "ayes": 1,
+     "ayes": 2,
      "noes": 0
     },
     "Labor": {
@@ -669,13 +694,12 @@
      "noes": 0
     },
     "United Australia Party": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     }
    },
    "party_coverage": {
-    "dated": 53,
-    "member": 6
+    "dated": 59
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-04/17"
@@ -690,12 +714,16 @@
    "noes": 33,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Greens": {
      "ayes": 0,
      "noes": 9
     },
     "Independent": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 0
     },
     "JLN": {
@@ -703,7 +731,7 @@
      "noes": 0
     },
     "LNP": {
-     "ayes": 1,
+     "ayes": 2,
      "noes": 0
     },
     "Labor": {
@@ -711,11 +739,11 @@
      "noes": 24
     },
     "Liberal": {
-     "ayes": 17,
+     "ayes": 18,
      "noes": 0
     },
     "Nationals": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     },
     "One Nation": {
@@ -723,13 +751,12 @@
      "noes": 0
     },
     "United Australia Party": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     }
    },
    "party_coverage": {
-    "dated": 55,
-    "member": 6
+    "dated": 61
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-04/18"
@@ -744,6 +771,10 @@
    "noes": 22,
    "outcome": "affirmative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Country Liberal Party": {
      "ayes": 1,
      "noes": 0
@@ -753,7 +784,7 @@
      "noes": 0
     },
     "Independent": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 1
     },
     "LNP": {
@@ -765,11 +796,11 @@
      "noes": 21
     },
     "Liberal": {
-     "ayes": 13,
+     "ayes": 14,
      "noes": 0
     },
     "Nationals": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     },
     "One Nation": {
@@ -778,8 +809,7 @@
     }
    },
    "party_coverage": {
-    "dated": 52,
-    "member": 3
+    "dated": 55
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-23/12"
@@ -794,6 +824,10 @@
    "noes": 22,
    "outcome": "affirmative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Country Liberal Party": {
      "ayes": 1,
      "noes": 0
@@ -803,7 +837,7 @@
      "noes": 0
     },
     "Independent": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 1
     },
     "LNP": {
@@ -815,11 +849,11 @@
      "noes": 21
     },
     "Liberal": {
-     "ayes": 13,
+     "ayes": 14,
      "noes": 0
     },
     "Nationals": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     },
     "One Nation": {
@@ -828,8 +862,7 @@
     }
    },
    "party_coverage": {
-    "dated": 52,
-    "member": 3
+    "dated": 55
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-23/13"

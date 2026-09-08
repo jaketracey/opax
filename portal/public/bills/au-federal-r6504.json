@@ -222,8 +222,8 @@
    },
    "party_coverage": {
     "dated": 19,
-    "member": 12,
-    "earliest": 17
+    "member": 4,
+    "earliest": 25
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-26/1"
@@ -268,8 +268,8 @@
     }
    },
    "party_coverage": {
-    "member": 12,
-    "earliest": 19,
+    "member": 4,
+    "earliest": 27,
     "dated": 19
    },
    "paired": 0,

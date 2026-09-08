@@ -1,0 +1,48 @@
+{
+ "key": "au-federal-s1512",
+ "title": "Tax Laws Amendment (Incentivising Food Donations to Charitable Organisations) Bill 2026",
+ "short_title": "Tax Laws Amendment (Incentivising Food Donations to Charitable Organisations) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-09-07",
+ "originating_house": "senate",
+ "sponsor": "SMITH, Sen Dean",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-09-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1512%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1512%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1512_ems_81f60262-ecd6-48ea-86d7-ecb96cb6b553%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1512%22",
+   "document_date": "2026-09-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -55,7 +55,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     story.hidden = !active;
     stage.classList.toggle('has-journey', Boolean(active));
     if (!active) { story.innerHTML = ''; return; }
-    const header = `<div class="journey-story-top"><span>${esc(active.title)}</span><button type="button" data-action="exit" aria-label="End guided journey">×</button></div>`;
+    const header = `<div class="journey-story-top"><h2 class="journey-title">${esc(active.title)}</h2><button type="button" data-action="exit" aria-label="End guided journey">×</button></div>`;
     const chooser = active.choices ? `<div class="journey-selector"><label for="journey-focus">${esc(active.selectorLabel || 'Focus')}</label><select id="journey-focus" data-focus="true" aria-label="${esc(active.selectorLabel || 'Focus')}"><option value="">Choose ${active.selectorLabel === 'Industry' ? 'an industry' : active.selectorLabel === 'Recipient' ? 'a recipient' : 'an organisation'}…</option>${active.choices.map(choice => `<option value="${esc(choice.value)}"${choice.value === active.selection ? ' selected' : ''}>${esc(choice.label)}</option>`).join('')}</select></div>` : '';
     if (!active.steps.length) {
       story.innerHTML = `${header}<div class="journey-choice-empty">${chooser}<p class="journey-help">${esc(active.id === 'public-money' ? 'Recipients with both public-money and party-funding connections in this map.' : active.id === 'over-time' ? 'Organisations with dated receipts in both comparison windows.' : 'Choices reflect the connections available in this map.')}</p></div>`;

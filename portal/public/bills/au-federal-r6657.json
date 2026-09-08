@@ -192,8 +192,8 @@
     }
    },
    "party_coverage": {
-    "member": 8,
-    "earliest": 15,
+    "member": 5,
+    "earliest": 18,
     "dated": 16
    },
    "paired": 0,

@@ -325,8 +325,8 @@
    },
    "party_coverage": {
     "dated": 20,
-    "member": 12,
-    "earliest": 14
+    "member": 5,
+    "earliest": 21
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-31/2"
@@ -368,8 +368,8 @@
    },
    "party_coverage": {
     "dated": 17,
-    "member": 6,
-    "earliest": 10
+    "member": 2,
+    "earliest": 14
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-31/3"
@@ -415,8 +415,8 @@
    },
    "party_coverage": {
     "dated": 24,
-    "member": 14,
-    "earliest": 12
+    "member": 5,
+    "earliest": 21
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-31/4"
@@ -462,8 +462,8 @@
    },
    "party_coverage": {
     "dated": 23,
-    "member": 15,
-    "earliest": 14
+    "member": 5,
+    "earliest": 24
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-31/5"
@@ -509,8 +509,8 @@
    },
    "party_coverage": {
     "dated": 23,
-    "member": 12,
-    "earliest": 13
+    "member": 4,
+    "earliest": 21
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-31/6"
@@ -556,8 +556,8 @@
    },
    "party_coverage": {
     "dated": 14,
-    "earliest": 14,
-    "member": 8
+    "earliest": 19,
+    "member": 3
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-01/1"
@@ -603,8 +603,8 @@
    },
    "party_coverage": {
     "dated": 14,
-    "earliest": 13,
-    "member": 8
+    "earliest": 18,
+    "member": 3
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-01/2"
@@ -646,8 +646,8 @@
    },
    "party_coverage": {
     "dated": 15,
-    "earliest": 11,
-    "member": 7
+    "earliest": 16,
+    "member": 2
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-01/3"
@@ -685,8 +685,8 @@
    },
    "party_coverage": {
     "dated": 15,
-    "earliest": 10,
-    "member": 6
+    "earliest": 14,
+    "member": 2
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-01/4"
@@ -728,8 +728,8 @@
    },
    "party_coverage": {
     "dated": 15,
-    "earliest": 12,
-    "member": 7
+    "earliest": 17,
+    "member": 2
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-01/5"

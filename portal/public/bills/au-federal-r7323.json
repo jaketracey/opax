@@ -301,13 +301,17 @@
    "noes": 15,
    "outcome": "affirmative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 0,
+     "noes": 1
+    },
     "Greens": {
      "ayes": 0,
-     "noes": 11
+     "noes": 10
     },
     "Independent": {
      "ayes": 1,
-     "noes": 3
+     "noes": 2
     },
     "JLN": {
      "ayes": 0,
@@ -315,7 +319,7 @@
     },
     "Labor": {
      "ayes": 22,
-     "noes": 0
+     "noes": 1
     },
     "Liberal": {
      "ayes": 4,
@@ -327,9 +331,7 @@
     }
    },
    "party_coverage": {
-    "dated": 35,
-    "member": 6,
-    "earliest": 2
+    "dated": 43
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2025-03-25/2"
@@ -344,12 +346,16 @@
    "noes": 28,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Greens": {
-     "ayes": 11,
+     "ayes": 10,
      "noes": 0
     },
     "Independent": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 1
     },
     "JLN": {
@@ -357,7 +363,7 @@
      "noes": 0
     },
     "Labor": {
-     "ayes": 0,
+     "ayes": 1,
      "noes": 22
     },
     "Liberal": {
@@ -370,9 +376,7 @@
     }
    },
    "party_coverage": {
-    "dated": 35,
-    "member": 6,
-    "earliest": 2
+    "dated": 43
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2025-03-25/3"
@@ -413,9 +417,7 @@
     }
    },
    "party_coverage": {
-    "dated": 36,
-    "member": 4,
-    "earliest": 1
+    "dated": 41
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2025-03-26/2"

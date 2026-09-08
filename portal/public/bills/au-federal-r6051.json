@@ -339,9 +339,9 @@
     }
    },
    "party_coverage": {
-    "member": 20,
+    "member": 14,
     "dated": 34,
-    "earliest": 10
+    "earliest": 16
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-26/1"
@@ -410,9 +410,9 @@
     }
    },
    "party_coverage": {
-    "member": 21,
+    "member": 15,
     "dated": 38,
-    "earliest": 9
+    "earliest": 15
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-13/1"
@@ -477,9 +477,9 @@
     }
    },
    "party_coverage": {
-    "member": 20,
+    "member": 14,
     "dated": 34,
-    "earliest": 9
+    "earliest": 15
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-13/2"
@@ -537,8 +537,8 @@
    },
    "party_coverage": {
     "dated": 26,
-    "earliest": 9,
-    "member": 16
+    "earliest": 14,
+    "member": 11
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-13/3"
@@ -608,8 +608,8 @@
    },
    "party_coverage": {
     "dated": 38,
-    "member": 19,
-    "earliest": 9
+    "member": 13,
+    "earliest": 15
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-13/4"
@@ -679,8 +679,8 @@
    },
    "party_coverage": {
     "dated": 39,
-    "member": 19,
-    "earliest": 9
+    "member": 13,
+    "earliest": 15
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-13/5"

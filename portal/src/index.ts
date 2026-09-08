@@ -1440,6 +1440,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
  * (the doc may land in the next sync).
  */
 async function apiResource(request: Request, url: URL, slug: string, env: Env, ctx: ExecutionContext): Promise<Response> {
+  if (/^news-\d+$/.test(slug)) return json({ error: 'News articles are no longer part of the corpus' }, 410)
   if (!isPublicSlug(slug)) return json({ error: 'bad slug' }, 400)
   const cacheKey = cacheRequest('resource', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
   const bypass = cacheBypass(request, url)
@@ -2196,7 +2197,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   stats: {
     title: 'Corpus stats · OPAX',
-    description: 'Live counts for every collection in the OPAX index: speeches, divisions, legislation and news, by parliament and year.',
+    description: 'Live counts for every collection in the OPAX index: speeches, divisions, bills and official statements, by parliament and year.',
   },
   declared: {
     title: 'Just declared · OPAX',
@@ -3185,6 +3186,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
     jsonLd: null,
     prerender: null,
   }
+  if (/^news-\d+$/.test(slug)) return { ...generic, title: 'Document removed · OPAX', status: 410 }
   if (!isPublicSlug(slug)) return { ...generic, title: 'Document not found · OPAX', status: 404 }
   let res: Response | null
   try {
@@ -3611,7 +3613,7 @@ const MAX_PARTY_CHARS = 64
 const MIN_YEAR = 1900
 const MAX_YEAR = 2100
 
-const KINDS = new Set(['speech', 'legal', 'news', 'division', 'bill', 'press_release', 'all'])
+const KINDS = new Set(['speech', 'legal', 'division', 'bill', 'press_release', 'all'])
 const STATES = new Set(['federal', 'nsw', 'vic', 'sa', 'qld'])
 const MODES = new Set(['hybrid', 'semantic', 'keyword'])
 // Party labels are the KB's own facet values (served by /api/parties) and grow

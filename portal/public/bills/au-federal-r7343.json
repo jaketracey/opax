@@ -192,6 +192,10 @@
    "noes": 32,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Country Liberal Party": {
      "ayes": 1,
      "noes": 0
@@ -201,7 +205,7 @@
      "noes": 9
     },
     "Independent": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 0
     },
     "LNP": {
@@ -230,8 +234,7 @@
     }
    },
    "party_coverage": {
-    "dated": 52,
-    "member": 6
+    "dated": 58
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/3"
@@ -246,12 +249,16 @@
    "noes": 22,
    "outcome": "affirmative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Greens": {
      "ayes": 8,
      "noes": 0
     },
     "Independent": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 0
     },
     "LNP": {
@@ -280,8 +287,7 @@
     }
    },
    "party_coverage": {
-    "dated": 50,
-    "member": 5
+    "dated": 55
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/4"
@@ -296,12 +302,16 @@
    "noes": 33,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Greens": {
      "ayes": 0,
      "noes": 9
     },
     "Independent": {
-     "ayes": 1,
+     "ayes": 0,
      "noes": 2
     },
     "LNP": {
@@ -330,8 +340,7 @@
     }
    },
    "party_coverage": {
-    "dated": 51,
-    "member": 5
+    "dated": 56
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/5"
@@ -346,12 +355,16 @@
    "noes": 29,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Greens": {
      "ayes": 9,
      "noes": 0
     },
     "Independent": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 0
     },
     "Labor": {
@@ -372,8 +385,7 @@
     }
    },
    "party_coverage": {
-    "dated": 38,
-    "member": 3
+    "dated": 41
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/6"
@@ -388,12 +400,16 @@
    "noes": 26,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Greens": {
      "ayes": 10,
      "noes": 0
     },
     "Independent": {
-     "ayes": 4,
+     "ayes": 3,
      "noes": 0
     },
     "JLN": {
@@ -414,8 +430,7 @@
     }
    },
    "party_coverage": {
-    "dated": 35,
-    "member": 7
+    "dated": 42
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/7"
@@ -430,6 +445,10 @@
    "noes": 21,
    "outcome": "affirmative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Country Liberal Party": {
      "ayes": 1,
      "noes": 0
@@ -439,7 +458,7 @@
      "noes": 0
     },
     "Independent": {
-     "ayes": 4,
+     "ayes": 3,
      "noes": 0
     },
     "JLN": {
@@ -468,8 +487,7 @@
     }
    },
    "party_coverage": {
-    "dated": 50,
-    "member": 6
+    "dated": 56
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/19"
@@ -484,6 +502,10 @@
    "noes": 20,
    "outcome": "affirmative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Country Liberal Party": {
      "ayes": 1,
      "noes": 0
@@ -493,7 +515,7 @@
      "noes": 0
     },
     "Independent": {
-     "ayes": 4,
+     "ayes": 3,
      "noes": 0
     },
     "JLN": {
@@ -522,8 +544,7 @@
     }
    },
    "party_coverage": {
-    "dated": 49,
-    "member": 6
+    "dated": 55
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/20"
@@ -538,12 +559,16 @@
    "noes": 30,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Greens": {
      "ayes": 9,
      "noes": 0
     },
     "Independent": {
-     "ayes": 4,
+     "ayes": 3,
      "noes": 0
     },
     "JLN": {
@@ -568,8 +593,7 @@
     }
    },
    "party_coverage": {
-    "dated": 38,
-    "member": 6
+    "dated": 44
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/21"

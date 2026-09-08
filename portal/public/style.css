@@ -4708,3 +4708,9 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .supplier-year-bar:is(:focus-visible, .is-active) .supplier-year-value-bar { fill: var(--navy); stroke: var(--bronze); stroke-width: 2; }
 .supplier-year-tooltip { position: absolute; z-index: 2; pointer-events: none; padding: .55rem .75rem; border-radius: 4px; background: var(--navy); color: #fff; box-shadow: 0 2px 8px #0002; font: 500 .8125rem/1.5 var(--sans); max-width: 100%; box-sizing: border-box; }
 .supplier-year-tooltip[hidden] { display: none; }
+
+.money-workspace-toolbar > .money-agency-link { display: inline-flex; align-items: center; box-sizing: border-box; text-decoration: none; }
+.money-workspace-toolbar > .money-agency-link:hover { border-color: var(--bronze); background: var(--paper-warm, var(--paper)); }
+
+.journey-story-top .journey-title { margin: 0; color: var(--ink); font: 600 1.3rem/1.3 var(--serif); }
+@media (max-width: 700px) { .journey-story-top:has(.journey-title) { position: static; margin-bottom: .65rem; } }

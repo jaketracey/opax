@@ -1,5 +1,10 @@
 # OPAX → Progress Agentic RAG migration
 
+**Current corpus policy (2026-09-08): news articles are excluded.** The daily
+fetch and KB sync no longer ingest news, and the resource client rejects it.
+Historical news counts below describe previous snapshots, not the live corpus.
+See `docs/operations/2026-09-08-official-corpus-refresh.md`.
+
 Status: **provisioned and smoke-tested end-to-end; bulk load pending cost sign-off.**
 KB `opax` (`d33c0a87-98cb-4169-b0d2-ff9b75573fb7`, account `7b5c9761…`) is live with a
 25-speech sample; the portal Worker serves grounded, cited answers off it. The
@@ -114,7 +119,7 @@ All corpus steps run on the WSL box (`desktop`), which holds `parli.db`.
 4. Sample eval: push ~2,000 mixed docs, judge retrieval quality + measure actual
    platform token burn per resource → extrapolate the full-push cost.
 5. **GATE: full-push sign-off** (see Costs). Then:
-   `uv run python -m parli.ingest.arag_sync --tables speeches,legal_documents,news_articles --full`
+   `uv run python -m parli.ingest.arag_sync --tables speeches,legal_documents --full`
    Resumable: checkpoint in `~/.cache/autoresearch/arag_sync_state.json`; 429
    backpressure honoured automatically; `--retry-failed` mops up.
 6. Portal deploy: `cd portal && npx wrangler secret put ARAG_KB_TOKEN && npx wrangler deploy`,

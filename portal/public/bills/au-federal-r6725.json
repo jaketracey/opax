@@ -201,8 +201,8 @@
     }
    },
    "party_coverage": {
-    "member": 10,
-    "earliest": 22,
+    "member": 4,
+    "earliest": 28,
     "dated": 14
    },
    "paired": 0,
@@ -244,8 +244,8 @@
     }
    },
    "party_coverage": {
-    "member": 9,
-    "earliest": 20,
+    "member": 4,
+    "earliest": 25,
     "dated": 17
    },
    "paired": 0,
@@ -287,8 +287,8 @@
     }
    },
    "party_coverage": {
-    "member": 11,
-    "earliest": 22,
+    "member": 4,
+    "earliest": 29,
     "dated": 17
    },
    "paired": 0,
@@ -330,8 +330,8 @@
     }
    },
    "party_coverage": {
-    "member": 11,
-    "earliest": 22,
+    "member": 4,
+    "earliest": 29,
     "dated": 17
    },
    "paired": 0,
