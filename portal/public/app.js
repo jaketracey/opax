@@ -633,7 +633,7 @@ function siteUrl(target) {
 // through the move off the hash router: renaming them would have churned a
 // hundred call sites for nothing.
 function askHash(q, kind) {
-  const scope = kind && kind !== "speech" ? `&kind=${encodeURIComponent(kind)}` : "";
+  const scope = kind && kind !== "all" ? `&kind=${encodeURIComponent(kind)}` : "";
   return `/ask?q=${encodeURIComponent(q)}${scope}`;
 }
 
@@ -1611,8 +1611,8 @@ function route() {
     else setCrumbs(q ? [{ label: "Ask" }] : null);
     if (view === "ask" && q && q !== lastAsk.question) {
       $("ask-input").value = q;
-      if ($("ask-wide")) $("ask-wide").checked = params.get("kind") === "all";
-      renderAskFilterChips(); // a shared &kind=all link arrives with a filter on
+      if ($("ask-wide")) $("ask-wide").checked = params.get("kind") !== "speech";
+      renderAskFilterChips(); // preserve an explicitly shared speech-only scope
       runAsk(q);
     } else if (!q && $("ask-result").hidden) {
       renderFrontPage();
@@ -2040,14 +2040,25 @@ function closeNavDrawer() {
 {
   const drawer = $("nav-drawer");
   const toggle = $("nav-open");
+  const searchToggle = $("nav-search-open");
+  searchToggle.addEventListener("click", () => {
+    drawer.showModal();
+    $("drawer-q").focus({ preventScroll: true });
+    toggle.setAttribute("aria-expanded", "true");
+    searchToggle.setAttribute("aria-expanded", "true");
+  });
   toggle.addEventListener("click", () => {
     drawer.showModal();
     // The dialog itself takes focus, so a tap on the hamburger does not land
     // a focus ring on the first control; Tab still reaches everything.
     drawer.focus({ preventScroll: true });
     toggle.setAttribute("aria-expanded", "true");
+    searchToggle.setAttribute("aria-expanded", "true");
   });
-  drawer.addEventListener("close", () => toggle.setAttribute("aria-expanded", "false"));
+  drawer.addEventListener("close", () => {
+    toggle.setAttribute("aria-expanded", "false");
+    searchToggle.setAttribute("aria-expanded", "false");
+  });
   // Escape: run the same exit animation instead of the instant native close.
   drawer.addEventListener("cancel", (e) => { e.preventDefault(); closeNavDrawer(); });
   $("drawer-close").addEventListener("click", () => closeNavDrawer());
@@ -2071,7 +2082,7 @@ function closeNavDrawer() {
   });
   // Growing past the mobile breakpoint with the drawer open would strand a
   // modal over a page that now shows the full nav.
-  window.matchMedia("(min-width: 861px)").addEventListener("change", (e) => {
+  window.matchMedia("(min-width: 1440px)").addEventListener("change", (e) => {
     if (e.matches && drawer.open) drawer.close();
   });
 }
@@ -2452,8 +2463,7 @@ function wireAskCitations(container, sources) {
 
 function sourceItem(s, num, passage = false) {
   const li = document.createElement("li");
-  const btn = document.createElement("button");
-  btn.type = "button";
+  const btn = document.createElement("a");
   btn.className = "link source-title";
   // A record titled only "Speaker — 2013-03-19" has no debate name to show:
   // the row leads with the speaker in words and the byline carries the rest,
@@ -2462,7 +2472,8 @@ function sourceItem(s, num, passage = false) {
   const nameOnly = !subject && s.speaker;
   btn.textContent = subject || String(s.title || s.slug || "");
   if (nameOnly) li.classList.add("source-name-only");
-  btn.addEventListener("click", () => { goRoute(`/doc/${s.slug}`); });
+  const target = new URL(searchResultHref(s), location.origin);
+  if (target.protocol === "https:" || (target.protocol === "http:" && target.origin === location.origin)) btn.href = target.href;
   if (num) {
     const numEl = document.createElement("span");
     numEl.className = "source-num";
@@ -2495,7 +2506,9 @@ function sourceItem(s, num, passage = false) {
       if (url && face) face.innerHTML = `<img src="${esc(url)}" alt="" width="40" height="40" loading="lazy">`;
     });
   } else {
-    const meta = metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: !passage });
+    const meta = s.resource?.startsWith("USER_CONTEXT_")
+      ? [s.source, s.dateLabel || (s.date ? fmtDate(s.date) : "")].filter(Boolean).map(esc).join(" · ")
+      : metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: !passage });
     if (meta) {
       const span = document.createElement("span");
       span.className = "source-meta";
@@ -2625,7 +2638,7 @@ function renderAskDateRuler(sources, isCited) {
     `<line class="date-ruler-tick ${cited ? "is-cited" : "is-retrieved"}"
       x1="${point.x.toFixed(2)}" x2="${point.x.toFixed(2)}" y1="${cited ? 12 : 33}" y2="52"/>`).join("");
   box.innerHTML = `
-    <h3 class="date-ruler-heading">When the sources were spoken</h3>
+    <h3 class="date-ruler-heading">Dates of the sources</h3>
     <div class="date-ruler-frame">
       <svg class="date-ruler-svg" viewBox="0 0 680 82" role="img" aria-label="Sources placed on a timeline from 1993 to 2026">
         <line class="date-ruler-axis" x1="${RULER_LEFT}" x2="${RULER_RIGHT}" y1="52" y2="52"/>
@@ -2688,7 +2701,7 @@ function quoteCardHTML(s, i, n) {
 }
 
 function setQuoteRail(sources) {
-  quoteRail.sources = sources || [];
+  quoteRail.sources = (sources || []).filter(s => !s.resource?.startsWith("USER_CONTEXT_"));
   quoteRail.idx = -1;
   updateQuoteRail();
 }
@@ -2861,7 +2874,7 @@ function updateQuoteRail() {
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   quoteRail.swap = setTimeout(() => {
     card.innerHTML = quoteCardHTML(s, idx, n);
-    card.onclick = (e) => { e.preventDefault(); goRoute(`/doc/${s.slug}`); };
+    card.onclick = (e) => { e.preventDefault(); goRoute(searchResultHref(s)); };
     void card.offsetWidth; // restart the fade-up from the bottom
     card.classList.add("shown");
     loadPhotoMap().then(() => {
@@ -8661,7 +8674,7 @@ function prefetchAskFollowups(ask) {
 // reload and navigation, and ends with the tab, like a conversation should.
 
 let chatThread = []; // {role: 'user'|'answer', text, sources?, next?}
-let chatKind = "speech";
+let chatKind = "all";
 let chatAbort = null;
 let chatFollowAbort = null;
 let chatTimer = null;
@@ -8677,7 +8690,7 @@ function loadChatSession() {
     const data = JSON.parse(sessionStorage.getItem("opax-chat") || "null");
     if (!data || !Array.isArray(data.thread)) return;
     chatThread = data.thread.filter((m) => m && typeof m.text === "string");
-    chatKind = data.kind === "all" ? "all" : "speech";
+    chatKind = data.kind === "speech" ? "speech" : "all";
   } catch { /* malformed storage reads as an empty thread */ }
 }
 
@@ -8696,7 +8709,7 @@ function initChat(manageFocus) {
           { role: "user", text: seed.question },
           { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined },
         ];
-        chatKind = seed.kind === "all" ? "all" : "speech";
+        chatKind = seed.kind === "speech" ? "speech" : "all";
         saveChatSession();
       }
     }
@@ -9359,11 +9372,11 @@ function searchFiltersChanged() {
   goRoute(searchHash(q, f, 1, $("search-sort").value));
 }
 
-// The same three pieces for the ask page. Its scope checkbox ("Also search
-// recorded divisions") is the corpus filter under another name, so it
+// The same three pieces for the ask page. Its all-records checkbox
+// is the corpus filter under another name, so it
 // arrives as `kind` and earns the same Corpus chip search shows.
 function askChipFilters() {
-  return { ...askFilters(), kind: askKind() };
+  return { ...askFilters(), kind: askKind(), scope: "all" };
 }
 
 function renderAskFilterChips() {
@@ -9381,7 +9394,7 @@ const ASK_FILTER_RESETS = {
   state: () => { $("a-state").value = ""; },
   topic: () => { $("a-topic").value = ""; },
   years: () => { $("a-from").value = "1993"; $("a-to").value = "2026"; updateAskYearsLabel(); },
-  kind: () => { $("ask-wide").checked = false; },
+  kind: () => { $("ask-wide").checked = true; },
 };
 
 function clearAskFilter(id) {
@@ -9901,7 +9914,7 @@ async function runSearchAnswer(q, f, mySeq) {
     const question = looksLikeQuestion ? q
       : f.speaker ? `What did ${f.speaker} say about ${q}?`
       : `What has parliament said about ${q}?`;
-    const body = { question, kind: f.kind || "speech" };
+    const body = { question, kind: ["speech", "division", "bill", "press_release", "legal"].includes(f.kind) ? f.kind : "all" };
     for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) body[k] = f[k];
     // The answer streams into the rail; the loader leaves on the first words.
     const mine = () => mySeq === searchSeq && searchAnswerAbort === abort;
@@ -10071,7 +10084,7 @@ function renderSearchRecovery(q, f) {
   box.innerHTML = `<h2 class="empty-title">No matches for “${esc(q || f.speaker)}”</h2>
     <p class="empty-lede">${filters ? `Searched with ${esc(filters)}. ` : ""}Try a broader phrase or a different part of the record.</p>
     <div class="empty-actions"><button type="button" class="action-btn" id="search-recovery-edit">${first ? `Remove ${esc(first.k.toLowerCase())} filter` : "Try fewer words"}</button>
-    <a class="action-btn" href="${esc(askHash(q || f.speaker, ["speech","division","press_release"].includes(f.kind) ? f.kind : "speech"))}">Try in Ask</a>
+    <a class="action-btn" href="${esc(askHash(q || f.speaker, f.kind === "speech" ? "speech" : "all"))}">Try in Ask</a>
     <a class="action-btn" href="${esc(topicHref)}">${f.topic ? `Browse ${esc(TOPICS[f.topic] || f.topic)}` : "Browse topics"}</a></div>`;
   $("search-recovery-edit").addEventListener("click", () => {
     if (first) clearSearchFilter(first.id);
