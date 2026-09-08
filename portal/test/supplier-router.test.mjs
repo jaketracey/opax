@@ -5,7 +5,7 @@ import { runInNewContext } from 'node:vm';
 
 const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
 const code = app.slice(app.indexOf('let supplierPage ='), app.indexOf('function rawFragment()'))
-  .replace('import("/suppliers.js?v=profiles-5")', 'loadModule()');
+  .replace('import("/suppliers.js?v=search-all-2")', 'loadModule()');
 
 function harness(loadModule) {
   const body = { innerHTML: '', classList: { remove() {} } };

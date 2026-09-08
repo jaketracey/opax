@@ -703,6 +703,15 @@ function askFilterSummary(f) {
   return bits.join(" · ");
 }
 
+function searchResultHref(row) {
+  if (row.href?.startsWith("/") && !row.href.startsWith("//")) return row.href;
+  return safeUrl(row.href) || `/doc/${encodeURIComponent(row.slug)}`;
+}
+function searchResultUrl(row) {
+  const target = searchResultHref(row);
+  return target.startsWith("/") ? siteUrl(target) : target;
+}
+
 function opaxUrl(slug) {
   return siteUrl(`/doc/${slug}`);
 }
@@ -716,8 +725,8 @@ function bibtexFor(s) {
     `  title = {${(s.title || s.slug).replace(/[{}]/g, "")}}`,
     year ? `  year = {${year}}` : null,
     month ? `  month = {${month}}` : null,
-    `  howpublished = {Parliamentary record, via OPAX corpus v${corpusVersion()}}`,
-    `  url = {${opaxUrl(s.slug)}}`,
+    `  howpublished = {Public record, via OPAX corpus v${corpusVersion()}}`,
+    `  url = {${searchResultUrl(s)}}`,
     `  urldate = {${localISODate()}}`,
     (s.sourceUrl ?? s.url) ? `  note = {Official record: ${s.sourceUrl ?? s.url}}` : null,
   ].filter(Boolean);
@@ -730,7 +739,7 @@ function risFor(s) {
   if (s.speaker) lines.push(`AU  - ${family}, ${given}`);
   lines.push(`TI  - ${s.title || s.slug}`);
   if (s.date) lines.push(`PY  - ${s.date.slice(0, 4)}`, `DA  - ${s.date.slice(0, 10).replace(/-/g, "/")}`);
-  lines.push(`UR  - ${opaxUrl(s.slug)}`);
+  lines.push(`UR  - ${searchResultUrl(s)}`);
   const official = s.sourceUrl ?? s.url;
   lines.push(`N1  - Via OPAX corpus v${corpusVersion()}${official ? `; official record: ${official}` : ""}`);
   lines.push("ER  - ");
@@ -759,7 +768,7 @@ function sourcesCSV(rows, context) {
   const head = "slug,kind,title,speaker,party,state,date,score,snippet,opax_url,source_url";
   const body = rows.map((r) =>
     [r.slug, r.kind || (r.slug || "").split("-")[0], r.title, r.speaker, r.party, r.state, r.date,
-      r.score ?? "", (r.snippet || "").slice(0, 300), opaxUrl(r.slug), r.url || ""].map(csvCell).join(",")
+      r.score ?? "", (r.snippet || "").slice(0, 300), searchResultUrl(r), r.url || ""].map(csvCell).join(",")
   );
   return `${exportHeader(context)}\n${head}\n${body.join("\n")}\n`;
 }
@@ -953,7 +962,7 @@ function discoveryDetailHTML(signal) {
       </div><p class="discovery-chart-note">Different money flows and reporting periods. A shared name doesn’t show that one led to the other.</p>`;
   }
   return `<article class="discovery-detail-card">${main}
-    <div class="discovery-actions">${signal.category !== "recipient_concentration" ? `<a href="/subject/supplier/${encodeURIComponent(signal.entity)}">Explore supplier profile</a>` : ""}<a href="/search?q=${encodeURIComponent(signal.entity)}">Find mentions in parliament</a>${!contracts ? '<button type="button" id="discover-map-toggle" aria-expanded="false" aria-controls="discover-map-area">Explore connections on the money map</button>' : ""}</div>
+    <div class="discovery-actions">${signal.category !== "recipient_concentration" ? `<a href="/subject/supplier/${encodeURIComponent(signal.entity)}">Explore supplier profile</a>` : ""}<a href="/search?kind=speech&q=${encodeURIComponent(signal.entity)}">Find mentions in parliament</a>${!contracts ? '<button type="button" id="discover-map-toggle" aria-expanded="false" aria-controls="discover-map-area">Explore connections on the money map</button>' : ""}</div>
     ${!contracts ? '<div id="discover-map-area" hidden><p class="discovery-chart-note">Political funding connections from the money map. Its coverage differs from this comparison.</p><div id="discover-map-root" class="discovery-map"></div><a href="/money">Open the full money map</a></div>' : ""}
     ${discoveryEvidenceHTML(signal)}</article>`;
 }
@@ -1348,7 +1357,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=profiles-5");
+    const module = await import("/suppliers.js?v=search-all-2");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -1359,7 +1368,7 @@ async function openSupplierPage(name, params, manageFocus) {
       },
       onCanonical(id, label) {
         if (generation !== supplierPageGeneration) return;
-        replaceRoute(`/subject/supplier/${encodeURIComponent(id)}`);
+        replaceRoute(`/subject/supplier/${encodeURIComponent(id)}${params.get("contract") ? "?"+new URLSearchParams({contract:params.get("contract")}) : ""}`);
         setCrumbs([{ label: "Suppliers", href: "/subject/supplier" }, { label }]);
       },
       onMentions: (label, container) => subjectMentions(label, container, "In parliament"),
@@ -1382,7 +1391,7 @@ async function openAgencyPage(name, params, manageFocus) {
   body.classList.remove("subject-person");
   body.innerHTML = '<p role="status">Loading agencies…</p>';
   try {
-    const module = await import("/agencies.js?v=agency-3");
+    const module = await import("/agencies.js?v=search-all-1");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -4770,7 +4779,7 @@ async function openSubject(kind, name, manageFocus) {
     dates.length && ["Indexed speeches span", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
     fitsInfoRow(fits, "people", name),
   ], "", [
-    actionBtn("speeches", searchHash("", { speaker: name }), "View all their speeches", { primary: true }),
+    actionBtn("speeches", searchHash("", { speaker: name, kind: "speech" }), "View all their speeches", { primary: true }),
     actionBtn("external", `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "Parliamentary profile", { external: true }),
     actionBtn("external", `https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician`, "Wikipedia", { external: true }),
   ]);
@@ -4848,7 +4857,7 @@ function renderCommitteeWitness(name, key, body, box, sections, speeches, dates)
       ? esc(fmtDate(hearings[0]))
       : `${hearings.length}, ${esc(fmtDate(hearings[0]))} – ${esc(fmtDate(hearings[hearings.length - 1]))}`],
   ], "", [
-    actionBtn("speeches", searchHash("", { speaker: name }), "View their evidence", { primary: true }),
+    actionBtn("speeches", searchHash("", { speaker: name, kind: "speech" }), "View their evidence", { primary: true }),
   ]);
   box.insertAdjacentHTML("beforeend", `<p class="fineprint">${known
     ? "Position and organisation as the hearing's attendance list recorded them on the day. A witness answering a parliamentary committee, not a member of parliament."
@@ -9017,6 +9026,16 @@ function fillMeter(boxId, textId, barId) {
 
 // --- search / workbench -----------------------------------------------------
 
+const DOCUMENT_SEARCH_KINDS = new Set(["all", "speech", "division", "press_release", "legal", "news"]);
+function syncSearchDatasetControls() {
+  const mode = $("search-mode");
+  const documents = DOCUMENT_SEARCH_KINDS.has($("search-kind").value);
+  if (!documents) mode.value = "keyword";
+  else if (mode.disabled) mode.value = "hybrid";
+  mode.disabled = !documents;
+}
+$("search-kind").addEventListener("change", syncSearchDatasetControls);
+
 function currentFilters() {
   // Year sliders mirror the ask popover: crossed thumbs swap, and the full
   // range means "no year filter".
@@ -9031,6 +9050,7 @@ function currentFilters() {
     from,
     to,
     kind: $("search-kind").value,
+    scope: "all",
     mode: $("search-mode").value,
   };
 }
@@ -9053,7 +9073,7 @@ function searchHash(q, f, page, sort) {
   const p = new URLSearchParams();
   if (q) p.set("q", q);
   for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
-  if (f.kind && f.kind !== "speech") p.set("kind", f.kind);
+  if (f.kind && f.kind !== "all") p.set("kind", f.kind);
   if (f.mode && f.mode !== "hybrid") p.set("mode", f.mode);
   if (sort && sort !== "relevance") p.set("sort", sort);
   if (page > 1) p.set("page", String(page));
@@ -9067,7 +9087,7 @@ const SEARCH_EXPORT_MAX = 200;
 
 function searchQueryParams(q, f, page, sort) {
   const p = new URLSearchParams({
-    q: q || f.speaker, kind: f.kind || "speech", mode: f.mode || "hybrid",
+    q: q || f.speaker, kind: f.kind || "all", mode: f.mode || "hybrid",
     page: String(page || 1), per: String(SEARCH_PER_PAGE), sort: sort || "relevance",
   });
   for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
@@ -9141,7 +9161,11 @@ function searchQueryParams(q, f, page, sort) {
 
 const FILTER_KIND_LABELS = {
   speech: "Speeches", news: "News", division: "Divisions",
-  press_release: "Government transcripts and releases", all: "Everything",
+  press_release: "Government transcripts and releases", all: "All records",
+  person: "Person", party: "Political party", donor: "Donor", receipt: "Political receipts",
+  agency: "Government agency", supplier: "Supplier", contract: "Government contract", grant: "Grant", bill: "Bill",
+  interest: "Declared interest", expense: "Parliamentary expenses", access: "Meeting or lobbying register",
+  campaigner: "Campaigner or associated entity", report: "Research report",
 };
 const FILTER_MODE_LABELS = { hybrid: "Hybrid", semantic: "Semantic", keyword: "Keyword" };
 
@@ -9162,8 +9186,8 @@ function filterChipSpecs(f) {
     const a = f.from || "1993", b = f.to || "2026";
     out.push({ id: "years", k: "Years", v: a === b ? a : `${a} to ${b}` });
   }
-  if (f.kind && f.kind !== "speech") {
-    out.push({ id: "kind", k: "Corpus", v: FILTER_KIND_LABELS[f.kind] || f.kind });
+  if (f.kind && f.kind !== (f.scope === "all" ? "all" : "speech")) {
+    out.push({ id: "kind", k: "Record type", v: FILTER_KIND_LABELS[f.kind] || f.kind });
   }
   if (f.mode && f.mode !== "hybrid") {
     out.push({ id: "mode", k: "Mode", v: FILTER_MODE_LABELS[f.mode] || f.mode });
@@ -9210,13 +9234,14 @@ const SEARCH_FILTER_RESETS = {
   state: () => { $("f-state").value = ""; },
   topic: () => { $("f-topic").value = ""; },
   years: () => { $("f-from").value = "1993"; $("f-to").value = "2026"; updateSearchYearsLabel(); },
-  kind: () => { $("search-kind").value = "speech"; },
+  kind: () => { $("search-kind").value = "all"; },
   mode: () => { $("search-mode").value = "hybrid"; },
 };
 
 function clearSearchFilter(id) {
   if (id === "all") for (const reset of Object.values(SEARCH_FILTER_RESETS)) reset();
   else SEARCH_FILTER_RESETS[id]?.();
+  syncSearchDatasetControls();
   searchFiltersChanged();
 }
 
@@ -9299,11 +9324,12 @@ function applySearchParams(params) {
     $("f-" + name).value = String(Math.min(RECORD_LAST_YEAR, Math.max(RECORD_FIRST_YEAR, Math.round(year))));
   }
   updateSearchYearsLabel();
-  $("search-kind").value = params.get("kind") || "speech";
+  $("search-kind").value = params.get("kind") || "all";
   $("search-mode").value = params.get("mode") || "hybrid";
-  if (!$("search-kind").value) $("search-kind").value = "speech";
+  if (!$("search-kind").value) $("search-kind").value = "all";
   if (!$("search-mode").value) $("search-mode").value = "hybrid";
   $("search-sort").value = params.get("sort") === "newest" ? "newest" : "relevance";
+  syncSearchDatasetControls();
   renderFilterChips();
   if ($("search-input").value.trim() || $("f-speaker").value.trim()) {
     runSearch(Number(params.get("page")) || 1);
@@ -9330,6 +9356,7 @@ function clearSearchResults() {
     briefs: {}, briefsLoading: false,
   };
   $("search-results").replaceChildren();
+  $("search-coverage").hidden = true;
   $("results-bar").hidden = true;
   $("search-date-ruler").hidden = true;
   $("search-date-ruler").replaceChildren();
@@ -9343,7 +9370,7 @@ function clearSearchResults() {
 // Example searches for an empty search page. Plain phrases a reader might
 // actually wonder about, not jargon; each returns real passages.
 const SEARCH_EXAMPLES = [
-  "cost of living", "negative gearing", "poker machines", "rental crisis",
+  "Woodside", "Austal", "Qantas", "University of Tasmania", "housing", "renewable energy",
   "aged care", "childcare", "bulk billing", "student debt",
   "supermarket prices", "penalty rates", "climate change", "renewable energy",
   "housing affordability", "robodebt", "gambling advertising", "Uluru Statement",
@@ -9383,7 +9410,7 @@ function activeFilterSummary(f) {
 function syncSearchReadBar() {
   const bar = $("search-readbar");
   if (!bar) return;
-  bar.hidden = !lastSearch.results.length;
+  bar.hidden = !lastSearch.results.some(r => !r.href);
   $("search-read-passages").setAttribute("aria-pressed", String(searchReadMode === "passages"));
   $("search-read-briefs").setAttribute("aria-pressed", String(searchReadMode === "briefs"));
   const status = $("search-brief-status");
@@ -9391,7 +9418,7 @@ function syncSearchReadBar() {
   else if (lastSearch.briefsLoading) status.textContent = "Reading the available briefs…";
   else {
     const count = lastSearch.results.filter((result) => lastSearch.briefs[result.resource]).length;
-    status.textContent = `${count} of ${lastSearch.results.length} have briefs. Others show passages.`;
+    status.textContent = `${count} documents have briefs. Other results show record details.`;
   }
 }
 
@@ -9423,6 +9450,13 @@ function renderResults(results) {
   $("search-results").replaceChildren(
     ...results.map((r, index) => {
       const li = document.createElement("li");
+      if (r.href) {
+        li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(r.title)}</a></h3>
+          <div class="result-meta"><span class="search-record-kind">${esc(FILTER_KIND_LABELS[r.kind] || r.kind)}</span>${r.source ? ` · ${esc(r.source)}` : ""}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}</div>
+          <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(r.snippet, lastSearch.query)}</p>
+          <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>`;
+        return li;
+      }
       const brief = lastSearch.briefs[r.resource];
       const text = searchReadMode === "briefs" && brief
         ? `<p id="search-passage-${index}" class="search-result-text search-result-brief"><span class="search-passage-tag">Brief</span>${esc(brief)}</p>`
@@ -9437,7 +9471,7 @@ function renderResults(results) {
       ].filter(Boolean).join('<span class="search-meta-separator" aria-hidden="true"> · </span>');
       const topics = [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => typeof t === "string" && t.trim()))];
       li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="/doc/${encodeURIComponent(r.slug)}">${esc(title)}</a></h3>
-        <div class="result-meta">${meta}</div>${text}
+        <div class="result-meta"><span class="search-record-kind">${esc(FILTER_KIND_LABELS[r.kind] || r.kind)}</span>${meta ? ` · ${meta}` : ""}</div>${text}
         <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>
         ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a href="${esc(subjectHash("topic", topic))}">${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
       return li;
@@ -9492,13 +9526,13 @@ function resultsCountLine(s) {
   if (s.pageCount <= 1) {
     return s.truncated
       ? `The ${n} strongest matches. The record holds more.`
-      : `All ${n} ${s.total === 1 ? "match" : "matches"} in the record.`;
+      : `${n} ${s.total === 1 ? "match" : "matches"} in searched records.`;
   }
   const from = ((s.page - 1) * s.perPage + 1).toLocaleString();
   const to = Math.min(s.page * s.perPage, s.total).toLocaleString();
   return s.truncated
     ? `Showing ${from} to ${to} of the ${n} strongest matches. The record holds more.`
-    : `Showing ${from} to ${to} of ${n} matches in the record.`;
+    : `Showing ${from} to ${to} of ${n} matches in searched records.`;
 }
 
 // How many numbered slots the pager offers. Odd, so the page you are on sits in
@@ -9840,10 +9874,11 @@ async function runSearch(page = 1) {
   const analyticsStarted = performance.now();
   trackOutcome("opax_search_started", { page, filter_count: Object.values(f).filter(Boolean).length });
   if (fresh) {
-    searchAnswerWanted = !!q;
+    searchAnswerWanted = !!q && ["speech", "division", "press_release"].includes(f.kind);
+    searchAnswerAbort?.abort();
     $("search-answer").hidden = true;
     $("search-answer-empty").hidden = true;
-    runSearchAnswer(q, f, mySeq);
+    if (searchAnswerWanted) runSearchAnswer(q, f, mySeq);
   }
   const btn = $("search-form").querySelector('button[type="submit"]');
   btn.disabled = true;
@@ -9864,9 +9899,11 @@ async function runSearch(page = 1) {
   $("search-chips").hidden = true; // the examples step aside once a search runs
   $("search-empty").hidden = true;
   try {
-    const data = await api(`/api/search?${searchQueryParams(q, f, page, sort)}`);
+    const data = await api(`/api/search-all?${searchQueryParams(q, f, page, sort)}`);
     if (mySeq !== searchSeq) return; // a newer search owns the results now
     const results = data.results || [];
+    $("search-coverage").hidden = !data.coverage;
+    $("search-coverage").querySelector("p").textContent = data.coverage || "";
     trackOutcome("opax_search_completed", { page, result_count: results.length, total_count: data.total ?? results.length, duration_ms: Math.round(performance.now() - analyticsStarted) });
     lastSearch = {
       key, query: q, filters: f, sort, results,
@@ -9881,8 +9918,8 @@ async function runSearch(page = 1) {
     };
     if (!data.count) {
       hideLoader("search-wombat");
-      setStatus($("search-status"), "No results from the record.");
-      $("search-status").classList.add("visually-hidden"); // announced; the empty state carries the words
+      setStatus($("search-status"), data.warnings?.join(" ") || "No results from the record.");
+      $("search-status").classList.toggle("visually-hidden", !data.warnings?.length); // unavailable sources stay visible
       $("results-bar").hidden = true;
       $("search-date-ruler").hidden = true;
       $("search-readbar").hidden = true;
@@ -9893,7 +9930,7 @@ async function runSearch(page = 1) {
     } else {
       hideLoader("search-wombat");
       $("search-status").classList.remove("visually-hidden");
-      setStatus($("search-status"), "");
+      setStatus($("search-status"), data.warnings?.join(" ") || "");
       const first = (lastSearch.page - 1) * lastSearch.perPage + 1;
       const last = Math.min(lastSearch.page * lastSearch.perPage, lastSearch.total);
       $("results-count").innerHTML = `<span class="search-count-wide">${esc(resultsCountLine(lastSearch))}</span><span class="search-count-phone">${first}–${last} of ${lastSearch.total.toLocaleString()}${lastSearch.truncated ? " strongest matches" : " matches"}</span>`;
@@ -9936,7 +9973,7 @@ function renderSearchRecovery(q, f) {
   box.innerHTML = `<h2 class="empty-title">No matches for “${esc(q || f.speaker)}”</h2>
     <p class="empty-lede">${filters ? `Searched with ${esc(filters)}. ` : ""}Try a broader phrase or a different part of the record.</p>
     <div class="empty-actions"><button type="button" class="action-btn" id="search-recovery-edit">${first ? `Remove ${esc(first.k.toLowerCase())} filter` : "Try fewer words"}</button>
-    <a class="action-btn" href="${esc(askHash(q || f.speaker, f.kind))}">Try in Ask</a>
+    <a class="action-btn" href="${esc(askHash(q || f.speaker, ["speech","division","press_release"].includes(f.kind) ? f.kind : "speech"))}">Try in Ask</a>
     <a class="action-btn" href="${esc(topicHref)}">${f.topic ? `Browse ${esc(TOPICS[f.topic] || f.topic)}` : "Browse topics"}</a></div>`;
   $("search-recovery-edit").addEventListener("click", () => {
     if (first) clearSearchFilter(first.id);
@@ -9987,7 +10024,7 @@ $("search-export").addEventListener("click", async (e) => {
     try {
       const params = searchQueryParams(s.query, s.filters, 1, s.sort);
       params.set("per", String(SEARCH_EXPORT_MAX));
-      const data = await api(`/api/search?${params}`);
+      const data = await api(`/api/search-all?${params}`);
       rows = data.results?.length ? data.results : rows;
     } catch {
       scope = `page ${s.page} of ${s.pageCount} only (collecting the rest failed)`;
@@ -9999,11 +10036,11 @@ $("search-export").addEventListener("click", async (e) => {
   const f = s.filters;
   offerExport(rows, [
     `# query: ${s.query}`,
-    `# filters: ${activeFilterSummary(f) || "none"} · corpus: ${f.kind || "speech"} · mode: ${f.mode || "hybrid"} · sort: ${s.sort}`,
+    `# filters: ${activeFilterSummary(f) || "none"} · record type: ${f.kind || "all"} · mode: ${f.mode || "hybrid"} · sort: ${s.sort}`,
     `# scope: ${scope}`,
     s.truncated
       ? `# retrieval reaches the ${s.total} strongest matches; the record holds more`
-      : `# retrieval reached every match in the record for this query`,
+      : `# all matches in the searched public-record snapshot and document retrieval window`,
   ], "opax-search");
 });
 
