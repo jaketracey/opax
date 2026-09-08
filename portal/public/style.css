@@ -4623,9 +4623,9 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .home-map-invite { display: flex; gap: 1.3rem; align-items: center; flex-wrap: wrap; padding: 1rem 0; border-top: 1px solid var(--line); }
 .home-map-invite span { color: var(--ink-soft); font-size: .8rem; }
 .home-map-invite a { font-size: .85rem; color: var(--bronze-ink); }
-.home-map-industries summary, .home-parliaments summary { cursor: pointer; color: var(--navy); padding: .75rem 0; font-size: .9rem; }
+.home-parliaments summary { cursor: pointer; color: var(--navy); padding: .75rem 0; font-size: .9rem; }
 .home-parliaments #front-statemap { max-width: 600px; height: 330px; margin: auto; }
-.home-map-industries .map-chips { margin-top: .75rem; }
+.home-map-industries.map-chips { margin-top: .75rem; }
 .drawer-primary { padding: 1rem; border-bottom: 1px solid var(--line); font-size: 1.05rem; font-weight: 650; }
 .money-heading h1 { font: 700 clamp(2rem,4vw,3rem)/1.2 var(--serif); margin: .5rem 0 1rem; }
 .research-filters { border: 1px solid var(--line); border-radius: 6px; padding: .8rem 1rem; margin: 1rem 0; }
