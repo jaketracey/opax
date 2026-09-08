@@ -183,7 +183,7 @@ function pick(h, value) {
 test('a lens opens a neutral dropdown and selecting a subject starts its matching journey', () => {
   const h = setup({build:selectableJourneys}); h.choose();
   assert.equal(h.scenes.length,0); assert.equal(h.timers.size,0);
-  assert.match(h.story.innerHTML,/Where would you like to start/);
+  assert.match(h.story.innerHTML,/Choose an organisation/);
   pick(h,'b');
   assert.equal(h.scenes.at(-1).focusId,'b:0');
   assert.equal(h.routes.at(-1)[2],'b');
@@ -200,7 +200,7 @@ test('shared selections restore the right subject and step; invalid selections s
   h.handle.setRoute('funding',1,'a'); assert.equal(h.scenes.at(-1).focusId,'a:1');
   const before=h.scenes.length;
   h.handle.setRoute('funding',2,'not-in-graph');
-  assert.equal(h.scenes.length,before); assert.match(h.story.innerHTML,/Where would you like to start/);
+  assert.equal(h.scenes.length,before); assert.match(h.story.innerHTML,/Choose an organisation/);
   assert.equal(h.story.querySelector('[data-action="play"]'),null);
 });
 

@@ -59,5 +59,16 @@
     // hundred ms of CPU each. A crawler fetches one per shared link; only a
     // script minting fresh ?q= URLs could ask for sixty in a minute.
     { "name": "OG_LIMITER", "namespace_id": "1004", "simple": { "limit": 60, "period": 60 } }
-  ]
+  ],
+  "env": {
+    "staging": {
+      "name": "opax-portal-staging",
+      "workers_dev": true,
+      "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
+      "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
+      "vars": { "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-08-footer-cleanup" },
+      "ratelimits": [],
+      "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": ["/*"] }
+    }
+  }
 }

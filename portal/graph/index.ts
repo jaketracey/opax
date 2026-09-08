@@ -28,6 +28,7 @@ import { type Reveal, runReveal } from './reveal.ts'
 import { mountWordsLayer } from './words.ts'
 import { cpiMultiplier } from './cpi.ts'
 import { mountConnectionFallback } from './connection-fallback.ts'
+import { filterMoneyEdges, readMoneyFilters, type MoneyFilters } from '../public/money-records.js'
 
 // Re-exported so a Node smoke test can exercise the pure layout/data layer
 // without a DOM or a WebGL context.
@@ -127,6 +128,8 @@ export type MoneyScene = {
 }
 
 export type MoneyMapOptions = {
+  filters?: MoneyFilters
+  onViewChange?: (view: MoneyGraph, filters: MoneyFilters, years: { from: number; to: number; cpi: boolean }) => void
   /** Reader input in the map or controls; scene presentation stays silent. */
   onInteract?: () => void
   /** Builds the parliament ask-link for a donor's industry. */
@@ -173,6 +176,7 @@ export type MoneyMapOptions = {
 }
 
 export type MoneyMapHandle = {
+  setFilters(filters: MoneyFilters, route?: URLSearchParams): void
   presentScene(scene: MoneyScene): boolean
   /** Restore the full nominal, unfiltered overview. */
   clearScene(): void
@@ -664,6 +668,7 @@ export async function mountMoneyMap(
   let syncScrubControls = () => {}
   let scrubPending = 0
   let destroyed = false
+  let researchFilters: MoneyFilters = opts.filters ?? (full && typeof location !== 'undefined' ? readMoneyFilters(new URLSearchParams(location.search)) : {})
 
   // Full maps own these three query parameters. Mini maps are embedded in
   // donor/party/front-page routes, so their scrub remains local to the embed.
@@ -697,6 +702,9 @@ export async function mountMoneyMap(
     } else {
       url.searchParams.delete('from')
       url.searchParams.delete('to')
+    }
+    for (const [key, value] of Object.entries({ type: researchFilters.type === 'all' ? '' : researchFilters.type, party: researchFilters.party, min: researchFilters.min || '', q: researchFilters.query, industry: activeGroup })) {
+      if (value) url.searchParams.set(key, String(value)); else url.searchParams.delete(key)
     }
     if (adjustForInflation) url.searchParams.set('cpi', '1')
     else url.searchParams.delete('cpi')
@@ -860,7 +868,7 @@ export async function mountMoneyMap(
   // --- Engine ----------------------------------------------------------
   let selectedId: string | null = null
   let selectedEdge: MapEdge | null = null
-  let activeGroup: string | null = null
+  let activeGroup: string | null = researchFilters.industry || null
 
   let recoveryNotice: HTMLDivElement | null = null
   let engine: KnowledgeMapEngine
@@ -975,11 +983,11 @@ export async function mountMoneyMap(
     const windowNodes = recalculated
       ? raw.nodes.map((n) => windowFigures(n, yearLo, yearHi, adjustForInflation))
       : raw.nodes
-    const windowEdges = (recalculated
+    const windowEdges = filterMoneyEdges({ ...raw, edges: (recalculated
       ? raw.edges.map((e) => windowFigures(e, yearLo, yearHi, adjustForInflation))
       : raw.edges)
       .filter(inWindow)
-      .filter((e) => grantsOn || !isGrantEdge(e))
+      .filter((e) => grantsOn || !isGrantEdge(e)) }, { ...researchFilters, industry: activeGroup || undefined })
     const grantsByNode = new Map<string, GrantsBlock>()
     const contractsByNode = new Map<string, GrantsBlock>()
     for (const n of raw.nodes) {
@@ -995,10 +1003,10 @@ export async function mountMoneyMap(
     }
     const activeDonors = new Set(windowEdges.flatMap((e) => [e.source, e.target]))
     const visibleNodes = windowNodes.filter((n) => {
-      if (n.kind === 'grantor') return grantsOn
-      if (n.group === 'parties') return true
+      if (n.kind === 'grantor') return grantsOn && activeDonors.has(n.id)
+      if (n.group === 'parties') return windowEdges.length > 0 && (researchFilters.party ? n.id === researchFilters.party : activeDonors.has(n.id))
       if (activeGroup !== null && n.group !== activeGroup) return false
-      return !scrubbed || activeDonors.has(n.id)
+      return activeDonors.has(n.id)
     })
     const visibleIds = new Set(visibleNodes.map((n) => n.id))
     const visibleEdges = windowEdges
@@ -1017,10 +1025,12 @@ export async function mountMoneyMap(
     visibleSceneIds = visibleIds
     visibleSceneEdges = visibleEdges
     engine.setData(data)
+    syncUrlState()
+    opts.onViewChange?.({ ...raw, nodes: visibleNodes, edges: windowEdges.filter(e => visibleIds.has(e.source) && visibleIds.has(e.target)) }, { ...researchFilters, industry: activeGroup || '' }, { from: yearLo, to: yearHi, cpi: adjustForInflation })
     // The fit signature deliberately excludes the year window: refitting the
     // camera on every scrub step would turn the timeline into a fairground
     // ride. Filters and resizes refit; the scrub holds the view still.
-    const sig = `${data.aspect}|${activeGroup ?? '*'}`
+    const sig = `${data.aspect}|${activeGroup ?? '*'}|${JSON.stringify(researchFilters)}`
     if (sig !== fitSig) {
       const firstFit = fitSig === ''
       fitSig = sig
@@ -1962,6 +1972,7 @@ export async function mountMoneyMap(
   /** Present only existing ids and observed endpoint pairs from the visible data. */
   const resetSceneWindow = (scene?: MoneyScene) => {
     cancelReveal()
+    researchFilters = {}
     selectedId = null
     selectedEdge = null
     card.hidden = true
@@ -2040,6 +2051,25 @@ export async function mountMoneyMap(
   }
 
   return {
+    setFilters: (filters, route) => {
+      if (destroyed) return
+      cancelReveal()
+      guidedScene = false
+      selectedId = null
+      selectedEdge = null
+      card.hidden = true
+      releaseHost()
+      if (route) {
+        const read = (key: string, fallback: number) => /^\d{4}$/.test(route.get(key) || '') ? Math.max(yearMin, Math.min(yearMax, Number(route.get(key)))) : fallback
+        const from = read('from', yearMin), to = read('to', yearMax)
+        yearLo = Math.min(from, to); yearHi = Math.max(from, to)
+        yearsInUrl = route.has('from') || route.has('to')
+        adjustForInflation = route.get('cpi') === '1'
+        syncScrubControls()
+      }
+      researchFilters = { ...filters }
+      applyIsolate(filters.industry || null)
+    },
     presentScene,
     clearScene,
     pauseScene,

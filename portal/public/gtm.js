@@ -3,6 +3,7 @@
    security policy needs no 'unsafe-inline' for scripts: the only allowance is
    the googletagmanager.com origin. Container GTM-PNDM87LW. */
 (function (w, d, s, l, i) {
+  if (!['opax.com.au', 'www.opax.com.au'].includes(w.location.hostname)) return;
   w[l] = w[l] || [];
   w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
   const f = d.getElementsByTagName(s)[0];
