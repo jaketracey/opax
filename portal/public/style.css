@@ -3268,7 +3268,7 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 }
 
 #panel-search .search-result-heading .result-title { display: flex; align-items: center; }
-#panel-search .result-meta { margin-top: -4px; }
+#panel-search .result-meta { margin-top: 4px; }
 #panel-search .search-result-text.is-collapsed { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
 /* The fold's control: a quiet bronze pill with a chevron that turns, sitting
    on a hairline rise so the passage reads as folded paper. */
@@ -4744,3 +4744,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 @media(max-width:700px) {
   .agency-supplier-controls .search-sort-picker { flex:1 1 100%; width:100%; }
 }
+
+#panel-search .result-meta a.search-record-kind { color:var(--navy); text-decoration:underline; text-decoration-color:var(--line-strong); text-underline-offset:.2em; }
+#panel-search .result-meta a.search-record-kind:hover { color:var(--bronze-ink); text-decoration-color:currentColor; }

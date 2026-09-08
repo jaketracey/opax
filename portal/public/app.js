@@ -9228,6 +9228,13 @@ const FILTER_KIND_LABELS = {
   interest: "Declared interest", expense: "Parliamentary expenses", access: "Meeting or lobbying register",
   campaigner: "Campaigner or associated entity", report: "Research report",
 };
+function recordTypeHref(kind) {
+  const roots = { person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/discover', grant:'/money/grants', bill:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports' };
+  return roots[kind] || '/search?' + new URLSearchParams({kind});
+}
+function recordTypeLink(kind) {
+  return `<a class="search-record-kind" href="${esc(recordTypeHref(kind))}">${esc(FILTER_KIND_LABELS[kind] || kind)}</a>`;
+}
 const FILTER_MODE_LABELS = { hybrid: "Hybrid", semantic: "Semantic", keyword: "Keyword" };
 
 /**
@@ -9513,7 +9520,7 @@ function renderResults(results) {
       const li = document.createElement("li");
       if (r.href) {
         li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(r.title)}</a></h3>
-          <div class="result-meta"><span class="search-record-kind">${esc(FILTER_KIND_LABELS[r.kind] || r.kind)}</span>${r.source ? ` · ${esc(r.source)}` : ""}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}</div>
+          <div class="result-meta">${recordTypeLink(r.kind)}${r.source ? ` · ${esc(r.source)}` : ""}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}</div>
           <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(r.snippet, lastSearch.query)}</p>
           <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>`;
         return li;
@@ -9532,7 +9539,7 @@ function renderResults(results) {
       ].filter(Boolean).join('<span class="search-meta-separator" aria-hidden="true"> · </span>');
       const topics = [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => typeof t === "string" && t.trim()))];
       li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="/doc/${encodeURIComponent(r.slug)}">${esc(title)}</a></h3>
-        <div class="result-meta"><span class="search-record-kind">${esc(FILTER_KIND_LABELS[r.kind] || r.kind)}</span>${meta ? ` · ${meta}` : ""}</div>${text}
+        <div class="result-meta">${recordTypeLink(r.kind)}${meta ? ` · ${meta}` : ""}</div>${text}
         <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>
         ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a href="${esc(subjectHash("topic", topic))}">${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
       return li;
