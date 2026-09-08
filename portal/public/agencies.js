@@ -1,4 +1,4 @@
-import { json, lifecycle, coverageHTML, yearChart, contractHTML } from './suppliers.js?v=profiles-4';
+import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart } from './suppliers.js?v=profiles-5';
 import { procurementGraph } from './procurement-data.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = value => (Number(value) || 0).toLocaleString('en-AU');
@@ -116,6 +116,7 @@ function renderProfile(root, profile, meta, helpers, life) {
   }
   supplierQuery.addEventListener('input', () => { suppliersVisible = 20; suppliers(); });
   contractQuery.addEventListener('input', () => { contractsVisible = 15; contracts(); });
+  mountYearChart(root, life);
   suppliers(); contracts(); helpers.onCanonical?.(profile.id, profile.name); helpers.onTitle?.(`${profile.name} · Government agency`);
   mountProcurementPreview(root.querySelector('.agency-map'), profile, 'agency', life).catch(() => {});
 }

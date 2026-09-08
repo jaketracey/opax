@@ -4697,3 +4697,9 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .agency-suppliers .supplier-directory-row > span:first-child { min-width: 0; }
 .agency-suppliers a { overflow-wrap: anywhere; }
 .supplier-totals dd { overflow-wrap: anywhere; }
+
+.supplier-year-chart { position: relative; }
+.supplier-year-bar { cursor: pointer; outline: none; }
+.supplier-year-bar:is(:focus-visible, .is-active) .supplier-year-value-bar { fill: var(--navy); stroke: var(--bronze); stroke-width: 2; }
+.supplier-year-tooltip { position: absolute; z-index: 2; pointer-events: none; padding: .55rem .75rem; border-radius: 4px; background: var(--navy); color: #fff; box-shadow: 0 2px 8px #0002; font: 500 .8125rem/1.5 var(--sans); max-width: 100%; box-sizing: border-box; }
+.supplier-year-tooltip[hidden] { display: none; }

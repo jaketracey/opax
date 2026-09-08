@@ -17,6 +17,7 @@ function node() {
     setAttribute(key, value) { this.attributes[key] = value; },
     removeAttribute(key) { delete this.attributes[key]; },
     addEventListener(event, fn) { this.listeners[event] = fn; },
+    removeEventListener(event) { delete this.listeners[event]; },
     querySelector(selector) { if (!children.has(selector)) children.set(selector, node()); return children.get(selector); },
     querySelectorAll() { return []; }, focus() {},
   };

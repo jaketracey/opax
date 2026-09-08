@@ -95,7 +95,37 @@ export function yearChart(years, undated) {
   const max = Math.max(1, ...rows.map((row) => Number(row.total) || 0));
   const width = 640, height = 175, step = width / rows.length;
   const labelEvery = Math.max(1, Math.ceil(rows.length / 10));
-  return `<section class="supplier-section"><h3 class="subject-section-title">Contract value over time</h3><p class="supplier-section-note">Recorded value grouped by contract start year. Each bar is a year with available records.</p><div class="supplier-year-chart"><svg viewBox="0 0 640 210" role="img" aria-label="Contract value by start year. Exact values are available in the table below."><line x1="0" y1="175" x2="640" y2="175" class="supplier-chart-baseline"/>${rows.map((row, index) => { const barHeight = Math.max(0, Number(row.total) / max * (height - 20)); return `<g><title>${esc(row.year)}: ${currency(row.total)}, ${number(row.count)} ${Number(row.count) === 1 ? "contract" : "contracts"}</title><rect x="${(index * step + step * .15).toFixed(2)}" y="${(height - barHeight).toFixed(2)}" width="${(step * .7).toFixed(2)}" height="${barHeight.toFixed(2)}" class="supplier-bar-fill"/>${index % labelEvery === 0 || index === rows.length - 1 ? `<text x="${(index * step + step / 2).toFixed(2)}" y="198" text-anchor="middle">${esc(row.year)}</text>` : ""}</g>`; }).join("")}</svg></div><details class="supplier-chart-data"><summary>Read the yearly values</summary><table><caption>Recorded contracts by start year</caption><thead><tr><th scope="col">Year</th><th scope="col">Value</th><th scope="col">Contracts</th></tr></thead><tbody>${rows.map((row) => `<tr><th scope="row">${esc(row.year)}</th><td>${currency(row.total)}</td><td>${number(row.count)}</td></tr>`).join("")}</tbody></table></details>${Number(undated?.count) > 0 ? `<p class="fineprint">${number(undated.count)} contracts worth ${currency(undated.total)} have no recorded start year and are not shown in this chart.</p>` : ""}</section>`;
+  return `<section class="supplier-section"><h3 class="subject-section-title">Contract value over time</h3><p class="supplier-section-note">Recorded value grouped by contract start year. Each bar is a year with available records.</p><div class="supplier-year-chart"><svg viewBox="0 0 640 210" role="group" aria-label="Contract value by start year. Hover, tap or focus a bar for its value."><line x1="0" y1="175" x2="640" y2="175" class="supplier-chart-baseline"/>${rows.map((row, index) => { const barHeight = Math.max(0, Number(row.total) / max * (height - 20)); return `<g class="supplier-year-bar" tabindex="0" role="img" aria-label="${esc(row.year)}: ${currency(row.total)}, ${number(row.count)} ${Number(row.count) === 1 ? "contract" : "contracts"}" data-year-value="${esc(row.year)} · ${currency(row.total)} · ${number(row.count)} ${Number(row.count) === 1 ? "contract" : "contracts"}"><rect x="${(index * step).toFixed(2)}" y="0" width="${step.toFixed(2)}" height="210" fill="transparent"/><rect x="${(index * step + step * .15).toFixed(2)}" y="${(height - barHeight).toFixed(2)}" width="${(step * .7).toFixed(2)}" height="${barHeight.toFixed(2)}" class="supplier-bar-fill supplier-year-value-bar"/>${index % labelEvery === 0 || index === rows.length - 1 ? `<text x="${(index * step + step / 2).toFixed(2)}" y="198" text-anchor="middle">${esc(row.year)}</text>` : ""}</g>`; }).join("")}</svg><div class="supplier-year-tooltip" role="tooltip" hidden></div></div><details class="supplier-chart-data"><summary>Read the yearly values</summary><table><caption>Recorded contracts by start year</caption><thead><tr><th scope="col">Year</th><th scope="col">Value</th><th scope="col">Contracts</th></tr></thead><tbody>${rows.map((row) => `<tr><th scope="row">${esc(row.year)}</th><td>${currency(row.total)}</td><td>${number(row.count)}</td></tr>`).join("")}</tbody></table></details>${Number(undated?.count) > 0 ? `<p class="fineprint">${number(undated.count)} contracts worth ${currency(undated.total)} have no recorded start year and are not shown in this chart.</p>` : ""}</section>`;
+}
+
+
+export function mountYearChart(root, life) {
+  const chart = root.querySelector('.supplier-year-chart');
+  if (!chart) return;
+  const tooltip = chart.querySelector('.supplier-year-tooltip');
+  if (!tooltip) return;
+  let active = null;
+  const hide = () => { tooltip.hidden = true; active?.classList.remove('is-active'); active = null; };
+  const show = (bar) => {
+    if (!bar || !chart.contains(bar)) return;
+    hide(); active = bar; bar.classList.add('is-active');
+    tooltip.textContent = bar.dataset.yearValue;
+    tooltip.hidden = false;
+    const bounds = chart.getBoundingClientRect();
+    const mark = bar.querySelector('.supplier-year-value-bar').getBoundingClientRect();
+    const x = mark.left - bounds.left + mark.width / 2 - tooltip.offsetWidth / 2;
+    tooltip.style.left = `${Math.max(0, Math.min(bounds.width - tooltip.offsetWidth, x))}px`;
+    tooltip.style.top = `${Math.max(0, mark.top - bounds.top - tooltip.offsetHeight - 8)}px`;
+  };
+  const target = event => event.target.closest?.('.supplier-year-bar');
+  const over = event => { const bar = target(event); if (bar && bar !== active) show(bar); };
+  const leave = () => { if (!chart.contains(document.activeElement)) hide(); };
+  const focus = event => show(target(event));
+  const click = event => { const bar = target(event); if (bar) { bar.focus(); show(bar); } };
+  const key = event => { if (event.key === 'Escape') { hide(); event.stopPropagation(); } };
+  const handlers = { pointerover: over, pointerleave: leave, focusin: focus, focusout: hide, click, keydown: key };
+  for (const [event, fn] of Object.entries(handlers)) chart.addEventListener(event, fn);
+  life.cleanup(() => { for (const [event, fn] of Object.entries(handlers)) chart.removeEventListener(event, fn); });
 }
 
 export function contractHTML(contract) {
@@ -120,11 +150,12 @@ function renderProfile(root, profile, meta, helpers, life) {
     </div><aside class="supplier-context"><section><h3>Follow the connections</h3>${donorLinks.length ? `<p>Also in the recorded party funding data:</p><ul>${donorLinks.map((link) => `<li><a href="${esc(donorUrl(link.url))}">${esc(link.name)}</a>${link.method ? `<small>${esc(identityMethod(link.method))}</small>` : ""}</li>`).join("")}</ul><p class="fineprint">An identity link connects records. It does not establish that funding influenced a contract award.</p>` : '<p>No link to an available donor profile is recorded for this supplier.</p>'}<a href="/search?q=${encodeURIComponent(`"${profile.name}"`)}">Find mentions in parliament</a><p class="fineprint">Search results may refer to other organisations with similar names.</p><a class="supplier-directory-link" href="/subject/supplier">Browse all suppliers</a></section>
       <section><details><summary>Identity and coverage</summary><dl class="supplier-identity">${sourceUrl(profile.identity?.abn_url) ? `<dt>Business register</dt><dd><a href="${esc(sourceUrl(profile.identity.abn_url))}" target="_blank" rel="noopener noreferrer">Check the ABN record</a></dd>` : ""}${profile.identity?.legal_name ? `<dt>Legal name</dt><dd>${esc(profile.identity.legal_name)}</dd>` : ""}${profile.identity?.method ? `<dt>Records grouped by</dt><dd>${esc(identityMethod(profile.identity.method))}</dd>` : ""}${profile.identity?.status ? `<dt>ABN status</dt><dd>${esc(profile.identity.status === "ACT" ? "Active" : profile.identity.status === "CAN" ? "Cancelled" : profile.identity.status)}</dd>` : ""}</dl>${(profile.aliases || []).length > 1 ? `<details><summary>Names in the source records</summary><ul>${profile.aliases.map((name) => `<li>${esc(name)}</li>`).join("")}</ul></details>` : ""}<ul class="supplier-caveats">${(profile.caveats || []).map((caveat) => `<li>${esc(caveat)}</li>`).join("")}</ul>${coverageHTML(meta)}</details></section>
     </aside></div></div>`;
-  import('/agencies.js?v=agency-2').then(({ mountProcurementPreview }) => {
+  import('/agencies.js?v=agency-3').then(({ mountProcurementPreview }) => {
     if (life.alive()) return mountProcurementPreview(root.querySelector('.supplier-agency-map'), profile, 'supplier', life);
   }).catch(() => {
     if (life.alive()) root.querySelector('.supplier-agency-map').innerHTML = '<p>The map could not open. Agency relationships are listed above.</p>';
   });
+  mountYearChart(root, life);
   helpers.onCanonical?.(profile.id, profile.name);
   helpers.onTitle?.(`${profile.name} · Government supplier`);
   helpers.onMentions?.(profile.name, root.querySelector(".supplier-mentions"));
