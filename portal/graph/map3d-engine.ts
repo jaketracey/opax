@@ -1044,15 +1044,15 @@ export class KnowledgeMapEngine {
           opacity: 0.055,
           depthWrite: false,
         })
-        const cat = this.palette.cats[style.slot] ?? this.palette.accent
-        material.color.copy(cat)
+        material.color.set(style.colour)
+        const cat = material.color
         const mesh = new THREE.Mesh(this.territoryGeo, material)
         mesh.raycast = () => undefined
         mesh.renderOrder = -2
         this.territoryGroup.add(mesh)
         const caption = document.createElement('div')
         caption.className = 'rp-map3d-territory'
-        caption.style.color = this.palette.inks[style.slot] ?? '#5A616B'
+        caption.style.color = style.ink
         const groupLabel = this.overviewMode ? group.charAt(0).toUpperCase() + group.slice(1) : group.toUpperCase()
         const captionFull = `${groupLabel} · ${count}`
         caption.textContent = captionFull
@@ -1080,7 +1080,8 @@ export class KnowledgeMapEngine {
         for (const member of members) member.territory = territory
         this.territories.push(territory)
 
-        if (data.collapseGroups === false || group === data.centralGroup || count < HUB_MIN_MEMBERS) continue
+        // Public sources stay distinct: grants and contracts must never fold into one summed hub.
+        if (data.collapseGroups === false || group === data.centralGroup || members.some((member) => member.node.kind === 'grantor') || count < HUB_MIN_MEMBERS) continue
 
         const hubMaterial = new THREE.MeshStandardMaterial({
           roughness: 0.42,
