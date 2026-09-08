@@ -82,6 +82,10 @@ uv run python scripts/generate_reports.py                                       
 uv run python scripts/ask_harness.py                                               # 24 grounded questions against production
 ```
 
+Reports retrieve original records across the corpus, with date windows rather than a Hansard-only topic filter. Each report includes a dedicated non-speech evidence question. Generated summaries and bill registry cards are excluded; original bill text, explanatory memoranda and other primary records remain eligible. Speech counts and charts use the current topic-labelled speech catalog; the financial charts retain the separately audited `scripts/report_stats.json` snapshot.
+
+Set `REPORT_STRUCTURED_WRITER=codex` to use the installed Codex CLI for structured figures, party positions and introductions. Narratives still use the knowledge box’s configured writer. Run `uv run python scripts/validate_reports.py` before publishing to check citations against the live corpus.
+
 Environment variables are documented in `.env.example`. Never commit `.env` or `portal/.dev.vars`.
 
 ## Data sources

@@ -124,9 +124,9 @@ def validate_report(slug: str, report: dict, problems: list[str]) -> list[str]:
         problems.append(f"{slug}: version {version!r}, expected 2")
         return slugs
 
-    # v1 fields must survive, so the live page keeps working.
-    for field in ("title", "blurb", "generated_at", "key_moments", "sections", "stats"):
-        check(field in report, f"{slug}: v1 field {field!r} was dropped", problems)
+    # Shared report fields remain required; obsolete v1 prose is optional.
+    for field in ("title", "blurb", "generated_at", "key_moments", "stats"):
+        check(field in report, f"{slug}: field {field!r} was dropped", problems)
 
     moments = report.get("key_moments") or []
     check(6 <= len(moments) <= 8, f"{slug}: {len(moments)} key speeches, expected 6-8", problems)
@@ -216,6 +216,14 @@ def validate_report(slug: str, report: dict, problems: list[str]) -> list[str]:
         for row in rows:
             check(row.get("speaker") and (row.get("count") or 0) > 0,
                   f"{slug}: a {window} voice has no speaker or no count", problems)
+    if report.get("retrieval_scope") == "full-corpus":
+        check(report.get("parliamentary_metrics_scope") == "speech",
+              f"{slug}: parliamentary metrics lost their speech scope", problems)
+        check(any(source.get("kind") and source["kind"] != "speech" and source.get("cited")
+                  for section in sections for source in section.get("sources") or []),
+              f"{slug}: full-corpus report has no cited non-speech evidence", problems)
+        check(not any(s.startswith("bill-") for s in slugs),
+              f"{slug}: generated bill registry summaries used as original evidence", problems)
     return slugs
 
 

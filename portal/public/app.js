@@ -11093,7 +11093,9 @@ function reportSourceRow(s, num) {
 
   const where = document.createElement("p");
   where.className = "report-source-where";
-  const parliament = s.state ? PARLIAMENT_NAMES[s.state] || STATE_NAMES[s.state] || s.state : "";
+  const speech = !s.kind || s.kind === "speech";
+  const jurisdiction = s.state ? (speech ? PARLIAMENT_NAMES[s.state] : STATE_NAMES[s.state]) || STATE_NAMES[s.state] || s.state : "";
+  const parliament = [!speech ? FILTER_KIND_LABELS[s.kind] || s.kind.replaceAll("_", " ") : "", jurisdiction].filter(Boolean).join(" · ");
   if (!s.speaker && s.party) {
     // No 24px link where a 44px one will not fit: the party is stated, and the
     // record itself is one tap away.
@@ -11129,7 +11131,7 @@ function reportSourceRow(s, num) {
   const read = document.createElement("a");
   read.className = "report-source-read";
   read.href = `/doc/${s.slug}`;
-  read.textContent = "Read the speech";
+  read.textContent = speech ? "Read the speech" : "Read the record";
   body.appendChild(read);
 
   li.appendChild(body); // the portrait, when there is one, is already in place
@@ -11355,7 +11357,7 @@ function reportStatTiles(stats) {
       const a = document.createElement("a");
       a.href = `/doc/${s.slug}`;
       a.textContent = reportSourceLabel(s.source_title, { short: true })
-        || "Read the speech that said it";
+        || "Read the source record";
       if (s.source_title) a.title = s.source_title;
       src.appendChild(a);
       t.appendChild(src);
@@ -11397,7 +11399,7 @@ function reportPositions(positions, win) {
     const who = [p.speaker, fmtDate(p.date || "")].filter(Boolean).join(", ");
     const read = document.createElement("a");
     read.href = `/doc/${p.slug}`;
-    read.textContent = "read the speech";
+    read.textContent = p.kind && p.kind !== "speech" ? "read the record" : "read the speech";
     cite.append(who ? `${who} · ` : "", read);
     const earlier = win?.since && p.date && String(p.date) < String(win.since);
     if (earlier) cite.append(" · cited from earlier in the record");
@@ -11529,7 +11531,7 @@ function reportAllSources(report) {
   const det = document.createElement("details");
   det.className = "chat-sources report-sources report-all-sources";
   const sum = document.createElement("summary");
-  sum.textContent = `Every speech behind this report (${rows.length})`;
+  sum.textContent = `Every record behind this report (${rows.length})`;
   const ol = document.createElement("ol");
   ol.className = "report-source-list";
   det.append(sum, ol);
@@ -11864,7 +11866,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   const corpusTotalsHTML = (st) => {
     const don = st?.donations;
     if (!st) return "";
-    return `${tile((st.speech_count ?? 0).toLocaleString(), "speeches on the record")}
+    return `${tile((st.speech_count ?? 0).toLocaleString(), st.speech_scope === "topic-labelled-corpus" ? "labelled speeches on this topic" : "speeches on the record")}
       ${tile((st.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
       ${don ? tile(fmtMoney(don.total ?? 0), `donations: ${fmtIndustries(don.industries || [])}`) : ""}`;
   };
@@ -11896,7 +11898,7 @@ async function openReport(slug, sectionNum, manageFocus) {
       // count is not money and the part heading should not claim it is.
       $("report-stats").insertAdjacentHTML("afterbegin",
         `<h3 class="report-part-title" id="report-money-head" tabindex="-1">The money beside the words</h3>
-         <h4 class="report-sub-title report-corpus-title">How much record this reads</h4>
+         <h4 class="report-sub-title report-corpus-title">The parliamentary record</h4>
          <div class="tiles report-corpus-tiles">${corpusTotalsHTML(report.stats)}</div>`);
     } else {
       const figures = $("report-figures");

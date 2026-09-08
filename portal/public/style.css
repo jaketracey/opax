@@ -3487,8 +3487,9 @@ html[data-panel="chat"] footer { display: none; }
   font-variant-numeric: tabular-nums; cursor: pointer;
 }
 #panel-reports .ask-citation::before {
-  content: ""; position: absolute; left: 50%; top: 50%;
-  width: 44px; height: 44px; transform: translate(-50%, -50%);
+  /* Keep the touch halo inside the right edge when a citation ends a line. */
+  content: ""; position: absolute; right: 0; top: 50%;
+  width: 44px; height: 44px; transform: translateY(-50%);
 }
 #panel-reports .ask-citation:hover { color: var(--ink); }
 #panel-reports .ask-citation:focus-visible {
@@ -3650,6 +3651,7 @@ html[data-panel="chat"] footer { display: none; }
 /* ---- the figures --------------------------------------------------------- */
 
 .report-stat-tiles { margin-bottom: var(--space-5); }
+.report-stat > b { overflow-wrap: anywhere; hyphens: auto; }
 .report-stat .report-stat-label { color: var(--ink); font: 400 0.9375rem/1.5 var(--sans); }
 .report-stat .report-stat-basis {
   margin-top: 0.35rem; color: var(--ink-faint);
@@ -4840,3 +4842,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .money-area-nav,.money-workspace-toolbar {grid-template-columns:repeat(4,minmax(0,1fr))}
   .money-related-links {display:flex;justify-content:flex-end;gap:1.5rem}
 }
+
+/* Retrieved records can contain long source URLs; keep the report within its column. */
+#report-view .answer, #report-view .report-source-passage { overflow-wrap: anywhere; }
