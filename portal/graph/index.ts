@@ -1419,7 +1419,7 @@ export async function mountMoneyMap(
   }
   /** Keep the map independent of the page shell: it only describes the held flow. */
   const explain = (parent: HTMLElement, detail: Record<string, string>) => {
-    const button = el('button', 'mm-ask', parent)
+    const button = el('button', 'mm-ask mm-ask-quiet', parent)
     button.type = 'button'
     button.textContent = 'Explain this flow'
     button.addEventListener('click', () => {
@@ -1470,7 +1470,7 @@ export async function mountMoneyMap(
         const other = view.nodes.get(edge.source === node.id ? edge.target : edge.source)
         if (other) row(list, other.colour ?? null, other.label, edge.total, `${edge.count.toLocaleString()} contracts`, () => setSelection(other.id, { user: true }))
       }
-      if (node.profileUrl && /^\/subject\/(agency|supplier)\//.test(node.profileUrl)) trigger(card, node.profileUrl, 'Full profile', true)
+      if (node.profileUrl && /^\/subject\/(agency|supplier)\//.test(node.profileUrl)) trigger(card, node.profileUrl, 'Full profile')
       el('p', 'mm-card-fine', card).textContent = 'Recorded contract commitments, not verified payments. The map shows the largest relationships; the profile lists all available records.'
       return
     }
@@ -1563,15 +1563,15 @@ export async function mountMoneyMap(
       }
       if (!['individual', 'other', ''].includes(node.industry.toLowerCase())) {
         trigger(card, askUrl(node.industry.replace(/_/g, ' ')),
-          'What did parliament say about this industry?')
+          'What did parliament say about this industry?', true)
       }
       // Quote the suffix-stripped name: MPs say "Philip Morris", never
       // "Philip Morris Limited" - the full label finds nothing.
       trigger(card,
         `/search?q=${encodeURIComponent(`"${shortName(node.label)}"`)}`,
         `What was said about ${shortName(node.label)}?`, true)
-      if (node.id !== opts.subject) trigger(card, subjectUrl('donor', node.label), 'Full profile', true)
       explain(card, { kind: 'donor', from: node.label })
+      if (node.id !== opts.subject) trigger(card, subjectUrl('donor', node.label), 'Full profile')
     } else if (node.kind === 'grantor') {
       const contracts = node.flow === 'contracts'
       listTitle.textContent = contracts
@@ -1632,10 +1632,10 @@ export async function mountMoneyMap(
           `/ask?q=${
             encodeURIComponent(`What has ${node.label} said about ${industry}?`)
           }`,
-          `Ask what ${node.label} said about ${industry}`)
+          `Ask what ${node.label} said about ${industry}`, true)
       }
-      if (node.id !== opts.subject) trigger(card, subjectUrl('party', node.label), 'Full profile', true)
       explain(card, { kind: 'party', to: node.label })
+      if (node.id !== opts.subject) trigger(card, subjectUrl('party', node.label), 'Full profile')
     }
   }
 
