@@ -28,8 +28,10 @@ The current release removes payment routes, SDK dependencies, promotional copy a
 
 ## Verification
 
-Twelve automated tests cover single-use links, expiration, sessions, origins, login rate limiting, private list ownership/sharing, public profile privacy, moderation, disabled accounts and member MCP access. MCP tests exercise tool discovery, search/read citations, invalid arguments, bounded responses, hashed keys and revocation. External email is simulated in these tests.
+Thirteen automated tests cover single-use links, expiration, sessions, origins, login rate limiting, private list ownership/sharing, public profile privacy, moderation, disabled accounts and member MCP access. MCP tests exercise tool discovery, search/read citations, invalid arguments, bounded responses, hashed keys and revocation. External email is simulated in these tests.
 
 The mobile browser harness exercises sign-in, profile editing, reading lists, discussions and token creation/revocation in Chromium and WebKit at 390, 768 and 1280 pixels. TypeScript, syntax and asset-stamp checks are also required.
 
 Preview: `https://staging.opax.com.au/community`. Production activation still requires Cloudflare Email Sending authorization and a real magic-link delivery/sign-in check. The existing OAuth grant lacks the email permissions, and browser authorization is currently prevented by the locked desktop Mac. Keep the goal open until production is enabled and verified.
+
+The official MCP client passes an HTTP integration check: initialization, tool discovery, record reading and rejection after token revocation. Run `npm run test:community` from `portal` to reproduce the account and MCP checks. Both production database migrations have been applied successfully; account activation is still pending email authorization.

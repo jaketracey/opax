@@ -42,3 +42,12 @@ test('MCP tools return usable record citations and bound oversized responses',as
 });
 
 test('member status has no payment tier and former payment routes are unavailable',async()=>{const f=fixture(),a=await f.login();const status=await (await f.call('status','GET',undefined,a.cookie)).json();assert.equal('supporter' in status,false);assert.equal('contribution' in status,false);assert.equal((await f.call('billing/checkout','POST',{},a.cookie)).status,404);assert.equal((await f.call('keys','POST',{name:'My assistant'},a.cookie)).status,201);f.db.close()});
+
+test('official MCP client connects over HTTP and reads records with a member token',async()=>{
+ const {createServer}=await import('node:http');const {Client}=await import('@modelcontextprotocol/sdk/client/index.js');const {StreamableHTTPClientTransport}=await import('@modelcontextprotocol/sdk/client/streamableHttp.js');
+ const f=fixture(),a=await f.login();const {token,id}=await (await f.call('keys','POST',{name:'HTTP research client'},a.cookie)).json();
+ const server=createServer(async(req,res)=>{try{const chunks=[];for await(const chunk of req)chunks.push(chunk);const input=new Request('http://127.0.0.1/mcp',{method:req.method,headers:req.headers,body:['GET','HEAD'].includes(req.method)?undefined:Buffer.concat(chunks)});const response=await communityMcp(input,f.env,async path=>Response.json({slug:path.split('/').pop(),text:'A public source record.'}));res.writeHead(response.status,Object.fromEntries(response.headers));res.end(Buffer.from(await response.arrayBuffer()))}catch{res.writeHead(500);res.end()}});
+ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const client=new Client({name:'Opax integration check',version:'1.0.0'});
+ try{const transport=new StreamableHTTPClientTransport(new URL('http://127.0.0.1:'+server.address().port+'/mcp'),{requestInit:{headers:{Authorization:'Bearer '+token}}});await client.connect(transport);assert.equal((await client.listTools()).tools.length,4);const record=await client.callTool({name:'read_record',arguments:{slug:'speech-931754'}});assert.equal(record.isError,false);assert.equal(JSON.parse(record.content[0].text).opax_url,'https://opax.test/doc/speech-931754');await f.call('keys/'+id,'DELETE',undefined,a.cookie);await assert.rejects(()=>client.listTools());}
+ finally{await client.close();server.closeAllConnections();await new Promise(resolve=>server.close(resolve));f.db.close()}
+});
