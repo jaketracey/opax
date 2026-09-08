@@ -88,5 +88,52 @@
       "SA Hansard refresh blocked by source HTTP 403; stored coverage ends 2024-11-12.",
       "OpenAustralia has not yet supplied the 7-8 September sitting records; stored federal Hansard ends 2026-08-20."
     ]
+  },
+  "enrichment": {
+    "generated_at": "2026-09-08T09:21:53.082961+00:00",
+    "complete": true,
+    "source_records": {
+      "speeches": 1310477,
+      "ext_press_releases": 21234,
+      "government_grants": 230007
+    },
+    "processed_records": {
+      "ext_press_releases": 21234,
+      "speeches": 1310477,
+      "government_grants": 230007
+    },
+    "relationships": {
+      "delivery_postcode_overlaps": 1928,
+      "grant_postcode_overlaps": 254751,
+      "grant_program": 206206,
+      "identifies": 325738,
+      "mentions": 1926133,
+      "mentions_electorate": 65187,
+      "recipient_address_overlaps": 9859,
+      "recorded_place": 213821,
+      "registered_address_overlaps": 202632,
+      "same_identity_candidate": 3005,
+      "speaker_represents": 821700
+    },
+    "programme_links_complete": true,
+    "identity_review_complete": true,
+    "additional_mentions_complete": true,
+    "additional_processed_records": {
+      "ext_press_releases": 21234,
+      "speeches": 1310477
+    },
+    "entities_with_connections": 19481,
+    "rejected_candidate_record_matches": 668419,
+    "published_record_matches": 1195578,
+    "identity_candidates": 3005,
+    "identity_decisions": {
+      "accepted": 1230,
+      "unresolved": 1775
+    },
+    "quarantined_identities": 11863,
+    "method": "Exact unambiguous recorded names and structured source locations. Exact full-name identity decisions retain ABN provenance; unresolved candidates are unpublished.",
+    "coverage_note": "Collected source corpus; coverage differs from searchable records. Postcode overlaps are not precise locations.",
+    "stats_url": "/evidence/stats.json",
+    "browse_url": "/connections.html"
   }
 }

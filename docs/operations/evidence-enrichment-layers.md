@@ -57,3 +57,10 @@ Two bounded semantic reviews checked the top 300 organisation entries (900 excer
 The first preview source audit verified 38,999 excerpts and 69 postcode links. The larger partial snapshot verified 85,885 excerpts and 9,760 postcode links without errors. These are previews, not publication totals. `scripts/audit_evidence_export.py` checks every exported excerpt against source fields/text positions and hashes, totals and directory/shard identity sets. Final export must pass it again.
 
 Additional mentions scan has finished; primary scan has passed 1.30m speeches as of 09:21 UTC. Baseline production Worker before this release is `c63368c1-d817-4022-85ae-fc3be6c6fdda`. No release made yet. Source stats UI separates collected corpus enrichment from live searchable coverage.
+
+
+## Final export
+
+Both full scans completed. Final desktop export: `/home/jake/.cache/autoresearch/evidence-final-20260908`, generated with no incomplete override. It is now copied into `portal/public/evidence` and recorded separately in `corpus.json`. Coverage: 1,310,477 speeches, 21,234 releases, 230,007 grants. Published: 1,195,578 entity/record connections, 19,481 entries; 668,419 candidate record matches withheld. Exact identity links: 1,230 accepted, 1,775 unresolved, 11,863 conflicting identities quarantined.
+
+Final source audit passed every one of 109,533 exported excerpts and 13,081 address links, with matching directory/totals and no broken related-entry IDs. Audit log: `/home/jake/.cache/autoresearch/evidence-final-20260908-audit.log`. Independent code review found no release blockers. Staging deployment and browser verification in progress; production not yet updated.
