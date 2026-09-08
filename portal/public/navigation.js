@@ -44,7 +44,7 @@
   };
   const esc = s => String(s).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');
   function moneyNav(path, jur) {
-    return `<nav class="area-nav" aria-label="Money">${money.map(([href,label]) => `<a href="${href}${jur && jur !== 'federal' && href !== '/discover' ? '?jur='+encodeURIComponent(jur) : ''}"${href===path?' aria-current="page"':''}>${label}</a>`).join('')}</nav>`;
+    return `<nav class="area-nav money-area-nav" aria-label="Money">${money.map(([href,label]) => `<a href="${href}${jur && jur !== 'federal' && href !== '/discover' ? '?jur='+encodeURIComponent(jur) : ''}"${href===path?' aria-current="page"':''}>${label}</a>`).join('')}</nav>`;
   }
   globalThis.OpaxNavigation = { sections, money, active, moneyNav };
   if (typeof document === 'undefined') return;
