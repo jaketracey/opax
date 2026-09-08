@@ -1391,10 +1391,11 @@ async function openAgencyPage(name, params, manageFocus) {
   body.classList.remove("subject-person");
   body.innerHTML = '<p role="status">Loading agencies…</p>';
   try {
-    const module = await import("/agencies.js?v=search-all-1");
+    const module = await import("/agencies.js?v=sort-1");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
+      mountSort: (root, onChange) => mountSearchSort(root, onChange, "Sort suppliers"),
       onTitle(title) {
         if (generation !== supplierPageGeneration) return;
         document.title = `${title} · OPAX`;
@@ -9019,7 +9020,7 @@ function fillMeter(boxId, textId, barId) {
 
 // --- search / workbench -----------------------------------------------------
 
-function mountSearchSort(root, onChange) {
+function mountSearchSort(root, onChange, label = "Sort matches") {
   const input = root.querySelector('input');
   const trigger = root.querySelector('[aria-haspopup]');
   const menu = root.querySelector('[role="menu"]');
@@ -9033,7 +9034,7 @@ function mountSearchSort(root, onChange) {
     const selected = options.find(option => option.dataset.value === value) || options[0];
     input.value = selected.dataset.value;
     trigger.querySelector('.search-sort-label').textContent = selected.querySelector('strong').textContent;
-    trigger.setAttribute('aria-label', `Sort matches: ${selected.querySelector('strong').textContent}`);
+    trigger.setAttribute('aria-label', `${label}: ${selected.querySelector('strong').textContent}`);
     for (const option of options) option.setAttribute('aria-checked', String(option === selected));
     close();
   }
@@ -9076,10 +9077,11 @@ function mountSearchSort(root, onChange) {
       if (match) { event.preventDefault(); match.focus(); }
     }
   });
-  document.addEventListener('pointerdown', event => { if (!root.contains(event.target)) close(); });
+  const outside = event => { if (!root.contains(event.target)) close(); };
+  document.addEventListener('pointerdown', outside);
   root.addEventListener('focusout', event => { if (!root.contains(event.relatedTarget)) close(); });
   set(input.value);
-  return { set, close };
+  return { set, close, destroy() { close(); document.removeEventListener('pointerdown', outside); } };
 }
 const searchSortPicker = mountSearchSort($("search-sort-picker"), () => {
   $("search-sort").dispatchEvent(new Event("change"));

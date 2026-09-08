@@ -4455,7 +4455,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 /* Mobile and tablet controls share a comfortable text size and tap area.
    A 16px field also avoids Safari zooming the page when it receives focus. */
 @media (max-width: 1000px), (pointer: coarse) {
-  #panel-search .search-sort-trigger,
+  .search-sort-picker .search-sort-trigger,
   .discovery-browser > input,
   .discovery-list-controls select,
   .supplier-controls input,
@@ -4717,21 +4717,30 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 
 /* Search sorting shares the navy, paper and bronze of the record toolbar. */
 .search-sort-picker { position:relative; display:inline-flex; }
-#panel-search .search-sort-trigger { min-width:180px; justify-content:flex-start; gap:.6rem; }
+.search-sort-picker .search-sort-trigger { min-width:180px; justify-content:flex-start; gap:.6rem; }
 .search-sort-chevron { width:16px; height:16px; margin-left:auto; }
 .search-sort-trigger[aria-expanded="true"] { border-color:var(--navy); }
 .search-sort-menu { position:absolute; z-index:40; top:calc(100% + 8px); right:0; width:300px; max-width:calc(100vw - 32px); padding:.4rem; background:#fff; border:1px solid var(--line); border-radius:8px; box-shadow:0 10px 30px #152c4026; max-height:min(480px,65dvh); overflow-y:auto; }
 .search-sort-menu[hidden] { display:none; }
 .search-sort-menu.opens-up { top:auto; bottom:calc(100% + 8px); }
-#panel-search .search-sort-menu button { display:flex; align-items:center; justify-content:space-between; gap:1rem; width:100%; min-height:52px; border:0; border-radius:4px; padding:.65rem .75rem; text-align:left; background:transparent; color:var(--navy); font:400 .8rem/1.4 var(--sans); cursor:pointer; }
+.search-sort-picker .search-sort-menu button { display:flex; align-items:center; justify-content:space-between; gap:1rem; width:100%; min-height:52px; border:0; border-radius:4px; padding:.65rem .75rem; text-align:left; background:transparent; color:var(--navy); font:400 .8rem/1.4 var(--sans); cursor:pointer; }
 .search-sort-menu strong { display:block; font-weight:650; }
 .search-sort-menu small { display:block; margin-top:.15rem; color:var(--ink-soft); font-size:.7rem; }
-#panel-search .search-sort-menu button:is(:hover,:focus-visible,[aria-checked="true"]) { background:#edf2f5; }
-#panel-search .search-sort-menu button:focus-visible { outline:2px solid var(--bronze); outline-offset:-2px; }
+.search-sort-picker .search-sort-menu button:is(:hover,:focus-visible,[aria-checked="true"]) { background:#edf2f5; }
+.search-sort-picker .search-sort-menu button:focus-visible { outline:2px solid var(--bronze); outline-offset:-2px; }
 .search-sort-check { color:var(--bronze); font-size:1rem; visibility:hidden; }
 [aria-checked="true"] > .search-sort-check { visibility:visible; }
 .search-sort-menu p { margin:.35rem .75rem .3rem; padding-top:.55rem; border-top:1px solid var(--line); color:var(--ink-soft); font:400 .65rem/1.5 var(--sans); }
 @media(max-width:700px) {
-  #panel-search .search-sort-picker, #panel-search .search-sort-trigger { width:100%; min-width:0; }
+  #panel-search .search-sort-picker, .search-sort-picker .search-sort-trigger { width:100%; min-width:0; }
   .search-sort-menu { width:max(100%,280px); }
+}
+
+.mm-root .mm-card .mm-ask + .mm-card-fine { margin-top:12px; }
+.agency-supplier-controls { align-items:flex-end; }
+.agency-supplier-controls > label { flex:1 1 240px; }
+.agency-supplier-controls .search-sort-picker { flex:0 0 auto; }
+.agency-supplier-controls .search-sort-trigger { min-height:44px; }
+@media(max-width:700px) {
+  .agency-supplier-controls .search-sort-picker { flex:1 1 100%; width:100%; }
 }

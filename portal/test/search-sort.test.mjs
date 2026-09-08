@@ -24,3 +24,8 @@ test('equal values break ties consistently and aggregate years are sortable',()=
  assert.ok(compareSearchResults({date:'2020',score:1,slug:'a'},{sort_date:'2020',score:1,slug:'b'},'oldest')<0);
  assert.ok(compareSearchResults({sort_date:'2019'},{date:'2025-01-01'},'oldest')<0);
 });
+test('title order uses the visible subject, not speaker metadata',()=>{
+ const a={title:'Zoe Example — Budget — 2025-01-01',speaker:'Zoe Example',date:'2025-01-01'};
+ const b={title:'Aaron Example — Water — 2025-01-01',speaker:'Aaron Example',date:'2025-01-01'};
+ assert.ok(compareSearchResults(a,b,'title_asc')<0);
+});
