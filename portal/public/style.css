@@ -4151,13 +4151,9 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .stats-live-table .stat-cell, .stats-live-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
 
 /* Discovery: compare an agency's suppliers at a glance. */
-.discovery-intro { max-width:850px; margin-bottom:var(--space-5); }
-.discovery-intro h1 { color:var(--navy); font:700 clamp(1.85rem,4vw,2.8rem)/1.25 var(--serif); margin:0 0 var(--space-4); }
-.discovery-intro p { color:var(--ink-soft); font-size:1rem; line-height:1.65; margin:0; }
-.discovery-tabs { display:flex; flex-wrap:wrap; gap:var(--space-2); border-bottom:1px solid var(--line); margin-bottom:var(--space-5); }
-.discovery-tabs button { background:none; border:0; border-bottom:3px solid transparent; padding:.9rem 1rem; cursor:pointer; font:600 .9rem var(--sans); color:var(--ink-soft); }
-.discovery-tabs button[aria-pressed="true"] { color:var(--navy); border-bottom-color:var(--bronze); }
-.discovery-tabs button:hover { background:var(--paper-sunken); }
+.discovery-view-control { display:flex; align-items:center; gap:.75rem; margin:0 0 var(--space-5); }
+.discovery-view-control label { font-size:.875rem; font-weight:600; color:var(--ink-soft); }
+.discovery-view-control select { min-height:44px; max-width:100%; padding:.65rem 2rem .65rem .8rem; border:1px solid var(--line-strong); border-radius:6px; background:var(--paper-raised); color:var(--ink); font:600 .875rem var(--sans); }
 .discovery-workspace { display:grid; grid-template-columns:minmax(250px,320px) minmax(0,1fr); gap:var(--space-6); align-items:start; }
 .discovery-browser > label { display:block; font-size:.875rem; font-weight:600; margin-bottom:var(--space-3); }
 .discovery-browser > input { width:100%; padding:.8rem; border:1px solid var(--line-strong); border-radius:6px; background:var(--paper-raised); font:.9rem var(--sans); }
@@ -4228,15 +4224,11 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
  .discovery-workspace { display:flex; flex-direction:column; }
  .discovery-browser,.discovery-detail { width:100%; }
  .discovery-detail-card { padding:var(--space-4); }
- .discovery-tabs { flex-wrap:nowrap; overflow-x:auto; scrollbar-width:thin; }
- .discovery-tabs button { flex:0 0 auto; white-space:nowrap; }
  .discovery-detail { position:static; }
  #discover-results { display:flex; gap:.5rem; overflow-x:auto; padding:.3rem .2rem .7rem; scroll-snap-type:x proximity; }
  .discovery-choice { flex:0 0 220px; scroll-snap-align:start; border-color:var(--line); margin:0; }
  .discovery-more { flex:0 0 90px; }
  .discovery-list-note { margin-bottom:.5rem; }
- .discovery-tabs { gap:0; margin-bottom:var(--space-5); }
- .discovery-tabs button { padding:.8rem .65rem; font-size:.8rem; }
  .discovery-takeaway { margin-bottom:var(--space-5); }
  .discovery-flows { gap:.5rem; }
  .discovery-flows > div { padding:.8rem; }
@@ -4621,7 +4613,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .home-parliaments #front-statemap { max-width: 600px; height: 330px; margin: auto; }
 .home-map-industries.map-chips { margin-top: .75rem; }
 .drawer-primary { padding: 1rem; border-bottom: 1px solid var(--line); font-size: 1.05rem; font-weight: 650; }
-.money-heading h1 { font: 700 clamp(2rem,4vw,3rem)/1.2 var(--serif); margin: .5rem 0 1rem; }
 .research-filters { border: 1px solid var(--line); border-radius: 6px; padding: .8rem 1rem; margin: 1rem 0; }
 .research-filters summary { cursor: pointer; font-weight: 650; color: var(--navy); min-height: 32px; }
 .research-controls { display: grid; grid-template-columns: 1.5fr repeat(4,1fr) auto; gap: .8rem; align-items: end; margin: .8rem 0; }
@@ -4663,7 +4654,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 @media(max-width:700px) { .home-map-invite .home-map-open { width: 100%; justify-content: center; margin-left: 0; } }
 
 /* The map leads. Research controls are opened only when needed. */
-#panel-money .money-heading h1 { font-size: 1.6rem; margin: .25rem 0 1rem; }
 .money-workspace-toolbar { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin: .5rem 0 1rem; z-index: 12; }
 #money-research { display: contents; }
 .money-workspace-toolbar select, .money-workspace-toolbar > details > summary, .research-filters > summary, .money-workspace-toolbar > .action-btn { font: 600 .85rem/1.3 var(--sans); min-height: 42px; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); color: var(--navy); padding: .65rem .85rem; }
