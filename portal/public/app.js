@@ -8519,6 +8519,7 @@ async function runAsk(question) {
     }
     $("ask-stamp").textContent =
       `Viewed ${fmtDate(localISODate())}` +
+      (data.scope?.party ? ` · Records indexed under ${data.scope.party}` : "") +
       (corpusVersion() !== "unversioned" ? ` · corpus v${corpusVersion()}` : "") +
       ((askFilterSummary(askFilters()) || (speakerFilter ? speakerFilter : ""))
         ? ` · filtered: ${askFilterSummary(askFilters()) || `${speakerFilter}'s speeches`}` : "");

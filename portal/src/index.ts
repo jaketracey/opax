@@ -14,6 +14,7 @@
  */
 
 import { ASK_PIPELINE_VERSION, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, FootnoteStream, normaliseFootnotes, originalContext, type AugmentedContext } from './ask-evidence'
+import { resolveAskScope } from './ask-scope'
 import { proxyPostHog } from './posthog'
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
 import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, type AskRecords } from './ask-records'
@@ -698,23 +699,26 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
     user:
       `${provenance}Passages from the record:\n{context}\n\n` +
       'Question: {question}\n\n' +
+      (party ? `This retrieval is restricted to records indexed under ${party}. A combined debate can still contain other parties' speakers. Unless the passages explicitly establish the speaker's affiliation, frame the answer as evidence in records indexed under ${party}, not as verified statements by ${party} MPs. Do not present a passage explicitly speaking for a different party as this group's position. ` : '') +
       'Instructions: Answer from whichever passages address the question, quoting or closely paraphrasing them. ' +
       'Ignore passages that are off-topic; answer from the ones that apply even if only a few do or they address it only in part. If some passages mention the subject only briefly, report what they say and note that the record is limited. ' +
       'Begin with the answer itself. Never open with a preamble such as "Based on the provided context", "According to the passages" or "The context shows": the reader knows the answer comes from the record. ' +
       FOOTNOTE_INSTRUCTIONS +
-      'Use source metadata for attribution, not as evidence of a claim. Do not explain how the passages are numbered, ordered or provided. ' +
+      'Party labels identify the indexing scope of a record, not the affiliation of every speaker in a combined debate. Do not call an unnamed speaker an Independent, Labor, Liberal or other party MP merely from the record label. When attribution is not explicit in the passage, describe it as a passage in records indexed under that group. ' +
+      'Do not explain how the passages are numbered, ordered or provided. ' +
       // "Donor" on this site is a political donor. Asked to count blood donors
       // the model once listed OAM recipients it found in the passages; asked
       // to count political donors it cannot, and should say where that lives.
       'On this site "donor", "donation" and "gave" mean money disclosed to electoral commissions by political donors, not blood or organ donation, unless the question says otherwise. ' +
       (records.coverage ? `Published-record coverage: ${records.coverage} ` : '') +
+      'A ranked retrieval is not an exhaustive search of parliament. Never claim a person or group made no statements merely because none appeared in these results. If the requested group is absent, say the retrieved selection does not establish its position. ' +
       'Only if NO passage mentions the subject at all, reply exactly: The record retrieved for this question does not discuss it.',
   }
   return body
 }
 
 /** The portal's answer payload: the same shape from the sync and streamed paths. */
-function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }): { answer: string; citations: Record<string, unknown>; sources: unknown[] } {
+function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: { party: string; kind?: string }): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: { party: string; kind?: string } } {
   const resources = Object.fromEntries(Object.entries(answer.retrieval_results?.resources ?? {})
     .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? '')))
   const knownContexts = new Set<string>(records.records.map((_, i) => `USER_CONTEXT_${i}`))
@@ -795,6 +799,7 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
 
   return {
     answer: normalised.answer,
+    ...(scope ? { scope } : {}),
     citations,
     sources: [...recordSources(records.records, citations), ...sources],
   }
@@ -903,7 +908,8 @@ function replayCachedAsk(hit: Response, ctx: ExecutionContext): Response {
 }
 
 async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-  const input = ((await request.json().catch(() => ({}))) ?? {}) as AskInput
+  const rawInput = ((await request.json().catch(() => ({}))) ?? {}) as AskInput
+  const { input, scope } = resolveAskScope(rawInput)
   if (!input.question?.trim()) return json({ error: 'question is required' }, 400)
 
   const url = new URL(request.url)
@@ -930,7 +936,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const store = (payload: AskPayload): void => {
     if (cacheKey && cacheableAnswer(payload)) cacheStore(ctx, cacheKey, json(payload), ASK_CACHE_TTL)
   }
-  if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status, records })
+  if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status, records, scope })
 
   const askOnce = async (b: Record<string, unknown>, timeoutMs: number): Promise<AskAnswer | Response> => {
     try {
@@ -950,10 +956,10 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     const again = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
     if (!(again instanceof Response) && !isRefusal(again)) answer = again
   }
-  let payload = askPayload(answer, records)
+  let payload = askPayload(answer, records, scope)
   if (!isRefusal(answer) && payload.sources.length && !Object.keys(payload.citations).length) {
     const fallback = await askOnce(legacyCitationsAsk(body), ASK_SYNC_TIMEOUT_MS)
-    if (!(fallback instanceof Response) && !isRefusal(fallback)) payload = askPayload(fallback, records)
+    if (!(fallback instanceof Response) && !isRefusal(fallback)) payload = askPayload(fallback, records, scope)
   }
   store(payload)
   return withCacheStatus(json(payload), status, false)
@@ -1175,7 +1181,7 @@ function apiAskStream(
   body: Record<string, unknown>,
   env: Env,
   ctx: ExecutionContext,
-  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus; records: AskRecords },
+  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus; records: AskRecords; scope?: { party: string; kind?: string } },
 ): Response {
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
   const writer = writable.getWriter()
@@ -1218,12 +1224,12 @@ function apiAskStream(
           const again = await streamAskOnce(env, body, send, upstream.signal)
           if (!isRefusal(again)) result = again
         }
-        let payload = askPayload(result, opts.records)
+        let payload = askPayload(result, opts.records, opts.scope)
         if (!clientGone && !isRefusal(result) && payload.sources.length && !Object.keys(payload.citations).length) {
           await send('retry', { reason: 'citations' })
           try {
             const fallback = await streamAskGuarded(env, legacyCitationsAsk(body), send, upstream.signal, ASK_STALL_MS)
-            if (!isRefusal(fallback)) payload = askPayload(fallback, opts.records)
+            if (!isRefusal(fallback)) payload = askPayload(fallback, opts.records, opts.scope)
           } catch {
             // Keep the completed answer as retrieved-only if citation recovery fails.
           }
