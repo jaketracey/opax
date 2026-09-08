@@ -21,8 +21,9 @@ export async function mountProcurementPreview(root, profile, kind, life) {
     const { mountMoneyMap } = await import('/money-map.js?v=agency-2');
     if (!life.alive()) return;
     const graph = procurementGraph(profile, kind);
+    if (!graph.edges.length) { root.innerHTML = '<p>No relationships with positive recorded contract value are available for the map.</p>'; return; }
     root.textContent = '';
-    const handle = await mountMoneyMap(root, graph, { focus: `${kind}:${profile.id}`, subject: `${kind}:${profile.id}`, chrome: 'mini', reveal: false, openCard: false });
+    const handle = await mountMoneyMap(root, graph, { subject: `${kind}:${profile.id}`, chrome: 'mini', reveal: false, openCard: false });
     if (!life.alive()) { handle.destroy(); return; }
     life.cleanup(() => handle.destroy());
     handle.fit(false);
