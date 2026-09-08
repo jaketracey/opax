@@ -23,3 +23,7 @@ The first 200-record pilot extracted 1,121 mentions (8 program mentions) and sur
 Eight regression tests cover ABN checksums, conflicting identities, ambiguous aliases, source offsets, sentence boundaries, generic labels, duplicate evidence and split-postcode location roles. The second 200-record pilot is running in `/home/jake/.cache/autoresearch/evidence-layers-v2-pilot.sqlite` on desktop (local process session 93894). Do not publish pilot outputs as full-corpus results.
 
 Remaining: audit second pilot and alias conflicts; scan all records; add place coverage beyond existing postcode mappings; review supplier identity candidates using Codex; expose evidence-backed profiles/map links; update published corpus stats; verify production and full coverage. The goal remains incomplete.
+
+Second pilot completed: 244 exact organisation/program mentions in 200 records; 3,005 review-only identity candidates; 11,863 conflicting source names quarantined. Structured-location build: 1,928 grant delivery postcode overlaps; 9,859 recipient address overlaps; 202,632 registered-address overlaps. These overlap counts are edges and may include multiple electorates per address.
+
+Full extraction launched on desktop as PID 918738, output `/home/jake/.cache/autoresearch/evidence-layers-full.sqlite`, log `/home/jake/.cache/autoresearch/evidence-layers-full.log`. Verify the PID/process and SQLite progress on continuation; do not infer completion from the log or restart merely because observation expires.
