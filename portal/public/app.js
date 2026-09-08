@@ -4730,6 +4730,15 @@ async function openSubject(kind, name, manageFocus) {
       `<p class="fineprint"><a href="/subject/supplier?donor=${encodeURIComponent(node.id)}">Explore their supplier records →</a></p>`);
     sections.insertAdjacentHTML("beforeend",
       `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
+    if (!isParty) {
+      const evidenceSlot = document.createElement('section');
+      evidenceSlot.hidden = true;
+      sections.appendChild(evidenceSlot);
+      import('/evidence.js').then(({mountEvidence}) => {
+        if (currentSubjectKey === key && evidenceSlot.isConnected)
+          return mountEvidence(evidenceSlot, {name: node.label}, {alive: () => currentSubjectKey === key && evidenceSlot.isConnected});
+      }).catch(() => {});
+    }
     if (!isParty) renderDonorInterests(node.label, sections);
     if (!isParty) renderDonorStateMoney(node.label, sections);
     if (isParty) {

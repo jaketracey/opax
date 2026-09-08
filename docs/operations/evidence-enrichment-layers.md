@@ -27,3 +27,13 @@ Remaining: audit second pilot and alias conflicts; scan all records; add place c
 Second pilot completed: 244 exact organisation/program mentions in 200 records; 3,005 review-only identity candidates; 11,863 conflicting source names quarantined. Structured-location build: 1,928 grant delivery postcode overlaps; 9,859 recipient address overlaps; 202,632 registered-address overlaps. These overlap counts are edges and may include multiple electorates per address.
 
 Full extraction launched on desktop as PID 918738, output `/home/jake/.cache/autoresearch/evidence-layers-full.sqlite`, log `/home/jake/.cache/autoresearch/evidence-layers-full.log`. Verify the PID/process and SQLite progress on continuation; do not infer completion from the log or restart merely because observation expires.
+
+## Profile and map integration (local, not shipped)
+
+Added a reusable evidence panel for supplier and donor profiles, an on-demand source-excerpt panel on Money Map donor cards, and `/connections.html` for searching organisations, programs and electorates. The exporter writes hashed lookup/shard files so profile pages do not download the whole directory. ABN-based lookups also require the profile name to map to that identity.
+
+Publication gates now reject generic aliases and loose aliases lacking canonical-name equivalence (e.g. “our community”, “the farm”, and “Australian Public Service” for the Commission). Pilot export: 77 entities, 111 entity-record matches, 80 candidate record matches withheld. Export refuses incomplete corpus runs unless explicitly invoked for preview. Preview assets remain on desktop under `/home/jake/.cache/autoresearch/evidence-preview`; they are NOT in public assets.
+
+Validation: 10 Python enrichment/export tests and 15 UI/router tests pass. Map bundles rebuild. Graph TypeScript checking reports eight existing undefined-Vector3 errors in `graph/explain.ts`; the file is byte-identical to origin/main (verified with cmp), and no new errors were reported in changed files. Full graph check remains unresolved for release.
+
+Next: verify PID 918738 and extraction progress; inspect a broader sample through the publication gates; finish supplier candidate decisions and place coverage; render the new UI at mobile/tablet sizes; export full completed data, refresh corpus stats, PR/release and production verification. No completion claim yet.

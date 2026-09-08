@@ -3,12 +3,22 @@ import importlib.util
 from pathlib import Path
 import tempfile
 import sqlite3
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'scripts'))
+from evidence_quality import publishable_alias
 import unittest
 
 spec=importlib.util.spec_from_file_location('layers',Path(__file__).resolve().parents[2]/'scripts/build_evidence_layers.py')
 m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 
 class EvidenceLayersTest(unittest.TestCase):
+    def test_common_phrases_and_loose_aliases_are_not_published(self):
+        self.assertFalse(publishable_alias('our community','Our Community Pty Ltd'))
+        self.assertFalse(publishable_alias('The Farm','The Farm'))
+        self.assertFalse(publishable_alias('Australian Public Service','Australian Public Service Commission'))
+        self.assertTrue(publishable_alias('Reserve Bank of Australia','Reserve Bank of Australia'))
+        self.assertTrue(publishable_alias('Acme Holdings','Acme Holdings Pty Ltd'))
+
     def test_mismatched_legal_identity_is_quarantined(self):
         self.assertFalse(m.compatible_names('Construction Control Interiors Pty Ltd',
             'DEPARTMENT OF CLIMATE CHANGE AND ENERGY EFFICIENCY'))
@@ -73,3 +83,14 @@ class EvidenceLayersTest(unittest.TestCase):
             db.close()
 
 if __name__=='__main__': unittest.main()
+
+class ExportCoverageTest(unittest.TestCase):
+    def test_export_refuses_partial_corpus_without_preview_flag(self):
+        from export_evidence_layers import export
+        with tempfile.TemporaryDirectory() as d:
+            path=Path(d); source=sqlite3.connect(path/'source.sqlite')
+            source.executescript('CREATE TABLE speeches(id); INSERT INTO speeches VALUES(1); CREATE TABLE ext_press_releases(id);')
+            source.close(); out=m.setup(str(path/'e.sqlite'));out.close()
+            with self.assertRaisesRegex(ValueError,'incomplete'):
+                export(str(path/'source.sqlite'),str(path/'e.sqlite'),str(path/'public'))
+            self.assertFalse((path/'public').exists())
