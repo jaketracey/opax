@@ -9993,6 +9993,8 @@ async function openDocPage(slug, manageFocus) {
   setStatus($("doc-status"), "Fetching the document…");
   try {
     const doc = await api(`/api/resource/${encodeURIComponent(slug)}`);
+    // Older browser-cached resources can outlive the corpus text repair.
+    if (typeof doc.text === "string") doc.text = doc.text.replace(/[ \t]*View the PC OA website[ \t]*$/gm, "").trimEnd();
     if (currentDocSlug !== slug) return; // user navigated away while fetching
     currentDoc = doc;
     const isGovernmentRelease = doc.labels?.kind === "press_release";
