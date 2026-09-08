@@ -144,6 +144,8 @@ export type MoneyMapOptions = {
   focus?: string
   /** 'full' (default): legend, find, time scrub, zoom, hint. 'mini': bare scene + cards. */
   chrome?: 'full' | 'mini'
+  /** A quiet, fitted industry overview; groups open only when chosen. */
+  overview?: boolean
   /**
    * The year scrub, on its own. Defaults to `chrome === 'full'`; set it true
    * to give mini chrome the two thumbs - one compact row docked bottom left,
@@ -900,6 +902,7 @@ export async function mountMoneyMap(
     container.replaceChildren()
     return mountConnectionFallback(container, raw, opts)
   }
+  engine.setOverviewMode(opts.overview === true)
   engine.onEdgePick = (edge) => setEdgeSelection(edge)
   const words = mountWordsLayer({ engine, raw, legend, routeBase })
 
@@ -965,7 +968,7 @@ export async function mountMoneyMap(
   let grantsOn = hasGrants
   let visibleSceneIds = new Set<string>()
   let visibleSceneEdges: MapEdge[] = []
-  const overviewScale = () => container.getBoundingClientRect().width <= 540 ? 1.3 : 1
+  const overviewScale = () => !opts.overview && container.getBoundingClientRect().width <= 540 ? 1.3 : 1
   const pushData = ({ keepFocus = false } = {}) => {
     // A scrub step, a filter or a re-layout is the reader driving: the
     // choreography gives way rather than animating over the top of it.

@@ -8183,6 +8183,7 @@ async function mountFrontMap() {
     root.textContent = "";
     const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
+      overview: true,
       askUrl: (industry) => askHash(`What has parliament said about ${industryLabel(industry)}?`),
 
     });
