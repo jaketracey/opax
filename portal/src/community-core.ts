@@ -18,7 +18,7 @@ export async function limit(env:Env,key:string,count:number,seconds:number){
  const row=await env.COMMUNITY_DB.prepare('INSERT INTO community_limits(key,hits,expires_at) VALUES (?,1,?) ON CONFLICT(key) DO UPDATE SET hits=hits+1 RETURNING hits').bind(hashed,(bucket+1)*seconds).first<{hits:number}>()
  if(!row||row.hits>count)throw new CommunityError(429,'Please wait a little before trying again.')
 }
-export type Member={id:string,email:string,display_name:string,bio:string,role:string,disabled:number,stripe_customer:string|null,created_at:number}
+export type Member={id:string,email:string,display_name:string,bio:string,role:string,disabled:number,created_at:number}
 export async function member(req:Request,env:Env):Promise<Member|null>{
  const token=req.headers.get('cookie')?.split(';').map(s=>s.trim()).find(s=>s.startsWith('__Host-opax_session='))?.slice(20)
  if(!token||!/^[\w-]{43}$/.test(token))return null

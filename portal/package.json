@@ -29,7 +29,6 @@
     "@resvg/resvg-wasm": "^2.6.2",
     "posthog-js": "^1.427.2",
     "satori": "^0.12.2",
-    "stripe": "^22.6.1",
     "yoga-wasm-web": "^0.3.3",
     "zod": "^4.5.4"
   }

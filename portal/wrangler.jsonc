@@ -38,7 +38,6 @@
     "COMMUNITY_ORIGIN": "https://opax.com.au",
     "COMMUNITY_EMAIL_FROM": "hello@login.opax.com.au",
     "COMMUNITY_ENABLED": "false",
-    "STRIPE_SUPPORTER_PRICE": "",
     "ARAG_ZONE": "aws-ap-southeast-2-1",
     // Folded into every response-cache key (/api/ask 7 days, /api/search,
     // /api/resource, /api/followups). Bump it whenever the corpus changes
@@ -75,7 +74,7 @@
       "workers_dev": true,
       "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
       "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
-      "vars": { "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"false", "STRIPE_SUPPORTER_PRICE":"", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-08-ask-full-record" },
+      "vars": { "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"false", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-08-ask-full-record" },
       "ratelimits": [],
       "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": ["/*"] }
     }

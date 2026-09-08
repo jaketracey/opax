@@ -1,5 +1,4 @@
 import {authRoute} from './community-auth'
-import {billingReady,billingRoute,stripe,supporter,syncSupporter} from './community-billing'
 import {body,CommunityError,digest,json,limit,member,now,publicMember,randomToken,requireMember,sameOrigin,sourcePath,text,type Member} from './community-core'
 export async function communityRoute(req:Request,env:Env):Promise<Response>{
  try{return await route(req,env)}catch(e){if(e instanceof CommunityError)return json({error:e.message},e.status);console.error(JSON.stringify({event:'community_request_failed',path:new URL(req.url).pathname}));return json({error:'This action could not be completed. Please try again shortly.'},503)}
@@ -7,14 +6,11 @@ export async function communityRoute(req:Request,env:Env):Promise<Response>{
 async function route(req:Request,env:Env):Promise<Response>{
  const url=new URL(req.url),path=url.pathname,t=now()
  if(path==='/api/community/status'&&req.method==='GET'){
-  const m=await member(req,env);let contribution=null
-  // A payment-provider outage must not prevent free members from signing in.
-  if(billingReady(env)){try{const price=await stripe(env).prices.retrieve(env.STRIPE_SUPPORTER_PRICE);if(price.active&&price.recurring&&price.currency==='aud')contribution={amount:price.unit_amount,currency:price.currency,interval:price.recurring.interval}}catch{console.error(JSON.stringify({event:'community_price_unavailable'}))}}
-  return json({enabled:String(env.COMMUNITY_ENABLED)==='true',member:m?{...publicMember(m),email:m.email,role:m.role}:null,supporter:m?await supporter(env,m.id):{active:false},contribution,mcp_url:env.COMMUNITY_ORIGIN+'/mcp'})
+  const m=await member(req,env)
+  return json({enabled:String(env.COMMUNITY_ENABLED)==='true',member:m?{...publicMember(m),email:m.email,role:m.role}:null,mcp_url:env.COMMUNITY_ORIGIN+'/mcp'})
  }
  if(String(env.COMMUNITY_ENABLED)!=='true')throw new CommunityError(503,'The community is being prepared. Please check back soon.')
  const auth=await authRoute(req,env,path);if(auth)return auth
- const billing=await billingRoute(req,env,path);if(billing)return billing
  const read=req.method==='GET'
  if(!read)sameOrigin(req,env)
  if(path==='/api/community/threads'&&read){const page=Math.max(0,Math.min(500,Number(url.searchParams.get('page'))||0));const rows=await env.COMMUNITY_DB.prepare("SELECT t.id,t.title,t.body,t.source_path,t.created_at,m.id AS member_id,m.display_name,(SELECT count(*) FROM community_replies r WHERE r.thread_id=t.id AND r.hidden=0) AS replies FROM community_threads t JOIN members m ON m.id=t.member_id WHERE t.hidden=0 AND m.disabled=0 ORDER BY t.created_at DESC,t.id DESC LIMIT 21 OFFSET ?").bind(Math.floor(page)*20).all();return json({threads:rows.results.slice(0,20),more:rows.results.length>20})}
@@ -41,7 +37,7 @@ async function route(req:Request,env:Env):Promise<Response>{
  const itemId=path.match(/^\/api\/community\/items\/([\w-]+)$/)?.[1]
  if(itemId&&req.method==='DELETE'){const r=await env.COMMUNITY_DB.prepare('DELETE FROM reading_list_items WHERE id=? AND list_id IN (SELECT id FROM reading_lists WHERE member_id=?)').bind(itemId,m.id).run();if(!r.meta.changes)throw new CommunityError(404,'This record is unavailable.');return json({removed:true})}
  if(path==='/api/community/keys'&&read){const rows=await env.COMMUNITY_DB.prepare('SELECT id,name,prefix,created_at,expires_at,last_used_at,revoked_at FROM mcp_keys WHERE member_id=? ORDER BY created_at DESC LIMIT 30').bind(m.id).all();return json({keys:rows.results})}
- if(path==='/api/community/keys'&&req.method==='POST'){await syncSupporter(env,m);if(!(await supporter(env,m.id)).active)throw new CommunityError(403,'MCP access is available to active supporters.');const d=await body(req);await limit(env,'keys:'+m.id,10,3600);const count=await env.COMMUNITY_DB.prepare('SELECT count(*) AS n FROM mcp_keys WHERE member_id=? AND revoked_at IS NULL AND expires_at>?').bind(m.id,t).first<{n:number}>();if(count&&count.n>=3)throw new CommunityError(400,'Revoke an old key before creating another. You can have three active keys.');const token='opax_'+randomToken(),id=crypto.randomUUID();const inserted=await env.COMMUNITY_DB.prepare('INSERT INTO mcp_keys(id,member_id,token_hash,name,prefix,created_at,expires_at) SELECT ?,?,?,?,?,?,? WHERE (SELECT count(*) FROM mcp_keys WHERE member_id=? AND revoked_at IS NULL AND expires_at>?)<3').bind(id,m.id,await digest(token),text(d.name,2,60,'Key name'),token.slice(0,12),t,t+90*86400,m.id,t).run();if(!inserted.meta.changes)throw new CommunityError(400,'You can have three active keys. Revoke an old key first.');return json({id,token,expires_at:t+90*86400},201)}
+ if(path==='/api/community/keys'&&req.method==='POST'){const d=await body(req);await limit(env,'keys:'+m.id,10,3600);const count=await env.COMMUNITY_DB.prepare('SELECT count(*) AS n FROM mcp_keys WHERE member_id=? AND revoked_at IS NULL AND expires_at>?').bind(m.id,t).first<{n:number}>();if(count&&count.n>=3)throw new CommunityError(400,'Revoke an old key before creating another. You can have three active keys.');const token='opax_'+randomToken(),id=crypto.randomUUID();const inserted=await env.COMMUNITY_DB.prepare('INSERT INTO mcp_keys(id,member_id,token_hash,name,prefix,created_at,expires_at) SELECT ?,?,?,?,?,?,? WHERE (SELECT count(*) FROM mcp_keys WHERE member_id=? AND revoked_at IS NULL AND expires_at>?)<3').bind(id,m.id,await digest(token),text(d.name,2,60,'Key name'),token.slice(0,12),t,t+90*86400,m.id,t).run();if(!inserted.meta.changes)throw new CommunityError(400,'You can have three active keys. Revoke an old key first.');return json({id,token,expires_at:t+90*86400},201)}
  const keyId=path.match(/^\/api\/community\/keys\/([\w-]+)$/)?.[1]
  if(keyId&&req.method==='DELETE'){const r=await env.COMMUNITY_DB.prepare('UPDATE mcp_keys SET revoked_at=? WHERE id=? AND member_id=?').bind(t,keyId,m.id).run();if(!r.meta.changes)throw new CommunityError(404,'This key is unavailable.');return json({revoked:true})}
  throw new CommunityError(404,'This action is unavailable.')

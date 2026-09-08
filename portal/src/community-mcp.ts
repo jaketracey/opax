@@ -2,19 +2,15 @@ import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js'
 import {WebStandardStreamableHTTPServerTransport} from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js'
 import {z} from 'zod'
 import {body,CommunityError,digest,json,limit,now,type Member} from './community-core'
-import {supporter,syncSupporter} from './community-billing'
 export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=>Promise<Response>):Promise<Response>{
  try{
   if(String(env.COMMUNITY_ENABLED)!=='true')throw new CommunityError(503,'Community access is being prepared.')
   const origin=req.headers.get('origin');if(origin&&origin!==env.COMMUNITY_ORIGIN)throw new CommunityError(403,'This origin is not allowed.')
   const token=req.headers.get('authorization')?.match(/^Bearer (opax_[\w-]{43})$/)?.[1]
-  if(!token)return json({error:'Use an Opax supporter access token.'},401,{'www-authenticate':'Bearer realm="Opax supporter tools"'})
+  if(!token)return json({error:'Use an Opax community access token.'},401,{'www-authenticate':'Bearer realm="Opax community tools"'})
   const record=await env.COMMUNITY_DB.prepare('SELECT m.*,k.id AS key_id FROM mcp_keys k JOIN members m ON m.id=k.member_id WHERE k.token_hash=? AND k.revoked_at IS NULL AND k.expires_at>? AND m.disabled=0').bind(await digest(token),now()).first<Member&{key_id:string}>()
   if(!record)throw new CommunityError(401,'This access token is expired or revoked.')
   await limit(env,'mcp:'+record.id,60,60)
-  const last=await env.COMMUNITY_DB.prepare('SELECT max(checked_at) AS checked FROM supporter_subscriptions WHERE member_id=?').bind(record.id).first<{checked:number|null}>()
-  if(!last?.checked||last.checked<Date.now()-300000)await syncSupporter(env,record)
-  if(!(await supporter(env,record.id)).active)throw new CommunityError(403,'An active supporter contribution is required for MCP access.')
   if(req.method!=='POST')return json({error:'This endpoint accepts MCP requests over HTTP POST.'},405,{'allow':'POST'})
   const parsed=await body(req,16384)
   await env.COMMUNITY_DB.prepare('UPDATE mcp_keys SET last_used_at=? WHERE id=?').bind(now(),record.key_id).run()
@@ -40,5 +36,5 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
   const transport=new WebStandardStreamableHTTPServerTransport({sessionIdGenerator:undefined,enableJsonResponse:true})
   await server.connect(transport)
   try{return await transport.handleRequest(req,{parsedBody:parsed})}finally{await server.close()}
- }catch(e){if(e instanceof CommunityError)return json({error:e.message},e.status,e.status===401?{'www-authenticate':'Bearer realm="Opax supporter tools"'}:{});return json({error:'Opax tools are temporarily unavailable.'},503)}
+ }catch(e){if(e instanceof CommunityError)return json({error:e.message},e.status,e.status===401?{'www-authenticate':'Bearer realm="Opax community tools"'}:{});return json({error:'Opax tools are temporarily unavailable.'},503)}
 }
