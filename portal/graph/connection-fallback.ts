@@ -29,7 +29,7 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
   let route = options.chrome !== 'mini' && typeof location !== 'undefined' ? new URLSearchParams(location.search) : new URLSearchParams()
   let filters: MoneyFilters = options.filters || readMoneyFilters(route)
   const years = data.edges.flatMap(e => [e.firstYear, e.lastYear]).filter((n): n is number => typeof n === 'number')
-  const yearMin = Math.min(...years), yearMax = Math.max(...years)
+  const yearMin = years.length ? Math.min(...years) : -Infinity, yearMax = years.length ? Math.max(...years) : Infinity
   const period = () => {
     const read = (key: string, fallback: number) => /^\d{4}$/.test(route.get(key) || '') ? Math.max(yearMin, Math.min(yearMax, Number(route.get(key)))) : fallback
     const from = current?.from ?? read('from', yearMin), to = current?.to ?? read('to', yearMax)
@@ -70,10 +70,15 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
         dot.setAttribute('aria-hidden', 'true')
         dot.style.background = /^#[0-9a-f]{6}$/i.test(node.colour ?? '') ? node.colour! : '#53788c'
         add('span', button, node.label)
+        if (node.profileUrl && /^\/subject\/(agency|supplier)\//.test(node.profileUrl)) {
+          const link = add('a', row, `Open ${node.label} profile`) as HTMLAnchorElement
+          link.href = node.profileUrl
+        }
         button.addEventListener('click', () => {
           options.onInteract?.()
           current = { focusId: id }
           render()
+          options.onSelect?.(node)
         })
       }
       add('strong', row, formatMoney(edge.total))

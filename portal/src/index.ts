@@ -2144,9 +2144,10 @@ const DIRECTORY_KINDS: Record<string, string> = {
   party: 'Parties',
   donor: 'Donors',
   supplier: 'Government suppliers',
+  agency: 'Government agencies',
   campaigner: 'Campaigners & third parties',
 }
-type DirectoryKind = 'person' | 'party' | 'donor' | 'campaigner' | 'supplier'
+type DirectoryKind = 'person' | 'party' | 'donor' | 'campaigner' | 'supplier' | 'agency'
 const isDirectoryKind = (s: string): s is DirectoryKind => s in DIRECTORY_KINDS
 
 // Static pages: title as app.js TITLES sets it, blurb from the masthead menus.
@@ -2279,7 +2280,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
     const dir = dec[1]
     if (isDirectoryKind(dir)) {
       if (segs.length === 2) return { kind: 'index', dir }
-      const max = dir === 'campaigner' ? CAMPAIGNER_NAME_MAX : dir === 'supplier' ? SUPPLIER_NAME_MAX : SUBJECT_NAME_MAX
+      const max = dir === 'campaigner' ? CAMPAIGNER_NAME_MAX : (dir === 'supplier' || dir === 'agency') ? SUPPLIER_NAME_MAX : SUBJECT_NAME_MAX
       if (segs.length === 3 && dec[2].trim() && dec[2].length <= max) {
         return { kind: 'subject', dir, name: dec[2].trim() }
       }
@@ -2683,7 +2684,7 @@ const yearSpan = (a: string, b: string): string => (a && b && a !== b ? `${a} to
 
 const indexLinks = (): string =>
   `<p><a href="/subject/person">Parliamentarians</a> · <a href="/subject/party">Parties</a> · ` +
-  `<a href="/subject/donor">Donors</a> · <a href="/subject/supplier">Government suppliers</a> · <a href="/subject/campaigner">Campaigners</a> · ` +
+  `<a href="/subject/donor">Donors</a> · <a href="/subject/supplier">Government suppliers</a> · <a href="/subject/agency">Government agencies</a> · <a href="/subject/campaigner">Campaigners</a> · ` +
   `<a href="/subject/topic">Topics</a></p>`
 
 function prerenderBlock(heading: string, sentence: string, kicker: string): string {
@@ -2781,6 +2782,10 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         description = clip(`Every parliamentarian in the OPAX record${people ? `: ${num(people.people.length)} speakers` : ''} since 1993, searchable by name, party and parliament, each with their speeches.`)
       } else if (route.dir === 'party') {
         description = 'Australian political parties in the record: speeches, members and disclosed receipts, party by party, from Hansard and electoral commission returns.'
+      } else if (route.dir === 'agency') {
+        const data = await loadAgencies(env).catch(() => null)
+        if (!data) return base({ title: 'Government agencies · OPAX', description: 'The agency index is temporarily unavailable. Please try again.', status: 503 })
+        description = clip(`Explore ${num(data.agencies.length)} Commonwealth agencies: contracts awarded, supplier relationships and 3D maps. Recorded commitments, not payments.`)
       } else if (route.dir === 'supplier') {
         const suppliers = await loadSuppliers(env).catch(() => null)
         if (!suppliers) return base({ title: 'Government suppliers · OPAX', description: 'The supplier index is temporarily unavailable. Please try again.', status: 503 })
@@ -2836,6 +2841,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if (route.dir === 'person') return personMeta(route.name, url, env)
       if (route.dir === 'campaigner') return campaignerMeta(route.name, url, env)
       if (route.dir === 'supplier') return supplierMeta(route.name, url, env)
+      if (route.dir === 'agency') return agencyMeta(route.name, url, env)
       return moneySubjectMeta(route.dir, route.name, url, env)
 
     case 'doc':
@@ -2973,6 +2979,34 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
       credit,
     },
   }
+}
+
+interface AgencyRow {
+  id: string; name: string; total: number; count: number; supplier_count: number
+  first_year?: number | null; last_year?: number | null
+}
+let agenciesMemo: Promise<{ meta?: { generated_at?: string }; agencies: AgencyRow[] }> | null = null
+function loadAgencies(env: Env) {
+  agenciesMemo ??= assetJson<{ meta?: { generated_at?: string }; agencies: AgencyRow[] }>(env, '/agencies.json').then(data => {
+    if (!Array.isArray(data.agencies) || data.agencies.some(a => !/^a-[a-f0-9]{20}$/.test(a.id) || typeof a.name !== 'string' || !a.name.trim() || !Number.isFinite(a.total) || !Number.isFinite(a.count) || !Number.isFinite(a.supplier_count))) throw new Error('Invalid agency directory')
+    return data
+  }).catch(error => { agenciesMemo = null; throw error })
+  return agenciesMemo
+}
+async function agencyMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
+  const data = await loadAgencies(env).catch(() => null)
+  const agency = data?.agencies.find(a => a.id === name) ?? data?.agencies.find(a => a.name === name)
+  if (!agency) return { title: data ? 'Agency not found · OPAX' : 'Agency temporarily unavailable · OPAX',
+    description: data ? 'Browse the government agency directory for available contract records.' : 'Agency records could not be loaded. Please try again.',
+    canonical: canonicalFor(url, false), ogType: 'website', status: data ? 404 : 503, jsonLd: null, prerender: null, card: null }
+  const canonical = `${SITE_ORIGIN}/subject/agency/${agency.id}`
+  const facts = `${agency.name}: ${money(agency.total)} in recorded contract commitments across ${num(agency.count)} contracts and ${num(agency.supplier_count)} suppliers.`
+  const description = withTail(facts, 'Explore supplier relationships and source notices.')
+  return { title: `${clip(agency.name, 90)} · Government agency · OPAX`, description, canonical, ogType: 'profile', status: 200,
+    jsonLd: { '@context': 'https://schema.org', '@type': 'ProfilePage', name: agency.name, url: canonical, description,
+      mainEntity: { '@type': 'GovernmentOrganization', name: agency.name } },
+    prerender: prerenderBlock(agency.name, `${facts} Award values are not expenditure. Agency names remain separate as recorded.`, 'Government agency'),
+    card: { kicker: 'Government agency', title: agency.name, lines: [`${money(agency.total)} in recorded commitments`, `${num(agency.count)} contracts · ${num(agency.supplier_count)} suppliers`, 'Recorded awards, not expenditure.'] } }
 }
 
 async function supplierMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
@@ -3440,7 +3474,7 @@ function robotsTxt(): Response {
 /** Every indexable page, rebuilt from the data files and cached a day. */
 async function sitemapXml(env: Env): Promise<Response> {
   return cachedJson('/sitemap.xml', async () => {
-    const [people, moneyData, reports, campaigners, suppliers] = await Promise.all([
+    const [people, moneyData, reports, campaigners, suppliers, agencies] = await Promise.all([
       loadPeople(env),
       loadMoney(env),
       loadReports(env),
@@ -3448,6 +3482,7 @@ async function sitemapXml(env: Env): Promise<Response> {
       // yet must cost the sitemap its campaigner rows, not the whole sitemap.
       loadCampaigners(env).catch(() => null),
       loadSuppliers(env).catch(() => null),
+      loadAgencies(env).catch(() => null),
     ])
     const rows: string[] = []
     const add = (path: string, lastmod?: string) => {
@@ -3456,10 +3491,11 @@ async function sitemapXml(env: Env): Promise<Response> {
     }
     add('/')
     for (const page of ['search', 'money', 'reports', 'explore', 'discover', 'about', 'methods', 'stats', 'expenses']) add(`/${page}`)
+    for (const a of agencies?.agencies ?? []) add(`/subject/agency/${a.id}`, agencies?.meta?.generated_at)
     for (const r of reports.reports) add(`/reports/${r.slug}`, r.updated)
     add('/subject/topic')
     for (const slug of Object.keys(TOPIC_NAMES)) add(`/subject/topic/${slug}`)
-    for (const dir of ['person', 'party', 'donor', 'campaigner', 'supplier']) add(`/subject/${dir}`)
+    for (const dir of ['person', 'party', 'donor', 'campaigner', 'supplier', 'agency']) add(`/subject/${dir}`)
     // Parties: every label the money data or the people data knows.
     const partyLabels = new Map<string, string>()
     for (const n of moneyData.parties.values()) partyLabels.set(foldName(n.label), n.label)

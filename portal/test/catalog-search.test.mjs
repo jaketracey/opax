@@ -19,7 +19,7 @@ test('published index covers financial records alongside people, bills and regis
  const manifest=JSON.parse(await readFile(new URL('../public/search-catalog/manifest.json',import.meta.url)));
  const suppliers=JSON.parse(await readFile(new URL('../public/suppliers.json',import.meta.url)));
  assert.ok(manifest.counts.contract>=suppliers.meta.contract_count);
- for(const kind of ['person','donor','receipt','grant','bill','interest','expense','access','campaigner','report'])assert.ok(manifest.counts[kind]>0,kind);
+ for(const kind of ['person','agency','donor','receipt','grant','bill','interest','expense','access','campaigner','report'])assert.ok(manifest.counts[kind]>0,kind);
 });
 test('an organisation is found in donors, receipts, contracts and grants',async()=>{
  for(const kind of ['donor','receipt','contract','grant']){
@@ -56,4 +56,10 @@ test('source filters and result windows stay bounded on common words',async()=>{
  const result=await find('contract',{kind:'contract',state:'federal'});
  assert.ok(result.total>200);assert.equal(result.results.length,200);assert.equal(result.truncated,true);
  const state=await find('Woodside',{kind:'contract',state:'qld'});assert.equal(state.total,0);
+});
+
+test('new agency profiles are discoverable with their direct destination',async()=>{
+ const result=await find('Department of Defence',{kind:'agency'});
+ assert.equal(result.results[0].title,'Department of Defence');
+ assert.match(result.results[0].href,/^\/subject\/agency\/a-/);
 });

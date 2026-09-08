@@ -131,6 +131,7 @@ export type EngineData = {
   aspect: number
   /** Group pinned to the origin with the rest ringed around it (the parties). */
   centralGroup?: string
+  collapseGroups?: boolean
 }
 
 export type EngineEmphasis = {
@@ -1075,7 +1076,7 @@ export class KnowledgeMapEngine {
         for (const member of members) member.territory = territory
         this.territories.push(territory)
 
-        if (group === data.centralGroup || count < HUB_MIN_MEMBERS) continue
+        if (data.collapseGroups === false || group === data.centralGroup || count < HUB_MIN_MEMBERS) continue
 
         const hubMaterial = new THREE.MeshStandardMaterial({
           roughness: 0.42,
@@ -1555,7 +1556,9 @@ export class KnowledgeMapEngine {
         : (node.industry ?? node.group).replace(/_/g, ' ')
       category.style.color = this.palette.inks[visual.slot] ?? '#5A616B'
       const links = visual.degree === 1 ? '1' : `${visual.degree}`
-      const who = node.kind === 'party'
+      const who = node.kind === 'agency' || node.kind === 'supplier'
+        ? `${links} contract relationship${visual.degree === 1 ? '' : 's'}`
+        : node.kind === 'party'
         ? (visual.degree === 1 ? '1 donor shown' : `${links} donors shown`)
         : (visual.degree === 1 ? '1 party' : `${links} parties`)
       this.popupCounts.textContent = node.total !== undefined

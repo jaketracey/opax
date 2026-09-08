@@ -1,5 +1,5 @@
 import { normalize, tokens, bucket } from './catalog-query.mjs'
-export const CATALOG_KINDS = new Set(['person','party','donor','supplier','receipt','contract','grant','bill','interest','expense','access','campaigner','report'])
+export const CATALOG_KINDS = new Set(['person','party','donor','agency','supplier','receipt','contract','grant','bill','interest','expense','access','campaigner','report'])
 export interface CatalogRecord {
   kind: string; title: string; href: string; snippet: string; slug: string; resource: string
   date?: string | null; dateLabel?: string; source?: string; url?: string; record_id?: string; score?: number; sort_date?: string

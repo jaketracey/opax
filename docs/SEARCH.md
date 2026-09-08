@@ -2,7 +2,7 @@
 
 Find records uses `GET /api/search-all` and defaults to all published record types. The existing `/api/search` endpoint remains document-only for internal callers. Ask continues to answer from parliamentary documents.
 
-The unified endpoint combines the document retrieval service with a generated lexical catalog of people, parties, donors, political receipts, suppliers, contracts, grants, bills, interests, expenses, meetings, lobbying and foreign-influence registers, campaigners, and reports. Result labels distinguish datasets; links open the relevant profile, map connection, recipient or contract notice. Financial-only searches do not invoke the document service.
+The unified endpoint combines the document retrieval service with a generated lexical catalog of people, parties, government agencies, donors, political receipts, suppliers, contracts, grants, bills, interests, expenses, meetings, lobbying and foreign-influence registers, campaigners, and reports. Result labels distinguish datasets; links open the relevant profile, map connection, recipient or contract notice. Financial-only searches do not invoke the document service.
 
 ## Coverage
 

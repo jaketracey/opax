@@ -2,6 +2,7 @@
 export function moneyFlowType(edge, nodes) {
   const from = nodes.get(edge.source), to = nodes.get(edge.target);
   if (!from || !to || !Number.isFinite(edge.total) || edge.total <= 0) return null;
+  if (from.kind === 'agency' && to.kind === 'supplier' && edge.flow === 'contracts') return 'contracts';
   if (from.kind === 'grantor' && to.kind === 'donor') return edge.flow === 'contracts' || from.flow === 'contracts' || from.explorer === 'contracts' ? 'contracts' : 'grants';
   if (from.kind === 'donor' && to.kind === 'party' && !edge.grant && !edge.flow) return 'receipts';
   return null;

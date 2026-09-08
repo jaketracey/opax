@@ -83,6 +83,8 @@ for(const file of await files('reports')) {
  if(file==='index.json')continue;const r=await read('reports/'+file);
  add('report:'+r.slug,'report',r.title,'/reports/'+r.slug,r.blurb,{date:r.generated_at?.slice(0,10),source:'OPAX research report'});
 }
+const agencies=await read('agencies.json');
+for(const a of agencies.agencies) add('agency:'+a.id,'agency',a.name,'/subject/agency/'+encodeURIComponent(a.id),`${cash(a.total)} in recorded awards across ${a.count} contracts and ${a.supplier_count} suppliers.`,{from:a.first_year,to:a.last_year,state:'federal',source:'AusTender agency profile',dateLabel:period(a.first_year,a.last_year)});
 const meta=docs.map(d=>d.meta), postings=Array.from({length:64},()=>Object.create(null));
 for(const [id,d] of docs.entries()) {
  const weights=new Map(d.bodyTokens.map(t=>[t,1])); for(const t of d.titleTokens)weights.set(t,8);
