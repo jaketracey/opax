@@ -4800,3 +4800,10 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .supplier-contract .evidence-fields {grid-template-columns:minmax(0,1fr);font-size:1rem}
 .evidence-fields>div {min-width:0}
 .evidence-years svg {display:block;width:100%;height:.6rem}
+
+.connections-page h1 {font:700 clamp(2rem,4vw,3rem)/1.25 var(--serif);color:var(--navy);margin-bottom:1.5rem}
+.connections-page h2 {font:700 clamp(1.4rem,2.5vw,2rem)/1.35 var(--serif);color:var(--navy);overflow-wrap:anywhere}
+.connections-page .supplier-controls :is(input,select) {font-size:1rem;min-height:44px;border-radius:4px}
+.connections-page select {appearance:none;padding-right:2rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23142A43' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center}
+.connection-choice {font:400 1rem/1.5 var(--sans)}
+#connection-detail .subject-section-title {margin-top:1.5rem}
