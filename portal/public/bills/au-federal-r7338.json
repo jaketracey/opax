@@ -125,24 +125,24 @@
    "noes": 12,
    "outcome": "affirmative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 0,
+     "noes": 1
+    },
     "Greens": {
      "ayes": 0,
      "noes": 10
     },
     "Independent": {
      "ayes": 0,
-     "noes": 2
+     "noes": 1
     },
     "Labor": {
      "ayes": 24,
      "noes": 0
     },
     "Liberal": {
-     "ayes": 2,
-     "noes": 0
-    },
-    "Nationals": {
-     "ayes": 1,
+     "ayes": 3,
      "noes": 0
     },
     "One Nation": {
@@ -151,8 +151,7 @@
     }
    },
    "party_coverage": {
-    "dated": 37,
-    "member": 5
+    "dated": 42
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-04/15"

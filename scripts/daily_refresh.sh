@@ -57,6 +57,7 @@ QLD_START="${OPAX_QLD_START:-$SINCE}"
 SA_SINCE="${OPAX_SA_SINCE:-$SINCE}"
 IPEA_SINCE="${OPAX_IPEA_SINCE:-$(date +%Y)}"
 ONLY="${OPAX_ONLY:-}"
+FAILED_STEPS=()
 
 mkdir -p "$PIPE"
 ts() { date '+%F %T'; }
@@ -71,8 +72,8 @@ if ! flock -n 9; then
   exit 0
 fi
 
-# Secrets: ARAG_*, OPENAUSTRALIA_API_KEY, TVFY_API_KEY (GUARDIAN_API_KEY is
-# optional; the fetcher falls back to the public 'test' key).
+# Secrets: ARAG_*, OPENAUSTRALIA_API_KEY, TVFY_API_KEY.
+# News is excluded from both acquisition and the knowledge box.
 if [ -f .env ]; then set -a; . ./.env; set +a; fi
 
 # Read-only row count. $1 is a SQL statement returning one number; empty $1
@@ -113,6 +114,7 @@ run_step() {
     124|137) status="FAIL(timeout ${STEP_TIMEOUT})" ;;
     *)   status="FAIL(rc=$rc)" ;;
   esac
+  if [ "$rc" -ne 0 ]; then FAILED_STEPS+=("$name"); fi
   log "[$name] $status in ${dur}s; $delta; log $PIPE/$name.log"
   return $rc
 }
@@ -126,8 +128,6 @@ run_step fed_load "SELECT COUNT(*) FROM speeches WHERE source='openaustralia'" \
   "$PY" -m parli.ingest.speeches --modern-only --since "$FED_START"
 
 # --- quick structured sources ------------------------------------------------
-run_step guardian "SELECT COUNT(*) FROM news_articles" \
-  "$PY" -m parli.ingest.guardian_news --all-topics --limit 100
 run_step austender "SELECT COUNT(*) FROM contracts" \
   "$PY" -m parli.ingest.austender
 run_step ipea "SELECT COUNT(*) FROM mp_expenses WHERE source='ipea'" \
@@ -145,6 +145,17 @@ run_step nsw "SELECT COUNT(*) FROM speeches WHERE source='nsw_hansard'" \
 run_step sa "SELECT COUNT(*) FROM speeches WHERE source='sa_hansard'" \
   "$PY" -m parli.ingest.sa_hansard --since "$SA_SINCE"
 
+run_step bills "SELECT COUNT(*) FROM bills_v2" \
+  bash scripts/refresh_bills.sh
+
+# --- official statements already included in the public corpus ---------------
+run_step releases_nsw "SELECT COUNT(*) FROM ext_press_releases WHERE source='nsw'" \
+  "$PY" -m parli.ingest.words_press_releases nsw --all --since "$SINCE"
+if [ "${OPAX_SYNC_KB:-0}" = "1" ]; then
+  run_step releases_nsw_sync "" \
+    "$PY" -m parli.ingest.words_sync --db "$DB" --source nsw --since "$SINCE" --full --limit 10000 --apply
+fi
+
 # --- derived data ------------------------------------------------------------
 run_step link_speakers "SELECT COUNT(*) FROM speeches WHERE person_id IS NOT NULL AND person_id != ''" \
   "$PY" -m parli.ingest.link_speakers
@@ -161,7 +172,7 @@ if [ "${OPAX_SYNC_KB:-0}" = "1" ]; then
   if "$PY" - "$STATE" <<'PYEOF'
 import json, sys
 s = json.load(open(sys.argv[1]))["tables"]
-assert s["speeches"]["after"] > 1_000_000 and s["news_articles"]["after"] > 1_000
+assert s["speeches"]["after"] > 1_000_000
 PYEOF
   then
     run_step arag_sync "" \
@@ -201,3 +212,7 @@ for src, mx, n in db.execute("SELECT source, MAX(date), COUNT(*) FROM speeches G
     print(f"{src:18s} newest {mx}  rows {n:,}")
 PYEOF
 log "===== daily refresh end ====="
+if [ "${#FAILED_STEPS[@]}" -gt 0 ]; then
+  log "Incomplete refresh: failed steps ${FAILED_STEPS[*]}"
+  exit 1
+fi

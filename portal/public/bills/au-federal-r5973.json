@@ -205,9 +205,9 @@
     }
    },
    "party_coverage": {
-    "member": 21,
+    "member": 14,
     "dated": 38,
-    "earliest": 9
+    "earliest": 16
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2018-05-10/5"
@@ -273,8 +273,8 @@
    },
    "party_coverage": {
     "dated": 27,
-    "earliest": 8,
-    "member": 19
+    "earliest": 13,
+    "member": 14
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-18/1"

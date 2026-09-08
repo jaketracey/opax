@@ -179,8 +179,8 @@
    },
    "party_coverage": {
     "dated": 22,
-    "member": 12,
-    "earliest": 23
+    "member": 5,
+    "earliest": 30
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-22/4"
@@ -237,8 +237,8 @@
     }
    },
    "party_coverage": {
-    "member": 8,
-    "earliest": 22,
+    "member": 4,
+    "earliest": 26,
     "dated": 14
    },
    "paired": 0,
@@ -292,8 +292,8 @@
     }
    },
    "party_coverage": {
-    "member": 8,
-    "earliest": 23,
+    "member": 3,
+    "earliest": 28,
     "dated": 16
    },
    "paired": 0,

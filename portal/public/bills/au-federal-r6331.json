@@ -332,9 +332,9 @@
     }
    },
    "party_coverage": {
-    "member": 9,
+    "member": 2,
     "dated": 23,
-    "earliest": 20
+    "earliest": 27
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-19/1"
@@ -387,9 +387,9 @@
     }
    },
    "party_coverage": {
-    "member": 14,
+    "member": 5,
     "dated": 27,
-    "earliest": 21
+    "earliest": 30
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-19/2"
@@ -442,9 +442,9 @@
     }
    },
    "party_coverage": {
-    "member": 11,
+    "member": 5,
     "dated": 29,
-    "earliest": 20
+    "earliest": 26
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-19/3"
@@ -497,9 +497,9 @@
     }
    },
    "party_coverage": {
-    "member": 13,
+    "member": 4,
     "dated": 26,
-    "earliest": 21
+    "earliest": 30
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-19/8"
@@ -552,8 +552,8 @@
     }
    },
    "party_coverage": {
-    "member": 8,
-    "earliest": 19,
+    "member": 2,
+    "earliest": 25,
     "dated": 22
    },
    "paired": 0,

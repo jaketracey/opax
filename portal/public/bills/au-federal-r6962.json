@@ -203,9 +203,8 @@
     }
    },
    "party_coverage": {
-    "earliest": 2,
-    "dated": 32,
-    "member": 5
+    "earliest": 7,
+    "dated": 32
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-07/1"
@@ -250,9 +249,8 @@
     }
    },
    "party_coverage": {
-    "earliest": 2,
-    "dated": 36,
-    "member": 6
+    "earliest": 8,
+    "dated": 36
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-07/2"

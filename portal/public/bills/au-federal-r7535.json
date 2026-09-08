@@ -1,0 +1,48 @@
+{
+ "key": "au-federal-r7535",
+ "title": "Firearms Legislation Amendment (Repealing Unfair Gun Laws) Bill 2026 (No. 2)",
+ "short_title": "Firearms Legislation Amendment (Repealing Unfair Gun Laws) Bill 2026 (No. 2)",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-09-07",
+ "originating_house": "representatives",
+ "sponsor": "LITTLEPROUD, David, MP",
+ "sponsor_party": "Liberal National Party of Queensland",
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-09-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7535%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7535%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7535_ems_c8407fdd-eb23-4393-8886-a42f7f96e364%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7535%22",
+   "document_date": "2026-09-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

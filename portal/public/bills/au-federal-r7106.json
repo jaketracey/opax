@@ -204,8 +204,7 @@
    },
    "party_coverage": {
     "dated": 29,
-    "member": 3,
-    "earliest": 2
+    "earliest": 5
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-20/1"
@@ -263,8 +262,7 @@
    },
    "party_coverage": {
     "dated": 49,
-    "member": 5,
-    "earliest": 4
+    "earliest": 9
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-20/2"
@@ -306,8 +304,7 @@
    },
    "party_coverage": {
     "dated": 32,
-    "member": 4,
-    "earliest": 1
+    "earliest": 5
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-20/3"
@@ -353,8 +350,7 @@
    },
    "party_coverage": {
     "dated": 32,
-    "member": 4,
-    "earliest": 1
+    "earliest": 5
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-20/4"
@@ -396,8 +392,7 @@
    },
    "party_coverage": {
     "dated": 31,
-    "member": 3,
-    "earliest": 1
+    "earliest": 4
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-20/5"

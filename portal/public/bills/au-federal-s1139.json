@@ -119,9 +119,9 @@
     }
    },
    "party_coverage": {
-    "member": 20,
+    "member": 15,
     "dated": 33,
-    "earliest": 10
+    "earliest": 15
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-20/1"

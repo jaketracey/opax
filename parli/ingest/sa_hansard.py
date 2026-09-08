@@ -119,7 +119,7 @@ def get_sitting_dates_for_year(year: int) -> list[str]:
             print("  hansardsearch.parliament.sa.gov.au is serving an Azure WAF "
                   "JavaScript challenge to non-browser clients; SA Hansard "
                   "cannot be fetched server-side until that changes.")
-        return []
+        raise RuntimeError(f"SA Hansard calendar could not be refreshed for {year}") from e
 
     # Parse getEvents("DD/MM/YYYY", ...) calls from the HTML
     pattern = re.compile(r'getEvents\("(\d{2}/\d{2}/\d{4})"')

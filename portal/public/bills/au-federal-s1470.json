@@ -111,7 +111,7 @@
      "noes": 1
     },
     "LNP": {
-     "ayes": 1,
+     "ayes": 2,
      "noes": 0
     },
     "Labor": {
@@ -119,25 +119,20 @@
      "noes": 23
     },
     "Liberal": {
-     "ayes": 17,
+     "ayes": 18,
      "noes": 0
     },
     "Nationals": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     },
     "One Nation": {
      "ayes": 4,
      "noes": 0
-    },
-    "United Australia Party": {
-     "ayes": 1,
-     "noes": 0
     }
    },
    "party_coverage": {
-    "dated": 54,
-    "member": 7
+    "dated": 61
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-24/1"

@@ -240,9 +240,9 @@
     }
    },
    "party_coverage": {
-    "member": 7,
+    "member": 3,
     "dated": 20,
-    "earliest": 16
+    "earliest": 20
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-15/1"
@@ -287,9 +287,9 @@
     }
    },
    "party_coverage": {
-    "member": 7,
+    "member": 4,
     "dated": 17,
-    "earliest": 16
+    "earliest": 19
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-15/2"

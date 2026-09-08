@@ -270,6 +270,11 @@ class KbClient:
     def create_resource(self, body: dict, max_retries: int = _MAX_RETRIES) -> dict:
         """POST /resources. Body carries slug/title/texts/origin/usermetadata/extra.
         409 (slug exists) is surfaced as AragError for the caller to treat as done."""
+        labels = (body.get("usermetadata") or {}).get("classifications") or []
+        if (str(body.get("slug", "")).startswith("news-")
+                or (body.get("origin") or {}).get("source_id") == "news"
+                or any(c.get("labelset") == "kind" and c.get("label") == "news" for c in labels)):
+            raise ValueError("News articles are excluded from the OPAX corpus")
         return _request(
             "POST", self._rag("/resources"), self._headers, body, max_retries=max_retries
         )

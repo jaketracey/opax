@@ -63,7 +63,7 @@
     },
     "LNP": {
      "ayes": 0,
-     "noes": 1
+     "noes": 2
     },
     "Labor": {
      "ayes": 19,
@@ -79,12 +79,11 @@
     },
     "United Australia Party": {
      "ayes": 0,
-     "noes": 2
+     "noes": 1
     }
    },
    "party_coverage": {
-    "dated": 41,
-    "member": 2
+    "dated": 43
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-30/18"
@@ -125,8 +124,7 @@
     }
    },
    "party_coverage": {
-    "dated": 39,
-    "member": 2
+    "dated": 41
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-30/19"

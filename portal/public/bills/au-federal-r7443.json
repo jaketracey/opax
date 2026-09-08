@@ -156,12 +156,16 @@
    "noes": 10,
    "outcome": "affirmative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Greens": {
      "ayes": 0,
      "noes": 10
     },
     "Independent": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 0
     },
     "Labor": {
@@ -178,8 +182,7 @@
     }
    },
    "party_coverage": {
-    "dated": 38,
-    "member": 6
+    "dated": 44
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-12/16"

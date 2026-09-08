@@ -653,8 +653,8 @@
    },
    "party_coverage": {
     "dated": 48,
-    "earliest": 5,
-    "member": 11
+    "earliest": 7,
+    "member": 9
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/1"
@@ -724,8 +724,8 @@
    },
    "party_coverage": {
     "dated": 48,
-    "earliest": 5,
-    "member": 11
+    "earliest": 7,
+    "member": 9
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/2"
@@ -795,8 +795,8 @@
    },
    "party_coverage": {
     "dated": 48,
-    "earliest": 5,
-    "member": 11
+    "earliest": 7,
+    "member": 9
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/3"
@@ -862,8 +862,8 @@
    },
    "party_coverage": {
     "dated": 51,
-    "earliest": 5,
-    "member": 9
+    "earliest": 6,
+    "member": 8
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/4"
@@ -929,8 +929,8 @@
    },
    "party_coverage": {
     "dated": 51,
-    "earliest": 5,
-    "member": 9
+    "earliest": 6,
+    "member": 8
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/5"
@@ -995,9 +995,9 @@
     }
    },
    "party_coverage": {
-    "member": 13,
+    "member": 11,
     "dated": 51,
-    "earliest": 5
+    "earliest": 7
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/6"
@@ -1062,9 +1062,9 @@
     }
    },
    "party_coverage": {
-    "member": 13,
+    "member": 11,
     "dated": 51,
-    "earliest": 5
+    "earliest": 7
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/7"
@@ -1129,9 +1129,9 @@
     }
    },
    "party_coverage": {
-    "member": 13,
+    "member": 11,
     "dated": 51,
-    "earliest": 5
+    "earliest": 7
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-02/8"

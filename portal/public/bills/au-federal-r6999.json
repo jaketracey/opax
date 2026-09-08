@@ -466,7 +466,7 @@
    },
    "party_coverage": {
     "dated": 31,
-    "member": 4
+    "earliest": 4
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-07/5"
@@ -524,8 +524,7 @@
    },
    "party_coverage": {
     "dated": 50,
-    "member": 6,
-    "earliest": 3
+    "earliest": 9
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-07/6"
@@ -583,8 +582,7 @@
    },
    "party_coverage": {
     "dated": 52,
-    "member": 7,
-    "earliest": 2
+    "earliest": 9
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-07/7"
@@ -642,8 +640,7 @@
    },
    "party_coverage": {
     "dated": 51,
-    "member": 7,
-    "earliest": 2
+    "earliest": 9
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-07/8"

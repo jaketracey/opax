@@ -143,12 +143,16 @@
    "noes": 38,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Greens": {
      "ayes": 10,
      "noes": 0
     },
     "Independent": {
-     "ayes": 4,
+     "ayes": 3,
      "noes": 0
     },
     "Labor": {
@@ -169,8 +173,7 @@
     }
    },
    "party_coverage": {
-    "dated": 42,
-    "member": 8,
+    "dated": 50,
     "earliest": 2
    },
    "paired": 0,
@@ -186,12 +189,16 @@
    "noes": 34,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Greens": {
      "ayes": 10,
      "noes": 0
     },
     "Independent": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 1
     },
     "Labor": {
@@ -212,8 +219,7 @@
     }
    },
    "party_coverage": {
-    "dated": 40,
-    "member": 5,
+    "dated": 45,
     "earliest": 2
    },
    "paired": 0,
@@ -229,13 +235,17 @@
    "noes": 45,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 0,
+     "noes": 1
+    },
     "Greens": {
      "ayes": 0,
      "noes": 10
     },
     "Independent": {
      "ayes": 0,
-     "noes": 4
+     "noes": 3
     },
     "Labor": {
      "ayes": 0,
@@ -255,8 +265,7 @@
     }
    },
    "party_coverage": {
-    "dated": 42,
-    "member": 5,
+    "dated": 47,
     "earliest": 3
    },
    "paired": 0,
@@ -272,12 +281,16 @@
    "noes": 35,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Greens": {
      "ayes": 10,
      "noes": 0
     },
     "Independent": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 1
     },
     "Labor": {
@@ -298,8 +311,7 @@
     }
    },
    "party_coverage": {
-    "dated": 41,
-    "member": 4,
+    "dated": 45,
     "earliest": 3
    },
    "paired": 0,
@@ -315,13 +327,17 @@
    "noes": 39,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 0,
+     "noes": 1
+    },
     "Greens": {
      "ayes": 0,
      "noes": 10
     },
     "Independent": {
      "ayes": 0,
-     "noes": 2
+     "noes": 1
     },
     "LNP": {
      "ayes": 0,
@@ -345,8 +361,7 @@
     }
    },
    "party_coverage": {
-    "dated": 38,
-    "member": 4,
+    "dated": 42,
     "earliest": 2
    },
    "paired": 0,
