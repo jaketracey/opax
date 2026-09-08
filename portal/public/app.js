@@ -6476,7 +6476,7 @@ const billFiles = new Map();
 let billView = null;
 
 function loadBillsIndex() {
-  billsIndexPromise ??= fetch("/bills/index.json")
+  billsIndexPromise ??= fetch("/bills/index.json", { cache: "no-cache" })
     .then((r) => (r.ok ? r.json() : null)).catch(() => null);
   return billsIndexPromise;
 }
@@ -6484,7 +6484,7 @@ function loadBillsIndex() {
 /** One bill's full record; null when the projection has no such file. */
 function loadBill(key) {
   if (!billFiles.has(key)) {
-    billFiles.set(key, fetch(`/bills/${encodeURIComponent(key)}.json`)
+    billFiles.set(key, fetch(`/bills/${encodeURIComponent(key)}.json`, { cache: "no-cache" })
       .then((r) => (r.ok ? r.json() : null)).catch(() => null));
   }
   return billFiles.get(key);

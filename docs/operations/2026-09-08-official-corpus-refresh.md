@@ -40,6 +40,11 @@ resources were indexed. The daily job now refreshes the current parliament,
 exports bill projections and upserts the corresponding KB resources.
 The website's static projections are published with the portal release.
 
+The completed publication checked all 2,974 registry files with no failures:
+1,276 created, seven updated and 1,691 unchanged. Live resource counters then
+reported 618,373 resources. Bill exports and their directory/detail fetches now
+revalidate on each new visit, avoiding an old hourly browser cache after release.
+
 ## Other sources and limits
 
 The daily source logs were audited against live source checks. The NSW Parliament

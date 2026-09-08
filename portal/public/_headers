@@ -35,6 +35,10 @@
 # .webp so /photos/people.json is left to the /*.json rule and not double-set.)
 /*.json
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+# Bill dates and progress should reflect each publication for returning readers.
+/bills/*.json
+  ! Cache-Control
+  Cache-Control: public, max-age=0, must-revalidate
 # Reports are regenerated several times a day now; five minutes, then a day of
 # stale grace, so a rebuild reaches readers without a hard refresh.
 /reports/*.json
