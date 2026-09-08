@@ -26,7 +26,6 @@ export const CONTRACTOR_COLOUR = '#1F6E8C'
  */
 export const CLUSTER_COLOURS: ReadonlyMap<string, ClusterColour> = new Map([
   ['parties', { colour: '#9AA0A8', ink: '#5A616B' }],
-  ['public money', { colour: GRANTOR_COLOUR, ink: '#245E58' }],
   ['unions', { colour: '#E15759', ink: '#A93843' }],
   ['finance', { colour: '#4E79A7', ink: '#365F86' }],
   ['individuals', { colour: '#79706E', ink: '#57504E' }],

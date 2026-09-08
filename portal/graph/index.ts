@@ -288,7 +288,7 @@ export function buildGraph(raw: MoneyGraph): {
 
   const groupStyles = new Map<string, GroupStyle>()
   for (const [group, count] of counts) {
-    const style = clusterColour(group)
+    const style = group === 'public money' ? { colour: GRANTOR_COLOUR, ink: '#245E58' } : clusterColour(group)
     groupStyles.set(group, {
       slot: slots.get(group) ?? (slots.get('other') ?? 0),
       colour: style.colour,
