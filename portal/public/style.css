@@ -4755,3 +4755,11 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .dir-main .result-meta .dir-party-link:hover { text-decoration-color:currentColor; }
 
 .dir-main .dir-parties { display:inline-flex; flex-wrap:wrap; align-items:center; column-gap:.65rem; row-gap:.2rem; }
+
+/* Register search and compact pagination share the directory controls. */
+#declared-filters .declared-search { flex: 1 1 260px; }
+#declared-filters .declared-search input { width: 100%; flex: none; }
+.declared-pagination { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-top: 1.25rem; }
+.declared-pagination > span { color: var(--ink-soft); font-size: .875rem; }
+.declared-pagination .action-btn { min-height: 44px; }
+.declared-pagination button:disabled { opacity: .45; cursor: default; }

@@ -58,7 +58,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=30ce882642">
+<link rel="stylesheet" href="/style.css?v=733bbb45f5">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -938,6 +938,10 @@
       <h1 tabindex="-1">Registers of interests</h1>
       <p class="lede">The newest additions and deletions recorded in parliamentarians' registers of interests, in their own words.</p>
       <form id="declared-filters" class="dir-controls" aria-label="Filter recent declarations">
+        <span class="dir-field declared-search">
+          <label for="declared-query">Search</label>
+          <input id="declared-query" type="search" placeholder="Name, organisation or interest…">
+        </span>
         <span class="dir-field">
           <label for="declared-bucket">Category</label>
           <select id="declared-bucket"><option value="">all categories</option></select>
@@ -946,8 +950,10 @@
           <label for="declared-party">Party</label>
           <select id="declared-party"><option value="">all parties</option></select>
         </span>
+        <button class="action-btn" type="submit">Search</button>
       </form>
-      <p class="interests-summary" id="declared-summary"></p>
+      <p class="interests-summary" id="declared-summary" hidden></p>
+      <div id="declared-pagination"></div>
       <div id="declared-list"><p class="status">Opening the register ledger…</p></div>
       <p class="fineprint declared-source">Sources: <a href="https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results/Registers_of_Interests" rel="noopener" target="_blank">Registers of Members' and Senators' Interests, 48th Parliament ↗︎</a>, entries as declared, not verified by OPAX; and the <a href="https://www.parliament.qld.gov.au/Members/Current-Members/Register-of-Interests" rel="noopener" target="_blank">Queensland Register of Members' Interests, 58th Parliament ↗︎</a>, facts and links only. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to <a href="https://transparency.aec.gov.au/" rel="noopener" target="_blank">AEC Transparency Register returns, CC BY 4.0 ↗︎</a>, the lobbyist registers and FITS use exact normalised names.</p>
     </section>
@@ -1297,6 +1303,6 @@
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
 <script src="/navigation.js?v=3630ab9726" defer></script>
-<script src="/app.js?v=ff180e0c87" defer></script>
+<script src="/app.js?v=d318df33f6" defer></script>
 </body>
 </html>

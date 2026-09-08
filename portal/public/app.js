@@ -3291,6 +3291,23 @@ function declaredLedgerHTML(items, partyByName) {
     </section>`).join("")}</div>`;
 }
 
+function declaredPage(items, partyByName, { category = "", party = "", person = "", q = "", page = 1 } = {}) {
+  const normalise = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const terms = normalise(q).trim().split(/\s+/).filter(Boolean);
+  const matches = items.filter((item) => {
+    const itemParty = partyByName.get(String(item.name || "").toLowerCase()) || "";
+    if (category && item.bucket !== category || party && itemParty !== party || person && normalise(item.name) !== normalise(person)) return false;
+    const text = normalise([item.name, item.description, itemParty, item.kind, item.date,
+      DECLARED_BUCKET_LABELS[item.bucket] || item.bucket, item.jurisdiction, item.chamber,
+      ...(item.ties || []).map((tie) => tie.organisation)].join(" "));
+    return terms.every((term) => text.includes(term));
+  });
+  const pages = Math.max(1, Math.ceil(matches.length / 20));
+  const requested = Number(page);
+  const current = Math.min(pages, Math.max(1, Number.isFinite(requested) ? Math.floor(requested) : 1));
+  return { items: matches.slice((current - 1) * 20, current * 20), page: current, pages };
+}
+
 async function renderDeclaredPage(params, manageFocus) {
   const root = $("declared-list");
   root.innerHTML = `<p class="status">Opening the register ledger…</p>`;
@@ -3304,6 +3321,9 @@ async function renderDeclaredPage(params, manageFocus) {
   const bucket = params.get("category") || "";
   const party = params.get("party") || "";
   const person = params.get("person") || "";
+  const query = params.get("q") || "";
+  const searchInput = $("declared-query");
+  searchInput.value = query;
   const bucketSelect = $("declared-bucket");
   const partySelect = $("declared-party");
   const buckets = [...new Set(items.map((x) => x.bucket).filter(Boolean))]
@@ -3313,25 +3333,35 @@ async function renderDeclaredPage(params, manageFocus) {
   partySelect.innerHTML = `<option value="">all parties</option>${parties.map((p) => `<option value="${esc(p)}">${esc(p)}</option>`).join("")}`;
   bucketSelect.value = buckets.includes(bucket) ? bucket : "";
   partySelect.value = parties.includes(party) ? party : "";
-  const filtered = items.filter((item) => (!bucketSelect.value || item.bucket === bucketSelect.value) &&
-    (!partySelect.value || partyByName.get(String(item.name || "").toLowerCase()) === partySelect.value) &&
-    (!person || String(item.name || "").toLowerCase() === person.toLowerCase()));
-  const reg = "https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results/Registers_of_Interests";
-  $("declared-summary").innerHTML = `${person ? `For <a href="${esc(subjectHash("person", person))}">${esc(person)}</a> · ` : ""}` +
-    `<a href="${reg}" rel="noopener" target="_blank"><b>${filtered.length.toLocaleString()}</b> of the newest ${items.length.toLocaleString()} alterations shown` +
-    (Number(data.meta?.available) > items.length ? ` (${Number(data.meta.available).toLocaleString()} dated alterations in the source export)` : "") + `</a>` +
-    `${person ? ` · <a href="/declared">view everyone</a>` : ""}`;
-  root.innerHTML = filtered.length ? declaredLedgerHTML(filtered, partyByName) : `<p class="status">No alterations match these filters.</p>`;
+  const result = declaredPage(items, partyByName, {
+    category: bucketSelect.value, party: partySelect.value, person, q: query, page: params.get("page") || 1,
+  });
+  $("declared-summary").hidden = !person;
+  $("declared-summary").innerHTML = person ? `For <a href="${esc(subjectHash("person", person))}">${esc(person)}</a> · <a href="/declared">View everyone</a>` : "";
+  const pageHref = (page) => {
+    const next = new URLSearchParams(params);
+    if (page > 1) next.set("page", String(page)); else next.delete("page");
+    return `/declared${next.size ? `?${next}` : ""}`;
+  };
+  const pager = (label) => `<nav class="declared-pagination" aria-label="${label}">
+    ${result.page > 1 ? `<a class="action-btn" href="${esc(pageHref(result.page - 1))}">Previous</a>` : `<button class="action-btn" disabled>Previous</button>`}
+    <span aria-live="polite">Page ${result.page} of ${result.pages}</span>
+    ${result.page < result.pages ? `<a class="action-btn" href="${esc(pageHref(result.page + 1))}">Next</a>` : `<button class="action-btn" disabled>Next</button>`}
+  </nav>`;
+  $("declared-pagination").innerHTML = result.items.length ? pager("Declarations pages") : "";
+  root.innerHTML = result.items.length ? declaredLedgerHTML(result.items, partyByName) + pager("Declarations pages, bottom") : `<p class="status" role="status">No alterations match these filters.</p>`;
   const navigate = () => {
     const next = new URLSearchParams();
     if (bucketSelect.value) next.set("category", bucketSelect.value);
     if (partySelect.value) next.set("party", partySelect.value);
     if (person) next.set("person", person);
+    if (searchInput.value.trim()) next.set("q", searchInput.value.trim());
     goRoute(`/declared${next.size ? `?${next}` : ""}`);
   };
   bucketSelect.onchange = navigate;
   partySelect.onchange = navigate;
-  $("declared-filters").onsubmit = (event) => event.preventDefault();
+  $("declared-filters").onsubmit = (event) => { event.preventDefault(); navigate(); };
+  searchInput.onsearch = () => { if (!searchInput.value) navigate(); };
   if (manageFocus) $("panel-declared").querySelector("h1")?.focus?.({ preventScroll: true });
 }
 
