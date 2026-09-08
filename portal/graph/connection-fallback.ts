@@ -1,5 +1,6 @@
 import type { MoneyGraph, MoneyMapHandle, MoneyMapOptions, MoneyScene } from './index.ts'
 import { windowFigures } from './index.ts'
+import { filterMoneyEdges, readMoneyFilters, type MoneyFilters } from '../public/money-records.js'
 import { formatMoney } from './map-types.ts'
 
 /** The fallback uses the same directed edges and year windows as the 3D scene. */
@@ -25,7 +26,16 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
   container.append(root)
   const nodes = new Map(data.nodes.map(node => [node.id, node]))
   let current: MoneyScene | undefined = options.focus ? { focusId: options.focus } : undefined
-  let group: string | null = null
+  let route = options.chrome !== 'mini' && typeof location !== 'undefined' ? new URLSearchParams(location.search) : new URLSearchParams()
+  let filters: MoneyFilters = options.filters || readMoneyFilters(route)
+  const years = data.edges.flatMap(e => [e.firstYear, e.lastYear]).filter((n): n is number => typeof n === 'number')
+  const yearMin = Math.min(...years), yearMax = Math.max(...years)
+  const period = () => {
+    const read = (key: string, fallback: number) => /^\d{4}$/.test(route.get(key) || '') ? Math.max(yearMin, Math.min(yearMax, Number(route.get(key)))) : fallback
+    const from = current?.from ?? read('from', yearMin), to = current?.to ?? read('to', yearMax)
+    return { from: Math.min(from, to), to: Math.max(from, to), cpi: route.get('cpi') === '1' }
+  }
+  let group: string | null = filters.industry || null
   let destroyed = false
   const add = (tag: string, parent: HTMLElement, value?: string) => {
     const node = document.createElement(tag)
@@ -38,7 +48,11 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
     root.replaceChildren()
     add('p', root, 'Connections · 2D view').className = 'mm-connections-title'
     add('p', root, 'Showing a lighter map for this browser.').className = 'mm-connections-note'
-    const rows = connectionRows(data, current, group)
+    const window = period()
+    const windowed = { ...data, edges: data.edges.map(e => windowFigures(e, window.from, window.to, window.cpi)).filter(e => e.byYear || (e.firstYear ?? yearMin) <= window.to && (e.lastYear ?? yearMax) >= window.from) }
+    const rows = filterMoneyEdges({ ...data, edges: connectionRows({ ...windowed, edges: windowed.edges.map(e => ({ ...e, byYear: undefined })) }, current ? { ...current, from: undefined, to: undefined } : undefined, group) }, filters)
+    const ids = new Set(rows.flatMap(e => [e.source, e.target]))
+    options.onViewChange?.({ ...data, nodes: data.nodes.filter(n => ids.has(n.id)), edges: rows }, { ...filters, industry: group || '' }, window)
     const shown = rows.slice(0, 24)
     if (!shown.length) add('p', root, 'No recorded connections in this view.')
     const list = add('ul', root)
@@ -72,15 +86,18 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
   }
   render()
   return {
+    setFilters: (value, nextRoute) => { if (nextRoute) route = nextRoute; current = undefined; filters = { ...value }; group = value.industry || null; render() },
     presentScene: scene => {
       if (destroyed || !nodes.has(scene.focusId)) return false
       current = scene
+      route = new URLSearchParams()
+      filters = {}
       group = null
       render()
       root.scrollTop = 0
       return true
     },
-    clearScene: () => { current = undefined; group = null; render() },
+    clearScene: () => { route = new URLSearchParams(); current = undefined; group = null; filters = {}; render() },
     select: id => { current = id ? { focusId: id } : undefined; render() },
     isolate: value => { group = value; current = undefined; render() },
     fit: () => { current = undefined; group = null; render() },

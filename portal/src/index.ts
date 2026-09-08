@@ -2110,6 +2110,8 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     description: 'Explore political funding and public money in 3D. Guided journeys follow contracts, shared party connections, industries and changes over time, with federal and state records.',
     query: true,
   },
+  'money/receipts': { title: 'Political receipts · OPAX', description: 'Explore disclosed political receipts by donor, party and industry.', query: true },
+  'money/grants': { title: 'Grants · OPAX', description: 'Explore public grant awards and their recipients.', query: true },
   reports: {
     title: 'Reports · OPAX',
     description: 'Standing investigations pairing the money with the words: climate, gambling, housing, immigration, First Nations and media ownership, every claim cited.',
@@ -2202,6 +2204,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
   } catch {
     return null
   }
+  if (segs.length === 2 && dec[0] === 'money' && ['receipts', 'grants'].includes(dec[1])) return { kind: 'static', page: dec.join('/') }
   if (segs.length === 1 && dec[0] in STATIC_PAGES) return { kind: 'static', page: dec[0] }
   if (dec[0] === 'reports' && /^[a-z][a-z0-9-]*$/.test(dec[1] ?? '')) {
     // /reports/<slug> and its section deep links /reports/<slug>/s/<n>
@@ -3715,6 +3718,22 @@ export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
     const isApi = url.pathname.startsWith('/api/')
+    // Staging serves this branch's assets and reuses only the existing public API.
+    // It needs no copied KB credentials and every preview response is noindex.
+    if (env.STAGING_API) {
+      let response: Response
+      if (isApi || url.pathname.startsWith('/og/')) response = await env.STAGING_API.fetch(request)
+      else if (url.pathname === '/robots.txt') response = new Response('User-agent: *\nDisallow: /\n', { headers: { 'content-type': 'text/plain' } })
+      else if (url.pathname.startsWith('/ingest/')) response = new Response(null, { status: 204 })
+      else {
+        const assetUrl = new URL(request.url)
+        if (matchSeoRoute(url)) assetUrl.pathname = '/'
+        response = await env.ASSETS.fetch(new Request(assetUrl, request))
+      }
+      const preview = withSecurityHeaders(response, url)
+      preview.headers.set('x-robots-tag', 'noindex, nofollow')
+      return preview
+    }
     if (url.pathname.startsWith('/ingest/')) return proxyPostHog(request)
     try {
       // The route table only matches GET, so a HEAD (curl -I, uptime probes)

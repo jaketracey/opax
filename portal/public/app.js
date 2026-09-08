@@ -31,7 +31,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "bill"];
+const PANELS = ["money-records","discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "bill"];
 // /bills is the bill panel's index; it has no panel of its own, so isRoute has
 // to be told the word is ours before the click handler will follow it.
 const PANEL_ALIASES = { bills: "bill" };
@@ -796,6 +796,9 @@ function focusEntry(id) {
 }
 
 function showPanel(name) {
+  if (name !== "money-records") { moneyRecordsGeneration++; moneyRecordsHandle?.destroy(); moneyRecordsHandle = null; }
+  for (const nav of document.querySelectorAll('[data-money-navigation]')) nav.innerHTML = OpaxNavigation.moneyNav(location.pathname, new URLSearchParams(location.search).get('jur'));
+
   if (name !== "discover") destroyDiscoveryMap();
   if (name !== "money") {
     moneyJourneys?.destroy(); moneyJourneys = null;
@@ -804,9 +807,12 @@ function showPanel(name) {
   } else moneyMapHandle?.setPaused(false);
   // Methods and the expense-category glossary live under the About menu, so its
   // trigger stays lit there; the drawer has exact links of its own.
-  const headerName = name === "methods" || name === "expenses" ? "about" : name === "bill" ? "bills" : name;
+  const headerName = OpaxNavigation.active('/' + parseHash().segs.join('/'), parseHash().params);
   for (const t of document.querySelectorAll("#primary-nav [data-panel], #nav-drawer [data-panel]")) {
-    const active = t.dataset.panel === (t.closest("#nav-drawer") ? headerName : headerName);
+    const href = t.getAttribute('href');
+    const active = t.closest('details.drawer-group') && href
+      ? location.pathname === href || location.pathname.startsWith(href + '/')
+      : t.dataset.panel === headerName;
     t.classList.toggle("active", active);
     if (t.tagName !== "A") continue; // aria-current marks pages, not disclosure buttons
     if (active) t.setAttribute("aria-current", "page");
@@ -833,7 +839,7 @@ const TITLES = {
   reports: "Reports · OPAX",
   doc: "From the record · OPAX",
   subject: "OPAX encyclopedia",
-  declared: "Just declared · OPAX",
+  declared: "Registers of interests · OPAX",
   explore: "Explore · OPAX",
   about: "About · OPAX",
   methods: "Methods · OPAX",
@@ -967,7 +973,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=touch-focus-2");
+    const { mountMoneyMap } = await import("/money-map.js?v=ia-ux-20260908-2");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1102,7 +1108,7 @@ function moneyHash(jur, industry, keepView = false) {
   if (industry) p.set("industry", industry);
   if (keepView) {
     const current = parseHash().params;
-    for (const key of ["from", "to", "cpi"]) {
+    for (const key of ["from", "to", "cpi", "type", "party", "industry", "min", "q", "focus"]) {
       const value = current.get(key);
       if (value) p.set(key, value);
     }
@@ -1114,11 +1120,8 @@ function moneyHash(jur, industry, keepView = false) {
 function renderMoneySwitch(jur) {
   const box = $("money-jur");
   if (!box) return;
-  box.innerHTML = Object.entries(MONEY_JURISDICTIONS).map(([k, c]) =>
-    `<button type="button" data-jur="${esc(k)}" aria-pressed="${k === jur ? "true" : "false"}">${esc(c.label)}</button>`).join("");
-  for (const btn of box.querySelectorAll("button")) {
-    btn.addEventListener("click", () => { goRoute(moneyHash(btn.dataset.jur, moneyMapIsolate, true)); });
-  }
+  box.innerHTML = `<select aria-label="Jurisdiction">${Object.entries(MONEY_JURISDICTIONS).map(([k,c]) => `<option value="${esc(k)}"${k === jur ? ' selected' : ''}>${esc(c.label)}</option>`).join('')}</select>`;
+  box.querySelector('select').addEventListener('change', e => goRoute(moneyHash(e.target.value, moneyMapIsolate, true)));
 }
 
 /** The panel fineprint, from the loaded file's meta block where it has one. */
@@ -1149,6 +1152,24 @@ function moneyFineprintHTML(jur, meta) {
 }
 
 let moneyMapHandle = null;
+let moneyResearch = null;
+let moneyRecordsHandle = null;
+let moneyRecordsGeneration = 0;
+async function openMoneyRecords(kind, params) {
+  const generation = ++moneyRecordsGeneration;
+  moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
+  const grants = kind === 'grants';
+  $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
+  $('money-records-description').textContent = grants ? 'Explore grant awards and the organisations receiving them. Open a recipient to inspect its records.' : 'Disclosed payments to political parties in the selected map. Public contracts and grants are excluded; a receipt is not necessarily a gift.';
+  const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
+  try {
+    const mod = await import(grants ? '/grants.js?v=ia-ux-20260908-2' : '/ledger.js?v=ia-ux-20260908-2');
+    if (generation !== moneyRecordsGeneration) return;
+    body.replaceChildren();
+    moneyRecordsHandle = grants ? mod.mountGrants(body, { showHeading: false, displayTitle, topics: TOPICS, topicPhrase, searchHash, subjectHash, jurisdiction: params.get('jur') }) : mod.mountLedger(body, { jurisdiction: params.get('jur') });
+    if (grants && (params.get('open') || params.get('jur'))) moneyRecordsHandle.open?.(params.get('open'), params.get('jur') || undefined);
+  } catch { if (generation === moneyRecordsGeneration) body.innerHTML = '<p role="alert">These records could not load. <a href="'+(grants?'/money/grants':'/money/receipts')+'">Try again</a>.</p>'; }
+}
 let moneyMapGeneration = 0;
 let moneyJourneys = null;
 let moneyJourneyModule = null;
@@ -1168,6 +1189,8 @@ function attachMoneyJourneys(params = new URLSearchParams()) {
     },
     initialJourney: params.get("journey"), initialStep: params.get("step"), initialFocus: params.get("focus"),
     onRoute(id, step, focus) {
+      $('money-journey-picker').open = false;
+      if (id) { $('money-map-root').classList.remove('show-key'); $('money-map-root').querySelector('.mm-key-toggle')?.setAttribute('aria-expanded', 'false'); }
       const next = new URLSearchParams(location.search);
       if (id) { next.set("journey", id); next.set("step", String(step)); next.delete("industry"); }
       else { next.delete("journey"); next.delete("step"); }
@@ -1183,36 +1206,64 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   if (moneyMapHandle && moneyMapJur === jur) {
     // A legend choice made on the page is left alone; only the route's own
     // parameter coming or going moves the map.
-    const changedIndustry = isolate !== moneyMapIsolate;
+
     moneyMapIsolate = isolate;
     moneyMapHandle.setPaused(false);
     if (!moneyJourneys) attachMoneyJourneys(params);
     else moneyJourneys.setRoute(params.get("journey"), params.get("step"), params.get("focus"));
-    if (changedIndustry && !params.get("journey")) moneyMapHandle.isolate?.(isolate);
+    if (!params.get("journey")) {
+      const { readMoneyFilters } = await import('/money-records.js?v=ia-ux-20260908-2');
+      moneyMapHandle.setFilters(readMoneyFilters(params), params);
+      if (params.get('focus')) moneyMapHandle.select(params.get('focus'));
+    }
     return;
   }
   moneyMapIsolate = isolate;
   if (moneyMapLoading === jur) return;
   moneyMapLoading = jur;
+  moneyResearch?.destroy(); moneyResearch = null;
   const generation = ++moneyMapGeneration;
   moneyJourneys?.destroy(); moneyJourneys = null;
   if (moneyMapHandle) { moneyMapHandle.destroy(); moneyMapHandle = null; moneyMapJur = null; }
   const root = $("money-map-root");
+  root.classList.remove("show-key");
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule] = await Promise.all([import("/money-map.js?v=touch-focus-2"), loadMoneyFile(jur), import("/money-journeys.js?v=story-1")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=ia-ux-20260908-2"), loadMoneyFile(jur), import("/money-journeys.js?v=ia-ux-20260908-2"), import("/map-research.js?v=ia-ux-20260908-2"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
     root.textContent = "";
+    moneyResearch = researchModule.mountMapResearch($('money-research'), data, {
+      resultsContainer: $('money-research-results'),
+      onChange(filters) { moneyJourneys?.setRoute(null, null, null); const u = new URL(location.href); for (const key of ['journey','step','focus']) u.searchParams.delete(key); replaceRoute(u.pathname + u.search); moneyMapHandle?.setFilters(filters); },
+      onFocus(id) { moneyJourneys?.pause('map'); moneyMapHandle?.select(id); $('money-stage').scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }); },
+    });
     const handle = await mountMoneyMap(root, cfg.file, {
+      filters: recordsModule.readMoneyFilters(params),
+      focus: params.get('journey') ? undefined : params.get('focus') || undefined,
+      onViewChange: (view, filters, years) => {
+        moneyResearch?.update(view, filters, years);
+        const full = document.querySelector('#money-fineprint a[href^="/map"]');
+        if (full) full.href = '/map' + location.search;
+      },
+      onSelect: (node) => { if (!new URLSearchParams(location.search).get('journey')) { const u = new URL(location.href); if (node) u.searchParams.set('focus', node.id); else u.searchParams.delete('focus'); replaceRoute(u.pathname + u.search); } },
       onInteract: () => moneyJourneys?.pause("map"),
       askUrl: (industry) =>
         askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
     });
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) { handle.destroy(); return; }
     moneyMapHandle = handle;
+    const legend = root.querySelector('.mm-legend');
+    if (legend) {
+      legend.id = 'money-map-key';
+      const key = document.createElement('button');
+      key.type = 'button'; key.className = 'mm-key-toggle'; key.textContent = 'Map key';
+      key.setAttribute('aria-expanded', 'false'); key.setAttribute('aria-controls', legend.id);
+      key.addEventListener('click', () => key.setAttribute('aria-expanded', String(root.classList.toggle('show-key'))));
+      root.append(key);
+    }
     moneyMapJur = jur;
     moneyJourneyModule = journeysModule; moneyJourneyData = data;
     attachMoneyJourneys(params);
@@ -1427,7 +1478,7 @@ function route() {
   } else if (view === "declared") {
     showPanel("declared");
     document.title = TITLES.declared;
-    setCrumbs([{ label: "Just declared" }]);
+    setCrumbs([{ label: "Registers of interests" }]);
     renderDeclaredPage(params, manageFocus);
   } else if (view === "doc" && segs[1]) {
     showPanel("doc");
@@ -1467,6 +1518,12 @@ function route() {
       setCrumbs([{ label: "Reports" }]);
       loadReportsList(manageFocus);
     }
+  } else if (view === "money" && ["receipts", "grants"].includes(segs[1])) {
+    showPanel("money-records");
+    const title = segs[1] === 'grants' ? 'Government grants' : 'Political receipts';
+    document.title = `${title} · OPAX`;
+    setCrumbs([{ label: 'Money', href: '/money' }, { label: title }]);
+    openMoneyRecords(segs[1], params);
   } else if (view === "money") {
     showPanel("money");
     document.title = TITLES.money;
@@ -1477,6 +1534,7 @@ function route() {
     // A link into one module, and for the grants explorer into one recipient's
     // file: /explore?game=grants&jur=federal&open=abn:12345678901
     const game = params.get("game");
+    if (game && ["ledger", "grants"].includes(game)) { openGame(game, params); return; }
     if (game && GAMES[game]) openGame(game, params);
     document.title = TITLES.explore;
     // A game already open (e.g. reload with its dialog up) keeps its own crumb.
@@ -1778,6 +1836,22 @@ window.addEventListener("hashchange", () => {
   if (frag.startsWith("/")) replaceRoute(frag);
   route();
 });
+
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('[data-entry-mode]');
+  if (!link || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault(); event.stopImmediatePropagation();
+  if (link.dataset.entryMode === 'search') {
+    goRoute(searchHash($('ask-input').value.trim(), { ...askFilters(), kind: askKind() }));
+  } else {
+    const f = currentFilters();
+    for (const key of ['speaker','party','state','topic']) $('a-'+key).value = f[key] || '';
+    $('a-from').value = f.from || '1993'; $('a-to').value = f.to || '2026';
+    $('ask-wide').checked = f.kind !== 'speech';
+    updateAskYearsLabel();
+    goRoute(askHash($('search-input').value.trim(), f.kind === 'speech' ? 'speech' : 'all'));
+  }
+}, true);
 
 // --- masthead nav: megamenus + mobile drawer --------------------------------
 // Disclosure pattern (button + panel), not role=menu: Enter/Space toggles,
@@ -3214,7 +3288,7 @@ async function renderDeclaredPage(params, manageFocus) {
   bucketSelect.onchange = navigate;
   partySelect.onchange = navigate;
   $("declared-filters").onsubmit = (event) => event.preventDefault();
-  if (manageFocus) $("panel-declared").querySelector("h2")?.focus?.({ preventScroll: true });
+  if (manageFocus) $("panel-declared").querySelector("h1")?.focus?.({ preventScroll: true });
 }
 
 // Declared interests on person pages: the registers of members' interests
@@ -3499,7 +3573,7 @@ async function mountSubjectMap(nodeId) {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=touch-focus-2");
+    const { mountMoneyMap } = await import("/money-map.js?v=ia-ux-20260908-2");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
@@ -7449,8 +7523,8 @@ const GAMES = {
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=ia-ux-20260908-2", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=ia-ux-20260908-2", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js", mount: "mountThenVsNow" },
@@ -7459,6 +7533,7 @@ const GAMES = {
 async function openGame(which, params = null) {
   const game = GAMES[which];
   if (!game) return;
+  if (which === 'ledger' || which === 'grants') { const q = params?.toString(); goRoute(`/money/${which === 'ledger' ? 'receipts' : 'grants'}${q ? '?'+q : ''}`); return; }
   if (!$(game.dialog).open) $(game.dialog).showModal();
   pauseSubjectMap("dialog", true);
   // The module is a page in its own right while it is up; the trail says so
@@ -7662,50 +7737,6 @@ function newsTopicSlug(headline) {
     if (hits > bestHits) { bestHits = hits; best = slug; }
   }
   return bestHits > 0 ? best : null;
-}
-
-async function renderFrontNews() {
-  const holder = $("front-news");
-  try {
-    const data = await api("/api/news");
-    const items = (data.items || []).filter((i) => safeUrl(i.url)).slice(0, 18);
-    if (!items.length) { $("mod-news").hidden = true; return; }
-    const srcName = { ABC: "ABC News", Guardian: "The Guardian" };
-    holder.innerHTML = `<ol class="news-list" role="list">${items.map((i, index) => {
-      // Search the subject rather than the headline.
-      // A headline that matches no topic gets no pivots. The old fallback took
-      // two words off the article's keyword string, which asked the record
-      // about phrases like "populist one" and retrieved nothing.
-      const slug = frontNewsTopic(i.title);
-      const subject = slug ? TOPICS[slug] : "";
-      const pivots = subject ? `<a class="news-record-chip" href="${esc(searchHash(subject, { topic: slug }))}">${esc(subject)} in the record <span aria-hidden="true">→</span></a>` : "";
-      const when = relTime(i.published);
-      return `<li${index >= 6 ? ' class="front-news-extra" hidden' : ""}>
-        <a class="news-headline" href="${esc(safeUrl(i.url))}" rel="noopener" target="_blank">${esc(i.title)}</a>
-        <span class="news-meta"><span class="news-source">${esc(srcName[i.source] || i.source || "")}</span>${when ? ` · ${esc(when)}` : ""}</span>
-        ${pivots}</li>`;
-    }).join("")}</ol>${items.length > 6 ? `<button type="button" class="action-btn" id="front-news-more" aria-expanded="false" aria-controls="front-news-list">More headlines (${items.length - 6})</button>` : ""}`;
-    holder.querySelector("ol").id = "front-news-list";
-    const more = $("front-news-more");
-    if (more) more.onclick = () => {
-      const expanded = more.getAttribute("aria-expanded") !== "true";
-      holder.querySelectorAll(".front-news-extra").forEach((row) => { row.hidden = !expanded; });
-      more.setAttribute("aria-expanded", String(expanded));
-      more.textContent = expanded ? "Fewer headlines" : `More headlines (${items.length - 6})`;
-    };
-  } catch {
-    $("mod-news").hidden = true;
-  }
-}
-
-function frontNewsTopic(headline) {
-  const fallback = newsTopicSlug(headline);
-  // Keep overseas coverage overseas; otherwise explicit subject phrases
-  // outrank incidental party names and words such as "budget".
-  if (fallback === "foreign-affairs") return fallback;
-  if (/\b(house prices?|home loans?|housing|mortgages?|rents?|renters?|negative gearing)\b/i.test(headline)) return "housing";
-  if (/\b(tobacco|vaping)\b/i.test(headline)) return "hospitality-alcohol";
-  return fallback;
 }
 
 function renderFrontNumbers() {
@@ -8045,7 +8076,6 @@ function renderFrontPage() {
   resetFrontMap();
   if (frontRendered) return;
   frontRendered = true;
-  renderFrontNews();
   onIdle(() => { mountFrontMaps(); renderFrontBills(); renderFrontTopic(); renderFrontReports(); renderFrontAdded(); renderFrontDeclared(); });
 }
 
@@ -8105,15 +8135,13 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=touch-focus-2"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=ia-ux-20260908-2"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
     const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
       askUrl: (industry) => askHash(`What has parliament said about ${industryLabel(industry)}?`),
-      onSelect: (node) => {
-        if (node) goRoute(subjectHash(node.kind === "party" ? "party" : "donor", node.label));
-      },
+
     });
     frontMapHandle = handle;
     frontMapObserver = new IntersectionObserver((entries) => handle.setPaused?.(!entries[entries.length - 1].isIntersecting));
@@ -8511,7 +8539,7 @@ function renderChips() {
 }
 
 function setFrontPageHidden(hidden) {
-  for (const id of ["front-map", "front-page"]) {
+  for (const id of ["front-map", "home-tasks", "front-page"]) {
     const el = $(id);
     if (el) el.hidden = hidden;
   }
@@ -11353,7 +11381,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=touch-focus-2");
+    const { mountMoneyMap } = await import("/money-map.js?v=ia-ux-20260908-2");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
