@@ -4763,3 +4763,5 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .declared-pagination > span { color: var(--ink-soft); font-size: .875rem; }
 .declared-pagination .action-btn { min-height: 44px; }
 .declared-pagination button:disabled { opacity: .45; cursor: default; }
+
+.agency-directory-page .supplier-directory-row strong { font-size: 1.0625rem; line-height: 1.45; }

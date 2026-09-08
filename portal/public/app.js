@@ -1391,7 +1391,7 @@ async function openAgencyPage(name, params, manageFocus) {
   body.classList.remove("subject-person");
   body.innerHTML = '<p role="status">Loading agencies…</p>';
   try {
-    const module = await import("/agencies.js?v=austender-1");
+    const module = await import("/agencies.js?v=directory-type-1");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
