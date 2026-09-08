@@ -2040,14 +2040,25 @@ function closeNavDrawer() {
 {
   const drawer = $("nav-drawer");
   const toggle = $("nav-open");
+  const searchToggle = $("nav-search-open");
+  searchToggle.addEventListener("click", () => {
+    drawer.showModal();
+    $("drawer-q").focus({ preventScroll: true });
+    toggle.setAttribute("aria-expanded", "true");
+    searchToggle.setAttribute("aria-expanded", "true");
+  });
   toggle.addEventListener("click", () => {
     drawer.showModal();
     // The dialog itself takes focus, so a tap on the hamburger does not land
     // a focus ring on the first control; Tab still reaches everything.
     drawer.focus({ preventScroll: true });
     toggle.setAttribute("aria-expanded", "true");
+    searchToggle.setAttribute("aria-expanded", "true");
   });
-  drawer.addEventListener("close", () => toggle.setAttribute("aria-expanded", "false"));
+  drawer.addEventListener("close", () => {
+    toggle.setAttribute("aria-expanded", "false");
+    searchToggle.setAttribute("aria-expanded", "false");
+  });
   // Escape: run the same exit animation instead of the instant native close.
   drawer.addEventListener("cancel", (e) => { e.preventDefault(); closeNavDrawer(); });
   $("drawer-close").addEventListener("click", () => closeNavDrawer());
@@ -2071,7 +2082,7 @@ function closeNavDrawer() {
   });
   // Growing past the mobile breakpoint with the drawer open would strand a
   // modal over a page that now shows the full nav.
-  window.matchMedia("(min-width: 861px)").addEventListener("change", (e) => {
+  window.matchMedia("(min-width: 1440px)").addEventListener("change", (e) => {
     if (e.matches && drawer.open) drawer.close();
   });
 }

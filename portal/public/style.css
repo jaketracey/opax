@@ -331,7 +331,7 @@ header :focus-visible { outline-color: var(--bronze-bright); }
   }
 }
 
-/* Hamburger: hidden until the band compacts (≤860px). */
+/* Compact header controls share the same drawer on phones and tablets. */
 .nav-toggle {
   display: none; margin-left: auto; align-items: center; justify-content: center;
   min-width: 44px; min-height: 44px; padding: 0;
@@ -340,6 +340,9 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 }
 .nav-toggle:hover { color: var(--on-navy); }
 .nav-toggle svg { width: 24px; height: 24px; }
+.mast-search-toggle { display: none; align-items: center; gap: .5rem; margin-left: auto; min-height: 44px; padding: .5rem .65rem; background: none; border: 0; border-radius: 4px; color: var(--on-navy-soft); font: 600 .9375rem/1.2 var(--sans); cursor: pointer; }
+.mast-search-toggle:hover { color: var(--on-navy); }
+.mast-search-toggle svg { width: 20px; height: 20px; }
 
 /* ---- mobile nav drawer --------------------------------------------------- */
 
@@ -2536,11 +2539,12 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   .logo-mark { height: 64px; width: 70px; }
 }
 
-/* Compact band: hamburger + drawer replace the inline nav. */
-@media (max-width: 860px) {
+/* Switch before the full navigation can collide with quick search. */
+@media (max-width: 1439px) {
   header { padding: 0.35rem 0; }
   .masthead-nav, .mast-search { display: none; }
-  .nav-toggle { display: inline-flex; }
+  .nav-toggle { display: inline-flex; margin-left: 0; }
+  .mast-search-toggle { display: inline-flex; }
   .logo-mark { height: 46px; width: 51px; }
   .masthead, .masthead-id { display: flex; align-items: center; }
   /* The compact band pads evenly and hides the nav, so the mark needs no lift. */
@@ -4636,7 +4640,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 #money-records-body .lg-root { margin-top: 1.5rem; }
 #panel-money .money-map-root { min-height: 560px; }
 #money-journey-controls { margin-top: 1.5rem; }
-@media (min-width: 861px) and (max-width: 1180px) { .masthead-name { font-size: .7rem; } #primary-nav .nav-link { padding-left: .55rem; padding-right: .55rem; font-size: .8rem; } .mast-search { max-width: 180px; } }
+@media (min-width: 1440px) { .masthead-nav { min-width: max-content; } .mast-search { min-width: 180px; } }
 @media (max-width: 1050px) { .research-controls { grid-template-columns: repeat(3,1fr); } }
 @media (max-width: 700px) {
   .home-tasks { grid-template-columns: repeat(2,1fr); gap: 1rem; margin: 1.5rem 0; }
