@@ -37,7 +37,7 @@
   "vars": {
     "COMMUNITY_ORIGIN": "https://opax.com.au",
     "COMMUNITY_EMAIL_FROM": "hello@login.opax.com.au",
-    "COMMUNITY_ENABLED": "false",
+    "COMMUNITY_ENABLED": "true",
     "ARAG_ZONE": "aws-ap-southeast-2-1",
     // Folded into every response-cache key (/api/ask 7 days, /api/search,
     // /api/resource, /api/followups). Bump it whenever the corpus changes
