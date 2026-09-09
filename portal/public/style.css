@@ -4653,6 +4653,14 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 #front-map-root .rp-map3d-territory[data-hub] { font-size: 13px; letter-spacing: .015em; }
 .home-map-stage { position: relative; margin: 1rem 0; }
 .home-map-stage #front-map-root { width: 100%; height: clamp(420px,38vw,540px); min-height: 420px; }
+/* Only the canvas breaks out of the reading column. Its fixed block size
+   keeps the caption, industry links and following sections steady. */
+@media (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
+  .home-map-stage #front-map-root {
+    width: calc(100% + var(--home-map-outset, 0px) * 2);
+    margin-inline: calc(var(--home-map-outset, 0px) * -1);
+  }
+}
 .home-map-invite { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.3rem; align-items: center; padding: 1rem 0; border-top: 1px solid var(--line); }
 .home-map-journeys { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1.3rem; }
 .home-map-invite span { color: var(--ink-soft); font-size: .8rem; }
