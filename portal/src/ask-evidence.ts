@@ -4,7 +4,12 @@ export type AugmentedContext = {
   fields?: Record<string, { id?: string; text?: string; parent?: string }>
 }
 
-export const ASK_PIPELINE_VERSION = '2026-09-09-footnotes-context-recovery-v7'
+export const ASK_PIPELINE_VERSION = '2026-09-09-footnotes-context-recovery-v8'
+
+/** Suppress generic website directions in previews, never in source records. */
+export function stripListingBoilerplate(value: string): string {
+  return value.replace(/\b(?:the\s+)?full\s+listing\s+can\s+be\s+found\s+at\s*:?\s*(?:\[[^\]\n]*\]\(https?:\/\/[^\s)]+\)|<https?:\/\/[^>\s]+>|https?:\/\/[^\s<>]+)\.?/gi, '').trim()
+}
 
 export const FOOTNOTE_INSTRUCTIONS = 'Cite factual claims with Markdown footnotes, for example [^1]. After the answer, define EVERY reference on its own line using an exact block identifier from the provided context, for example [^1]: block-AA. Do not use that example identifier unless it is present in the context. Never invent an identifier or use paragraph order as a citation. '
 
@@ -34,7 +39,7 @@ const EXCERPT_STOP = new Set(('a an and are as at be been being by can could did
 
 /** A contiguous, word-bounded original-text window near the question's terms. */
 export function evidenceExcerpt(value: string, question: string, limit = 440): { text: string; relevance: number } {
-  const text = value.replace(/\n+DOCUMENT CLASSIFICATION LABELS:[\s\S]*$/, '').replace(/\s+/g, ' ').trim()
+  const text = stripListingBoilerplate(value.replace(/\n+DOCUMENT CLASSIFICATION LABELS:[\s\S]*$/, '')).replace(/\s+/g, ' ').trim()
   const terms = new Set((question.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []).filter(t => t.length > 2 && !EXCERPT_STOP.has(t)))
   const matches = [...text.matchAll(/[\p{L}\p{N}]+/gu)].filter(m => terms.has(m[0].toLowerCase()))
   let start = 0

@@ -13,7 +13,7 @@
  *  - exclude da-* fields from citations (enrichment output must not cite itself)
  */
 
-import { ASK_PIPELINE_VERSION, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteRecoveryAsk, evidenceExcerpt, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
+import { ASK_PIPELINE_VERSION, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteRecoveryAsk, evidenceExcerpt, stripListingBoilerplate, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, type AskScope } from './ask-scope'
 import { communityRoute } from './community'
 import { communityMcp } from './community-mcp'
@@ -24,6 +24,8 @@ import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, int
 import { SEARCH_SORTS, compareSearchResults } from './search-sort'
 import { tokens as catalogTokens } from './catalog-query.mjs'
 import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
+
+import { SEARCH_SUMMARY_VERSION, SEARCH_SUMMARY_SYSTEM, summarySources, summaryPrompt, parseSearchSummary, summaryModelAnswer } from './search-summary'
 
 import { OG_FONT_FILES, OG_VERSION, homeCard, type OgCard } from './og'
 import { renderOgPng, type OgFont } from './og-render'
@@ -553,7 +555,9 @@ async function searchWindow(
     for (const field of Object.values(resource.fields ?? {})) {
       for (const para of Object.values(field.paragraphs ?? {})) {
         const cal = calibrate(para.score, para.score_type)
-        const lower = para.text.toLowerCase()
+        const passage = stripListingBoilerplate(para.text)
+        if (!passage) continue
+        const lower = passage.toLowerCase()
         let hits = 0
         let at = -1
         for (const t of queryTerms) {
@@ -563,7 +567,7 @@ async function searchWindow(
         if (hits > bestHits || (hits === bestHits && cal >= bestScore)) {
           bestHits = hits
           bestScore = cal
-          bestText = para.text
+          bestText = passage
           hitAt = at
         }
       }
@@ -723,6 +727,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
       (party ? `This retrieval is restricted to records indexed under ${party}. A combined debate can still contain other parties' speakers. Unless the passages explicitly establish the speaker's affiliation, frame the answer as evidence in records indexed under ${party}, not as verified statements by ${party} MPs. Do not present a passage explicitly speaking for a different party as this group's position. ` : '') +
       'Instructions: If the question contains a follow-up, answer the latest follow-up; the earlier user question only supplies its subject. Give a concise, cited explanation in your own words from whichever passages address the question. Use direct quotations only when their exact wording helps answer the question or the reader asks for quotes. ' +
       'When the question names a particular institution, commission, bill or policy, exclude passages about other institutions sharing generic words such as commission or reform. For example, a not-for-profit regulator or another national commissioner is not evidence about a federal anti-corruption commission. ' +
+      'Omit generic website directions such as \"The full listing can be found at\" and its URL. Summarise the substantive evidence instead. ' +
       'Ignore passages that are off-topic; answer from the ones that apply even if only a few do or they address it only in part. If some passages mention the subject only briefly, report what they say and note that the record is limited. ' +
       'Begin with the answer itself. Never open with a preamble such as "Based on the provided context", "According to the passages" or "The context shows": the reader knows the answer comes from the record. ' +
       FOOTNOTE_INSTRUCTIONS +
@@ -1064,6 +1069,45 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   if (hasUnsupportedQuotes(payload, answer) || (!isRefusal(answer) && !Object.keys(payload.citations).length)) payload = evidenceOnlyAnswer(payload, answer, String(body.query ?? ''))
   store(payload)
   return withCacheStatus(json(payload), status, false)
+}
+
+/** A short overview grounded only in the same filtered public search results. */
+async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const searchUrl = new URL(url)
+  searchUrl.pathname = '/api/search-all'
+  searchUrl.searchParams.set('page', '1')
+  searchUrl.searchParams.set('per', '20')
+  searchUrl.searchParams.set('sort', 'relevance')
+  const response = await apiUnifiedSearch(request, searchUrl, env, ctx)
+  if (!response.ok) return response
+  const results = await response.json() as {results: Record<string, unknown>[]; index_version?: string; warnings?: string[]}
+  const sources = summarySources(results.results || [])
+  if (!sources.length) return json({status:'empty', points:[], sources:[]})
+  const query = (searchUrl.searchParams.get('q') || '').trim()
+  const filters = Object.fromEntries(['kind','mode','speaker','party','state','topic','from','to'].map(k => [k, searchUrl.searchParams.get(k) || '']))
+  const key = cacheRequest('search-summary', await sha256Hex(JSON.stringify({version:SEARCH_SUMMARY_VERSION, epoch:env.CACHE_EPOCH, query, filters, sources, index:results.index_version})))
+  const cached = await caches.default.match(key)
+  if (cached) return withCacheStatus(cached, 'HIT', false)
+  const limited = await rateLimited(env.FOLLOWUPS_LIMITER, request)
+  if (limited) return limited
+  try {
+    const prompt = summaryPrompt(query,filters,sources)
+    const generate = async (query: string) => summaryModelAnswer(await kbFetch(env, '/ask', {
+      body: {query, top_k:1, reranker:'noop', generative_model:'openai-compatible', max_tokens:4096,
+        prompt:{system:SEARCH_SUMMARY_SYSTEM, user:'{question}'}},
+      headers:{'x-synchronous':'true'}, signal:AbortSignal.timeout(25_000),
+    }))
+    const answer = await generate(prompt)
+    let summary = answer ? parseSearchSummary(answer,sources) : null
+    if (!summary && answer) {
+      const repaired = await generate(prompt + '\nWrite a fresh, short overview. Previous output failed source validation. Keep each sentence to one narrow factual point. Cite an EXACT passage or title for every named speaker and claim. Use supplied numbers without rounding. Grants and contracts are published awards, not received, paid or spent money, funded work, or completed projects. Return only the required JSON.')
+      summary = repaired ? parseSearchSummary(repaired,sources) : null
+    }
+    if (!summary) return json({error:'A cited summary is unavailable. Your matching records are still below.'},502)
+    const out = json({status:'ready', ...summary, reviewed_count:sources.length, partial:!!results.warnings?.length})
+    cacheStore(ctx, key, out, 24*60*60)
+    return withCacheStatus(out,'MISS',false)
+  } catch { return json({error:'A cited summary is unavailable. Your matching records are still below.'},503) }
 }
 
 // Narration is generated from server-loaded graph facts, never client-supplied amounts.
@@ -3849,7 +3893,7 @@ const NULL_BODY_STATUS = new Set([101, 204, 205, 304])
 // query's result set. Every other /api route is the caching work's to own, so
 // its Cache-Control is left exactly as the handler returned it — and even here
 // a handler that sets its own (the SSE stream does) wins.
-const NO_STORE_PATHS = new Set(['/api/journey-story', '/api/ask', '/api/followups', '/api/search', '/api/search-all'])
+const NO_STORE_PATHS = new Set(['/api/search-summary', '/api/journey-story', '/api/ask', '/api/followups', '/api/search', '/api/search-all'])
 
 function withSecurityHeaders(res: Response, url: URL): Response {
   const isApi = url.pathname.startsWith('/api/')
@@ -3996,6 +4040,9 @@ async function route(
   {
       if (url.pathname === '/api/search' && request.method === 'GET') {
         return validateSearchQuery(url) ?? (await apiSearch(request, url, env, ctx))
+      }
+      if (url.pathname === '/api/search-summary' && request.method === 'GET') {
+        return await apiSearchSummary(request, url, env, ctx)
       }
       if (url.pathname === '/api/ask' && request.method === 'POST') {
         const body = await readJsonBody(request)

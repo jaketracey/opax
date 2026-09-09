@@ -5219,7 +5219,7 @@ function topicTideHTML(data, slug, phrase) {
    name ("[Legal and Constitutional … Police] Ms Barrett : Thank you"). None
    of that is the speech. Display only; exports and citations quote the record. */
 function cleanPassage(text) {
-  let raw = String(text || "");
+  let raw = String(text || "").replace(/\b(?:the\s+)?full\s+listing\s+can\s+be\s+found\s+at\s*:?\s*(?:\[[^\]\n]*\]\(https?:\/\/[^\s)]+\)|<https?:\/\/[^>\s]+>|https?:\/\/[^\s<>]+)\.?/gi, '');
   // A heading the source glued above the passage: "Gambling\n\nGambling is also…"
   const head = /^\s*([^\n]{1,80}?)[ \t]*\n(?:[ \t]*\n)+/.exec(raw);
   if (head && !/[.!?,;:]$/.test(head[1].trim()) && head[1].trim().split(/\s+/).length <= 8) raw = raw.slice(head[0].length);
@@ -9787,7 +9787,7 @@ function renderResults(results) {
       if (r.href) {
         li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(r.title)}</a></h3>
           <div class="result-meta">${recordTypeLink(r.kind)}${r.source ? ` · ${esc(r.source)}` : ""}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}</div>
-          <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(r.snippet, lastSearch.query)}</p>
+          <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>
           <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>`;
         return li;
       }
@@ -10006,181 +10006,89 @@ function renderSearchEmpty(q, f) {
   box.hidden = false;
 }
 
-// With nothing retrieved there is nothing to answer from: stop the reader
-// rather than let the rail wait on a model that has no passages.
-function giveUpSearchAnswer() {
-  const box = $("search-answer");
-  if (!searchAnswerWanted) return;
-  if (searchAnswerAbort) { searchAnswerAbort.abort(); searchAnswerAbort = null; }
-  clearTimeout(searchAnswerStill);
-  hideLoader("search-answer-wombat");
-  setStatus($("search-answer-status"), "");
-  $("search-answer-body").replaceChildren();
-  $("search-answer-fold").hidden = true;
-  $("search-answer-more").textContent = "";
-  const empty = $("search-answer-empty");
-  empty.innerHTML = `<p class="rail-empty-line">Nothing to read from.</p>
-    <p class="fineprint">The record answers only from passages it can cite. None matched this search, so it stays silent rather than guess.</p>`;
-  empty.hidden = false;
-  box.hidden = false;
-}
-
-
-// --- search answer (the summary beside the results) -------------------------
-
+// A new query owns its summary; paging and sorting keep the same overview.
 let searchAnswerAbort = null;
-let searchAnswerStill = null;
-let searchAnswerWanted = false; // an ask runs beside this search (there was a query)
+let searchAnswerWanted = false;
+let searchAnswerKey = "";
 
-
-// On phones the summary sits above the results (CSS order) and folds to a
-// few lines once it has finished streaming, so the first result is one
-// thumb-flick away rather than a screen of prose away. Wide screens keep the
-// full rail. The fold only applies when the text actually overflows.
-const SEARCH_ANSWER_FOLD_QUERY = "(max-width: 1099px)";
-function resetSearchAnswerFold() {
-  const box = $("search-answer");
-  const body = $("search-answer-body");
-  const btn = $("search-answer-readmore");
-  const narrow = window.matchMedia(SEARCH_ANSWER_FOLD_QUERY).matches;
-  // Phones: the card is clamped from the first character and holds its
-  // folded height while it waits (a hairline skeleton stands in), so the
-  // results underneath never move and nothing is shown whole then folded.
-  box.classList.toggle("is-clamped", narrow);
-  box.classList.toggle("is-loading", narrow);
-  if (narrow) {
-    const sk = document.createElement("div");
-    sk.className = "answer-skeleton";
-    sk.setAttribute("aria-hidden", "true");
-    sk.append(...[92, 100, 96, 60].map((w) => { const b = document.createElement("i"); b.style.width = `${w}%`; return b; }));
-    body.replaceChildren(sk);
-  }
-  // Folded: the control is present but invisible (its line is reserved);
-  // unfolded (wide screens): absent.
-  if (btn) { btn.textContent = "Read summary"; btn.hidden = !narrow; btn.classList.remove("is-ready"); btn.setAttribute("aria-expanded", "false"); }
-}
-const searchAnswerFolds = () => window.matchMedia(SEARCH_ANSWER_FOLD_QUERY).matches;
-function searchAnswerArrived() {
-  const box = $("search-answer");
-  box.classList.remove("is-loading");
-  $("search-answer-body").querySelector(".answer-skeleton")?.remove();
-}
-function offerSearchAnswerReadMore() {
-  const box = $("search-answer");
-  const body = $("search-answer-body");
-  const btn = $("search-answer-readmore");
-  if (!btn || !box.classList.contains("is-clamped") || btn.classList.contains("is-ready")) return;
-  if (body.scrollHeight <= body.clientHeight + 8) return;
-  btn.classList.add("is-ready");
-  btn.onclick = () => {
-    const expanded = btn.getAttribute("aria-expanded") !== "true";
-    box.classList.toggle("is-clamped", !expanded);
-    btn.setAttribute("aria-expanded", String(expanded));
-    btn.textContent = expanded ? "Show less" : "Read summary";
-  };
-}
-function foldSearchAnswer() {
-  const box = $("search-answer");
-  const body = $("search-answer-body");
-  searchAnswerArrived();
-  if (box.hidden) return; // Cached answers may arrive before the rail is measurable.
-  if (!box.classList.contains("is-clamped")) return;
-  // A short summary needs no fold: let it stand whole.
-  if (body.scrollHeight <= body.clientHeight + 8) { box.classList.remove("is-clamped"); $("search-answer-readmore").hidden = true; return; }
-  offerSearchAnswerReadMore();
-  // Overflowing but never offered (a rare race): offer it now.
-  if (!$("search-answer-readmore").classList.contains("is-ready")) { $("search-answer-readmore").classList.add("is-ready"); }
+function giveUpSearchAnswer() {
+  searchAnswerAbort?.abort();
+  searchAnswerAbort = null;
+  $("search-answer").hidden = true;
+  $("search-answer").classList.remove("is-loading");
 }
 
 function refreshSearchLayout() {
-  if ($("panel-search").hidden) return;
-  refreshSearchPassageFolds();
-  const box = $("search-answer"), btn = $("search-answer-readmore");
-  if (box.hidden || box.classList.contains("is-loading")) return;
-  if (!searchAnswerFolds()) { box.classList.remove("is-clamped"); btn.hidden = true; return; }
-  if (btn.getAttribute("aria-expanded") === "true") { btn.hidden = false; return; }
-  box.classList.add("is-clamped");
-  btn.hidden = false;
-  btn.classList.remove("is-ready");
-  foldSearchAnswer();
+  if (!$("panel-search").hidden) refreshSearchPassageFolds();
 }
 window.addEventListener("resize", refreshSearchLayout);
 document.fonts?.ready.then(refreshSearchLayout);
 
-async function runSearchAnswer(q, f, mySeq) {
-  const box = $("search-answer");
-  if (!q) { box.hidden = true; return; }
-  if (searchAnswerAbort) searchAnswerAbort.abort();
+async function runSearchAnswer(q, f, key) {
+  searchAnswerAbort?.abort();
   const abort = new AbortController();
   searchAnswerAbort = abort;
-  // The rail stays hidden until the results land: the answer always takes
-  // longer than the search, and an empty rail with a loader reads as a stall.
-  $("search-answer-body").replaceChildren();
+  searchAnswerKey = key;
+  const mine = () => searchAnswerAbort === abort && !abort.signal.aborted && searchAnswerKey === key;
+  const box = $("search-answer"), body = $("search-answer-body");
+  box.hidden = false;
+  box.classList.add("is-loading");
+  body.setAttribute("aria-busy", "true");
+  body.innerHTML = '<div class="answer-skeleton" aria-hidden="true"><i style="width:94%"></i><i style="width:86%"></i><i style="width:68%"></i></div>';
   $("search-answer-sources").replaceChildren();
   $("search-answer-fold").hidden = true;
   $("search-answer-fold").open = false;
-  $("search-answer-more").textContent = "Generating from the retrieved passages…";
-  setStatus($("search-answer-status"), "Reading the record…");
-  resetSearchAnswerFold();
-  $("search-answer-status").classList.add("visually-hidden"); // announced; the loader shows it
-  if (!searchAnswerFolds()) showLoader("search-answer-wombat", ""); // phones: the skeleton is the loader
-  // Silent for the first ten seconds; then a small word so a long wait reads
-  // as patience, not a stall.
-  clearTimeout(searchAnswerStill);
-  searchAnswerStill = setTimeout(() => {
-    if (searchAnswerAbort === abort) loaders.get("search-answer-wombat")?.setLabel("Still reading…");
-  }, 10000);
+  $("search-answer-more").textContent = "";
+  $("search-answer-retry").hidden = true;
+  $("search-answer-status").classList.remove("visually-hidden");
+  setStatus($("search-answer-status"), "Reading matching records…");
+  $("search-answer-dismiss").onclick = () => { searchAnswerWanted = false; giveUpSearchAnswer(); };
+  $("search-answer-retry").onclick = () => runSearchAnswer(q, f, key);
   try {
-    // A search query is rarely a question ("gambling"); the model refuses bare
-    // keywords. Phrase it, folding in the speaker when one is filtered.
-    const looksLikeQuestion = /\?\s*$|^(what|how|why|who|when|where|did|does|do|has|have|is|are|was|were)\b/i.test(q);
-    const question = looksLikeQuestion ? q
-      : f.speaker ? `What did ${f.speaker} say about ${q}?`
-      : `What has parliament said about ${q}?`;
-    const body = { question, kind: ["speech", "division", "bill", "press_release", "legal", "grant_invitation", "grant_award", "election_baseline", "parliamentary_profile", "research_report"].includes(f.kind) ? f.kind : "all" };
-    for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) body[k] = f[k];
-    // The answer streams into the rail; the loader leaves on the first words.
-    const mine = () => mySeq === searchSeq && searchAnswerAbort === abort;
-    const live = streamRenderer($("search-answer-body"), mine);
-    let streamed = false;
-    const data = await askRecord(JSON.stringify(body), abort.signal, {
-      delta(text) {
-        if (!mine()) return;
-        if (!streamed) {
-          streamed = true;
-          clearTimeout(searchAnswerStill);
-          hideLoader("search-answer-wombat");
-          setStatus($("search-answer-status"), "");
-          searchAnswerArrived();
-        }
-        live.push(text);
-        offerSearchAnswerReadMore();
-      },
-      retry() {
-        if (!mine()) return;
-        streamed = false;
-        live.reset();
-        if (!searchAnswerFolds()) showLoader("search-answer-wombat", "");
-      },
-    });
-    live.stop();
+    const data = await api(`/api/search-summary?${searchQueryParams(q, f, 1, "relevance")}`, { signal: abort.signal });
     if (!mine()) return;
-    const answer = (data.answer || "").trim();
-    if (!answer) { clearTimeout(searchAnswerStill); hideLoader("search-answer-wombat"); searchAnswerArrived(); box.hidden = true; return; }
-    clearTimeout(searchAnswerStill);
-    hideLoader("search-answer-wombat");
-    setStatus($("search-answer-status"), "");
-    renderAnswer($("search-answer-body"), answer, data);
-    foldSearchAnswer();
-    const cited = (data.sources || []).filter((x) => x.cited).slice(0, 3);
-    $("search-answer-sources").replaceChildren(...cited.map((x, i) => sourceItem(x, i + 1)));
-    $("search-answer-sum").textContent = `Sources (${cited.length})`;
-    $("search-answer-fold").hidden = !cited.length;
-    $("search-answer-more").innerHTML =
-      `${data.answer_status === "evidence_only" ? "Passages from the record." : "Generated from the retrieved passages."} <a href="${esc(askHash(question, f.kind))}">Open in Ask</a> for the full sources.`;
+    if (data.status === "empty") { box.hidden = true; return; }
+    if (!data.points?.length || !data.sources?.length) throw new Error("Summary unavailable");
+    const sources = new Map(data.sources.map((s, i) => [s.id, { ...s, number: i + 1 }]));
+    body.replaceChildren(...data.points.map(point => {
+      const p = document.createElement("p");
+      p.append(document.createTextNode(point.text + " "));
+      for (const id of point.source_ids) {
+        const s = sources.get(id);
+        if (!s || !/^\/(?!\/)/.test(s.href)) continue;
+        const a = document.createElement("a");
+        a.className = "search-summary-citation";
+        a.href = s.href;
+        a.textContent = `[${s.number}]`;
+        a.setAttribute("aria-label", `Source ${s.number}: ${s.title}`);
+        p.append(a, document.createTextNode(" "));
+      }
+      return p;
+    }));
+    $("search-answer-sources").replaceChildren(...[...sources.values()].map(s => {
+      const li = document.createElement("li"), a = document.createElement("a");
+      a.className = "source-title";
+      a.href = s.href; a.textContent = s.title;
+      li.append(a);
+      for (const text of s.evidence || []) {
+        const quote = document.createElement("blockquote");
+        quote.textContent = text; li.append(quote);
+      }
+      return li;
+    }));
+    $("search-answer-sum").textContent = `Sources (${sources.size})`;
+    $("search-answer-fold").hidden = false;
+    $("search-answer-more").textContent = `AI summary of ${data.reviewed_count} matching records.${data.partial ? " Some sources are temporarily unavailable." : ""}`;
+    setStatus($("search-answer-status"), "Summary ready");
+    $("search-answer-status").classList.add("visually-hidden");
   } catch (err) {
-    if (err.name === "AbortError" || mySeq !== searchSeq) return;
-    box.hidden = true;
+    if (!mine()) return;
+    body.replaceChildren();
+    setStatus($("search-answer-status"), "Summary unavailable");
+    $("search-answer-more").textContent = "Your matching records are below. You can try the summary again.";
+    $("search-answer-retry").hidden = false;
+  } finally {
+    if (mine()) { box.classList.remove("is-loading"); body.setAttribute("aria-busy", "false"); }
   }
 }
 
@@ -10208,11 +10116,11 @@ async function runSearch(page = 1) {
   const analyticsStarted = performance.now();
   trackOutcome("opax_search_started", { page, filter_count: Object.values(f).filter(Boolean).length });
   if (fresh) {
-    searchAnswerWanted = !!q && ["speech", "division", "press_release"].includes(f.kind);
+    searchAnswerWanted = !!(q || f.speaker);
+    searchAnswerKey = key;
     searchAnswerAbort?.abort();
     $("search-answer").hidden = true;
-    $("search-answer-empty").hidden = true;
-    if (searchAnswerWanted) runSearchAnswer(q, f, mySeq);
+
   }
   const btn = $("search-form").querySelector('button[type="submit"]');
   btn.disabled = true;
@@ -10282,8 +10190,7 @@ async function runSearch(page = 1) {
         history.replaceState(null, "", fixed);
       }
       if (searchAnswerWanted && fresh) {
-        $("search-answer").hidden = false; // the rail joins the results
-        if (!$("search-answer").classList.contains("is-loading")) foldSearchAnswer();
+        void runSearchAnswer(q, f, key);
       }
       if (searchScrollPending) scrollToResults();
     }

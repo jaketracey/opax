@@ -58,7 +58,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=c53659b948">
+<link rel="stylesheet" href="/style.css?v=b776aeb688">
 <link rel="stylesheet" href="/voice.css?v=df866209cb">
 <script type="module" src="/voice.js?v=9b7030f89d"></script>
 </head>
@@ -565,6 +565,20 @@
       <details id="search-coverage" class="fineprint" hidden><summary>Search coverage</summary><p></p></details>
       <div id="search-wombat" hidden></div>
       <div class="search-results-grid">
+      <aside class="search-answer" id="search-answer" hidden aria-labelledby="search-answer-head">
+        <div class="search-summary-heading">
+          <h2 id="search-answer-head">Cited summary</h2>
+          <span id="search-answer-status" role="status" aria-live="polite"></span>
+          <button type="button" id="search-answer-dismiss" aria-label="Dismiss summary"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
+        </div>
+        <div class="answer answer-compact" id="search-answer-body"></div>
+        <details id="search-answer-fold" class="chat-sources" hidden>
+          <summary id="search-answer-sum">Sources</summary>
+          <ol class="source-list" id="search-answer-sources"></ol>
+        </details>
+        <p class="fineprint" id="search-answer-more"></p>
+        <button type="button" class="action-btn" id="search-answer-retry" hidden>Try summary again</button>
+      </aside>
       <div class="search-results-main">
       <div id="search-empty" class="empty-state" hidden></div>
       <div class="results-bar" id="results-bar" hidden>
@@ -615,19 +629,7 @@
         <span class="visually-hidden" id="pager-where" role="status"></span>
       </nav>
       </div>
-      <aside class="search-answer" id="search-answer" hidden aria-label="Answer from the record">
-        <h2 class="kicker" id="search-answer-head">Summary</h2>
-        <div id="search-answer-status" class="status" role="status"></div>
-        <div id="search-answer-wombat" class="rail-wombat" hidden></div>
-        <div id="search-answer-empty" class="rail-empty" hidden></div>
-        <div class="answer answer-compact" id="search-answer-body"></div>
-        <button type="button" class="answer-readmore" id="search-answer-readmore" hidden aria-controls="search-answer-body" aria-expanded="false">Read more</button>
-        <details id="search-answer-fold" class="chat-sources" hidden>
-          <summary id="search-answer-sum">Sources</summary>
-          <ol class="source-list" id="search-answer-sources"></ol>
-        </details>
-        <p class="fineprint" id="search-answer-more"></p>
-      </aside>
+
       </div>
     </section>
 
@@ -1329,6 +1331,6 @@
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
 <script src="/navigation.js?v=842e523c9d" defer></script>
-<script src="/app.js?v=fc82d301d8" defer></script>
+<script src="/app.js?v=c4da84ca81" defer></script>
 </body>
 </html>

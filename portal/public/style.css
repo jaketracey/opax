@@ -1231,25 +1231,20 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .money-jur button:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: -2px; }
 
 .search-results-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem 2.5rem; align-items: start; margin-top: 1.25rem; }
-@media (min-width: 1100px) {
-  .search-results-grid { grid-template-columns: minmax(0, 1fr) 380px; }
-  .search-answer { position: sticky; top: calc(var(--header-h) + 1rem); }
-}
-/* Below the two-column breakpoint the summary reads first, folded to a few
-   lines behind a "Read more"; the results follow. On wide screens it is the
-   sticky rail beside the results and never folds. */
-@media (max-width: 1099px) {
-  .search-answer { order: -1; }
-  .search-answer.is-clamped .answer-compact {
-    max-height: 9.9em; overflow: hidden;
-    -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent); mask-image: linear-gradient(to bottom, #000 72%, transparent);
-  }
-  /* The folded box stands at its full height from the skeleton to the last
-     word, and the Read more line keeps its space before it is needed, so the
-     results below hold still throughout. */
-  .search-answer.is-clamped .answer-compact { min-height: 9.9em; }
-  .search-answer.is-clamped .answer-readmore { display: inline-block; visibility: hidden; }
-  .search-answer.is-clamped .answer-readmore.is-ready { visibility: visible; }
+/* A compact overview leads the matching records on every screen size. */
+.search-summary-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+#search-answer-head { margin: 0; font: 600 1rem/1.4 var(--sans); color: var(--navy); }
+#search-answer-status { color: var(--ink-soft); font-size: .8125rem; }
+#search-answer-dismiss { margin-left: auto; width: 44px; min-height: 44px; padding: 10px; border: 0; background: transparent; color: var(--ink-soft); cursor: pointer; }
+#search-answer-dismiss svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+#search-answer.is-loading #search-answer-status::before { content: ""; display: inline-block; width: .8em; height: .8em; margin-right: .5em; border: 1.5px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: btnspin 800ms linear infinite; }
+#search-answer-body { max-width: 80ch; }
+.search-summary-citation { display: inline-flex; align-items: center; justify-content: center; min-height: 24px; min-width: 24px; font-family: var(--sans); font-size: .8em; font-weight: 600; white-space: nowrap; }
+#search-answer-sources blockquote { margin: 4px 0 12px; border-left: 2px solid var(--line); padding-left: 12px; color: var(--ink-soft); font-size: .875rem; }
+#search-answer-retry { margin-top: 12px; }
+@media (max-width: 480px) {
+  .search-summary-heading { column-gap: 8px; row-gap: 0; }
+  #search-answer-status { order: 3; flex-basis: 100%; }
 }
 .answer-skeleton { display: grid; gap: 0.7em; padding-top: 0.35em; }
 .answer-skeleton i {
@@ -3339,7 +3334,6 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
   #panel-search #search-options-btn { width: auto; min-height: 44px; padding: 0 14px; gap: 8px; }
   #panel-search .search-filter-word { display: inline; }
   #panel-search .search-answer { padding: 14px 16px; }
-  #panel-search .search-answer.is-clamped .answer-compact { min-height: 6.6em; max-height: 6.6em; }
   #panel-search #search-answer .kicker { margin-bottom: 8px; padding-bottom: 8px; }
   #panel-search .search-results-grid { margin-top: 16px; }
   #panel-search #search-date-ruler { margin: 16px 0 12px; }
