@@ -4794,13 +4794,6 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
 
   // person
   const sections = $("subject-sections");
-  loadElectorateModule().then(async (module) => {
-    const data = await module.loadPeople();
-    if (currentSubjectKey !== key) return;
-    const person = module.findPerson(data.people, name);
-    const html = module.personLinksHTML(person);
-    if (html) sections.insertAdjacentHTML("afterbegin", html);
-  }).catch(() => { /* The parliamentary record remains available. */ });
   const box = $("subject-infobox");
   loadPhotoMap().then(() => {
     if (currentSubjectKey !== key) return;
@@ -4864,28 +4857,35 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       so a person may be indexed under a fuller or shorter form of this name. The search looks across every spelling.</p>`);
     return;
   }
+  const q = encodeURIComponent(name);
+  const [fits, electorateReference] = await Promise.all([
+    loadFits(),
+    loadElectorateModule().then(async (module) => {
+      const [data, people] = await Promise.all([module.loadIndex(), module.loadPeople().catch(() => ({ people: [] }))]);
+      return { module, data, person: module.findPerson(people.people, name) };
+    }).catch(() => null),
+  ]);
+  if (currentSubjectKey !== key) return;
+  const electorateLinks = electorateReference
+    ? electorateReference.module.personElectorateLinksHTML(electorateReference.person, representation.representations, electorateReference.data.electorates)
+    : representation.representations.map((r) => esc(r.electorate)).join(', ');
   subjectTag(body).innerHTML = [
     party ? partyChipHTML(party) : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
     representation.jurisdictions.length ? `<span>${esc(representation.jurisdictions.map(j=>j.label).join(" · "))}</span>` : "",
     representation.chambers.length ? `<span>${esc(representation.chambers.join(" · "))}</span>` : "",
-    representation.representations.length === 1 ? `<span>${esc(representation.representations[0].electorate)}</span>` : "",
+    electorateLinks ? `<span>${electorateLinks}</span>` : "",
   ].filter(Boolean).join(" · ") || "<span>From the parliamentary record</span>";
-  const q = encodeURIComponent(name);
-  const [fits, electorateReference] = await Promise.all([
-    loadFits(),
-    loadElectorateModule().then(async (module) => ({ module, data: await module.loadIndex() })).catch(() => null),
-  ]);
-  if (currentSubjectKey !== key) return;
-  const recordedRepresentation = (r) => electorateReference
-    ? electorateReference.module.recordedRepresentationHTML(r, electorateReference.data.electorates)
-    : `${esc(r.electorate)}${r.state && r.chamber !== 'senate' ? `, ${esc(r.state)}` : ''}`;
+  const electorateRows = electorateReference
+    ? electorateReference.module.personRepresentationRows(electorateReference.person, representation.representations, electorateReference.data.electorates)
+    : representation.representations.length ? [["Recorded representation", representation.representations.map((r) =>
+      `${esc(r.electorate)}${r.state && r.chamber !== 'senate' ? `, ${esc(r.state)}` : ''}`).join('<br>') + '<small class="representation-note">Roster affiliation; may include past seats.</small>']] : [];
   box.innerHTML = infoboxHTML([
     ["Type", roster?.current ? "Sitting parliamentarian" : "Parliamentarian"],
     party && ["Party", partyChipHTML(party) + (formerly ? ` <span class="fineprint" style="display:inline">formerly ${esc(formerly)}</span>` : "")],
     representation.jurisdictions.length && ["Jurisdiction", representation.jurisdictions.map(j=>`<a href="${esc(searchHash('',{state:j.id,kind:'speech'}))}">${esc(j.label)}</a>`).join(', ')],
     representation.chambers.length && ["Chamber", esc(representation.chambers.join(', '))],
-    representation.representations.length && ["Recorded representation", representation.representations.map(recordedRepresentation).join('<br>') + '<small class="representation-note">Roster affiliation; may include past seats.</small>'],
+    ...electorateRows,
     dates.length && ["Indexed speeches span", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
     fitsInfoRow(fits, "people", name),
   ], "", [
@@ -5621,7 +5621,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=20260909-quick-facts").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 

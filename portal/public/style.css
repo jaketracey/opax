@@ -4962,7 +4962,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .el-section > ul { padding-left:1.2rem; }
 .el-section > ul li { margin:.65rem 0; }
 .el-id { overflow-wrap:anywhere; font-size:.75rem; }
-.electorate-person-links li { margin-bottom:.8rem; }
 @media(max-width:650px) {
  .el-directory-row { grid-template-columns:1fr; gap:.45rem; }
  .el-intro { grid-template-columns:1fr; gap:1.5rem; }
