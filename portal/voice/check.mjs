@@ -35,7 +35,8 @@ const base = 'http://127.0.0.1:' + server.address().port;
 let assertions = 0;
 try {
   for (const [browserName, browserType] of [['chromium', chromium], ['webkit', webkit]]) {
-    const browser = await browserType.launch({ headless: true });
+    const executablePath = process.env['OPAX_' + browserName.toUpperCase() + '_PATH'];
+    const browser = await browserType.launch({ headless: true, ...(executablePath ? { executablePath } : {}) });
     async function fixture(width, overrides = {}, realSdk = false) {
       const page = await browser.newPage({ viewport: { width, height: width < 480 ? 667 : 820 }, reducedMotion: 'reduce' });
       const errors = [], requests = [], sdkRequests = [];
@@ -141,6 +142,20 @@ try {
       assert.ok(f.requests.includes('/api/voice/finish'));
       assert.deepEqual(f.errors, []);
       assertions += 15;
+      await p.close();
+    }
+    {
+      const f = await fixture(390, { unlimited: true, total_seconds: null }), p = f.page;
+      await open(p);
+      assert.equal(await p.locator('.opax-voice-allowance strong').textContent(), 'Unlimited');
+      assert.match(await p.locator('.opax-voice-allowance').textContent(), /up to 10 minutes per call/);
+      await p.getByRole('button', { name: 'Start talking', exact: true }).click();
+      await p.getByRole('button', { name: 'Mute mic', exact: true }).waitFor();
+      assert.match(await p.locator('.opax-voice-allowance').textContent(), /left in this call · unlimited calls/);
+      await p.getByRole('button', { name: 'End call', exact: true }).click();
+      await p.waitForFunction(() => document.querySelector('.opax-voice-allowance strong').textContent === 'Unlimited');
+      assert.equal(await p.getByRole('button', { name: 'Start talking', exact: true }).isEnabled(), true);
+      await fits(p);assert.deepEqual(f.errors, []);assertions += 6;
       await p.close();
     }
     for (const [name, overrides] of [['signed-out', { signed_in: false }], ['disabled', { enabled: false }], ['exhausted', { remaining_seconds: 0 }], ['active-elsewhere', { active_session: { id: 'another-call', expires_at: Date.now() / 1000 + 300 } }]]) {

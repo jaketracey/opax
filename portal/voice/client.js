@@ -186,15 +186,15 @@ export function createVoiceAssistant({ mount = document.body, fetcher = window.f
     mute.setAttribute('aria-pressed', String(Boolean(attempt?.muted)));
     end.hidden = !busy;
     end.textContent = connected ? 'End call' : 'Cancel';
-    clock.textContent = formatSeconds(secondsLeft());
-    allowanceText.textContent = status?.signed_in ? ' remaining · 10 minutes free in total' : ' free · 10 minutes total per account';
+    clock.textContent = status?.unlimited && !attempt ? 'Unlimited' : formatSeconds(secondsLeft());
+    allowanceText.textContent = status?.unlimited ? (attempt ? ' left in this call · unlimited calls' : ' voice access · up to 10 minutes per call') : status?.signed_in ? ' remaining · 10 minutes free in total' : ' free · 10 minutes total per account';
     root.classList.toggle('is-active', Boolean(connected));
     root.classList.toggle('is-speaking', Boolean(connected && attempt?.mode === 'speaking'));
     root.classList.toggle('is-connecting', busy && !connected);
     connectingSpinner.hidden = !busy || Boolean(connected);
     waves.hidden = busy && !connected;
     if (busy) activityText.textContent = connected ? (attempt.muted ? 'Your microphone is muted' : attempt.mode === 'speaking' ? 'Opax is speaking' : 'Listening to you') : 'Connecting…';
-    else activityText.textContent = secondsLeft() <= 0 && status?.signed_in ? 'Your free voice time is complete' : status?.enabled === false ? 'Voice is unavailable right now' : 'Ready when you are';
+    else activityText.textContent = secondsLeft() <= 0 && status?.signed_in && !status?.unlimited ? 'Your free voice time is complete' : status?.enabled === false ? 'Voice is unavailable right now' : 'Ready when you are';
   };
   async function refreshStatus() {
     const generation = ++statusGeneration;
@@ -346,7 +346,7 @@ export function createVoiceAssistant({ mount = document.body, fetcher = window.f
       timer = setInterval(() => {
         if (!validAttempt(value)) return;
         render();
-        if (secondsLeft() <= 0) void stop('Your 10 free minutes are complete. Your microphone is off. Keep exploring with Ask.');
+        if (secondsLeft() <= 0) void stop(status?.unlimited ? 'This call has finished. Start another whenever you’re ready.' : 'Your 10 free minutes are complete. Your microphone is off. Keep exploring with Ask.');
       }, 250);
       const conversation = await sdk.Conversation.startSession({
         signedUrl: data.signed_url, connectionType: 'websocket',

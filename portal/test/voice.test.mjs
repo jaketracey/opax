@@ -18,7 +18,7 @@ const hash=async value=>Buffer.from(await crypto.subtle.digest('SHA-256',new Tex
 
 function fixture(){
   const db=new DatabaseSync(':memory:');
-  for(const name of ['0001_community.sql','0002_free_community.sql','0003_voice.sql']) db.exec(readFileSync(new URL('../migrations/'+name,import.meta.url),'utf8'));
+  for(const name of ['0001_community.sql','0002_free_community.sql','0003_voice.sql','0004_voice_access.sql']) db.exec(readFileSync(new URL('../migrations/'+name,import.meta.url),'utf8'));
   const statement=(sql,args=[])=>({bind(...values){return statement(sql,values)},async first(){return db.prepare(sql).get(...args)||null},async all(){return {results:db.prepare(sql).all(...args)}},async run(){const result=db.prepare(sql).run(...args);return {success:true,meta:{changes:Number(result.changes)}}}});
   const env={COMMUNITY_DB:{prepare:statement},COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',VOICE_ENABLED:'true',VOICE_AGENT_ID:'agent_test',ELEVENLABS_API_KEY:'server-only-test-key',VOICE_TOOL_SECRET:'t'.repeat(43),VOICE_MONTHLY_SECONDS:'40000',ASSETS:{async fetch(){return Response.json({entities:[],sources:[]})}}};
   const pending=[]; const ctx={waitUntil(p){pending.push(p)}};
@@ -83,6 +83,39 @@ test('only a confirmed provider closure returns unused time and never returns it
   assert.equal(f.db.prepare('SELECT charged_seconds FROM voice_sessions').get().charged_seconds,121);
   const next=await reserveVoiceSession(f.env,a.id);assert.equal(next.reserved_seconds,479);await claimVoiceSession(f.env,a.id,next.id);await reconcileVoiceSession(f.env,next.id,9999);
   assert.equal(await reserveVoiceSession(f.env,a.id),null);assert.equal(f.db.prepare('SELECT SUM(charged_seconds) n FROM voice_sessions').get().n,600);f.db.close();
+});
+
+test('operator voice access allows repeated calls without changing other accounts or spending limits',async()=>{
+  const f=fixture(),a=await f.login('operator@example.com'),b=await f.login('reader@example.com');
+  f.db.prepare('INSERT INTO voice_access(member_id,unlimited,updated_at) VALUES(?,1,?)').run(a.id,Math.floor(Date.now()/1000));
+  for(const account of [a,b]){
+    const first=await reserveVoiceSession(f.env,account.id);assert.equal(first.reserved_seconds,600);
+    await claimVoiceSession(f.env,account.id,first.id);await reconcileVoiceSession(f.env,first.id,600);
+  }
+  const status=await (await f.call('status','GET',undefined,a.cookie)).json();
+  assert.equal(status.unlimited,true);assert.equal(status.total_seconds,null);assert.equal(status.remaining_seconds,600);
+  const ordinary=await (await f.call('status','GET',undefined,b.cookie)).json();
+  assert.equal(ordinary.unlimited,false);assert.equal(ordinary.remaining_seconds,0);
+  assert.equal((await f.call('start','POST',{unlimited:true},b.cookie)).status,403,'Client fields cannot grant access');
+  const second=await reserveVoiceSession(f.env,a.id);assert.equal(second.reserved_seconds,600);
+  assert.equal(await reserveVoiceSession(f.env,a.id),null,'Unlimited access still has one active call per account');
+  await claimVoiceSession(f.env,a.id,second.id);await reconcileVoiceSession(f.env,second.id,600);
+  f.env.VOICE_MONTHLY_SECONDS='1900';
+  const last=await reserveVoiceSession(f.env,a.id);assert.equal(last.reserved_seconds,100,'Global budget also caps unlimited accounts');
+  await claimVoiceSession(f.env,a.id,last.id);await reconcileVoiceSession(f.env,last.id,100);
+  assert.equal(await reserveVoiceSession(f.env,a.id),null);
+  assert.equal((await f.call('start','POST',{},a.cookie)).status,429);
+  assert.equal(f.db.prepare('SELECT SUM(charged_seconds) n FROM voice_sessions').get().n,1900,'Keep the usage history');
+  f.db.exec('UPDATE members SET disabled=1');assert.equal((await f.call('start','POST',{},a.cookie)).status,401);
+  f.db.close();
+});
+
+test('revoking unlimited access restores the ordinary lifetime allowance',async()=>{
+  const f=fixture(),a=await f.login();
+  f.db.prepare('INSERT INTO voice_access(member_id,unlimited,updated_at) VALUES(?,1,?)').run(a.id,Math.floor(Date.now()/1000));
+  const session=await reserveVoiceSession(f.env,a.id);await claimVoiceSession(f.env,a.id,session.id);await reconcileVoiceSession(f.env,session.id,600);
+  f.db.exec('UPDATE voice_access SET unlimited=0');
+  assert.equal(await reserveVoiceSession(f.env,a.id),null);f.db.close();
 });
 
 test('expired unused reservations are free while an uncertain active session remains charged',async()=>{
@@ -218,7 +251,7 @@ test('real Worker integration preserves SDK protocol, proxy deadline and clean-c
   const mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:'opax',modules:true,script:compiled.outputFiles[0].text,compatibilityDate:'2026-09-01',compatibilityFlags:['nodejs_compat'],d1Databases:{COMMUNITY_DB:'voice-runtime'},outboundService:'provider',bindings:{COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',VOICE_ENABLED:'true',VOICE_AGENT_ID:'agent_test',ELEVENLABS_API_KEY:'test-key',VOICE_TOOL_SECRET:'t'.repeat(43),VOICE_MONTHLY_SECONDS:'40000'}},{name:'provider',modules:true,script:provider,compatibilityDate:'2026-09-01'}]}));
   try{
     const db=await mf.getD1Database('COMMUNITY_DB','opax');
-    for(const name of ['0001_community.sql','0002_free_community.sql','0003_voice.sql'])for(const sql of readFileSync(new URL('../migrations/'+name,import.meta.url),'utf8').replace(/^\s*--.*$/gm,'').split(';').map(s=>s.trim()).filter(Boolean))await db.prepare(sql).run();
+    for(const name of ['0001_community.sql','0002_free_community.sql','0003_voice.sql','0004_voice_access.sql'])for(const sql of readFileSync(new URL('../migrations/'+name,import.meta.url),'utf8').replace(/^\s*--.*$/gm,'').split(';').map(s=>s.trim()).filter(Boolean))await db.prepare(sql).run();
     const id=crypto.randomUUID(),token='a'.repeat(43),timestamp=Math.floor(Date.now()/1000);
     await db.prepare('INSERT INTO members(id,email,created_at) VALUES(?,?,?)').bind(id,'runtime@example.invalid',timestamp).run();
     await db.prepare('INSERT INTO member_sessions(token_hash,member_id,expires_at,created_at) VALUES(?,?,?,?)').bind(await hash(token),id,timestamp+600,timestamp).run();
