@@ -4,6 +4,7 @@
    the googletagmanager.com origin. Container GTM-PNDM87LW. */
 (function (w, d, s, l, i) {
   if (!['opax.com.au', 'www.opax.com.au'].includes(w.location.hostname)) return;
+  if (navigator.doNotTrack === '1' || w.doNotTrack === '1') return;
   w[l] = w[l] || [];
   w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
   const f = d.getElementsByTagName(s)[0];

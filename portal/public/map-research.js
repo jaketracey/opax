@@ -52,16 +52,17 @@ export function mountMapResearch(container, data, options = {}) {
     controls();
   }
   const input=e=>{if(e.target.name==='query'){clearTimeout(timer);timer=setTimeout(apply,180)}};
-  const change=e=>{if(e.target.name!=='query')apply()};
-  const submit=e=>{e.preventDefault();apply();filterPanel.open=false};
+  const track=(action,properties={})=>{try{dispatchEvent(new CustomEvent('opax:analytics',{detail:{event:'opax_map_action',properties:{action,...properties}}}))}catch{}};
+  const change=e=>{if(e.target.name!=='query'){apply();track('filter_changed',{filter:e.target.name})}};
+  const submit=e=>{e.preventDefault();apply();track('filters_applied');filterPanel.open=false};
   const reset=e=>{e.preventDefault();clearTimeout(timer);filters={type:'all',min:0};for(const key of ['query','party','industry'])form.elements[key].value='';form.elements.type.value='all';form.elements.min.value='0';apply()};
   form.addEventListener('input',input);form.addEventListener('change',change);form.addEventListener('submit',submit);form.addEventListener('reset',reset);
   const click=e=>{
     const b=e.target.closest('button');if(!b)return;
-    if(b.hasAttribute('data-records')){records.hidden=!records.hidden;b.setAttribute('aria-expanded',String(!records.hidden));renderRows();if(!records.hidden)records.scrollIntoView({block:'nearest',behavior:'instant'})}
+    if(b.hasAttribute('data-records')){records.hidden=!records.hidden;if(!records.hidden)track('records_opened');b.setAttribute('aria-expanded',String(!records.hidden));renderRows();if(!records.hidden)records.scrollIntoView({block:'nearest',behavior:'instant'})}
     if(b.hasAttribute('data-more')){rowsShown+=50;renderRows()}
-    if(b.dataset.focus)options.onFocus?.(b.dataset.focus);
-    if(b.hasAttribute('data-export')){const blob=new Blob(['# OPAX selected map connections; record types are separate. Undated amounts included.\r\n# View: '+location.href+'\r\n'+moneyRecordsCSV(current)],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='opax-map-connections.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);feedback.textContent='Connections exported.'}
+    if(b.dataset.focus){track('record_focused');options.onFocus?.(b.dataset.focus);}
+    if(b.hasAttribute('data-export')){const blob=new Blob(['# OPAX selected map connections; record types are separate. Undated amounts included.\r\n# View: '+location.href+'\r\n'+moneyRecordsCSV(current)],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='opax-map-connections.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);feedback.textContent='Connections exported.';track('exported',{format:'csv',row_count:current.edges.length})}
   };
   container.addEventListener('click',click);if(resultsHost !== container) records.addEventListener('click',click);controls();
   return {update,destroy(){destroyed=true;clearTimeout(timer);container.removeEventListener('click',click);records.removeEventListener('click',click);document.removeEventListener('click',closeMenus);document.removeEventListener('keydown',closeMenus);records.remove();container.replaceChildren()}};

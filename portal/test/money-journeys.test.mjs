@@ -53,9 +53,9 @@ function setup({ reduced = false, journeys = defaultJourneys(), build, options =
   const focus = []; const controls = element(focus); const story = element(focus); const stage = element(focus);
   const media = emitter({ matches: reduced }); const document = emitter({ hidden: false });
   let timerId = 0; const timers = new Map(); const timerHistory = new Map(); const observers = [];
-  const scenes = []; const routes = []; let clears = 0; let pauses = 0;
+  const events = []; const scenes = []; const routes = []; let clears = 0; let pauses = 0;
   const map = { presentScene(scene) { scenes.push(scene); return available; }, clearScene() { clears++; }, pauseScene() { pauses++; } };
-  const context = { AbortController, buildMoneyJourneys: build || (() => journeys), matchMedia: () => media, document,
+  const context = { CustomEvent: class { constructor(type, {detail}) { this.type=type; this.detail=detail; } }, dispatchEvent: e => events.push(e.detail), AbortController, buildMoneyJourneys: build || (() => journeys), matchMedia: () => media, document,
     setTimeout(fn, ms) { const id = ++timerId; timers.set(id, { fn, ms }); timerHistory.set(id, fn); return id; },
     clearTimeout(id) { timers.delete(id); },
     IntersectionObserver: class { constructor(callback) { this.callback = callback; this.disconnected = false; observers.push(this); } observe() {} disconnect() { this.disconnected = true; } },
@@ -66,7 +66,7 @@ function setup({ reduced = false, journeys = defaultJourneys(), build, options =
   const choose = () => controls.emit('click', { target: controls.querySelector('[data-journey]') });
   const tick = () => { const [id, timer] = timers.entries().next().value || []; assert.ok(timer, 'one pending timer'); timers.delete(id); timer.fn(); };
   const key = (key, extra = {}) => { let prevented = false; story.emit('keydown', { key, target: story.querySelector('[data-action="next"]'), preventDefault() { prevented = true; }, ...extra }); return prevented; };
-  return { handle, controls, story, stage, media, document, timers, timerHistory, observers, scenes, routes, focus, click, choose, tick, key, clears: () => clears, pauses: () => pauses };
+  return { events, handle, controls, story, stage, media, document, timers, timerHistory, observers, scenes, routes, focus, click, choose, tick, key, clears: () => clears, pauses: () => pauses };
 }
 
 test('journeys are opt-in and deep links bound their requested step without starting playback', () => {
@@ -242,4 +242,13 @@ test('returning to a subject before its cancelled request settles keeps the new 
  h.choose();pick(h,'a');pick(h,'b');pick(h,'a');
  requests[0].resolve({steps:[]});await new Promise(resolve=>setImmediate(resolve));
  h.handle.destroy();assert.equal(requests[2].signal.aborted,true);
+});
+
+ test('journey events reflect visible steps and never disclose the focus identity', () => {
+  const h = setup(); h.choose(); h.click('play'); h.tick();
+  assert.deepEqual(h.events.map(e => e.properties.action), ['step','played','step','completed']);
+  assert.equal(h.events.at(-1).properties.step, 3);
+  assert.ok(!JSON.stringify(h.events).includes('node:'));
+  const unavailable = setup({available:false}); unavailable.choose();
+  assert.equal(unavailable.events.at(-1).properties.action, 'unavailable');
 });
