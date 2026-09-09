@@ -52,3 +52,16 @@ cancellation, denied permission, navigation/background/offline teardown and
 allowance exhaustion. It also runs the actual bundled SDK with self-hosted Wasm
 worklets under the required CSP, including delayed mic permission, delayed
 socket metadata, partial audio setup failure and immediate track release.
+
+### Staging browser verification, 9 September 2026
+
+The shipped client was exercised against staging deployment `015601b1` in
+Chromium at 390 × 667, using a separate synthetic account and synthetic
+microphone. The real provider returned conversation metadata, its greeting
+transcript and two audio events; the browser audio element was actively
+playing. Start returned 201. End stopped both microphone tracks, removed the
+audio element and closed the socket. Finish and the following status request
+returned 200 with no active session. The synthetic account's remaining
+allowance reconciled from 90 to 88 seconds. There were no CSP violations or
+uncaught browser errors. The browser context was fully closed before account
+cleanup. No email was sent.
