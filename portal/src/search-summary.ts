@@ -10,7 +10,7 @@ export interface SearchSummary {
   sources: (SummarySource & { evidence: string[] })[]
 }
 const clean = (value: unknown, max: number) => typeof value === 'string'
-  ? value.replace(/<[^>]*>/g, '').replaceAll('<', '').replaceAll('>', '').replace(/\s+/g, ' ').trim().slice(0, max) : ''
+  ? value.replace(/<[^>]*(?:>|$)/g, '').replaceAll('>', '').replace(/\s+/g, ' ').trim().slice(0, max) : ''
 const fold = (value: string) => value.normalize('NFKC').replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim()
 
 /** Only server-retrieved passages enter the prompt; briefs and client prose do not. */
