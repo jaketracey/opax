@@ -5,6 +5,7 @@
     { id: 'topics', label: 'Topics', href: '/subject/topic' },
     { id: 'people', label: 'People & organisations', children: [
       ['/subject/person', 'Parliamentarians', 'Speeches, recorded votes and declared interests.'],
+      ['/subject/electorate', 'Electorates', 'Representatives, election timelines and Census context.'],
       ['/subject/party', 'Parties', 'Members, debate and disclosed receipts.'],
       ['/subject/donor', 'Donors', 'The people and organisations in disclosure records.'],
       ['/subject/agency', 'Agencies', 'Government contract awards and the companies receiving them.'],

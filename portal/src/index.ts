@@ -2301,8 +2301,9 @@ const DIRECTORY_KINDS: Record<string, string> = {
   supplier: 'Government suppliers',
   agency: 'Government agencies',
   campaigner: 'Campaigners & third parties',
+  electorate: 'Electorates',
 }
-type DirectoryKind = 'person' | 'party' | 'donor' | 'campaigner' | 'supplier' | 'agency'
+type DirectoryKind = 'person' | 'party' | 'donor' | 'campaigner' | 'supplier' | 'agency' | 'electorate'
 const isDirectoryKind = (s: string): s is DirectoryKind => s in DIRECTORY_KINDS
 
 // Static pages: title as app.js TITLES sets it, blurb from the masthead menus.
@@ -2467,6 +2468,7 @@ interface Person {
   last: number | null
   pid?: string
   representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[]
+  rosterOnly?: { asOf?: string; seats: string[] }
 }
 interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person> }
 
@@ -2569,7 +2571,19 @@ async function assetJson<T>(env: Env, path: string): Promise<T> {
 let peopleMemo: Promise<PeopleData> | null = null
 function loadPeople(env: Env): Promise<PeopleData> {
   peopleMemo ??= assetJson<{ meta?: { generated?: string }; people: Person[] }>(env, '/parliamentarians.json')
-    .then((raw) => {
+    .then(async (raw) => {
+      const reference = await loadElectorates(env).catch(() => null)
+      const names = new Set(raw.people.map((p) => foldName(p.name)))
+      for (const p of reference?.people || []) {
+        if ([p.name, ...p.aliases].some((n) => names.has(foldName(n)))) continue
+        const seats = p.electorates.filter((e) => e.current)
+        if (!seats.length) continue
+        raw.people.push({ name: p.name, pid: p.legacy_person_id || p.person_id, speeches: 0,
+          party: seats[0].party || null, states: [...new Set(seats.map((e) => e.jurisdiction))],
+          chambers: [...new Set(seats.map((e) => e.chamber))], first: null, last: null,
+          rosterOnly: { asOf: seats[0].as_of, seats: seats.map((e) => e.name) } })
+        names.add(foldName(p.name))
+      }
       const byName = new Map<string, Person>()
       const byFold = new Map<string, Person>()
       for (const p of raw.people) {
@@ -2936,6 +2950,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if (route.dir === 'person') {
         const people = await loadPeople(env).catch(() => null)
         description = clip(`Every parliamentarian in the OPAX record${people ? `: ${num(people.people.length)} speakers` : ''} since 1993, searchable by name, party and parliament, each with their speeches.`)
+      } else if (route.dir === 'electorate') {
+        description = 'Australian electorates, their representatives, election results and Census context. Browse by parliament and chamber, with dated sources and explicit historical coverage.'
       } else if (route.dir === 'party') {
         description = 'Australian political parties in the record: speeches, members and disclosed receipts, party by party, from Hansard and electoral commission returns.'
       } else if (route.dir === 'agency') {
@@ -2994,6 +3010,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
     }
 
     case 'subject':
+      if (route.dir === 'electorate') return electorateMeta(route.name, url, env)
       if (route.dir === 'person') return personMeta(route.name, url, env)
       if (route.dir === 'campaigner') return campaignerMeta(route.name, url, env)
       if (route.dir === 'supplier') return supplierMeta(route.name, url, env)
@@ -3080,6 +3097,49 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
   }
 }
 
+interface ElectorateSummary {
+  electorate_id: string; slug: string; name: string; jurisdiction: string; chamber: string;
+  state_code: string; status: string; url: string; detail_url: string;
+  representation_as_of: string | null; election_count: number;
+  representatives: { person_id: string; party?: string; person: { name: string } }[];
+}
+interface ElectoratePerson {
+  person_id: string; name: string; aliases: string[]; legacy_person_id?: string;
+  electorates: { current: boolean; name: string; jurisdiction: string; chamber: string; party?: string; as_of?: string; url: string }[];
+}
+let electorateMemo: Promise<{ generated: string; electorates: ElectorateSummary[]; people: ElectoratePerson[] }> | null = null
+function loadElectorates(env: Env) {
+  electorateMemo ??= assetJson<{ index_url: string; people_url: string; generated: string }>(env, '/electorates/manifest.json')
+    .then(async (manifest) => {
+      const [index, people] = await Promise.all([
+        assetJson<{ electorates: ElectorateSummary[] }>(env, manifest.index_url),
+        assetJson<{ people: ElectoratePerson[] }>(env, manifest.people_url),
+      ])
+      return { generated: manifest.generated, electorates: index.electorates, people: people.people }
+    }).catch((error) => { electorateMemo = null; throw error })
+  return electorateMemo
+}
+async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
+  const data = await loadElectorates(env).catch(() => null)
+  const e = data?.electorates.find((e) => e.slug === name || e.electorate_id === name)
+  if (!e) return {
+    title: data ? 'Electorate not found · OPAX' : 'Electorate data unavailable · OPAX',
+    description: 'Browse the OPAX electorate directory.', canonical: canonicalFor(url, true), ogType: 'website',
+    status: data ? 404 : 503, jsonLd: null, prerender: null,
+  }
+  const representation = e.representatives.length
+    ? `${e.representatives.map((m) => `${m.person.name}${m.party ? ` (${m.party})` : ''}`).join(', ')}. Verified ${e.representation_as_of}.`
+    : 'Representation is not yet verified in this release.'
+  const facts = `${e.name}, ${e.jurisdiction === 'federal' ? 'Federal' : e.jurisdiction.toUpperCase()} ${CHAMBER_NAMES[e.chamber] || e.chamber}. ${representation} ${e.election_count} indexed election contests.`
+  const canonical = `${SITE_ORIGIN}${e.url}`
+  return {
+    title: `${e.name} · Electorate · OPAX`, description: clip(facts), canonical, ogType: 'website', status: 200,
+    jsonLd: { '@context': 'https://schema.org', '@type': 'Place', name: e.name, identifier: e.electorate_id, url: canonical, description: facts },
+    prerender: prerenderBlock(e.name, facts, 'Electorate'),
+    card: { kicker: 'Electorate', title: e.name, lines: [representation, `${e.election_count} indexed election contests · ${e.state_code.toUpperCase()}`] },
+  }
+}
+
 async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const [people, photos, moneyData] = await Promise.all([
     loadPeople(env).catch(() => null),
@@ -3107,6 +3167,13 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     : p.states.map((s) => STATE_NAMES[s] ?? s).join(' and ')
   const represented = [...new Set((p.representation ?? []).map(r => r.electorate))].join(', ')
   const who = [p.party, where, represented ? `recorded representation: ${represented}` : ''].filter(Boolean).join(', ')
+  if (p.rosterOnly) {
+    const description = clip(`${display}, representative for ${p.rosterOnly.seats.join(', ')}${p.party ? ` (${p.party})` : ''}. Verified ${p.rosterOnly.asOf || 'in the parliamentary roster'}. Speech totals are not yet in the directory.`)
+    return { title, description, canonical, ogType: 'profile', status: 200,
+      jsonLd: { '@context': 'https://schema.org', '@type': 'Person', name: display, url: canonical, jobTitle: 'Parliamentarian' },
+      prerender: prerenderBlock(display, description, 'Parliamentarian'),
+      card: { kicker: 'Parliamentarian', title: display, lines: [description], portraitId, credit } }
+  }
   const facts = `${display}${who ? ` (${who})` : ''}: ${num(p.speeches)} speeches in the Australian parliamentary record, ${years(p.first, p.last)}.`
   const tail = 'What they said, and who funds them.'
   const federal = p.states.includes('federal')
@@ -3640,7 +3707,7 @@ function robotsTxt(): Response {
 /** Every indexable page, rebuilt from the data files and cached a day. */
 async function sitemapXml(env: Env): Promise<Response> {
   return cachedJson('/sitemap.xml', async () => {
-    const [people, moneyData, reports, campaigners, suppliers, agencies] = await Promise.all([
+    const [people, moneyData, reports, campaigners, suppliers, agencies, electorates] = await Promise.all([
       loadPeople(env),
       loadMoney(env),
       loadReports(env),
@@ -3649,6 +3716,7 @@ async function sitemapXml(env: Env): Promise<Response> {
       loadCampaigners(env).catch(() => null),
       loadSuppliers(env).catch(() => null),
       loadAgencies(env).catch(() => null),
+      loadElectorates(env).catch(() => null),
     ])
     const rows: string[] = []
     const add = (path: string, lastmod?: string) => {
@@ -3661,7 +3729,8 @@ async function sitemapXml(env: Env): Promise<Response> {
     for (const r of reports.reports) add(`/reports/${r.slug}`, r.updated)
     add('/subject/topic')
     for (const slug of Object.keys(TOPIC_NAMES)) add(`/subject/topic/${slug}`)
-    for (const dir of ['person', 'party', 'donor', 'campaigner', 'supplier', 'agency']) add(`/subject/${dir}`)
+    for (const dir of ['person', 'party', 'donor', 'campaigner', 'supplier', 'agency', 'electorate']) add(`/subject/${dir}`)
+    for (const e of electorates?.electorates || []) add(e.url, electorates?.generated)
     // Parties: every label the money data or the people data knows.
     const partyLabels = new Map<string, string>()
     for (const n of moneyData.parties.values()) partyLabels.set(foldName(n.label), n.label)
