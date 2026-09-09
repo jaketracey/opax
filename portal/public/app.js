@@ -4859,7 +4859,7 @@ async function openSubject(kind, name, manageFocus) {
       <label for="subject-ask-topic">Ask about their speeches</label>
       <input id="subject-ask-topic" type="text" autocomplete="off"
              placeholder="Enter a topic…">
-      <button type="submit" class="secondary">Ask</button>
+      <button type="submit" class="primary">Ask</button>
     </form>`);
   $("subject-ask-form").addEventListener("submit", (e) => {
     e.preventDefault();
@@ -4933,7 +4933,7 @@ function renderCommitteeWitness(name, key, body, box, sections, speeches, dates)
     <form class="query-line subject-ask-form" id="subject-ask-form">
       <label for="subject-ask-topic">Ask about their evidence</label>
       <input id="subject-ask-topic" type="text" autocomplete="off" placeholder="Enter a topic…">
-      <button type="submit" class="secondary">Ask</button>
+      <button type="submit" class="primary">Ask</button>
     </form>`);
   $("subject-ask-form").addEventListener("submit", (e) => {
     e.preventDefault();
