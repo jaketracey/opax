@@ -1593,7 +1593,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
 async function apiResource(request: Request, url: URL, slug: string, env: Env, ctx: ExecutionContext): Promise<Response> {
   if (/^news-\d+$/.test(slug)) return json({ error: 'News articles are no longer part of the corpus' }, 410)
   if (!isPublicSlug(slug)) return json({ error: 'bad slug' }, 400)
-  const cacheKey = cacheRequest('resource', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
+  const cacheKey = cacheRequest('resource-body-v2', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
@@ -1615,11 +1615,14 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
     extra?: { metadata?: Record<string, unknown> }
     data?: { texts?: Record<string, { value?: { body?: string } }> }
   }
-  // Reassemble split bodies (body, body-1, body-2...) in order.
+  // Source publishers use body or t-body. Prefer the standard family when
+  // both exist, and never include generated summary fields in the source text.
   const texts = r.data?.texts ?? {}
-  const bodyText = Object.keys(texts)
-    .filter((k) => k === 'body' || k.startsWith('body-'))
-    .sort((a, b) => (a === 'body' ? -1 : b === 'body' ? 1 : a.localeCompare(b, undefined, { numeric: true })))
+  const standardBodyKeys = Object.keys(texts).filter((k) => /^body(?:-\d+)?$/.test(k))
+  const sourceBodyKeys = standardBodyKeys.length ? standardBodyKeys
+    : Object.keys(texts).filter((k) => /^t-body(?:-\d+)?$/.test(k))
+  const bodyText = sourceBodyKeys
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
     .map((k) => texts[k]?.value?.body ?? '')
     .join('')
   const labels: Record<string, string> = {}
