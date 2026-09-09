@@ -102,7 +102,7 @@ test('missing or malformed export yields 503 and a failed load can recover', asy
 
 test('metadata escapes supplier text and links to the new directory', async () => {
   const meta = await harness([supplier({ name: '<script>alert("x")</script> & Co' })]).meta(id);
-  assert.doesNotMatch(meta.prerender, /<script>/);
+  assert.doesNotMatch(meta.prerender, /<script\b/i);
   assert.match(meta.prerender, /&lt;script&gt;/);
   assert.match(meta.prerender, /href="\/subject\/supplier"/);
   assert.equal(meta.canonical, `https://opax.com.au/subject/supplier/${id}`);
