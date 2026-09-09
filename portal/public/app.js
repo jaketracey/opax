@@ -805,6 +805,7 @@ function focusEntry(id) {
 }
 
 function showPanel(name) {
+  if (name !== "ask") stopFrontMapImmersion();
   if (name !== "money-records") { moneyRecordsGeneration++; moneyRecordsHandle?.destroy(); moneyRecordsHandle = null; }
   for (const nav of document.querySelectorAll('[data-money-navigation]')) nav.innerHTML = OpaxNavigation.moneyNav(location.pathname, new URLSearchParams(location.search).get('jur'));
 
@@ -5579,7 +5580,7 @@ async function openTopicsIndex(manageFocus) {
   const body = $("subject-body");
   body.classList.remove("subject-person");
   body.innerHTML = `
-    <div class="subject-head">
+    <div class="subject-head topic-index-head">
       <h2 id="subject-title" tabindex="-1">Topics A-Z</h2>
       <p class="subject-tag"><span id="subject-loader" class="subject-loader"></span></p>
     </div>
@@ -5596,8 +5597,9 @@ async function openTopicsIndex(manageFocus) {
     tag.innerHTML = `<span>The live counts could not be loaded. Try again shortly.</span>`;
     return;
   }
-  tag.innerHTML = `<span>${esc((data.labelled ?? 0).toLocaleString())} speeches carry topic labels
-    so far. The labelling pass is still running, so every count below is a floor.</span>`;
+  const labelled = Math.max(0, Math.round(Number(data.labelled) || 0));
+  tag.innerHTML = `<span class="topic-index-total"><span class="visually-hidden">${labelled.toLocaleString()} speeches labelled so far</span><span aria-hidden="true"><b id="topic-labelled-total">${Math.max(0, labelled - 32).toLocaleString()}</b> speeches labelled</span></span>`;
+  countUp($("topic-labelled-total"), labelled, { duration: 700 });
   const known = data.topics.filter((t) => TOPICS[t.slug])
     .sort((a, b) => TOPICS[a.slug].localeCompare(TOPICS[b.slug]));
   const li = (t) => `<li><a href="${esc(subjectHash("topic", t.slug))}" class="topic-index-row">
@@ -5608,9 +5610,7 @@ async function openTopicsIndex(manageFocus) {
   </a></li>`;
   $("subject-sections").innerHTML = `
     <ul class="topic-index-list" role="list">${known.map(li).join("")}</ul>
-    <p class="fineprint">A machine pass is labelling every speech in the corpus by subject;
-    these counts are live and grow as it runs. A topic with few speeches yet is not a quiet
-    debate, just one the pass has not reached.</p>`;
+    <details class="topic-index-coverage"><summary>About these counts</summary><p>Counts cover speeches labelled so far. The small bars show each topic’s share of federal speeches over time, scaled within that topic.</p></details>`;
   const tide = await tidePromise;
   if (currentSubjectKey !== key || !tide) return;
   for (const spark of body.querySelectorAll('[data-topic-spark]')) {
@@ -5618,7 +5618,6 @@ async function openTopicsIndex(manageFocus) {
     const max = Math.max(...series.map((point) => Number(point.share) || 0), Number.EPSILON);
     spark.innerHTML = series.map((point) => `<i style="height:${Math.max(2, (Number(point.share) || 0) / max * 16)}px"></i>`).join('');
   }
-  body.querySelector('.topic-index-list').insertAdjacentHTML('beforebegin', '<p class="fineprint">Counts are labelled speeches. Small bars show the federal share over time, scaled within each topic.</p>');
 }
 
 // Display descriptions mirror the canonical enrichment taxonomy in scripts/arag_enrich.py.
@@ -8310,6 +8309,76 @@ let stateMapHandle = null;
 let frontMapHandle = null;
 let frontMapLoading = false;
 let frontMapObserver = null;
+let frontMapImmersionCleanup = null;
+
+function stopFrontMapImmersion() {
+  frontMapImmersionCleanup?.();
+  frontMapImmersionCleanup = null;
+}
+
+/** Give the graph room as it comes into view; its caption and page stay put. */
+function mountFrontMapImmersion() {
+  stopFrontMapImmersion();
+  const stage = document.querySelector(".home-map-stage");
+  const root = $("front-map-root");
+  if (!stage || !root || !("IntersectionObserver" in window)) return;
+  const eligible = matchMedia("(min-width: 1200px) and (prefers-reduced-motion: no-preference)");
+  let frame = 0;
+  let listening = false;
+  let lastOutset = "";
+
+  const update = () => {
+    frame = 0;
+    if (!eligible.matches) return;
+    // Measure the unchanged stage, never the graph we are widening. Use the
+    // layout viewport (excluding its scrollbar) to retain real edge gutters.
+    const rect = stage.getBoundingClientRect();
+    if (!rect.width) return;
+    const viewportWidth = document.documentElement.clientWidth;
+    const gutter = Math.max(24, Math.min(64, viewportWidth * 0.025));
+    const room = Math.max(0, Math.min(rect.left - gutter, viewportWidth - rect.right - gutter));
+    const top = rect.top + window.scrollY;
+    const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 0;
+    const start = Math.max(0, top - window.innerHeight * 0.8);
+    const end = Math.max(start + 200, top - Math.max(header + 32, window.innerHeight * 0.2));
+    const progress = Math.max(0, Math.min(1, (window.scrollY - start) / (end - start)));
+    const outset = `${(room * progress * progress * (3 - 2 * progress)).toFixed(2)}px`;
+    if (outset === lastOutset) return;
+    lastOutset = outset;
+    root.style.setProperty("--home-map-outset", outset);
+  };
+  const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+  const listen = (visible) => {
+    if (visible === listening) return;
+    listening = visible;
+    if (visible) window.addEventListener("scroll", schedule, { passive: true });
+    else window.removeEventListener("scroll", schedule);
+  };
+  const observer = new IntersectionObserver((entries) => {
+    listen(eligible.matches && entries[entries.length - 1].isIntersecting);
+    if (listening) schedule();
+  }, { rootMargin: "100px" });
+  const configure = () => {
+    observer.disconnect();
+    listen(false);
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0;
+    lastOutset = "";
+    root.style.removeProperty("--home-map-outset");
+    if (eligible.matches) { observer.observe(stage); schedule(); }
+  };
+  eligible.addEventListener("change", configure);
+  window.addEventListener("resize", schedule, { passive: true });
+  configure();
+  frontMapImmersionCleanup = () => {
+    observer.disconnect();
+    listen(false);
+    eligible.removeEventListener("change", configure);
+    window.removeEventListener("resize", schedule);
+    if (frame) cancelAnimationFrame(frame);
+    root.style.removeProperty("--home-map-outset");
+  };
+}
 
 function mountFrontMaps() {
   mountStateMap();
@@ -8772,6 +8841,8 @@ function setFrontPageHidden(hidden) {
     const el = $(id);
     if (el) el.hidden = hidden;
   }
+  if (hidden) stopFrontMapImmersion();
+  else mountFrontMapImmersion();
 }
 
 // --- chat (keep asking) -----------------------------------------------------
@@ -12132,7 +12203,7 @@ function countUp(el, value, { duration = 1300 } = {}) {
   const t0 = performance.now();
   const token = (el.dataset.countToken = String(t0));
   const step = (now) => {
-    if (el.dataset.countToken !== token) return; // a newer count took over
+    if (!el.isConnected || el.dataset.countToken !== token) return; // a newer count took over
     const p = Math.min(1, (now - t0) / duration);
     el.textContent = fmt(from + (target - from) * (1 - Math.pow(1 - p, 3)));
     if (p < 1) requestAnimationFrame(step);
