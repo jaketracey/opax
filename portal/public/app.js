@@ -1052,7 +1052,7 @@ function route() {
     // The group step leads to that kind's index (/subject/person etc.).
     const group = DIRECTORY_KINDS[segs[1]];
     setCrumbs([group ? { label: group, href: `/subject/${segs[1]}` } : { label: "Encyclopedia" }, { label: name }]);
-    openSubject(segs[1], name, manageFocus);
+    openSubject(segs[1], name, manageFocus, params);
   } else if (view === "subject" && DIRECTORY_KINDS[segs[1]]) {
     showPanel("subject");
     document.title = `${DIRECTORY_KINDS[segs[1]]} · OPAX`;
@@ -1256,6 +1256,14 @@ function attachQuickSearch(input, panel, { idPrefix, beforeGo, source, enterFall
     }
     const ql = q.toLowerCase();
     const out = [{ label: `Search the record for “${q}”`, type: "Search", href: searchHash(q, {}) }];
+    try {
+      const module = await loadElectorateModule();
+      const reference = await module.loadIndex();
+      if (my !== seq) return;
+      for (const e of reference.electorates.filter((e) => e.name.toLowerCase().includes(ql)).slice(0, 3)) {
+        out.push({ label: e.name, type: `${module.JURISDICTIONS[e.jurisdiction]} electorate`, href: e.url });
+      }
+    } catch { /* Other search suggestions remain available. */ }
     try {
       await Promise.all([loadSpeakersDir(), loadMoneyData(), loadReportsIndex()]);
       if (my !== seq) return;
@@ -4058,15 +4066,15 @@ async function renderPersonTopics(name, sections) {
   }
 }
 
-async function openSubject(kind, name, manageFocus) {
-  let key = `${kind}:${name}`;
+async function openSubject(kind, name, manageFocus, params = new URLSearchParams()) {
+  let key = `${kind}:${name}${kind === "electorate" ? `:${params.get("asof") || ""}` : ""}`;
   if (currentSubjectKey === key) { if (manageFocus) $("subject-title")?.focus(); return; }
   currentSubjectKey = key;
   destroySubjectMap();
   const body = $("subject-body");
   body.classList.toggle("subject-person", kind === "person");
   const SUBJECT_LABELS = {
-    person: "Parliamentarian", party: "Political party", donor: "Donor",
+    person: "Parliamentarian", party: "Political party", donor: "Donor", electorate: "Electorate",
     // Provisional: the entry names its own AEC category once the register
     // file has loaded and the entity is known.
     campaigner: "Campaigner or third party",
@@ -4077,6 +4085,17 @@ async function openSubject(kind, name, manageFocus) {
     `<span class="answer-skeleton subject-skel tag-skel" aria-hidden="true"><i></i></span>`);
   if (manageFocus) $("subject-title")?.focus();
 
+  if (kind === "electorate") {
+    try {
+      const module = await loadElectorateModule();
+      if (currentSubjectKey !== key) return;
+      await module.renderProfile({ body, slug: name, on: params.get("asof") || "",
+        isActive: () => currentSubjectKey === key, setCrumbs, goRoute, manageFocus });
+    } catch {
+      if (currentSubjectKey === key) body.innerHTML = '<h2 id="subject-title" tabindex="-1">Electorate data unavailable</h2><p>Reload this page to try again.</p>';
+    }
+    return;
+  }
   if (kind === "campaigner") { await renderCampaignerEntry(name, key); return; }
 
   if (kind === "donor" || kind === "party") {
@@ -4192,6 +4211,13 @@ async function openSubject(kind, name, manageFocus) {
 
   // person
   const sections = $("subject-sections");
+  loadElectorateModule().then(async (module) => {
+    const data = await module.loadPeople();
+    if (currentSubjectKey !== key) return;
+    const person = module.findPerson(data.people, name);
+    const html = module.personLinksHTML(person);
+    if (html) sections.insertAdjacentHTML("afterbegin", html);
+  }).catch(() => { /* The parliamentary record remains available. */ });
   const box = $("subject-infobox");
   loadPhotoMap().then(() => {
     if (currentSubjectKey !== key) return;
@@ -4804,8 +4830,12 @@ function topicIndexDescription(slug) {
 
 const DIRECTORY_KINDS = {
   person: "Parliamentarians", party: "Parties", donor: "Donors",
-  campaigner: "Campaigners & third parties",
+  campaigner: "Campaigners & third parties", electorate: "Electorates",
 };
+let electorateModulePromise;
+function loadElectorateModule() {
+  return electorateModulePromise ??= import("./electorates.js").catch((e) => { electorateModulePromise = null; throw e; });
+}
 const DIR_CHUNK = 60;
 
 // Chamber codes as parli.db records them, in the order the filter lists them.
@@ -4858,7 +4888,25 @@ function anyPartyDotHTML(label, colours) {
 let parliamentariansPromise = null;
 function loadParliamentarians() {
   parliamentariansPromise ??= fetch("/parliamentarians.json")
-    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    .then((r) => (r.ok ? r.json() : null)).then(async (data) => {
+      try {
+        const module = await loadElectorateModule();
+        const reference = await module.loadPeople();
+        data ||= { people: [] };
+        const names = new Set(data.people.map((p) => p.name.toLowerCase()));
+        for (const p of reference.people) {
+          if ([p.name, ...(p.aliases || [])].some((n) => names.has(n.toLowerCase()))) continue;
+          const current = p.electorates.filter((e) => e.current);
+          if (!current.length) continue;
+          data.people.push({ name: p.name, pid: p.legacy_person_id || p.person_id, speeches: 0,
+            states: [...new Set(current.map((e) => e.jurisdiction))], chambers: [...new Set(current.map((e) => e.chamber))],
+            party: current[0].party, party_now: current[0].party, current: true, first: null, last: null,
+            representation_as_of: current[0].as_of, roster_only: true });
+          names.add(p.name.toLowerCase());
+        }
+      } catch { /* A missing foundation release does not remove the speech directory. */ }
+      return data;
+    }).catch(() => null);
   return parliamentariansPromise;
 }
 function loadAccess() {
@@ -5081,6 +5129,7 @@ async function openDirectory(kind, params, manageFocus) {
   activeDirectory = null;
   destroySubjectMap();
   const body = $("subject-body");
+  body.classList.remove("subject-person");
   body.innerHTML = `
     <p class="kicker">Encyclopedia</p>
     <div class="subject-head">
@@ -5092,6 +5141,7 @@ async function openDirectory(kind, params, manageFocus) {
   const build = {
     person: buildPeopleDirectory, party: buildPartiesDirectory,
     donor: buildDonorsDirectory, campaigner: buildCampaignersDirectory,
+    electorate: async () => (await loadElectorateModule()).directorySpec(),
   }[kind];
   let spec = null;
   try { spec = await build(); } catch { /* honest failure below */ }
@@ -5159,7 +5209,7 @@ async function buildPeopleDirectory() {
         <span class="result-meta">${metaLine}</span>
       </div>
       <div class="dir-figs">
-        <span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>
+        ${p.roster_only ? '<span class="dir-fig">From the member roster<br>Speech total not yet indexed</span>' : `<span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>`}
         ${p._divisions ? `<span class="dir-fig"><b>${num(p._divisions)}</b>division${p._divisions === 1 ? "" : "s"}</span>` : ""}
       </div>
     </li>`;
@@ -5195,7 +5245,7 @@ async function buildPeopleDirectory() {
       (speeches since the 1993 election, 200+ characters, procedural rows removed) and are counted from the
       corpus itself, so they can run ahead of what the index has loaded so far; speakers with fewer than
       ${num(meta.floor || 5)} indexed speeches${meta.witnesses_excluded ? ` and ${num(meta.witnesses_excluded)} people who appear only as committee witnesses` : ""}
-      are not listed. Party is the label the person's speeches carry, or the members register's where they carry none;
+      are not listed from the speech export. Verified representatives are included independently of that threshold; their missing speech totals are labelled explicitly. Party is the label the person's speeches carry, or the members register's where they carry none;
       many state Hansard rows record neither. Portraits are official APH and OpenAustralia photos; divisions come from
       They Vote For You and the NSW, Victorian and Queensland Hansard.`,
   };
@@ -5249,7 +5299,7 @@ async function buildPartiesDirectory() {
       jurs.length && p._first < 9999 ? esc(yearSpan(p._first, p._last)) : "",
     ].filter(Boolean).join(" · ");
     const figs = [
-      `<span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>`,
+      `${p.roster_only ? '<span class="dir-fig">From the member roster<br>Speech total not yet indexed</span>' : `<span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>`}`,
       `<span class="dir-fig"><b>${num(p.members)}</b>in the directory</span>`,
       ...jurs.map((j) => `<span class="dir-fig"><b>${esc(fmtMoney(p.money[j].total))}</b>${esc(sourceShort[j] || j)}</span>`),
     ].join("");

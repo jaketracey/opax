@@ -3708,3 +3708,58 @@ html[data-panel="chat"] footer { display: none; }
 @media (max-width: 640px) { .report-map { height: 380px; } }
 .report-words { margin-top: var(--space-3); }
 .report-words .wd-panel { margin-top: 0; }
+
+/* Electorate reference directory and timeline. */
+.el-directory-row { display:grid; grid-template-columns:minmax(180px,1fr) minmax(160px,1fr) 150px; gap:1rem; align-items:start; padding:1rem 0; }
+.el-directory-row > a { display:grid; gap:.2rem; }
+.el-directory-row .fineprint { margin:0; }
+.el-directory-row small,.el-members span,.el-section li > small { display:block; font-size:.78rem; opacity:.8; }
+.el-intro { display:grid; grid-template-columns:1.3fr 1fr; gap:3rem; margin:2rem 0; }
+.el-intro h3,.el-section h3 { font-family:var(--serif, Georgia, serif); font-size:1.3rem; margin:0 0 1rem; }
+.el-members { list-style:none; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1rem; }
+.el-members a { font-size:1.2rem; font-weight:600; }
+.el-members span { margin-top:.2rem; }
+.el-asof { margin-top:1.5rem; font-size:.85rem; }
+.el-asof label { display:block; margin-bottom:.5rem; }
+.el-asof > div { display:flex; align-items:center; flex-wrap:wrap; gap:.5rem; }
+.el-asof input { padding:.5rem; color:inherit; background:transparent; border:1px solid currentColor; border-radius:3px; font:inherit; }
+.el-outline { margin:0; }
+.el-outline svg { width:100%; max-height:220px; }
+.el-outline path { fill:color-mix(in srgb, currentColor 12%, transparent); stroke:currentColor; stroke-width:1; }
+.el-outline figcaption { text-align:center; font-size:.75rem; opacity:.8; }
+.el-jumps { display:flex; gap:1.3rem; flex-wrap:wrap; padding:1rem 0; border-top:1px solid color-mix(in srgb, currentColor 20%, transparent); border-bottom:1px solid color-mix(in srgb, currentColor 20%, transparent); font-size:.8rem; }
+.el-section { padding:2rem 0; scroll-margin-top:6rem; border-bottom:1px solid color-mix(in srgb, currentColor 20%, transparent); }
+.el-timeline,.el-service { list-style:none; padding:0; margin:0; }
+.el-timeline > li { border-top:1px solid color-mix(in srgb, currentColor 15%, transparent); }
+.el-election > summary { padding:1.1rem 0; cursor:pointer; display:list-item; }
+.el-election > summary time { display:inline-block; min-width:8rem; font-size:.85rem; }
+.el-election > summary strong { margin-right:1rem; }
+.el-election > summary span { display:block; margin:.35rem 0 0 1rem; font-size:.85rem; }
+.el-election-body { padding:0 0 1rem; }
+.el-table-scroll { overflow-x:auto; }
+.el-election table { width:100%; border-collapse:collapse; font-size:.85rem; }
+.el-election caption { text-align:left; padding:.5rem 0; font-size:.8rem; }
+.el-election th,.el-election td { text-align:right; padding:.75rem .5rem; border-bottom:1px solid color-mix(in srgb, currentColor 15%, transparent); vertical-align:top; }
+.el-election th:first-child { text-align:left; min-width:160px; }
+.el-election td { font-variant-numeric:tabular-nums; }
+.el-election small { display:block; font-weight:normal; font-size:.75rem; opacity:.8; }
+.el-elected { font-size:.65rem; text-transform:uppercase; letter-spacing:.04em; padding:.15rem .3rem; border:1px solid currentColor; white-space:nowrap; }
+.el-service li { padding:0 0 1.2rem 1rem; margin-left:.25rem; border-left:2px solid color-mix(in srgb, currentColor 20%, transparent); }
+.el-service li > div { font-size:.75rem; margin-bottom:.35rem; }
+.el-service li > span { margin-left:.6rem; font-size:.85rem; }
+.el-demographics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1.5rem; }
+.el-demographics dt { font-size:.8rem; }
+.el-demographics dd { margin:.3rem 0 0; font-size:1.7rem; font-variant-numeric:tabular-nums; }
+.el-demographics small { display:block; font-size:.7rem; }
+.el-section > ul { padding-left:1.2rem; }
+.el-section > ul li { margin:.65rem 0; }
+.el-id { overflow-wrap:anywhere; font-size:.75rem; }
+.electorate-person-links li { margin-bottom:.8rem; }
+@media(max-width:650px) {
+ .el-directory-row { grid-template-columns:1fr; gap:.45rem; }
+ .el-intro { grid-template-columns:1fr; gap:1.5rem; }
+ .el-intro aside { max-width:360px; }
+ .el-demographics { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .el-election > summary time { min-width:7rem; }
+ .el-election > summary strong { font-size:.9rem; }
+}

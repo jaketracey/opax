@@ -26,5 +26,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+electorates = ["pyshp>=2.3", "shapely>=2.0"]
 # parli.db can read a PostgreSQL copy of the corpus when DATABASE_URL is set.
 postgres = ["psycopg[binary,pool]>=3.2"]
