@@ -48,6 +48,11 @@ test('briefs, generated records, duplicate links and unsafe destinations cannot 
  const candidates=[...rows,rows[0],{...rows[0],slug:'da-summary-1'},{...rows[0],slug:'speech-2',snippet:'',brief:'Machine generated content'},...['https://evil.test/doc/1','//evil.test/doc/1','/doc/../api/private','/api/private'].map(href=>({...rows[0],href}))];
  assert.equal(summary.summarySources(candidates).length,2);
 });
+test('malformed and nested markup cannot survive source text cleanup',()=>{
+ const [source]=summary.summarySources([{...rows[0],title:'<scr<script>ipt>Record</script>',snippet:'<mark>Agricultural research</mark> and development remain in the original passage. <script'}]);
+ assert.doesNotMatch(source.title,/[<>]/);assert.doesNotMatch(source.snippet,/[<>]/);
+ assert.match(source.snippet,/Agricultural research and development/);
+});
 test('listing boilerplate is removed without removing substantive grant data or other links',()=>{
  const url='http://www.dpmc.gov.au/accountability/grants/index.cfm';
  for(const value of [url,`[${url}](${url})`,`<${url}>`]){
