@@ -33,7 +33,8 @@ export async function reserveVoiceSession(env: VoiceEnv, memberId: string, times
   return env.COMMUNITY_DB.prepare(`
     WITH balances AS (
       SELECT
-        ? - COALESCE(SUM(CASE WHEN member_id=? THEN charged_seconds ELSE 0 END),0) AS personal,
+        CASE WHEN EXISTS (SELECT 1 FROM voice_access WHERE member_id=? AND unlimited=1) THEN ?
+          ELSE ? - COALESCE(SUM(CASE WHEN member_id=? THEN charged_seconds ELSE 0 END),0) END AS personal,
         ? - COALESCE(SUM(CASE WHEN created_at>=? THEN charged_seconds ELSE 0 END),0) AS monthly,
         COUNT(CASE WHEN state IN ('reserved','connecting','active') THEN 1 END) AS active
       FROM voice_sessions
@@ -43,7 +44,7 @@ export async function reserveVoiceSession(env: VoiceEnv, memberId: string, times
     WHERE personal>0 AND monthly>0 AND active<?
       AND NOT EXISTS (SELECT 1 FROM voice_sessions WHERE member_id=? AND state IN ('reserved','connecting','active'))
     RETURNING *
-  `).bind(VOICE_ALLOWANCE_SECONDS, memberId, monthlyLimit(env), monthStart(timestamp) - VOICE_ALLOWANCE_SECONDS - RESERVATION_SECONDS - 60, id, memberId, timestamp, timestamp + RESERVATION_SECONDS, MAX_ACTIVE_SESSIONS, memberId).first<Session>()
+  `).bind(memberId, VOICE_ALLOWANCE_SECONDS, VOICE_ALLOWANCE_SECONDS, memberId, monthlyLimit(env), monthStart(timestamp) - VOICE_ALLOWANCE_SECONDS - RESERVATION_SECONDS - 60, id, memberId, timestamp, timestamp + RESERVATION_SECONDS, MAX_ACTIVE_SESSIONS, memberId).first<Session>()
 }
 
 export async function claimVoiceSession(env: VoiceEnv, memberId: string, id: string, timestamp = now()): Promise<Session | null> {
@@ -62,10 +63,14 @@ async function releaseUnusedSession(env: VoiceEnv, id: string): Promise<void> {
 
 async function voiceStatus(env: VoiceEnv, memberId: string | null) {
   if (!memberId) return {enabled: configured(env), signed_in: false, total_seconds: VOICE_ALLOWANCE_SECONDS, remaining_seconds: VOICE_ALLOWANCE_SECONDS, active_session: null}
+  const access = await env.COMMUNITY_DB.prepare('SELECT unlimited FROM voice_access WHERE member_id=?').bind(memberId).first<{unlimited:number}>()
+  const unlimited = access?.unlimited === 1
   const used = await env.COMMUNITY_DB.prepare('SELECT COALESCE(SUM(charged_seconds),0) AS seconds FROM voice_sessions WHERE member_id=?').bind(memberId).first<{seconds: number}>()
   const active = await env.COMMUNITY_DB.prepare("SELECT * FROM voice_sessions WHERE member_id=? AND state IN ('reserved','connecting','active')").bind(memberId).first<Session>()
   const reservedRemaining = active ? Math.max(0, active.reserved_seconds - (active.started_at == null ? 0 : now() - active.started_at)) : 0
-  return {enabled: configured(env), signed_in: true, total_seconds: VOICE_ALLOWANCE_SECONDS, remaining_seconds: Math.max(0, VOICE_ALLOWANCE_SECONDS - (used?.seconds ?? 0)) + reservedRemaining, active_session: active ? {id: active.id, expires_at: active.expires_at, state: active.state} : null}
+  return {enabled: configured(env), signed_in: true, unlimited, total_seconds: unlimited ? null : VOICE_ALLOWANCE_SECONDS,
+    remaining_seconds: unlimited ? (active ? reservedRemaining : VOICE_ALLOWANCE_SECONDS) : Math.max(0, VOICE_ALLOWANCE_SECONDS - (used?.seconds ?? 0)) + reservedRemaining,
+    active_session: active ? {id: active.id, expires_at: active.expires_at, state: active.state} : null}
 }
 
 async function toolAuthorized(req: Request, env: VoiceEnv): Promise<void> {
